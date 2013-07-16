@@ -1,1 +1,12 @@
-/target
+.metadata/
+target
+.project
+release.properties
+pom.xml.releaseBackup
+*.log
+.settings
+*.pyc
+.DS_Store
+.idea/*
+.clover
+.classpath
