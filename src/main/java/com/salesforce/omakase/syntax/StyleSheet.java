@@ -9,7 +9,6 @@ import java.util.List;
  * TODO Description
  * 
  * @author nmcwilliams
- * @since 0.1
  */
 public interface StyleSheet {
 	/**
@@ -17,5 +16,5 @@ public interface StyleSheet {
 	 * 
 	 * @return TODO
 	 */
-	List<Ruleset> getRulesets();
+	List<Ruleset> rulesets();
 }

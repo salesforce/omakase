@@ -1,10 +1,12 @@
+/**
+ * ADD LICENSE
+ */
 package com.salesforce.omakase;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
- * @since 0.1
  */
 public final class Omakase {
 	// private final EventListener[] listeners;

@@ -1,15 +1,16 @@
+/**
+ * ADD LICENSE
+ */
 package com.salesforce.omakase.syntax;
 
 import java.util.List;
-
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
- * @since 0.1
  */
-public interface Ruleset extends Syntax<RefinedRuleset> {
+public interface Ruleset extends Syntax {
 	/**
 	 * TODO Description
 	 * 

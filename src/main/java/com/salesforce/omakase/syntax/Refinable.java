@@ -1,17 +1,20 @@
+/**
+ * ADD LICENSE
+ */
 package com.salesforce.omakase.syntax;
-
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
- * @since 0.1
+ * @param <T>
+ *            TODO
  */
-public interface RawSelectorGroup extends SelectorGroup {
+public interface Refinable<T> {
 	/**
 	 * TODO Description
 	 * 
 	 * @return TODO
 	 */
-	String getSelectorGroup();
+	T refine();
 }

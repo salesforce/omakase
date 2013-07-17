@@ -1,23 +1,27 @@
+/**
+ * ADD LICENSE
+ */
 package com.salesforce.omakase.syntax;
+
+import com.salesforce.omakase.syntax.impl.RefinedDeclaration;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
- * @since 0.1
  */
-public interface Declaration extends Syntax<RefinedDeclaration> {
+public interface Declaration extends Syntax, Refinable<RefinedDeclaration> {
 	/**
 	 * TODO Description
 	 * 
 	 * @return TODO
 	 */
-	String getProperty();
+	String property();
 
 	/**
 	 * TODO Description
 	 * 
 	 * @return TODO
 	 */
-	String getValue();
+	String value();
 }
