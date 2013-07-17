@@ -1,5 +1,12 @@
 package com.salesforce.omakase.syntax;
 
-public interface RawDeclaration extends Syntax {
+
+/**
+ * TODO Description
+ * 
+ * @author nmcwilliams
+ * @since 0.1
+ */
+public interface RawDeclaration extends Declaration {
 
 }

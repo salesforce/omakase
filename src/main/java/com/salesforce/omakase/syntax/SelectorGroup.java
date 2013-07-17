@@ -1,5 +1,12 @@
 package com.salesforce.omakase.syntax;
 
-public interface SelectorGroup extends Syntax {
+
+/**
+ * TODO Description
+ * 
+ * @author nmcwilliams
+ * @since 0.1
+ */
+public interface SelectorGroup extends Syntax<RefinedSelectorGroup> {
 
 }

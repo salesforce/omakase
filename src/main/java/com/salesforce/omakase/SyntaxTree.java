@@ -2,8 +2,19 @@ package com.salesforce.omakase;
 
 import com.salesforce.omakase.syntax.Declaration;
 import com.salesforce.omakase.syntax.SelectorGroup;
+import com.salesforce.omakase.syntax.StyleSheet;
 
+/**
+ * TODO Description
+ * 
+ * @author nmcwilliams
+ * @since 0.1
+ */
 public class SyntaxTree implements EventListener {
+
+	public StyleSheet getStyleSheet() {
+		return null;
+	}
 
 	@Override
 	public void selectorGroup(SelectorGroup selectorGroup) {
@@ -16,7 +27,5 @@ public class SyntaxTree implements EventListener {
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 }

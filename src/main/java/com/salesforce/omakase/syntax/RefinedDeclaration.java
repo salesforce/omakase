@@ -7,6 +7,6 @@ package com.salesforce.omakase.syntax;
  * @author nmcwilliams
  * @since 0.1
  */
-public interface RawRuleset extends Ruleset {
+public interface RefinedDeclaration extends Declaration {
 
 }
