@@ -14,17 +14,17 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class AtRuleParser extends AbstractParser {
 
     @Override
-    public boolean raw(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
         stream.skipWhitepace();
 
         // must begin with '@'
-        if (!Tokens.AT.matches(stream.current())) return false;
+        if (!Tokens.AT_RULE.matches(stream.current())) return false;
 
-        return true;
+        return false; // TODO
     }
 
     @Override
-    public boolean refined(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
         // TODO Auto-generated method stub
         return false;
     }

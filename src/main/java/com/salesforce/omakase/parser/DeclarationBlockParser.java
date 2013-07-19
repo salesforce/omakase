@@ -17,12 +17,12 @@ import com.salesforce.omakase.adapter.Adapter;
 public class DeclarationBlockParser extends AbstractParser {
 
     @Override
-    public boolean raw(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
         stream.skipWhitepace();
         stream.expect(OPEN_BRACKET);
         do {
             stream.skipWhitepace();
-            new DeclarationParser().raw(stream, adapters);
+            new DeclarationParser().parseRaw(stream, adapters);
             stream.skipWhitepace();
         } while (stream.optional(SEMICOLON));
         stream.expect(CLOSE_BRACKET);
@@ -30,7 +30,7 @@ public class DeclarationBlockParser extends AbstractParser {
     }
 
     @Override
-    public boolean refined(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
         // TODO Auto-generated method stub
         return false;
     }

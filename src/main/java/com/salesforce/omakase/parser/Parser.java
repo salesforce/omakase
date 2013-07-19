@@ -11,7 +11,7 @@ import com.salesforce.omakase.adapter.Adapter;
  * @author nmcwilliams
  */
 public interface Parser {
-    boolean raw(Stream stream, Iterable<Adapter> adapters);
+    boolean parseRaw(Stream stream, Iterable<Adapter> adapters);
 
-    boolean refined(Stream stream, Iterable<Adapter> adapters);
+    boolean parseRefined(Stream stream, Iterable<Adapter> adapters);
 }

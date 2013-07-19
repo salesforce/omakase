@@ -17,7 +17,7 @@ import com.salesforce.omakase.syntax.impl.RawDeclaration;
 public class DeclarationParser extends AbstractParser {
 
     @Override
-    public boolean raw(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
         stream.skipWhitepace();
 
         if (!ALPHA.or(HYPHEN).matches(stream.peek())) return false;
@@ -40,7 +40,7 @@ public class DeclarationParser extends AbstractParser {
     }
 
     @Override
-    public boolean refined(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
         // TODO Auto-generated method stub
         return false;
     }

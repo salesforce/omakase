@@ -185,9 +185,18 @@ public final class Stream {
     /**
      * TODO Description
      * 
-     * @return
+     * @return TODO
      */
     public String source() {
         return source;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public String remaining() {
+        return source.substring(index);
     }
 }

@@ -11,23 +11,22 @@ import com.salesforce.omakase.adapter.Adapter;
  * @author nmcwilliams
  */
 public class StyleSheetParser extends AbstractParser {
+    private static final Parser child = new AtRuleParser().or(new RuleParser());
+    private static final String msg = "Extraneous input! %s";
 
     @Override
-    public boolean raw(Stream stream, Iterable<Adapter> adapters) {
-        // there should be only at-rules or regular rules at the root level
-        final Parser child = new AtRuleParser().or(new RuleParser());
-
-        // continually parse until there is nothing left
+    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
+        // continually parse until there is nothing left in the stream
         while (!stream.eof()) {
-            boolean matched = child.raw(stream, adapters);
-            if (!matched && !stream.eof()) throw new ParserException("Extraneous input!!", stream);
+            boolean matched = child.parseRaw(stream, adapters);
+            if (!matched && !stream.eof()) error(stream, msg, stream.remaining());
         }
 
         return true;
     }
 
     @Override
-    public boolean refined(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
         // TODO Auto-generated method stub
         return false;
     }
