@@ -3,14 +3,14 @@
  */
 package com.salesforce.omakase.syntax.impl;
 
-import com.salesforce.omakase.syntax.SelectorGroup;
+import com.salesforce.omakase.syntax.Selector;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class RefinedSelectorGroup extends BaseSyntaxUnit implements SelectorGroup {
+public class RefinedSelector extends BaseSyntaxUnit implements Selector {
     /**
      * TODO
      * 
@@ -19,7 +19,7 @@ public class RefinedSelectorGroup extends BaseSyntaxUnit implements SelectorGrou
      * @param column
      *            TODO
      */
-    public RefinedSelectorGroup(int line, int column) {
+    public RefinedSelector(int line, int column) {
         super(line, column);
         // TODO Auto-generated constructor stub
     }
@@ -30,18 +30,18 @@ public class RefinedSelectorGroup extends BaseSyntaxUnit implements SelectorGrou
      * @param rawSelectorGroup
      *            TODO
      */
-    public RefinedSelectorGroup(RawSelectorGroup rawSelectorGroup) {
-        super(rawSelectorGroup.getLine(), rawSelectorGroup.getColumn());
+    public RefinedSelector(RawSelector rawSelectorGroup) {
+        super(rawSelectorGroup.line(), rawSelectorGroup.column());
         // TODO Auto-generated constructor stub
     }
 
     @Override
-    public RefinedSelectorGroup refine() {
+    public RefinedSelector refine() {
         return this;
     }
 
     @Override
-    public String selectorGroup() {
+    public String selector() {
         // TODO Auto-generated method stub
         return null;
     }

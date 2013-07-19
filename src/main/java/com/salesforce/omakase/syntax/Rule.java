@@ -3,23 +3,25 @@
  */
 package com.salesforce.omakase.syntax;
 
+import java.util.List;
+
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public interface Syntax {
+public interface Rule extends Syntax {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    int line();
+    Selector selector();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    int column();
+    List<Declaration> declarations();
 }

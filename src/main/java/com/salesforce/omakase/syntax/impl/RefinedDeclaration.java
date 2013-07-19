@@ -28,7 +28,7 @@ public class RefinedDeclaration extends BaseSyntaxUnit implements Declaration {
 	 *            TODO
 	 */
 	public RefinedDeclaration(RawDeclaration rawDeclaration) {
-		super(rawDeclaration.getLine(), rawDeclaration.getColumn());
+		super(rawDeclaration.line(), rawDeclaration.column());
 	}
 
 	@Override

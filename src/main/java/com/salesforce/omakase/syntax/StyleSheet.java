@@ -11,10 +11,10 @@ import java.util.List;
  * @author nmcwilliams
  */
 public interface StyleSheet {
-	/**
-	 * TODO Description
-	 * 
-	 * @return TODO
-	 */
-	List<Ruleset> rulesets();
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    List<Rule> rules();
 }

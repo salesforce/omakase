@@ -3,23 +3,18 @@
  */
 package com.salesforce.omakase.syntax;
 
+import com.salesforce.omakase.syntax.impl.RefinedSelector;
+
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public interface Syntax {
+public interface Selector extends Syntax, Refinable<RefinedSelector> {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    int line();
-
-    /**
-     * TODO Description
-     * 
-     * @return TODO
-     */
-    int column();
+    String selector();
 }

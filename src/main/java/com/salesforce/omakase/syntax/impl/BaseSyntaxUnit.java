@@ -28,12 +28,12 @@ public abstract class BaseSyntaxUnit implements Syntax {
 	}
 
 	@Override
-	public int getLine() {
+	public int line() {
 		return line;
 	}
 
 	@Override
-	public int getColumn() {
+	public int column() {
 		return column;
 	}
 }

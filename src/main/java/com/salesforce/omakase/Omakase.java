@@ -3,10 +3,11 @@
  */
 package com.salesforce.omakase;
 
-import com.salesforce.omakase.syntax.Declaration;
-import com.salesforce.omakase.syntax.SelectorGroup;
-import com.salesforce.omakase.syntax.impl.RawDeclaration;
-import com.salesforce.omakase.syntax.impl.RawSelectorGroup;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.adapter.Adapter;
+import com.salesforce.omakase.parser.StyleSheetParser;
 
 /**
  * TODO Description
@@ -14,14 +15,14 @@ import com.salesforce.omakase.syntax.impl.RawSelectorGroup;
  * @author nmcwilliams
  */
 public final class Omakase {
-    private final EventListener[] listeners;
+    private final List<Adapter> adapters;
 
     /**
-     * @param listeners
+     * @param adapters
      *            TODO
      */
-    public Omakase(EventListener... listeners) {
-        this.listeners = listeners;
+    public Omakase(Adapter... adapters) {
+        this.adapters = Lists.newArrayList(adapters);
     }
 
     /**
@@ -31,30 +32,17 @@ public final class Omakase {
      *            TODO
      */
     public void parse(CharSequence input) {
-        selectorGroup(new RawSelectorGroup(0, 0, ".THIS #one"));
-        declaration(new RawDeclaration(0, 0, "margin", "3px 4px 3px"));
-    }
-
-    private void declaration(Declaration declaration) {
-        for (EventListener listener : listeners) {
-            listener.declaration(declaration);
-        }
-    }
-
-    private void selectorGroup(SelectorGroup selectorGroup) {
-        for (EventListener listener : listeners) {
-            listener.selectorGroup(selectorGroup);
-        }
+        new StyleSheetParser(input, adapters).parse();
     }
 
     /**
      * TODO Description
      * 
-     * @param listeners
+     * @param adapters
      *            TODO
      * @return TODO
      */
-    public static Omakase using(EventListener... listeners) {
-        return new Omakase(listeners);
+    public static Omakase using(Adapter... adapters) {
+        return new Omakase(adapters);
     }
 }
