@@ -3,6 +3,10 @@
  */
 package com.salesforce.omakase.parser;
 
+import static com.salesforce.omakase.parser.token.Tokens.CLOSE_BRACKET;
+import static com.salesforce.omakase.parser.token.Tokens.OPEN_BRACKET;
+import static com.salesforce.omakase.parser.token.Tokens.SEMICOLON;
+
 import com.salesforce.omakase.adapter.Adapter;
 
 /**
@@ -12,7 +16,6 @@ import com.salesforce.omakase.adapter.Adapter;
  */
 public class RuleParser extends AbstractParser {
     private static final SelectorParser selector = new SelectorParser();
-    private static final DeclarationBlockParser declarationBlock = new DeclarationBlockParser();
 
     @Override
     public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
@@ -27,10 +30,15 @@ public class RuleParser extends AbstractParser {
 
         // declaration block
         stream.skipWhitepace();
-        matched = declarationBlock.parseRaw(stream, adapters);
+        stream.expect(OPEN_BRACKET);
 
-        // if there was a selector then there must be a declaration block
-        if (!matched) error(stream, "Expected to find a declaration block");
+        do {
+            stream.skipWhitepace();
+            new DeclarationParser().parseRaw(stream, adapters);
+            stream.skipWhitepace();
+        } while (stream.optional(SEMICOLON));
+
+        stream.expect(CLOSE_BRACKET);
 
         for (Adapter adapter : adapters) {
             adapter.endRule();

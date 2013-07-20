@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.adapter.Adapter;
+import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.StyleSheetParser;
 
 /**
@@ -32,7 +33,8 @@ public final class Omakase {
      *            TODO
      */
     public void parse(CharSequence input) {
-        new StyleSheetParser(input, adapters).parse();
+        Stream stream = new Stream(input);
+        new StyleSheetParser().parseRaw(stream, adapters);
     }
 
     /**

@@ -20,6 +20,8 @@ public enum Tokens implements Token {
     COLON(is(':'), ":"),
     ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
     STAR(is('*'), "universal selector"),
+    HASH(is('#'), "#"),
+    DOT(is('.'), "."),
     HYPHEN(is('-'), "-"),
     AT_RULE(is('@'), "@")
 

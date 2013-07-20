@@ -13,7 +13,7 @@ import com.salesforce.omakase.adapter.EchoLogger;
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
-public class Develop {
+public class Debug {
     @Test
     public void develop() {
         EchoLogger el = new EchoLogger();

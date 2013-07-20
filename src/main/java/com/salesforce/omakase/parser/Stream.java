@@ -89,7 +89,6 @@ public final class Stream {
     public void skipWhitepace() {
         if (eof()) return;
 
-        System.out.println("peek:" + peek() + ":");
         while (CharMatcher.WHITESPACE.matches(peek())) {
             logger.debug("Skipping whitespace character");
             next();
@@ -134,19 +133,28 @@ public final class Stream {
      * @return TODO
      */
     public String until(Token token) {
-        if (eof()) {
-            String msg = String.format("Expected to find %s", token.description());
-            throw new ParserException(msg, line, column, source);
-        }
+        // if we are already at the end then there is no content to return
+        if (eof()) return "";
 
+        String sequence; // to hold the sequence of characters to return
+
+        // find the first character that matches the given token starting from the current position
         int found = token.matcher().indexIn(source, index + 1);
-        if (found == -1) {
-            String msg = String.format("Expected to find %s", token.description());
-            throw new ParserException(msg, line, column, source);
+
+        if (found > -1) {
+            // from the current position up to and excluding the matched token
+            sequence = source.substring(index, found);
+
+            // move the index to character before the matched token
+            forward(found - 1);
+        } else {
+            // from the current position until the end of the source
+            sequence = source.substring(index);
+
+            // move the index straight to the end
+            index = source.length();
         }
 
-        String sequence = source.substring(index, found);
-        forward(found - 1);
         return sequence;
     }
 
