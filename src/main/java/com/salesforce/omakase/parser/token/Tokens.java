@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.parser.token;
@@ -23,7 +23,8 @@ public enum Tokens implements Token {
     HASH(is('#'), "#"),
     DOT(is('.'), "."),
     HYPHEN(is('-'), "-"),
-    AT_RULE(is('@'), "@")
+    AT_RULE(is('@'), "@"),
+    NEWLINE(is('\n'), "newline")
 
     ;
 

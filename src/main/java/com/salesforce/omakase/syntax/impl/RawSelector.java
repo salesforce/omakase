@@ -1,19 +1,17 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.syntax.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.salesforce.omakase.syntax.Selector;
 import com.google.common.base.Objects;
+import com.salesforce.omakase.syntax.Selector;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class RawSelector extends BaseSyntaxUnit implements Selector {
+public final class RawSelector extends BaseSyntaxUnit implements Selector {
     private final String selector;
 
     /**
@@ -26,7 +24,7 @@ public class RawSelector extends BaseSyntaxUnit implements Selector {
      */
     public RawSelector(int line, int column, String selector) {
         super(line, column);
-        this.selector = checkNotNull(selector, "selector cannot be null");
+        this.selector = selector;
     }
 
     @Override

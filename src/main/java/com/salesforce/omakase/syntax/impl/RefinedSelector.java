@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.syntax.impl;
@@ -10,7 +10,7 @@ import com.salesforce.omakase.syntax.Selector;
  * 
  * @author nmcwilliams
  */
-public class RefinedSelector extends BaseSyntaxUnit implements Selector {
+public final class RefinedSelector extends BaseSyntaxUnit implements Selector {
     /**
      * TODO
      * 

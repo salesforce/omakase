@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.parser;
@@ -22,7 +22,7 @@ public class SelectorParser implements Parser {
         stream.skipWhitepace();
 
         // if the next character is a valid first character for a selector
-        if (!SELECTOR_START.matches(stream.peek())) return false;
+        if (!SELECTOR_START.matches(stream.current())) return false;
 
         // create our raw selector. Note that we have no idea if the selector is valid at this point
         RawSelector rs = new RawSelector(stream.line(), stream.column(), stream.until(OPEN_BRACKET));

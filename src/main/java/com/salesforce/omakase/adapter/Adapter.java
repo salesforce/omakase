@@ -1,10 +1,9 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.adapter;
 
 import com.salesforce.omakase.syntax.Declaration;
-import com.salesforce.omakase.syntax.Rule;
 import com.salesforce.omakase.syntax.Selector;
 
 /**

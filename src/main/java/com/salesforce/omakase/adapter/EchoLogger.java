@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.adapter;
@@ -6,7 +6,6 @@ package com.salesforce.omakase.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.syntax.Declaration;
 import com.salesforce.omakase.syntax.Selector;
 
@@ -41,6 +40,7 @@ public class EchoLogger implements Adapter {
     @Override
     public void declaration(Declaration declaration) {
         logger.info("declaration: {}", declaration);
+        count++;
 
     }
 

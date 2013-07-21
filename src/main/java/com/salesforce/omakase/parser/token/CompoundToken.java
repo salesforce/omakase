@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.parser.token;
@@ -12,12 +12,10 @@ import com.google.common.base.CharMatcher;
  */
 public class CompoundToken implements Token {
     private final String description;
-    private final Token first;
-    private final Token second;
+    private final CharMatcher matcher;
 
     public CompoundToken(Token first, Token second) {
-        this.first = first;
-        this.second = second;
+        this.matcher = first.matcher().or(second.matcher());
 
         StringBuilder sb = new StringBuilder(first.description().length() + second.description().length() + 4);
         sb.append(first.description());
@@ -28,7 +26,7 @@ public class CompoundToken implements Token {
 
     @Override
     public CharMatcher matcher() {
-        return first.matcher().or(second.matcher());
+        return matcher;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class CompoundToken implements Token {
 
     @Override
     public boolean matches(Character c) {
-        return matcher().matches(c);
+        return matcher.matches(c);
     }
 
     @Override

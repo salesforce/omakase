@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase;
@@ -27,12 +27,15 @@ public class PerfTest {
     /** run tests for multiple LOC variations */
     private static final boolean USE_FACTORS = true;
 
+    /** run phloc */
+    private static final boolean PHLOC = true;
+
     /** LOC variations (multiplication) */
     private static final List<Integer> MULTI_FACTORS = ImmutableList.of(1, 2, 4, 6, 8, 10, 12, 16, 18, 20, 22, 24, 26,
         28, 30, 35, 40, 45, 50, 60, 70, 80, 100, 120, 140, 200);
 
     /** Single LOC variation (multiplication) */
-    private static final List<Integer> SINGLE_FACTOR = ImmutableList.of(1);
+    private static final List<Integer> SINGLE_FACTOR = ImmutableList.of(100);
 
     // END OPTIONS
 
@@ -58,7 +61,7 @@ public class PerfTest {
         if (PRIME) {
             System.out.println("Priming");
             for (int i = 0; i < 150; i++) {
-                parse(Mode.phloc, original);
+                if (PHLOC) parse(Mode.phloc, original);
                 parse(Mode.omakase, original);
             }
         }
@@ -79,19 +82,21 @@ public class PerfTest {
             final int runs = 7;
 
             // phloc
-            List<Long> phlocParseTimes = Lists.newArrayListWithCapacity(runs);
-            for (int i = 0; i < runs; i++) {
-                long start = System.currentTimeMillis();
-                parse(Mode.phloc, actual);
-                long end = System.currentTimeMillis();
-                phlocParseTimes.add(end - start);
+            if (PHLOC) {
+                List<Long> phlocParseTimes = Lists.newArrayListWithCapacity(runs);
+                for (int i = 0; i < runs; i++) {
+                    long start = System.currentTimeMillis();
+                    parse(Mode.phloc, actual);
+                    long end = System.currentTimeMillis();
+                    phlocParseTimes.add(end - start);
+                }
+                long phlocTotal = 0;
+                for (Long time : phlocParseTimes) {
+                    phlocTotal += time;
+                }
+                long phlocParseAvg = phlocTotal / phlocParseTimes.size();
+                System.out.println("phloc: " + phlocParseAvg + "ms");
             }
-            long phlocTotal = 0;
-            for (Long time : phlocParseTimes) {
-                phlocTotal += time;
-            }
-            long phlocParseAvg = phlocTotal / phlocParseTimes.size();
-            System.out.println("phloc: " + phlocParseAvg + "ms");
 
             // omakase
             List<Long> omakaseParseTimes = Lists.newArrayListWithCapacity(runs);

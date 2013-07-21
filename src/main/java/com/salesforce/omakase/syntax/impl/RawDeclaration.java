@@ -1,19 +1,17 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.syntax.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.salesforce.omakase.syntax.Declaration;
 import com.google.common.base.Objects;
+import com.salesforce.omakase.syntax.Declaration;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class RawDeclaration extends BaseSyntaxUnit implements Declaration {
+public final class RawDeclaration extends BaseSyntaxUnit implements Declaration {
     private final String property;
     private final String value;
 
@@ -25,8 +23,8 @@ public class RawDeclaration extends BaseSyntaxUnit implements Declaration {
      */
     public RawDeclaration(int line, int column, String property, String value) {
         super(line, column);
-        this.property = checkNotNull(property, "property cannot be null");
-        this.value = checkNotNull(value, "value cannot be null");
+        this.property = property;
+        this.value = value;
     }
 
     @Override

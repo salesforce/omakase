@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.parser;
@@ -16,6 +16,7 @@ import com.salesforce.omakase.adapter.Adapter;
  */
 public class RuleParser extends AbstractParser {
     private static final SelectorParser selector = new SelectorParser();
+    private static final DeclarationParser declaration = new DeclarationParser();
 
     @Override
     public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
@@ -34,7 +35,7 @@ public class RuleParser extends AbstractParser {
 
         do {
             stream.skipWhitepace();
-            new DeclarationParser().parseRaw(stream, adapters);
+            declaration.parseRaw(stream, adapters);
             stream.skipWhitepace();
         } while (stream.optional(SEMICOLON));
 
