@@ -11,7 +11,7 @@ import com.salesforce.omakase.syntax.Declaration;
  * 
  * @author nmcwilliams
  */
-public final class RawDeclaration extends BaseSyntaxUnit implements Declaration {
+public final class RawDeclaration extends AbstractSyntaxUnit implements Declaration {
     private final String property;
     private final String value;
 

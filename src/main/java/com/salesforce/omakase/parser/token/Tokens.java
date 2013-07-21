@@ -14,17 +14,32 @@ import com.google.common.base.CharMatcher;
  * @author nmcwilliams
  */
 public enum Tokens implements Token {
+    /** TODO */
     OPEN_BRACKET(is('{'), "opening bracket '{'"),
+    /** TODO */
     CLOSE_BRACKET(is('}'), "closing bracket '}'"),
+    /** TODO */
     SEMICOLON(is(';'), ";"),
+    /** TODO */
     COLON(is(':'), ":"),
+    /** TODO */
     ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
+    /** TODO */
     STAR(is('*'), "universal selector"),
+    /** TODO */
     HASH(is('#'), "#"),
+    /** TODO */
     DOT(is('.'), "."),
+    /** TODO */
     HYPHEN(is('-'), "-"),
+    /** TODO */
     AT_RULE(is('@'), "@"),
-    NEWLINE(is('\n'), "newline")
+    /** TODO */
+    NEWLINE(is('\n'), "newline"),
+    /** TODO */
+    DOUBLE_QUOTE(is('"'), "double quote"),
+    /** TODO */
+    SINGLE_QUOTE(is('\''), "single quote")
 
     ;
 

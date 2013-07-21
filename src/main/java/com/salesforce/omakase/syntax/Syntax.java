@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.syntax;
 
+import java.util.List;
+
 /**
  * TODO Description
  * 
@@ -22,4 +24,19 @@ public interface Syntax {
      * @return TODO
      */
     int column();
+
+    /**
+     * TODO Description
+     * 
+     * @param comment
+     *            TODO
+     */
+    void comment(String comment);
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    List<String> comments();
 }

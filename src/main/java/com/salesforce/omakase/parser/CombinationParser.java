@@ -3,9 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.salesforce.omakase.adapter.Adapter;
+import com.salesforce.omakase.observer.Observer;
 
 /**
  * TODO Description
@@ -25,20 +23,13 @@ public class CombinationParser extends AbstractParser {
      *            TODO
      */
     public CombinationParser(Parser first, Parser second) {
-        this.first = checkNotNull(first, "first parser cannot be null");
-        this.second = checkNotNull(second, "second parser cannot be null");
+        this.first = first;
+        this.second = second;
     }
 
     @Override
-    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
-        boolean matched = first.parseRaw(stream, adapters);
-        return matched ? true : second.parseRaw(stream, adapters);
+    public boolean parse(Stream stream, Iterable<Observer> observers) {
+        boolean matched = first.parse(stream, observers);
+        return matched ? true : second.parse(stream, observers);
     }
-
-    @Override
-    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
-        boolean matched = first.parseRefined(stream, adapters);
-        return matched ? true : second.parseRefined(stream, adapters);
-    }
-
 }

@@ -1,7 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.adapter;
+package com.salesforce.omakase.observer;
 
 import com.salesforce.omakase.syntax.Declaration;
 import com.salesforce.omakase.syntax.Selector;
@@ -11,17 +11,14 @@ import com.salesforce.omakase.syntax.Selector;
  * 
  * @author nmcwilliams
  */
-public interface Adapter {
-    /**
-     * TODO Description
-     */
-    void beginRule();
-
+public interface Observer {
     /**
      * TODO Description
      * 
+     * @param comment
+     *            TODO
      */
-    void endRule();
+    void comment(String comment);
 
     /**
      * TODO Description
@@ -38,5 +35,4 @@ public interface Adapter {
      *            TODO
      */
     void declaration(Declaration declaration);
-
 }

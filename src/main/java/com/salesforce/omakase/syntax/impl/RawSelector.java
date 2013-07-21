@@ -11,7 +11,7 @@ import com.salesforce.omakase.syntax.Selector;
  * 
  * @author nmcwilliams
  */
-public final class RawSelector extends BaseSyntaxUnit implements Selector {
+public final class RawSelector extends AbstractSyntaxUnit implements Selector {
     private final String selector;
 
     /**

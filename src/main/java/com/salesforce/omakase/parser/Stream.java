@@ -8,6 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
 import com.google.common.base.CharMatcher;
+import com.salesforce.omakase.Errors;
 import com.salesforce.omakase.parser.token.Token;
 
 /**
@@ -33,6 +34,12 @@ public final class Stream {
 
     /** current column in the source */
     private int column = 1;
+
+    /** if we are inside of a comment */
+    private boolean inComment = false;
+
+    /** if we are inside of a string */
+    private boolean inString = false;
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
@@ -169,10 +176,7 @@ public final class Stream {
      *            Ensure that the current token matches this {@link Token} before we advance.
      */
     public void expect(Token token) {
-        if (!token.matches(current())) {
-            String msg = String.format("Expected to find %s", token.description());
-            throw new ParserException(msg, line, column, source);
-        }
+        if (!token.matches(current())) Errors.expected.send(this, token.description());
         next();
     }
 
@@ -258,6 +262,24 @@ public final class Stream {
      */
     public int length() {
         return length;
+    }
+
+    /**
+     * Whether we are currently inside of a comment block.
+     * 
+     * @return True if we are in a comment block.
+     */
+    public boolean inComment() {
+        return inComment;
+    }
+
+    /**
+     * Whether we are currently inside of a string.
+     * 
+     * @return True if we are inside of a string.
+     */
+    public boolean inString() {
+        return inString;
     }
 
     /**

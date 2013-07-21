@@ -7,7 +7,7 @@ import static com.salesforce.omakase.parser.token.Tokens.CLOSE_BRACKET;
 import static com.salesforce.omakase.parser.token.Tokens.OPEN_BRACKET;
 import static com.salesforce.omakase.parser.token.Tokens.SEMICOLON;
 
-import com.salesforce.omakase.adapter.Adapter;
+import com.salesforce.omakase.observer.Observer;
 
 /**
  * TODO Description
@@ -19,39 +19,29 @@ public class RuleParser extends AbstractParser {
     private static final DeclarationParser declaration = new DeclarationParser();
 
     @Override
-    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parse(Stream stream, Iterable<Observer> observers) {
         boolean matched;
 
         // selector
         stream.skipWhitepace();
-        matched = selector.parseRaw(stream, adapters);
+        matched = selector.parse(stream, observers);
 
         // if there wasn't a selector then we aren't at a rule
         if (!matched) return false;
 
         // declaration block
         stream.skipWhitepace();
+
         stream.expect(OPEN_BRACKET);
 
         do {
             stream.skipWhitepace();
-            declaration.parseRaw(stream, adapters);
+            declaration.parse(stream, observers);
             stream.skipWhitepace();
         } while (stream.optional(SEMICOLON));
 
         stream.expect(CLOSE_BRACKET);
 
-        for (Adapter adapter : adapters) {
-            adapter.endRule();
-        }
-
         return true;
     }
-
-    @Override
-    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 }

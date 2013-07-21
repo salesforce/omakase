@@ -5,7 +5,9 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.adapter.EchoLogger;
+import com.salesforce.omakase.observer.EchoLogger;
+import com.salesforce.omakase.observer.SyntaxTree;
+import com.salesforce.omakase.observer.Validator;
 
 /**
  * TODO Description
@@ -17,7 +19,10 @@ public class Debug {
     @Test
     public void develop() {
         EchoLogger el = new EchoLogger();
-        Omakase.using(el).parse(src2);
+        SyntaxTree tree = new SyntaxTree();
+        Validator validator = new Validator();
+        Omakase.using(el, tree, validator).parse(src2);
+        tree.toString();
     }
 
     public static final String src1 = ".testing #is > fun { color: red; margin: 10px 5px; }";

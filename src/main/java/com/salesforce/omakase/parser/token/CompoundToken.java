@@ -14,6 +14,14 @@ public class CompoundToken implements Token {
     private final String description;
     private final CharMatcher matcher;
 
+    /**
+     * TODO
+     * 
+     * @param first
+     *            TODO
+     * @param second
+     *            TODO
+     */
     public CompoundToken(Token first, Token second) {
         this.matcher = first.matcher().or(second.matcher());
 

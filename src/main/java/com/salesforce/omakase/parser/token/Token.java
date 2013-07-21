@@ -12,8 +12,18 @@ import com.google.common.base.CharMatcher;
  */
 public interface Token {
 
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     CharMatcher matcher();
 
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     String description();
 
     /**
@@ -25,6 +35,12 @@ public interface Token {
      */
     boolean matches(Character c);
 
+    /**
+     * TODO Description
+     * 
+     * @param other
+     * @return TODO
+     */
     Token or(Token other);
 
 }

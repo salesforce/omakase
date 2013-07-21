@@ -10,9 +10,18 @@ import com.google.common.collect.ImmutableList;
  * 
  * @author nmcwilliams
  */
-public final class Utils {
-    private Utils() {}
+public final class Util {
+    private Util() {}
 
+    /**
+     * TODO Description
+     * 
+     * @param <T>
+     *            TODO
+     * @param original
+     *            TODO
+     * @return TODO
+     */
     public static <T> ImmutableList<T> immutableList(Iterable<T> original) {
         return original == null ? ImmutableList.<T>of() : ImmutableList.copyOf(original);
     }

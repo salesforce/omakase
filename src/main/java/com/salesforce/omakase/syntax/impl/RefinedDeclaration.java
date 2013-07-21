@@ -10,7 +10,7 @@ import com.salesforce.omakase.syntax.Declaration;
  * 
  * @author nmcwilliams
  */
-public final class RefinedDeclaration extends BaseSyntaxUnit implements Declaration {
+public final class RefinedDeclaration extends AbstractSyntaxUnit implements Declaration {
 
     /**
      * @param line

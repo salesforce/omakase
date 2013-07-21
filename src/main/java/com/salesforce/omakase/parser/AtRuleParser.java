@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.adapter.Adapter;
+import com.salesforce.omakase.observer.Observer;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -12,9 +12,8 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public class AtRuleParser extends AbstractParser {
-
     @Override
-    public boolean parseRaw(Stream stream, Iterable<Adapter> adapters) {
+    public boolean parse(Stream stream, Iterable<Observer> observers) {
         stream.skipWhitepace();
 
         // must begin with '@'
@@ -22,11 +21,4 @@ public class AtRuleParser extends AbstractParser {
 
         return false; // TODO
     }
-
-    @Override
-    public boolean parseRefined(Stream stream, Iterable<Adapter> adapters) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 }

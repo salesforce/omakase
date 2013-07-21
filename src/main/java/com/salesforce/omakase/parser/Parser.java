@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.adapter.Adapter;
+import com.salesforce.omakase.observer.Observer;
 
 /**
  * TODO Description
@@ -11,7 +11,14 @@ import com.salesforce.omakase.adapter.Adapter;
  * @author nmcwilliams
  */
 public interface Parser {
-    boolean parseRaw(Stream stream, Iterable<Adapter> adapters);
-
-    boolean parseRefined(Stream stream, Iterable<Adapter> adapters);
+    /**
+     * TODO Description
+     * 
+     * @param stream
+     *            TODO
+     * @param observers
+     *            TODO
+     * @return TODO
+     */
+    boolean parse(Stream stream, Iterable<Observer> observers);
 }

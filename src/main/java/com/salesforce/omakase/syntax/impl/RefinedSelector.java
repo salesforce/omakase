@@ -10,7 +10,7 @@ import com.salesforce.omakase.syntax.Selector;
  * 
  * @author nmcwilliams
  */
-public final class RefinedSelector extends BaseSyntaxUnit implements Selector {
+public final class RefinedSelector extends AbstractSyntaxUnit implements Selector {
     /**
      * TODO
      * 
