@@ -4,7 +4,7 @@
 package com.salesforce.omakase.observer;
 
 import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.SelectorGroup;
 
 /**
  * TODO Description
@@ -16,8 +16,8 @@ public class Validator implements Observer {
     public void comment(String comment) {}
 
     @Override
-    public void selector(Selector selector) {
-        selector.refine();
+    public void selectorGroup(SelectorGroup selectors) {
+        selectors.refine();
     }
 
     @Override

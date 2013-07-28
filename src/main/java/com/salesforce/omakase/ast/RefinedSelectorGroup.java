@@ -1,20 +1,20 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.ast;
+
+import java.util.List;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
- * @param <T>
- *            TODO
  */
-public interface Refinable<T> {
+public interface RefinedSelectorGroup extends SelectorGroup {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    T refine();
+    List<Selector> selectors();
 }

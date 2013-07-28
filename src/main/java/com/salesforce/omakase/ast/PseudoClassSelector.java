@@ -1,13 +1,13 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
 /**
  * TODO Description
  *
  * @author nmcwilliams
  */
-public interface SelectorPart {
+public interface PseudoClassSelector {
 
 }

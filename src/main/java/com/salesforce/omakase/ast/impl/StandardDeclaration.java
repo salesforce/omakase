@@ -1,35 +1,36 @@
-﻿/**
+/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.syntax.impl;
+package com.salesforce.omakase.ast.impl;
 
 import com.google.common.base.Objects;
-import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.RefinedDeclaration;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public final class RawDeclaration extends AbstractSyntaxUnit implements Declaration {
-    private final String property;
-    private final String value;
+public class StandardDeclaration extends AbstractSyntax implements RefinedDeclaration {
+    private String property;
+    private String value;
 
     /**
+     * TODO
+     * 
      * @param line
      *            TODO
      * @param column
      *            TODO
+     * @param property
+     *            TODO
+     * @param value
+     *            TODO
      */
-    public RawDeclaration(int line, int column, String property, String value) {
+    public StandardDeclaration(int line, int column, String property, String value) {
         super(line, column);
         this.property = property;
         this.value = value;
-    }
-
-    @Override
-    public RefinedDeclaration refine() {
-        return new RefinedDeclaration(this);
     }
 
     @Override
@@ -43,12 +44,17 @@ public final class RawDeclaration extends AbstractSyntaxUnit implements Declarat
     }
 
     @Override
+    public RefinedDeclaration refine() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this)
             .add("property", property)
             .add("value", value)
-            .add("line", line())
-            .add("column", column())
             .toString();
     }
+
 }

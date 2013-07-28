@@ -5,16 +5,12 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
-import com.salesforce.omakase.syntax.impl.RefinedRule;
-
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public interface Rule extends Syntax, Refinable<RefinedRule> {
+public interface Rule extends Syntax {
     /**
      * TODO Description
      * 
@@ -22,14 +18,14 @@ public interface Rule extends Syntax, Refinable<RefinedRule> {
      *            TODO
      * @return TODO
      */
-    Rule selectors(SelectorGroup selectors);
+    Rule selectorGroup(SelectorGroup selectorGroup);
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    SelectorGroup selectors();
+    List<SelectorGroup> selectorGroups();
 
     /**
      * TODO Description

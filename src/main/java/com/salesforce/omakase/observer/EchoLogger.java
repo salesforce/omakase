@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.SelectorGroup;
 
 /**
  * TODO Description
@@ -23,8 +23,8 @@ public class EchoLogger implements Observer {
     }
 
     @Override
-    public void selector(Selector selector) {
-        logger.info("selector: {}", selector);
+    public void selectorGroup(SelectorGroup selectors) {
+        logger.info("selectors: {}", selectors);
     }
 
     @Override

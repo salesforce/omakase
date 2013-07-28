@@ -6,9 +6,9 @@ package com.salesforce.omakase.parser;
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
 import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.impl.StandardDeclaration;
 import com.salesforce.omakase.observer.Observer;
 import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.syntax.impl.RawDeclaration;
 
 /**
  * TODO Description
@@ -37,7 +37,7 @@ public class DeclarationParser extends AbstractParser {
         stream.skipWhitepace();
         String value = stream.until(DECLARATION_END);
 
-        Declaration d = new RawDeclaration(line, column, property, value);
+        Declaration d = new StandardDeclaration(line, column, property, value);
         for (Observer observer : observers) {
             observer.declaration(d);
         }

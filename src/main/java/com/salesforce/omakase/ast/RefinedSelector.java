@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.ast;
@@ -10,20 +10,22 @@ import java.util.List;
  * 
  * @author nmcwilliams
  */
-public interface Stylesheet {
+public interface RefinedSelector extends Selector {
     /**
      * TODO Description
      * 
-     * @param rule
-     *            TODO
      * @return TODO
      */
-    Stylesheet rule(Rule rule);
+    List<SelectorPart> parts();
 
     /**
      * TODO Description
      * 
+     * @param <T>
+     *            TODO
+     * @param type
+     *            TODO
      * @return TODO
      */
-    List<? extends Rule> rules();
+    <T extends SelectorPart> List<T> parts(Class<T> type);
 }

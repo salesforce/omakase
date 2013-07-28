@@ -1,7 +1,7 @@
-﻿/**
+/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.syntax.impl;
+package com.salesforce.omakase.ast.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -15,11 +15,12 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * @author nmcwilliams
  */
-public abstract class AbstractSyntaxUnit implements Syntax {
+abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
 
     private List<String> comments;
+    private boolean dirty;
 
     /**
      * TODO
@@ -29,7 +30,7 @@ public abstract class AbstractSyntaxUnit implements Syntax {
      * @param column
      *            TODO
      */
-    public AbstractSyntaxUnit(int line, int column) {
+    public AbstractSyntax(int line, int column) {
         this.line = line;
         this.column = column;
     }
@@ -58,5 +59,19 @@ public abstract class AbstractSyntaxUnit implements Syntax {
             comments = Lists.newArrayList();
         }
         return comments;
+    }
+
+    @Override
+    public List<String> ownComments() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    protected boolean dirty() {
+        return dirty;
+    }
+
+    protected void dirty(boolean dirty) {
+        this.dirty = dirty;
     }
 }

@@ -4,7 +4,7 @@
 package com.salesforce.omakase.observer;
 
 import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.SelectorGroup;
 
 /**
  * TODO Description
@@ -18,7 +18,7 @@ public class Mapper implements Observer {
     }
 
     @Override
-    public void selector(Selector selector) {
+    public void selectorGroup(SelectorGroup selectors) {
         // TODO Auto-generated method stub
     }
 

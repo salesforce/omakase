@@ -1,9 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.syntax.impl;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+package com.salesforce.omakase.ast.impl;
 
 import java.util.List;
 
@@ -17,17 +15,12 @@ import com.salesforce.omakase.ast.Stylesheet;
  * 
  * @author nmcwilliams
  */
-public class RawStylesheet implements Stylesheet {
+public class StandardStylesheet implements Stylesheet {
     private final List<Rule> rules = Lists.newArrayList();
 
     @Override
-    public RefinedStylesheet refine() {
-        return new RefinedStylesheet(this);
-    }
-
-    @Override
     public Stylesheet rule(Rule rule) {
-        rules.add(checkNotNull(rule, "rule cannot be null"));
+        rules.add(rule);
         return this;
     }
 

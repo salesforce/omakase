@@ -1,11 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.declaration;
-
-import com.salesforce.omakase.ast.Refinable;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.syntax.impl.RefinedDeclaration;
+package com.salesforce.omakase.ast;
 
 /**
  * TODO Description

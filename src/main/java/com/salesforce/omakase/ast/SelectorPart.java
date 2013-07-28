@@ -1,49 +1,44 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.ast;
-
-import java.util.List;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public interface Syntax {
-    /**
-     * TODO Description
-     * 
-     * @return TODO
-     */
-    int line();
+public interface SelectorPart extends Syntax {
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    int column();
-
-    /**
-     * TODO Description
-     * 
-     * @param comment
-     *            TODO
-     */
-    void comment(String comment);
+    boolean isFirst();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<String> comments();
+    boolean isLast();
+
+    /**
+     * If this selector part is the key selector. FSame as {@link #isLast()}.
+     * 
+     * @return TODO
+     */
+    boolean isKey();
+
+    boolean isSelector();
+
+    boolean isCombinator();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<String> ownComments();
+    SelectorPartType type();
 }

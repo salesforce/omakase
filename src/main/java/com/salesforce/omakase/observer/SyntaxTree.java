@@ -8,9 +8,8 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.*;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.syntax.impl.RawRule;
-import com.salesforce.omakase.syntax.impl.RawStylesheet;
+import com.salesforce.omakase.ast.impl.StandardRule;
+import com.salesforce.omakase.ast.impl.StandardStylesheet;
 
 /**
  * TODO Description
@@ -18,7 +17,7 @@ import com.salesforce.omakase.syntax.impl.RawStylesheet;
  * @author nmcwilliams
  */
 public class SyntaxTree implements Observer {
-    private final Stylesheet stylesheet = new RawStylesheet();
+    private final Stylesheet stylesheet = new StandardStylesheet();
     private final List<String> comments = Lists.newArrayList();
 
     private Rule rule;
@@ -38,12 +37,13 @@ public class SyntaxTree implements Observer {
     }
 
     @Override
-    public void selector(Selector selector) {
+    public void selectorGroup(SelectorGroup selectors) {
         // add any associated comments to the selector
-        associateComments(selector);
+        associateComments(selectors);
 
         // create a new rule with the selector
-        rule = new RawRule(selector.line(), selector.column()).selector(selector);
+        rule = new StandardRule(selectors.line(), selectors.column());
+        rule.selectorGroup(selectors);
 
         // add the rule to the stylesheet
         stylesheet.rule(rule);
