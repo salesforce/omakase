@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.observer;
 
-import com.salesforce.omakase.syntax.Declaration;
-import com.salesforce.omakase.syntax.Selector;
+import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * TODO Description

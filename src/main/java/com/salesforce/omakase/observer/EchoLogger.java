@@ -6,8 +6,8 @@ package com.salesforce.omakase.observer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.salesforce.omakase.syntax.Declaration;
-import com.salesforce.omakase.syntax.Selector;
+import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * TODO Description

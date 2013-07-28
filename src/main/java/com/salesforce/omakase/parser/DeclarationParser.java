@@ -5,9 +5,9 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
+import com.salesforce.omakase.ast.Declaration;
 import com.salesforce.omakase.observer.Observer;
 import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.syntax.Declaration;
 import com.salesforce.omakase.syntax.impl.RawDeclaration;
 
 /**

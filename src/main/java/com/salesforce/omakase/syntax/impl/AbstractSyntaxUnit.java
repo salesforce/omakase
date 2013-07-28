@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.syntax.Syntax;
+import com.salesforce.omakase.ast.Syntax;
 
 /**
  * TODO Description

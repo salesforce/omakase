@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.syntax.impl;
 
-import com.salesforce.omakase.syntax.Declaration;
+import com.salesforce.omakase.ast.Declaration;
 
 /**
  * TODO Description

@@ -7,7 +7,8 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.syntax.*;
+import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.syntax.impl.RawRule;
 import com.salesforce.omakase.syntax.impl.RawStylesheet;
 

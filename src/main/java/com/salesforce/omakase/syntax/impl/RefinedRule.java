@@ -5,9 +5,9 @@ package com.salesforce.omakase.syntax.impl;
 
 import java.util.List;
 
-import com.salesforce.omakase.syntax.Declaration;
-import com.salesforce.omakase.syntax.Rule;
-import com.salesforce.omakase.syntax.Selector;
+import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * TODO Description

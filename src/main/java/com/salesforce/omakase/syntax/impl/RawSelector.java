@@ -4,7 +4,7 @@
 package com.salesforce.omakase.syntax.impl;
 
 import com.google.common.base.Objects;
-import com.salesforce.omakase.syntax.Selector;
+import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * TODO Description

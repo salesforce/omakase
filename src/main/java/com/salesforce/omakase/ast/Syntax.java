@@ -1,7 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.syntax;
+package com.salesforce.omakase.ast;
 
 import java.util.List;
 

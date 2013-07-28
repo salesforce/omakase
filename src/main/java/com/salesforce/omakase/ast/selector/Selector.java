@@ -1,8 +1,12 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.syntax;
+package com.salesforce.omakase.ast.selector;
 
+import java.util.List;
+
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.syntax.impl.RefinedSelector;
 
 /**
@@ -11,10 +15,5 @@ import com.salesforce.omakase.syntax.impl.RefinedSelector;
  * @author nmcwilliams
  */
 public interface Selector extends Syntax, Refinable<RefinedSelector> {
-    /**
-     * TODO Description
-     * 
-     * @return TODO
-     */
-    String selector();
+    List<SelectorPart> parts();
 }
