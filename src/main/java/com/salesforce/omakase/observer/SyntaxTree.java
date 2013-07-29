@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.impl.StandardRule;
 import com.salesforce.omakase.ast.impl.StandardStylesheet;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
  * TODO Description

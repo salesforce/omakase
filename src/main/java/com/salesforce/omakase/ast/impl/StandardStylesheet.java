@@ -15,7 +15,7 @@ import com.salesforce.omakase.ast.Stylesheet;
  * 
  * @author nmcwilliams
  */
-public class StandardStylesheet implements Stylesheet {
+final class StandardStylesheet implements Stylesheet {
     private final List<Rule> rules = Lists.newArrayList();
 
     @Override

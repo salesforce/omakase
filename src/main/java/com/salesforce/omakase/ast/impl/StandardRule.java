@@ -8,14 +8,14 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Declaration;
 import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.SelectorGroup;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class StandardRule extends AbstractSyntax implements Rule {
+final class StandardRule extends AbstractSyntax implements Rule {
     private List<SelectorGroup> selectorGroups = Lists.newArrayList();
     private List<Declaration> declarations = Lists.newArrayList();
 

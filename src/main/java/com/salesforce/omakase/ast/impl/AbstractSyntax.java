@@ -15,7 +15,7 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * @author nmcwilliams
  */
-abstract class AbstractSyntax implements Syntax {
+public abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
 

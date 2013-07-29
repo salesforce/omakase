@@ -5,8 +5,8 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
-import com.salesforce.omakase.ast.SelectorGroup;
 import com.salesforce.omakase.ast.impl.StandardSelectorGroup;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.observer.Observer;
 import com.salesforce.omakase.parser.token.Token;
 

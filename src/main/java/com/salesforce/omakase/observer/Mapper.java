@@ -4,7 +4,7 @@
 package com.salesforce.omakase.observer;
 
 import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.SelectorGroup;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
  * TODO Description

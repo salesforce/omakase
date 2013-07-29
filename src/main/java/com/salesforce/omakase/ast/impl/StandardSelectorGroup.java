@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.ast.RefinedSelectorGroup;
-import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.ast.selector.RefinedSelectorGroup;
+import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * TODO Description
