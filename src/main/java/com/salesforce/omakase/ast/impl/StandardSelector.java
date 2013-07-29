@@ -15,7 +15,7 @@ import com.salesforce.omakase.ast.selector.part.SelectorPart;
  * 
  * @author nmcwilliams
  */
-final class StandardSelector extends AbstractSyntax implements RefinedSelector {
+public class StandardSelector extends AbstractSyntax implements RefinedSelector {
     private List<SelectorPart> parts;
     private String raw;
 

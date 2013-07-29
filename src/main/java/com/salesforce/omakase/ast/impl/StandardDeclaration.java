@@ -11,7 +11,7 @@ import com.salesforce.omakase.ast.RefinedDeclaration;
  * 
  * @author nmcwilliams
  */
-final class StandardDeclaration extends AbstractSyntax implements RefinedDeclaration {
+public class StandardDeclaration extends AbstractSyntax implements RefinedDeclaration {
     private String property;
     private String value;
 

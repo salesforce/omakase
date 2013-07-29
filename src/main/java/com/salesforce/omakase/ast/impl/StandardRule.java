@@ -15,7 +15,7 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  * 
  * @author nmcwilliams
  */
-final class StandardRule extends AbstractSyntax implements Rule {
+public class StandardRule extends AbstractSyntax implements Rule {
     private List<SelectorGroup> selectorGroups = Lists.newArrayList();
     private List<Declaration> declarations = Lists.newArrayList();
 
