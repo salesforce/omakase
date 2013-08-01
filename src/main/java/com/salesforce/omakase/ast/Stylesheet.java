@@ -10,20 +10,11 @@ import java.util.List;
  * 
  * @author nmcwilliams
  */
-public interface Stylesheet {
-    /**
-     * TODO Description
-     * 
-     * @param rule
-     *            TODO
-     * @return TODO
-     */
-    Stylesheet rule(Rule rule);
-
+public interface Stylesheet extends Syntax {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<? extends Rule> rules();
+    List<Statement> statements();
 }

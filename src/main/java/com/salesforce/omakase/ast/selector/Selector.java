@@ -12,4 +12,10 @@ import com.salesforce.omakase.ast.Syntax;
  * @author nmcwilliams
  */
 public interface Selector extends Syntax, Refinable<RefinedSelector> {
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    String content();
 }

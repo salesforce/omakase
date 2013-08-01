@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase;
 
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -22,7 +24,7 @@ public final class Util {
      *            TODO
      * @return TODO
      */
-    public static <T> ImmutableList<T> immutableList(Iterable<T> original) {
+    public static <T> ImmutableList<T> immutable(List<T> original) {
         return original == null ? ImmutableList.<T>of() : ImmutableList.copyOf(original);
     }
 }

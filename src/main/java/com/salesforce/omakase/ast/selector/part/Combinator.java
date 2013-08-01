@@ -3,17 +3,21 @@
  */
 package com.salesforce.omakase.ast.selector.part;
 
-
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
 public interface Combinator extends SelectorPart {
+    /** TODO */
     public enum Type {
+        /** TODO */
         descendant(' '),
+        /** TODO */
         child('>'),
+        /** TODO */
         adjacentSibling('+'),
+        /** TODO */
         generalSibling('~');
 
         private final char symbol;
@@ -32,5 +36,10 @@ public interface Combinator extends SelectorPart {
         }
     }
 
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     Type getType();
 }

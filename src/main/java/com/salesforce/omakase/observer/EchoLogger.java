@@ -6,7 +6,7 @@ package com.salesforce.omakase.observer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
@@ -23,8 +23,8 @@ public class EchoLogger implements Observer {
     }
 
     @Override
-    public void selectorGroup(SelectorGroup selectors) {
-        logger.info("selectors: {}", selectors);
+    public void selectorGroup(SelectorGroup selectorGroup) {
+        logger.info("selectors: {}", selectorGroup);
     }
 
     @Override

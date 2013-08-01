@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.observer;
 
-import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
@@ -18,7 +18,7 @@ public class Mapper implements Observer {
     }
 
     @Override
-    public void selectorGroup(SelectorGroup selectors) {
+    public void selectorGroup(SelectorGroup selectorGroup) {
         // TODO Auto-generated method stub
     }
 

@@ -3,25 +3,52 @@
  */
 package com.salesforce.omakase.observer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.List;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.*;
-import com.salesforce.omakase.ast.impl.StandardRule;
-import com.salesforce.omakase.ast.impl.StandardStylesheet;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.builder.*;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
+import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
+@NotThreadSafe
 public class SyntaxTree implements Observer {
-    private final Stylesheet stylesheet = new StandardStylesheet();
-    private final List<String> comments = Lists.newArrayList();
+    private final SyntaxFactory factory;
 
-    private Rule rule;
+    private List<Builder<? extends Statement>> statements;
+    private RuleBuilder currentRuleBuilder;
+    private List<String> comments;
+
+    private Stylesheet stylesheet;
+
+    /**
+     * TODO
+     */
+    public SyntaxTree() {
+        this(StandardSyntaxFactory.instance());
+    }
+
+    /**
+     * TODO
+     * 
+     * @param factory
+     *            TODO
+     */
+    public SyntaxTree(SyntaxFactory factory) {
+        this.factory = checkNotNull(factory, "factory cannot be null");
+    }
 
     /**
      * TODO Description
@@ -29,6 +56,13 @@ public class SyntaxTree implements Observer {
      * @return TODO
      */
     public Stylesheet stylesheet() {
+        if (stylesheet == null) {
+            StylesheetBuilder builder = factory.stylesheet();
+            for (Builder<? extends Statement> statement : statements) {
+                builder.statement(statement.build());
+            }
+            stylesheet = builder.build();
+        }
         return stylesheet;
     }
 
@@ -38,36 +72,38 @@ public class SyntaxTree implements Observer {
     }
 
     @Override
-    public void selectorGroup(SelectorGroup selectors) {
-        // add any associated comments to the selector
-        associateComments(selectors);
+    public void selectorGroup(SelectorGroup selectorGroup) {
+        RuleBuilder builder = factory.rule();
+        builder.selectorGroup(selectorGroup);
+        associateComments(builder);
 
-        // create a new rule with the selector
-        rule = new StandardRule(selectors.line(), selectors.column());
-        rule.selectorGroup(selectors);
-
-        // add the rule to the stylesheet
-        stylesheet.rule(rule);
+        statements.add(builder);
     }
 
     @Override
     public void declaration(Declaration declaration) {
-        // add any associated comments to the declaration
-        associateComments(declaration);
-
-        // add the declaration to the rule
-        rule.declaration(declaration);
+        checkState(currentRuleBuilder != null, "cannot handle a declaration without a current rule");
+        currentRuleBuilder.declaration(declaration);
     }
 
-    private void associateComments(Syntax unit) {
+    /**
+     * TODO Description
+     * 
+     * @param builder
+     */
+    private void associateComments(Builder<?> builder) {
         for (String comment : comments) {
-            unit.comment(comment);
+            builder.comment(comment);
         }
         comments.clear();
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("stylesheet", stylesheet).toString();
+        return Objects.toStringHelper(this)
+            .add("super", super.toString())
+            .add("stylesheet", stylesheet)
+            .toString();
     }
+
 }

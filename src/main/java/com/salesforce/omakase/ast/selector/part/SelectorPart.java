@@ -33,8 +33,18 @@ public interface SelectorPart extends Syntax {
      */
     boolean isKey();
 
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     boolean isSelector();
 
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     boolean isCombinator();
 
     /**

@@ -1,8 +1,9 @@
-﻿/**
+/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.observer;
+package com.salesforce.omakase.ast.builder;
 
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
@@ -11,28 +12,22 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  * 
  * @author nmcwilliams
  */
-public interface Observer {
-    /**
-     * TODO Description
-     * 
-     * @param comment
-     *            TODO
-     */
-    void comment(String comment);
-
+public interface RuleBuilder extends Builder<Rule> {
     /**
      * TODO Description
      * 
      * @param selectorGroup
      *            TODO
+     * @return TODO
      */
-    void selectorGroup(SelectorGroup selectorGroup);
+    RuleBuilder selectorGroup(SelectorGroup selectorGroup);
 
     /**
      * TODO Description
      * 
      * @param declaration
      *            TODO
+     * @return TODO
      */
-    void declaration(Declaration declaration);
+    RuleBuilder declaration(Declaration declaration);
 }

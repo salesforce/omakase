@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.observer;
 
-import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
@@ -16,8 +16,8 @@ public class Validator implements Observer {
     public void comment(String comment) {}
 
     @Override
-    public void selectorGroup(SelectorGroup selectors) {
-        selectors.refine();
+    public void selectorGroup(SelectorGroup selectorGroup) {
+        selectorGroup.refine();
     }
 
     @Override

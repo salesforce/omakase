@@ -8,6 +8,5 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface RefinedDeclaration extends Declaration {
-
+public interface Statement extends Syntax {
 }

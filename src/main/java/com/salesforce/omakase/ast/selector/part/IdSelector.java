@@ -9,5 +9,10 @@ package com.salesforce.omakase.ast.selector.part;
  * @author nmcwilliams
  */
 public interface IdSelector {
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     String name();
 }

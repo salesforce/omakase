@@ -1,44 +1,46 @@
-﻿/**
+/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast;
-
-import java.util.List;
-
-import javax.annotation.concurrent.Immutable;
+package com.salesforce.omakase.ast.builder;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-@Immutable
-public interface Syntax {
+public interface SyntaxFactory {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    int line();
+    StylesheetBuilder stylesheet();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    int column();
+    RuleBuilder rule();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<String> comments();
+    SelectorGroupBuilder selectorGroup();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<String> ownComments();
+    SelectorBuilder selector();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    DeclarationBuilder declaration();
 }

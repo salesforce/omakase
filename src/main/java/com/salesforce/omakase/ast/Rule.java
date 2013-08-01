@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
@@ -12,31 +13,13 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  * 
  * @author nmcwilliams
  */
-public interface Rule extends Syntax {
-    /**
-     * TODO Description
-     * 
-     * @param selectors
-     *            TODO
-     * @return TODO
-     */
-    Rule selectorGroup(SelectorGroup selectorGroup);
-
+public interface Rule extends Statement {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<SelectorGroup> selectorGroups();
-
-    /**
-     * TODO Description
-     * 
-     * @param declaration
-     *            TODO
-     * @return TODO
-     */
-    Rule declaration(Declaration declaration);
+    SelectorGroup selectorGroup();
 
     /**
      * TODO Description

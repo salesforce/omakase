@@ -1,0 +1,73 @@
+/**
+ * ADD LICENSE
+ */
+package com.salesforce.omakase.ast.standard;
+
+import java.util.List;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.selector.RefinedSelector;
+import com.salesforce.omakase.ast.selector.part.SelectorPart;
+
+/**
+ * TODO Description
+ * 
+ * @author nmcwilliams
+ */
+final class StandardSelector extends AbstractSyntax implements RefinedSelector {
+    private final String content;
+    private ImmutableList<SelectorPart> parts;
+
+    /**
+     * TODO
+     * 
+     * @param line
+     *            TODO
+     * @param column
+     *            TODO
+     * @param comments
+     *            TODO
+     * @param content
+     *            TODO
+     */
+    public StandardSelector(int line, int column, List<String> comments, String content) {
+        super(line, column, comments);
+        this.content = content;
+        this.parts = ImmutableList.of();
+    }
+
+    @Override
+    public RefinedSelector refine() {
+        if (parts.isEmpty()) {
+            // TODO parse parts
+        }
+
+        return this;
+    }
+
+    @Override
+    public String content() {
+        return content;
+    }
+
+    @Override
+    public List<SelectorPart> parts() {
+        return parts;
+    }
+
+    @Override
+    public <T extends SelectorPart> List<T> parts(Class<T> type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("super", super.toString())
+            .add("content", content)
+            .add("parts", parts)
+            .toString();
+    }
+}

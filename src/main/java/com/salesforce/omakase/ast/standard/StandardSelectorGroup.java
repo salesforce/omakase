@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.impl;
+package com.salesforce.omakase.ast.standard;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import com.salesforce.omakase.ast.selector.Selector;
  * 
  * @author nmcwilliams
  */
-public class StandardSelectorGroup extends AbstractSyntax implements RefinedSelectorGroup {
-    private List<Selector> selectors;
-    private String raw;
+final class StandardSelectorGroup extends AbstractSyntax implements RefinedSelectorGroup {
+    private final String content;
+    private ImmutableList<Selector> selectors;
 
     /**
      * TODO
@@ -26,19 +26,21 @@ public class StandardSelectorGroup extends AbstractSyntax implements RefinedSele
      *            TODO
      * @param column
      *            TODO
-     * @param raw
+     * @param comments
+     *            TODO
+     * @param content
      *            TODO
      */
-    public StandardSelectorGroup(int line, int column, String raw) {
-        super(line, column);
-        this.raw = raw;
+    public StandardSelectorGroup(int line, int column, List<String> comments, String content) {
+        super(line, column, comments);
+        this.content = content;
+        this.selectors = ImmutableList.of();
     }
 
     @Override
     public RefinedSelectorGroup refine() {
-        if (dirty()) {
+        if (selectors.isEmpty()) {
             // TODO, refinement
-            dirty(false);
         }
 
         return this;
@@ -53,7 +55,7 @@ public class StandardSelectorGroup extends AbstractSyntax implements RefinedSele
     public String toString() {
         return Objects.toStringHelper(this)
             .add("selectors", selectors)
-            .add("raw", raw)
+            .add("raw", content)
             .toString();
     }
 }

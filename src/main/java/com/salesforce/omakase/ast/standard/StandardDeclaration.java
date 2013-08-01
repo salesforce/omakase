@@ -1,19 +1,21 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.impl;
+package com.salesforce.omakase.ast.standard;
+
+import java.util.List;
 
 import com.google.common.base.Objects;
-import com.salesforce.omakase.ast.RefinedDeclaration;
+import com.salesforce.omakase.ast.declaration.RefinedDeclaration;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class StandardDeclaration extends AbstractSyntax implements RefinedDeclaration {
-    private String property;
-    private String value;
+final class StandardDeclaration extends AbstractSyntax implements RefinedDeclaration {
+    private final String property;
+    private final String value;
 
     /**
      * TODO
@@ -22,13 +24,15 @@ public class StandardDeclaration extends AbstractSyntax implements RefinedDeclar
      *            TODO
      * @param column
      *            TODO
+     * @param comments
+     *            TODO
      * @param property
      *            TODO
      * @param value
      *            TODO
      */
-    public StandardDeclaration(int line, int column, String property, String value) {
-        super(line, column);
+    public StandardDeclaration(int line, int column, List<String> comments, String property, String value) {
+        super(line, column, comments);
         this.property = property;
         this.value = value;
     }
@@ -52,9 +56,9 @@ public class StandardDeclaration extends AbstractSyntax implements RefinedDeclar
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
+            .add("super", super.toString())
             .add("property", property)
             .add("value", value)
             .toString();
     }
-
 }
