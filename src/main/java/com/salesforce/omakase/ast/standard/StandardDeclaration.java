@@ -3,8 +3,6 @@
  */
 package com.salesforce.omakase.ast.standard;
 
-import java.util.List;
-
 import com.google.common.base.Objects;
 import com.salesforce.omakase.ast.declaration.RefinedDeclaration;
 
@@ -24,15 +22,13 @@ final class StandardDeclaration extends AbstractSyntax implements RefinedDeclara
      *            TODO
      * @param column
      *            TODO
-     * @param comments
-     *            TODO
      * @param property
      *            TODO
      * @param value
      *            TODO
      */
-    public StandardDeclaration(int line, int column, List<String> comments, String property, String value) {
-        super(line, column, comments);
+    public StandardDeclaration(int line, int column, String property, String value) {
+        super(line, column);
         this.property = property;
         this.value = value;
     }

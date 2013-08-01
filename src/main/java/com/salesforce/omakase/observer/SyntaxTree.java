@@ -29,7 +29,6 @@ public class SyntaxTree implements Observer {
 
     private List<Builder<? extends Statement>> statements;
     private RuleBuilder currentRuleBuilder;
-    private List<String> comments;
 
     private Stylesheet stylesheet;
 
@@ -67,15 +66,9 @@ public class SyntaxTree implements Observer {
     }
 
     @Override
-    public void comment(String comment) {
-        comments.add(comment);
-    }
-
-    @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
         RuleBuilder builder = factory.rule();
         builder.selectorGroup(selectorGroup);
-        associateComments(builder);
 
         statements.add(builder);
     }
@@ -84,18 +77,6 @@ public class SyntaxTree implements Observer {
     public void declaration(Declaration declaration) {
         checkState(currentRuleBuilder != null, "cannot handle a declaration without a current rule");
         currentRuleBuilder.declaration(declaration);
-    }
-
-    /**
-     * TODO Description
-     * 
-     * @param builder
-     */
-    private void associateComments(Builder<?> builder) {
-        for (String comment : comments) {
-            builder.comment(comment);
-        }
-        comments.clear();
     }
 
     @Override

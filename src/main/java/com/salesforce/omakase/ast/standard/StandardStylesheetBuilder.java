@@ -27,7 +27,7 @@ public class StandardStylesheetBuilder extends AbstractBuilder<Stylesheet> imple
     public Stylesheet build() {
         line = Math.max(line, 0);
         column = Math.max(line, 0);
-        return new StandardStylesheet(line, column, comments, statements);
+        return new StandardStylesheet(line, column, statements);
     }
 
     @Override

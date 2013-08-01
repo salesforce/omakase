@@ -15,14 +15,6 @@ public interface Observer {
     /**
      * TODO Description
      * 
-     * @param comment
-     *            TODO
-     */
-    void comment(String comment);
-
-    /**
-     * TODO Description
-     * 
      * @param selectorGroup
      *            TODO
      */

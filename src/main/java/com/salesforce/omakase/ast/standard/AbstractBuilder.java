@@ -3,9 +3,6 @@
  */
 package com.salesforce.omakase.ast.standard;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.builder.Builder;
 
@@ -19,8 +16,6 @@ abstract class AbstractBuilder<T extends Syntax> implements Builder<T> {
     protected int line = -1;
     /** TODO */
     protected int column = -1;
-    /** TODO */
-    protected List<String> comments;
 
     @Override
     public Builder<T> line(int line) {
@@ -35,11 +30,9 @@ abstract class AbstractBuilder<T extends Syntax> implements Builder<T> {
     }
 
     @Override
-    public Builder<T> comment(String comment) {
-        if (comments == null) {
-            comments = Lists.newArrayList();
-        }
-        comments.add(comment);
+    public Builder<T> position(int line, int column) {
+        this.line = line;
+        this.column = column;
         return this;
     }
 }

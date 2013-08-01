@@ -20,7 +20,7 @@ public class StandardSelectorGroupBuilder extends AbstractBuilder<SelectorGroup>
 
     @Override
     public SelectorGroup build() {
-        return new StandardSelectorGroup(line, column, comments, content);
+        return new StandardSelectorGroup(line, column, content);
     }
 
     @Override

@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.declaration.value;
+package com.salesforce.omakase.ast.declaration;
 
 /**
  * TODO Description

@@ -5,7 +5,7 @@ package com.salesforce.omakase;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.observer.Observer;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.StyleSheetParser;
@@ -16,35 +16,35 @@ import com.salesforce.omakase.parser.StyleSheetParser;
  * @author nmcwilliams
  */
 public final class Omakase {
-    private final List<Observer> adapters;
+    private final List<Observer> observers;
 
     /**
-     * @param adapters
+     * @param observers
      *            TODO
      */
-    public Omakase(Observer... adapters) {
-        this.adapters = Lists.newArrayList(adapters);
+    public Omakase(Observer... observers) {
+        this.observers = ImmutableList.copyOf(observers);
     }
 
     /**
      * TODO Description
      * 
-     * @param input
+     * @param source
      *            TODO
      */
-    public void parse(CharSequence input) {
-        Stream stream = new Stream(input);
-        new StyleSheetParser().parse(stream, adapters);
+    public void parse(CharSequence source) {
+        Stream stream = new Stream(source);
+        new StyleSheetParser().parse(stream, observers);
     }
 
     /**
      * TODO Description
      * 
-     * @param adapters
+     * @param observers
      *            TODO
      * @return TODO
      */
-    public static Omakase using(Observer... adapters) {
-        return new Omakase(adapters);
+    public static Omakase using(Observer... observers) {
+        return new Omakase(observers);
     }
 }

@@ -26,13 +26,11 @@ final class StandardSelectorGroup extends AbstractSyntax implements RefinedSelec
      *            TODO
      * @param column
      *            TODO
-     * @param comments
-     *            TODO
      * @param content
      *            TODO
      */
-    public StandardSelectorGroup(int line, int column, List<String> comments, String content) {
-        super(line, column, comments);
+    public StandardSelectorGroup(int line, int column, String content) {
+        super(line, column);
         this.content = content;
         this.selectors = ImmutableList.of();
     }

@@ -34,10 +34,13 @@ public interface Builder<T extends Syntax> {
     /**
      * TODO Description
      * 
-     * @param comment
+     * @param line
+     *            TODO
+     * @param column
+     *            TODO
      * @return TODO
      */
-    Builder<T> comment(String comment);
+    Builder<T> position(int line, int column);
 
     /**
      * TODO Description

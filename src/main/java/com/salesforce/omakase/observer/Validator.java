@@ -13,9 +13,6 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  */
 public class Validator implements Observer {
     @Override
-    public void comment(String comment) {}
-
-    @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
         selectorGroup.refine();
     }

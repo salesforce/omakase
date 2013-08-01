@@ -20,7 +20,7 @@ public class StandardSelectorBuilder extends AbstractBuilder<Selector> implement
 
     @Override
     public Selector build() {
-        return new StandardSelector(line, column, comments, content);
+        return new StandardSelector(line, column, content);
     }
 
     @Override

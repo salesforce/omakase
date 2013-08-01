@@ -27,13 +27,11 @@ final class StandardStylesheet extends AbstractSyntax implements Stylesheet {
      *            TODO
      * @param column
      *            TODO
-     * @param comments
-     *            TODO
      * @param statements
      *            TODO
      */
-    public StandardStylesheet(int line, int column, List<String> comments, List<Statement> statements) {
-        super(line, column, comments);
+    public StandardStylesheet(int line, int column, List<Statement> statements) {
+        super(line, column);
         this.statements = immutable(statements);
     }
 

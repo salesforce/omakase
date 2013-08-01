@@ -26,13 +26,11 @@ final class StandardSelector extends AbstractSyntax implements RefinedSelector {
      *            TODO
      * @param column
      *            TODO
-     * @param comments
-     *            TODO
      * @param content
      *            TODO
      */
-    public StandardSelector(int line, int column, List<String> comments, String content) {
-        super(line, column, comments);
+    public StandardSelector(int line, int column, String content) {
+        super(line, column);
         this.content = content;
         this.parts = ImmutableList.of();
     }

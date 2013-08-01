@@ -29,15 +29,13 @@ final class StandardRule extends AbstractSyntax implements Rule {
      *            TODO
      * @param column
      *            TODO
-     * @param comments
-     *            TODO
      * @param selectorGroup
      *            TODO
      * @param declarations
      *            TODO
      */
-    public StandardRule(int line, int column, List<String> comments, SelectorGroup selectorGroup, List<Declaration> declarations) {
-        super(line, column, comments);
+    public StandardRule(int line, int column, SelectorGroup selectorGroup, List<Declaration> declarations) {
+        super(line, column);
         this.selectorGroup = selectorGroup;
         this.declarations = immutable(declarations);
     }

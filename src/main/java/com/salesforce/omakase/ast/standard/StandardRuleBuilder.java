@@ -25,7 +25,7 @@ public class StandardRuleBuilder extends AbstractBuilder<Rule> implements RuleBu
 
     @Override
     public Rule build() {
-        return new StandardRule(line, column, comments, selectors, declarations);
+        return new StandardRule(line, column, selectors, declarations);
     }
 
     @Override

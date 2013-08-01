@@ -22,7 +22,7 @@ public class StandardDeclarationBuilder extends AbstractBuilder<Declaration> imp
 
     @Override
     public Declaration build() {
-        return new StandardDeclaration(line, column, comments, property, value);
+        return new StandardDeclaration(line, column, property, value);
     }
 
     @Override

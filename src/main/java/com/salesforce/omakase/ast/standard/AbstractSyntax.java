@@ -3,12 +3,9 @@
  */
 package com.salesforce.omakase.ast.standard;
 
-import static com.salesforce.omakase.Util.immutable;
-
 import java.util.List;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
@@ -19,7 +16,6 @@ import com.salesforce.omakase.ast.Syntax;
 abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
-    private final ImmutableList<String> comments;
 
     /**
      * TODO
@@ -28,13 +24,10 @@ abstract class AbstractSyntax implements Syntax {
      *            TODO
      * @param column
      *            TODO
-     * @param comments
-     *            TODO
      */
-    public AbstractSyntax(int line, int column, List<String> comments) {
+    public AbstractSyntax(int line, int column) {
         this.line = line;
         this.column = column;
-        this.comments = immutable(comments);
     }
 
     @Override
@@ -49,7 +42,8 @@ abstract class AbstractSyntax implements Syntax {
 
     @Override
     public List<String> comments() {
-        return comments;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -64,7 +58,6 @@ abstract class AbstractSyntax implements Syntax {
             .add("super", super.toString())
             .add("line", line)
             .add("column", column)
-            .add("comments", comments)
             .toString();
     }
 }

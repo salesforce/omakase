@@ -13,17 +13,15 @@ import com.salesforce.omakase.parser.Stream;
  */
 public enum Errors {
     /** didn't match the expected character */
-    expected(Context.parsing, "Expected to find '%s'"),
+    expected("Expected to find '%s'"),
     /** extra input at the end of the source that doesn't match a rule or at-rule */
-    extraneous(Context.parsing, "Extraneous text found at the end of the source '%s'")
+    extraneous("Extraneous text found at the end of the source '%s'")
 
     ;
 
-    private final Context context;
     private final String template;
 
-    Errors(Context context, String template) {
-        this.context = context;
+    Errors(String template) {
         this.template = template;
     }
 
@@ -36,11 +34,6 @@ public enum Errors {
      *            TODO
      */
     public void send(Stream stream, Object... args) {
-        switch (context) {
-        case parsing:
-            throw new ParserException(stream, String.format(template, args));
-        case validation:
-            break;
-        }
+        throw new ParserException(stream, String.format(template, args));
     }
 }

@@ -18,11 +18,6 @@ public class EchoLogger implements Observer {
     private static final Logger logger = LoggerFactory.getLogger(EchoLogger.class);
 
     @Override
-    public void comment(String comment) {
-        logger.info("comment: {}", comment);
-    }
-
-    @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
         logger.info("selectors: {}", selectorGroup);
     }
