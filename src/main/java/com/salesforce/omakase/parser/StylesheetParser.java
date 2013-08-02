@@ -4,21 +4,21 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Errors;
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class StyleSheetParser extends AbstractParser {
-    private static final Parser child = new AtRuleParser().or(new RuleParser());
+public class StylesheetParser extends AbstractParser {
+    private static final Parser statement = new AtRuleParser().or(new RuleParser());
 
     @Override
-    public boolean parse(Stream stream, Iterable<Observer> observers) {
+    public boolean parse(Stream stream, Iterable<Consumer> workers) {
         // continually parse until there is nothing left in the stream
         while (!stream.eof()) {
-            boolean matched = child.parse(stream, observers);
+            boolean matched = statement.parse(stream, workers);
             if (!matched && !stream.eof()) Errors.extraneous.send(stream, stream.remaining());
         }
 

@@ -1,14 +1,14 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector.part;
+package com.salesforce.omakase.ast.selector;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public interface IdSelector {
+public interface ClassSelector extends SelectorPart {
     /**
      * TODO Description
      * 

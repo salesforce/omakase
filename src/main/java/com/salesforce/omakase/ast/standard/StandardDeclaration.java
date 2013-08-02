@@ -52,7 +52,8 @@ final class StandardDeclaration extends AbstractSyntax implements RefinedDeclara
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-            .add("super", super.toString())
+            .add("line", line())
+            .add("column", column())
             .add("property", property)
             .add("value", value)
             .toString();

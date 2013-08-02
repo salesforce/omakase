@@ -1,7 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.observer;
+package com.salesforce.omakase.consumer;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
@@ -11,7 +11,7 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  * 
  * @author nmcwilliams
  */
-public class Mapper implements Observer {
+public class Mapper implements Consumer {
     @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
         // TODO Auto-generated method stub

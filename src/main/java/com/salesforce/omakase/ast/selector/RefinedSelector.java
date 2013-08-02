@@ -5,7 +5,6 @@ package com.salesforce.omakase.ast.selector;
 
 import java.util.List;
 
-import com.salesforce.omakase.ast.selector.part.SelectorPart;
 
 /**
  * TODO Description

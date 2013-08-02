@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector.part;
+package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.ast.Syntax;
 

@@ -34,17 +34,6 @@ public interface Builder<T extends Syntax> {
     /**
      * TODO Description
      * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
-     * @return TODO
-     */
-    Builder<T> position(int line, int column);
-
-    /**
-     * TODO Description
-     * 
      * @return TODO
      */
     T build();

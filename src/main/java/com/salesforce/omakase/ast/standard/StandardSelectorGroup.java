@@ -46,14 +46,16 @@ final class StandardSelectorGroup extends AbstractSyntax implements RefinedSelec
 
     @Override
     public List<Selector> selectors() {
-        return ImmutableList.copyOf(selectors);
+        return selectors;
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
+            .add("line", line())
+            .add("column", column())
+            .add("content", content.replaceAll("\n", "↳"))
             .add("selectors", selectors)
-            .add("raw", content)
             .toString();
     }
 }

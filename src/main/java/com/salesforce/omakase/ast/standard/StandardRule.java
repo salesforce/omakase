@@ -52,10 +52,19 @@ final class StandardRule extends AbstractSyntax implements Rule {
 
     @Override
     public String toString() {
+        StringBuilder sBuilder = new StringBuilder(32);
+        sBuilder.append("\n  ").append(selectorGroup);
+
+        StringBuilder dBuilder = new StringBuilder(128);
+        for (Declaration declaration : declarations) {
+            dBuilder.append("\n  ").append(declaration);
+        }
+
         return Objects.toStringHelper(this)
-            .add("super", super.toString())
-            .add("selectorGroup", selectorGroup)
-            .add("declarations", declarations)
+            .add("line", line())
+            .add("column", column())
+            .addValue(sBuilder.toString())
+            .addValue(dBuilder.toString())
             .toString();
     }
 }

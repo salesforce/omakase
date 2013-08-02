@@ -5,7 +5,6 @@ package com.salesforce.omakase.ast.standard;
 
 import java.util.List;
 
-import com.google.common.base.Objects;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
@@ -50,14 +49,5 @@ abstract class AbstractSyntax implements Syntax {
     public List<String> ownComments() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-            .add("super", super.toString())
-            .add("line", line)
-            .add("column", column)
-            .toString();
     }
 }

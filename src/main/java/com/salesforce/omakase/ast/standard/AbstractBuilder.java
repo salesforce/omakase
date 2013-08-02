@@ -28,11 +28,4 @@ abstract class AbstractBuilder<T extends Syntax> implements Builder<T> {
         this.column = column;
         return this;
     }
-
-    @Override
-    public Builder<T> position(int line, int column) {
-        this.line = line;
-        this.column = column;
-        return this;
-    }
 }

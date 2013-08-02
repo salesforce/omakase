@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.RefinedSelector;
-import com.salesforce.omakase.ast.selector.part.SelectorPart;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 
 /**
  * TODO Description
@@ -63,7 +63,8 @@ final class StandardSelector extends AbstractSyntax implements RefinedSelector {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-            .add("super", super.toString())
+            .add("line", line())
+            .add("column", column())
             .add("content", content)
             .add("parts", parts)
             .toString();

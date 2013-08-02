@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 
 /**
  * TODO Description
@@ -16,9 +16,9 @@ public interface Parser {
      * 
      * @param stream
      *            TODO
-     * @param observers
+     * @param workers
      *            TODO
      * @return TODO
      */
-    boolean parse(Stream stream, Iterable<Observer> observers);
+    boolean parse(Stream stream, Iterable<Consumer> workers);
 }

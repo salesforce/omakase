@@ -6,7 +6,7 @@ package com.salesforce.omakase.parser;
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 import com.salesforce.omakase.parser.token.Token;
 
 /**
@@ -22,7 +22,7 @@ public class DeclarationParser extends AbstractParser {
     private static final Token DECLARATION_END = SEMICOLON.or(CLOSE_BRACKET);
 
     @Override
-    public boolean parse(Stream stream, Iterable<Observer> observers) {
+    public boolean parse(Stream stream, Iterable<Consumer> workers) {
         stream.skipWhitepace();
 
         if (!PROPERTY.matches(stream.current())) return false;
@@ -43,7 +43,7 @@ public class DeclarationParser extends AbstractParser {
             .column(column)
             .build();
 
-        announce(declaration, observers);
+        notify(workers, declaration);
 
         return true;
     }

@@ -5,9 +5,9 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.observer.EchoLogger;
-import com.salesforce.omakase.observer.SyntaxTree;
-import com.salesforce.omakase.observer.Validator;
+import com.salesforce.omakase.consumer.EchoLogger;
+import com.salesforce.omakase.consumer.SyntaxTree;
+import com.salesforce.omakase.consumer.Validator;
 
 /**
  * TODO Description
@@ -22,7 +22,7 @@ public class Debug {
         SyntaxTree tree = new SyntaxTree();
         Validator validator = new Validator();
         Omakase.using(el, tree, validator).parse(src2);
-        tree.toString();
+        System.out.println("\n\n" + tree);
     }
 
     public static final String src1 = ".testing #is > fun { color: red; margin: 10px 5px; }";

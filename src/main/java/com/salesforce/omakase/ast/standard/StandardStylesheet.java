@@ -42,9 +42,14 @@ final class StandardStylesheet extends AbstractSyntax implements Stylesheet {
 
     @Override
     public String toString() {
+        StringBuilder builder = new StringBuilder(256);
+
+        for (Statement statement : statements) {
+            builder.append("\n\n").append(statement);
+        }
+
         return Objects.toStringHelper(this)
-            .add("super", super.toString())
-            .add("statements", statements)
+            .add("statements", builder.toString())
             .toString();
     }
 }

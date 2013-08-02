@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 
 /**
  * TODO Description
@@ -28,8 +28,8 @@ public class CombinationParser extends AbstractParser {
     }
 
     @Override
-    public boolean parse(Stream stream, Iterable<Observer> observers) {
-        boolean matched = first.parse(stream, observers);
-        return matched ? true : second.parse(stream, observers);
+    public boolean parse(Stream stream, Iterable<Consumer> workers) {
+        boolean matched = first.parse(stream, workers);
+        return matched ? true : second.parse(stream, workers);
     }
 }

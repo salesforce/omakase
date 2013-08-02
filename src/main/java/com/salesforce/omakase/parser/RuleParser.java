@@ -3,11 +3,9 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.salesforce.omakase.parser.token.Tokens.CLOSE_BRACKET;
-import static com.salesforce.omakase.parser.token.Tokens.OPEN_BRACKET;
-import static com.salesforce.omakase.parser.token.Tokens.SEMICOLON;
+import static com.salesforce.omakase.parser.token.Tokens.*;
 
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 
 /**
  * TODO Description
@@ -19,12 +17,12 @@ public class RuleParser extends AbstractParser {
     private static final DeclarationParser declaration = new DeclarationParser();
 
     @Override
-    public boolean parse(Stream stream, Iterable<Observer> observers) {
+    public boolean parse(Stream stream, Iterable<Consumer> workers) {
         boolean matched;
 
         // selector
         stream.skipWhitepace();
-        matched = selector.parse(stream, observers);
+        matched = selector.parse(stream, workers);
 
         // if there wasn't a selector then we aren't at a rule
         if (!matched) return false;
@@ -36,7 +34,7 @@ public class RuleParser extends AbstractParser {
 
         do {
             stream.skipWhitepace();
-            declaration.parse(stream, observers);
+            declaration.parse(stream, workers);
             stream.skipWhitepace();
         } while (stream.optional(SEMICOLON));
 

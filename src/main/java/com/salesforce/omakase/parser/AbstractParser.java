@@ -7,7 +7,7 @@ import com.salesforce.omakase.ast.builder.SyntaxFactory;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 
 /**
  * TODO Description
@@ -57,28 +57,28 @@ public abstract class AbstractParser implements Parser {
     /**
      * TODO Description
      * 
+     * @param workers
+     *            TODO
      * @param declaration
      *            TODO
-     * @param observers
-     *            TODO
      */
-    protected void announce(Declaration declaration, Iterable<Observer> observers) {
-        for (Observer observer : observers) {
-            observer.declaration(declaration);
+    protected void notify(Iterable<Consumer> workers, Declaration declaration) {
+        for (Consumer worker : workers) {
+            worker.declaration(declaration);
         }
     }
 
     /**
      * TODO Description
      * 
+     * @param workers
+     *            TODO
      * @param selectorGroup
      *            TODO
-     * @param observers
-     *            TODO
      */
-    protected void announce(SelectorGroup selectorGroup, Iterable<Observer> observers) {
-        for (Observer observer : observers) {
-            observer.selectorGroup(selectorGroup);
+    protected void notify(Iterable<Consumer> workers, SelectorGroup selectorGroup) {
+        for (Consumer worker : workers) {
+            worker.selectorGroup(selectorGroup);
         }
     }
 }

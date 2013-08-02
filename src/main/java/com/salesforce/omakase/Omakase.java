@@ -6,9 +6,9 @@ package com.salesforce.omakase;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.observer.Observer;
+import com.salesforce.omakase.consumer.Consumer;
 import com.salesforce.omakase.parser.Stream;
-import com.salesforce.omakase.parser.StyleSheetParser;
+import com.salesforce.omakase.parser.StylesheetParser;
 
 /**
  * TODO Description
@@ -16,14 +16,14 @@ import com.salesforce.omakase.parser.StyleSheetParser;
  * @author nmcwilliams
  */
 public final class Omakase {
-    private final List<Observer> observers;
+    private final List<Consumer> observers;
 
     /**
-     * @param observers
+     * @param workers
      *            TODO
      */
-    public Omakase(Observer... observers) {
-        this.observers = ImmutableList.copyOf(observers);
+    public Omakase(Consumer... workers) {
+        this.observers = ImmutableList.copyOf(workers);
     }
 
     /**
@@ -34,7 +34,7 @@ public final class Omakase {
      */
     public void parse(CharSequence source) {
         Stream stream = new Stream(source);
-        new StyleSheetParser().parse(stream, observers);
+        new StylesheetParser().parse(stream, observers);
     }
 
     /**
@@ -44,7 +44,7 @@ public final class Omakase {
      *            TODO
      * @return TODO
      */
-    public static Omakase using(Observer... observers) {
+    public static Omakase using(Consumer... observers) {
         return new Omakase(observers);
     }
 }

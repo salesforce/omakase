@@ -1,7 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.observer;
+package com.salesforce.omakase.consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.builder.*;
@@ -24,12 +25,11 @@ import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
  * @author nmcwilliams
  */
 @NotThreadSafe
-public class SyntaxTree implements Observer {
+public class SyntaxTree implements Consumer {
     private final SyntaxFactory factory;
+    private final List<Builder<? extends Statement>> statements;
 
-    private List<Builder<? extends Statement>> statements;
     private RuleBuilder currentRuleBuilder;
-
     private Stylesheet stylesheet;
 
     /**
@@ -47,6 +47,7 @@ public class SyntaxTree implements Observer {
      */
     public SyntaxTree(SyntaxFactory factory) {
         this.factory = checkNotNull(factory, "factory cannot be null");
+        this.statements = Lists.newArrayList();
     }
 
     /**
@@ -67,10 +68,11 @@ public class SyntaxTree implements Observer {
 
     @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
-        RuleBuilder builder = factory.rule();
-        builder.selectorGroup(selectorGroup);
-
-        statements.add(builder);
+        currentRuleBuilder = factory.rule();
+        currentRuleBuilder.selectorGroup(selectorGroup);
+        currentRuleBuilder.line(selectorGroup.line());
+        currentRuleBuilder.column(selectorGroup.column());
+        statements.add(currentRuleBuilder);
     }
 
     @Override
@@ -82,8 +84,7 @@ public class SyntaxTree implements Observer {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-            .add("super", super.toString())
-            .add("stylesheet", stylesheet)
+            .add("stylesheet", stylesheet())
             .toString();
     }
 
