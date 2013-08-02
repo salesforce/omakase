@@ -6,35 +6,35 @@ package com.salesforce.omakase.ast.builder;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TODO Description
+ * Used to construct various {@link Syntax} unit objects.
  * 
  * @author nmcwilliams
  * @param <T>
- *            TODO
+ *            The Type of {@link Syntax} object to build.
  */
 public interface Builder<T extends Syntax> {
     /**
-     * TODO Description
+     * Specifies the line number where the {@link Syntax} unit was found.
      * 
      * @param line
-     *            TODO
-     * @return TODO
+     *            The line number.
+     * @return this, for chaining.
      */
     Builder<T> line(int line);
 
     /**
-     * TODO Description
+     * Specifies the column number where the {@link Syntax} unit was found.
      * 
      * @param column
-     *            TODO
-     * @return TODO
+     *            The column number.
+     * @return this, for chaining.
      */
     Builder<T> column(int column);
 
     /**
-     * TODO Description
+     * Creates a new instance of the {@link Syntax} object with the information currently given to this {@link Builder}.
      * 
-     * @return TODO
+     * @return The object instance.
      */
     T build();
 }

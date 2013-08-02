@@ -9,9 +9,12 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.RefinedSelectorGroup;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * Standard implementation of a {@link SelectorGroup}.
+ * 
+ * <p> Not intended for subclassing or direct reference by clients.
  * 
  * @author nmcwilliams
  */
@@ -19,17 +22,7 @@ final class StandardSelectorGroup extends AbstractSyntax implements RefinedSelec
     private final String content;
     private ImmutableList<Selector> selectors;
 
-    /**
-     * TODO
-     * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
-     * @param content
-     *            TODO
-     */
-    public StandardSelectorGroup(int line, int column, String content) {
+    StandardSelectorGroup(int line, int column, String content) {
         super(line, column);
         this.content = content;
         this.selectors = ImmutableList.of();

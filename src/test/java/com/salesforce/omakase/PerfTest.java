@@ -13,7 +13,7 @@ import com.phloc.css.ECSSVersion;
 import com.phloc.css.reader.CSSReader;
 
 /**
- * TODO Description
+ * Performance testing of this parser with others.
  * 
  * @author nmcwilliams
  */

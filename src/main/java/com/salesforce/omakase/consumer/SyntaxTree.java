@@ -26,10 +26,10 @@ import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
  */
 @NotThreadSafe
 public class SyntaxTree implements Consumer {
-    private final SyntaxFactory factory;
     private final List<Builder<? extends Statement>> statements;
+    private final SyntaxFactory factory;
 
-    private RuleBuilder currentRuleBuilder;
+    private RuleBuilder currentRule;
     private Stylesheet stylesheet;
 
     /**
@@ -46,8 +46,8 @@ public class SyntaxTree implements Consumer {
      *            TODO
      */
     public SyntaxTree(SyntaxFactory factory) {
-        this.factory = checkNotNull(factory, "factory cannot be null");
         this.statements = Lists.newArrayList();
+        this.factory = checkNotNull(factory, "factory cannot be null");
     }
 
     /**
@@ -68,17 +68,24 @@ public class SyntaxTree implements Consumer {
 
     @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
-        currentRuleBuilder = factory.rule();
-        currentRuleBuilder.selectorGroup(selectorGroup);
-        currentRuleBuilder.line(selectorGroup.line());
-        currentRuleBuilder.column(selectorGroup.column());
-        statements.add(currentRuleBuilder);
+        // create a new rule
+        currentRule = factory.rule();
+
+        // at the selector group to the rule
+        currentRule.selectorGroup(selectorGroup);
+
+        // the rule's position is the same as the selector group
+        currentRule.line(selectorGroup.line());
+        currentRule.column(selectorGroup.column());
+
+        // add the rule to the list of statements
+        statements.add(currentRule);
     }
 
     @Override
     public void declaration(Declaration declaration) {
-        checkState(currentRuleBuilder != null, "cannot handle a declaration without a current rule");
-        currentRuleBuilder.declaration(declaration);
+        checkState(currentRule != null, "new declaration without a current rule");
+        currentRule.declaration(declaration);
     }
 
     @Override
@@ -87,5 +94,4 @@ public class SyntaxTree implements Consumer {
             .add("stylesheet", stylesheet())
             .toString();
     }
-
 }

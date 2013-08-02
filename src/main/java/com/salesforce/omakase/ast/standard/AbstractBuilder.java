@@ -7,14 +7,17 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.builder.Builder;
 
 /**
- * TODO Description
+ * Base class for {@link Builder}s.
+ * 
+ * @param <T>
+ *            The Type of {@link Syntax} object to build.
  * 
  * @author nmcwilliams
  */
-abstract class AbstractBuilder<T extends Syntax> implements Builder<T> {
-    /** TODO */
+public abstract class AbstractBuilder<T extends Syntax> implements Builder<T> {
+    /** line number */
     protected int line = -1;
-    /** TODO */
+    /** column number */
     protected int column = -1;
 
     @Override

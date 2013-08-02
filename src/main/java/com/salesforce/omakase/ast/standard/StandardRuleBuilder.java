@@ -7,12 +7,14 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.builder.Builder;
 import com.salesforce.omakase.ast.builder.RuleBuilder;
+import com.salesforce.omakase.ast.builder.SyntaxFactory;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link Rule} instances.
  * 
  * @author nmcwilliams
  */
@@ -20,7 +22,7 @@ public class StandardRuleBuilder extends AbstractBuilder<Rule> implements RuleBu
     private SelectorGroup selectors;
     private List<Declaration> declarations = Lists.newArrayList();
 
-    /** TODO */
+    /** use a {@link SyntaxFactory} instead. */
     protected StandardRuleBuilder() {}
 
     @Override

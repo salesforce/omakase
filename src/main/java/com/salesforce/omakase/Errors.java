@@ -7,7 +7,7 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TODO Description
+ * Error messages.
  * 
  * @author nmcwilliams
  */
@@ -26,12 +26,12 @@ public enum Errors {
     }
 
     /**
-     * TODO Description
+     * Creates and throws an exception for this error message.
      * 
      * @param stream
-     *            TODO
+     *            The stream containing the source of the error.
      * @param args
-     *            TODO
+     *            Any arguments to String.format, as applicable to the particular error message.
      */
     public void send(Stream stream, Object... args) {
         throw new ParserException(stream, String.format(template, args));

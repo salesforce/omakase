@@ -10,7 +10,7 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * Simply logs the occurrence of each event.
  * 
  * @author nmcwilliams
  */
@@ -19,12 +19,11 @@ public class EchoLogger implements Consumer {
 
     @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
-        logger.info("selectors: {}", selectorGroup);
+        logger.info("selectorGroup: {}", selectorGroup);
     }
 
     @Override
     public void declaration(Declaration declaration) {
         logger.info("declaration: {}", declaration);
     }
-
 }

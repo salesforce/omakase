@@ -3,8 +3,12 @@
  */
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.Errors;
+
 /**
- * TODO Description
+ * An error encountered while parsing.
+ * 
+ * @see Errors
  * 
  * @author nmcwilliams
  */
@@ -12,12 +16,12 @@ public class ParserException extends RuntimeException {
     private static final long serialVersionUID = -8952238331167900360L;
 
     /**
-     * TODO
+     * Construct a new instance of a {@link ParserException}.
      * 
      * @param stream
-     *            TODO
+     *            The stream containing the source of the error.
      * @param msg
-     *            TODO
+     *            The error message.
      */
     public ParserException(Stream stream, String msg) {
         super(msg + indicator(stream.line(), stream.column(), stream.source()));

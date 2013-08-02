@@ -13,24 +13,16 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 
 /**
- * TODO Description
+ * Standard implementation of a {@link Stylesheet}
+ * 
+ * <p> Not intended for subclassing or direct reference by clients.
  * 
  * @author nmcwilliams
  */
 final class StandardStylesheet extends AbstractSyntax implements Stylesheet {
     private final ImmutableList<Statement> statements;
 
-    /**
-     * TODO
-     * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
-     * @param statements
-     *            TODO
-     */
-    public StandardStylesheet(int line, int column, List<Statement> statements) {
+    StandardStylesheet(int line, int column, List<Statement> statements) {
         super(line, column);
         this.statements = immutable(statements);
     }

@@ -4,10 +4,13 @@
 package com.salesforce.omakase.ast.standard;
 
 import com.google.common.base.Objects;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.RefinedDeclaration;
 
 /**
- * TODO Description
+ * Standard implementation of a {@link Declaration}.
+ * 
+ * <p> Not intended for subclassing or direct reference by clients.
  * 
  * @author nmcwilliams
  */
@@ -15,19 +18,7 @@ final class StandardDeclaration extends AbstractSyntax implements RefinedDeclara
     private final String property;
     private final String value;
 
-    /**
-     * TODO
-     * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
-     * @param property
-     *            TODO
-     * @param value
-     *            TODO
-     */
-    public StandardDeclaration(int line, int column, String property, String value) {
+    StandardDeclaration(int line, int column, String property, String value) {
         super(line, column);
         this.property = property;
         this.value = value;

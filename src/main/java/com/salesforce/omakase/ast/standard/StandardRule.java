@@ -14,7 +14,9 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * Standard implementation of a {@link Rule}.
+ * 
+ * <p> Not intended for subclassing or direct reference by clients.
  * 
  * @author nmcwilliams
  */
@@ -22,19 +24,7 @@ final class StandardRule extends AbstractSyntax implements Rule {
     private final SelectorGroup selectorGroup;
     private final ImmutableList<Declaration> declarations;
 
-    /**
-     * TODO
-     * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
-     * @param selectorGroup
-     *            TODO
-     * @param declarations
-     *            TODO
-     */
-    public StandardRule(int line, int column, SelectorGroup selectorGroup, List<Declaration> declarations) {
+    StandardRule(int line, int column, SelectorGroup selectorGroup, List<Declaration> declarations) {
         super(line, column);
         this.selectorGroup = selectorGroup;
         this.declarations = immutable(declarations);

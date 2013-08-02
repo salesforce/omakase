@@ -6,17 +6,20 @@ package com.salesforce.omakase.ast.builder;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link SelectorGroup} instances.
  * 
  * @author nmcwilliams
  */
 public interface SelectorGroupBuilder extends Builder<SelectorGroup> {
     /**
-     * TODO Description
+     * Specifies the content of the entire selector group. A selector group contains multiple selectors, with each
+     * selector separated by commas.
+     * 
+     * <p> The content can also contain CSS comments.
      * 
      * @param content
-     *            TODO
-     * @return TODO
+     *            The content of the selector group.
+     * @return this, for chaining.
      */
     SelectorGroupBuilder content(String content);
 }

@@ -3,44 +3,51 @@
  */
 package com.salesforce.omakase.ast.builder;
 
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
+
 /**
- * TODO Description
+ * A factory used to obtain {@link Builder}s for constructing {@link Syntax} object instances.
  * 
  * @author nmcwilliams
  */
 public interface SyntaxFactory {
     /**
-     * TODO Description
+     * Gets a {@link Builder} for constructing a new {@link Stylesheet}.
      * 
-     * @return TODO
+     * @return this, for chaining.
      */
     StylesheetBuilder stylesheet();
 
     /**
-     * TODO Description
+     * Gets a {@link Builder} for constructing a new {@link Rule}.
      * 
-     * @return TODO
+     * @return this, for chaining.
      */
     RuleBuilder rule();
 
     /**
-     * TODO Description
+     * Gets a {@link Builder} for constructing a new {@link SelectorGroup}.
      * 
-     * @return TODO
+     * @return this, for chaining.
      */
     SelectorGroupBuilder selectorGroup();
 
     /**
-     * TODO Description
+     * Gets a {@link Builder} for constructing a new {@link Selector}.
      * 
-     * @return TODO
+     * @return this, for chaining.
      */
     SelectorBuilder selector();
 
     /**
-     * TODO Description
+     * Gets a {@link Builder} for constructing a new {@link Declaration}.
      * 
-     * @return TODO
+     * @return this, for chaining.
      */
     DeclarationBuilder declaration();
 }

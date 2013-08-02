@@ -8,23 +8,23 @@ import java.util.List;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TODO Description
+ * Base class for {@link Syntax} units.
  * 
  * @author nmcwilliams
  */
-abstract class AbstractSyntax implements Syntax {
+public abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
 
     /**
-     * TODO
+     * Creates a new instance with the given line and column numbers.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      */
-    public AbstractSyntax(int line, int column) {
+    protected AbstractSyntax(int line, int column) {
         this.line = line;
         this.column = column;
     }

@@ -19,11 +19,11 @@ public final class Omakase {
     private final List<Consumer> observers;
 
     /**
-     * @param workers
+     * @param consumers
      *            TODO
      */
-    public Omakase(Consumer... workers) {
-        this.observers = ImmutableList.copyOf(workers);
+    public Omakase(Consumer... consumers) {
+        this.observers = ImmutableList.copyOf(consumers);
     }
 
     /**
@@ -40,11 +40,11 @@ public final class Omakase {
     /**
      * TODO Description
      * 
-     * @param observers
+     * @param consumers
      *            TODO
      * @return TODO
      */
-    public static Omakase using(Consumer... observers) {
-        return new Omakase(observers);
+    public static Omakase using(Consumer... consumers) {
+        return new Omakase(consumers);
     }
 }

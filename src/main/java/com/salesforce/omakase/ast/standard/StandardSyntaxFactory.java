@@ -3,26 +3,27 @@
  */
 package com.salesforce.omakase.ast.standard;
 
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.builder.*;
 
 /**
- * TODO Description
+ * A {@link SyntaxFactory} factory for creating standard {@link Syntax} objects.
  * 
  * @author nmcwilliams
  */
 public class StandardSyntaxFactory implements SyntaxFactory {
-    private final static StandardSyntaxFactory instance = new StandardSyntaxFactory();
+    private static final StandardSyntaxFactory instance = new StandardSyntaxFactory();
 
     /**
-     * TODO Description
+     * Gets the cached factory instance.
      * 
-     * @return TODO
+     * @return The cache instance.
      */
     public static SyntaxFactory instance() {
         return instance;
     }
 
-    /** TODO */
+    /** Only here to allow for subclassing. Clients should use {@link #instance()} instead. */
     protected StandardSyntaxFactory() {}
 
     @Override

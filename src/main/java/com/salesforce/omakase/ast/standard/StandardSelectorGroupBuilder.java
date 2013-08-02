@@ -3,19 +3,21 @@
  */
 package com.salesforce.omakase.ast.standard;
 
+import com.salesforce.omakase.ast.builder.Builder;
 import com.salesforce.omakase.ast.builder.SelectorGroupBuilder;
+import com.salesforce.omakase.ast.builder.SyntaxFactory;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link SelectorGroup} instances.
  * 
  * @author nmcwilliams
  */
 public class StandardSelectorGroupBuilder extends AbstractBuilder<SelectorGroup> implements SelectorGroupBuilder {
-    /** TODO */
+    /** the selector group content. */
     protected String content;
 
-    /** TODO */
+    /** use a {@link SyntaxFactory} instead. */
     protected StandardSelectorGroupBuilder() {}
 
     @Override

@@ -4,7 +4,7 @@
 package com.salesforce.omakase.ast;
 
 /**
- * TODO Description
+ * A top-level {@link Syntax} unit, for example a {@link Rule} or AtRule.
  * 
  * @author nmcwilliams
  */

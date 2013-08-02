@@ -6,26 +6,26 @@ package com.salesforce.omakase.ast.builder;
 import com.salesforce.omakase.ast.declaration.Declaration;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link Declaration} instances.
  * 
  * @author nmcwilliams
  */
 public interface DeclarationBuilder extends Builder<Declaration> {
     /**
-     * TODO Description
+     * Specifies the property name of the declaration.
      * 
      * @param property
-     *            TODO
-     * @return TODO
+     *            The property name. This can include any associated CSS comments.
+     * @return this, for chaining.
      */
     DeclarationBuilder property(String property);
 
     /**
-     * TODO Description
+     * Specifies the property value of the declaration.
      * 
      * @param value
-     *            TODO
-     * @return TODO
+     *            The property value. This can include any associated CSS comments.
+     * @return this, for chaining.
      */
     DeclarationBuilder value(String value);
 }

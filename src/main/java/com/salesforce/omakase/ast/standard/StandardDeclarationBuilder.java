@@ -3,21 +3,23 @@
  */
 package com.salesforce.omakase.ast.standard;
 
+import com.salesforce.omakase.ast.builder.Builder;
 import com.salesforce.omakase.ast.builder.DeclarationBuilder;
+import com.salesforce.omakase.ast.builder.SyntaxFactory;
 import com.salesforce.omakase.ast.declaration.Declaration;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link Declaration} instances.
  * 
  * @author nmcwilliams
  */
 public class StandardDeclarationBuilder extends AbstractBuilder<Declaration> implements DeclarationBuilder {
-    /** TODO */
+    /** property name */
     protected String property;
-    /** TODO */
+    /** property value */
     protected String value;
 
-    /** TODO */
+    /** use a {@link SyntaxFactory} instead. */
     protected StandardDeclarationBuilder() {}
 
     @Override
@@ -36,5 +38,4 @@ public class StandardDeclarationBuilder extends AbstractBuilder<Declaration> imp
         this.value = value;
         return this;
     }
-
 }

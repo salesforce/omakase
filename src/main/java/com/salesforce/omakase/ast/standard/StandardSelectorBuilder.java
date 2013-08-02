@@ -3,19 +3,21 @@
  */
 package com.salesforce.omakase.ast.standard;
 
+import com.salesforce.omakase.ast.builder.Builder;
 import com.salesforce.omakase.ast.builder.SelectorBuilder;
+import com.salesforce.omakase.ast.builder.SyntaxFactory;
 import com.salesforce.omakase.ast.selector.Selector;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link Selector} instances.
  * 
  * @author nmcwilliams
  */
 public class StandardSelectorBuilder extends AbstractBuilder<Selector> implements SelectorBuilder {
-    /** TODO */
+    /** the selector content. */
     protected String content;
 
-    /** TODO */
+    /** use a {@link SyntaxFactory} instead. */
     protected StandardSelectorBuilder() {}
 
     @Override

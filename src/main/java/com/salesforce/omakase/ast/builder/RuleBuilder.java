@@ -5,29 +5,30 @@ package com.salesforce.omakase.ast.builder;
 
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link Rule} instances.
  * 
  * @author nmcwilliams
  */
 public interface RuleBuilder extends Builder<Rule> {
     /**
-     * TODO Description
+     * Specifies the {@link SelectorGroup} containing the {@link Selector}s of the rule.
      * 
      * @param selectorGroup
-     *            TODO
-     * @return TODO
+     *            The {@link SelectorGroup}.
+     * @return this, for chaining.
      */
     RuleBuilder selectorGroup(SelectorGroup selectorGroup);
 
     /**
-     * TODO Description
+     * Adds a declaration to the list.
      * 
      * @param declaration
-     *            TODO
-     * @return TODO
+     *            The declaration to add.
+     * @return this, for chaining.
      */
     RuleBuilder declaration(Declaration declaration);
 }

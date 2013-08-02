@@ -5,15 +5,18 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.consumer.Consumer;
 import com.salesforce.omakase.parser.token.Token;
 
 /**
- * TODO Description
+ * Parses a {@link Declaration}.
  * 
  * @author nmcwilliams
  */
+@Immutable
 public class DeclarationParser extends AbstractParser {
     /** expected characters in a property */
     private static final Token PROPERTY = ALPHA.or(HYPHEN);
@@ -22,7 +25,7 @@ public class DeclarationParser extends AbstractParser {
     private static final Token DECLARATION_END = SEMICOLON.or(CLOSE_BRACKET);
 
     @Override
-    public boolean parse(Stream stream, Iterable<Consumer> workers) {
+    public boolean parse(Stream stream, Iterable<Consumer> consumers) {
         stream.skipWhitepace();
 
         if (!PROPERTY.matches(stream.current())) return false;
@@ -43,7 +46,7 @@ public class DeclarationParser extends AbstractParser {
             .column(column)
             .build();
 
-        notify(workers, declaration);
+        notify(consumers, declaration);
 
         return true;
     }

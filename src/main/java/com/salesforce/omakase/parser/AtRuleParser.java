@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.parser;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.salesforce.omakase.consumer.Consumer;
 import com.salesforce.omakase.parser.token.Tokens;
 
@@ -11,9 +13,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  * 
  * @author nmcwilliams
  */
+@Immutable
 public class AtRuleParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Iterable<Consumer> workers) {
+    public boolean parse(Stream stream, Iterable<Consumer> consumers) {
         stream.skipWhitepace();
 
         // must begin with '@'

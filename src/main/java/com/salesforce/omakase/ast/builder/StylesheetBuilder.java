@@ -3,32 +3,21 @@
  */
 package com.salesforce.omakase.ast.builder;
 
-import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 
 /**
- * TODO Description
+ * A {@link Builder} used to create {@link Stylesheet} instances.
  * 
  * @author nmcwilliams
  */
 public interface StylesheetBuilder extends Builder<Stylesheet> {
     /**
-     * TODO Description
+     * Adds a {@link Statement} to the list.
      * 
      * @param statement
-     *            TODO
-     * @return TODO
+     *            The statement to add.
+     * @return this, for chaining.
      */
     StylesheetBuilder statement(Statement statement);
-
-    /**
-     * TODO Description
-     * 
-     * @param rule
-     *            TODO
-     * @return TODO
-     */
-    StylesheetBuilder rule(Rule rule);
-
 }

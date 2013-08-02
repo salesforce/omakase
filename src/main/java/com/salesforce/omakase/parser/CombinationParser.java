@@ -3,24 +3,28 @@
  */
 package com.salesforce.omakase.parser;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.salesforce.omakase.consumer.Consumer;
 
 /**
- * TODO Description
+ * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second
+ * parse will be tried.
  * 
  * @author nmcwilliams
  */
+@Immutable
 public class CombinationParser extends AbstractParser {
     private final Parser first;
     private final Parser second;
 
     /**
-     * TODO
+     * Construct a new {@link CombinationParser} instance with the given two {@link Parser}s.
      * 
      * @param first
-     *            TODO
+     *            The first {@link Parser} to try.
      * @param second
-     *            TODO
+     *            The second {@link Parser} to try,
      */
     public CombinationParser(Parser first, Parser second) {
         this.first = first;
@@ -28,8 +32,7 @@ public class CombinationParser extends AbstractParser {
     }
 
     @Override
-    public boolean parse(Stream stream, Iterable<Consumer> workers) {
-        boolean matched = first.parse(stream, workers);
-        return matched ? true : second.parse(stream, workers);
+    public boolean parse(Stream stream, Iterable<Consumer> consumers) {
+        return first.parse(stream, consumers) ? true : second.parse(stream, consumers);
     }
 }

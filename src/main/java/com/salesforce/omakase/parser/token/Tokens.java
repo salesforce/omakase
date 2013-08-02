@@ -9,36 +9,48 @@ import static com.google.common.base.CharMatcher.is;
 import com.google.common.base.CharMatcher;
 
 /**
- * TODO Description
+ * List of {@link Token}s.
  * 
  * @author nmcwilliams
  */
 public enum Tokens implements Token {
-    /** TODO */
+    /** open bracket */
     OPEN_BRACKET(is('{'), "opening bracket '{'"),
-    /** TODO */
+
+    /** closing bracket */
     CLOSE_BRACKET(is('}'), "closing bracket '}'"),
-    /** TODO */
+
+    /** a semicolon */
     SEMICOLON(is(';'), ";"),
-    /** TODO */
+
+    /** a regular colon */
     COLON(is(':'), ":"),
-    /** TODO */
+
+    /** upper or lower case alpha character */
     ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
-    /** TODO */
+
+    /** asterisk */
     STAR(is('*'), "universal selector"),
-    /** TODO */
+
+    /** hash mark */
     HASH(is('#'), "#"),
-    /** TODO */
+
+    /** dot, period, full-stop, etc... */
     DOT(is('.'), "."),
-    /** TODO */
+
+    /** hyphen */
     HYPHEN(is('-'), "-"),
-    /** TODO */
+
+    /** at symbol */
     AT_RULE(is('@'), "@"),
-    /** TODO */
+
+    /** newline character */
     NEWLINE(is('\n'), "newline"),
-    /** TODO */
+
+    /** double quote */
     DOUBLE_QUOTE(is('"'), "double quote"),
-    /** TODO */
+
+    /** single quote */
     SINGLE_QUOTE(is('\''), "single quote")
 
     ;
@@ -57,13 +69,13 @@ public enum Tokens implements Token {
     }
 
     @Override
-    public String description() {
-        return description;
+    public boolean matches(Character c) {
+        return matcher.matches(c);
     }
 
     @Override
-    public boolean matches(Character c) {
-        return matcher.matches(c);
+    public String description() {
+        return description;
     }
 
     @Override

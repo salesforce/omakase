@@ -10,9 +10,7 @@ import com.salesforce.omakase.consumer.SyntaxTree;
 import com.salesforce.omakase.consumer.Validator;
 
 /**
- * TODO Description
- * 
- * @author nmcwilliams
+ * Temp test for debugging.
  */
 @SuppressWarnings("javadoc")
 public class Debug {

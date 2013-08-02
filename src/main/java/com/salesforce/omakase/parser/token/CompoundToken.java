@@ -6,7 +6,7 @@ package com.salesforce.omakase.parser.token;
 import com.google.common.base.CharMatcher;
 
 /**
- * TODO Description
+ * A combination matcher that does an OR comparison of two {@link Token}s.
  * 
  * @author nmcwilliams
  */
@@ -15,12 +15,13 @@ public class CompoundToken implements Token {
     private final CharMatcher matcher;
 
     /**
-     * TODO
+     * Constructs a new {@link CompoundToken} for doing OR character comparisons. The descriptions of each will be
+     * combined.
      * 
      * @param first
-     *            TODO
+     *            The first {@link Token}.
      * @param second
-     *            TODO
+     *            The second {@link Token}.
      */
     public CompoundToken(Token first, Token second) {
         this.matcher = first.matcher().or(second.matcher());

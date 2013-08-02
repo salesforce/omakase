@@ -8,10 +8,13 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.RefinedSelector;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 
 /**
- * TODO Description
+ * Standard implementation of a {@link Selector}.
+ * 
+ * <p> Not intended for subclassing or direct reference by clients.
  * 
  * @author nmcwilliams
  */
@@ -19,17 +22,7 @@ final class StandardSelector extends AbstractSyntax implements RefinedSelector {
     private final String content;
     private ImmutableList<SelectorPart> parts;
 
-    /**
-     * TODO
-     * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
-     * @param content
-     *            TODO
-     */
-    public StandardSelector(int line, int column, String content) {
+    StandardSelector(int line, int column, String content) {
         super(line, column);
         this.content = content;
         this.parts = ImmutableList.of();

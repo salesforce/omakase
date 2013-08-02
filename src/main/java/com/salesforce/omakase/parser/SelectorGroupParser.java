@@ -5,20 +5,23 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.consumer.Consumer;
 import com.salesforce.omakase.parser.token.Token;
 
 /**
- * TODO Description
+ * Parses a {@link SelectorGroup}.
  * 
  * @author nmcwilliams
  */
-public class SelectorParser extends AbstractParser implements Parser {
+@Immutable
+public class SelectorGroupParser extends AbstractParser implements Parser {
     private static final Token SELECTOR_START = ALPHA.or(STAR).or(HASH).or(DOT);
 
     @Override
-    public boolean parse(Stream stream, Iterable<Consumer> workers) {
+    public boolean parse(Stream stream, Iterable<Consumer> consumers) {
         stream.skipWhitepace();
 
         // if the next character is a valid first character for a selector
@@ -34,7 +37,7 @@ public class SelectorParser extends AbstractParser implements Parser {
             .column(column)
             .build();
 
-        notify(workers, selectorGroup);
+        notify(consumers, selectorGroup);
 
         return true;
     }

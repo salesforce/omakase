@@ -7,22 +7,22 @@ import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TODO Description
+ * A CSS declaration, comprised of a property and value.
  * 
  * @author nmcwilliams
  */
 public interface Declaration extends Syntax, Refinable<RefinedDeclaration> {
     /**
-     * TODO Description
+     * Gets the property name.
      * 
-     * @return TODO
+     * @return The property name.
      */
     String property();
 
     /**
-     * TODO Description
+     * Gets the property value.
      * 
-     * @return TODO
+     * @return The property value.
      */
     String value();
 }
