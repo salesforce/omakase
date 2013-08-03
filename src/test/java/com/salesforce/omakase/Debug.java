@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.salesforce.omakase.consumer.EchoLogger;
 import com.salesforce.omakase.consumer.SyntaxTree;
-import com.salesforce.omakase.consumer.Validator;
+import com.salesforce.omakase.consumer.SyntaxValidator;
 
 /**
  * Temp test for debugging.
@@ -18,7 +18,7 @@ public class Debug {
     public void develop() {
         EchoLogger el = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
-        Validator validator = new Validator();
+        SyntaxValidator validator = new SyntaxValidator();
         Omakase.using(el, tree, validator).parse(src2);
         System.out.println("\n\n" + tree);
     }

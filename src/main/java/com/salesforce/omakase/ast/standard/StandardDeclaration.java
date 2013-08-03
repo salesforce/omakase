@@ -15,13 +15,18 @@ import com.salesforce.omakase.ast.declaration.RefinedDeclaration;
  * @author nmcwilliams
  */
 final class StandardDeclaration extends AbstractSyntax implements RefinedDeclaration {
-    private final String property;
-    private final String value;
+    private final String content;
+    private String property;
+    private String value;
 
-    StandardDeclaration(int line, int column, String property, String value) {
+    StandardDeclaration(int line, int column, String content) {
         super(line, column);
-        this.property = property;
-        this.value = value;
+        this.content = content;
+    }
+
+    @Override
+    public String content() {
+        return content;
     }
 
     @Override
@@ -36,8 +41,10 @@ final class StandardDeclaration extends AbstractSyntax implements RefinedDeclara
 
     @Override
     public RefinedDeclaration refine() {
-        // TODO Auto-generated method stub
-        return null;
+        if (property == null) {
+            // TODO assign property and value
+        }
+        return this;
     }
 
     @Override
@@ -45,8 +52,10 @@ final class StandardDeclaration extends AbstractSyntax implements RefinedDeclara
         return Objects.toStringHelper(this)
             .add("line", line())
             .add("column", column())
+            .add("raw", content)
             .add("property", property)
             .add("value", value)
             .toString();
     }
+
 }

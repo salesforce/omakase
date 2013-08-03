@@ -4,7 +4,7 @@
 package com.salesforce.omakase.ast.selector;
 
 /**
- * TODO Description
+ * Represents a type selector (also known as an element type selector).
  * 
  * @author nmcwilliams
  */

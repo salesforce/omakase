@@ -17,7 +17,7 @@ public interface SelectorBuilder extends Builder<Selector> {
      * Specifies the content of the selector. For example, "#id > .class". This is for the individual selectors, i.e.,
      * don't include commas. If the string has commas then use {@link SelectorGroupBuilder} instead.
      * 
-     * <p> The content can also contain CSS comments.
+     * <p> The content can also contain CSS comments (usually at the beginning).
      * 
      * @param content
      *            The content of the selector.

@@ -14,28 +14,20 @@ import com.salesforce.omakase.ast.declaration.Declaration;
  * @author nmcwilliams
  */
 public class StandardDeclarationBuilder extends AbstractBuilder<Declaration> implements DeclarationBuilder {
-    /** property name */
-    protected String property;
-    /** property value */
-    protected String value;
+    /** full declaration */
+    protected String content;
 
     /** use a {@link SyntaxFactory} instead. */
     protected StandardDeclarationBuilder() {}
 
     @Override
     public Declaration build() {
-        return new StandardDeclaration(line, column, property, value);
+        return new StandardDeclaration(line, column, content);
     }
 
     @Override
-    public DeclarationBuilder property(String property) {
-        this.property = property;
-        return this;
-    }
-
-    @Override
-    public DeclarationBuilder value(String value) {
-        this.value = value;
+    public DeclarationBuilder content(String content) {
+        this.content = content;
         return this;
     }
 }

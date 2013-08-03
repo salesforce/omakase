@@ -4,8 +4,8 @@
 package com.salesforce.omakase.ast.selector;
 
 /**
- * TODO Description
- *
+ * Represents the universal selector, i.e., "*".
+ * 
  * @author nmcwilliams
  */
 public interface UniversalSelector {

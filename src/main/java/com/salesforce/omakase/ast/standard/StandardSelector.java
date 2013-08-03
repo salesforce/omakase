@@ -10,6 +10,8 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.RefinedSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.SelectorParser;
 
 /**
  * Standard implementation of a {@link Selector}.
@@ -19,6 +21,8 @@ import com.salesforce.omakase.ast.selector.SelectorPart;
  * @author nmcwilliams
  */
 final class StandardSelector extends AbstractSyntax implements RefinedSelector {
+    private static final Parser parser = new SelectorParser();
+
     private final String content;
     private ImmutableList<SelectorPart> parts;
 
@@ -31,7 +35,7 @@ final class StandardSelector extends AbstractSyntax implements RefinedSelector {
     @Override
     public RefinedSelector refine() {
         if (parts.isEmpty()) {
-            // TODO parse parts
+            // TODO
         }
 
         return this;

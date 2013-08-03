@@ -11,7 +11,7 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  * 
  * @author nmcwilliams
  */
-public class Validator implements Consumer {
+public class SyntaxValidator implements Consumer {
     @Override
     public void selectorGroup(SelectorGroup selectorGroup) {
         selectorGroup.refine();

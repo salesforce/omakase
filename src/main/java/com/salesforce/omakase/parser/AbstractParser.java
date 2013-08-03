@@ -10,7 +10,10 @@ import com.salesforce.omakase.ast.builder.SyntaxFactory;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
+import com.salesforce.omakase.ast.standard.StandardTokenFactory;
 import com.salesforce.omakase.consumer.Consumer;
+import com.salesforce.omakase.parser.token.Token;
+import com.salesforce.omakase.parser.token.TokenFactory;
 
 /**
  * Base class for {@link Parser}s.
@@ -19,23 +22,28 @@ import com.salesforce.omakase.consumer.Consumer;
  */
 @Immutable
 public abstract class AbstractParser implements Parser {
-    private final SyntaxFactory factory;
+    private final SyntaxFactory syntaxFactory;
+    private final TokenFactory tokenFactory;
 
     /**
-     * Creates a new {@link AbstractParser} instance with using a standard {@link SyntaxFactory}.
+     * Creates a new {@link AbstractParser} instance with using a standard {@link SyntaxFactory} and a standard
+     * {@link TokenFactory}.
      */
     public AbstractParser() {
-        this(StandardSyntaxFactory.instance());
+        this(StandardSyntaxFactory.instance(), StandardTokenFactory.instance());
     }
 
     /**
      * Creates a new {@link AbstractParser} instance using the given {@link SyntaxFactory}.
      * 
-     * @param factory
+     * @param syntaxFactory
      *            Use this factory for creating {@link Syntax} objects.
+     * @param tokenFactory
+     *            Use this factory for retrieving {@link Token} delimiters.
      */
-    public AbstractParser(SyntaxFactory factory) {
-        this.factory = factory;
+    public AbstractParser(SyntaxFactory syntaxFactory, TokenFactory tokenFactory) {
+        this.syntaxFactory = syntaxFactory;
+        this.tokenFactory = tokenFactory;
     }
 
     /**
@@ -55,7 +63,16 @@ public abstract class AbstractParser implements Parser {
      * @return The factory.
      */
     protected SyntaxFactory factory() {
-        return factory;
+        return syntaxFactory;
+    }
+
+    /**
+     * Gets the {@link TokenFactory} to use for various {@link Token} delimiters.
+     * 
+     * @return The factory.
+     */
+    protected TokenFactory tokenFactory() {
+        return tokenFactory;
     }
 
     /**

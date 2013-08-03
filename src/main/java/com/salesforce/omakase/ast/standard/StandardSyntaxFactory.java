@@ -12,12 +12,12 @@ import com.salesforce.omakase.ast.builder.*;
  * @author nmcwilliams
  */
 public class StandardSyntaxFactory implements SyntaxFactory {
-    private static final StandardSyntaxFactory instance = new StandardSyntaxFactory();
+    private static final SyntaxFactory instance = new StandardSyntaxFactory();
 
     /**
      * Gets the cached factory instance.
      * 
-     * @return The cache instance.
+     * @return The cached instance.
      */
     public static SyntaxFactory instance() {
         return instance;

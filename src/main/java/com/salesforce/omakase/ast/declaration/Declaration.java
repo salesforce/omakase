@@ -13,16 +13,9 @@ import com.salesforce.omakase.ast.Syntax;
  */
 public interface Declaration extends Syntax, Refinable<RefinedDeclaration> {
     /**
-     * Gets the property name.
+     * TODO Description
      * 
-     * @return The property name.
+     * @return TODO
      */
-    String property();
-
-    /**
-     * Gets the property value.
-     * 
-     * @return The property value.
-     */
-    String value();
+    String content();
 }
