@@ -5,10 +5,12 @@ package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-
+import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.consumer.Plugin;
+import com.google.common.collect.MutableClassToInstanceMap;
+import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * TODO Description
@@ -16,7 +18,44 @@ import com.salesforce.omakase.consumer.Plugin;
  * @author nmcwilliams
  */
 public class Context {
-    private final List<Plugin> plugins = Lists.newArrayList();
+    private final ClassToInstanceMap<Plugin> plugins = MutableClassToInstanceMap.create();
+
+    /**
+     * TODO
+     * 
+     * @param plugins
+     *            TODO
+     */
+    public Context(Plugin... plugins) {
+        this(Lists.newArrayList(plugins));
+    }
+
+    /**
+     * TODO
+     * 
+     * @param plugins
+     *            TODO
+     */
+    public Context(Iterable<Plugin> plugins) {
+        for (Plugin plugin : plugins) {
+            plugin(plugin);
+        }
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param <T>
+     *            TODO
+     * @param type
+     *            TODO
+     * @param supplier
+     *            TODO
+     * @return TODO
+     */
+    public <T extends Plugin> T require(Class<T> type, Supplier<T> supplier) {
+        return Optional.fromNullable(plugins.getInstance(type)).or(supplier);
+    }
 
     /**
      * TODO Description
@@ -26,7 +65,9 @@ public class Context {
      * @return TODO
      */
     public Context plugin(Plugin plugin) {
-        plugins.add(checkNotNull(plugin, "plugin cannot be null"));
+        checkNotNull(plugin, "plugin cannot be null");
+
+        plugins.put(plugin.getClass(), plugin);
         return this;
     }
 }

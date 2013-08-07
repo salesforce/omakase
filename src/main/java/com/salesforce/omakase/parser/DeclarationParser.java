@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser;
 import javax.annotation.concurrent.Immutable;
 
 import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * Parses a {@link Declaration}.
@@ -17,7 +16,7 @@ import com.salesforce.omakase.consumer.Plugin;
 public class DeclarationParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Iterable<Plugin> consumers) {
+    public boolean parse(Stream stream, Context context) {
         // skip whitespace
         stream.skipWhitepace();
 
@@ -37,7 +36,7 @@ public class DeclarationParser extends AbstractParser {
             .column(column)
             .build();
 
-        notify(consumers, declaration);
+        notify(context, declaration);
 
         return true;
     }

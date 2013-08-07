@@ -1,8 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.consumer;
-
+package com.salesforce.omakase.plugin;
 
 /**
  * TODO Description

@@ -5,9 +5,7 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.consumer.Echoer;
-import com.salesforce.omakase.consumer.SyntaxTree;
-import com.salesforce.omakase.consumer.SyntaxValidator;
+import com.salesforce.omakase.plugin.SyntaxTree;
 
 /**
  * Temp test for debugging.
@@ -16,10 +14,8 @@ import com.salesforce.omakase.consumer.SyntaxValidator;
 public class Debug {
     @Test
     public void develop() {
-        Echoer el = new Echoer();
         SyntaxTree tree = new SyntaxTree();
-        SyntaxValidator validator = new SyntaxValidator();
-        Omakase.using(el, tree, validator).parse(src2);
+        Omakase.request(tree).process(src2);
         System.out.println("\n\n" + tree);
     }
 

@@ -8,7 +8,6 @@ import static com.salesforce.omakase.parser.token.Tokens.*;
 import javax.annotation.concurrent.Immutable;
 
 import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * Parses a {@link Rule}.
@@ -21,12 +20,12 @@ public class RuleParser extends AbstractParser {
     private static final DeclarationParser declaration = new DeclarationParser();
 
     @Override
-    public boolean parse(Stream stream, Iterable<Plugin> consumers) {
+    public boolean parse(Stream stream, Context context) {
         boolean matched;
 
         // selector
         stream.skipWhitepace();
-        matched = selector.parse(stream, consumers);
+        matched = selector.parse(stream, context);
 
         // if there wasn't a selector then we aren't at a rule
         if (!matched) return false;
@@ -38,7 +37,7 @@ public class RuleParser extends AbstractParser {
 
         do {
             stream.skipWhitepace();
-            declaration.parse(stream, consumers);
+            declaration.parse(stream, context);
             stream.skipWhitepace();
         } while (stream.optional(SEMICOLON));
 

@@ -3,7 +3,6 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * TODO Description
@@ -13,7 +12,7 @@ import com.salesforce.omakase.consumer.Plugin;
 public class SelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Iterable<Plugin> consumers) {
+    public boolean parse(Stream stream, Context context) {
         // TODO Auto-generated method stub
         return false;
     }

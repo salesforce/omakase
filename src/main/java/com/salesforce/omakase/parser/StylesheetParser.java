@@ -7,7 +7,6 @@ import javax.annotation.concurrent.Immutable;
 
 import com.salesforce.omakase.Errors;
 import com.salesforce.omakase.ast.Stylesheet;
-import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * Parses a top-level {@link Stylesheet}
@@ -19,10 +18,10 @@ public class StylesheetParser extends AbstractParser {
     private static final Parser statement = new AtRuleParser().or(new RuleParser());
 
     @Override
-    public boolean parse(Stream stream, Iterable<Plugin> consumers) {
+    public boolean parse(Stream stream, Context context) {
         // continually parse until there is nothing left in the stream
         while (!stream.eof()) {
-            boolean matched = statement.parse(stream, consumers);
+            boolean matched = statement.parse(stream, context);
             if (!matched && !stream.eof()) Errors.extraneous.send(stream, stream.remaining());
         }
 

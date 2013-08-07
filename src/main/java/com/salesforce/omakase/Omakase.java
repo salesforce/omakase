@@ -5,10 +5,10 @@ package com.salesforce.omakase;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.consumer.Plugin;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.StylesheetParser;
+import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * TODO Description
@@ -16,14 +16,26 @@ import com.salesforce.omakase.parser.StylesheetParser;
  * @author nmcwilliams
  */
 public final class Omakase {
-    private final List<Plugin> observers;
+    private final List<Plugin> plugins;
 
     /**
      * @param consumers
      *            TODO
      */
-    public Omakase(Plugin... consumers) {
-        this.observers = ImmutableList.copyOf(consumers);
+    private Omakase(Plugin... consumers) {
+        this.plugins = Lists.newArrayList(consumers);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param plugin
+     *            TODO
+     * @return TODO
+     */
+    public Omakase request(Plugin plugin) {
+        plugins.add(plugin);
+        return this;
     }
 
     /**
@@ -31,20 +43,24 @@ public final class Omakase {
      * 
      * @param source
      *            TODO
+     * @return TODO
      */
-    public void parse(CharSequence source) {
+    public Context process(CharSequence source) {
         Stream stream = new Stream(source);
-        new StylesheetParser().parse(stream, observers);
+        Context context = new Context(plugins);
+
+        new StylesheetParser().parse(stream, context);
+        return context;
     }
 
     /**
      * TODO Description
      * 
-     * @param consumers
+     * @param plugins
      *            TODO
      * @return TODO
      */
-    public static Omakase using(Plugin... consumers) {
-        return new Omakase(consumers);
+    public static Omakase request(Plugin... plugins) {
+        return new Omakase(plugins);
     }
 }

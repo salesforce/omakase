@@ -121,7 +121,7 @@ public class PerfTest {
         if (mode == Mode.phloc) {
             CSSReader.readFromString(src, Charsets.UTF_8, ECSSVersion.LATEST);
         } else if (mode == Mode.omakase) {
-            omakase.parse(src);
+            omakase.process(src);
         }
     }
 

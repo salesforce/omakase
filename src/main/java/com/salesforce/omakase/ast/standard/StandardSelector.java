@@ -7,9 +7,12 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.ast.RefinedSelector;
-import com.salesforce.omakase.ast.Selector;
-import com.salesforce.omakase.ast.SelectorPart;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.selector.RefinedSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.SelectorParser;
 
 /**
  * Standard implementation of a {@link Selector}.
@@ -18,39 +21,35 @@ import com.salesforce.omakase.ast.SelectorPart;
  * 
  * @author nmcwilliams
  */
-final class StandardSelector extends AbstractLinkableSyntax<Selector> implements RefinedSelector {
-    private final String original;
-    private List<SelectorPart> parts;
+final class StandardSelector extends AbstractSyntax implements RefinedSelector {
+    private static final Parser parser = new SelectorParser();
 
-    StandardSelector(int line, int column, String original) {
+    private final String content;
+    private ImmutableList<SelectorPart> parts;
+
+    StandardSelector(int line, int column, String content) {
         super(line, column);
-        this.original = original;
+        this.content = content;
         this.parts = ImmutableList.of();
     }
 
     @Override
     public RefinedSelector refine() {
         if (parts.isEmpty()) {
-            // TODO
+            parser.parse(new Stream(content), Lists.newArrayList())
         }
 
         return this;
     }
 
     @Override
-    public String original() {
-        return original;
-    }
-
-    @Override
-    public RefinedSelector part(SelectorPart part) {
-        this.parts.add(part);
-        return this;
+    public String content() {
+        return content;
     }
 
     @Override
     public List<SelectorPart> parts() {
-        return ImmutableList.copyOf(parts);
+        return parts;
     }
 
     @Override
@@ -64,9 +63,8 @@ final class StandardSelector extends AbstractLinkableSyntax<Selector> implements
         return Objects.toStringHelper(this)
             .add("line", line())
             .add("column", column())
-            .add("content", original)
+            .add("content", content)
             .add("parts", parts)
             .toString();
     }
-
 }
