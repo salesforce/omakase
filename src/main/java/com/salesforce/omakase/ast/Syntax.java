@@ -7,9 +7,6 @@ import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.salesforce.omakase.ast.builder.Builder;
-import com.salesforce.omakase.ast.selector.Selector;
-
 /**
  * A distinct unit of syntax within CSS.
  * 
@@ -23,13 +20,11 @@ import com.salesforce.omakase.ast.selector.Selector;
  * contain invalid CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled
  * with (linting?) to ensure correct usage.
  * 
- * <p> In implementation, each {@link Syntax} unit must be <em>immutable</em>. {@link Builder}s are used to assist with
- * this.
- * 
  * @author nmcwilliams
  */
 @Immutable
 public interface Syntax {
+
     /**
      * The line number within the source where this {@link Syntax} unit was parsed.
      * 
@@ -43,6 +38,15 @@ public interface Syntax {
      * @return The column number.
      */
     int column();
+
+    /**
+     * TODO Description
+     * 
+     * @param comment
+     *            TODO
+     * @return TODO
+     */
+    Syntax comment(String comment);
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.

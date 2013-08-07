@@ -5,7 +5,7 @@ package com.salesforce.omakase.parser;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.salesforce.omakase.consumer.Consumer;
+import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * Used to an aspect of CSS source code.
@@ -18,7 +18,7 @@ import com.salesforce.omakase.consumer.Consumer;
 @Immutable
 public interface Parser {
     /**
-     * Parse from the current position of the given stream, notifying the given {@link Consumer}s of any applicable
+     * Parse from the current position of the given stream, notifying the given {@link Plugin}s of any applicable
      * events and data.
      * 
      * @param stream
@@ -28,5 +28,5 @@ public interface Parser {
      * @return true if we parsed <em>something</em> (excluding whitespace), false otherwise. Note that a return value of
      *         true does not indicate that the parsed content was actually valid grammar.
      */
-    boolean parse(Stream stream, Iterable<Consumer> consumers);
+    boolean parse(Stream stream, Iterable<Plugin> consumers);
 }

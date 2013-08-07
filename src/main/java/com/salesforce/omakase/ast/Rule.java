@@ -5,22 +5,36 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
-
 /**
- * Represents a CSS Rule. Each rule has one {@link SelectorGroup} and any number of ordered {@link Declaration}s.
+ * Represents a CSS Rule. Each rule has one or more {@link Selector}s and zero or more {@link Declaration}s.
  * 
  * @author nmcwilliams
  */
-public interface Rule extends Statement {
+public interface Rule extends Statement, Linkable<Rule> {
     /**
-     * Gets the {@link SelectorGroup} containing the {@link Selector}s for this {@link Rule}.
+     * TODO Description
      * 
-     * @return The {@link SelectorGroup}.
+     * @param selector
+     *            TODO
+     * @return TODO
      */
-    SelectorGroup selectorGroup();
+    Rule selector(Selector selector);
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    List<Selector> selectors();
+
+    /**
+     * TODO Description
+     * 
+     * @param declaration
+     *            TODO
+     * @return TODO
+     */
+    Rule declaration(Declaration declaration);
 
     /**
      * Gets the {@link Declaration}s within this {@link Rule}. May be empty.

@@ -1,9 +1,8 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.Syntax;
 
 /**
  * TODO Description

@@ -3,15 +3,15 @@
  */
 package com.salesforce.omakase.ast.standard;
 
-import static com.salesforce.omakase.Util.immutable;
-
 import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Declaration;
 import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
+import com.salesforce.omakase.ast.Selector;
 
 /**
  * Standard implementation of a {@link Rule}.
@@ -20,30 +20,45 @@ import com.salesforce.omakase.ast.selector.SelectorGroup;
  * 
  * @author nmcwilliams
  */
-final class StandardRule extends AbstractSyntax implements Rule {
-    private final SelectorGroup selectorGroup;
-    private final ImmutableList<Declaration> declarations;
+final class StandardRule extends AbstractLinkableSyntax<Rule> implements Rule {
+    private final List<Selector> selectors = Lists.newArrayList();
+    private final List<Declaration> declarations = Lists.newArrayList();
 
-    StandardRule(int line, int column, SelectorGroup selectorGroup, List<Declaration> declarations) {
+    StandardRule(int line, int column, Iterable<Selector> selectors, Iterable<Declaration> declarations) {
         super(line, column);
-        this.selectorGroup = selectorGroup;
-        this.declarations = immutable(declarations);
+        Iterables.addAll(this.selectors, selectors);
+        Iterables.addAll(this.declarations, declarations);
     }
 
     @Override
-    public SelectorGroup selectorGroup() {
-        return selectorGroup;
+    public Rule selector(Selector selector) {
+        selectors.add(selector);
+        return this;
+    }
+
+    @Override
+    public List<Selector> selectors() {
+        return ImmutableList.copyOf(selectors);
+    }
+
+    @Override
+    public Rule declaration(Declaration declaration) {
+        this.declarations.add(declaration);
+        return this;
     }
 
     @Override
     public List<Declaration> declarations() {
-        return declarations;
+        return ImmutableList.copyOf(declarations);
     }
 
     @Override
     public String toString() {
         StringBuilder sBuilder = new StringBuilder(32);
-        sBuilder.append("\n  ").append(selectorGroup);
+        sBuilder.append("\n  ");
+        for (Selector selector : selectors) {
+            sBuilder.append(selector);
+        }
 
         StringBuilder dBuilder = new StringBuilder(128);
         for (Declaration declaration : declarations) {
@@ -57,4 +72,5 @@ final class StandardRule extends AbstractSyntax implements Rule {
             .addValue(dBuilder.toString())
             .toString();
     }
+
 }

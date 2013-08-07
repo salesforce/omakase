@@ -3,12 +3,12 @@
  */
 package com.salesforce.omakase.ast.standard;
 
-import static com.salesforce.omakase.Util.immutable;
-
 import java.util.List;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 
@@ -20,11 +20,17 @@ import com.salesforce.omakase.ast.Stylesheet;
  * @author nmcwilliams
  */
 final class StandardStylesheet extends AbstractSyntax implements Stylesheet {
-    private final ImmutableList<Statement> statements;
+    private final List<Statement> statements = Lists.newArrayList();
 
-    StandardStylesheet(int line, int column, List<Statement> statements) {
+    StandardStylesheet(int line, int column, Iterable<Statement> statements) {
         super(line, column);
-        this.statements = immutable(statements);
+        Iterables.addAll(this.statements, statements);
+    }
+
+    @Override
+    public Stylesheet statement(Statement statement) {
+        statements.add(statement);
+        return this;
     }
 
     @Override
@@ -34,14 +40,8 @@ final class StandardStylesheet extends AbstractSyntax implements Stylesheet {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(256);
-
-        for (Statement statement : statements) {
-            builder.append("\n\n").append(statement);
-        }
-
         return Objects.toStringHelper(this)
-            .add("statements", builder.toString())
+            .add("statements", Joiner.on("\n\n").join(statements))
             .toString();
     }
 }

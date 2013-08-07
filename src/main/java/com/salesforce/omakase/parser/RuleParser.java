@@ -8,7 +8,7 @@ import static com.salesforce.omakase.parser.token.Tokens.*;
 import javax.annotation.concurrent.Immutable;
 
 import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.consumer.Consumer;
+import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * Parses a {@link Rule}.
@@ -21,7 +21,7 @@ public class RuleParser extends AbstractParser {
     private static final DeclarationParser declaration = new DeclarationParser();
 
     @Override
-    public boolean parse(Stream stream, Iterable<Consumer> consumers) {
+    public boolean parse(Stream stream, Iterable<Plugin> consumers) {
         boolean matched;
 
         // selector

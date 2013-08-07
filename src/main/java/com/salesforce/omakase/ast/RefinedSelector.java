@@ -1,10 +1,9 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
 import java.util.List;
-
 
 /**
  * TODO Description
@@ -12,6 +11,15 @@ import java.util.List;
  * @author nmcwilliams
  */
 public interface RefinedSelector extends Selector {
+    /**
+     * TODO Description
+     * 
+     * @param part
+     *            TODO
+     * @return TODO
+     */
+    RefinedSelector part(SelectorPart part);
+
     /**
      * TODO Description
      * 

@@ -1,13 +1,13 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
 /**
  * Represents the universal selector, i.e., "*".
  * 
  * @author nmcwilliams
  */
-public interface UniversalSelector {
+public interface UniversalSelector extends SelectorPart {
 
 }

@@ -5,7 +5,7 @@ package com.salesforce.omakase.parser;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.salesforce.omakase.consumer.Consumer;
+import com.salesforce.omakase.consumer.Plugin;
 
 /**
  * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second
@@ -32,7 +32,7 @@ public class CombinationParser extends AbstractParser {
     }
 
     @Override
-    public boolean parse(Stream stream, Iterable<Consumer> consumers) {
+    public boolean parse(Stream stream, Iterable<Plugin> consumers) {
         return first.parse(stream, consumers) ? true : second.parse(stream, consumers);
     }
 }

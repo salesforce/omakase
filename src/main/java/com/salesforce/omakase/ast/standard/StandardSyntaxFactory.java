@@ -3,51 +3,27 @@
  */
 package com.salesforce.omakase.ast.standard;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.builder.*;
+import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.ast.SyntaxFactory;
 
 /**
- * A {@link SyntaxFactory} factory for creating standard {@link Syntax} objects.
+ * TODO Description
  * 
  * @author nmcwilliams
  */
 public class StandardSyntaxFactory implements SyntaxFactory {
-    private static final SyntaxFactory instance = new StandardSyntaxFactory();
-
     /**
-     * Gets the cached factory instance.
+     * TODO Description
      * 
-     * @return The cached instance.
+     * @return TODO
      */
     public static SyntaxFactory instance() {
-        return instance;
-    }
-
-    /** Only here to allow for subclassing. Clients should use {@link #instance()} instead. */
-    protected StandardSyntaxFactory() {}
-
-    @Override
-    public StylesheetBuilder stylesheet() {
-        return new StandardStylesheetBuilder();
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    public RuleBuilder rule() {
-        return new StandardRuleBuilder();
-    }
-
-    @Override
-    public SelectorGroupBuilder selectorGroup() {
-        return new StandardSelectorGroupBuilder();
-    }
-
-    @Override
-    public SelectorBuilder selector() {
-        return new StandardSelectorBuilder();
-    }
-
-    @Override
-    public DeclarationBuilder declaration() {
-        return new StandardDeclarationBuilder();
+    public Selector selector(int line, int column, String original) {
+        return new StandardSelector(line, column, original);
     }
 }
