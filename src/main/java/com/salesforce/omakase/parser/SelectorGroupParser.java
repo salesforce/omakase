@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.parser;
@@ -11,14 +11,12 @@ import com.salesforce.omakase.parser.token.Tokens;
  * 
  * @author nmcwilliams
  */
-public class AtRuleParser extends AbstractParser {
+public class SelectorGroupParser extends AbstractParser {
+
     @Override
     public boolean parse(Stream stream, Context context) {
-        stream.skipWhitepace();
-
-        // must begin with '@'
-        if (!Tokens.AT_RULE.matches(stream.current())) return false;
-
-        return false; // TODO
+        stream.until(Tokens.OPEN_BRACKET);
+        return true;
     }
+
 }

@@ -5,7 +5,7 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.plugin.SyntaxTree;
+import com.salesforce.omakase.plugin.EchoLogger;
 
 /**
  * Temp test for debugging.
@@ -14,9 +14,8 @@ import com.salesforce.omakase.plugin.SyntaxTree;
 public class Debug {
     @Test
     public void develop() {
-        SyntaxTree tree = new SyntaxTree();
-        Omakase.request(tree).process(src2);
-        System.out.println("\n\n" + tree);
+        EchoLogger logger = new EchoLogger();
+        Omakase.source(src1).request(logger).process();
     }
 
     public static final String src1 = ".testing #is > fun { color: red; margin: 10px 5px; }";

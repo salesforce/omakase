@@ -3,8 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import javax.annotation.concurrent.Immutable;
-
+import com.salesforce.omakase.Context;
 
 /**
  * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second
@@ -12,7 +11,6 @@ import javax.annotation.concurrent.Immutable;
  * 
  * @author nmcwilliams
  */
-@Immutable
 public class CombinationParser extends AbstractParser {
     private final Parser first;
     private final Parser second;

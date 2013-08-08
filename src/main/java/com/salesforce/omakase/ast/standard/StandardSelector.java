@@ -7,10 +7,9 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.selector.RefinedSelector;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.RefinedSelector;
+import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.ast.SelectorPart;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.SelectorParser;
 
@@ -21,7 +20,7 @@ import com.salesforce.omakase.parser.SelectorParser;
  * 
  * @author nmcwilliams
  */
-final class StandardSelector extends AbstractSyntax implements RefinedSelector {
+final class StandardSelector extends AbstractLinkableSyntax<Selector> implements RefinedSelector {
     private static final Parser parser = new SelectorParser();
 
     private final String content;
@@ -36,15 +35,21 @@ final class StandardSelector extends AbstractSyntax implements RefinedSelector {
     @Override
     public RefinedSelector refine() {
         if (parts.isEmpty()) {
-            parser.parse(new Stream(content), Lists.newArrayList())
+            // parser.parse(new Stream(content), Lists.newArrayList())
         }
 
         return this;
     }
 
     @Override
-    public String content() {
+    public String original() {
         return content;
+    }
+
+    @Override
+    public RefinedSelector part(SelectorPart part) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.standard;
 
+import com.salesforce.omakase.ast.Declaration;
 import com.salesforce.omakase.ast.Selector;
 import com.salesforce.omakase.ast.SyntaxFactory;
 
@@ -12,18 +13,24 @@ import com.salesforce.omakase.ast.SyntaxFactory;
  * @author nmcwilliams
  */
 public class StandardSyntaxFactory implements SyntaxFactory {
+    private static final SyntaxFactory instance = new StandardSyntaxFactory();
+
     /**
      * TODO Description
      * 
      * @return TODO
      */
     public static SyntaxFactory instance() {
-        // TODO Auto-generated method stub
-        return null;
+        return instance;
     }
 
     @Override
     public Selector selector(int line, int column, String original) {
         return new StandardSelector(line, column, original);
+    }
+
+    @Override
+    public Declaration declaration(int line, int column, String original) {
+        return new StandardDeclaration(line, column, original);
     }
 }

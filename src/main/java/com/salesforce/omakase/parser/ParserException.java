@@ -4,6 +4,7 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Errors;
+import com.salesforce.omakase.OmakaseException;
 
 /**
  * An error encountered while parsing.
@@ -12,7 +13,7 @@ import com.salesforce.omakase.Errors;
  * 
  * @author nmcwilliams
  */
-public class ParserException extends RuntimeException {
+public class ParserException extends OmakaseException {
     private static final long serialVersionUID = -8952238331167900360L;
 
     /**

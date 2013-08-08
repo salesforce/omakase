@@ -5,8 +5,7 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
-import javax.annotation.concurrent.Immutable;
-
+import com.salesforce.omakase.Context;
 import com.salesforce.omakase.ast.Rule;
 
 /**
@@ -14,7 +13,6 @@ import com.salesforce.omakase.ast.Rule;
  * 
  * @author nmcwilliams
  */
-@Immutable
 public class RuleParser extends AbstractParser {
     private static final SelectorGroupParser selector = new SelectorGroupParser();
     private static final DeclarationParser declaration = new DeclarationParser();

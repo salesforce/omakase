@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.Context;
 
 /**
  * TODO Description

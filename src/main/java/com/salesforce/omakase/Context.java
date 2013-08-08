@@ -3,13 +3,15 @@
  */
 package com.salesforce.omakase;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.emitter.Emitter;
+import com.salesforce.omakase.plugin.Filter;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -17,28 +19,31 @@ import com.salesforce.omakase.plugin.Plugin;
  * 
  * @author nmcwilliams
  */
-public class Context {
+public final class Context {
     private final ClassToInstanceMap<Plugin> plugins = MutableClassToInstanceMap.create();
+    private final Emitter emitter = new Emitter();
+
+    /** for internal construction */
+    Context() {}
 
     /**
-     * TODO
+     * TODO Description This is to make #require and #retrieve work in a simple way
      * 
-     * @param plugins
+     * @param pluginsToRegister
      *            TODO
      */
-    public Context(Plugin... plugins) {
-        this(Lists.newArrayList(plugins));
-    }
+    public void plugins(Plugin... pluginsToRegister) {
+        for (Plugin plugin : pluginsToRegister) {
+            Class<? extends Plugin> klass = plugin.getClass();
 
-    /**
-     * TODO
-     * 
-     * @param plugins
-     *            TODO
-     */
-    public Context(Iterable<Plugin> plugins) {
-        for (Plugin plugin : plugins) {
-            plugin(plugin);
+            // only one instance per plugin allowed per type.
+            checkArgument(!plugins.containsKey(klass), String.format("Only one plugin instance of each type allowed: %s", klass));
+
+            // add the plugin to the list
+            plugins.put(klass, plugin);
+
+            // register the plugin for events
+            emitter.register(plugin);
         }
     }
 
@@ -60,14 +65,36 @@ public class Context {
     /**
      * TODO Description
      * 
-     * @param plugin
+     * @param klass
      *            TODO
      * @return TODO
      */
-    public Context plugin(Plugin plugin) {
-        checkNotNull(plugin, "plugin cannot be null");
+    public Filter require(Class<Filter> klass) {
+        return require(klass, Suppliers.FILTER);
+    }
 
-        plugins.put(plugin.getClass(), plugin);
+    /**
+     * TODO Description
+     * 
+     * @param <T>
+     *            TODO
+     * @param klass
+     *            TODO
+     * @return TODO
+     */
+    public <T extends Plugin> Optional<T> retrieve(Class<T> klass) {
+        return Optional.of(plugins.getInstance(klass));
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param syntax
+     *            TODO
+     * @return TODO
+     */
+    public <T extends Syntax> Context broadcast(T syntax) {
+        emitter.emit(syntax);
         return this;
     }
 }

@@ -21,4 +21,6 @@ public interface SyntaxFactory {
      * @return TODO
      */
     Selector selector(int line, int column, String original);
+
+    Declaration declaration(int line, int column, String original);
 }

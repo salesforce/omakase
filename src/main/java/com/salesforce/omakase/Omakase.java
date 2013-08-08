@@ -3,9 +3,8 @@
  */
 package com.salesforce.omakase;
 
-import java.util.List;
+import javax.annotation.concurrent.NotThreadSafe;
 
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.StylesheetParser;
 import com.salesforce.omakase.plugin.Plugin;
@@ -15,28 +14,9 @@ import com.salesforce.omakase.plugin.Plugin;
  * 
  * @author nmcwilliams
  */
+@NotThreadSafe
 public final class Omakase {
-    private final List<Plugin> plugins;
-
-    /**
-     * @param consumers
-     *            TODO
-     */
-    private Omakase(Plugin... consumers) {
-        this.plugins = Lists.newArrayList(consumers);
-    }
-
-    /**
-     * TODO Description
-     * 
-     * @param plugin
-     *            TODO
-     * @return TODO
-     */
-    public Omakase request(Plugin plugin) {
-        plugins.add(plugin);
-        return this;
-    }
+    private Omakase() {}
 
     /**
      * TODO Description
@@ -45,22 +25,41 @@ public final class Omakase {
      *            TODO
      * @return TODO
      */
-    public Context process(CharSequence source) {
-        Stream stream = new Stream(source);
-        Context context = new Context(plugins);
-
-        new StylesheetParser().parse(stream, context);
-        return context;
+    public static Omakase.Request source(CharSequence source) {
+        return new Request(source);
     }
 
     /**
      * TODO Description
-     * 
-     * @param plugins
-     *            TODO
-     * @return TODO
      */
-    public static Omakase request(Plugin... plugins) {
-        return new Omakase(plugins);
+    public static final class Request {
+        private final Stream stream;
+        private final Context context = new Context();
+
+        Request(CharSequence source) {
+            this.stream = new Stream(source.toString());
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param plugins
+         *            TODO
+         * @return TODO
+         */
+        public Request request(Plugin... plugins) {
+            context.plugins(plugins);
+            return this;
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @return TODO
+         */
+        public Context process() {
+            new StylesheetParser().parse(stream, context);
+            return context;
+        }
     }
 }

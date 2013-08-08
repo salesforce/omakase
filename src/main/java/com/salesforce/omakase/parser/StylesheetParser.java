@@ -5,6 +5,7 @@ package com.salesforce.omakase.parser;
 
 import javax.annotation.concurrent.Immutable;
 
+import com.salesforce.omakase.Context;
 import com.salesforce.omakase.Errors;
 import com.salesforce.omakase.ast.Stylesheet;
 

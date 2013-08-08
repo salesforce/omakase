@@ -45,7 +45,6 @@ public class PerfTest {
     }
 
     private static final Pattern commentPattern = Pattern.compile("\\/\\*[^*]*\\*+([^/*][^*]*\\*+)*\\/");
-    private static final Omakase omakase = new Omakase();
 
     /** main method with setup */
     public static void main(String[] args) {
@@ -121,7 +120,7 @@ public class PerfTest {
         if (mode == Mode.phloc) {
             CSSReader.readFromString(src, Charsets.UTF_8, ECSSVersion.LATEST);
         } else if (mode == Mode.omakase) {
-            omakase.process(src);
+            Omakase.source(src).process();
         }
     }
 

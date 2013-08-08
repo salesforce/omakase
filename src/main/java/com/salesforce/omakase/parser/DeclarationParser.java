@@ -3,8 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import javax.annotation.concurrent.Immutable;
-
+import com.salesforce.omakase.Context;
 import com.salesforce.omakase.ast.Declaration;
 
 /**
@@ -12,7 +11,6 @@ import com.salesforce.omakase.ast.Declaration;
  * 
  * @author nmcwilliams
  */
-@Immutable
 public class DeclarationParser extends AbstractParser {
 
     @Override
@@ -30,13 +28,8 @@ public class DeclarationParser extends AbstractParser {
         // take everything until the end of declaration token
         String content = stream.until(tokenFactory().declarationEnd());
 
-        Declaration declaration = factory().declaration()
-            .content(content)
-            .line(line)
-            .column(column)
-            .build();
-
-        notify(context, declaration);
+        Declaration declaration = syntaxFactory().declaration(line, column, content);
+        context.broadcast(declaration);
 
         return true;
     }

@@ -3,8 +3,6 @@
  */
 package com.salesforce.omakase.parser;
 
-import javax.annotation.concurrent.Immutable;
-
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.SyntaxFactory;
 import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
@@ -17,7 +15,6 @@ import com.salesforce.omakase.parser.token.TokenFactory;
  * 
  * @author nmcwilliams
  */
-@Immutable
 public abstract class AbstractParser implements Parser {
     private final SyntaxFactory syntaxFactory;
     private final TokenFactory tokenFactory;
@@ -59,7 +56,7 @@ public abstract class AbstractParser implements Parser {
      * 
      * @return The factory.
      */
-    protected SyntaxFactory factory() {
+    protected SyntaxFactory syntaxFactory() {
         return syntaxFactory;
     }
 
