@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.Context;
+import com.salesforce.omakase.Broadcaster;
 
 /**
  * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second
@@ -29,7 +29,7 @@ public class CombinationParser extends AbstractParser {
     }
 
     @Override
-    public boolean parse(Stream stream, Context context) {
-        return first.parse(stream, context) ? true : second.parse(stream, context);
+    public boolean parse(Stream stream, Broadcaster broadcaster) {
+        return first.parse(stream, null) ? true : second.parse(stream, null);
     }
 }

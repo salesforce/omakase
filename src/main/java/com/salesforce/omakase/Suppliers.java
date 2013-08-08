@@ -3,31 +3,55 @@
  */
 package com.salesforce.omakase;
 
+import java.util.Map;
+
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.salesforce.omakase.plugin.Filter;
+import com.google.common.collect.ImmutableMap;
+import com.salesforce.omakase.plugin.AutoRefiner;
 import com.salesforce.omakase.plugin.SyntaxTree;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
- * @since 0.1
  */
-public final class Suppliers {
-    /** supplies a new {@link Filter} instance */
-    public static final Supplier<Filter> FILTER = new Supplier<Filter>() {
-        @Override
-        public Filter get() {
-            return new Filter();
-        }
-    };
+final class Suppliers {
 
-    /** supplies a new {@link SyntaxTree} instance */
-    public static final Supplier<SyntaxTree> SYNTAX_TREE = new Supplier<SyntaxTree>() {
-        @Override
-        public SyntaxTree get() {
-            return new SyntaxTree();
-        }
-    };
+    private static final Map<Class<?>, Supplier<?>> map = ImmutableMap.<Class<?>, Supplier<?>>builder()
+        .put(SyntaxTree.class, new Supplier<SyntaxTree>() {
+            @Override
+            public SyntaxTree get() {
+                return new SyntaxTree();
+            }
+        })
+        .put(AutoRefiner.class, new Supplier<AutoRefiner>() {
+            @Override
+            public AutoRefiner get() {
+                return new AutoRefiner();
+            }
+        })
+        .build();
 
+    /** do not construct */
+    private Suppliers() {};
+
+    /**
+     * TODO Description
+     * 
+     * @param <T>
+     *            TODO
+     * @param klass
+     *            TODO
+     * @return TODO
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<Supplier<T>> get(Class<T> klass) {
+        Supplier<?> found = map.get(klass);
+        if (found != null) {
+            /** cast is safe as long as the internal map is correctly formed */
+            return Optional.of((Supplier<T>)found);
+        }
+        return Optional.absent();
+    }
 }

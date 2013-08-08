@@ -16,12 +16,49 @@ import com.google.common.base.Objects;
  * @author nmcwilliams
  */
 public final class Subscription {
-    private final Object target;
+    private final SubscriptionType type;
+    private final Object subscriber;
     private final Method method;
+    private final String filter;
 
-    Subscription(Object target, Method method) {
-        this.target = checkNotNull(target, "target cannot be null");
-        this.method = checkNotNull(method, "method cannot be null");
+    Subscription(SubscriptionType type, Object subscriber, Method method, String filter) {
+        this.type = type;
+        this.subscriber = subscriber;
+        this.method = method;
+        this.filter = filter;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public SubscriptionType type() {
+        return type;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public String filter() {
+        return filter;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param type
+     *            TODO
+     * @param event
+     *            TODO
+     */
+    public void inform(SubscriptionType type, Object event) {
+        checkNotNull(event, "event cannot be null");
+        if (this.type == type) {
+            deliver(event);
+        }
     }
 
     /**
@@ -30,10 +67,9 @@ public final class Subscription {
      * @param event
      *            TOOD
      */
-    public void deliver(Object event) {
-        checkNotNull(event, "event cannot be null");
+    private void deliver(Object event) {
         try {
-            method.invoke(target, new Object[] { event });
+            method.invoke(subscriber, event);
         } catch (IllegalArgumentException e) {
             throw new SubscriptionException("Invalid arguments for subscription method", e);
         } catch (IllegalAccessException e) {
@@ -45,14 +81,14 @@ public final class Subscription {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(target, method);
+        return Objects.hashCode(subscriber, method);
     }
 
     @Override
     public boolean equals(Object object) {
         if (object instanceof Subscription) {
             Subscription that = (Subscription)object;
-            return Objects.equal(this.target, that.target) && Objects.equal(this.method, that.method);
+            return subscriber == that.subscriber && Objects.equal(this.method, that.method);
         }
         return false;
     }

@@ -5,7 +5,7 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
-import com.salesforce.omakase.Context;
+import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Rule;
 
 /**
@@ -18,12 +18,12 @@ public class RuleParser extends AbstractParser {
     private static final DeclarationParser declaration = new DeclarationParser();
 
     @Override
-    public boolean parse(Stream stream, Context context) {
+    public boolean parse(Stream stream, Broadcaster broadcaster) {
         boolean matched;
 
         // selector
         stream.skipWhitepace();
-        matched = selector.parse(stream, context);
+        matched = selector.parse(stream, null);
 
         // if there wasn't a selector then we aren't at a rule
         if (!matched) return false;
@@ -35,7 +35,7 @@ public class RuleParser extends AbstractParser {
 
         do {
             stream.skipWhitepace();
-            declaration.parse(stream, context);
+            declaration.parse(stream, null);
             stream.skipWhitepace();
         } while (stream.optional(SEMICOLON));
 

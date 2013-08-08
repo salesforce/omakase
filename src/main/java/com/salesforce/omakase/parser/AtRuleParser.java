@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.Context;
+import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -13,7 +13,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public class AtRuleParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Context context) {
+    public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
 
         // must begin with '@'

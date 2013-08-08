@@ -8,7 +8,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
 import com.google.common.base.CharMatcher;
-import com.salesforce.omakase.Errors;
 import com.salesforce.omakase.parser.token.Token;
 
 /**
@@ -176,7 +175,10 @@ public final class Stream {
      *            Ensure that the current token matches this {@link Token} before we advance.
      */
     public void expect(Token token) {
-        if (!token.matches(current())) Errors.expected.send(this, token.description());
+        if (!token.matches(current())) {
+            String msg = "Expected to find '%s'";
+            throw new ParserException(this, String.format(msg, token.description()));
+        }
         next();
     }
 

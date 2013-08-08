@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.Context;
+import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Declaration;
 
 /**
@@ -14,7 +14,7 @@ import com.salesforce.omakase.ast.Declaration;
 public class DeclarationParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Context context) {
+    public boolean parse(Stream stream, Broadcaster broadcaster) {
         // skip whitespace
         stream.skipWhitepace();
 

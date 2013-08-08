@@ -8,8 +8,8 @@ import java.util.Set;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.reflect.TypeToken;
 
 /**
@@ -17,21 +17,21 @@ import com.google.common.reflect.TypeToken;
  * 
  * @author nmcwilliams
  */
-public class Emitter {
+public final class Emitter {
     private static final AnnotationScanner scanner = new AnnotationScanner();
 
-    private static final LoadingCache<Class<?>, Set<Class<?>>> cache =
-            CacheBuilder.newBuilder()
-                .weakKeys()
-                .build(new CacheLoader<Class<?>, Set<Class<?>>>() {
-                    @Override
-                    @SuppressWarnings({ "unchecked", "rawtypes" })
-                    public Set<Class<?>> load(Class<?> klass) {
-                        return (Set)TypeToken.of(klass).getTypes().rawTypes();
-                    }
-                });
+    private static final LoadingCache<Class<?>, Set<Class<?>>> cache = CacheBuilder.newBuilder()
+        .weakKeys()
+        .build(new CacheLoader<Class<?>, Set<Class<?>>>() {
+            @Override
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            public Set<Class<?>> load(Class<?> klass) {
+                return (Set)TypeToken.of(klass).getTypes().rawTypes();
+            }
+        });
 
-    private final SetMultimap<Class<?>, Subscription> subscriptions = HashMultimap.create();
+    /** order is important so that subscribers are notified in the order they were registered */
+    private final Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
 
     /**
      * TODO Description
@@ -46,18 +46,20 @@ public class Emitter {
     /**
      * TODO Description
      * 
+     * @param type
+     *            TODO
      * @param event
      *            TODO
      */
-    public void emit(Object event) {
-        for (Class<?> type : flattened(event.getClass())) {
-            for (Subscription subscription : subscriptions.get(type)) {
-                subscription.deliver(event);
+    public void emit(SubscriptionType type, Object event) {
+        for (Class<?> klass : hierarchy(event.getClass())) {
+            for (Subscription subscription : subscriptions.get(klass)) {
+                subscription.inform(type, event);
             }
         }
     }
 
-    private Set<Class<?>> flattened(Class<?> klass) {
+    private Set<Class<?>> hierarchy(Class<?> klass) {
         return cache.getUnchecked(klass);
     }
 }

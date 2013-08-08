@@ -11,7 +11,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Emitter;
-import com.salesforce.omakase.plugin.Filter;
+import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -19,30 +19,35 @@ import com.salesforce.omakase.plugin.Plugin;
  * 
  * @author nmcwilliams
  */
-public final class Context {
-    private final ClassToInstanceMap<Plugin> plugins = MutableClassToInstanceMap.create();
+public final class Context implements Broadcaster {
+    /** registry of all plugins */
+    private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
+
+    /** used for propagating new syntax creation or change events */
     private final Emitter emitter = new Emitter();
 
-    /** for internal construction */
+    /** internal construction only */
     Context() {}
 
     /**
      * TODO Description This is to make #require and #retrieve work in a simple way
      * 
-     * @param pluginsToRegister
+     * @param plugins
      *            TODO
      */
-    public void plugins(Plugin... pluginsToRegister) {
-        for (Plugin plugin : pluginsToRegister) {
+    public void plugins(Plugin... plugins) {
+        for (Plugin plugin : plugins) {
+            // get the class of the plugin, which we will use to index this instance in the registry
             Class<? extends Plugin> klass = plugin.getClass();
 
-            // only one instance per plugin allowed per type.
-            checkArgument(!plugins.containsKey(klass), String.format("Only one plugin instance of each type allowed: %s", klass));
+            // only one instance of a plugin allowed per type.
+            String msg = "Only one plugin instance of each type allowed: %s";
+            checkArgument(!registry.containsKey(klass), String.format(msg, klass));
 
-            // add the plugin to the list
-            plugins.put(klass, plugin);
+            // add the plugin to the registry
+            registry.put(klass, plugin);
 
-            // register the plugin for events
+            // hook up the plugin for events
             emitter.register(plugin);
         }
     }
@@ -52,25 +57,29 @@ public final class Context {
      * 
      * @param <T>
      *            TODO
-     * @param type
-     *            TODO
-     * @param supplier
+     * @param klass
      *            TODO
      * @return TODO
      */
-    public <T extends Plugin> T require(Class<T> type, Supplier<T> supplier) {
-        return Optional.fromNullable(plugins.getInstance(type)).or(supplier);
+    public <T extends Plugin> T require(Class<T> klass) {
+        Optional<Supplier<T>> supplier = Suppliers.get(klass);
+        checkArgument(supplier.isPresent(), String.format("No supplier defined for %s.", klass));
+        return require(klass, supplier.get());
     }
 
     /**
      * TODO Description
      * 
+     * @param <T>
+     *            TODO
      * @param klass
+     *            TODO
+     * @param supplier
      *            TODO
      * @return TODO
      */
-    public Filter require(Class<Filter> klass) {
-        return require(klass, Suppliers.FILTER);
+    public <T extends Plugin> T require(Class<T> klass, Supplier<T> supplier) {
+        return Optional.fromNullable(registry.getInstance(klass)).or(supplier);
     }
 
     /**
@@ -83,18 +92,11 @@ public final class Context {
      * @return TODO
      */
     public <T extends Plugin> Optional<T> retrieve(Class<T> klass) {
-        return Optional.of(plugins.getInstance(klass));
+        return Optional.of(registry.getInstance(klass));
     }
 
-    /**
-     * TODO Description
-     * 
-     * @param syntax
-     *            TODO
-     * @return TODO
-     */
-    public <T extends Syntax> Context broadcast(T syntax) {
-        emitter.emit(syntax);
-        return this;
+    @Override
+    public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
+        emitter.emit(type, syntax);
     }
 }

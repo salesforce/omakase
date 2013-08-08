@@ -12,10 +12,13 @@ import com.salesforce.omakase.plugin.Plugin;
 /**
  * TODO Description
  * 
+ * <p> This library is <em>not</em> thread-safe.
+ * 
  * @author nmcwilliams
  */
 @NotThreadSafe
 public final class Omakase {
+    /** do not construct */
     private Omakase() {}
 
     /**
@@ -58,7 +61,7 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
-            new StylesheetParser().parse(stream, context);
+            new StylesheetParser().parse(stream, null);
             return context;
         }
     }

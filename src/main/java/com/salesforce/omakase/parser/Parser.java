@@ -5,7 +5,7 @@ package com.salesforce.omakase.parser;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.salesforce.omakase.Context;
+import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -24,10 +24,11 @@ public interface Parser {
      * 
      * @param stream
      *            The stream to parse.
-     * @param context
-     *            The consumers to notify.
+     * @param broadcaster
+     *            TODO
+     * 
      * @return true if we parsed <em>something</em> (excluding whitespace), false otherwise. Note that a return value of
      *         true does not indicate that the parsed content was actually valid grammar.
      */
-    boolean parse(Stream stream, Context context);
+    boolean parse(Stream stream, Broadcaster broadcaster);
 }

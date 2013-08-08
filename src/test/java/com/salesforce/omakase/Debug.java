@@ -78,4 +78,5 @@ public class Debug {
             ".uiButton.default:disabled .label:hover{\n" +
             "    color:#888;\n" +
             "}";
+
 }
