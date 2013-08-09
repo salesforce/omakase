@@ -8,14 +8,14 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface RefinedDeclaration {
+public interface RefinedDeclaration extends Syntax {
     /**
      * Gets the property name.
      * 
      * @return The property name.
      */
 
-    Property property();
+    PropertyName propertyName();
 
     /**
      * Gets the property value.
@@ -23,5 +23,5 @@ public interface RefinedDeclaration {
      * @return The property value.
      */
 
-    String value();
+    PropertyValue propertyValue();
 }

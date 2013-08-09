@@ -10,7 +10,7 @@ import java.util.Iterator;
  * 
  * @author nmcwilliams
  */
-public interface RefinedSelector {
+public interface RefinedSelector extends Syntax {
     /**
      * TODO Description
      * 

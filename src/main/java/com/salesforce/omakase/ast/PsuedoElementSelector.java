@@ -11,7 +11,6 @@ import com.google.common.base.Objects;
  * @author nmcwilliams
  */
 public class PsuedoElementSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
-
     /**
      * TODO
      * 
@@ -42,7 +41,7 @@ public class PsuedoElementSelector extends AbstractLinkableSyntax<SelectorPart> 
     }
 
     @Override
-    protected PsuedoElementSelector get() {
+    protected PsuedoElementSelector self() {
         return this;
     }
 

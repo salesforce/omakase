@@ -47,7 +47,7 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
     }
 
     @Override
-    protected Selector get() {
+    protected Selector self() {
         return this;
     }
 

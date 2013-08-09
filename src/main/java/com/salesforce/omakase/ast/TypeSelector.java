@@ -25,11 +25,6 @@ public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implement
     }
 
     @Override
-    protected SelectorPart get() {
-        return this;
-    }
-
-    @Override
     public boolean isSelector() {
         return true;
     }
@@ -42,6 +37,11 @@ public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implement
     @Override
     public SelectorPartType type() {
         return SelectorPartType.TYPE;
+    }
+
+    @Override
+    protected SelectorPart self() {
+        return this;
     }
 
     @Override

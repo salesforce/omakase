@@ -6,8 +6,6 @@ package com.salesforce.omakase.parser;
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
 import com.salesforce.omakase.Broadcaster;
-import com.salesforce.omakase.ast.SelectorGroup;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.token.Token;
 
 /**
@@ -26,12 +24,12 @@ public class SelectorGroupParser extends AbstractParser {
         // if the next character is a valid first character for a selector
         if (!SELECTOR_START.matches(stream.current())) return false;
 
-        int line = stream.line();
-        int column = stream.column();
-        String content = stream.until(OPEN_BRACKET);
-
-        SelectorGroup selectorGroup = new SelectorGroup(line, column, content);
-        broadcaster.broadcast(SubscriptionType.CREATED, selectorGroup);
+        // int line = stream.line();
+        // int column = stream.column();
+        // String content = stream.until(OPEN_BRACKET);
+        //
+        // SelectorGroup selectorGroup = new SelectorGroup(line, column, content);
+        // broadcaster.broadcast(SubscriptionType.CREATED, selectorGroup);
         return true;
     }
 

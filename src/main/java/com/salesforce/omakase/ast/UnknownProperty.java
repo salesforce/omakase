@@ -12,7 +12,7 @@ import com.google.common.base.Objects;
  * 
  * @author nmcwilliams
  */
-public final class UnknownProperty implements Property {
+public final class UnknownProperty implements PropertyName {
     private final String name;
 
     /**
@@ -26,7 +26,7 @@ public final class UnknownProperty implements Property {
     }
 
     @Override
-    public String propertyName() {
+    public String get() {
         return name;
     }
 

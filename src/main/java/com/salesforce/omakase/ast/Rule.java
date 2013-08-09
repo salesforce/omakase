@@ -32,11 +32,6 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
         this.head = head;
     }
 
-    @Override
-    protected Statement get() {
-        return this;
-    }
-
     /**
      * TODO Description
      * 
@@ -67,6 +62,11 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
      */
     public Rule appendDeclaration(Declaration declaration) {
         Iterators.getLast(declarations()).append(declaration);
+        return this;
+    }
+
+    @Override
+    protected Statement self() {
         return this;
     }
 

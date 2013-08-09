@@ -17,17 +17,13 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
     /**
      * TODO
      * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
      * @param rawProperty
      *            TODO
      * @param rawValue
      *            TODO
      */
-    public Declaration(int line, int column, RawSyntax rawProperty, RawSyntax rawValue) {
-        super(line, column);
+    public Declaration(RawSyntax rawProperty, RawSyntax rawValue) {
+        super(rawProperty.line(), rawProperty.column());
         this.rawProperty = rawProperty;
         this.rawValue = rawValue;
     }
@@ -51,13 +47,13 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
     }
 
     @Override
-    public Property property() {
+    public PropertyName propertyName() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public String value() {
+    public PropertyValue propertyValue() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -70,11 +66,11 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
 
     @Override
     public String filterName() {
-        return refine().property().propertyName();
+        return refine().propertyName().get();
     }
 
     @Override
-    protected Declaration get() {
+    protected Declaration self() {
         return this;
     }
 

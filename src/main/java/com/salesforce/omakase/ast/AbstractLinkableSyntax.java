@@ -38,7 +38,7 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
      * 
      * @return TODO
      */
-    protected abstract T get();
+    protected abstract T self();
 
     @Override
     public Optional<T> previous() {
@@ -57,7 +57,7 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
 
     @Override
     public T head() {
-        return isHead() ? get() : previous.get().head();
+        return isHead() ? self() : previous.get().head();
     }
 
     @Override
@@ -67,7 +67,7 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
 
     @Override
     public T tail() {
-        return isTail() ? get() : previous.get().tail();
+        return isTail() ? self() : previous.get().tail();
     }
 
     @Override

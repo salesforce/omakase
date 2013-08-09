@@ -41,7 +41,7 @@ public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> im
     }
 
     @Override
-    protected PseudoClassSelector get() {
+    protected PseudoClassSelector self() {
         return this;
     }
 

@@ -37,7 +37,7 @@ public class UniversalSelector extends AbstractLinkableSyntax<SelectorPart> impl
     }
 
     @Override
-    protected SelectorPart get() {
+    protected SelectorPart self() {
         return this;
     }
 }

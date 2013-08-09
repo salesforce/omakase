@@ -49,7 +49,7 @@ public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements 
     }
 
     @Override
-    protected SelectorPart get() {
+    protected SelectorPart self() {
         return this;
     }
 

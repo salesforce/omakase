@@ -39,7 +39,7 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
     }
 
     @Override
-    protected SelectorPart get() {
+    protected SelectorPart self() {
         return this;
     }
 

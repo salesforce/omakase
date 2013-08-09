@@ -8,10 +8,10 @@ import java.util.List;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.PropertyName;
+import com.salesforce.omakase.ast.Properties;
 
 /**
- * Utility to take list of css names and convert them to the {@link PropertyName} enum.
+ * Utility to take list of css names and convert them to the {@link Properties} enum.
  */
 @SuppressWarnings("javadoc")
 public class PropertyToEnum {
