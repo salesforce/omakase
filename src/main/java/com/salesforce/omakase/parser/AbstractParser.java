@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.parser.token.StandardTokenFactory;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenFactory;
 
@@ -38,6 +39,7 @@ public abstract class AbstractParser implements Parser {
      *            The {@link Parser} to use.
      * @return A new {@link CombinationParser} instance.
      */
+    @Override
     public Parser or(Parser other) {
         return new CombinationParser(this, other);
     }

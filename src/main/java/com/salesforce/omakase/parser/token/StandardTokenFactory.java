@@ -1,12 +1,11 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.parser;
+package com.salesforce.omakase.parser.token;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
-import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.TokenFactory;
+import com.salesforce.omakase.parser.Parser;
 
 /**
  * A {@link TokenFactory} for retrieving standard {@link Token} objects. Mainly using by {@link Parser}s.
@@ -14,8 +13,12 @@ import com.salesforce.omakase.parser.token.TokenFactory;
  * @author nmcwilliams
  */
 public class StandardTokenFactory implements TokenFactory {
+    private static final Token SELETOR_BEGIN = ALPHA.or(STAR).or(HASH).or(DOT);
+    private static final Token SELECTOR_DELIMITER = COMMA;
+    private static final Token SELECTOR_END = SELECTOR_DELIMITER.or(OPEN_BRACKET);
     private static final Token PROPERTY_START = ALPHA.or(HYPHEN);
     private static final Token DECLARATION_END = SEMICOLON.or(CLOSE_BRACKET);
+
     private static final TokenFactory instance = new StandardTokenFactory();
 
     /** Only here to allow for subclassing. Clients should use {@link #instance()} instead. */
@@ -31,8 +34,38 @@ public class StandardTokenFactory implements TokenFactory {
     }
 
     @Override
+    public Token selectorBegin() {
+        return SELETOR_BEGIN;
+    }
+
+    @Override
+    public Token selectorDelimiter() {
+        return SELECTOR_DELIMITER;
+    }
+
+    @Override
+    public Token selectorEnd() {
+        return SELECTOR_END;
+    }
+
+    @Override
+    public Token declarationBlockBegin() {
+        return OPEN_BRACKET;
+    }
+
+    @Override
+    public Token declarationBlockEnd() {
+        return CLOSE_BRACKET;
+    }
+
+    @Override
     public Token declarationBegin() {
         return PROPERTY_START;
+    }
+
+    @Override
+    public Token declarationDelimiter() {
+        return SEMICOLON;
     }
 
     @Override
@@ -40,4 +73,8 @@ public class StandardTokenFactory implements TokenFactory {
         return DECLARATION_END;
     }
 
+    @Override
+    public Token propertyNameEnd() {
+        return COLON;
+    }
 }

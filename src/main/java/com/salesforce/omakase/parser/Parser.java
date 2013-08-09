@@ -31,4 +31,12 @@ public interface Parser {
      *         true does not indicate that the parsed content was actually valid grammar.
      */
     boolean parse(Stream stream, Broadcaster broadcaster);
+
+    /**
+     * TODO Description
+     * 
+     * @param other
+     * @return TODO
+     */
+    Parser or(Parser other);
 }

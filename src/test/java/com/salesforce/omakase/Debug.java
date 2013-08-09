@@ -5,6 +5,7 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
+import com.salesforce.omakase.util.EchoLogger;
 
 /**
  * Temp test for debugging.
@@ -14,7 +15,7 @@ public class Debug {
     @Test
     public void develop() {
         EchoLogger logger = new EchoLogger();
-        Omakase.source(src1).request(logger).process();
+        Omakase.source(src2).request(logger).process();
     }
 
     public static final String src1 = ".testing #is > fun { color: red; margin: 10px 5px; }";

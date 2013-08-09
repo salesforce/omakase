@@ -92,4 +92,14 @@ public final class Subscription {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("method", method.getName())
+            .add("subscriber", subscriber)
+            .add("type", type)
+            .add("filter", filter)
+            .toString();
+    }
 }

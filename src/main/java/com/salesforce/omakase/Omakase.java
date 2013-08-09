@@ -7,9 +7,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
-import com.salesforce.omakase.parser.StylesheetParser;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -40,7 +39,6 @@ public final class Omakase {
      * TODO Description
      */
     public static final class Request {
-        private static final Parser parser = new StylesheetParser();
         private final Context context = new Context();
         private final Stream stream;
 
@@ -66,7 +64,7 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
-            parser.parse(stream, context);
+            ParserFactory.stylesheetParser().parse(stream, context);
             return context;
         }
     }

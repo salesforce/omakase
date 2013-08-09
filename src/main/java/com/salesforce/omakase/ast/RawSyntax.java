@@ -11,19 +11,19 @@ import com.google.common.base.Objects;
  * @author nmcwilliams
  */
 public class RawSyntax extends AbstractSyntax {
-    private final String rawContent;
+    private final String content;
 
     /**
      * @param line
      *            TODO
      * @param column
      *            TODO
-     * @param rawContent
+     * @param rawcontentContent
      *            TODO
      */
-    protected RawSyntax(int line, int column, String rawContent) {
+    public RawSyntax(int line, int column, String rawcontentContent) {
         super(line, column);
-        this.rawContent = rawContent;
+        this.content = rawcontentContent;
     }
 
     /**
@@ -31,8 +31,8 @@ public class RawSyntax extends AbstractSyntax {
      * 
      * @return TODO
      */
-    public String rawContent() {
-        return rawContent;
+    public String content() {
+        return content;
     }
 
     @Override
@@ -45,7 +45,8 @@ public class RawSyntax extends AbstractSyntax {
         return Objects.toStringHelper(this)
             .add("line", line())
             .add("column", column())
-            .add("rawContent", rawContent)
+            .add("content", content)
+            .add("comments", comments())
             .toString();
     }
 }

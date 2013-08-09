@@ -15,17 +15,20 @@ import com.salesforce.omakase.ast.Stylesheet;
  */
 @Immutable
 public class StylesheetParser extends AbstractParser {
-    private static final Parser statement = new AtRuleParser().or(new RuleParser());
+    private static final String EXTRANEOUS = "Extraneous text found at the end of the source '%s'";
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        // continually parse until there is nothing left in the stream
+        // continually parse until we get to the end of the stream
         while (!stream.eof()) {
-            boolean matched = statement.parse(stream, broadcaster);
-            if (!matched && !stream.eof()) {
-                String msg = "Extraneous text found at the end of the source '%s'";
-                throw new ParserException(stream, String.format(msg, stream.remaining()));
-            }
+            // parse the next statement
+            boolean matched = ParserFactory.statementParser().parse(stream, broadcaster);
+
+            // skip whitespace
+            stream.skipWhitepace();
+
+            // after all rules and content is parsed, there should be nothing left in the stream
+            if (!matched && !stream.eof()) throw new ParserException(stream, String.format(EXTRANEOUS, stream.remaining()));
         }
 
         return true;

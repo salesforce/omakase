@@ -3,10 +3,6 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.salesforce.omakase.parser.token.Tokens.CLOSE_BRACKET;
-import static com.salesforce.omakase.parser.token.Tokens.OPEN_BRACKET;
-import static com.salesforce.omakase.parser.token.Tokens.SEMICOLON;
-
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Rule;
 
@@ -16,32 +12,25 @@ import com.salesforce.omakase.ast.Rule;
  * @author nmcwilliams
  */
 public class RuleParser extends AbstractParser {
-    private static final SelectorGroupParser selector = new SelectorGroupParser();
-    private static final DeclarationParser declaration = new DeclarationParser();
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        boolean matched;
-
-        // selector
         stream.skipWhitepace();
-        matched = selector.parse(stream, broadcaster);
 
         // if there wasn't a selector then we aren't at a rule
-        if (!matched) return false;
+        if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster)) return false;
 
-        // declaration block
         stream.skipWhitepace();
 
-        stream.expect(OPEN_BRACKET);
+        // parse the declaration block
+        stream.expect(tokenFactory().declarationBlockBegin());
 
         do {
             stream.skipWhitepace();
-            declaration.parse(stream, broadcaster);
+            ParserFactory.declarationParser().parse(stream, broadcaster);
             stream.skipWhitepace();
-        } while (stream.optional(SEMICOLON));
+        } while (stream.optional(tokenFactory().declarationDelimiter()));
 
-        stream.expect(CLOSE_BRACKET);
+        stream.expect(tokenFactory().declarationBlockEnd());
 
         return true;
     }

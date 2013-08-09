@@ -12,7 +12,7 @@ import com.google.common.base.Objects;
  * 
  * @author nmcwilliams
  */
-public final class UnknownProperty implements PropertyName {
+public final class UnknownPropertyName implements PropertyName {
     private final String name;
 
     /**
@@ -21,7 +21,7 @@ public final class UnknownProperty implements PropertyName {
      * @param name
      *            TODO
      */
-    public UnknownProperty(String name) {
+    public UnknownPropertyName(String name) {
         this.name = checkNotNull(name, "name cannot be null");
     }
 

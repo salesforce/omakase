@@ -630,11 +630,11 @@ public enum Properties implements PropertyName {
      * 
      * @param name
      *            The name of the property.
-     * @return The associated {@link Properties}, or a new instance of an {@link UnknownProperty} if not found.
+     * @return The associated {@link Properties}, or a new instance of an {@link UnknownPropertyName} if not found.
      */
     public static PropertyName from(String name) {
         Properties matched = map.get(name.toLowerCase());
-        return matched != null ? matched : new UnknownProperty(name);
+        return matched != null ? matched : new UnknownPropertyName(name);
     }
 
     @Override

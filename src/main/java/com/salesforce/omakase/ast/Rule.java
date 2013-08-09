@@ -16,20 +16,20 @@ import com.salesforce.omakase.LinkableIterator;
  */
 public class Rule extends AbstractLinkableSyntax<Statement> implements Statement {
     private final SelectorGroup selectorGroup;
-    private final Declaration head;
+    private final Declaration declarationHead;
 
     /**
      * TODO
      * 
      * @param selectorGroup
      *            TODO
-     * @param head
+     * @param declarationHead
      *            TODO
      */
-    protected Rule(SelectorGroup selectorGroup, Declaration head) {
+    public Rule(SelectorGroup selectorGroup, Declaration declarationHead) {
         super(selectorGroup.line(), selectorGroup.column());
         this.selectorGroup = selectorGroup;
-        this.head = head;
+        this.declarationHead = declarationHead;
     }
 
     /**
@@ -47,7 +47,7 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
      * @return TODO
      */
     public Iterator<Declaration> declarations() {
-        return LinkableIterator.create(head);
+        return LinkableIterator.create(declarationHead);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
             .add("line", line())
             .add("column", column())
             .add("selectorGroup", selectorGroup)
-            .add("declarations", declarations())
+            .add("declarations", declarationHead != null ? declarations() : null)
             .toString();
     }
 }

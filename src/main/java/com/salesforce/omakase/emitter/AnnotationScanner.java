@@ -19,6 +19,8 @@ import com.salesforce.omakase.plugin.Plugin;
  * @author nmcwilliams
  */
 final class AnnotationScanner {
+    private static final String ONE_ARG = "Methods annotated with @Subscribe must have exactly one argument: '%s'";
+
     /** cache of which methods on a {@link Plugin} are {@link Subscription} methods */
     private static final LoadingCache<Class<?>, Set<SubscriptionMetadata>> cache = CacheBuilder.newBuilder()
         .weakKeys()
@@ -60,10 +62,7 @@ final class AnnotationScanner {
                 SubscriptionMetadata metadata = new SubscriptionMetadata();
 
                 // must have exactly one argument
-                if (parameterTypes.length != 1) {
-                    String msg = "Methods annotated with @Subscribe must have exactly one argument: '%s'";
-                    throw new SubscriptionException(String.format(msg, method));
-                }
+                if (parameterTypes.length != 1) { throw new SubscriptionException(String.format(ONE_ARG, method)); }
 
                 metadata.method = method;
                 metadata.type = subscribe.type();
@@ -112,6 +111,16 @@ final class AnnotationScanner {
                         && Objects.equal(filter, that.filter);
             }
             return false;
+        }
+
+        @Override
+        public String toString() {
+            return Objects.toStringHelper(this)
+                .add("method", method.getName())
+                .add("priority", priority)
+                .add("type", type)
+                .add("filter", filter)
+                .toString();
         }
     }
 }

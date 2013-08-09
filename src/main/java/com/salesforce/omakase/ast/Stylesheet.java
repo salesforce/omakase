@@ -56,7 +56,7 @@ public final class Stylesheet extends AbstractSyntax {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-            .add("statements", Joiner.on("\n\n").join(statements()))
+            .add("statements", head != null ? Joiner.on("\n\n").join(statements()) : null)
             .toString();
     }
 }

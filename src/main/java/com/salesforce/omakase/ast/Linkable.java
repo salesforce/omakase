@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
  * @param <T>
  *            TODO
  */
-public interface Linkable<T> {
+public interface Linkable<T> extends Syntax {
     /**
      * TODO Description
      * 

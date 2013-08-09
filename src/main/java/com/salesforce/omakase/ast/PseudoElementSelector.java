@@ -10,7 +10,7 @@ import com.google.common.base.Objects;
  * 
  * @author nmcwilliams
  */
-public class PsuedoElementSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class PseudoElementSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
     /**
      * TODO
      * 
@@ -19,7 +19,7 @@ public class PsuedoElementSelector extends AbstractLinkableSyntax<SelectorPart> 
      * @param column
      *            TODO
      */
-    protected PsuedoElementSelector(int line, int column) {
+    protected PseudoElementSelector(int line, int column) {
         super(line, column);
         // TODO Auto-generated constructor stub
     }
@@ -41,7 +41,7 @@ public class PsuedoElementSelector extends AbstractLinkableSyntax<SelectorPart> 
     }
 
     @Override
-    protected PsuedoElementSelector self() {
+    protected PseudoElementSelector self() {
         return this;
     }
 

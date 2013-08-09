@@ -8,6 +8,6 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface PropertyValue {
+public interface PropertyValue extends Syntax {
 
 }

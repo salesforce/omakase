@@ -21,7 +21,7 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
      * @param rawContent
      *            TODO
      */
-    protected Selector(RawSyntax rawContent) {
+    public Selector(RawSyntax rawContent) {
         super(rawContent.line(), rawContent.column());
         this.rawContent = rawContent;
     }
@@ -57,7 +57,7 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
             .add("line", line())
             .add("column", column())
             .add("rawContent", rawContent)
-            .add("selectorParts", parts())
+            .add("selectorParts", head != null ? parts() : null)
             .toString();
     }
 }

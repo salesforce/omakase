@@ -59,7 +59,7 @@ public class SelectorGroup extends AbstractSyntax {
         return Objects.toStringHelper(this)
             .add("line", line())
             .add("column", column())
-            .add("selectors", selectors())
+            .add("selectors", head != null ? selectors() : head)
             .toString();
     }
 }

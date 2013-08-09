@@ -26,6 +26,9 @@ public enum Tokens implements Token {
     /** a regular colon */
     COLON(is(':'), ":"),
 
+    /** comma */
+    COMMA(is(','), ","),
+
     /** upper or lower case alpha character */
     ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
 

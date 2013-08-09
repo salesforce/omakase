@@ -16,7 +16,7 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface Refinable<T> {
+public interface Refinable<T> extends Syntax {
     /**
      * Refines the object to its more specific and detailed state or representation. This may return the same object
      * with its internal state altered, or it may return a new object altogether.
