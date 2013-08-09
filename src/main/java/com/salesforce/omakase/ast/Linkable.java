@@ -14,16 +14,6 @@ import com.google.common.collect.ImmutableList;
  *            TODO
  */
 public interface Linkable<T> {
-    boolean isHead();
-
-    boolean isTail();
-
-    T head();
-
-    T tail();
-
-    Linkable<T> append(T node);
-
     /**
      * TODO Description
      * 
@@ -43,6 +33,42 @@ public interface Linkable<T> {
      * 
      * @return TODO
      */
+    boolean isHead();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    T head();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    boolean isTail();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    T tail();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     ImmutableList<T> group();
 
+    /**
+     * TODO Description
+     * 
+     * @param node
+     *            TODO
+     * @return TODO
+     */
+    Linkable<T> append(T node);
 }

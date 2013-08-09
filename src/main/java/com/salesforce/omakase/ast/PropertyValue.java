@@ -8,6 +8,6 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface NumericValue extends PropertyValue {
+public interface PropertyValue {
 
 }

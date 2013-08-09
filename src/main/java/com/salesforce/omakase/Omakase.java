@@ -3,8 +3,11 @@
  */
 package com.salesforce.omakase;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.annotation.concurrent.NotThreadSafe;
 
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.StylesheetParser;
 import com.salesforce.omakase.plugin.Plugin;
@@ -29,6 +32,7 @@ public final class Omakase {
      * @return TODO
      */
     public static Omakase.Request source(CharSequence source) {
+        checkNotNull(source, "source cannot be null");
         return new Request(source);
     }
 
@@ -36,8 +40,9 @@ public final class Omakase {
      * TODO Description
      */
     public static final class Request {
-        private final Stream stream;
+        private static final Parser parser = new StylesheetParser();
         private final Context context = new Context();
+        private final Stream stream;
 
         Request(CharSequence source) {
             this.stream = new Stream(source.toString());
@@ -61,7 +66,7 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
-            new StylesheetParser().parse(stream, context);
+            parser.parse(stream, context);
             return context;
         }
     }

@@ -20,6 +20,9 @@ import com.salesforce.omakase.plugin.Plugin;
  * @author nmcwilliams
  */
 public final class Context implements Broadcaster {
+    private static final String NO_SUPPLER = "No supplier defined for %s. Use require(Class, Supplier) instead.";
+    private static final String DUPLICATE = "Only one plugin instance of each type allowed: %s";
+
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
 
@@ -30,7 +33,9 @@ public final class Context implements Broadcaster {
     Context() {}
 
     /**
-     * TODO Description This is to make #require and #retrieve work in a simple way
+     * TODO Description
+     * 
+     * <p> This is to make #require and #retrieve work in a simple way
      * 
      * @param plugins
      *            TODO
@@ -40,9 +45,7 @@ public final class Context implements Broadcaster {
             // get the class of the plugin, which we will use to index this instance in the registry
             Class<? extends Plugin> klass = plugin.getClass();
 
-            // only one instance of a plugin allowed per type.
-            String msg = "Only one plugin instance of each type allowed: %s";
-            checkArgument(!registry.containsKey(klass), String.format(msg, klass));
+            checkArgument(!registry.containsKey(klass), String.format(DUPLICATE, klass));
 
             // add the plugin to the registry
             registry.put(klass, plugin);
@@ -63,7 +66,7 @@ public final class Context implements Broadcaster {
      */
     public <T extends Plugin> T require(Class<T> klass) {
         Optional<Supplier<T>> supplier = Suppliers.get(klass);
-        checkArgument(supplier.isPresent(), String.format("No supplier defined for %s.", klass));
+        checkArgument(supplier.isPresent(), String.format(NO_SUPPLER, klass));
         return require(klass, supplier.get());
     }
 

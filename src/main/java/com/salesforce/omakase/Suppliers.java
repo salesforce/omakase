@@ -17,7 +17,7 @@ import com.salesforce.omakase.plugin.SyntaxTree;
  * @author nmcwilliams
  */
 final class Suppliers {
-
+    /** map of suppliers for all library-provided plugins. This map isn't type safe... so don't screw it up */
     private static final Map<Class<?>, Supplier<?>> map = ImmutableMap.<Class<?>, Supplier<?>>builder()
         .put(SyntaxTree.class, new Supplier<SyntaxTree>() {
             @Override
@@ -34,7 +34,7 @@ final class Suppliers {
         .build();
 
     /** do not construct */
-    private Suppliers() {};
+    private Suppliers() {}
 
     /**
      * TODO Description

@@ -9,5 +9,10 @@ package com.salesforce.omakase.ast;
  * @author nmcwilliams
  */
 public interface Property {
-    String name();
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    String propertyName();
 }

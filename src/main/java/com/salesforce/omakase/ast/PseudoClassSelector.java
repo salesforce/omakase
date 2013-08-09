@@ -1,9 +1,9 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.AbstractLinkableSyntax;
+import com.google.common.base.Objects;
 
 /**
  * TODO Description
@@ -11,19 +11,17 @@ import com.salesforce.omakase.ast.AbstractLinkableSyntax;
  * @author nmcwilliams
  */
 public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
-
     /**
+     * TODO
+     * 
      * @param line
+     *            TODO
      * @param column
+     *            TODO
      */
     protected PseudoClassSelector(int line, int column) {
         super(line, column);
         // TODO Auto-generated constructor stub
-    }
-
-    @Override
-    protected PseudoClassSelector get() {
-        return this;
     }
 
     @Override
@@ -42,4 +40,16 @@ public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> im
         return null;
     }
 
+    @Override
+    protected PseudoClassSelector get() {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("line", line())
+            .add("column", column())
+            .toString();
+    }
 }

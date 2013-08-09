@@ -6,7 +6,7 @@ package com.salesforce.omakase.parser;
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
 import com.salesforce.omakase.Broadcaster;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
+import com.salesforce.omakase.ast.SelectorGroup;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.token.Token;
 

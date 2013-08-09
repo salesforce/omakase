@@ -5,10 +5,9 @@ package com.salesforce.omakase.ast;
 
 import java.util.Iterator;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import com.salesforce.omakase.LinkableIterator;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
 
 /**
  * Represents a CSS Rule. Each rule has one or more {@link Selector}s and zero or more {@link Declaration}s.
@@ -22,17 +21,13 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
     /**
      * TODO
      * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
      * @param selectorGroup
      *            TODO
      * @param head
      *            TODO
      */
-    protected Rule(int line, int column, SelectorGroup selectorGroup, Declaration head) {
-        super(line, column);
+    protected Rule(SelectorGroup selectorGroup, Declaration head) {
+        super(selectorGroup.line(), selectorGroup.column());
         this.selectorGroup = selectorGroup;
         this.head = head;
     }
@@ -47,11 +42,16 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
      * 
      * @return TODO
      */
-    SelectorGroup selectorGroup() {
+    public SelectorGroup selectorGroup() {
         return selectorGroup;
     }
 
-    Iterator<Declaration> declarations() {
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public Iterator<Declaration> declarations() {
         return LinkableIterator.create(head);
     }
 
@@ -70,4 +70,13 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
         return this;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("line", line())
+            .add("column", column())
+            .add("selectorGroup", selectorGroup)
+            .add("declarations", declarations())
+            .toString();
+    }
 }

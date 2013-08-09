@@ -10,8 +10,8 @@ import com.google.common.base.Objects;
  * 
  * @author nmcwilliams
  */
-public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
-    private final CombinatorType type;
+public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+    private String name;
 
     /**
      * TODO
@@ -20,37 +20,32 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
      *            TODO
      * @param column
      *            TODO
-     * @param type
+     * @param name
      *            TODO
      */
-    protected Combinator(int line, int column, CombinatorType type) {
+    protected IdSelector(int line, int column, String name) {
         super(line, column);
-        this.type = type;
+        this.name = name;
     }
 
     @Override
     public boolean isSelector() {
-        return false;
-    }
-
-    @Override
-    public boolean isCombinator() {
         return true;
     }
 
     @Override
+    public boolean isCombinator() {
+        return false;
+    }
+
+    @Override
     public SelectorPartType type() {
-        switch (type) {
-        case ADJACENT:
-            return SelectorPartType.ADJACENT_SIBLING;
-        case CHILD:
-            return SelectorPartType.ADJACENT_SIBLING;
-        case DESCENDENT:
-            return SelectorPartType.ADJACENT_SIBLING;
-        case GENERAL:
-            return SelectorPartType.ADJACENT_SIBLING;
-        }
-        throw new RuntimeException("unknown combinator type");
+        return SelectorPartType.ID;
+    }
+
+    @Override
+    public String filterName() {
+        return name;
     }
 
     @Override
@@ -63,7 +58,7 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
         return Objects.toStringHelper(this)
             .add("line", line())
             .add("column", column())
-            .add("type", type.symbol())
+            .add("name", name)
             .toString();
     }
 }

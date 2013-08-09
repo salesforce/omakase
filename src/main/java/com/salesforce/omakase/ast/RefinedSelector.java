@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
 import java.util.Iterator;
 
@@ -10,11 +10,11 @@ import java.util.Iterator;
  * 
  * @author nmcwilliams
  */
-public interface RefinedSelectorGroup {
+public interface RefinedSelector {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    Iterator<Selector> selectors();
+    Iterator<SelectorPart> parts();
 }

@@ -1,9 +1,9 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.AbstractLinkableSyntax;
+import com.google.common.base.Objects;
 
 /**
  * Represents a type selector (also known as an element type selector).
@@ -12,8 +12,12 @@ import com.salesforce.omakase.ast.AbstractLinkableSyntax;
  */
 public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
     /**
+     * TODO
+     * 
      * @param line
+     *            TODO
      * @param column
+     *            TODO
      */
     protected TypeSelector(int line, int column) {
         super(line, column);
@@ -37,8 +41,14 @@ public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implement
 
     @Override
     public SelectorPartType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return SelectorPartType.TYPE;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("line", line())
+            .add("column", column())
+            .toString();
+    }
 }

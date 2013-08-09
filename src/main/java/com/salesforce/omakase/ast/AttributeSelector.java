@@ -1,9 +1,9 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.AbstractLinkableSyntax;
+import com.google.common.base.Objects;
 
 /**
  * TODO Description
@@ -11,19 +11,16 @@ import com.salesforce.omakase.ast.AbstractLinkableSyntax;
  * @author nmcwilliams
  */
 public class AttributeSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
-
     /**
+     * TODO
+     * 
      * @param line
+     *            TODO
      * @param column
+     *            TODO
      */
     protected AttributeSelector(int line, int column) {
         super(line, column);
-        // TODO Auto-generated constructor stub
-    }
-
-    @Override
-    protected SelectorPart get() {
-        return this;
     }
 
     @Override
@@ -38,8 +35,19 @@ public class AttributeSelector extends AbstractLinkableSyntax<SelectorPart> impl
 
     @Override
     public SelectorPartType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return SelectorPartType.ATTRIBUTE;
     }
 
+    @Override
+    protected SelectorPart get() {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("line", line())
+            .add("column", column())
+            .toString();
+    }
 }

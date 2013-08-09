@@ -1,9 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
-
-import com.salesforce.omakase.ast.AbstractLinkableSyntax;
+package com.salesforce.omakase.ast;
 
 /**
  * Represents the universal selector, i.e., "*".
@@ -11,19 +9,16 @@ import com.salesforce.omakase.ast.AbstractLinkableSyntax;
  * @author nmcwilliams
  */
 public class UniversalSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
-
     /**
+     * TODO
+     * 
      * @param line
+     *            TODO
      * @param column
+     *            TODO
      */
-    protected UniversalSelector(int line, int column) {
+    public UniversalSelector(int line, int column) {
         super(line, column);
-        // TODO Auto-generated constructor stub
-    }
-
-    @Override
-    protected SelectorPart get() {
-        return this;
     }
 
     @Override
@@ -38,8 +33,11 @@ public class UniversalSelector extends AbstractLinkableSyntax<SelectorPart> impl
 
     @Override
     public SelectorPartType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return SelectorPartType.UNIVERSAL;
     }
 
+    @Override
+    protected SelectorPart get() {
+        return this;
+    }
 }

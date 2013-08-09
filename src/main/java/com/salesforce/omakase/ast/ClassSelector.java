@@ -1,9 +1,9 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.AbstractLinkableSyntax;
+import com.google.common.base.Objects;
 
 /**
  * TODO Description
@@ -11,7 +11,6 @@ import com.salesforce.omakase.ast.AbstractLinkableSyntax;
  * @author nmcwilliams
  */
 public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
-
     /**
      * TODO
      * 
@@ -22,11 +21,6 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
      */
     protected ClassSelector(int line, int column) {
         super(line, column);
-    }
-
-    @Override
-    protected SelectorPart get() {
-        return this;
     }
 
     @Override
@@ -41,8 +35,19 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
 
     @Override
     public SelectorPartType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return SelectorPartType.CLASS;
     }
 
+    @Override
+    protected SelectorPart get() {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("line", line())
+            .add("column", column())
+            .toString();
+    }
 }

@@ -38,6 +38,11 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
+    public String filterName() {
+        return "";
+    }
+
+    @Override
     public Syntax comment(String comment) {
         // TODO Auto-generated method stub
         return null;

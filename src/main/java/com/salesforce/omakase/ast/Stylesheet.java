@@ -21,15 +21,11 @@ public final class Stylesheet extends AbstractSyntax {
     /**
      * TODO
      * 
-     * @param line
-     *            TODO
-     * @param column
-     *            TODO
      * @param head
      *            TODO
      */
-    public Stylesheet(int line, int column, Statement head) {
-        super(line, column);
+    public Stylesheet(Statement head) {
+        super(head.line(), head.column());
         this.head = head;
     }
 

@@ -17,6 +17,8 @@ import com.salesforce.omakase.ast.Linkable;
  * XXX {@link ListIterator}?
  * 
  * @author nmcwilliams
+ * @param <T>
+ *            TODO
  */
 public class LinkableIterator<T extends Linkable<T>> implements Iterator<T> {
     private final T head;
@@ -53,7 +55,7 @@ public class LinkableIterator<T extends Linkable<T>> implements Iterator<T> {
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException(); // figure this out later
+        throw new UnsupportedOperationException(); // can implement later if needed
     }
 
     /**

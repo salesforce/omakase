@@ -4,7 +4,7 @@
 package com.salesforce.omakase;
 
 /**
- * TODO Description
+ * Generic parent for all Omakase CSS Parser related exceptions.
  * 
  * @author nmcwilliams
  */
@@ -12,6 +12,8 @@ public class OmakaseException extends RuntimeException {
     private static final long serialVersionUID = -2367547081410118208L;
 
     /**
+     * TODO
+     * 
      * @param message
      *            TODO
      */

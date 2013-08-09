@@ -40,22 +40,10 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
      */
     protected abstract T get();
 
-    // @Override
-    // protected AbstractLinkableSyntax<T> previous(T previous) {
-    // this.previous = Optional.of(previous);
-    // return this;
-    // }
-
     @Override
     public Optional<T> previous() {
         return previous;
     }
-
-    // @Override
-    // public AbstractLinkableSyntax<T> next(T next) {
-    // this.next = Optional.of(next);
-    // return this;
-    // }
 
     @Override
     public Optional<T> next() {
