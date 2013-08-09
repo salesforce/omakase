@@ -3,13 +3,10 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.Errors;
 import com.salesforce.omakase.OmakaseException;
 
 /**
  * An error encountered while parsing.
- * 
- * @see Errors
  * 
  * @author nmcwilliams
  */

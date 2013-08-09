@@ -1,18 +1,20 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast;
+package com.salesforce.omakase.ast.selector;
+
+import java.util.Iterator;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public interface IdSelector {
+public interface RefinedSelectorGroup {
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    String name();
+    Iterator<Selector> selectors();
 }

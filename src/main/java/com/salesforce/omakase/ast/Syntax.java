@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
 
+import com.salesforce.omakase.ast.selector.Selector;
+
 /**
  * A distinct unit of syntax within CSS.
  * 

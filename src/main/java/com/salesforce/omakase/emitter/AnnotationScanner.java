@@ -69,6 +69,8 @@ final class AnnotationScanner {
                 metadata.type = subscribe.type();
                 metadata.priority = subscribe.priority();
                 metadata.filter = subscribe.filter();
+
+                set.add(metadata);
             }
         }
 

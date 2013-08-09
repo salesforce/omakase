@@ -8,5 +8,5 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface Statement extends Syntax {
+public interface Statement extends Syntax, Linkable<Statement> {
 }

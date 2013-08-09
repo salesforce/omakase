@@ -30,6 +30,6 @@ public class CombinationParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        return first.parse(stream, null) ? true : second.parse(stream, null);
+        return first.parse(stream, broadcaster) ? true : second.parse(stream, broadcaster);
     }
 }

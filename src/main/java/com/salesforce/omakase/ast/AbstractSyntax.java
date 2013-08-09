@@ -1,11 +1,9 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.standard;
+package com.salesforce.omakase.ast;
 
 import java.util.List;
-
-import com.salesforce.omakase.ast.Syntax;
 
 /**
  * Base class for {@link Syntax} units.

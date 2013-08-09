@@ -8,16 +8,7 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
-public interface RefinedDeclaration extends Declaration {
-    /**
-     * TODO Description
-     * 
-     * @param property
-     *            TODO
-     * @return TODO
-     */
-    RefinedDeclaration property(Property property);
-
+public interface RefinedDeclaration {
     /**
      * Gets the property name.
      * 
@@ -25,15 +16,6 @@ public interface RefinedDeclaration extends Declaration {
      */
 
     Property property();
-
-    /**
-     * TODO Description
-     * 
-     * @param value
-     *            TODO
-     * @return TODO
-     */
-    RefinedDeclaration value(String value);
 
     /**
      * Gets the property value.

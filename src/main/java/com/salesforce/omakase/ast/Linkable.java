@@ -3,7 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.List;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 /**
  * TODO Description
@@ -13,42 +14,35 @@ import java.util.List;
  *            TODO
  */
 public interface Linkable<T> {
-    /**
-     * TODO Description
-     * 
-     * @param previous
-     *            TODO
-     * @return TODO
-     */
-    Linkable<T> previous(T previous);
+    boolean isHead();
+
+    boolean isTail();
+
+    T head();
+
+    T tail();
+
+    Linkable<T> append(T node);
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    T previous();
-
-    /**
-     * TODO Description
-     * 
-     * @param next
-     *            TODO
-     * @return TODO
-     */
-    Linkable<T> next(T next);
+    Optional<T> previous();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    T next();
+    Optional<T> next();
 
     /**
      * TODO Description
      * 
      * @return TODO
      */
-    List<T> group();
+    ImmutableList<T> group();
+
 }

@@ -1,11 +1,10 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast.standard;
+package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
-import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenFactory;
 

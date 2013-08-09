@@ -61,7 +61,7 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
-            new StylesheetParser().parse(stream, null);
+            new StylesheetParser().parse(stream, context);
             return context;
         }
     }

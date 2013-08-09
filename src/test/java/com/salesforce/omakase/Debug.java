@@ -5,7 +5,6 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.plugin.EchoLogger;
 
 /**
  * Temp test for debugging.

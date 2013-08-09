@@ -3,10 +3,6 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.SyntaxFactory;
-import com.salesforce.omakase.ast.standard.StandardSyntaxFactory;
-import com.salesforce.omakase.ast.standard.StandardTokenFactory;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenFactory;
 
@@ -16,27 +12,22 @@ import com.salesforce.omakase.parser.token.TokenFactory;
  * @author nmcwilliams
  */
 public abstract class AbstractParser implements Parser {
-    private final SyntaxFactory syntaxFactory;
     private final TokenFactory tokenFactory;
 
     /**
-     * Creates a new {@link AbstractParser} instance with using a standard {@link SyntaxFactory} and a standard
-     * {@link TokenFactory}.
+     * Creates a new {@link AbstractParser} instance with using a standard {@link TokenFactory}.
      */
     public AbstractParser() {
-        this(StandardSyntaxFactory.instance(), StandardTokenFactory.instance());
+        this(StandardTokenFactory.instance());
     }
 
     /**
-     * Creates a new {@link AbstractParser} instance using the given {@link SyntaxFactory}.
+     * Creates a new {@link AbstractParser} instance using the given {@link TokenFactory}.
      * 
-     * @param syntaxFactory
-     *            Use this factory for creating {@link Syntax} objects.
      * @param tokenFactory
      *            Use this factory for retrieving {@link Token} delimiters.
      */
-    public AbstractParser(SyntaxFactory syntaxFactory, TokenFactory tokenFactory) {
-        this.syntaxFactory = syntaxFactory;
+    public AbstractParser(TokenFactory tokenFactory) {
         this.tokenFactory = tokenFactory;
     }
 
@@ -49,15 +40,6 @@ public abstract class AbstractParser implements Parser {
      */
     public Parser or(Parser other) {
         return new CombinationParser(this, other);
-    }
-
-    /**
-     * Gets the {@link SyntaxFactory} to use for creating {@link Syntax} objects.
-     * 
-     * @return The factory.
-     */
-    protected SyntaxFactory syntaxFactory() {
-        return syntaxFactory;
     }
 
     /**

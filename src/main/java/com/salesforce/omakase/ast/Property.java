@@ -1,5 +1,5 @@
 /**
- * ADD LICENSE
+\ * ADD LICENSE
  */
 package com.salesforce.omakase.ast;
 

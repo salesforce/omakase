@@ -5,6 +5,7 @@ package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
  * Parses a {@link Declaration}.
@@ -28,8 +29,7 @@ public class DeclarationParser extends AbstractParser {
         // take everything until the end of declaration token
         String content = stream.until(tokenFactory().declarationEnd());
 
-        Declaration declaration = syntaxFactory().declaration(line, column, content);
-        context.broadcast(declaration);
+        broadcaster.broadcast(SubscriptionType.CREATED, new Declaration(line, column, content));
 
         return true;
     }

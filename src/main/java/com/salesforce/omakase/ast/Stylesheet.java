@@ -3,28 +3,64 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.List;
+import java.util.Iterator;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.collect.Iterators;
+import com.salesforce.omakase.LinkableIterator;
 
 /**
- * The root-level {@link Syntax} object. This contains directly and indirectly the {@link Rule}s, {@link Selector}s,
- * {@link Declaration}s, etc.. of a parsed CSS resource.
+ * The root-level {@link Syntax} object.
  * 
  * @author nmcwilliams
  */
-public interface Stylesheet extends Syntax {
+public final class Stylesheet extends AbstractSyntax {
+    private final Statement head;
+
+    /**
+     * TODO
+     * 
+     * @param line
+     *            TODO
+     * @param column
+     *            TODO
+     * @param head
+     *            TODO
+     */
+    public Stylesheet(int line, int column, Statement head) {
+        super(line, column);
+        this.head = head;
+    }
+
     /**
      * TODO Description
      * 
-     * @param statement
-     *            TODO
      * @return TODO
      */
-    Stylesheet statement(Statement statement);
+    public Iterator<Statement> statements() {
+        return LinkableIterator.create(head);
+    }
 
     /**
-     * Gets all of the {@link Statement}s within this {@link Stylesheet}.
+     * TODO Description
      * 
-     * @return The {@link Statement}s.
+     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to
+     * a specific instance of an existing one.
+     * 
+     * @param statement
+     *            TODO
+     * @return this, for chaining.
      */
-    List<Statement> statements();
+    public Stylesheet append(Statement statement) {
+        Iterators.getLast(statements()).append(statement);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("statements", Joiner.on("\n\n").join(statements()))
+            .toString();
+    }
 }

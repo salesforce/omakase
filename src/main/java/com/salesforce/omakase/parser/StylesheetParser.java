@@ -21,7 +21,7 @@ public class StylesheetParser extends AbstractParser {
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // continually parse until there is nothing left in the stream
         while (!stream.eof()) {
-            boolean matched = statement.parse(stream, null);
+            boolean matched = statement.parse(stream, broadcaster);
             if (!matched && !stream.eof()) {
                 String msg = "Extraneous text found at the end of the source '%s'";
                 throw new ParserException(stream, String.format(msg, stream.remaining()));

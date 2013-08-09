@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.ast.selector.SelectorPart;
+
 /**
  * TODO Description
  * 
