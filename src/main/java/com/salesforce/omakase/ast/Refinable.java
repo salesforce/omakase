@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.emitter.Subscribable;
+
 /**
  * Designates that an object is <em>refinable</em> to a more specified or detailed representation.
  * 
@@ -16,6 +18,7 @@ package com.salesforce.omakase.ast;
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public interface Refinable<T> extends Syntax {
     /**
      * Refines the object to its more specific and detailed state or representation. This may return the same object

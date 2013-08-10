@@ -7,12 +7,14 @@ import java.util.Iterator;
 
 import com.google.common.base.Objects;
 import com.salesforce.omakase.LinkableIterator;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public class SelectorGroup extends AbstractSyntax {
     private final Selector head;
 

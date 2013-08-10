@@ -3,11 +3,14 @@
  */
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.emitter.Subscribable;
+
 /**
  * Represents the universal selector, i.e., "*".
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public class UniversalSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
     /**
      * TODO

@@ -7,12 +7,14 @@ import java.util.Iterator;
 
 import com.google.common.base.Objects;
 import com.salesforce.omakase.LinkableIterator;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public class Selector extends AbstractLinkableSyntax<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
     private final RawSyntax rawContent;
     private SelectorPart head;

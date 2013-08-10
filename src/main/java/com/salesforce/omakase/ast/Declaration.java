@@ -4,13 +4,16 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Objects;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A CSS declaration, comprised of a property and value.
  * 
  * @author nmcwilliams
  */
-public class Declaration extends AbstractLinkableSyntax<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration {
+@Subscribable
+public class Declaration extends AbstractLinkableSyntax<Declaration> implements Refinable<RefinedDeclaration>,
+        RefinedDeclaration {
     private final RawSyntax rawProperty;
     private final RawSyntax rawValue;
 

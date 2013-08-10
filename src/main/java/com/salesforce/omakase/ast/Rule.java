@@ -8,12 +8,14 @@ import java.util.Iterator;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import com.salesforce.omakase.LinkableIterator;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * Represents a CSS Rule. Each rule has one or more {@link Selector}s and zero or more {@link Declaration}s.
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public class Rule extends AbstractLinkableSyntax<Statement> implements Statement {
     private final SelectorGroup selectorGroup;
     private final Declaration declarationHead;

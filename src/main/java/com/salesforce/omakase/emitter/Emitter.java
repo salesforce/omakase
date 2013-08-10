@@ -8,8 +8,8 @@ import java.util.Set;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.reflect.TypeToken;
 
 /**
@@ -20,18 +20,25 @@ import com.google.common.reflect.TypeToken;
 public final class Emitter {
     private static final AnnotationScanner scanner = new AnnotationScanner();
 
+    /** cache of class -> (class + supers). Only supers marked as {@link Subscribable} are stored */
     private static final LoadingCache<Class<?>, Set<Class<?>>> cache = CacheBuilder.newBuilder()
-        .weakKeys()
+        .weakKeys() // use weak references for keys (classes)
+        .initialCapacity(32) // expected number of subscribable syntax classes
         .build(new CacheLoader<Class<?>, Set<Class<?>>>() {
             @Override
-            @SuppressWarnings({ "unchecked", "rawtypes" })
             public Set<Class<?>> load(Class<?> klass) {
-                return (Set)TypeToken.of(klass).getTypes().rawTypes();
+                final Builder<Class<?>> builder = ImmutableSet.<Class<?>>builder();
+                for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
+                    if (type.isAnnotationPresent(Subscribable.class)) {
+                        builder.add(type);
+                    }
+                }
+                return builder.build();
             }
         });
 
     /** order is important so that subscribers are notified in the order they were registered */
-    private final Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
+    private final Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create(32, 8);
 
     /**
      * TODO Description

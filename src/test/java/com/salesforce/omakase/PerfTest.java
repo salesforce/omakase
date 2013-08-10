@@ -30,12 +30,15 @@ public class PerfTest {
     /** run phloc */
     private static final boolean PHLOC = true;
 
+    /** output statistics */
+    private static final boolean CONSOLE = true;
+
     /** LOC variations (multiplication) */
     private static final List<Integer> MULTI_FACTORS = ImmutableList.of(1, 2, 4, 6, 8, 10, 12, 16, 18, 20, 22, 24, 26,
         28, 30, 35, 40, 45, 50, 60, 70, 80, 100, 120, 140, 200);
 
     /** Single LOC variation (multiplication) */
-    private static final List<Integer> SINGLE_FACTOR = ImmutableList.of(100);
+    private static final List<Integer> SINGLE_FACTOR = ImmutableList.of(200);
 
     // END OPTIONS
 
@@ -48,7 +51,19 @@ public class PerfTest {
 
     /** main method with setup */
     public static void main(String[] args) {
+        env();
         run();
+    }
+
+    public static void env() {
+        int mb = 1024 * 1024;
+        Runtime runtime = Runtime.getRuntime();
+
+        print("##### Heap utilization statistics [MB] #####");
+        print("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);
+        print("Free Memory:" + runtime.freeMemory() / mb);
+        print("Total Memory:" + runtime.totalMemory() / mb);
+        print("Max Memory:" + runtime.maxMemory() / mb);
     }
 
     /** test execution */
@@ -58,7 +73,7 @@ public class PerfTest {
 
         // prime
         if (PRIME) {
-            System.out.println("Priming");
+            print("\nPriming");
             for (int i = 0; i < 150; i++) {
                 if (PHLOC) parse(Mode.phloc, original);
                 parse(Mode.omakase, original);
@@ -75,7 +90,7 @@ public class PerfTest {
 
             // calculate LOC
             int loc = commentPattern.matcher(actual).replaceAll("").trim().split("\n").length;
-            System.out.println("\nLOC: " + loc);
+            print("\nLOC: " + loc);
 
             // take an average of 7 runs
             final int runs = 7;
@@ -94,7 +109,7 @@ public class PerfTest {
                     phlocTotal += time;
                 }
                 long phlocParseAvg = phlocTotal / phlocParseTimes.size();
-                System.out.println("phloc: " + phlocParseAvg + "ms");
+                print("phloc: " + phlocParseAvg + "ms");
             }
 
             // omakase
@@ -110,10 +125,10 @@ public class PerfTest {
                 omakaseTotal += time;
             }
             long omakaseParseAvg = omakaseTotal / omakaseParseTimes.size();
-            System.out.println("omakase: " + omakaseParseAvg + "ms");
+            print("omakase: " + omakaseParseAvg + "ms");
         }
 
-        System.out.println("\ndone");
+        print("\ndone");
     }
 
     public static void parse(Mode mode, String src) {
@@ -122,6 +137,15 @@ public class PerfTest {
         } else if (mode == Mode.omakase) {
             Omakase.source(src).process();
         }
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param string
+     */
+    private static void print(String string) {
+        if (CONSOLE) System.out.println(string);
     }
 
     private static final String CSS = ".uiButton{\n" +

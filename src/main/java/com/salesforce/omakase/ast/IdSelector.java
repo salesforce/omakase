@@ -4,12 +4,14 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Objects;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
     private String name;
 

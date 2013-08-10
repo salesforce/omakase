@@ -9,12 +9,14 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import com.salesforce.omakase.LinkableIterator;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * The root-level {@link Syntax} object.
  * 
  * @author nmcwilliams
  */
+@Subscribable
 public final class Stylesheet extends AbstractSyntax {
     private final Statement head;
 

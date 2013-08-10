@@ -5,7 +5,7 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
-import javax.annotation.concurrent.Immutable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A distinct unit of syntax within CSS.
@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * 
  * @author nmcwilliams
  */
-@Immutable
+@Subscribable
 public interface Syntax {
 
     /**

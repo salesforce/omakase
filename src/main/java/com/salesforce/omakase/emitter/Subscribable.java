@@ -12,5 +12,5 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Broadcasted {
+public @interface Subscribable {
 }
