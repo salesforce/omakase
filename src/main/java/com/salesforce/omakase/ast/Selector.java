@@ -3,10 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.Iterator;
-
 import com.google.common.base.Objects;
-import com.salesforce.omakase.LinkableIterator;
+import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -38,8 +36,8 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
     }
 
     @Override
-    public Iterator<SelectorPart> parts() {
-        return LinkableIterator.create(head);
+    public LinkableCollection<SelectorPart> parts() {
+        return LinkableCollection.of(head);
     }
 
     @Override

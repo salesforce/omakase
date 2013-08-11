@@ -3,12 +3,10 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.Iterator;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.collect.Iterators;
-import com.salesforce.omakase.LinkableIterator;
+import com.google.common.collect.Iterables;
+import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -36,22 +34,23 @@ public final class Stylesheet extends AbstractSyntax {
      * 
      * @return TODO
      */
-    public Iterator<Statement> statements() {
-        return LinkableIterator.create(head);
+    public LinkableCollection<Statement> statements() {
+        return LinkableCollection.of(head);
     }
 
     /**
      * TODO Description
      * 
-     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to
-     * a specific instance of an existing one.
+     * <p>
+     * Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to a
+     * specific instance of an existing one.
      * 
      * @param statement
      *            TODO
      * @return this, for chaining.
      */
     public Stylesheet append(Statement statement) {
-        Iterators.getLast(statements()).append(statement);
+        Iterables.getLast(statements()).append(statement);
         return this;
     }
 

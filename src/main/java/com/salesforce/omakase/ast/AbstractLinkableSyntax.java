@@ -18,8 +18,8 @@ import com.salesforce.omakase.LinkableIterator;
  *            TODO
  */
 public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends AbstractSyntax implements Linkable<T> {
-    private Optional<T> previous;
-    private Optional<T> next;
+    private Optional<T> previous = Optional.absent();
+    private Optional<T> next = Optional.absent();
 
     /**
      * Creates a new instance with the given line and column numbers.

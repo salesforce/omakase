@@ -3,11 +3,9 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.Iterator;
-
 import com.google.common.base.Objects;
-import com.google.common.collect.Iterators;
-import com.salesforce.omakase.LinkableIterator;
+import com.google.common.collect.Iterables;
+import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -48,14 +46,15 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
      * 
      * @return TODO
      */
-    public Iterator<Declaration> declarations() {
-        return LinkableIterator.create(declarationHead);
+    public LinkableCollection<Declaration> declarations() {
+        return LinkableCollection.of(declarationHead);
     }
 
     /**
      * TODO Description
      * 
-     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
+     * <p>
+     * Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
      * specific instance of an existing one.
      * 
      * @param declaration
@@ -63,7 +62,7 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
      * @return this, for chaining.
      */
     public Rule appendDeclaration(Declaration declaration) {
-        Iterators.getLast(declarations()).append(declaration);
+        Iterables.getLast(declarations()).append(declaration);
         return this;
     }
 

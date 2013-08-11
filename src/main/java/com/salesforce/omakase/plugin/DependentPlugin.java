@@ -19,4 +19,12 @@ public interface DependentPlugin extends Plugin {
      *            TODO
      */
     void before(Context context);
+
+    /**
+     * TODO Description
+     * 
+     * @param context
+     *            TODO
+     */
+    void after(Context context);
 }

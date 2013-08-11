@@ -14,7 +14,8 @@ import com.salesforce.omakase.plugin.Plugin;
 /**
  * TODO Description
  * 
- * <p> This library is <em>not</em> thread-safe.
+ * <p>
+ * This library is <em>not</em> thread-safe.
  * 
  * @author nmcwilliams
  */
@@ -64,7 +65,9 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
+            context.before();
             ParserFactory.stylesheetParser().parse(stream, context);
+            context.after();
             return context;
         }
     }

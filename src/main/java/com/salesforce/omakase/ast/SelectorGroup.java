@@ -3,10 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.Iterator;
-
 import com.google.common.base.Objects;
-import com.salesforce.omakase.LinkableIterator;
+import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -52,8 +50,8 @@ public class SelectorGroup extends AbstractSyntax {
      * 
      * @return TODO
      */
-    public Iterator<Selector> selectors() {
-        return LinkableIterator.create(head);
+    public LinkableCollection<Selector> selectors() {
+        return LinkableCollection.of(head);
     }
 
     @Override

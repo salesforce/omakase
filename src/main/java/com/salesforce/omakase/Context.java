@@ -5,13 +5,17 @@ package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.util.List;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionType;
+import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -26,6 +30,8 @@ public final class Context implements Broadcaster {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
 
+    private final List<DependentPlugin> dependentPlugins = Lists.newArrayList();
+
     /** used for propagating new syntax creation or change events */
     private final Emitter emitter = new Emitter();
 
@@ -35,7 +41,8 @@ public final class Context implements Broadcaster {
     /**
      * TODO Description
      * 
-     * <p> This is to make #require and #retrieve work in a simple way
+     * <p>
+     * This is to make #require and #retrieve work in a simple way
      * 
      * @param plugins
      *            TODO
@@ -52,6 +59,10 @@ public final class Context implements Broadcaster {
 
             // hook up the plugin for events
             emitter.register(plugin);
+
+            if (plugin instanceof DependentPlugin) {
+                dependentPlugins.add((DependentPlugin)plugin);
+            }
         }
     }
 
@@ -82,7 +93,14 @@ public final class Context implements Broadcaster {
      * @return TODO
      */
     public <T extends Plugin> T require(Class<T> klass, Supplier<T> supplier) {
-        return Optional.fromNullable(registry.getInstance(klass)).or(supplier);
+        T instance = registry.getInstance(klass);
+
+        if (instance == null) {
+            instance = supplier.get();
+            plugins(instance);
+        }
+
+        return instance;
     }
 
     /**
@@ -101,5 +119,25 @@ public final class Context implements Broadcaster {
     @Override
     public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
         emitter.emit(type, syntax);
+    }
+
+    /**
+     * TODO Description
+     * 
+     */
+    protected void before() {
+        for (DependentPlugin plugin : dependentPlugins) {
+            plugin.before(this);
+        }
+    }
+
+    /**
+     * TODO Description
+     * 
+     */
+    protected void after() {
+        for (DependentPlugin plugin : dependentPlugins) {
+            plugin.after(this);
+        }
     }
 }

@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.emitter;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Set;
 
 import com.google.common.cache.CacheBuilder;
@@ -59,6 +61,8 @@ public final class Emitter {
      *            TODO
      */
     public void emit(SubscriptionType type, Object event) {
+        checkNotNull(event, "event cannot be null");
+
         for (Class<?> klass : hierarchy(event.getClass())) {
             for (Subscription subscription : subscriptions.get(klass)) {
                 subscription.inform(type, event);

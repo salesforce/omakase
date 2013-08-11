@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.Iterator;
+import com.salesforce.omakase.LinkableCollection;
 
 /**
  * TODO Description
@@ -16,5 +16,5 @@ public interface RefinedSelector extends Syntax {
      * 
      * @return TODO
      */
-    Iterator<SelectorPart> parts();
+    LinkableCollection<SelectorPart> parts();
 }
