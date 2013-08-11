@@ -28,7 +28,7 @@ public class PerfTest {
     private static final boolean USE_FACTORS = true;
 
     /** run phloc */
-    private static final boolean PHLOC = true;
+    private static final boolean PHLOC = false;
 
     /** output statistics */
     private static final boolean CONSOLE = true;
@@ -51,19 +51,20 @@ public class PerfTest {
 
     /** main method with setup */
     public static void main(String[] args) {
-        env();
+        env(true);
         run();
+        env(false);
     }
 
-    public static void env() {
+    public static void env(boolean full) {
         int mb = 1024 * 1024;
         Runtime runtime = Runtime.getRuntime();
 
         print("##### Heap utilization statistics [MB] #####");
         print("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);
         print("Free Memory:" + runtime.freeMemory() / mb);
-        print("Total Memory:" + runtime.totalMemory() / mb);
-        print("Max Memory:" + runtime.maxMemory() / mb);
+        if (full) print("Total Memory:" + runtime.totalMemory() / mb);
+        if (full) print("Max Memory:" + runtime.maxMemory() / mb);
     }
 
     /** test execution */
