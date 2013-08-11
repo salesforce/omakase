@@ -31,4 +31,15 @@ public final class Util {
     public static <T> ImmutableList<T> immutable(@Nullable List<T> original) {
         return original == null ? ImmutableList.<T>of() : ImmutableList.copyOf(original);
     }
+
+    /**
+     * TODO Description
+     * 
+     * @param object
+     *            TODO
+     * @return TODO
+     */
+    public static StringHelper toStringHelper(Object object) {
+        return new StringHelper(object);
+    }
 }

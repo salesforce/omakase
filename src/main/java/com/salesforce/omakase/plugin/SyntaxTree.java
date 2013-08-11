@@ -179,13 +179,6 @@ public class SyntaxTree implements DependentPlugin {
 
     @Override
     public String toString() {
-        if (currentStylesheet == null) return Objects.toStringHelper(this).toString();
-
-        StringBuilder builder = new StringBuilder(512);
-        for (Statement statement : currentStylesheet.statements()) {
-            System.out.println(statement);
-        }
-
-        return builder.toString();
+        return Objects.toStringHelper(this).add("stylesheet", currentStylesheet).toString();
     }
 }

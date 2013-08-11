@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
 import com.salesforce.omakase.LinkableCollection;
+import com.salesforce.omakase.Util;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -56,9 +56,10 @@ public class SelectorGroup extends AbstractSyntax {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return Util.toStringHelper(this)
+            .indent()
             .add("line", line())
-            .add("column", column())
+            .add("column", column(), false)
             .add("selectors", head != null ? selectors() : head)
             .toString();
     }

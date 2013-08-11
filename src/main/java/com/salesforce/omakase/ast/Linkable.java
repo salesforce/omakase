@@ -19,7 +19,21 @@ public interface Linkable<T> extends Syntax {
      * 
      * @return TODO
      */
+    boolean hasPrevious();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     Optional<T> previous();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    boolean hasNext();
 
     /**
      * TODO Description

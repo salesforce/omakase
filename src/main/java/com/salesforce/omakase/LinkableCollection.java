@@ -46,4 +46,21 @@ public class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
     public static <T extends Linkable<T>> LinkableCollection<T> of(T head) {
         return new LinkableCollection<T>(head);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(128);
+        T current = head;
+
+        builder.append(current);
+        while (current.hasNext()) {
+            builder.append(current);
+            current = current.next().get();
+        }
+
+        return Util.toStringHelper(this)
+            .indent()
+            .add("items", builder)
+            .toString();
+    }
 }

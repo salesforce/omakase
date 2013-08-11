@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.Util;
 
 /**
  * TODO Description
@@ -42,7 +42,7 @@ public class RawSyntax extends AbstractSyntax {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return Util.toStringHelper(this)
             .add("line", line())
             .add("column", column())
             .add("content", content)

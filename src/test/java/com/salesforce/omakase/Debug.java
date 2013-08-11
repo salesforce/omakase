@@ -18,7 +18,7 @@ public class Debug {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
         Omakase.source(src2).request(tree, logger).process();
-        System.out.println(tree.toString());
+        // System.out.println(tree.toString());
     }
 
     public static final String src1 = ".testing #is > fun { color: red; margin: 10px 5px; }";

@@ -41,8 +41,18 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
     protected abstract T self();
 
     @Override
+    public boolean hasPrevious() {
+        return previous.isPresent();
+    }
+
+    @Override
     public Optional<T> previous() {
         return previous;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return next.isPresent();
     }
 
     @Override
