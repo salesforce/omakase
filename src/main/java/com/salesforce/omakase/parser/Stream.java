@@ -8,13 +8,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
 import com.google.common.base.CharMatcher;
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.parser.token.MemberToken;
 import com.salesforce.omakase.parser.token.Token;
+import com.salesforce.omakase.parser.token.TokenSequence;
 
 /**
  * A tool for reading a String source one character at a time.
  * 
- * <p> This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps
- * track of the current line and column positions.
+ * <p>
+ * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of
+ * the current line and column positions.
  * 
  * @author nmcwilliams
  */
@@ -34,6 +38,12 @@ public final class Stream {
     /** current column in the source */
     private int column = 1;
 
+    /** line from the original source from which this sub-stream was derived */
+    private final int anchorLine;
+
+    /** column from the original source from which this sub-stream was derived */
+    private final int anchorColumn;
+
     /** if we are inside of a comment */
     private boolean inComment = false;
 
@@ -47,9 +57,37 @@ public final class Stream {
      *            The source to read.
      */
     public Stream(CharSequence source) {
+        this(source, 1, 1);
+    }
+
+    /**
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
+     * This will use the line and column from the given {@link RawSyntax} as the anchor/starting point.
+     * 
+     * @param raw
+     *            The {@link RawSyntax} containing the source.
+     */
+    public Stream(RawSyntax raw) {
+        this(raw.content(), raw.line(), raw.column());
+    }
+
+    /**
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
+     * This will use the given starting line and column.
+     * 
+     * @param source
+     *            The source to read.
+     * @param anchorLine
+     *            The starting line.
+     * @param anchorColumn
+     *            The starting column.
+     */
+    public Stream(CharSequence source, int anchorLine, int anchorColumn) {
         checkNotNull(source, "source cannot be null");
         this.source = source.toString();
         this.length = source.length();
+        this.anchorLine = anchorLine;
+        this.anchorColumn = anchorColumn;
     }
 
     /**
@@ -68,6 +106,26 @@ public final class Stream {
      */
     public int column() {
         return column;
+    }
+
+    public int anchorLine() {
+        return anchorLine;
+    }
+
+    public int anchorColumn() {
+        return anchorColumn;
+    }
+
+    public boolean isSubStream() {
+        return anchorLine != 1 || anchorColumn != 1;
+    }
+
+    public StringBuilder anchorPosition() {
+        return new StringBuilder(64).append("(starting from line ")
+            .append(anchorLine)
+            .append(", column ")
+            .append(anchorColumn)
+            .append(" in original source)");
     }
 
     /**
@@ -238,6 +296,36 @@ public final class Stream {
         return source.substring(start, index);
     }
 
+    public String read(TokenSequence sequence) {
+        int i = index;
+        int x = i;
+        String s = "";
+        for (MemberToken member : sequence) {
+            x = peak(member.token(), i);
+            if (x > -1) {
+                i = x;
+            } else {
+                if (!member.isOptional()) return s;
+            }
+        }
+        s = source.substring(index, i);
+        forward(i);
+        return s;
+    }
+
+    public int peak(Token token, int startIndex) {
+        boolean matched = false;
+        char c = source.charAt(startIndex);
+        int i = startIndex;
+        while (token.matches(c)) {
+            matched = true;
+            if (eof()) break;
+            c = source.charAt(i++);
+        }
+
+        return i;
+    }
+
     /**
      * Gets the original source.
      * 
@@ -295,6 +383,11 @@ public final class Stream {
 
     @Override
     public String toString() {
-        return source.substring(0, index) + "»" + source.substring(index);
+        StringBuilder builder = new StringBuilder(source.length() + 16);
+        builder.append(source.substring(0, index) + "»" + source.substring(index));
+        if (isSubStream()) {
+            builder.append(" ").append(anchorPosition());
+        }
+        return builder.toString();
     }
 }

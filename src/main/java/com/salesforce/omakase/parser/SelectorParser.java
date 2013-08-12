@@ -30,7 +30,7 @@ public class SelectorParser extends AbstractParser {
         RawSyntax rawContent = new RawSyntax(line, column, content.trim());
 
         // notify listeners of new selector
-        broadcaster.broadcast(SubscriptionType.CREATED, new Selector(rawContent));
+        broadcaster.broadcast(SubscriptionType.CREATED, new Selector(rawContent, broadcaster));
 
         return true;
     }

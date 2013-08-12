@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -13,6 +13,8 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+    private String name;
+
     /**
      * Creates a new instance with the given line and column numbers.
      * 
@@ -20,9 +22,21 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
      *            The line number.
      * @param column
      *            The column number.
+     * @param name
+     *            TODO
      */
-    public ClassSelector(int line, int column) {
+    public ClassSelector(int line, int column, String name) {
         super(line, column);
+        this.name = name;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String filterName() {
+        return name;
     }
 
     @Override
@@ -47,9 +61,9 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .add("syntax", super.toString())
+            .add("name", name)
             .toString();
     }
 }

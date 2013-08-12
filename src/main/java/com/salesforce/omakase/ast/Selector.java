@@ -3,9 +3,12 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.As;
-import com.salesforce.omakase.LinkableCollection;
+import com.google.common.base.Optional;
+import com.salesforce.omakase.*;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.RefinedSelectorParser;
+import com.salesforce.omakase.parser.Stream;
 
 /**
  * Represents a CSS selector.
@@ -28,6 +31,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 public class Selector extends AbstractLinkableSyntax<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
+    private final Broadcaster broadcaster;
     private final RawSyntax rawContent;
     private SelectorPart head;
 
@@ -37,10 +41,13 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
      * 
      * @param rawContent
      *            The selector content.
+     * @param broadcaster
+     *            TODO
      */
-    public Selector(RawSyntax rawContent) {
+    public Selector(RawSyntax rawContent, Broadcaster broadcaster) {
         super(rawContent.line(), rawContent.column());
         this.rawContent = rawContent;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -59,8 +66,17 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
 
     @Override
     public RefinedSelector refine() {
-        // TODO Auto-generated method stub
-        return null;
+        if (head == null) {
+            CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
+            Stream stream = new Stream(rawContent.content(), line(), column());
+            new RefinedSelectorParser().parse(stream, collector);
+            if (!stream.eof()) throw new ParserException(stream, "invalid content remaining in the selector");
+            Optional<SelectorPart> first = collector.find(SelectorPart.class);
+            if (!first.isPresent()) throw new ParserException(stream, "does not contain any selectors!");
+            head = first.get();
+        }
+
+        return this;
     }
 
     @Override

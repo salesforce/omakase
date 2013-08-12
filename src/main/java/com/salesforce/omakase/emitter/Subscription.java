@@ -75,7 +75,7 @@ public final class Subscription {
         } catch (IllegalAccessException e) {
             throw new SubscriptionException("Subscription method is not accessible", e);
         } catch (InvocationTargetException e) {
-            throw new SubscriptionException("Could not invoke the subscription method", e);
+            throw new SubscriptionException("There was a problem invoking the subscription method", e);
         }
     }
 

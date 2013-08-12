@@ -54,7 +54,11 @@ public enum Tokens implements Token {
     DOUBLE_QUOTE(is('"'), "double quote"),
 
     /** single quote */
-    SINGLE_QUOTE(is('\''), "single quote")
+    SINGLE_QUOTE(is('\''), "single quote"),
+
+    NMSTART(is('_').or(inRange('a', 'z')).or(inRange('A', 'Z')), "name character start"),
+
+    NMCHAR(is('_').or(is('-')).or(inRange('a', 'z')).or(inRange('A', 'Z').or(inRange('0', '9'))), "name character")
 
     ;
 

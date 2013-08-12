@@ -22,10 +22,20 @@ public class ParserException extends OmakaseException {
      *            The error message.
      */
     public ParserException(Stream stream, String msg) {
-        super(msg + indicator(stream.line(), stream.column(), stream.source()));
+        super(msg + indicator(stream));
     }
 
-    private static String indicator(int line, int column, String source) {
-        return String.format("\n at line %s, column %s in '%s", line, column, source);
+    private static String indicator(Stream stream) {
+        StringBuilder builder = new StringBuilder(128);
+        builder.append("\n ")
+            .append("at line ").append(stream.line()).append(", ")
+            .append("column ").append(stream.column()).append(" ")
+            .append("in '").append(stream.source()).append("'");
+
+        if (stream.isSubStream()) {
+            builder.append(" ").append(stream.anchorPosition());
+        }
+
+        return builder.toString();
     }
 }
