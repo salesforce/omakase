@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.LinkableCollection;
-import com.salesforce.omakase.Util;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -53,13 +53,11 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
 
     @Override
     public String toString() {
-        return Util.toStringHelper(this)
+        return As.string(this)
             .indent()
-            .add("line", line())
-            .inline("column", column())
-            .add("comments", comments())
+            .add("syntax", super.toString())
             .add("raw", rawContent)
-            .add("selectorParts", head != null ? parts() : null)
+            .add("parts", parts())
             .toString();
     }
 }

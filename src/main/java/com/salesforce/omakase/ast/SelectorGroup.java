@@ -3,8 +3,10 @@
  */
 package com.salesforce.omakase.ast;
 
+import java.util.Iterator;
+
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.LinkableCollection;
-import com.salesforce.omakase.Util;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -13,7 +15,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class SelectorGroup extends AbstractSyntax {
+public class SelectorGroup extends AbstractSyntax implements Iterable<Selector> {
     private final Selector head;
 
     /**
@@ -55,11 +57,17 @@ public class SelectorGroup extends AbstractSyntax {
     }
 
     @Override
+    public Iterator<Selector> iterator() {
+        return selectors().iterator();
+    }
+
+    @Override
     public String toString() {
-        return Util.toStringHelper(this)
-            .add("line", line()).inline("column", column())
-            .add("selectors", selectors())
+        return As.string(this)
             .indent()
+            .add("syntax", super.toString())
+            .add("selectors", selectors())
             .toString();
     }
+
 }

@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -79,9 +79,9 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .indent()
+            .add("syntax", super.toString())
             .add("rawProperty", rawProperty)
             .add("rawValue", rawValue)
             .toString();

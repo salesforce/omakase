@@ -5,12 +5,15 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
+import com.salesforce.omakase.As;
+
 /**
  * Base class for {@link Syntax} units.
  * 
  * @author nmcwilliams
  */
 public abstract class AbstractSyntax implements Syntax {
+
     private final int line;
     private final int column;
 
@@ -58,5 +61,14 @@ public abstract class AbstractSyntax implements Syntax {
     public List<String> ownComments() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return As.named("AbstractSyntax")
+            .add("line", line)
+            .add("column", column)
+            .add("comments", comments())
+            .toString();
     }
 }

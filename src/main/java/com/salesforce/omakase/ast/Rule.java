@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
@@ -53,8 +53,7 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
     /**
      * TODO Description
      * 
-     * <p>
-     * Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
+     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
      * specific instance of an existing one.
      * 
      * @param declaration
@@ -73,11 +72,11 @@ public class Rule extends AbstractLinkableSyntax<Statement> implements Statement
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .indent()
+            .add("syntax", super.toString())
             .add("selectorGroup", selectorGroup)
-            .add("declarations", declarationHead != null ? declarations() : null)
+            .add("declarations", declarations())
             .toString();
     }
 }

@@ -5,8 +5,8 @@ package com.salesforce.omakase;
 
 import java.util.Iterator;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Linkable;
 
 /**
@@ -16,7 +16,7 @@ import com.salesforce.omakase.ast.Linkable;
  * @param <T>
  *            TODO
  */
-public class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
+public final class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
     private final Iterator<T> iterator;
 
     /**
@@ -49,10 +49,6 @@ public class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
 
     @Override
     public String toString() {
-
-        return Util.toStringHelper(this)
-            .indent()
-            .add("items", Joiner.on("").join(this))
-            .toString();
+        return As.string(this).indent().add("items", Lists.newArrayList(this)).toString();
     }
 }
