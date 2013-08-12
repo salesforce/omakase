@@ -56,7 +56,7 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
         return Util.toStringHelper(this)
             .indent()
             .add("line", line())
-            .add("column", column(), false)
+            .inline("column", column())
             .add("comments", comments())
             .add("raw", rawContent)
             .add("selectorParts", head != null ? parts() : null)

@@ -5,8 +5,6 @@ package com.salesforce.omakase;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 
 /**
@@ -15,81 +13,74 @@ import com.google.common.collect.Lists;
  * @author nmcwilliams
  */
 public final class StringHelper {
-    private static final String indentString = "                ";
-
+    private boolean indent;
     private final String name;
     private final List<Entry> entries;
 
-    private static int level = 0;
-
-    private boolean indent;
-
+    /**
+     * TODO
+     * 
+     * @param object
+     *            TODO
+     */
     public StringHelper(Object object) {
-        this(object.getClass());
-
+        this(name(object.getClass()));
     }
 
-    public StringHelper(Class<? extends Object> klass) {
-        this(name(klass));
-    }
-
+    /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     */
     public StringHelper(String name) {
         this.name = name;
         this.entries = Lists.newArrayList();
     }
 
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
     public StringHelper indent() {
         indent = true;
         return this;
     }
 
-    public StringHelper add(String name, @Nullable Object value) {
-        return entry(name, value);
+    /**
+     * TODO Description
+     * 
+     * @param name
+     *            TODO
+     * @param value
+     *            TODO
+     * @return TODO
+     */
+    public StringHelper add(String name, Object value) {
+        return entry(name, value, false, false);
     }
 
-    public StringHelper add(String name, @Nullable Object value, boolean newline) {
-        return entry(name, value, newline);
+    public StringHelper inline(String name, Object value) {
+        return entry(name, value, true, false);
     }
 
-    public StringHelper add(String name, boolean value) {
-        return entry(name, String.valueOf(value));
+    public StringHelper add(String name, Iterable<?> collection) {
+        return entry(name, collection, false, true);
     }
 
-    public StringHelper add(String name, char value) {
-        return entry(name, String.valueOf(value));
-    }
-
-    public StringHelper add(String name, double value) {
-        return entry(name, String.valueOf(value));
-    }
-
-    public StringHelper add(String name, float value) {
-        return entry(name, String.valueOf(value));
-    }
-
-    public StringHelper add(String name, int value) {
-        return entry(name, String.valueOf(value));
-    }
-
-    public StringHelper add(String name, long value) {
-        return entry(name, String.valueOf(value));
-    }
-
-    private StringHelper entry(String name, Object value) {
-        return entry(name, value, true);
-    }
-
-    private StringHelper entry(String name, Object value, boolean newline) {
-        entries.add(new Entry(name, value, newline));
+    private StringHelper entry(String name, Object value, boolean forceInline, boolean isCollection) {
+        Entry e = new Entry();
+        e.name = name;
+        e.value = value;
+        e.forceInline = forceInline;
+        e.isCollection = isCollection;
+        entries.add(e);
         return this;
     }
 
     @Override
     public String toString() {
-        if (indent) {
-            level++;
-        }
-
         StringBuilder builder = new StringBuilder(32);
 
         builder.append(name);
@@ -106,8 +97,8 @@ public final class StringHelper {
             Entry entry = entries.get(i);
 
             if (indent) {
-                if (entry.newline) {
-                    builder.append("\n").append(indentString(level));
+                if (!entry.forceInline) {
+                    builder.append("\n  ");
                 } else {
                     builder.append(", ");
                 }
@@ -121,42 +112,23 @@ public final class StringHelper {
                 builder.append("=");
             }
 
-            builder.append(entry.value);
+            String value = String.valueOf(entry.value);
+            if (entry.isCollection) {
+                value = value.replaceAll("\n", "\n  ");
+            }
+            builder.append(value);
+
             if (!indent && i != last) {
                 builder.append(", ");
             }
-
         }
 
         if (indent) {
-            level--;
-            builder.append("\n").append(indentString(level));
+            builder.append("\n");
         }
         builder.append("}");
 
         return builder.toString();
-    }
-
-    private static final class Entry {
-        final String name;
-        final Object value;
-        final boolean newline;
-
-        public Entry(String name, Object value, boolean newline) {
-            this.name = name;
-            this.value = value;
-            this.newline = newline;
-        }
-    }
-
-    /**
-     * TODO Description
-     * 
-     * @param level
-     * @return
-     */
-    private Object indentString(int level) {
-        return indentString.substring(0, level * 2);
     }
 
     /**
@@ -167,5 +139,12 @@ public final class StringHelper {
      */
     private static String name(Class<? extends Object> klass) {
         return klass.getSimpleName();
+    }
+
+    private static final class Entry {
+        String name;
+        Object value;
+        boolean forceInline;
+        boolean isCollection;
     }
 }

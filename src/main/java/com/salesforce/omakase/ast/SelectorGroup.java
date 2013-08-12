@@ -57,10 +57,9 @@ public class SelectorGroup extends AbstractSyntax {
     @Override
     public String toString() {
         return Util.toStringHelper(this)
+            .add("line", line()).inline("column", column())
+            .add("selectors", selectors())
             .indent()
-            .add("line", line())
-            .add("column", column(), false)
-            .add("selectors", head != null ? selectors() : head)
             .toString();
     }
 }

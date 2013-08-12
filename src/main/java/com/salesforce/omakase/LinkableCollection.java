@@ -3,10 +3,10 @@
  */
 package com.salesforce.omakase;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Iterator;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterators;
 import com.salesforce.omakase.ast.Linkable;
 
 /**
@@ -17,7 +17,7 @@ import com.salesforce.omakase.ast.Linkable;
  *            TODO
  */
 public class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
-    private final T head;
+    private final Iterator<T> iterator;
 
     /**
      * TODO
@@ -26,12 +26,12 @@ public class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
      *            TODO
      */
     public LinkableCollection(T head) {
-        this.head = checkNotNull(head, "head cannot be null");
+        this.iterator = (head == null) ? Iterators.<T>emptyIterator() : LinkableIterator.create(head);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return LinkableIterator.create(head);
+        return iterator;
     }
 
     /**
@@ -49,18 +49,10 @@ public class LinkableCollection<T extends Linkable<T>> implements Iterable<T> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(128);
-        T current = head;
-
-        builder.append(current);
-        while (current.hasNext()) {
-            builder.append(current);
-            current = current.next().get();
-        }
 
         return Util.toStringHelper(this)
             .indent()
-            .add("items", builder)
+            .add("items", Joiner.on("").join(this))
             .toString();
     }
 }
