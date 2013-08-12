@@ -10,7 +10,19 @@ import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS selector group.
+ * 
+ * <p>
+ * A selector group is a list of {@link Selector}s, with each {@link Selector} separated by a comma. For example, in
+ * 
+ * <pre>.class #id, #id { ... } </pre>
+ * 
+ * The selector group is
+ * 
+ * <pre>.class #id, #id</pre>
+ * 
+ * <p>
+ * Each {@link Rule} has one and only one {@link SelectorGroup}.
  * 
  * @author nmcwilliams
  */
@@ -19,10 +31,10 @@ public class SelectorGroup extends AbstractSyntax implements Iterable<Selector> 
     private final Selector head;
 
     /**
-     * TODO
+     * Creates a new instance with the given {@link Selector} at the beginning.
      * 
      * @param head
-     *            TOOD
+     *            The first {@link Selector} in the {@link SelectorGroup}.
      */
     public SelectorGroup(Selector head) {
         super(head.line(), head.column());
@@ -30,27 +42,27 @@ public class SelectorGroup extends AbstractSyntax implements Iterable<Selector> 
     }
 
     /**
-     * TODO Description
+     * Gets the first {@link Selector} in the group.
      * 
-     * @return TODO
+     * @return The first {@link Selector}.
      */
     public Selector first() {
         return head;
     }
 
     /**
-     * TODO Description
+     * Gets the last (or <em>key</em>) {@link Selector} in the group.
      * 
-     * @return TODO
+     * @return The last {@link Selector}.
      */
     public Selector last() {
         return head.tail();
     }
 
     /**
-     * TODO Description
+     * Gets a {@link LinkableCollection} of each {@link Selector} in this group.
      * 
-     * @return TODO
+     * @return The {@link LinkableCollection} of selectors.
      */
     public LinkableCollection<Selector> selectors() {
         return LinkableCollection.of(head);

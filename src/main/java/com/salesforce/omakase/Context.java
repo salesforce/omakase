@@ -41,8 +41,7 @@ public final class Context implements Broadcaster {
     /**
      * TODO Description
      * 
-     * <p>
-     * This is to make #require and #retrieve work in a simple way
+     * <p> This is to make #require and #retrieve work in a simple way
      * 
      * @param plugins
      *            TODO
@@ -122,8 +121,9 @@ public final class Context implements Broadcaster {
     }
 
     /**
-     * TODO Description
-     * 
+     * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that
+     * are interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s
+     * using {@link #require(Class)}.
      */
     protected void before() {
         for (DependentPlugin plugin : dependentPlugins) {
@@ -132,8 +132,9 @@ public final class Context implements Broadcaster {
     }
 
     /**
-     * TODO Description
-     * 
+     * Internal method to signify when (high-level) parsing is completed. This will notify all {@link Plugin}s that are
+     * interested in such information, usually in cases where the {@link Plugin} needs to wait until all selectors
+     * and/or declarations in the source have been parsed.
      */
     protected void after() {
         for (DependentPlugin plugin : dependentPlugins) {

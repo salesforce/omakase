@@ -6,7 +6,7 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.As;
 
 /**
- * TODO Description
+ * Represents raw, non-validated content. Usually used by {@link Refinable}s.
  * 
  * @author nmcwilliams
  */
@@ -14,30 +14,27 @@ public class RawSyntax extends AbstractSyntax {
     private final String content;
 
     /**
+     * Creates an instance with the given line and column number and content.
+     * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
-     * @param rawcontentContent
-     *            TODO
+     *            The column number.
+     * @param content
+     *            The raw content.
      */
-    public RawSyntax(int line, int column, String rawcontentContent) {
+    public RawSyntax(int line, int column, String content) {
         super(line, column);
-        this.content = rawcontentContent;
+        this.content = content;
     }
 
     /**
-     * TODO Description
+     * Gets the raw content.
      * 
-     * @return TODO
+     * @return The raw content.
      */
     public String content() {
         return content;
-    }
-
-    @Override
-    public String filterName() {
-        return "";
     }
 
     @Override

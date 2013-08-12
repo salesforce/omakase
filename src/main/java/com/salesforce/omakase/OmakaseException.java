@@ -12,20 +12,22 @@ public class OmakaseException extends RuntimeException {
     private static final long serialVersionUID = -2367547081410118208L;
 
     /**
-     * TODO
+     * Creates a new exception with the given message.
      * 
      * @param message
-     *            TODO
+     *            The description of the exception.
      */
     public OmakaseException(String message) {
         super(format(message));
     }
 
     /**
+     * Creates a new exception with the given message and cause.
+     * 
      * @param message
-     *            TODO
+     *            The description of the exception.
      * @param cause
-     *            TODO
+     *            The cause of the exception.
      */
     public OmakaseException(String message, Throwable cause) {
         super(format(message), cause);

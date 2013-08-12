@@ -6,15 +6,15 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.LinkableCollection;
 
 /**
- * TODO Description
+ * A refined {@link Selector}, with the selector's individual parts fully parsed.
  * 
  * @author nmcwilliams
  */
 public interface RefinedSelector extends Syntax {
     /**
-     * TODO Description
+     * Gets the individual parts of the selector.
      * 
-     * @return TODO
+     * @return The list of {@link SelectorPart} members.
      */
     LinkableCollection<SelectorPart> parts();
 }

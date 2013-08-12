@@ -5,12 +5,12 @@ package com.salesforce.omakase.ast;
 
 import java.util.Map;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import com.salesforce.omakase.As;
 
 /**
- * TODO Description
+ * Enum of all recognized CSS properties.
  * 
  * @author nmcwilliams
  */
@@ -626,11 +626,12 @@ public enum Properties implements PropertyName {
     }
 
     /**
-     * Gets the {@link Properties} associated with the given String name.
+     * Gets the {@link PropertyName} associated with the given String name.
      * 
      * @param name
      *            The name of the property.
-     * @return The associated {@link Properties}, or a new instance of an {@link UnknownPropertyName} if not found.
+     * @return The associated {@link Properties} member, or a new instance of an {@link UnknownPropertyName} if not
+     *         found.
      */
     public static PropertyName from(String name) {
         Properties matched = map.get(name.toLowerCase());
@@ -639,6 +640,6 @@ public enum Properties implements PropertyName {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("name", name).toString();
+        return As.string(this).add("name", name).toString();
     }
 }

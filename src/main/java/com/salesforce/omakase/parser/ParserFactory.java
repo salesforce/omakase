@@ -4,7 +4,11 @@
 package com.salesforce.omakase.parser;
 
 /**
- * TODO Description
+ * A cache of {@link Parser} instances.
+ * 
+ * <p>
+ * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to
+ * the fact that {@link Parser}s are not allowed to maintain state.
  * 
  * @author nmcwilliams
  */
@@ -18,63 +22,63 @@ public final class ParserFactory {
     private static final Parser selectorParser = new SelectorParser();
 
     /**
-     * TODO Description
+     * Gets the {@link StylesheetParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser stylesheetParser() {
         return stylesheetParser;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link AtRuleParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser atRuleParser() {
         return atRuleParser;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link RuleParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser ruleParser() {
         return ruleParser;
     }
 
     /**
-     * TODO Description
+     * Gets the statement parser.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser statementParser() {
         return statementParser;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link DeclarationParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser declarationParser() {
         return declarationParser;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link SelectorGroupParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser selectorGroupParser() {
         return selectorGroupParser;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link SelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser selectorParser() {
         return selectorParser;

@@ -37,7 +37,7 @@ import com.salesforce.omakase.emitter.Subscribe;
  *   {@literal @}Override public void before(Context context) {
  *     context.require(AutoRefiner.class).include(Declaration.class);
  *   }
- *              
+ *
  *   ...(subscriptions)...
  * }<code></pre>
  * 
@@ -47,11 +47,12 @@ public class AutoRefiner implements Plugin {
     private final Set<Class<? extends Refinable<?>>> refinables = Sets.newHashSet();
 
     /**
-     * TODO Description
+     * Includes the given class in auto-refinement. This means that {@link Refinable#refine()} will be automatically
+     * called on the instance.
      * 
      * @param klass
-     *            TODO
-     * @return TODO
+     *            The class to auto-refine.
+     * @return this, for chaining.
      */
     public AutoRefiner include(Class<? extends Refinable<?>> klass) {
         refinables.add(klass);

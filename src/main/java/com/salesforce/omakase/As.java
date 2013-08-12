@@ -8,8 +8,9 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 /**
- * TODO Description
+ * Helper for constructing toString methods.
  * 
+ * @example <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
  * @author nmcwilliams
  */
 public final class As {
@@ -17,30 +18,18 @@ public final class As {
     private final String name;
     private final List<Entry> entries = Lists.newArrayList();
 
-    /**
-     * TODO
-     * 
-     * @param object
-     *            TODO
-     */
     private As(Object object) {
-        this(name(object.getClass()));
+        this(object.getClass().getSimpleName());
     }
 
-    /**
-     * TODO
-     * 
-     * @param name
-     *            TODO
-     */
     private As(String name) {
         this.name = name;
     }
 
     /**
-     * TODO Description
+     * Specifies that this toString representation should indent and write each member on a separate line.
      * 
-     * @return TODO
+     * @return this, for chaining.
      */
     public As indent() {
         indent = true;
@@ -48,51 +37,37 @@ public final class As {
     }
 
     /**
-     * TODO Description
+     * Adds a member to this toString representation.
      * 
      * @param name
-     *            TODO
+     *            Name of the member.
      * @param value
-     *            TODO
-     * @return TODO
+     *            the member.
+     * @return this, for chaining.
      */
     public As add(String name, Object value) {
-        return entry(name, value, false, false);
+        return entry(name, value, false);
     }
 
     /**
-     * TODO Description
+     * Adds a member to this toString representation. This is for iterables, which will automatically have their
+     * indentation level increased (if indent is turned on).
      * 
      * @param name
-     *            TODO
-     * @param value
-     *            TODO
-     * @param forceInline
-     *            TODO
-     * @return TODO
-     */
-    public As add(String name, Object value, boolean forceInline) {
-        return entry(name, value, forceInline, false);
-    }
-
-    /**
-     * TODO Description
-     * 
-     * @param name
-     *            TODO
+     *            Name of the member.
      * @param collection
-     *            TODO
-     * @return TODO
+     *            The member.
+     * @return this, for chaining.
      */
     public As add(String name, Iterable<?> collection) {
-        return entry(name, collection, false, true);
+        return entry(name, collection, true);
     }
 
-    private As entry(String name, Object value, boolean forceInline, boolean isIterable) {
+    /** utility method to create an {@link Entry} */
+    private As entry(String name, Object value, boolean isIterable) {
         Entry e = new Entry();
         e.name = name;
         e.value = value;
-        e.forceInline = forceInline;
         e.isIterable = isIterable;
         entries.add(e);
         return this;
@@ -110,14 +85,11 @@ public final class As {
         // entries for the object being printed
         String separator = "";
         for (Entry entry : entries) {
-            if (indent && !entry.forceInline) {
+            if (indent) {
                 // use a new line separator between entries
                 builder.append("\n  ");
-            } else if (indent) {
-                // forcedIndent uses a comma separator between entries
-                builder.append(", ");
             } else {
-                // separator for when indent is off
+                // use a comma separator between entries
                 builder.append(separator);
                 separator = ", ";
             }
@@ -142,41 +114,30 @@ public final class As {
         return builder.toString();
     }
 
-    /**
-     * TODO Description
-     * 
-     * @param klass
-     * @return
-     */
-    private static String name(Class<? extends Object> klass) {
-        return klass.getSimpleName();
-    }
-
     /** information on an item to include in toString */
     private static final class Entry {
         String name;
         Object value;
-        boolean forceInline;
         boolean isIterable;
     }
 
     /**
-     * TODO Description
+     * Creates a new string representation helper for the given object. Usually used inside of toString methods.
      * 
      * @param object
-     *            TODO
-     * @return TODO
+     *            Create a string representation of this object.
+     * @return The helper instance.
      */
     public static As string(Object object) {
         return new As(object);
     }
 
     /**
-     * TODO Description
+     * Creates a new string representation helper described by the given name. Usually used inside of toString methods.
      * 
      * @param name
-     *            TODO
-     * @return TODO
+     *            Name of the object being represented.
+     * @return The helper instance.
      */
     public static As named(String name) {
         return new As(name);

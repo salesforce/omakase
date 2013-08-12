@@ -5,7 +5,7 @@ package com.salesforce.omakase.plugin;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.Context;
 import com.salesforce.omakase.ast.*;
@@ -46,19 +46,19 @@ public class SyntaxTree implements DependentPlugin {
     }
 
     /**
-     * TODO Description
+     * Gets the {@link Stylesheet} instance.
      * 
-     * @return TODO
+     * @return The {@link Stylesheet}.
      */
     public Stylesheet stylesheet() {
         return currentStylesheet;
     }
 
     /**
-     * TODO Description
+     * Subscription method. Do not call directly.
      * 
      * @param selector
-     *            TODO
+     *            The new selector.
      */
     @Subscribe
     public void startSelector(Selector selector) {
@@ -80,10 +80,10 @@ public class SyntaxTree implements DependentPlugin {
     }
 
     /**
-     * TODO Description
+     * Subscription method. Do not call directly.
      * 
      * @param declaration
-     *            TODO
+     *            The new declaration.
      */
     @Subscribe
     public void startDeclaration(Declaration declaration) {
@@ -101,12 +101,6 @@ public class SyntaxTree implements DependentPlugin {
         currentDeclaration = declaration;
     }
 
-    /**
-     * TODO Description
-     * 
-     * @param firstStatement
-     *            TODO
-     */
     private void startStylesheet(Statement firstStatement) {
         checkState(currentStylesheet == null, "previous stylesheet not ended");
 
@@ -179,6 +173,6 @@ public class SyntaxTree implements DependentPlugin {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("stylesheet", currentStylesheet).toString();
+        return As.string(this).indent().add("stylesheet", currentStylesheet).toString();
     }
 }

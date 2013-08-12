@@ -7,21 +7,21 @@ import com.google.common.base.Objects;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS class selector.
  * 
  * @author nmcwilliams
  */
 @Subscribable
 public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
     /**
-     * TODO
+     * Creates a new instance with the given line and column numbers.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      */
-    protected ClassSelector(int line, int column) {
+    public ClassSelector(int line, int column) {
         super(line, column);
     }
 

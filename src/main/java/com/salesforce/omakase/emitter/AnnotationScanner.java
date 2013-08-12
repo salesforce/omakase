@@ -14,7 +14,7 @@ import com.google.common.collect.*;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * TODO Description
+ * Scans for annotated methods on classes.
  * 
  * @author nmcwilliams
  */

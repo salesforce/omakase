@@ -8,7 +8,21 @@ import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS selector.
+ * 
+ * <p>
+ * {@link Selector}s are lists of {@link SelectorPart}s. individual {@link Selector}s are separated by commas. For
+ * example, in
+ * 
+ * <pre>.class, .class #id</pre>
+ * 
+ * there are two selectors,
+ * 
+ * <pre>.class</pre>
+ * 
+ * and
+ * 
+ * <pre>.class #id</pre>
  * 
  * @author nmcwilliams
  */
@@ -18,8 +32,11 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
     private SelectorPart head;
 
     /**
+     * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to
+     * the individual {@link SelectorPart}s by using {@link #refine()}.
+     * 
      * @param rawContent
-     *            TODO
+     *            The selector content.
      */
     public Selector(RawSyntax rawContent) {
         super(rawContent.line(), rawContent.column());
@@ -27,9 +44,9 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
     }
 
     /**
-     * TODO Description
+     * Gets the original, raw, non-validated selector content.
      * 
-     * @return TODO
+     * @return The raw selector content.
      */
     public RawSyntax rawContent() {
         return rawContent;

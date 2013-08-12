@@ -5,6 +5,8 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 
 /**
@@ -16,6 +18,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     private final int line;
     private final int column;
+    private List<String> comments;
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -47,8 +50,11 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public Syntax comment(String comment) {
-        // TODO Auto-generated method stub
-        return null;
+        if (comments == null) {
+            comments = Lists.newArrayList();
+        }
+        comments.add(comment);
+        return this;
     }
 
     @Override
@@ -59,8 +65,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public List<String> ownComments() {
-        // TODO Auto-generated method stub
-        return null;
+        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
     }
 
     @Override

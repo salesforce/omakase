@@ -3,20 +3,18 @@
  */
 package com.salesforce.omakase.parser;
 
-import javax.annotation.concurrent.Immutable;
-
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * Used to an aspect of CSS source code.
  * 
- * <p> {@link Parser}s must <em>not</em> maintain any state or persistence from one parse operation to another. They
- * should be immutable objects.
+ * <p>
+ * {@link Parser}s must <em>not</em> maintain any state or persistence from one parse operation to another. They should
+ * be immutable objects.
  * 
  * @author nmcwilliams
  */
-@Immutable
 public interface Parser {
     /**
      * Parse from the current position of the given stream, notifying the given {@link Plugin}s of any applicable events
@@ -33,10 +31,11 @@ public interface Parser {
     boolean parse(Stream stream, Broadcaster broadcaster);
 
     /**
-     * TODO Description
+     * Utility for creating a {@link CombinationParser}.
      * 
      * @param other
-     * @return TODO
+     *            The other {@link Parser} in addition to this one to use to create the {@link CombinationParser}.
+     * @return The {@link CombinationParser}.
      */
     Parser or(Parser other);
 }

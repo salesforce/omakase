@@ -3,72 +3,81 @@
  */
 package com.salesforce.omakase.parser.token;
 
+import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.parser.Parser;
+
 /**
- * TODO Description
+ * A factory for retrieving various {@link Token}s. Mainly using by {@link Parser}s.
+ * 
+ * <p>
+ * The motivation for using a factory interface for tokens is that it provides the ability for highly-customized input
+ * source code grammar. This could be used, for example, to enable grammar similar to the popular Stylus open source
+ * library.
  * 
  * @author nmcwilliams
  */
 public interface TokenFactory {
     /**
-     * TODO Description
+     * Gets the {@link Token} representing what the first character of a {@link Selector} must be.
      * 
-     * @return TODO
+     * @return {@link Token} representing the first character of a {@link Selector}.
      */
     Token selectorBegin();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing the delimiter between {@link Selector}s.
      * 
-     * @return TODO
+     * @return {@link Token} representing the {@link Selector} delimiter.
      */
     Token selectorDelimiter();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing what indicates the end of a {@link Selector}.
      * 
-     * @return TODO
+     * @return {@link Token} representing the end of the {@link Selector}.
      */
     Token selectorEnd();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing the beginning of a declaration block.
      * 
-     * @return TODO
+     * @return {@link Token} representing the beginning of a declaration block.
      */
     Token declarationBlockBegin();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing the end of a declaration block.
      * 
-     * @return TODO
+     * @return {@link Token} representing the end of a declaration block.
      */
     Token declarationBlockEnd();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing what the first character of a {@link Declaration} must be (property name).
      * 
-     * @return TODO
+     * @return {@link Token} representing the first character of a {@link Declaration}.
      */
     Token declarationBegin();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing the delimiter between {@link Declaration}s.
      * 
-     * @return TODO
+     * @return The {@link Token} representing the delimiter between {@link Declaration}s.
      */
     Token declarationDelimiter();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing what indicates the end of a {@link Declaration}.
      * 
-     * @return TODO
+     * @return The {@link Token} representing the end of a {@link Declaration}.
      */
     Token declarationEnd();
 
     /**
-     * TODO Description
+     * Gets the {@link Token} representing what indicates the end of a {@link Declaration}'s property name.
      * 
-     * @return TODO
+     * @return The {@link Token} representing what indicates the end of a property name.
      */
     Token propertyNameEnd();
 }

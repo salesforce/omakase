@@ -28,6 +28,8 @@ public class DeclarationParser extends AbstractParser {
         RawSyntax property = new RawSyntax(line, column, content.trim());
 
         stream.skipWhitepace();
+        stream.expect(tokenFactory().propertyNameEnd());
+        stream.skipWhitepace();
 
         // get the value, which is everything until the end of the declaration
         line = stream.line();

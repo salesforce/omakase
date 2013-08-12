@@ -4,18 +4,18 @@
 package com.salesforce.omakase.ast;
 
 /**
- * TODO Description
+ * Enum of the types of CSS combinators.
  * 
  * @author nmcwilliams
  */
 public enum CombinatorType {
-    /** TODO */
-    DESCENDENT(' '),
-    /** TODO */
+    /** descendant combinator */
+    DESCENDANT(' '),
+    /** child combinator */
     CHILD('>'),
-    /** TODO */
+    /** adjacent sibling combinator */
     ADJACENT('+'),
-    /** TODO */
+    /** general sibling combinator */
     GENERAL('~');
 
     private final char symbol;
@@ -25,9 +25,9 @@ public enum CombinatorType {
     }
 
     /**
-     * TODO Description
+     * Gets the character representation of this combinator.
      * 
-     * @return TODO
+     * @return The combinator's character.
      */
     public char symbol() {
         return symbol;

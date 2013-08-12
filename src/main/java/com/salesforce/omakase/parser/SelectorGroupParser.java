@@ -4,9 +4,10 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.ast.SelectorGroup;
 
 /**
- * TODO Description
+ * Parses a {@link SelectorGroup}.
  * 
  * @author nmcwilliams
  */

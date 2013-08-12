@@ -9,7 +9,7 @@ import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Stylesheet;
 
 /**
- * Parses a top-level {@link Stylesheet}
+ * Parses a top-level {@link Stylesheet}.
  * 
  * @author nmcwilliams
  */

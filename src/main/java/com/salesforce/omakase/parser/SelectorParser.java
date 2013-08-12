@@ -9,7 +9,7 @@ import com.salesforce.omakase.ast.Selector;
 import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
- * TODO Description
+ * Parses a {@link Selector}.
  * 
  * @author nmcwilliams
  */

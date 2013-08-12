@@ -7,7 +7,7 @@ import com.google.common.base.Objects;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * Represents a type selector (also known as an element type selector).
+ * Represents a CSS type selector (also known as an element type selector).
  * 
  * @author nmcwilliams
  */

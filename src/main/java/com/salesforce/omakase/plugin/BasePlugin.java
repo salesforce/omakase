@@ -9,41 +9,34 @@ import com.salesforce.omakase.emitter.Subscribe;
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
  * 
- * <p> It is <em>not</em> recommended that you override each one of these methods. Note that some methods are more
- * generic subscriptions that will also be covered by their more specific counterparts. For example, a
- * {@link ClassSelector} will be sent to {@link #classSelector(ClassSelector)}, {@link #selectorPart(SelectorPart)} and
+ * <p>
+ * It is <em>not</em> recommended that you override each one of these methods. Note that some methods are more generic
+ * subscriptions that will also be covered by their more specific counterparts. For example, a {@link ClassSelector}
+ * will be sent to {@link #classSelector(ClassSelector)}, {@link #selectorPart(SelectorPart)} and
  * {@link #syntax(Syntax)}.
  * 
- * <p> See the notes on {@link Plugin} about invocation order for subscriptions within the same class.
+ * <p>
+ * See the notes on {@link Plugin} about invocation order for subscriptions within the same class.
  * 
  * @author nmcwilliams
  */
-@SuppressWarnings({ "unused" })
+@SuppressWarnings("unused")
 public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
      * of type {@link Syntax}.
      * 
      * @param syntax
-     *            TODO
+     *            The {@link Syntax} instance.
      */
     public void syntax(Syntax syntax) {}
-
-    /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link RawSyntax}.
-     * 
-     * @param rawSyntax
-     *            TODO
-     */
-    public void rawSyntax(RawSyntax rawSyntax) {}
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
      * of type {@link Refinable}.
      * 
      * @param refinable
-     *            TODO
+     *            The {@link Refinable} instance.
      */
     public void refinable(Refinable<?> refinable) {}
 
@@ -52,7 +45,7 @@ public class BasePlugin implements Plugin {
      * of type {@link Stylesheet}.
      * 
      * @param stylesheet
-     *            TODO
+     *            The {@link Stylesheet} instance.
      */
     public void stylesheet(Stylesheet stylesheet) {}
 
@@ -61,7 +54,7 @@ public class BasePlugin implements Plugin {
      * of type {@link Statement}.
      * 
      * @param statement
-     *            TODO
+     *            The {@link Statement} instance.
      */
     public void statement(Statement statement) {}
 
@@ -70,7 +63,7 @@ public class BasePlugin implements Plugin {
      * of type {@link Rule}.
      * 
      * @param rule
-     *            TODO
+     *            The {@link Rule} instance.
      */
     public void rule(Rule rule) {}
 
@@ -79,7 +72,7 @@ public class BasePlugin implements Plugin {
      * of type {@link SelectorGroup}.
      * 
      * @param selectorGroup
-     *            TODO
+     *            The {@link SelectorGroup} instance.
      */
     public void selectorGroup(SelectorGroup selectorGroup) {}
 
@@ -88,7 +81,7 @@ public class BasePlugin implements Plugin {
      * of type {@link Selector}.
      * 
      * @param selector
-     *            TODO
+     *            The {@link Selector} instance.
      */
     public void selector(Selector selector) {}
 
@@ -97,7 +90,7 @@ public class BasePlugin implements Plugin {
      * of type {@link SelectorPart}.
      * 
      * @param selectorPart
-     *            TODO
+     *            The {@link SelectorPart} instance.
      */
     public void selectorPart(SelectorPart selectorPart) {}
 
@@ -106,7 +99,7 @@ public class BasePlugin implements Plugin {
      * of type {@link Combinator}.
      * 
      * @param combinator
-     *            TODO
+     *            The {@link Combinator} instance.
      */
     public void combinator(Combinator combinator) {}
 
@@ -115,7 +108,7 @@ public class BasePlugin implements Plugin {
      * of type {@link TypeSelector}.
      * 
      * @param typeSelector
-     *            TODO
+     *            The {@link TypeSelector} instance.
      */
     public void typeSelector(TypeSelector typeSelector) {}
 
@@ -124,7 +117,7 @@ public class BasePlugin implements Plugin {
      * of type {@link IdSelector}.
      * 
      * @param idSelector
-     *            TODO
+     *            The {@link IdSelector} instance.
      */
     public void idSelector(IdSelector idSelector) {}
 
@@ -133,7 +126,7 @@ public class BasePlugin implements Plugin {
      * of type {@link ClassSelector}.
      * 
      * @param classSelector
-     *            TODO
+     *            The {@link ClassSelector} instance.
      */
     public void classSelector(ClassSelector classSelector) {}
 
@@ -142,7 +135,7 @@ public class BasePlugin implements Plugin {
      * of type {@link AttributeSelector}.
      * 
      * @param attributeSelector
-     *            TODO
+     *            The {@link AttributeSelector} instance.
      */
     public void attributeSelector(AttributeSelector attributeSelector) {}
 
@@ -151,7 +144,7 @@ public class BasePlugin implements Plugin {
      * of type {@link PseudoClassSelector}.
      * 
      * @param pseudoClassSelector
-     *            TODO
+     *            The {@link PseudoClassSelector} instance.
      */
     public void pseudoClassSelector(PseudoClassSelector pseudoClassSelector) {}
 
@@ -160,7 +153,7 @@ public class BasePlugin implements Plugin {
      * of type {@link PseudoElementSelector}.
      * 
      * @param pseudoElementSelector
-     *            TODO
+     *            The {@link PseudoElementSelector} instance.
      */
     public void pseudoElementSelector(PseudoElementSelector pseudoElementSelector) {}
 
@@ -169,7 +162,7 @@ public class BasePlugin implements Plugin {
      * of type {@link UniversalSelector}.
      * 
      * @param universalSelector
-     *            TODO
+     *            The {@link UniversalSelector} instance.
      */
     public void universalSelector(UniversalSelector universalSelector) {}
 
@@ -178,7 +171,7 @@ public class BasePlugin implements Plugin {
      * of type {@link Declaration}.
      * 
      * @param declaration
-     *            TODO
+     *            The {@link Declaration} instance.
      */
     public void declaration(Declaration declaration) {}
 
@@ -187,7 +180,7 @@ public class BasePlugin implements Plugin {
      * of type {@link PropertyName}.
      * 
      * @param propertyName
-     *            TODO
+     *            The {@link PropertyName} instance.
      */
     public void propertyName(PropertyName propertyName) {}
 
@@ -196,16 +189,7 @@ public class BasePlugin implements Plugin {
      * of type {@link PropertyValue}.
      * 
      * @param propertyValue
-     *            TODO
+     *            The {@link PropertyValue} instance.
      */
     public void propertyValue(PropertyValue propertyValue) {}
-
-    /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link NumericValue}.
-     * 
-     * @param numericValue
-     *            TODO
-     */
-    public void numericValue(NumericValue numericValue) {}
 }

@@ -3,11 +3,11 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS selector part combinator.
  * 
  * @author nmcwilliams
  */
@@ -16,16 +16,16 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
     private final CombinatorType type;
 
     /**
-     * TODO
+     * Creates a new instance with the given line and column numbers, and the {@link CombinatorType}.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      * @param type
-     *            TODO
+     *            The {@link CombinatorType}.
      */
-    protected Combinator(int line, int column, CombinatorType type) {
+    public Combinator(int line, int column, CombinatorType type) {
         super(line, column);
         this.type = type;
     }
@@ -46,11 +46,11 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
         case ADJACENT:
             return SelectorPartType.ADJACENT_SIBLING;
         case CHILD:
-            return SelectorPartType.ADJACENT_SIBLING;
-        case DESCENDENT:
-            return SelectorPartType.ADJACENT_SIBLING;
+            return SelectorPartType.CHILD;
+        case DESCENDANT:
+            return SelectorPartType.DESCENDENT;
         case GENERAL:
-            return SelectorPartType.ADJACENT_SIBLING;
+            return SelectorPartType.GENERAL_SIBLING;
         }
         throw new RuntimeException("unknown combinator type");
     }
@@ -62,10 +62,7 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
-            .add("type", type.symbol())
-            .toString();
+        return As.string(this).add("syntax", super.toString()).add("type", type.symbol()).toString();
+
     }
 }

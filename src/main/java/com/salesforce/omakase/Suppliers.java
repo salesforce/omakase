@@ -9,10 +9,11 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.AutoRefiner;
+import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.SyntaxTree;
 
 /**
- * TODO Description
+ * Helper for creating instances of library-provided {@link Plugin}s.
  * 
  * @author nmcwilliams
  */
@@ -37,13 +38,13 @@ final class Suppliers {
     private Suppliers() {}
 
     /**
-     * TODO Description
+     * Gets the supplier for the given class.
      * 
      * @param <T>
-     *            TODO
+     *            Type of class/supplier.
      * @param klass
-     *            TODO
-     * @return TODO
+     *            Get a supplier for this class.
+     * @return The supplier for the class, or {@link Optional#absent()} if not present.
      */
     @SuppressWarnings("unchecked")
     public static <T> Optional<Supplier<T>> get(Class<T> klass) {

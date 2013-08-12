@@ -4,7 +4,7 @@
 package com.salesforce.omakase.ast;
 
 /**
- * TODO Description
+ * A refined {@link Declaration}, with the property name and property value fully parsed.
  * 
  * @author nmcwilliams
  */
@@ -22,6 +22,5 @@ public interface RefinedDeclaration extends Syntax {
      * 
      * @return The property value.
      */
-
     PropertyValue propertyValue();
 }

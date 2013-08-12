@@ -9,7 +9,7 @@ import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * Represents a CSS Rule. Each rule has one or more {@link Selector}s and zero or more {@link Declaration}s.
+ * Represents a CSS Rule. Each rule has one {@link SelectorGroup}s and zero or more {@link Declaration}s.
  * 
  * @author nmcwilliams
  */

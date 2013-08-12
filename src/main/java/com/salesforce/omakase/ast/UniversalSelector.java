@@ -6,7 +6,7 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * Represents the universal selector, i.e., "*".
+ * Represents the CSS universal selector, i.e., "*".
  * 
  * @author nmcwilliams
  */

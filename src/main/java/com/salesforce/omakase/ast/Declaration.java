@@ -18,12 +18,17 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
     private final RawSyntax rawValue;
 
     /**
-     * TODO
+     * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property
+     * value). The property name and value can be further refined or validated by calling {@link #refine()}.
+     * 
+     * <p> Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS.
+     * Hence really anything can technically be in there and we can't be sure it is proper formed until
+     * {@link #refine()} has been called.
      * 
      * @param rawProperty
-     *            TODO
+     *            The raw property name.
      * @param rawValue
-     *            TODO
+     *            The raw property value.
      */
     public Declaration(RawSyntax rawProperty, RawSyntax rawValue) {
         super(rawProperty.line(), rawProperty.column());
@@ -32,18 +37,18 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
     }
 
     /**
-     * TODO Description
+     * Gets the original, raw, non-validated property name.
      * 
-     * @return TODO
+     * @return The raw property name.
      */
     public RawSyntax rawProperty() {
         return rawProperty;
     }
 
     /**
-     * TODO Description
+     * Gets the original, raw, non-validated property value.
      * 
-     * @return TODO
+     * @return The raw property value.
      */
     public RawSyntax rawValue() {
         return rawValue;
@@ -69,7 +74,7 @@ public class Declaration extends AbstractLinkableSyntax<Declaration> implements 
 
     @Override
     public String filterName() {
-        return refine().propertyName().get();
+        return (propertyName() != null) ? propertyName().get() : rawProperty.filterName();
     }
 
     @Override

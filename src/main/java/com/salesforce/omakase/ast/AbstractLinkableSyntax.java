@@ -11,11 +11,11 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.LinkableIterator;
 
 /**
- * TODO Description
+ * Base class for {@link Linkable} {@link Syntax} units.
  * 
  * @author nmcwilliams
  * @param <T>
- *            TODO
+ *            Same type as the {@link Linkable}.
  */
 public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends AbstractSyntax implements Linkable<T> {
     private Optional<T> previous = Optional.absent();
@@ -34,9 +34,9 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
     }
 
     /**
-     * TODO Description
+     * Should return "this". This is needed for property type access in the {@link AbstractLinkableSyntax} class.
      * 
-     * @return TODO
+     * @return "this".
      */
     protected abstract T self();
 
@@ -62,7 +62,7 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
 
     @Override
     public boolean isHead() {
-        return !previous.isPresent();
+        return !hasPrevious();
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
 
     @Override
     public boolean isTail() {
-        return !next.isPresent();
+        return !hasNext();
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.google.common.base.Objects;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS ID selector.
  * 
  * @author nmcwilliams
  */
@@ -16,14 +16,14 @@ public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements 
     private String name;
 
     /**
-     * TODO
+     * Creates a new instance with the given line and column numbers and id name.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      * @param name
-     *            TODO
+     *            Content of the selector.
      */
     protected IdSelector(int line, int column, String name) {
         super(line, column);

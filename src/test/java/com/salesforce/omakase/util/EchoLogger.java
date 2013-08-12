@@ -25,12 +25,6 @@ public final class EchoLogger extends BasePlugin {
     }
 
     @Override
-    @Subscribe(priority = 2)
-    public void rawSyntax(RawSyntax rawSyntax) {
-        // logger.info("\nrawSyntax: {}", rawSyntax);
-    }
-
-    @Override
     @Subscribe(priority = 3)
     public void refinable(Refinable<?> refinable) {
         // logger.info("\nrefinable: {}", refinable);
@@ -136,11 +130,5 @@ public final class EchoLogger extends BasePlugin {
     @Subscribe(priority = 20)
     public void propertyValue(PropertyValue propertyValue) {
         logger.info("\npropertyValue: {}", propertyValue);
-    }
-
-    @Override
-    @Subscribe(priority = 21)
-    public void numericValue(NumericValue numericValue) {
-        logger.info("\nnumericValue: {}", numericValue);
     }
 }

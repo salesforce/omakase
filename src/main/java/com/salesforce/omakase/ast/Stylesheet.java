@@ -3,9 +3,11 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
+import java.util.Iterator;
+
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
 
@@ -15,7 +17,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public final class Stylesheet extends AbstractSyntax {
+public final class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     private final Statement head;
 
     /**
@@ -38,12 +40,16 @@ public final class Stylesheet extends AbstractSyntax {
         return LinkableCollection.of(head);
     }
 
+    @Override
+    public Iterator<Statement> iterator() {
+        return statements().iterator();
+    }
+
     /**
      * TODO Description
      * 
-     * <p>
-     * Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to a
-     * specific instance of an existing one.
+     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to
+     * a specific instance of an existing one.
      * 
      * @param statement
      *            TODO
@@ -56,8 +62,10 @@ public final class Stylesheet extends AbstractSyntax {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("statements", head != null ? Joiner.on("\n\n").join(statements()) : null)
+        return As.string(this)
+            .indent()
+            .add("statements", Lists.newArrayList(statements()))
             .toString();
     }
+
 }
