@@ -20,6 +20,8 @@ import com.salesforce.omakase.parser.token.TokenSequence;
  * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of
  * the current line and column positions.
  * 
+ * TODO review
+ * 
  * @author nmcwilliams
  */
 public final class Stream {
@@ -156,7 +158,7 @@ public final class Stream {
      * @return The character at the current position.
      */
     public Character current() {
-        return source.charAt(index);
+        return eof() ? null : source.charAt(index);
     }
 
     /**
@@ -181,7 +183,7 @@ public final class Stream {
         index += 1;
 
         // return the current character
-        return current();
+        return eof() ? null : current();
     }
 
     /**
@@ -217,6 +219,7 @@ public final class Stream {
             lastIndex = peek(member.token(), currentIndex);
             if (lastIndex > -1) {
                 currentIndex = lastIndex;
+                if (currentIndex == length) break;
             } else {
                 if (!member.isOptional()) return "";
             }
@@ -248,7 +251,7 @@ public final class Stream {
      * @return The character, or null if the end of the stream occurs first.
      */
     public Character peek(int numCharacters) {
-        return length <= index + numCharacters ? source.charAt(index + numCharacters) : null;
+        return (length <= index + numCharacters) ? source.charAt(index + numCharacters) : null;
     }
 
     /**
@@ -264,8 +267,9 @@ public final class Stream {
         int i = startIndex;
         char c = source.charAt(startIndex);
         while (token.matches(c)) {
-            if (eof()) break;
-            c = source.charAt(i++);
+            i++;
+            if (i == (length)) break;
+            c = source.charAt(i);
         }
 
         return (i == startIndex) ? -1 : i;
@@ -275,6 +279,8 @@ public final class Stream {
      * If the current character is whitespace then skip it along with all subsequent whitespace characters.
      */
     public void skipWhitepace() {
+        if (eof()) return;
+
         // skip characters until the current character is not whitespace
         while (CharMatcher.WHITESPACE.matches(current())) {
             next();
@@ -423,7 +429,7 @@ public final class Stream {
      * @return True of we are at the end of the source.
      */
     public boolean eof() {
-        return index == (length - 1);
+        return index == length;
     }
 
     @Override

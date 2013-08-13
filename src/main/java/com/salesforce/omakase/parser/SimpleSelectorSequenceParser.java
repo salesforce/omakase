@@ -4,9 +4,10 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.ast.SimpleSelector;
 
 /**
- * TODO Description
+ * Parsers a sequence of {@link SimpleSelector}s.
  * 
  * @author nmcwilliams
  */
@@ -16,18 +17,21 @@ public class SimpleSelectorSequenceParser extends AbstractParser {
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
 
-        boolean s = new TypeSelectorParser().or(new UniversalSelectorParser()).parse(stream, broadcaster);
+        // if a universal or type selector is present, it must be the first one
+        boolean matched = ParserFactory.simpleSelectorStartParser().parse(stream, broadcaster);
 
-        Parser p = new IdSelectorParser().or(new ClassSelectorParser()).or(new AttributeSelectorParser())
-            .or(new PseudoSelectorParser()).or(new NegationSelectorParser());
+        // parse all remaining regular simple selectors
+        Parser simpleSelectorParser = ParserFactory.simpleSelectorParser();
 
-        boolean h = true;
-        do {
-            stream.skipWhitepace();
-            h = p.parse(stream, broadcaster);
-            if (h) s = true;
-        } while (h);
+        boolean simpleSelectorMatched = true;
+        while (simpleSelectorMatched) {
+            // it's important not to skip whitespace here (neither should any simple selector parser skip whitespace)
+            // because a space could be the descendant combinator
+            simpleSelectorMatched = simpleSelectorParser.parse(stream, broadcaster);
+            if (simpleSelectorMatched) matched = true;
+        }
 
-        return s;
+        return matched;
     }
+
 }

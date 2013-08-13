@@ -13,7 +13,7 @@ import com.salesforce.omakase.emitter.SubscriptionType;
  * 
  * @author nmcwilliams
  */
-public class SelectorParser extends AbstractParser {
+public class RawSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {

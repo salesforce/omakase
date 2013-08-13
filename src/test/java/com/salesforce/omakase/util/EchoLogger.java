@@ -67,6 +67,12 @@ public final class EchoLogger extends BasePlugin {
     }
 
     @Override
+    @Subscribe(priority = 9)
+    public void simpleSelector(SimpleSelector simpleSelector) {
+        logger.info("\nsimpleSelector: {}", simpleSelector);
+    }
+
+    @Override
     @Subscribe(priority = 10)
     public void combinator(Combinator combinator) {
         logger.info("\ncombinator: {}", combinator);

@@ -43,14 +43,14 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
     @Override
     public SelectorPartType type() {
         switch (type) {
-        case ADJACENT:
-            return SelectorPartType.ADJACENT_SIBLING;
+        case ADJACENT_SIBLING:
+            return SelectorPartType.ADJACENT_SIBLING_COMBINATOR;
         case CHILD:
-            return SelectorPartType.CHILD;
+            return SelectorPartType.CHILD_COMBINATOR;
         case DESCENDANT:
-            return SelectorPartType.DESCENDENT;
-        case GENERAL:
-            return SelectorPartType.GENERAL_SIBLING;
+            return SelectorPartType.DESCENDENT_COMBINATOR;
+        case GENERAL_SIBLING:
+            return SelectorPartType.GENERAL_SIBLING_COMBINATOR;
         }
         throw new RuntimeException("unknown combinator type");
     }
@@ -62,7 +62,7 @@ public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements 
 
     @Override
     public String toString() {
-        return As.string(this).add("syntax", super.toString()).add("type", type.symbol()).toString();
+        return As.string(this).add("syntax", super.toString()).add("type", type).toString();
 
     }
 }

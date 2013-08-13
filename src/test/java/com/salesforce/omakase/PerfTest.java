@@ -11,6 +11,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.phloc.css.ECSSVersion;
 import com.phloc.css.reader.CSSReader;
+import com.salesforce.omakase.Omakase.Request;
+import com.salesforce.omakase.ast.Declaration;
+import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.plugin.AutoRefiner;
 
 /**
  * Performance testing of this parser with others.
@@ -32,6 +36,9 @@ public class PerfTest {
 
     /** output statistics */
     private static final boolean CONSOLE = true;
+
+    /** full parsing for omakase */
+    private static final boolean AUTO_REFINE = true;
 
     /** LOC variations (multiplication) */
     private static final List<Integer> MULTI_FACTORS = ImmutableList.of(1, 2, 4, 6, 8, 10, 12, 16, 18, 20, 22, 24, 26,
@@ -136,7 +143,15 @@ public class PerfTest {
         if (mode == Mode.phloc) {
             CSSReader.readFromString(src, Charsets.UTF_8, ECSSVersion.LATEST);
         } else if (mode == Mode.omakase) {
-            Omakase.source(src).process();
+            Request request = Omakase.source(src);
+
+            if (AUTO_REFINE) {
+                AutoRefiner autoRefiner = new AutoRefiner();
+                autoRefiner.include(Selector.class).include(Declaration.class);
+                request.add(autoRefiner);
+            }
+
+            request.process();
         }
     }
 

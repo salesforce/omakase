@@ -56,11 +56,23 @@ public enum Tokens implements Token {
     /** single quote */
     SINGLE_QUOTE(is('\''), "single quote"),
 
+    /** single space character */
+    SINGLE_SPACE(is(' '), "single space character"),
+
+    /** greater than character, usually for the combinator symbol */
+    GREATER_THAN(is('>'), ">"),
+
+    /** plus character, usually for the combinator symbol */
+    PLUS(is('+'), "+"),
+
+    /** tilde character, usually for the combinator symbol */
+    TILDE(is('~'), "~"),
+
     /** first allowed character in a css ident/name */
-    NMSTART(is('_').or(inRange('a', 'z')).or(inRange('A', 'Z')), "valid first CSS id character"),
+    NMSTART(is('_').or(inRange('a', 'z')).or(inRange('A', 'Z')), "first character of an identifier"),
 
     /** subsequent allowed characters in a css ident/name */
-    NMCHAR(is('_').or(is('-')).or(inRange('a', 'z')).or(inRange('A', 'Z').or(inRange('0', '9'))), "valid CSS id character")
+    NMCHAR(is('_').or(is('-')).or(inRange('a', 'z')).or(inRange('A', 'Z').or(inRange('0', '9'))), "identifier character")
 
     ;
 
@@ -79,7 +91,7 @@ public enum Tokens implements Token {
 
     @Override
     public boolean matches(Character c) {
-        return matcher.matches(c);
+        return c == null ? false : matcher.matches(c);
     }
 
     @Override

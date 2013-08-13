@@ -13,7 +13,7 @@ import com.salesforce.omakase.emitter.SubscriptionType;
  * 
  * @author nmcwilliams
  */
-public class DeclarationParser extends AbstractParser {
+public class RawDeclarationParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();

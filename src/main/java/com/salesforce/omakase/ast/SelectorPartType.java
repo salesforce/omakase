@@ -10,25 +10,25 @@ package com.salesforce.omakase.ast;
  */
 public enum SelectorPartType {
     /** TODO */
-    UNIVERSAL,
+    UNIVERSAL_SELECTOR,
     /** TODO */
-    TYPE,
+    TYPE_SELECTOR,
     /** TODO */
-    ID,
+    ID_SELECTOR,
     /** TODO */
-    CLASS,
+    CLASS_SELECTOR,
     /** TODO */
-    ATTRIBUTE,
+    ATTRIBUTE_SELECTOR,
     /** TODO */
-    PSEUDO_ELEMENT,
+    PSEUDO_ELEMENT_SELECTOR,
     /** TODO */
-    PSEUDO_CLASS,
+    PSEUDO_CLASS_SELECTOR,
     /** TODO */
-    DESCENDENT,
+    DESCENDENT_COMBINATOR,
     /** TODO */
-    CHILD,
+    CHILD_COMBINATOR,
     /** TODO */
-    ADJACENT_SIBLING,
+    ADJACENT_SIBLING_COMBINATOR,
     /** TODO */
-    GENERAL_SIBLING
+    GENERAL_SIBLING_COMBINATOR
 }

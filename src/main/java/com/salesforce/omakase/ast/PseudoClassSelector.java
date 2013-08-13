@@ -12,7 +12,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SimpleSelector {
     /**
      * TODO
      * 

@@ -87,12 +87,21 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link SelectorPart}.
+     * of type {@link SelectorPart} ({@link SimpleSelector}s or {@link Combinator}s).
      * 
      * @param selectorPart
      *            The {@link SelectorPart} instance.
      */
     public void selectorPart(SelectorPart selectorPart) {}
+
+    /**
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link SimpleSelector}.
+     * 
+     * @param simpleSelector
+     *            The {@link SimpleSelector} instance.
+     */
+    public void simpleSelector(SimpleSelector simpleSelector) {}
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
@@ -111,6 +120,15 @@ public class BasePlugin implements Plugin {
      *            The {@link TypeSelector} instance.
      */
     public void typeSelector(TypeSelector typeSelector) {}
+
+    /**
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link UniversalSelector}.
+     * 
+     * @param universalSelector
+     *            The {@link UniversalSelector} instance.
+     */
+    public void universalSelector(UniversalSelector universalSelector) {}
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
@@ -156,15 +174,6 @@ public class BasePlugin implements Plugin {
      *            The {@link PseudoElementSelector} instance.
      */
     public void pseudoElementSelector(PseudoElementSelector pseudoElementSelector) {}
-
-    /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link UniversalSelector}.
-     * 
-     * @param universalSelector
-     *            The {@link UniversalSelector} instance.
-     */
-    public void universalSelector(UniversalSelector universalSelector) {}
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units

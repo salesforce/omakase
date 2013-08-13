@@ -15,6 +15,9 @@ import com.salesforce.omakase.plugin.Plugin;
  * TODO Description
  * 
  * <p>
+ * doesn't support namespaces, imports, charset
+ * 
+ * <p>
  * This library is <em>not</em> thread-safe.
  * 
  * @author nmcwilliams
@@ -57,6 +60,17 @@ public final class Omakase {
         public Request request(Plugin... plugins) {
             context.plugins(plugins);
             return this;
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param plugins
+         *            TODO
+         * @return TODO
+         */
+        public Request add(Plugin... plugins) {
+            return request(plugins);
         }
 
         /**

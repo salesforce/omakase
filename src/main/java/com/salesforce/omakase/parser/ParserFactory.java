@@ -3,6 +3,9 @@
  */
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.parser.token.IdentSequence;
+import com.salesforce.omakase.parser.token.TokenSequence;
+
 /**
  * A cache of {@link Parser} instances.
  * 
@@ -13,13 +16,32 @@ package com.salesforce.omakase.parser;
  * @author nmcwilliams
  */
 public final class ParserFactory {
-    private static final Parser stylesheetParser = new StylesheetParser();
-    private static final Parser atRuleParser = new AtRuleParser();
-    private static final Parser ruleParser = new RuleParser();
-    private static final Parser statementParser = atRuleParser.or(ruleParser);
-    private static final Parser declarationParser = new DeclarationParser();
-    private static final Parser selectorGroupParser = new SelectorGroupParser();
-    private static final Parser selectorParser = new SelectorParser();
+    /* parsers */
+    private static final Parser stylesheet = new StylesheetParser();
+    private static final Parser atRule = new AtRuleParser();
+    private static final Parser rule = new RuleParser();
+    private static final Parser statement = atRule.or(rule);
+    private static final Parser declaration = new RawDeclarationParser();
+    private static final Parser selectorGroup = new SelectorGroupParser();
+    private static final Parser selector = new RawSelectorParser();
+    private static final Parser refinedSelector = new RefinedSelectorParser();
+
+    private static final Parser combinator = new CombinatorParser();
+    private static final Parser classSelector = new ClassSelectorParser();
+    private static final Parser idSelector = new IdSelectorParser();
+    private static final Parser attributeSelector = new AttributeSelectorParser();
+    private static final Parser typeSelector = new TypeSelectorParser();
+    private static final Parser universalSelector = new UniversalSelectorParser();
+    private static final Parser pseudoSelector = new PseudoSelectorParser();
+    private static final Parser negationSelector = new NegationSelectorParser();
+
+    private static final Parser simpleSelectorSequence = new SimpleSelectorSequenceParser();
+    private static final Parser simpleSelectorStart = typeSelector.or(universalSelector);
+    private static final Parser simpleSelector = idSelector.or(classSelector)
+        .or(attributeSelector).or(pseudoSelector).or(negationSelector);
+
+    /* sequences */
+    private static final TokenSequence ident = new IdentSequence();
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -27,25 +49,7 @@ public final class ParserFactory {
      * @return The parser instance.
      */
     public static Parser stylesheetParser() {
-        return stylesheetParser;
-    }
-
-    /**
-     * Gets the {@link AtRuleParser}.
-     * 
-     * @return The parser instance.
-     */
-    public static Parser atRuleParser() {
-        return atRuleParser;
-    }
-
-    /**
-     * Gets the {@link RuleParser}.
-     * 
-     * @return The parser instance.
-     */
-    public static Parser ruleParser() {
-        return ruleParser;
+        return stylesheet;
     }
 
     /**
@@ -54,16 +58,25 @@ public final class ParserFactory {
      * @return The parser instance.
      */
     public static Parser statementParser() {
-        return statementParser;
+        return statement;
     }
 
     /**
-     * Gets the {@link DeclarationParser}.
+     * Gets the {@link AtRuleParser}.
      * 
      * @return The parser instance.
      */
-    public static Parser declarationParser() {
-        return declarationParser;
+    public static Parser atRuleParser() {
+        return atRule;
+    }
+
+    /**
+     * Gets the {@link RuleParser}.
+     * 
+     * @return The parser instance.
+     */
+    public static Parser ruleParser() {
+        return rule;
     }
 
     /**
@@ -72,15 +85,105 @@ public final class ParserFactory {
      * @return The parser instance.
      */
     public static Parser selectorGroupParser() {
-        return selectorGroupParser;
+        return selectorGroup;
     }
 
     /**
-     * Gets the {@link SelectorParser}.
+     * Gets the {@link RawSelectorParser}.
      * 
      * @return The parser instance.
      */
     public static Parser selectorParser() {
-        return selectorParser;
+        return selector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser refinedSelectorParser() {
+        return refinedSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser simpleSelectorSequenceParser() {
+        return simpleSelectorSequence;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser simpleSelectorStartParser() {
+        return simpleSelectorStart;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser simpleSelectorParser() {
+        return simpleSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser combinatorParser() {
+        return combinator;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser classSelectorParser() {
+        return classSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser idSelectorParser() {
+        return idSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser attributeSelectorParser() {
+        return attributeSelector;
+    }
+
+    /**
+     * Gets the {@link RawDeclarationParser}.
+     * 
+     * @return The parser instance.
+     */
+    public static Parser declarationParser() {
+        return declaration;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static TokenSequence ident() {
+        return ident;
     }
 }

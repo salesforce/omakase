@@ -12,7 +12,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SimpleSelector {
     private String name;
 
     /**
@@ -56,7 +56,7 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
 
     @Override
     public SelectorPartType type() {
-        return SelectorPartType.CLASS;
+        return SelectorPartType.CLASS_SELECTOR;
     }
 
     @Override

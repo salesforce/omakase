@@ -12,7 +12,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements SimpleSelector {
     private String name;
 
     /**
@@ -25,7 +25,7 @@ public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements 
      * @param name
      *            Content of the selector.
      */
-    protected IdSelector(int line, int column, String name) {
+    public IdSelector(int line, int column, String name) {
         super(line, column);
         this.name = name;
     }
@@ -42,7 +42,7 @@ public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements 
 
     @Override
     public SelectorPartType type() {
-        return SelectorPartType.ID;
+        return SelectorPartType.ID_SELECTOR;
     }
 
     @Override

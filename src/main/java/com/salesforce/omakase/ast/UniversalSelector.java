@@ -36,7 +36,7 @@ public class UniversalSelector extends AbstractLinkableSyntax<SelectorPart> impl
 
     @Override
     public SelectorPartType type() {
-        return SelectorPartType.UNIVERSAL;
+        return SelectorPartType.UNIVERSAL_SELECTOR;
     }
 
     @Override

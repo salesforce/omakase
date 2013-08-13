@@ -12,7 +12,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class AttributeSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class AttributeSelector extends AbstractLinkableSyntax<SelectorPart> implements SimpleSelector {
     /**
      * Creates a new instance with the given line and column numbers.
      * 
@@ -37,7 +37,7 @@ public class AttributeSelector extends AbstractLinkableSyntax<SelectorPart> impl
 
     @Override
     public SelectorPartType type() {
-        return SelectorPartType.ATTRIBUTE;
+        return SelectorPartType.ATTRIBUTE_SELECTOR;
     }
 
     @Override

@@ -14,9 +14,9 @@ public enum CombinatorType {
     /** child combinator */
     CHILD('>'),
     /** adjacent sibling combinator */
-    ADJACENT('+'),
+    ADJACENT_SIBLING('+'),
     /** general sibling combinator */
-    GENERAL('~');
+    GENERAL_SIBLING('~');
 
     private final char symbol;
 

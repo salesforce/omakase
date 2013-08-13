@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -12,7 +12,9 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implements SimpleSelector {
+    private String name;
+
     /**
      * TODO
      * 
@@ -20,10 +22,26 @@ public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implement
      *            TODO
      * @param column
      *            TODO
+     * @param name
+     *            TODO
      */
-    protected TypeSelector(int line, int column) {
+    public TypeSelector(int line, int column, String name) {
         super(line, column);
-        // TODO Auto-generated constructor stub
+        this.name = name;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String filterName() {
+        return name;
     }
 
     @Override
@@ -38,7 +56,7 @@ public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implement
 
     @Override
     public SelectorPartType type() {
-        return SelectorPartType.TYPE;
+        return SelectorPartType.TYPE_SELECTOR;
     }
 
     @Override
@@ -48,9 +66,6 @@ public class TypeSelector extends AbstractLinkableSyntax<SelectorPart> implement
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
-            .toString();
+        return As.string(this).add("syntax", super.toString()).add("name", name).toString();
     }
 }
