@@ -108,24 +108,46 @@ public final class Stream {
         return column;
     }
 
+    /**
+     * Gets the original line of this {@link Stream} within the original source. This is mainly useful for sub-sequences
+     * (sequences created from a substring of the original source).
+     * 
+     * @return The line number of the start of this stream in the original source.
+     */
     public int anchorLine() {
         return anchorLine;
     }
 
+    /**
+     * Gets the original column of this {@link Stream} within the original source. This is mainly useful for
+     * sub-sequences (sequences created from a substring of the original source).
+     * 
+     * @return The column number of the start of this stream in the original source.
+     */
     public int anchorColumn() {
         return anchorColumn;
     }
 
-    public boolean isSubStream() {
-        return anchorLine != 1 || anchorColumn != 1;
-    }
-
-    public StringBuilder anchorPosition() {
+    /**
+     * Gets a string description of the position of this {@link Stream} within the original source.
+     * 
+     * @return The message.
+     */
+    public StringBuilder anchorPositionMessage() {
         return new StringBuilder(64).append("(starting from line ")
             .append(anchorLine)
             .append(", column ")
             .append(anchorColumn)
             .append(" in original source)");
+    }
+
+    /**
+     * Gets whether this a sub-sequence.
+     * 
+     * @return True if either the {@link #anchorLine()} or {@link #anchorColumn()} is greater than 1.
+     */
+    public boolean isSubStream() {
+        return anchorLine != 1 || anchorColumn != 1;
     }
 
     /**
@@ -177,6 +199,39 @@ public final class Stream {
     }
 
     /**
+     * Reads the given {@link TokenSequence} from the current position in the source. If the sequence matches (all
+     * required members are found in order) then the current position will be advanced to the last matched character. If
+     * the sequence doesn't match then the position will remain unchanged.
+     * 
+     * @param sequence
+     *            The {@link TokenSequence} to read.
+     * @return The substring matching the {@link TokenSequence}.
+     */
+    public String read(TokenSequence sequence) {
+        int currentIndex = index;
+        int lastIndex = currentIndex;
+
+        // attempt to match each member of the sequence. If a required member doesn't match then the whole operation
+        // fails and we do not advance the current position.
+        for (MemberToken member : sequence) {
+            lastIndex = peek(member.token(), currentIndex);
+            if (lastIndex > -1) {
+                currentIndex = lastIndex;
+            } else {
+                if (!member.isOptional()) return "";
+            }
+        }
+
+        // find the matched substring
+        String matched = source.substring(index, currentIndex);
+
+        // advance to the last position
+        forward(currentIndex);
+
+        return matched;
+    }
+
+    /**
      * Gets the next character without advancing the current position.
      * 
      * @return The next character, or null if at the end of the stream.
@@ -194,6 +249,26 @@ public final class Stream {
      */
     public Character peek(int numCharacters) {
         return length <= index + numCharacters ? source.charAt(index + numCharacters) : null;
+    }
+
+    /**
+     * Gets the index of the last character matching the given token without advancing the current position.
+     * 
+     * @param token
+     *            The {@link Token} to match.
+     * @param startIndex
+     *            Begin searching from this (arbitrary and unrelated to the current index) position in the source.
+     * @return The index of the last matching character, or -1 if the {@link Token} didn't match anything.
+     */
+    public int peek(Token token, int startIndex) {
+        int i = startIndex;
+        char c = source.charAt(startIndex);
+        while (token.matches(c)) {
+            if (eof()) break;
+            c = source.charAt(i++);
+        }
+
+        return (i == startIndex) ? -1 : i;
     }
 
     /**
@@ -296,36 +371,6 @@ public final class Stream {
         return source.substring(start, index);
     }
 
-    public String read(TokenSequence sequence) {
-        int i = index;
-        int x = i;
-        String s = "";
-        for (MemberToken member : sequence) {
-            x = peak(member.token(), i);
-            if (x > -1) {
-                i = x;
-            } else {
-                if (!member.isOptional()) return s;
-            }
-        }
-        s = source.substring(index, i);
-        forward(i);
-        return s;
-    }
-
-    public int peak(Token token, int startIndex) {
-        boolean matched = false;
-        char c = source.charAt(startIndex);
-        int i = startIndex;
-        while (token.matches(c)) {
-            matched = true;
-            if (eof()) break;
-            c = source.charAt(i++);
-        }
-
-        return i;
-    }
-
     /**
      * Gets the original source.
      * 
@@ -386,7 +431,7 @@ public final class Stream {
         StringBuilder builder = new StringBuilder(source.length() + 16);
         builder.append(source.substring(0, index) + "»" + source.substring(index));
         if (isSubStream()) {
-            builder.append(" ").append(anchorPosition());
+            builder.append(" ").append(anchorPositionMessage());
         }
         return builder.toString();
     }

@@ -33,7 +33,7 @@ public class ParserException extends OmakaseException {
             .append("in '").append(stream.source()).append("'");
 
         if (stream.isSubStream()) {
-            builder.append(" ").append(stream.anchorPosition());
+            builder.append(" ").append(stream.anchorPositionMessage());
         }
 
         return builder.toString();

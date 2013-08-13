@@ -56,9 +56,11 @@ public enum Tokens implements Token {
     /** single quote */
     SINGLE_QUOTE(is('\''), "single quote"),
 
-    NMSTART(is('_').or(inRange('a', 'z')).or(inRange('A', 'Z')), "name character start"),
+    /** first allowed character in a css ident/name */
+    NMSTART(is('_').or(inRange('a', 'z')).or(inRange('A', 'Z')), "valid first CSS id character"),
 
-    NMCHAR(is('_').or(is('-')).or(inRange('a', 'z')).or(inRange('A', 'Z').or(inRange('0', '9'))), "name character")
+    /** subsequent allowed characters in a css ident/name */
+    NMCHAR(is('_').or(is('-')).or(inRange('a', 'z')).or(inRange('A', 'Z').or(inRange('0', '9'))), "valid CSS id character")
 
     ;
 

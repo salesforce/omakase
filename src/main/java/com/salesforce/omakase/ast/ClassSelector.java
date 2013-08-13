@@ -23,13 +23,18 @@ public class ClassSelector extends AbstractLinkableSyntax<SelectorPart> implemen
      * @param column
      *            The column number.
      * @param name
-     *            TODO
+     *            The name of the class.
      */
     public ClassSelector(int line, int column, String name) {
         super(line, column);
         this.name = name;
     }
 
+    /**
+     * Gets the class name.
+     * 
+     * @return The class name.
+     */
     public String name() {
         return name;
     }

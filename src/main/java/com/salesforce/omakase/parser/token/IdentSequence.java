@@ -9,7 +9,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 /**
- * TODO Description
+ * A {@link TokenSequence} matching the "ident" CSS grammar rule.
  * 
  * @author nmcwilliams
  */
@@ -22,8 +22,7 @@ public class IdentSequence implements TokenSequence {
 
     @Override
     public String description() {
-        // TODO Auto-generated method stub
-        return "TODO";
+        return "CSS identifier";
     }
 
     @Override
@@ -35,5 +34,4 @@ public class IdentSequence implements TokenSequence {
     public Iterator<MemberToken> iterator() {
         return tokens.iterator();
     }
-
 }

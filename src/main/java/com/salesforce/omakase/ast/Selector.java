@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.*;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.RefinedSelectorParser;
+import com.salesforce.omakase.parser.SimpleSelectorSequenceParser;
 import com.salesforce.omakase.parser.Stream;
 
 /**
@@ -69,7 +69,7 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
         if (head == null) {
             CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
             Stream stream = new Stream(rawContent.content(), line(), column());
-            new RefinedSelectorParser().parse(stream, collector);
+            new SimpleSelectorSequenceParser().parse(stream, collector);
             if (!stream.eof()) throw new ParserException(stream, "invalid content remaining in the selector");
             Optional<SelectorPart> first = collector.find(SelectorPart.class);
             if (!first.isPresent()) throw new ParserException(stream, "does not contain any selectors!");
