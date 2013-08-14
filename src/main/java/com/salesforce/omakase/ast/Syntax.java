@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast;
 
 import java.util.List;
 
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**

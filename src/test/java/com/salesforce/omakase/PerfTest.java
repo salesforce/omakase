@@ -12,8 +12,8 @@ import com.google.common.collect.Lists;
 import com.phloc.css.ECSSVersion;
 import com.phloc.css.reader.CSSReader;
 import com.salesforce.omakase.Omakase.Request;
-import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.AutoRefiner;
 import com.salesforce.omakase.plugin.SyntaxTree;
 

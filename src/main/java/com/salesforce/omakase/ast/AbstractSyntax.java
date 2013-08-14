@@ -28,7 +28,7 @@ public abstract class AbstractSyntax implements Syntax {
      * @param column
      *            The column number.
      */
-    protected AbstractSyntax(int line, int column) {
+    public AbstractSyntax(int line, int column) {
         this.line = line;
         this.column = column;
     }

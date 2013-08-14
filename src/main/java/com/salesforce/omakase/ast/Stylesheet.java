@@ -10,9 +10,13 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.plugin.SyntaxTree;
 
 /**
  * The root-level {@link Syntax} object.
+ * 
+ * <p>
+ * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
  * 
  * @author nmcwilliams
  */
@@ -48,8 +52,9 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
     /**
      * TODO Description
      * 
-     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to
-     * a specific instance of an existing one.
+     * <p>
+     * Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to a
+     * specific instance of an existing one.
      * 
      * @param statement
      *            TODO

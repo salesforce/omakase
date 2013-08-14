@@ -5,6 +5,8 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**

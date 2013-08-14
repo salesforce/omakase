@@ -3,8 +3,9 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.ast.Property;
-import com.salesforce.omakase.ast.PropertyName;
+import com.salesforce.omakase.ast.declaration.Property;
+import com.salesforce.omakase.ast.declaration.PropertyName;
+import com.salesforce.omakase.parser.declaration.TermListParser;
 
 /**
  * TODO Description
@@ -26,10 +27,10 @@ public final class ParserStrategy {
 
             switch (property) {
             default:
-                return new GenericPropertyValueParser();
+                return new TermListParser();
             }
         }
 
-        return new GenericPropertyValueParser();
+        return new TermListParser();
     }
 }

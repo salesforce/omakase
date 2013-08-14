@@ -4,9 +4,9 @@
 package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.Context;
-import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.Selector;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * A {@link Plugin} that is dependent on another {@link Plugin}, or for some other reason needs access to the

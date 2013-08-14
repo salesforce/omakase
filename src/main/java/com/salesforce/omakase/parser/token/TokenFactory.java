@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.Parser;
 
 /**

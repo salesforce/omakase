@@ -5,8 +5,8 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.ast.Declaration;
-import com.salesforce.omakase.ast.Selector;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.AutoRefiner;
 import com.salesforce.omakase.plugin.SyntaxTree;
 import com.salesforce.omakase.util.EchoLogger;
@@ -21,11 +21,14 @@ public class Debug {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
         AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
-        Omakase.source(src1).request(tree, autoRefiner, logger).process();
+        Omakase.source(src2).request(tree, autoRefiner, logger).process();
+        System.out.println(tree.toString());
     }
 
-    public static final String src1 = ".testing #is > fun p { color: red; margin: 10px 5px; }";
-    public static final String src2 = ".uiButton{\n" +
+    public static final String src1 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; }";
+    public static final String src2 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; background-color: #fffeee; -moz-border-radius: 3px 4px 5px 6px; }";
+
+    public static final String src3 = ".uiButton{\n" +
             "    display:inline-block;\n" +
             "    cursor:pointer;\n" +
             "}\n" +

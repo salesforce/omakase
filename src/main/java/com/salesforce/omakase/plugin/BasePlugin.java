@@ -4,6 +4,10 @@
 package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.PropertyName;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Subscribe;
 
 /**

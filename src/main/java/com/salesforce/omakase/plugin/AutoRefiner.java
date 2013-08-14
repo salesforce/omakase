@@ -6,7 +6,9 @@ package com.salesforce.omakase.plugin;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.emitter.Subscribe;
 
 /**

@@ -1,0 +1,23 @@
+/**
+ * ADD LICENSE
+ */
+package com.salesforce.omakase.parser.selector;
+
+import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Stream;
+
+/**
+ * TODO Description
+ * 
+ * @author nmcwilliams
+ */
+public class PseudoElementSelectorParser extends AbstractParser {
+
+    @Override
+    public boolean parse(Stream stream, Broadcaster broadcaster) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+}

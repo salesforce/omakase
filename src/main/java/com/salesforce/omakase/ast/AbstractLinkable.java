@@ -29,7 +29,7 @@ public abstract class AbstractLinkable<T extends Linkable<T>> extends AbstractSy
      * @param column
      *            The column number.
      */
-    protected AbstractLinkable(int line, int column) {
+    public AbstractLinkable(int line, int column) {
         super(line, column);
     }
 

@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.parser.token.IdentSequence;
-import com.salesforce.omakase.parser.token.TokenSequence;
+import com.salesforce.omakase.parser.raw.*;
+import com.salesforce.omakase.parser.selector.*;
 
 /**
  * A cache of {@link Parser} instances.
@@ -21,9 +21,9 @@ public final class ParserFactory {
     private static final Parser atRule = new AtRuleParser();
     private static final Parser rule = new RuleParser();
     private static final Parser statement = atRule.or(rule);
-    private static final Parser declaration = new RawDeclarationParser();
+    private static final Parser rawDeclaration = new RawDeclarationParser();
     private static final Parser selectorGroup = new SelectorGroupParser();
-    private static final Parser selector = new RawSelectorParser();
+    private static final Parser rawSelector = new RawSelectorParser();
     private static final Parser refinedSelector = new RefinedSelectorParser();
 
     private static final Parser combinator = new CombinatorParser();
@@ -40,9 +40,6 @@ public final class ParserFactory {
     private static final Parser simpleSelectorStart = typeSelector.or(universalSelector);
     private static final Parser simpleSelector = idSelector.or(classSelector)
         .or(attributeSelector).or(pseudoClassSelector).or(negationSelector);
-
-    /* sequences */
-    private static final TokenSequence ident = new IdentSequence();
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -94,8 +91,8 @@ public final class ParserFactory {
      * 
      * @return The parser instance.
      */
-    public static Parser selectorParser() {
-        return selector;
+    public static Parser rawSelectorParser() {
+        return rawSelector;
     }
 
     /**
@@ -220,16 +217,8 @@ public final class ParserFactory {
      * 
      * @return The parser instance.
      */
-    public static Parser declarationParser() {
-        return declaration;
+    public static Parser rawDeclarationParser() {
+        return rawDeclaration;
     }
 
-    /**
-     * TODO Description
-     * 
-     * @return TODO
-     */
-    public static TokenSequence ident() {
-        return ident;
-    }
 }

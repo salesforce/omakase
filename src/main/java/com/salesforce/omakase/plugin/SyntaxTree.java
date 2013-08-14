@@ -9,6 +9,9 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.Context;
 import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.emitter.Subscribe;
 import com.salesforce.omakase.emitter.SubscriptionType;
 

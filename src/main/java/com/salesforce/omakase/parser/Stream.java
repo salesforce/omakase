@@ -3,19 +3,19 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.parser.token.MemberToken;
+import com.salesforce.omakase.ast.declaration.value.NumericalValue;
+import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.TokenSequence;
+import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * A tool for reading a String source one character at a time.
@@ -211,40 +211,6 @@ public final class Stream {
     }
 
     /**
-     * Reads the given {@link TokenSequence} from the current position in the source. If the sequence matches (all
-     * required members are found in order) then the current position will be advanced to the last matched character. If
-     * the sequence doesn't match then the position will remain unchanged.
-     * 
-     * @param sequence
-     *            The {@link TokenSequence} to read.
-     * @return The substring matching the {@link TokenSequence}.
-     */
-    public String read(TokenSequence sequence) {
-        int currentIndex = index;
-        int lastIndex = currentIndex;
-
-        // attempt to match each member of the sequence. If a required member doesn't match then the whole operation
-        // fails and we do not advance the current position.
-        for (MemberToken member : sequence) {
-            lastIndex = peek(member.token(), currentIndex);
-            if (lastIndex > -1) {
-                currentIndex = lastIndex;
-                if (currentIndex == length) break;
-            } else {
-                if (!member.isOptional()) return "";
-            }
-        }
-
-        // find the matched substring
-        String matched = source.substring(index, currentIndex);
-
-        // advance to the last position
-        forward(currentIndex);
-
-        return matched;
-    }
-
-    /**
      * Gets the next character without advancing the current position.
      * 
      * @return The next character, or null if at the end of the stream.
@@ -262,27 +228,6 @@ public final class Stream {
      */
     public Character peek(int numCharacters) {
         return (length <= index + numCharacters) ? source.charAt(index + numCharacters) : null;
-    }
-
-    /**
-     * Gets the index of the last character matching the given token without advancing the current position.
-     * 
-     * @param token
-     *            The {@link Token} to match.
-     * @param startIndex
-     *            Begin searching from this (arbitrary and unrelated to the current index) position in the source.
-     * @return The index of the last matching character, or -1 if the {@link Token} didn't match anything.
-     */
-    public int peek(Token token, int startIndex) {
-        int i = startIndex;
-        char c = source.charAt(startIndex);
-        while (token.matches(c)) {
-            i++;
-            if (i == (length)) break;
-            c = source.charAt(i);
-        }
-
-        return (i == startIndex) ? -1 : i;
     }
 
     /**
@@ -306,14 +251,23 @@ public final class Stream {
      *            The token to match.
      * @return True if there was a match, false otherwise.
      */
-    public boolean optional(Token token) {
+    public Optional<Character> optional(Token token) {
         // if the current character doesn't match then don't advance
-        if (!token.matches(current())) return false;
+        if (!token.matches(current())) return Optional.absent();
 
         // advance to the next character
-        next();
+        return Optional.of(next());
+    }
 
-        return true;
+    /**
+     * TODO Description
+     * 
+     * @param token
+     *            TODO
+     * @return TODO
+     */
+    public boolean optionallyPresent(Token token) {
+        return optional(token).isPresent();
     }
 
     /**
@@ -372,7 +326,8 @@ public final class Stream {
      * 
      * @param token
      *            The token to match.
-     * @return A string containing all characters that were matched.
+     * @return A string containing all characters that were matched. If nothing matched then an empty string is
+     *         returned.
      */
     public String chomp(Token token) {
         if (eof()) return "";
@@ -453,6 +408,7 @@ public final class Stream {
         snapshot.column = column;
         snapshot.inString = inString;
         snapshot.inComment = inComment;
+        snapshots.add(snapshot);
     }
 
     /**
@@ -472,6 +428,64 @@ public final class Stream {
         this.inString = snapshot.inString;
         this.inComment = snapshot.inComment;
         return false;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public Optional<String> readIdent() {
+        if (Tokens.NMSTART.matches(current())) {
+            String ident = chomp(Tokens.NMCHAR);
+            return Optional.of(ident);
+        }
+        return Optional.absent();
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public Optional<NumericalValue> readNumber() {
+        snapshot();
+
+        // parse the optional sign
+        Optional<Character> sign = optional(Tokens.SIGN);
+
+        // integer value
+        String integerValue = chomp(Tokens.DIGIT);
+        Integer integer = integerValue.isEmpty() ? null : Integer.valueOf(integerValue);
+
+        // decimal
+        Integer decimal = null;
+        if (optionallyPresent(Tokens.DOT)) {
+            String decimalValue = chomp(Tokens.DIGIT);
+            decimal = decimalValue.isEmpty() ? null : Integer.valueOf(decimalValue);
+        }
+
+        // integer value or decimal must be present
+        if (integer == null && decimal == null) {
+            rollback();
+            return Optional.absent();
+        }
+
+        NumericalValue value = new NumericalValue(integer == null ? 0 : integer);
+
+        if (decimal != null) {
+            value.decimalValue(decimal);
+        }
+
+        if (sign.isPresent()) {
+            value.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
+        }
+
+        // discard our snapshot
+        snapshots.pop();
+
+        // return the numerical value
+        return Optional.of(value);
     }
 
     @Override

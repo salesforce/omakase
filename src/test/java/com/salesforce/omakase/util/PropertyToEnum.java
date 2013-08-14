@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.Property;
+import com.salesforce.omakase.ast.declaration.Property;
 
 /**
  * Utility to take list of css names and convert them to the {@link Property} enum.

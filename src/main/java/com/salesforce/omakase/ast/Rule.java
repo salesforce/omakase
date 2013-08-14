@@ -6,10 +6,16 @@ package com.salesforce.omakase.ast;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.LinkableCollection;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.plugin.SyntaxTree;
 
 /**
  * Represents a CSS Rule. Each rule has one {@link SelectorGroup}s and zero or more {@link Declaration}s.
+ * 
+ * <p>
+ * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
  * 
  * @author nmcwilliams
  */
@@ -53,7 +59,8 @@ public class Rule extends AbstractLinkable<Statement> implements Statement {
     /**
      * TODO Description
      * 
-     * <p> Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
+     * <p>
+     * Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
      * specific instance of an existing one.
      * 
      * @param declaration

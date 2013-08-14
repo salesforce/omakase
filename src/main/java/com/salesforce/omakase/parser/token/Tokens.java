@@ -29,8 +29,17 @@ public enum Tokens implements Token {
     /** comma */
     COMMA(is(','), ","),
 
+    /** forward slash */
+    FORWARD_SLASH(is('/'), "/"),
+
     /** upper or lower case alpha character */
     ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
+
+    /** numerical digit */
+    DIGIT(inRange('0', '9'), "numerical digit [0-9]"),
+
+    /** negative or positive sign */
+    SIGN(is('-').or(is('+')), "numerical sign (- or +)"),
 
     /** asterisk */
     STAR(is('*'), "universal selector"),
@@ -68,11 +77,11 @@ public enum Tokens implements Token {
     /** tilde character, usually for the combinator symbol */
     TILDE(is('~'), "~"),
 
-    /** first allowed character in a css ident/name */
-    NMSTART(is('_').or(inRange('a', 'z')).or(inRange('A', 'Z')), "first character of an identifier"),
+    /** first allowed character in a css ident/name (ordered based on likelihood of occurrence) */
+    NMSTART(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z').or(is('_'))), "valid first identifier character"),
 
-    /** subsequent allowed characters in a css ident/name */
-    NMCHAR(is('_').or(is('-')).or(inRange('a', 'z')).or(inRange('A', 'Z').or(inRange('0', '9'))), "identifier character")
+    /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
+    NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')), "valid identifier character")
 
     ;
 
