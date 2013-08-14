@@ -3,9 +3,11 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import com.google.common.base.CharMatcher;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -51,6 +53,9 @@ public final class Stream {
 
     /** if we are inside of a string */
     private boolean inString = false;
+
+    /** snapshots of a current index position and the associated line and column numbers */
+    private final Deque<Snapshot> snapshots = new ArrayDeque<Snapshot>();
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
@@ -432,13 +437,48 @@ public final class Stream {
         return index == length;
     }
 
+    /**
+     * TODO Description
+     * 
+     */
+    public void snapshot() {
+        Snapshot snapshot = new Snapshot();
+        snapshot.index = index;
+        snapshot.line = line;
+        snapshot.column = column;
+        snapshot.inString = inString;
+        snapshot.inComment = inComment;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return always returns <b>false</b> (convenience for inlining return statements in methods)
+     * 
+     * @throws IllegalStateException
+     *             If no snapshot exists.
+     */
+    public boolean rollback() {
+        checkState(snapshots.size() > 0, "no snapshots currently exist");
+        Snapshot snapshot = snapshots.pop();
+        this.index = snapshot.index;
+        this.line = snapshot.line;
+        this.column = snapshot.column;
+        this.inString = snapshot.inString;
+        this.inComment = snapshot.inComment;
+        return false;
+    }
+
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(source.length() + 16);
-        builder.append(source.substring(0, index) + "»" + source.substring(index));
-        if (isSubStream()) {
-            builder.append(" ").append(anchorPositionMessage());
-        }
-        return builder.toString();
+        return String.format("%s»%s", source.substring(0, index), source.substring(index));
+    }
+
+    private static final class Snapshot {
+        int index;
+        int line;
+        int column;
+        boolean inString;
+        boolean inComment;
     }
 }

@@ -15,6 +15,7 @@ import com.salesforce.omakase.Omakase.Request;
 import com.salesforce.omakase.ast.Declaration;
 import com.salesforce.omakase.ast.Selector;
 import com.salesforce.omakase.plugin.AutoRefiner;
+import com.salesforce.omakase.plugin.SyntaxTree;
 
 /**
  * Performance testing of this parser with others.
@@ -32,13 +33,10 @@ public class PerfTest {
     private static final boolean USE_FACTORS = true;
 
     /** run phloc */
-    private static final boolean PHLOC = false;
+    private static final boolean PHLOC = true;
 
     /** output statistics */
     private static final boolean CONSOLE = true;
-
-    /** full parsing for omakase */
-    private static final boolean AUTO_REFINE = true;
 
     /** LOC variations (multiplication) */
     private static final List<Integer> MULTI_FACTORS = ImmutableList.of(1, 2, 4, 6, 8, 10, 12, 16, 18, 20, 22, 24, 26,
@@ -50,8 +48,9 @@ public class PerfTest {
     // END OPTIONS
 
     enum Mode {
-        phloc,
-        omakase
+        PHLOC,
+        OMAKASE,
+        OMAKASE_FULL
     }
 
     private static final Pattern commentPattern = Pattern.compile("\\/\\*[^*]*\\*+([^/*][^*]*\\*+)*\\/");
@@ -83,8 +82,8 @@ public class PerfTest {
         if (PRIME) {
             print("\nPriming");
             for (int i = 0; i < 150; i++) {
-                if (PHLOC) parse(Mode.phloc, original);
-                parse(Mode.omakase, original);
+                if (PHLOC) parse(Mode.PHLOC, original);
+                parse(Mode.OMAKASE, original);
             }
         }
 
@@ -108,7 +107,7 @@ public class PerfTest {
                 List<Long> phlocParseTimes = Lists.newArrayListWithCapacity(runs);
                 for (int i = 0; i < runs; i++) {
                     long start = System.currentTimeMillis();
-                    parse(Mode.phloc, actual);
+                    parse(Mode.PHLOC, actual);
                     long end = System.currentTimeMillis();
                     phlocParseTimes.add(end - start);
                 }
@@ -120,11 +119,11 @@ public class PerfTest {
                 print("phloc: " + phlocParseAvg + "ms");
             }
 
-            // omakase
+            // omakase thin
             List<Long> omakaseParseTimes = Lists.newArrayListWithCapacity(runs);
             for (int i = 0; i < runs; i++) {
                 long start = System.currentTimeMillis();
-                parse(Mode.omakase, actual);
+                parse(Mode.OMAKASE, actual);
                 long end = System.currentTimeMillis();
                 omakaseParseTimes.add(end - start);
             }
@@ -133,23 +132,40 @@ public class PerfTest {
                 omakaseTotal += time;
             }
             long omakaseParseAvg = omakaseTotal / omakaseParseTimes.size();
-            print("omakase: " + omakaseParseAvg + "ms");
+            print("omakase thin: " + omakaseParseAvg + "ms");
+
+            // omakase full
+            List<Long> omakaseParseTimes2 = Lists.newArrayListWithCapacity(runs);
+            for (int i = 0; i < runs; i++) {
+                long start = System.currentTimeMillis();
+                parse(Mode.OMAKASE_FULL, actual);
+                long end = System.currentTimeMillis();
+                omakaseParseTimes2.add(end - start);
+            }
+            long omakaseTotal2 = 0;
+            for (Long time : omakaseParseTimes2) {
+                omakaseTotal2 += time;
+            }
+            long omakaseParseAvg2 = omakaseTotal2 / omakaseParseTimes2.size();
+            print("omakase full: " + omakaseParseAvg2 + "ms");
         }
 
         print("\ndone");
     }
 
     public static void parse(Mode mode, String src) {
-        if (mode == Mode.phloc) {
+        if (mode == Mode.PHLOC) {
             CSSReader.readFromString(src, Charsets.UTF_8, ECSSVersion.LATEST);
-        } else if (mode == Mode.omakase) {
+        } else if (mode == Mode.OMAKASE) {
+            Omakase.source(src).process();
+        } else if (mode == Mode.OMAKASE_FULL) {
             Request request = Omakase.source(src);
 
-            if (AUTO_REFINE) {
-                AutoRefiner autoRefiner = new AutoRefiner();
-                autoRefiner.include(Selector.class).include(Declaration.class);
-                request.add(autoRefiner);
-            }
+            request.add(new SyntaxTree());
+
+            AutoRefiner autoRefiner = new AutoRefiner();
+            autoRefiner.include(Selector.class).include(Declaration.class);
+            request.add(autoRefiner);
 
             request.process();
         }

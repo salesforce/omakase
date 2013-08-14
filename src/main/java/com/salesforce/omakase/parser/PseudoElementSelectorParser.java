@@ -10,7 +10,7 @@ import com.salesforce.omakase.Broadcaster;
  * 
  * @author nmcwilliams
  */
-public class PseudoSelectorParser extends AbstractParser {
+public class PseudoElementSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {

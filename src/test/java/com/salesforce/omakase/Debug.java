@@ -20,7 +20,7 @@ public class Debug {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
         AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class);
-        Omakase.source(src2).request(autoRefiner, logger).process();
+        Omakase.source(src2).request(tree, autoRefiner, logger).process();
     }
 
     public static final String src1 = ".testing #is > fun p { color: red; margin: 10px 5px; }";

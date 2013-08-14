@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -13,6 +13,8 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> implements SimpleSelector {
+    private String name;
+
     /**
      * TODO
      * 
@@ -20,10 +22,26 @@ public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> im
      *            TODO
      * @param column
      *            TODO
+     * @param name
+     *            TODO
      */
-    protected PseudoClassSelector(int line, int column) {
+    public PseudoClassSelector(int line, int column, String name) {
         super(line, column);
-        // TODO Auto-generated constructor stub
+        this.name = name;
+    }
+
+    /**
+     * Gets the selector name (e.g., "hover").
+     * 
+     * @return The selector name.
+     */
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String filterName() {
+        return name;
     }
 
     @Override
@@ -38,8 +56,7 @@ public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> im
 
     @Override
     public SelectorPartType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return SelectorPartType.PSEUDO_CLASS_SELECTOR;
     }
 
     @Override
@@ -49,9 +66,9 @@ public class PseudoClassSelector extends AbstractLinkableSyntax<SelectorPart> im
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .add("syntax", super.toString())
+            .add("name", name)
             .toString();
     }
 }

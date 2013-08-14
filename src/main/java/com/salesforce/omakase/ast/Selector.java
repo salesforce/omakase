@@ -31,6 +31,9 @@ import com.salesforce.omakase.parser.Stream;
  */
 @Subscribable
 public class Selector extends AbstractLinkableSyntax<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
+    private static final String EXPECTED = "Expected to find a selector!";
+    private static final String UNRECOGNIZED = "Unrecognized selector grammar";
+
     private final Broadcaster broadcaster;
     private final RawSyntax rawContent;
     private SelectorPart head;
@@ -69,10 +72,16 @@ public class Selector extends AbstractLinkableSyntax<Selector> implements Refina
         if (head == null) {
             CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
             Stream stream = new Stream(rawContent.content(), line(), column());
+
+            // parse the contents
             ParserFactory.refinedSelectorParser().parse(stream, collector);
-            if (!stream.eof()) throw new ParserException(stream, "invalid content remaining in the selector");
+
+            // there should be nothing left
+            if (!stream.eof()) throw new ParserException(stream, UNRECOGNIZED);
+
+            // store the parsed selector parts
             Optional<SelectorPart> first = collector.find(SelectorPart.class);
-            if (!first.isPresent()) throw new ParserException(stream, "does not contain any selectors!");
+            if (!first.isPresent()) throw new ParserException(stream, EXPECTED);
             head = first.get();
         }
 

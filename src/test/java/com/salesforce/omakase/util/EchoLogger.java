@@ -21,120 +21,120 @@ public final class EchoLogger extends BasePlugin {
     @Override
     @Subscribe(priority = 1)
     public void syntax(Syntax syntax) {
-        // logger.info("\nsyntax :{}", syntax);
+        logger.trace("syntax :{}", syntax);
     }
 
     @Override
     @Subscribe(priority = 3)
     public void refinable(Refinable<?> refinable) {
-        // logger.info("\nrefinable: {}", refinable);
+        logger.trace("refinable: {}", refinable);
     }
 
     @Override
     @Subscribe(priority = 4)
     public void stylesheet(Stylesheet stylesheet) {
-        logger.info("\nstylesheet: {}", stylesheet);
+        logger.debug("stylesheet: {}", stylesheet);
     }
 
     @Override
     @Subscribe(priority = 5)
     public void statement(Statement statement) {
-        logger.info("\nstatement: {}", statement);
+        logger.trace("statement: {}", statement);
     }
 
     @Override
     @Subscribe(priority = 6)
     public void rule(Rule rule) {
-        logger.info("\nrule: {}", rule);
+        logger.debug("rule: {}", rule);
     }
 
     @Override
     @Subscribe(priority = 7)
     public void selectorGroup(SelectorGroup selectorGroup) {
-        logger.info("\nselectorGroup: {}", selectorGroup);
+        logger.debug("selectorGroup: {}", selectorGroup);
     }
 
     @Override
     @Subscribe(priority = 8)
     public void selector(Selector selector) {
-        logger.info("\nselector: {}", selector);
+        logger.info("selector: {}", selector);
     }
 
     @Override
     @Subscribe(priority = 9)
     public void selectorPart(SelectorPart selectorPart) {
-        logger.info("\nselectorPart: {}", selectorPart);
+        logger.trace("selectorPart: {}", selectorPart);
     }
 
     @Override
     @Subscribe(priority = 9)
     public void simpleSelector(SimpleSelector simpleSelector) {
-        logger.info("\nsimpleSelector: {}", simpleSelector);
+        logger.trace("simpleSelector: {}", simpleSelector);
     }
 
     @Override
     @Subscribe(priority = 10)
     public void combinator(Combinator combinator) {
-        logger.info("\ncombinator: {}", combinator);
+        logger.info("combinator: {}", combinator);
     }
 
     @Override
     @Subscribe(priority = 11)
     public void typeSelector(TypeSelector typeSelector) {
-        logger.info("\ntypeSelector: {}", typeSelector);
+        logger.info("typeSelector: {}", typeSelector);
     }
 
     @Override
     @Subscribe(priority = 12)
     public void idSelector(IdSelector idSelector) {
-        logger.info("\nidSelector: {}", idSelector);
+        logger.info("idSelector: {}", idSelector);
     }
 
     @Override
     @Subscribe(priority = 13)
     public void classSelector(ClassSelector classSelector) {
-        logger.info("\nclassSelector: {}", classSelector);
+        logger.info("classSelector: {}", classSelector);
     }
 
     @Override
     @Subscribe(priority = 14)
     public void attributeSelector(AttributeSelector attributeSelector) {
-        logger.info("\nattributeSelector: {}", attributeSelector);
+        logger.info("attributeSelector: {}", attributeSelector);
     }
 
     @Override
     @Subscribe(priority = 15)
     public void pseudoClassSelector(PseudoClassSelector pseudoClassSelector) {
-        logger.info("\npseudoClassSelector: {}", pseudoClassSelector);
+        logger.info("pseudoClassSelector: {}", pseudoClassSelector);
     }
 
     @Override
     @Subscribe(priority = 16)
     public void pseudoElementSelector(PseudoElementSelector pseudoElementSelector) {
-        logger.info("\npseudoElementSelector: {}", pseudoElementSelector);
+        logger.info("pseudoElementSelector: {}", pseudoElementSelector);
     }
 
     @Override
     @Subscribe(priority = 17)
     public void universalSelector(UniversalSelector universalSelector) {
-        logger.info("\nuniversalSelector: {}", universalSelector);
+        logger.info("universalSelector: {}", universalSelector);
     }
 
     @Override
     @Subscribe(priority = 18)
     public void declaration(Declaration declaration) {
-        logger.info("\ndeclaration: {}", declaration);
+        logger.info("declaration: {}", declaration);
     }
 
     @Override
     @Subscribe(priority = 19)
     public void propertyName(PropertyName propertyName) {
-        logger.info("\npropertyName: {}", propertyName);
+        logger.info("propertyName: {}", propertyName);
     }
 
     @Override
     @Subscribe(priority = 20)
     public void propertyValue(PropertyValue propertyValue) {
-        logger.info("\npropertyValue: {}", propertyValue);
+        logger.info("propertyValue: {}", propertyValue);
     }
 }

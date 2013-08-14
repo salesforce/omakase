@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
@@ -30,6 +30,20 @@ public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements 
         this.name = name;
     }
 
+    /**
+     * Gets the id name.
+     * 
+     * @return The id name.
+     */
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String filterName() {
+        return name;
+    }
+
     @Override
     public boolean isSelector() {
         return true;
@@ -46,20 +60,14 @@ public class IdSelector extends AbstractLinkableSyntax<SelectorPart> implements 
     }
 
     @Override
-    public String filterName() {
-        return name;
-    }
-
-    @Override
     protected SelectorPart self() {
         return this;
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .add("syntax", super.toString())
             .add("name", name)
             .toString();
     }

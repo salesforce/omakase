@@ -32,13 +32,14 @@ public final class ParserFactory {
     private static final Parser attributeSelector = new AttributeSelectorParser();
     private static final Parser typeSelector = new TypeSelectorParser();
     private static final Parser universalSelector = new UniversalSelectorParser();
-    private static final Parser pseudoSelector = new PseudoSelectorParser();
+    private static final Parser pseudoClassSelector = new PseudoClassSelectorParser();
+    private static final Parser pseudoElementSelector = new PseudoElementSelectorParser();
     private static final Parser negationSelector = new NegationSelectorParser();
 
     private static final Parser simpleSelectorSequence = new SimpleSelectorSequenceParser();
     private static final Parser simpleSelectorStart = typeSelector.or(universalSelector);
     private static final Parser simpleSelector = idSelector.or(classSelector)
-        .or(attributeSelector).or(pseudoSelector).or(negationSelector);
+        .or(attributeSelector).or(pseudoClassSelector).or(negationSelector);
 
     /* sequences */
     private static final TokenSequence ident = new IdentSequence();
@@ -167,6 +168,51 @@ public final class ParserFactory {
      */
     public static Parser attributeSelectorParser() {
         return attributeSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser typeSelectorParser() {
+        return typeSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser universalSelectorParser() {
+        return universalSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser pseudoClassSelectorParser() {
+        return pseudoClassSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser psuedoElementSelectorParser() {
+        return pseudoElementSelector;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static Parser negationParser() {
+        return negationSelector;
     }
 
     /**
