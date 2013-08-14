@@ -11,7 +11,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class UniversalSelector extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class UniversalSelector extends AbstractLinkable<SelectorPart> implements SelectorPart {
     /**
      * TODO
      * 

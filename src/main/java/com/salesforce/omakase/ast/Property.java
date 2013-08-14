@@ -14,7 +14,7 @@ import com.salesforce.omakase.As;
  * 
  * @author nmcwilliams
  */
-public enum Properties implements PropertyName {
+public enum Property implements PropertyName {
     /** CSS property named 'alignment-adjust' */
     ALIGNMENT_ADJUST("alignment-adjust"),
     /** CSS property named 'alignment-baseline' */
@@ -605,23 +605,23 @@ public enum Properties implements PropertyName {
     ZOOM("zoom");
 
     /** reverse lookup map */
-    private static final Map<String, Properties> map;
+    private static final Map<String, Property> map;
     static {
-        Builder<String, Properties> builder = ImmutableMap.<String, Properties>builder();
-        for (Properties pn : Properties.values()) {
-            builder.put(pn.get(), pn);
+        Builder<String, Property> builder = ImmutableMap.<String, Property>builder();
+        for (Property pn : Property.values()) {
+            builder.put(pn.getName(), pn);
         }
         map = builder.build();
     }
 
     private final String name;
 
-    Properties(String name) {
+    Property(String name) {
         this.name = name;
     }
 
     @Override
-    public String get() {
+    public String getName() {
         return name;
     }
 
@@ -630,11 +630,10 @@ public enum Properties implements PropertyName {
      * 
      * @param name
      *            The name of the property.
-     * @return The associated {@link Properties} member, or a new instance of an {@link UnknownPropertyName} if not
-     *         found.
+     * @return The associated {@link Property} member, or a new instance of an {@link UnknownPropertyName} if not found.
      */
-    public static PropertyName from(String name) {
-        Properties matched = map.get(name.toLowerCase());
+    public static PropertyName named(String name) {
+        Property matched = map.get(name.toLowerCase());
         return matched != null ? matched : new UnknownPropertyName(name);
     }
 

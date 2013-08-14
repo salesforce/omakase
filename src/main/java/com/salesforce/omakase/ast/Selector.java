@@ -30,7 +30,7 @@ import com.salesforce.omakase.parser.Stream;
  * @author nmcwilliams
  */
 @Subscribable
-public class Selector extends AbstractLinkableSyntax<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
+public class Selector extends AbstractLinkable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
     private static final String EXPECTED = "Expected to find a selector!";
     private static final String UNRECOGNIZED = "Unrecognized selector grammar";
 

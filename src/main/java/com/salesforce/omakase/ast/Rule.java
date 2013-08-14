@@ -14,7 +14,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class Rule extends AbstractLinkableSyntax<Statement> implements Statement {
+public class Rule extends AbstractLinkable<Statement> implements Statement {
     private final SelectorGroup selectorGroup;
     private final Declaration declarationHead;
 

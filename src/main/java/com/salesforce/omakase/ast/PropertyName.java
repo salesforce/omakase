@@ -17,5 +17,5 @@ public interface PropertyName {
      * 
      * @return TODO
      */
-    String get();
+    String getName();
 }

@@ -12,7 +12,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * @author nmcwilliams
  */
 @Subscribable
-public class Combinator extends AbstractLinkableSyntax<SelectorPart> implements SelectorPart {
+public class Combinator extends AbstractLinkable<SelectorPart> implements SelectorPart {
     private final CombinatorType type;
 
     /**

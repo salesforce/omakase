@@ -26,7 +26,7 @@ public final class UnknownPropertyName implements PropertyName {
     }
 
     @Override
-    public String get() {
+    public String getName() {
         return name;
     }
 

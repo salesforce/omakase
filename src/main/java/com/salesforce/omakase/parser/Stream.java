@@ -3,7 +3,9 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
 import java.util.ArrayDeque;
@@ -23,6 +25,9 @@ import com.salesforce.omakase.parser.token.TokenSequence;
  * the current line and column positions.
  * 
  * TODO review
+ * 
+ * FIXME this (or somewhere) needs to normalize newline chars
+ * (http://dev.w3.org/csswg/css-syntax/#preprocessing-the-input-stream)
  * 
  * @author nmcwilliams
  */

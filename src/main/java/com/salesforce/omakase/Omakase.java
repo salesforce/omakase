@@ -15,7 +15,7 @@ import com.salesforce.omakase.plugin.Plugin;
  * TODO Description
  * 
  * <p>
- * doesn't support namespaces, imports, charset
+ * doesn't support namespaces, imports, charset, at-page, cdo, cdc, escaping, font-face
  * 
  * <p>
  * This library is <em>not</em> thread-safe.

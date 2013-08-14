@@ -38,7 +38,7 @@ public class RawDeclarationParser extends AbstractParser {
         RawSyntax value = new RawSyntax(line, column, content.trim());
 
         // notifier listeners of new declaration
-        broadcaster.broadcast(SubscriptionType.CREATED, new Declaration(property, value));
+        broadcaster.broadcast(SubscriptionType.CREATED, new Declaration(property, value, broadcaster));
 
         return true;
     }

@@ -5,6 +5,7 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
+import com.salesforce.omakase.ast.Declaration;
 import com.salesforce.omakase.ast.Selector;
 import com.salesforce.omakase.plugin.AutoRefiner;
 import com.salesforce.omakase.plugin.SyntaxTree;
@@ -19,8 +20,8 @@ public class Debug {
     public void develop() {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
-        AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class);
-        Omakase.source(src2).request(tree, autoRefiner, logger).process();
+        AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
+        Omakase.source(src1).request(tree, autoRefiner, logger).process();
     }
 
     public static final String src1 = ".testing #is > fun p { color: red; margin: 10px 5px; }";

@@ -17,7 +17,7 @@ import com.salesforce.omakase.LinkableIterator;
  * @param <T>
  *            Same type as the {@link Linkable}.
  */
-public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends AbstractSyntax implements Linkable<T> {
+public abstract class AbstractLinkable<T extends Linkable<T>> extends AbstractSyntax implements Linkable<T> {
     private Optional<T> previous = Optional.absent();
     private Optional<T> next = Optional.absent();
 
@@ -29,12 +29,12 @@ public abstract class AbstractLinkableSyntax<T extends Linkable<T>> extends Abst
      * @param column
      *            The column number.
      */
-    protected AbstractLinkableSyntax(int line, int column) {
+    protected AbstractLinkable(int line, int column) {
         super(line, column);
     }
 
     /**
-     * Should return "this". This is needed for property type access in the {@link AbstractLinkableSyntax} class.
+     * Should return "this". This is needed for property type access in the {@link AbstractLinkable} class.
      * 
      * @return "this".
      */
