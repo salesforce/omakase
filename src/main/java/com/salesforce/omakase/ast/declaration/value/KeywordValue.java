@@ -12,7 +12,7 @@ import com.salesforce.omakase.As;
  * 
  * @author nmcwilliams
  */
-public class KeywordValue implements Term {
+public class KeywordValue implements ExpressionTerm {
     private String keyword;
 
     /**

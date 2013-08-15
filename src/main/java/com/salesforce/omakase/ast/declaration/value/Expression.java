@@ -10,14 +10,18 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.parser.declaration.ExpressionParser;
 
 /**
  * TODO Description
  * 
+ * @see ExpressionParser
+ * @see ExpressionTerm
+ * 
  * @author nmcwilliams
  */
-public class TermList extends AbstractSyntax implements PropertyValue {
-    private final List<TermMember> terms = Lists.newArrayListWithCapacity(4);
+public class Expression extends AbstractSyntax implements PropertyValue {
+    private final List<ExpressionMember> terms = Lists.newArrayListWithCapacity(4);
 
     /**
      * TODO
@@ -27,7 +31,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      * @param column
      *            TODO
      */
-    public TermList(int line, int column) {
+    public Expression(int line, int column) {
         super(line, column);
     }
 
@@ -38,7 +42,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      *            TODO
      * @return TODO
      */
-    public TermList add(TermMember term) {
+    public Expression add(ExpressionMember term) {
         this.terms.add(term);
         return this;
     }
@@ -48,13 +52,14 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      * 
      * @return TODO
      */
-    public ImmutableList<TermMember> terms() {
+    public ImmutableList<ExpressionMember> terms() {
         return ImmutableList.copyOf(terms);
     }
 
     @Override
     public String toString() {
-        return As.string(this).indent()
+        return As.string(this)
+            .indent()
             .add("syntax", super.toString())
             .add("terms", terms)
             .toString();

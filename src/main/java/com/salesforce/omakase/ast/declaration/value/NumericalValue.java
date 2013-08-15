@@ -17,7 +17,7 @@ import com.salesforce.omakase.As;
  * 
  * @author nmcwilliams
  */
-public class NumericalValue implements Term {
+public class NumericalValue implements ExpressionTerm {
 
     private Integer integerValue;
     private Optional<Integer> decimalValue = Optional.absent();

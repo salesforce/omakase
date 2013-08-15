@@ -8,7 +8,7 @@ package com.salesforce.omakase.ast.declaration.value;
  * 
  * @author nmcwilliams
  */
-public enum TermOperator implements TermMember {
+public enum ExpressionOperator implements ExpressionMember {
     /** TODO */
     COMMA(','),
     /** TODO */
@@ -18,7 +18,7 @@ public enum TermOperator implements TermMember {
 
     private final char symbol;
 
-    TermOperator(char symbol) {
+    ExpressionOperator(char symbol) {
         this.symbol = symbol;
     }
 

@@ -20,6 +20,12 @@ public enum Tokens implements Token {
     /** closing bracket */
     CLOSE_BRACKET(is('}'), "closing bracket '}'"),
 
+    /** opening parenthesis */
+    OPEN_PAREN(is('('), "("),
+
+    /** closing parenthesis */
+    CLOSE_PAREN(is(')'), ")"),
+
     /** a semicolon */
     SEMICOLON(is(';'), ";"),
 
@@ -28,6 +34,9 @@ public enum Tokens implements Token {
 
     /** comma */
     COMMA(is(','), ","),
+
+    /** CSS escape character */
+    ESCAPE(is('\\'), "CSS escape character"),
 
     /** forward slash */
     FORWARD_SLASH(is('/'), "/"),
@@ -59,6 +68,9 @@ public enum Tokens implements Token {
     /** newline character */
     NEWLINE(is('\n'), "newline"),
 
+    /** color in hex format */
+    HEX_COLOR(inRange('a', 'f').or(inRange('0', '9')).or(inRange('A', 'F')), "hex color [a-fA-F0-9]{3,6}"),
+
     /** double quote */
     DOUBLE_QUOTE(is('"'), "double quote"),
 
@@ -81,7 +93,8 @@ public enum Tokens implements Token {
     NMSTART(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z').or(is('_'))), "valid first identifier character"),
 
     /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
-    NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')), "valid identifier character")
+    NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')),
+            "valid identifier character")
 
     ;
 

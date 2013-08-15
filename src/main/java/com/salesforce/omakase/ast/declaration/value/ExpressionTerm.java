@@ -8,5 +8,5 @@ package com.salesforce.omakase.ast.declaration.value;
  * 
  * @author nmcwilliams
  */
-public interface Term extends TermMember {
+public interface ExpressionTerm extends ExpressionMember {
 }

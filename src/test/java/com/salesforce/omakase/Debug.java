@@ -21,7 +21,7 @@ public class Debug {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
         AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
-        Omakase.source(src2).request(tree, autoRefiner, logger).process();
+        Omakase.source(src3).request(tree, autoRefiner, logger).process();
         System.out.println(tree.toString());
     }
 

@@ -5,7 +5,7 @@ package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.ast.declaration.Property;
 import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.declaration.ExpressionParser;
 
 /**
  * TODO Description
@@ -27,10 +27,10 @@ public final class ParserStrategy {
 
             switch (property) {
             default:
-                return new TermListParser();
+                return new ExpressionParser();
             }
         }
 
-        return new TermListParser();
+        return new ExpressionParser();
     }
 }

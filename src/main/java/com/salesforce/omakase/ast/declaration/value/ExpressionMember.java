@@ -8,6 +8,6 @@ package com.salesforce.omakase.ast.declaration.value;
  *
  * @author nmcwilliams
  */
-public interface TermMember {
+public interface ExpressionMember {
 
 }

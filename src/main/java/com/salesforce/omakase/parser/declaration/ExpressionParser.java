@@ -12,11 +12,11 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TODO Description
+ * Parses an {@link Expression}.
  * 
  * @author nmcwilliams
  */
-public class TermListParser extends AbstractParser {
+public class ExpressionParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -26,9 +26,9 @@ public class TermListParser extends AbstractParser {
         int line = stream.line();
         int column = stream.column();
 
-        Term term = null;
-        TermList list = null;
-        TermOperator operator = null;
+        ExpressionTerm term = null;
+        Expression expression = null;
+        ExpressionOperator operator = null;
 
         do {
             stream.skipWhitepace();
@@ -49,7 +49,14 @@ public class TermListParser extends AbstractParser {
 
                 term = value;
             }
-            term = (number.isPresent()) ? number.get() : null;
+
+            // function (must be before keyword
+            if (term == null) {
+                Optional<FunctionValue> function = stream.readFunction();
+                if (function.isPresent()) {
+                    term = function.get();
+                }
+            }
 
             // keywords
             if (term == null) {
@@ -59,50 +66,47 @@ public class TermListParser extends AbstractParser {
                 }
             }
 
+            // hex
+            if (term == null) {
+                Optional<String> color = stream.readHexColor();
+                if (color.isPresent()) {
+                    term = new HexColorValue(color.get());
+                }
+            }
+
             // string
             if (term == null) {
 
             }
-
-            // hex
-            if (term == null) {
-
-            }
-
-            // function
-            if (term == null) {
-
-            }
-
             // if we have a term, add it to the list
             if (term != null) {
-                if (list == null) {
-                    list = new TermList(line, column);
+                if (expression == null) {
+                    expression = new Expression(line, column);
                 }
-                list.add(term);
+                expression.add(term);
 
                 // try to parse an operator
                 if (stream.optionallyPresent(Tokens.SINGLE_SPACE)) {
-                    operator = TermOperator.SINGLE_SPACE;
+                    operator = ExpressionOperator.SINGLE_SPACE;
                 } else if (stream.optionallyPresent(Tokens.COMMA)) {
-                    operator = TermOperator.COMMA;
+                    operator = ExpressionOperator.COMMA;
                 } else if (stream.optionallyPresent(Tokens.FORWARD_SLASH)) {
-                    operator = TermOperator.SLASH;
+                    operator = ExpressionOperator.SLASH;
                 } else {
                     operator = null;
                 }
 
                 if (operator != null) {
-                    list.add(operator);
+                    expression.add(operator);
                 }
             }
 
         } while (operator != null);
 
         // if any term was parsed then broadcast the term list
-        if (list == null) return false;
+        if (expression == null) return false;
 
-        broadcaster.broadcast(SubscriptionType.CREATED, list);
+        broadcaster.broadcast(SubscriptionType.CREATED, expression);
         return true;
     }
 }

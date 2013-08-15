@@ -12,6 +12,7 @@ import java.util.Deque;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.parser.token.Token;
@@ -32,6 +33,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public final class Stream {
+    private static final String EXPECTED = "Expected to find '%s'";
+    private static final String EXPECTED_CLOSING = "Expected to find closing '%s'";
+    private static final String INVALID_HEX = "Expected a hex color of length 3 or 6, but found '%s'";
+
     /** the source to process */
     private final String source;
 
@@ -227,7 +232,16 @@ public final class Stream {
      * @return The character, or null if the end of the stream occurs first.
      */
     public Character peek(int numCharacters) {
-        return (length <= index + numCharacters) ? source.charAt(index + numCharacters) : null;
+        return (index + numCharacters < length) ? source.charAt(index + numCharacters) : null;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public Character peekPrevious() {
+        return (index > 0) ? source.charAt(index - 1) : null;
     }
 
     /**
@@ -279,7 +293,7 @@ public final class Stream {
      */
     public void expect(Token token) {
         if (!token.matches(current())) {
-            String msg = "Expected to find '%s'";
+            String msg = EXPECTED;
             throw new ParserException(this, String.format(msg, token.description()));
         }
         next();
@@ -340,6 +354,47 @@ public final class Stream {
         }
 
         return source.substring(start, index);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param openingToken
+     *            TODO
+     * @param closing
+     *            TODO
+     * @return TODO
+     */
+    public String chompEnclosedValue(Token openingToken, Token closing) {
+        expect(openingToken);
+
+        int start = index;
+        int level = 1;
+
+        while (!eof()) {
+            // if we are in a string continue until we are out of it
+            if (inString()) {
+                next();
+            }
+
+            if (openingToken.matches(current())) {
+                if (!Tokens.ESCAPE.matches(peekPrevious())) {
+                    level++;
+                }
+            } else if (closing.matches(current())) {
+                if (!Tokens.ESCAPE.matches(peekPrevious())) {
+                    level--;
+                    if (level == 0) {
+                        // skip closing token
+                        next();
+                        return source.substring(start, index - 1);
+                    }
+                }
+            }
+
+            next();
+        }
+        throw new ParserException(this, String.format(EXPECTED_CLOSING, closing.description()));
     }
 
     /**
@@ -486,6 +541,69 @@ public final class Stream {
 
         // return the numerical value
         return Optional.of(value);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public Optional<String> readHexColor() {
+        if (Tokens.HASH.matches(current()) && Tokens.HEX_COLOR.matches(peek())) {
+            // skip the has mark
+            next();
+
+            // get the color value
+            String value = chomp(Tokens.HEX_COLOR);
+            if (value.length() != 6 && value.length() != 3) {
+                error(String.format(INVALID_HEX, value));
+            }
+            return Optional.of(value);
+        }
+        return Optional.absent();
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param msg
+     * @throws ParserException
+     */
+    private void error(String msg) {
+        throw new ParserException(this, msg);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public Optional<FunctionValue> readFunction() {
+        snapshot();
+
+        // read the function name
+        Optional<String> name = readIdent();
+
+        if (!name.isPresent()) {
+            rollback();
+            return Optional.absent();
+        }
+
+        // must be an open parenthesis
+        if (!Tokens.OPEN_PAREN.matches(current())) {
+            rollback();
+            return Optional.absent();
+        }
+
+        // read the arguments. This behavior itself differs from the spec a little. We aren't validating what's inside
+        // the arguments. The more specifically typed function values will be responsible for validating their own args.
+        String args = chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+
+        // discard the snapshot
+        snapshots.pop();
+
+        // return a new function value instance
+        return Optional.of(new FunctionValue(name.get(), args));
     }
 
     @Override
