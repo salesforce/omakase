@@ -4,9 +4,13 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.emitter.Description;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A numerical value (e.g., 1 or 1px or 3.5em).
@@ -25,7 +29,9 @@ import com.salesforce.omakase.As;
  * 
  * @author nmcwilliams
  */
-public class NumericalValue implements Term {
+@Subscribable
+@Description(value = "individual numerical value", broadcasted = REFINED_DECLARATION)
+public class NumericalValue extends AbstractSyntax implements Term {
     private Integer integerValue;
     private Optional<Integer> decimalValue = Optional.absent();
     private Optional<String> unit = Optional.absent();
@@ -36,7 +42,7 @@ public class NumericalValue implements Term {
         /** + */
         POSITIVE('+'),
         /** - */
-        NEGATIVE('_');
+        NEGATIVE('-');
 
         final char symbol;
 
@@ -49,10 +55,15 @@ public class NumericalValue implements Term {
      * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a
      * value of 0 should be passed in here.
      * 
+     * @param line
+     *            The line number.
+     * @param column
+     *            The column number.
      * @param integerValue
      *            The integer value.
      */
-    public NumericalValue(Integer integerValue) {
+    public NumericalValue(int line, int column, Integer integerValue) {
+        super(line, column);
         this.integerValue = integerValue;
     }
 

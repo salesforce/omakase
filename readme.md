@@ -1,8 +1,28 @@
 Omakase
 =======
 
+Fast and slightly opinionated CSS parser.
 
+Omakase (お任せ o-ma-ka-say) is a Japanese phrase that means "I'll leave it to you" (from Japanese "to entrust"). In Japan it can be used at any restaurant.
 
+Features
+--------
+
+The two main goals of Omakase are speed and flexibility.
+
+### Focus on speed
+
+Created with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional needs of runtime-level usage.
+
+2-phase parsing accounts for various usage needs. First phase separates into selectors and declarations only. Second phase can be conditionally applied to specific selectors and declarations or all depending on applicability. 
+
+### Focus on flexibility
+
+Omakase is a network of *plugins*. Plugins can subscribe to specific CSS syntax units to perform custom validation and/or rework any part of the CSS. The plugin framework is so flexible that much of library-provided functionality and APIs are written using the same plugin infrastructure (SyntaxTree (AST) generation, built-in linting, etc...)
+
+### Better error messaging
+
+Because Omakase doesn't use a generic parser generator, the error messages are all CSS specific and easier to understand.
 
 Subscribable Syntax Units
 -------------------------

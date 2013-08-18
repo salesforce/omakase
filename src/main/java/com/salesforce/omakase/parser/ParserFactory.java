@@ -3,24 +3,11 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.parser.declaration.TermListParser;
-import com.salesforce.omakase.parser.raw.AtRuleParser;
-import com.salesforce.omakase.parser.raw.RawDeclarationParser;
-import com.salesforce.omakase.parser.raw.RawSelectorParser;
-import com.salesforce.omakase.parser.raw.RuleParser;
-import com.salesforce.omakase.parser.raw.SelectorGroupParser;
-import com.salesforce.omakase.parser.raw.StylesheetParser;
-import com.salesforce.omakase.parser.selector.AttributeSelectorParser;
-import com.salesforce.omakase.parser.selector.ClassSelectorParser;
-import com.salesforce.omakase.parser.selector.CombinatorParser;
-import com.salesforce.omakase.parser.selector.IdSelectorParser;
-import com.salesforce.omakase.parser.selector.NegationSelectorParser;
-import com.salesforce.omakase.parser.selector.PseudoClassSelectorParser;
-import com.salesforce.omakase.parser.selector.PseudoElementSelectorParser;
-import com.salesforce.omakase.parser.selector.RefinedSelectorParser;
-import com.salesforce.omakase.parser.selector.SimpleSelectorSequenceParser;
-import com.salesforce.omakase.parser.selector.TypeSelectorParser;
-import com.salesforce.omakase.parser.selector.UniversalSelectorParser;
+import com.salesforce.omakase.ast.declaration.value.Term;
+import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.parser.declaration.*;
+import com.salesforce.omakase.parser.raw.*;
+import com.salesforce.omakase.parser.selector.*;
 
 /**
  * A cache of {@link Parser} instances.
@@ -58,6 +45,14 @@ public final class ParserFactory {
         .or(attributeSelector).or(pseudoClassSelector).or(negationSelector);
 
     private static final Parser termList = new TermListParser();
+
+    private static final Parser numericalValue = new NumericalValueParser();
+    private static final Parser functionValue = new FunctionValueParser();
+    private static final Parser keywordValue = new KeywordValueParser();
+    private static final Parser hexColorValue = new HexColorValueParser();
+    private static final Parser stringValue = new StringValueParser();
+
+    private static final Parser term = numericalValue.or(functionValue).or(keywordValue).or(hexColorValue).or(stringValue);
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -141,7 +136,7 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets a parser to parse a simple selector.
+     * Gets the parser to parse a {@link SimpleSelector}.
      * 
      * @return The parser instance.
      */
@@ -247,5 +242,14 @@ public final class ParserFactory {
      */
     public static Parser termListParser() {
         return termList;
+    }
+
+    /**
+     * Gets the parser to parse a {@link Term} value.
+     * 
+     * @return The parser instance.
+     */
+    public static Parser termParser() {
+        return term;
     }
 }

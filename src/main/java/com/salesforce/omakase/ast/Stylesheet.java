@@ -3,11 +3,14 @@
  */
 package com.salesforce.omakase.ast;
 
+import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
+
 import java.util.Iterator;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
@@ -20,6 +23,7 @@ import com.salesforce.omakase.plugin.standard.SyntaxTree;
  * @author nmcwilliams
  */
 @Subscribable
+@Description(broadcasted = SYNTAX_TREE)
 public final class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     private final Statement head;
 

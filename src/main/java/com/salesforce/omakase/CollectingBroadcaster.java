@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.List;
 
 import com.google.common.base.Optional;
@@ -78,8 +80,23 @@ public class CollectingBroadcaster implements Broadcaster {
      *         {@link Optional#absent()} if not present.
      */
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> find(Class<T> klass) {
+    public <T extends Syntax> Optional<T> find(Class<T> klass) {
         // Predicates.instanceOf ensures that this is a safe cast
         return (Optional<T>)Iterables.tryFind(collected, Predicates.instanceOf(klass));
+    }
+
+    /**
+     * Similar to {@link #find(Class)}, except that this expects one and only one broadcasted event to have occurred.
+     * 
+     * @param <T>
+     *            Type of the {@link Syntax} unit.
+     * @param klass
+     *            Get the one and only {@link Syntax} unit that is an instance of this class.
+     * @return The single matching {@link Syntax} unit that is an instance of the given class, or
+     *         {@link Optional#absent()} if not present.
+     */
+    public <T extends Syntax> Optional<T> findOnly(Class<T> klass) {
+        checkState(collected.size() == 1, "unexpected number of broadcasted events");
+        return find(klass);
     }
 }

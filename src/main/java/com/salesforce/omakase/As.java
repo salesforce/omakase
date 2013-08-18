@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 /**
- * Helper for constructing toString methods.
+ * Helper for constructing toString methods. Cuz guava's helper doesn't get the job done.
  * 
  * @example <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
  * @author nmcwilliams
@@ -67,17 +67,17 @@ public final class As {
 
     /** utility method to create an {@link Entry} */
     private As entry(String name, Object value, boolean isIterable) {
-        Entry e = new Entry();
-        e.name = name;
-        e.value = value;
-        e.isIterable = isIterable;
-        entries.add(e);
+        Entry entry = new Entry();
+        entry.name = name;
+        entry.value = value;
+        entry.isIterable = isIterable;
+        entries.add(entry);
         return this;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(entries.size() * 24);
+        StringBuilder builder = new StringBuilder(entries.size() * 32);
 
         // name of the object being printed
         builder.append(name);

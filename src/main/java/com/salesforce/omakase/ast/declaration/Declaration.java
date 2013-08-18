@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
+import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Broadcaster;
@@ -10,6 +12,8 @@ import com.salesforce.omakase.CollectingBroadcaster;
 import com.salesforce.omakase.ast.AbstractLinkable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.declaration.value.PropertyValue;
+import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.*;
 
@@ -19,6 +23,7 @@ import com.salesforce.omakase.parser.*;
  * @author nmcwilliams
  */
 @Subscribable
+@Description(broadcasted = AUTOMATIC)
 public class Declaration extends AbstractLinkable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration {
     private static final String UNRECOGNIZED = "Unable to parse remaining declaration value";
     private static final String EXPECTED = "Expected to parse a property value!";

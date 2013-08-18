@@ -21,8 +21,8 @@ public class Debug {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
         AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
-        Omakase.source(src3).request(tree, autoRefiner, logger).process();
-        System.out.println(tree.toString());
+        Omakase.source(src1).request(tree, autoRefiner, logger).process();
+        // System.out.println(tree.toString());
     }
 
     public static final String src1 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; }";

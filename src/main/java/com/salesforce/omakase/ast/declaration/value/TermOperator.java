@@ -3,29 +3,40 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
+import com.salesforce.omakase.parser.token.Token;
+import com.salesforce.omakase.parser.token.TokenEnum;
+import com.salesforce.omakase.parser.token.Tokens;
+
 /**
  * An operator, or separator, between {@link Term}s in a {@link TermList}.
  * 
  * @author nmcwilliams
  */
-public enum TermOperator implements TermListMember {
+public enum TermOperator implements TermListMember, TokenEnum<TermOperator> {
     /** comma separator */
-    COMMA(','),
+    COMMA(Tokens.COMMA, ','),
     /** slash separator */
-    SLASH('/'),
+    SLASH(Tokens.FORWARD_SLASH, '/'),
     /** white space separator */
-    SINGLE_SPACE(' ');
+    SINGLE_SPACE(Tokens.SINGLE_SPACE, ' ');
 
+    private final Token token;
     private final char symbol;
 
-    TermOperator(char symbol) {
+    TermOperator(Token token, char symbol) {
+        this.token = token;
         this.symbol = symbol;
     }
 
+    @Override
+    public Token token() {
+        return token;
+    }
+
     /**
-     * Gets the symbol representing this separator.
+     * TODO this is for output?
      * 
-     * @return The symbol.
+     * @return TODO
      */
     public char symbol() {
         return symbol;

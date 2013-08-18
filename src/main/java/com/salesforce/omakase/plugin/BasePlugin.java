@@ -5,8 +5,8 @@ package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Subscribe;
 
@@ -190,19 +190,66 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link PropertyName}.
-     * 
-     * @param propertyName
-     *            The {@link PropertyName} instance.
-     */
-    public void propertyName(PropertyName propertyName) {}
-
-    /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
      * of type {@link PropertyValue}.
      * 
      * @param propertyValue
      *            The {@link PropertyValue} instance.
      */
     public void propertyValue(PropertyValue propertyValue) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param term
+     *            TODO
+     */
+    public void term(Term term) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param termList
+     *            TODO
+     */
+    public void termList(TermList termList) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param functionValue
+     *            TODO
+     */
+    public void functionValue(FunctionValue functionValue) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param hexColorValue
+     *            TODO
+     */
+    public void hexColorValue(HexColorValue hexColorValue) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param keywordValue
+     *            TODO
+     */
+    public void keywordValue(KeywordValue keywordValue) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param numericalValue
+     *            TODO
+     */
+    public void numericalValue(NumericalValue numericalValue) {}
+
+    /**
+     * TODO Description
+     * 
+     * @param stringValue
+     *            TODO
+     */
+    public void stringValue(StringValue stringValue) {}
 }

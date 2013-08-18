@@ -58,6 +58,13 @@
 			<version>3.5.5</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- SubscribableSyntaxTable.java - do not use in non-test code! -->
+        <dependency>
+         <groupId>org.reflections</groupId>
+         <artifactId>reflections</artifactId>
+         <version>0.9.9-RC1</version>
+         <scope>test</scope>
+     </dependency>
 	</dependencies>
 
 	<build>

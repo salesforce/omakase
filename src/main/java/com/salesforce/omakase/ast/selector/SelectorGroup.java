@@ -3,25 +3,33 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 import java.util.Iterator;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.LinkableCollection;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * Represents a CSS selector group.
  * 
- * <p> A selector group is a list of {@link Selector}s, with each {@link Selector} separated by a comma. Each
- * {@link Rule} has one and only one {@link SelectorGroup}. For example, in
+ * <p>
+ * A selector group is a list of {@link Selector}s, with each {@link Selector} separated by a comma. Each {@link Rule}
+ * has one and only one {@link SelectorGroup}. For example, in
  * 
- * <pre>.class #id, #id { ... } </pre> The selector group is <pre>.class #id, #id</pre>
+ * <pre>.class #id, #id { ... } </pre>
+ * The selector group is
+ * 
+ * <pre>.class #id, #id</pre>
  * 
  * @author nmcwilliams
  */
 @Subscribable
+@Description(value = "group of comma-separated selectors", broadcasted = REFINED_SELECTOR)
 public class SelectorGroup extends AbstractSyntax implements Iterable<Selector> {
     private final Selector head;
 

@@ -10,20 +10,9 @@ import ch.qos.logback.classic.Level;
 
 import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.selector.AttributeSelector;
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.Combinator;
-import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.ast.selector.PseudoClassSelector;
-import com.salesforce.omakase.ast.selector.PseudoElementSelector;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.ast.selector.SimpleSelector;
-import com.salesforce.omakase.ast.selector.TypeSelector;
-import com.salesforce.omakase.ast.selector.UniversalSelector;
+import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.declaration.value.StringValue;
+import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Subscribe;
 import com.salesforce.omakase.plugin.BasePlugin;
 
@@ -42,7 +31,7 @@ public final class EchoLogger extends BasePlugin {
     @Override
     @Subscribe(priority = 1)
     public void syntax(Syntax syntax) {
-        logger.trace("syntax :{}", syntax);
+        logger.trace("syntax: {}", syntax);
     }
 
     @Override
@@ -148,14 +137,50 @@ public final class EchoLogger extends BasePlugin {
     }
 
     @Override
-    @Subscribe(priority = 19)
-    public void propertyName(PropertyName propertyName) {
-        logger.info("propertyName: {}", propertyName);
+    @Subscribe(priority = 20)
+    public void propertyValue(PropertyValue propertyValue) {
+        logger.trace("propertyValue: {}", propertyValue);
     }
 
     @Override
     @Subscribe(priority = 20)
-    public void propertyValue(PropertyValue propertyValue) {
-        logger.info("propertyValue: {}", propertyValue);
+    public void term(Term term) {
+        logger.trace("term: {}", term);
+    }
+
+    @Override
+    @Subscribe(priority = 20)
+    public void termList(TermList termList) {
+        logger.info("termList: {}", termList);
+    }
+
+    @Override
+    @Subscribe(priority = 20)
+    public void functionValue(FunctionValue functionValue) {
+        logger.trace("functionValue: {}", functionValue);
+    }
+
+    @Override
+    @Subscribe(priority = 20)
+    public void hexColorValue(HexColorValue hexColorValue) {
+        logger.trace("hexColorValue: {}", hexColorValue);
+    }
+
+    @Override
+    @Subscribe(priority = 20)
+    public void keywordValue(KeywordValue keywordValue) {
+        logger.trace("keywordValue: {}", keywordValue);
+    }
+
+    @Override
+    @Subscribe(priority = 20)
+    public void numericalValue(NumericalValue numericalValue) {
+        logger.trace("numericalValue: {}", numericalValue);
+    }
+
+    @Override
+    @Subscribe(priority = 20)
+    public void stringValue(StringValue stringValue) {
+        logger.trace("stringValue: {}", stringValue);
     }
 }

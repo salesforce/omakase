@@ -3,16 +3,20 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 import com.google.common.base.Objects;
 import com.salesforce.omakase.ast.AbstractLinkable;
+import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS pseudo element selector.
  * 
  * @author nmcwilliams
  */
 @Subscribable
+@Description(value = "pseudo element selector segment", broadcasted = REFINED_SELECTOR)
 public class PseudoElementSelector extends AbstractLinkable<SelectorPart> implements SelectorPart {
     /**
      * Constructs a new {@link PseudoElementSelector} selector with the given name.

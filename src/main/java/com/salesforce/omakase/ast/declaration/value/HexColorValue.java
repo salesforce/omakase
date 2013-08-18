@@ -4,24 +4,35 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.emitter.Description;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A hex color value (e.g., "fffeee").
  * 
  * @author nmcwilliams
  */
-public class HexColorValue implements Term {
+@Subscribable
+@Description(value = "individual hex color value", broadcasted = REFINED_DECLARATION)
+public class HexColorValue extends AbstractSyntax implements Term {
     private String color;
 
     /**
      * Constructs a new instance of a {@link HexColorValue}.
      * 
+     * @param line
+     *            The line number.
+     * @param column
+     *            The column number.
      * @param color
      *            The hex color (do not include the #).
      */
-    public HexColorValue(String color) {
+    public HexColorValue(int line, int column, String color) {
+        super(line, column);
         this.color = color;
     }
 

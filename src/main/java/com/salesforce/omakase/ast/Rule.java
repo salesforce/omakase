@@ -3,11 +3,14 @@
  */
 package com.salesforce.omakase.ast;
 
+import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
+
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
+import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
@@ -24,6 +27,7 @@ import com.salesforce.omakase.plugin.standard.SyntaxTree;
  * @author nmcwilliams
  */
 @Subscribable
+@Description(broadcasted = SYNTAX_TREE)
 public class Rule extends AbstractLinkable<Statement> implements Statement {
     private final SelectorGroup selectorGroup;
     private final Declaration declarationHead;

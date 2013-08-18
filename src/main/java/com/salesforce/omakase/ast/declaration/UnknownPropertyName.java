@@ -5,7 +5,7 @@ package com.salesforce.omakase.ast.declaration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 
 /**
  * A {@link PropertyName} that is currently unknown to this library.
@@ -32,6 +32,6 @@ public final class UnknownPropertyName implements PropertyName {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("name", name).toString();
+        return As.string(this).add("name", name).toString();
     }
 }

@@ -4,29 +4,40 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.emitter.Description;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public class FunctionValue implements Term {
-    private String functionName;
-    private String rawArguments;
+@Subscribable
+@Description(value = "individual function value", broadcasted = REFINED_DECLARATION)
+public class FunctionValue extends AbstractSyntax implements Term {
+    private String name;
+    private String args;
 
     /**
      * Constructs a new {@link FunctionValue} instance with the given function name and arguments.
      * 
-     * @param functionName
+     * @param line
+     *            The line number.
+     * @param column
+     *            The column number.
+     * @param name
      *            The name of the function.
-     * @param rawArguments
+     * @param args
      *            The raw, non-validated function arguments.
      */
-    public FunctionValue(String functionName, String rawArguments) {
-        this.functionName = functionName;
-        this.rawArguments = rawArguments;
+    public FunctionValue(int line, int column, String name, String args) {
+        super(line, column);
+        this.name = name;
+        this.args = args;
     }
 
     /**
@@ -36,8 +47,8 @@ public class FunctionValue implements Term {
      *            The function name.
      * @return this, for chaining.
      */
-    public FunctionValue functionName(String functionName) {
-        this.functionName = checkNotNull(functionName, "functionName cannot be null");
+    public FunctionValue name(String functionName) {
+        this.name = checkNotNull(functionName, "name cannot be null");
         return this;
     }
 
@@ -46,19 +57,19 @@ public class FunctionValue implements Term {
      * 
      * @return The function name.
      */
-    public String functionName() {
-        return functionName;
+    public String name() {
+        return name;
     }
 
     /**
      * Sets the raw arguments.
      * 
-     * @param rawArguments
+     * @param args
      *            The arguments.
      * @return this, for chaining.
      */
-    public FunctionValue rawArguments(String rawArguments) {
-        this.rawArguments = checkNotNull(rawArguments, "rawArguments cannot be null");
+    public FunctionValue args(String args) {
+        this.args = checkNotNull(args, "args cannot be null");
         return this;
     }
 
@@ -67,15 +78,15 @@ public class FunctionValue implements Term {
      * 
      * @return The raw arguments.
      */
-    public String rawArguments() {
-        return rawArguments;
+    public String args() {
+        return args;
     }
 
     @Override
     public String toString() {
         return As.string(this)
-            .add("name", functionName)
-            .add("args", rawArguments)
+            .add("name", name)
+            .add("args", args)
             .toString();
     }
 }

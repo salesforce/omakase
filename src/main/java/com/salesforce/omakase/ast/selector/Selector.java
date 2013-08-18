@@ -3,9 +3,14 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+
 import com.google.common.base.Optional;
-import com.salesforce.omakase.*;
+import com.salesforce.omakase.As;
+import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.CollectingBroadcaster;
 import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
@@ -14,12 +19,22 @@ import com.salesforce.omakase.parser.Stream;
 /**
  * Represents a CSS selector.
  * 
- * <p> {@link Selector}s are lists of {@link SelectorPart}s. individual {@link Selector}s are separated by commas. For
- * example, in <pre>.class, .class #id</pre> there are two selectors, <pre>.class</pre> and <pre>.class #id</pre>
+ * <p>
+ * {@link Selector}s are lists of {@link SelectorPart}s. individual {@link Selector}s are separated by commas. For
+ * example, in
+ * 
+ * <pre>.class, .class #id</pre>
+ * there are two selectors,
+ * 
+ * <pre>.class</pre>
+ * and
+ * 
+ * <pre>.class #id</pre>
  * 
  * @author nmcwilliams
  */
 @Subscribable
+@Description(broadcasted = AUTOMATIC)
 public class Selector extends AbstractLinkable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
     private static final String EXPECTED = "Expected to find a selector!";
     private static final String UNRECOGNIZED = "Unrecognized selector grammar";

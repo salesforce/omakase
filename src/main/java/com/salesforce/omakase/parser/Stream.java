@@ -6,14 +6,10 @@ package com.salesforce.omakase.parser;
 import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.declaration.value.*;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.parser.token.Token;
+import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -27,9 +23,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public final class Stream {
     private static final String EXPECTED = "Expected to find '%s'";
-    private static final String DECIMAL = "Expected to find decimal value";
     private static final String EXPECTED_CLOSING = "Expected to find closing '%s'";
-    private static final String INVALID_HEX = "Expected a hex color of length 3 or 6, but found '%s'";
 
     /** the source to process */
     private final String source;
@@ -58,8 +52,8 @@ public final class Stream {
     /** if we are inside of a string */
     private boolean inString = false;
 
-    /** snapshots of a current index position and the associated line and column numbers */
-    private Deque<Snapshot> snapshots;
+    /** snapshot of a previous index position and the associated line and column numbers */
+    private Snapshot snapshot;
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
@@ -345,6 +339,22 @@ public final class Stream {
     }
 
     /**
+     * TODO Description
+     * 
+     * @param <T>
+     *            TODO
+     * @param klass
+     *            TODO
+     * @return TODO
+     */
+    public <T extends Enum<T> & TokenEnum<?>> Optional<T> optionalFromEnum(Class<T> klass) {
+        for (T constant : klass.getEnumConstants()) {
+            if (optionallyPresent(constant.token())) return Optional.of(constant);
+        }
+        return Optional.absent();
+    }
+
+    /**
      * Similar to {@link #next()}, except it will enforce that <b>current</b> character matches the given {@link Token}
      * before advancing, otherwise an error will be thrown.
      * 
@@ -462,25 +472,18 @@ public final class Stream {
      * 
      * <p>
      * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that
-     * the content does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. Snapshots
-     * are created on a stack, you can created multiple and rollback one at a time.
+     * the content does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. To revert to
+     * a specific snapshot, use {@link #rollback(Snapshot)}.
      * 
      * <p>
      * This should be used sparingly, as in most cases you can ascertain the necessary information through
      * {@link #peek()}, {@link #current()} and other methods on this class.
+     * 
+     * @return The created snapshot.
      */
-    public void snapshot() {
-        if (snapshots == null) {
-            snapshots = new ArrayDeque<Snapshot>();
-        }
-
-        Snapshot snapshot = new Snapshot();
-        snapshot.index = index;
-        snapshot.line = line;
-        snapshot.column = column;
-        snapshot.inString = inString;
-        snapshot.inComment = inComment;
-        snapshots.add(snapshot);
+    public Snapshot snapshot() {
+        snapshot = new Snapshot(index, line, column, inString, inComment);
+        return snapshot;
     }
 
     /**
@@ -491,8 +494,18 @@ public final class Stream {
      *             If no snapshots exist.
      */
     public boolean rollback() {
-        checkState(snapshots.size() > 0, "no snapshots currently exist");
-        Snapshot snapshot = snapshots.pop();
+        checkState(snapshot != null, "no snapshots currently exist");
+        return rollback(snapshot);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param snapshot
+     *            TODO
+     * @return TODO
+     */
+    public boolean rollback(Snapshot snapshot) {
         this.index = snapshot.index;
         this.line = snapshot.line;
         this.column = snapshot.column;
@@ -514,128 +527,30 @@ public final class Stream {
         return Optional.absent();
     }
 
-    /**
-     * Reads a number (including optional sign and optional decimal point).
-     * 
-     * @return The parsed {@link NumericalValue}, or {@link Optional#absent()} if not matched.
-     */
-    public Optional<NumericalValue> readNumber() {
-        snapshot();
-
-        // parse the optional sign
-        Optional<Character> sign = optional(Tokens.SIGN);
-
-        // integer value
-        String integerValue = chomp(Tokens.DIGIT);
-        Integer integer = integerValue.isEmpty() ? null : Integer.valueOf(integerValue);
-
-        // decimal
-        Integer decimal = null;
-        if (optionallyPresent(Tokens.DOT)) {
-            String decimalValue = chomp(Tokens.DIGIT);
-            if (decimalValue.isEmpty()) {
-                // there must be a number after a decimal
-                throw new ParserException(this, DECIMAL);
-            }
-            decimal = Integer.valueOf(decimalValue);
-        }
-
-        // integer value or decimal must be present
-        if (integer == null && decimal == null) {
-            rollback();
-            return Optional.absent();
-        }
-
-        // create the numerical value instance
-        NumericalValue value = new NumericalValue(integer == null ? 0 : integer);
-
-        // add the decimal value if applicable
-        if (decimal != null) {
-            value.decimalValue(decimal);
-        }
-
-        // add the sign if applicable
-        if (sign.isPresent()) {
-            value.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
-        }
-
-        // discard our snapshot
-        snapshots.pop();
-
-        // return the numerical value
-        return Optional.of(value);
-    }
-
-    /**
-     * Reads a hex color value.
-     * 
-     * @return The hex color value, or {@link Optional#absent()} if not matched.
-     */
-    public Optional<HexColorValue> readHexColor() {
-        // starts with hash and then a valid hash character
-        if (Tokens.HASH.matches(current()) && Tokens.HEX_COLOR.matches(peek())) {
-            // skip the has mark
-            next();
-
-            // get the color value
-            String value = chomp(Tokens.HEX_COLOR);
-            if (value.length() != 6 && value.length() != 3) {
-                // incorrect length
-                throw new ParserException(this, String.format(INVALID_HEX, value));
-            }
-
-            // return the hex color value
-            return Optional.of(new HexColorValue(value));
-        }
-
-        return Optional.absent();
-    }
-
-    /**
-     * Reads a function value. This does not validate the arguments inside of the parenthesis, but only that the the
-     * opening and closing parenthesis are matched.
-     * 
-     * @return The function value, or {@link Optional#absent()} if not matched.
-     */
-    public Optional<FunctionValue> readFunction() {
-        snapshot();
-
-        // read the function name
-        Optional<String> name = readIdent();
-
-        if (!name.isPresent()) {
-            rollback();
-            return Optional.absent();
-        }
-
-        // must be an open parenthesis
-        if (!Tokens.OPEN_PAREN.matches(current())) {
-            rollback();
-            return Optional.absent();
-        }
-
-        // read the arguments. This behavior itself differs from the spec a little. We aren't validating what's inside
-        // the arguments. The more specifically typed function values will be responsible for validating their own args.
-        String args = chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
-
-        // discard the snapshot
-        snapshots.pop();
-
-        // return the function value object
-        return Optional.of(new FunctionValue(name.get(), args));
-    }
-
     @Override
     public String toString() {
         return String.format("%s»%s", source.substring(0, index), source.substring(index));
     }
 
     /** data object */
-    private static final class Snapshot {
-        int index;
-        int line;
-        int column;
-        boolean inString;
-        boolean inComment;
+    public static final class Snapshot {
+        /** TODO */
+        public final int index;
+        /** TODO */
+        public final int line;
+        /** TODO */
+        public final int column;
+        /** TODO */
+        public final boolean inString;
+        /** TODO */
+        public final boolean inComment;
+
+        private Snapshot(int index, int line, int column, boolean inString, boolean inComment) {
+            this.index = index;
+            this.line = line;
+            this.column = column;
+            this.inString = inString;
+            this.inComment = inComment;
+        }
     }
 }
