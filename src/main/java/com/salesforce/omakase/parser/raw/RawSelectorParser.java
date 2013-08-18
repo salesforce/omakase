@@ -29,11 +29,11 @@ public class RawSelectorParser extends AbstractParser {
 
         // grab everything until the end of the selector
         String content = stream.until(tokenFactory().selectorEnd());
-        RawSyntax rawContent = new RawSyntax(line, column, content.trim());
+        RawSyntax raw = new RawSyntax(line, column, content.trim());
 
         // notify listeners of new selector
-        broadcaster.broadcast(SubscriptionType.CREATED, new Selector(rawContent, broadcaster));
-
+        broadcaster.broadcast(SubscriptionType.CREATED, new Selector(raw, broadcaster));
         return true;
     }
+
 }

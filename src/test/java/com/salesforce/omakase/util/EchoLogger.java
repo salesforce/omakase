@@ -6,16 +6,33 @@ package com.salesforce.omakase.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.Level;
+
 import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.selector.*;
+import com.salesforce.omakase.ast.selector.AttributeSelector;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Combinator;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorGroup;
+import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.ast.selector.TypeSelector;
+import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.emitter.Subscribe;
 import com.salesforce.omakase.plugin.BasePlugin;
 
 /**
- * TODO Description
+ * Simply logs the creation or change of {@link Syntax} units. Used for debugging.
+ * 
+ * <p>
+ * Most events are logged at {@link Level#INFO}, however some events are {@link Level#TRACE} or {@link Level#DEBUG}.
+ * Update the logging config file as appropriate to filter which levels are shown in the console.
  * 
  * @author nmcwilliams
  */

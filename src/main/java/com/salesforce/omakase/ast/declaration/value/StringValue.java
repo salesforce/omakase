@@ -8,6 +8,6 @@ package com.salesforce.omakase.ast.declaration.value;
  * 
  * @author nmcwilliams
  */
-public class StringValue implements ExpressionTerm {
+public class StringValue implements Term {
 
 }

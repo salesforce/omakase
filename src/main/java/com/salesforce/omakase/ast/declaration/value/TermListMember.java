@@ -4,10 +4,9 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 /**
- * TODO Description
- *
+ * A member of a {@link TermList}.
+ * 
  * @author nmcwilliams
  */
-public interface ExpressionMember {
-
+public interface TermListMember {
 }

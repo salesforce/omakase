@@ -17,14 +17,14 @@ public class TypeSelector extends AbstractLinkable<SelectorPart> implements Simp
     private String name;
 
     /**
-     * TODO
+     * Constructs a new {@link TypeSelector} instance with the given name.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      * @param name
-     *            TODO
+     *            Name of the element / type.
      */
     public TypeSelector(int line, int column, String name) {
         super(line, column);
@@ -32,9 +32,9 @@ public class TypeSelector extends AbstractLinkable<SelectorPart> implements Simp
     }
 
     /**
-     * TODO Description
+     * Gets the name of the selector.
      * 
-     * @return TODO
+     * @return The name.
      */
     public String name() {
         return name;

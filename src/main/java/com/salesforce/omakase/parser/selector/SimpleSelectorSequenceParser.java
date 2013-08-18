@@ -32,8 +32,6 @@ public class SimpleSelectorSequenceParser extends AbstractParser {
             if (simpleSelectorMatched) matched = true;
         }
 
-        // FIXME pseudo element
-
         return matched;
     }
 

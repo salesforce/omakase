@@ -49,7 +49,7 @@ public class Combinator extends AbstractLinkable<SelectorPart> implements Select
         case CHILD:
             return SelectorPartType.CHILD_COMBINATOR;
         case DESCENDANT:
-            return SelectorPartType.DESCENDENT_COMBINATOR;
+            return SelectorPartType.DESCENDANT_COMBINATOR;
         case GENERAL_SIBLING:
             return SelectorPartType.GENERAL_SIBLING_COMBINATOR;
         }

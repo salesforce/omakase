@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.LinkableCollection;
+import com.salesforce.omakase.ast.LinkableCollection;
 import com.salesforce.omakase.ast.Syntax;
 
 /**

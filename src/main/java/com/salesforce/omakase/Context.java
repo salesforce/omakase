@@ -30,27 +30,32 @@ public final class Context implements Broadcaster {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
 
+    /** list of all plugins that have dependencies (e.g., needs access to this {@link Context} */
     private final List<DependentPlugin> dependentPlugins = Lists.newArrayList();
 
-    /** used for propagating new syntax creation or change events */
+    /** used for propagating new syntax unit created or change events */
     private final Emitter emitter = new Emitter();
 
     /** internal construction only */
     Context() {}
 
     /**
-     * TODO Description
+     * Registers {@link Plugin} instances to this {@link Context}.
      * 
-     * <p> This is to make #require and #retrieve work in a simple way
+     * <p>
+     * Only <b>one</b> instance of a {@link Plugin} can be registered to a single {@link Context}. This is to make
+     * {@link #require(Class)} and {@link #retrieve(Class)} work in a simple way. {@link Plugin}s should be coded with
+     * this in mind.
      * 
      * @param plugins
-     *            TODO
+     *            The {@link Plugin}(s) to register.
      */
     public void plugins(Plugin... plugins) {
         for (Plugin plugin : plugins) {
             // get the class of the plugin, which we will use to index this instance in the registry
             Class<? extends Plugin> klass = plugin.getClass();
 
+            // only one instance allowed per plugin type
             checkArgument(!registry.containsKey(klass), String.format(DUPLICATE, klass));
 
             // add the plugin to the registry
@@ -59,6 +64,7 @@ public final class Context implements Broadcaster {
             // hook up the plugin for events
             emitter.register(plugin);
 
+            // check if the plugin has dependencies on other plugins
             if (plugin instanceof DependentPlugin) {
                 dependentPlugins.add((DependentPlugin)plugin);
             }
@@ -103,13 +109,14 @@ public final class Context implements Broadcaster {
     }
 
     /**
-     * TODO Description
+     * Retrieves the instance of the given {@link Plugin} type. This is normally used by {@link Plugin}s to access
+     * another {@link Plugin} instance that they are dependent on.
      * 
      * @param <T>
-     *            TODO
+     *            Get the instance of this {@link Plugin} type.
      * @param klass
-     *            TODO
-     * @return TODO
+     *            Class of the plugin to retrieve.
+     * @return The instance, or {@link Optional#absent()} if no instance of the {@link Plugin} was registered.
      */
     public <T extends Plugin> Optional<T> retrieve(Class<T> klass) {
         return Optional.of(registry.getInstance(klass));

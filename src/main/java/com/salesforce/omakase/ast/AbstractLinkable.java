@@ -8,7 +8,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.LinkableIterator;
 
 /**
  * Base class for {@link Linkable} {@link Syntax} units.
@@ -93,6 +92,7 @@ public abstract class AbstractLinkable<T extends Linkable<T>> extends AbstractSy
         if (next.isPresent()) {
             node.append(next.get());
         }
+        // FIXME add previous?
         next = Optional.of(node);
         return this;
     }

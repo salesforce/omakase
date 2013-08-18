@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Objects;
 
 /**
- * TODO Description
+ * A {@link PropertyName} that is currently unknown to this library.
  * 
  * @author nmcwilliams
  */
@@ -16,10 +16,10 @@ public final class UnknownPropertyName implements PropertyName {
     private final String name;
 
     /**
-     * TODO
+     * Constructs a new {@link UnknownPropertyName} instance with the given name.
      * 
      * @param name
-     *            TODO
+     *            The name of the property.
      */
     public UnknownPropertyName(String name) {
         this.name = checkNotNull(name, "name cannot be null");

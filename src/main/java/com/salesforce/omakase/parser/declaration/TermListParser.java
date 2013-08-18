@@ -12,11 +12,11 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * Parses an {@link Expression}.
+ * Parses an {@link TermList}.
  * 
  * @author nmcwilliams
  */
-public class ExpressionParser extends AbstractParser {
+public class TermListParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -26,9 +26,9 @@ public class ExpressionParser extends AbstractParser {
         int line = stream.line();
         int column = stream.column();
 
-        ExpressionTerm term = null;
-        Expression expression = null;
-        ExpressionOperator operator = null;
+        Term term = null;
+        TermList expression = null;
+        TermOperator operator = null;
 
         do {
             stream.skipWhitepace();
@@ -50,7 +50,7 @@ public class ExpressionParser extends AbstractParser {
                 term = value;
             }
 
-            // function (must be before keyword
+            // function (must be before keyword)
             if (term == null) {
                 Optional<FunctionValue> function = stream.readFunction();
                 if (function.isPresent()) {
@@ -68,34 +68,36 @@ public class ExpressionParser extends AbstractParser {
 
             // hex
             if (term == null) {
-                Optional<String> color = stream.readHexColor();
+                Optional<HexColorValue> color = stream.readHexColor();
                 if (color.isPresent()) {
-                    term = new HexColorValue(color.get());
+                    term = color.get();
                 }
             }
 
             // string
             if (term == null) {
-
+                // TODO
             }
+
             // if we have a term, add it to the list
             if (term != null) {
                 if (expression == null) {
-                    expression = new Expression(line, column);
+                    expression = new TermList(line, column);
                 }
                 expression.add(term);
 
                 // try to parse an operator
                 if (stream.optionallyPresent(Tokens.SINGLE_SPACE)) {
-                    operator = ExpressionOperator.SINGLE_SPACE;
+                    operator = TermOperator.SINGLE_SPACE;
                 } else if (stream.optionallyPresent(Tokens.COMMA)) {
-                    operator = ExpressionOperator.COMMA;
+                    operator = TermOperator.COMMA;
                 } else if (stream.optionallyPresent(Tokens.FORWARD_SLASH)) {
-                    operator = ExpressionOperator.SLASH;
+                    operator = TermOperator.SLASH;
                 } else {
                     operator = null;
                 }
 
+                // add the operator as a member to term list, so we know what to print out
                 if (operator != null) {
                     expression.add(operator);
                 }

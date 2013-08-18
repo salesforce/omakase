@@ -13,7 +13,11 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
- * TODO Description
+ * A {@link Broadcaster} that stores each event for later querying and retrieval. It can also optionally relay each
+ * event to another {@link Broadcaster}.
+ * 
+ * <p>
+ * Note that currently only {@link SubscriptionType#CREATED} events are stored.
  * 
  * @author nmcwilliams
  */
@@ -22,17 +26,19 @@ public class CollectingBroadcaster implements Broadcaster {
     private final Broadcaster relay;
 
     /**
-     * TODO
+     * Constructs a new {@link CollectingBroadcaster} instance that will <em>not</em> relay any events to another
+     * {@link Broadcaster}.
      */
     public CollectingBroadcaster() {
         this(null);
     }
 
     /**
-     * TODO
+     * Constructs a new {@link CollectingBroadcaster} instance that will relay all events to the given
+     * {@link Broadcaster}.
      * 
      * @param relay
-     *            TODO
+     *            Relay all events to this {@link Broadcaster}.
      */
     public CollectingBroadcaster(Broadcaster relay) {
         this.relay = relay;
@@ -49,31 +55,31 @@ public class CollectingBroadcaster implements Broadcaster {
     }
 
     /**
-     * TODO Description
+     * Gets all broadcasted events of type {@link SubscriptionType#CREATED} that are instances of the given class.
      * 
      * @param <T>
-     *            TODO
+     *            Type of the {@link Syntax} unit.
      * @param klass
-     *            TODO
-     * @return TODO
+     *            Filter {@link Syntax} units that are instances of this class.
+     * @return All matching {@link Syntax} units that are instances of the given class.
      */
     public <T extends Syntax> Iterable<T> filter(Class<T> klass) {
         return Iterables.filter(collected, klass);
     }
 
     /**
-     * TODO Description
+     * Finds the first {@link Syntax} unit that is an instance of the given class.
      * 
      * @param <T>
-     *            TODO
+     *            Type of the {@link Syntax} unit.
      * @param klass
-     *            TODO
-     * @return TODO
+     *            Get the first {@link Syntax} unit that is an instance of this class.
+     * @return The single matching {@link Syntax} unit that is an instance of the given class, or
+     *         {@link Optional#absent()} if not present.
      */
     @SuppressWarnings("unchecked")
     public <T> Optional<T> find(Class<T> klass) {
         // Predicates.instanceOf ensures that this is a safe cast
         return (Optional<T>)Iterables.tryFind(collected, Predicates.instanceOf(klass));
     }
-
 }

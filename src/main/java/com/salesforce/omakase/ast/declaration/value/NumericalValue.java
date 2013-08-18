@@ -9,26 +9,33 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 
 /**
- * TODO Description
+ * A numerical value (e.g., 1 or 1px or 3.5em).
  * 
  * <p>
- * we use two integers instead of a double because we want to preserve the information regarding the presence of the
+ * The decimal point and unit are both optional. THe unit is any keyword directly following the number value, such as
+ * px, em, or ms.
+ * 
+ * <p>
+ * The sign is optional, and is only defined if explicitly included in the source. In other words, in "5px" the sign
+ * will <b>not</b> be {@link Sign#POSITIVE} but {@link Optional#absent()}.
+ * 
+ * <p>
+ * We use two integers instead of a double because we want to preserve the information regarding the presence of the
  * decimal point as authored.
  * 
  * @author nmcwilliams
  */
-public class NumericalValue implements ExpressionTerm {
-
+public class NumericalValue implements Term {
     private Integer integerValue;
     private Optional<Integer> decimalValue = Optional.absent();
     private Optional<String> unit = Optional.absent();
     private Optional<Sign> explicitSign = Optional.absent();
 
-    /** TODO */
+    /** Represents the sign of the number (+/-) */
     public enum Sign {
-        /** TODO */
+        /** + */
         POSITIVE('+'),
-        /** TODO */
+        /** - */
         NEGATIVE('_');
 
         final char symbol;
@@ -39,21 +46,22 @@ public class NumericalValue implements ExpressionTerm {
     }
 
     /**
-     * TODO
+     * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a
+     * value of 0 should be passed in here.
      * 
      * @param integerValue
-     *            TODO
+     *            The integer value.
      */
     public NumericalValue(Integer integerValue) {
         this.integerValue = integerValue;
     }
 
     /**
-     * TODO Description
+     * Sets the integer value.
      * 
      * @param integerValue
-     *            TODO
-     * @return TODO
+     *            The integer value.
+     * @return this, for chaining.
      */
     public NumericalValue integerValue(Integer integerValue) {
         this.integerValue = checkNotNull(integerValue, "integerValue cannot be null");
@@ -61,20 +69,20 @@ public class NumericalValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the integer value.
      * 
-     * @return TODO
+     * @return The integer value.
      */
     public Integer integerValue() {
         return integerValue;
     }
 
     /**
-     * TODO Description
+     * Sets the decimal value.
      * 
      * @param decimalValue
-     *            TODO
-     * @return TODO
+     *            The decimal value.
+     * @return this, for chaining.
      */
     public NumericalValue decimalValue(Integer decimalValue) {
         this.decimalValue = Optional.fromNullable(decimalValue);
@@ -82,20 +90,20 @@ public class NumericalValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the decimal value.
      * 
-     * @return TODO
+     * @return The decimal value, or {@link Optional#absent()} if not set.
      */
     public Optional<Integer> decimalValue() {
         return decimalValue;
     }
 
     /**
-     * TODO Description
+     * Sets the unit, e.g., px or em.
      * 
      * @param unit
-     *            TODO
-     * @return TODO
+     *            The unit.
+     * @return this, for chaining.
      */
     public NumericalValue unit(String unit) {
         this.unit = Optional.fromNullable(unit);
@@ -103,20 +111,20 @@ public class NumericalValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the unit.
      * 
-     * @return TODO
+     * @return The unit, or {@link Optional#absent()} if not set.
      */
     public Optional<String> unit() {
         return unit;
     }
 
     /**
-     * TODO Description TODO
+     * Sets the explicit sign of the number.
      * 
      * @param sign
-     *            TODO
-     * @return TODO
+     *            The sign.
+     * @return this, for chaining.
      */
     public NumericalValue explicitSign(Sign sign) {
         this.explicitSign = Optional.fromNullable(sign);
@@ -124,9 +132,9 @@ public class NumericalValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the explicit sign of the number.
      * 
-     * @return TODO
+     * @return The sign, or {@link Optional#absent()} if not set.
      */
     public Optional<Sign> explicitSign() {
         return explicitSign;

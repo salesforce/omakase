@@ -6,16 +6,16 @@ package com.salesforce.omakase.ast.declaration;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * The name of a property in a {@link Declaration}.
  * 
  * @author nmcwilliams
  */
 @Subscribable
 public interface PropertyName {
     /**
-     * TODO Description
+     * Gets the property name.
      * 
-     * @return TODO
+     * @return The property name.
      */
     String getName();
 }

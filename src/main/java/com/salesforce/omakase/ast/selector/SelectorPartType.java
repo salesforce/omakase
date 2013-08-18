@@ -4,31 +4,42 @@
 package com.salesforce.omakase.ast.selector;
 
 /**
- * TODO Description
+ * The type of selector or combinator for a {@link SelectorPart}. Checking against {@link SelectorPart#type()} can be
+ * useful in place of using instanceof.
  * 
  * @author nmcwilliams
  */
 public enum SelectorPartType {
-    /** TODO */
+    /** a universal selector */
     UNIVERSAL_SELECTOR,
-    /** TODO */
+
+    /** a type (aka element) selector */
     TYPE_SELECTOR,
-    /** TODO */
+
+    /** an id selector */
     ID_SELECTOR,
-    /** TODO */
+
+    /** a class selector */
     CLASS_SELECTOR,
-    /** TODO */
+
+    /** an attribute selector */
     ATTRIBUTE_SELECTOR,
-    /** TODO */
-    PSEUDO_ELEMENT_SELECTOR,
-    /** TODO */
+
+    /** a pseudo class selector */
     PSEUDO_CLASS_SELECTOR,
-    /** TODO */
-    DESCENDENT_COMBINATOR,
-    /** TODO */
+
+    /** a pseudo element selector */
+    PSEUDO_ELEMENT_SELECTOR,
+
+    /** a descendant combinator */
+    DESCENDANT_COMBINATOR,
+
+    /** a child combinator */
     CHILD_COMBINATOR,
-    /** TODO */
+
+    /** an adjacent sibling combinator */
     ADJACENT_SIBLING_COMBINATOR,
-    /** TODO */
+
+    /** a general sibling combinator */
     GENERAL_SIBLING_COMBINATOR
 }

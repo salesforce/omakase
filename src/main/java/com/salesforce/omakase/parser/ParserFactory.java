@@ -3,8 +3,24 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.parser.raw.*;
-import com.salesforce.omakase.parser.selector.*;
+import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.raw.AtRuleParser;
+import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.parser.raw.RawSelectorParser;
+import com.salesforce.omakase.parser.raw.RuleParser;
+import com.salesforce.omakase.parser.raw.SelectorGroupParser;
+import com.salesforce.omakase.parser.raw.StylesheetParser;
+import com.salesforce.omakase.parser.selector.AttributeSelectorParser;
+import com.salesforce.omakase.parser.selector.ClassSelectorParser;
+import com.salesforce.omakase.parser.selector.CombinatorParser;
+import com.salesforce.omakase.parser.selector.IdSelectorParser;
+import com.salesforce.omakase.parser.selector.NegationSelectorParser;
+import com.salesforce.omakase.parser.selector.PseudoClassSelectorParser;
+import com.salesforce.omakase.parser.selector.PseudoElementSelectorParser;
+import com.salesforce.omakase.parser.selector.RefinedSelectorParser;
+import com.salesforce.omakase.parser.selector.SimpleSelectorSequenceParser;
+import com.salesforce.omakase.parser.selector.TypeSelectorParser;
+import com.salesforce.omakase.parser.selector.UniversalSelectorParser;
 
 /**
  * A cache of {@link Parser} instances.
@@ -40,6 +56,8 @@ public final class ParserFactory {
     private static final Parser simpleSelectorStart = typeSelector.or(universalSelector);
     private static final Parser simpleSelector = idSelector.or(classSelector)
         .or(attributeSelector).or(pseudoClassSelector).or(negationSelector);
+
+    private static final Parser termList = new TermListParser();
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -96,119 +114,120 @@ public final class ParserFactory {
     }
 
     /**
-     * TODO Description
+     * Gets the {@link RefinedSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser refinedSelectorParser() {
         return refinedSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link SimpleSelectorSequenceParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser simpleSelectorSequenceParser() {
         return simpleSelectorSequence;
     }
 
     /**
-     * TODO Description
+     * Gets a parser to parse the start of a simple selector.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser simpleSelectorStartParser() {
         return simpleSelectorStart;
     }
 
     /**
-     * TODO Description
+     * Gets a parser to parse a simple selector.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser simpleSelectorParser() {
+        // FIXME add pseudo element
         return simpleSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link CombinatorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser combinatorParser() {
         return combinator;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link ClassSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser classSelectorParser() {
         return classSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link IdSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser idSelectorParser() {
         return idSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link AttributeSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser attributeSelectorParser() {
         return attributeSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link TypeSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser typeSelectorParser() {
         return typeSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link UniversalSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser universalSelectorParser() {
         return universalSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link PseudoClassSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser pseudoClassSelectorParser() {
         return pseudoClassSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link PseudoElementSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
     public static Parser psuedoElementSelectorParser() {
         return pseudoElementSelector;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link NegationSelectorParser}.
      * 
-     * @return TODO
+     * @return The parser instance.
      */
-    public static Parser negationParser() {
+    public static Parser negationSelectorParser() {
         return negationSelector;
     }
 
@@ -221,4 +240,12 @@ public final class ParserFactory {
         return rawDeclaration;
     }
 
+    /**
+     * Gets the {@link TermListParser}.
+     * 
+     * @return The parser instance.
+     */
+    public static Parser termListParser() {
+        return termList;
+    }
 }

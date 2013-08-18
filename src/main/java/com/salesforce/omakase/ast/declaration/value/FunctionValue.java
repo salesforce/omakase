@@ -12,17 +12,17 @@ import com.salesforce.omakase.As;
  * 
  * @author nmcwilliams
  */
-public class FunctionValue implements ExpressionTerm {
+public class FunctionValue implements Term {
     private String functionName;
     private String rawArguments;
 
     /**
-     * TODO
+     * Constructs a new {@link FunctionValue} instance with the given function name and arguments.
      * 
      * @param functionName
-     *            TODO
+     *            The name of the function.
      * @param rawArguments
-     *            TODO
+     *            The raw, non-validated function arguments.
      */
     public FunctionValue(String functionName, String rawArguments) {
         this.functionName = functionName;
@@ -30,11 +30,11 @@ public class FunctionValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Sets the function name.
      * 
      * @param functionName
-     *            TODO
-     * @return TODO
+     *            The function name.
+     * @return this, for chaining.
      */
     public FunctionValue functionName(String functionName) {
         this.functionName = checkNotNull(functionName, "functionName cannot be null");
@@ -42,20 +42,20 @@ public class FunctionValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the function name.
      * 
-     * @return TODO
+     * @return The function name.
      */
     public String functionName() {
         return functionName;
     }
 
     /**
-     * TODO Description
+     * Sets the raw arguments.
      * 
      * @param rawArguments
-     *            TODO
-     * @return TODO
+     *            The arguments.
+     * @return this, for chaining.
      */
     public FunctionValue rawArguments(String rawArguments) {
         this.rawArguments = checkNotNull(rawArguments, "rawArguments cannot be null");
@@ -63,9 +63,9 @@ public class FunctionValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the raw arguments.
      * 
-     * @return TODO
+     * @return The raw arguments.
      */
     public String rawArguments() {
         return rawArguments;

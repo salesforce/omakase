@@ -8,7 +8,11 @@ import com.salesforce.omakase.ast.AbstractLinkable;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * Represents a CSS pseudo class selector.
+ * 
+ * <p>
+ * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b>
+ * considered pseudo classes in this library, but as {@link PseudoElementSelector}s.
  * 
  * @author nmcwilliams
  */
@@ -17,14 +21,14 @@ public class PseudoClassSelector extends AbstractLinkable<SelectorPart> implemen
     private String name;
 
     /**
-     * TODO
+     * Constructs a new {@link PseudoClassSelector} instance with the given name.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      * @param name
-     *            TODO
+     *            Name of the pseudo class.
      */
     public PseudoClassSelector(int line, int column, String name) {
         super(line, column);

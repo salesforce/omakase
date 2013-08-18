@@ -30,7 +30,7 @@ public class ParserException extends OmakaseException {
         builder.append("\n ")
             .append("at line ").append(stream.line()).append(", ")
             .append("column ").append(stream.column()).append(" ")
-            .append("in '").append(stream.source()).append("'");
+            .append("in '").append(stream).append("'");
 
         if (stream.isSubStream()) {
             builder.append(" ").append(stream.anchorPositionMessage());

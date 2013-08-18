@@ -8,29 +8,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.salesforce.omakase.As;
 
 /**
- * TODO Description
+ * A hex color value (e.g., "fffeee").
  * 
  * @author nmcwilliams
  */
-public class HexColorValue implements ExpressionTerm {
+public class HexColorValue implements Term {
     private String color;
 
     /**
-     * TODO
+     * Constructs a new instance of a {@link HexColorValue}.
      * 
      * @param color
-     *            TODO
+     *            The hex color (do not include the #).
      */
     public HexColorValue(String color) {
         this.color = color;
     }
 
     /**
-     * TODO Description
+     * Sets the value of the color
      * 
      * @param color
-     *            TODO
-     * @return TODO
+     *            The hex color (do not include the #).
+     * @return this, for chaining.
      */
     public HexColorValue color(String color) {
         this.color = checkNotNull(color, "color cannot be null");
@@ -38,18 +38,18 @@ public class HexColorValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the color value (does not include the #).
      * 
-     * @return TODO
+     * @return The color value.
      */
     public String color() {
         return color;
     }
 
     /**
-     * TODO Description
+     * Gets whether this hex color is shorthand (has a length of three).
      * 
-     * @return TODO
+     * @return True if the length of this color is 3.
      */
     public boolean isShorthand() {
         return color.length() == 3;

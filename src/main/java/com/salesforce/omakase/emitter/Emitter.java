@@ -3,8 +3,6 @@
  */
 package com.salesforce.omakase.emitter;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Set;
 
 import com.google.common.cache.CacheBuilder;
@@ -40,7 +38,7 @@ public final class Emitter {
         });
 
     /** order is important so that subscribers are notified in the order they were registered */
-    private final Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create(32, 8);
+    private final Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create(32, 12);
 
     /**
      * TODO Description
@@ -61,9 +59,13 @@ public final class Emitter {
      *            TODO
      */
     public void emit(SubscriptionType type, Object event) {
-        checkNotNull(event, "event cannot be null");
+        Class<? extends Object> eventType = event.getClass();
 
-        for (Class<?> klass : hierarchy(event.getClass())) {
+        // perf - if we don't have a subscription for this class skip the cache check or load
+        if (!subscriptions.containsKey(eventType)) return;
+
+        // for each subscribable type in the event's hierarchy, inform each subscription to that type of the event
+        for (Class<?> klass : hierarchy(eventType)) {
             for (Subscription subscription : subscriptions.get(klass)) {
                 subscription.inform(type, event);
             }

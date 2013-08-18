@@ -6,7 +6,7 @@ package com.salesforce.omakase.emitter;
 import com.salesforce.omakase.OmakaseException;
 
 /**
- * TODO Description
+ * An error that occurs while invoking a method annotated with {@link Subscribe}.
  * 
  * @author nmcwilliams
  */
@@ -15,21 +15,19 @@ public class SubscriptionException extends OmakaseException {
 
     /**
      * @param message
-     *            TODO
+     *            The error message.
      */
     public SubscriptionException(String message) {
         super(message);
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param message
-     *            TODO
+     *            The error message.
      * @param cause
-     *            TODO
+     *            The underlying cause.
      */
     public SubscriptionException(String message, Throwable cause) {
         super(message, cause);
-        // TODO Auto-generated constructor stub
     }
 }

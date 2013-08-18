@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import com.google.common.base.Objects;
 
 /**
- * TODO Description
+ * Metadata class to wrap the details around a subscription method. For internal use only.
  * 
  * @author nmcwilliams
  */
@@ -29,30 +29,31 @@ public final class Subscription {
     }
 
     /**
-     * TODO Description
+     * The type of subscription.
      * 
-     * @return TODO
+     * @return The type of subscription.
      */
     public SubscriptionType type() {
         return type;
     }
 
     /**
-     * TODO Description
+     * The filter name.
      * 
-     * @return TODO
+     * @return the filter name.
      */
     public String filter() {
         return filter;
     }
 
     /**
-     * TODO Description
+     * Inform this subscription that a particular event of a given type occurred. The subscription method may not be
+     * invoked, dependent on how restrictive it is with respect to the {@link SubscriptionType}, etc...
      * 
      * @param type
-     *            TODO
+     *            The type of event.
      * @param event
-     *            TODO
+     *            The event object (e.g., syntax instance).
      */
     public void inform(SubscriptionType type, Object event) {
         checkNotNull(event, "event cannot be null");
@@ -62,10 +63,10 @@ public final class Subscription {
     }
 
     /**
-     * TODO Description
+     * Invokes the subscription method.
      * 
      * @param event
-     *            TOOD
+     *            The event object (e.g., syntax instance).
      */
     private void deliver(Object event) {
         try {
@@ -87,8 +88,8 @@ public final class Subscription {
     @Override
     public boolean equals(Object object) {
         if (object instanceof Subscription) {
-            Subscription that = (Subscription)object;
-            return subscriber == that.subscriber && Objects.equal(this.method, that.method);
+            Subscription other = (Subscription)object;
+            return subscriber == other.subscriber && Objects.equal(this.method, other.method);
         }
         return false;
     }

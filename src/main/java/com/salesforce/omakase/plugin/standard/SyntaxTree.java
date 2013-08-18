@@ -1,7 +1,7 @@
 ﻿/**
  * ADD LICENSE
  */
-package com.salesforce.omakase.plugin;
+package com.salesforce.omakase.plugin.standard;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -14,6 +14,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.emitter.Subscribe;
 import com.salesforce.omakase.emitter.SubscriptionType;
+import com.salesforce.omakase.plugin.DependentPlugin;
 
 /**
  * TODO Description

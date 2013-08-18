@@ -8,9 +8,8 @@ import java.util.Iterator;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.plugin.SyntaxTree;
+import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
  * The root-level {@link Syntax} object.
@@ -25,10 +24,10 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
     private final Statement head;
 
     /**
-     * TODO
+     * Constructs a new {@link Stylesheet} instance with the given first {@link Statement}.
      * 
      * @param head
-     *            TODO
+     *            The first {@link Statement} in the stylesheet.
      */
     public Stylesheet(Statement head) {
         super(head.line(), head.column());
@@ -36,33 +35,33 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
     }
 
     /**
-     * TODO Description
+     * Gets all {@link Statement}s in this stylesheet.
      * 
-     * @return TODO
+     * @return All statements.
      */
     public LinkableCollection<Statement> statements() {
         return LinkableCollection.of(head);
     }
 
-    @Override
-    public Iterator<Statement> iterator() {
-        return statements().iterator();
-    }
-
     /**
-     * TODO Description
+     * Appends a new {@link Statement} to the end of this stylesheet.
      * 
      * <p>
      * Avoid if possible, as this method is less efficient. Prefer instead to append the rule or at-rule directly to a
      * specific instance of an existing one.
      * 
      * @param statement
-     *            TODO
+     *            The {@link Statement} to append.
      * @return this, for chaining.
      */
     public Stylesheet append(Statement statement) {
         Iterables.getLast(statements()).append(statement);
         return this;
+    }
+
+    @Override
+    public Iterator<Statement> iterator() {
+        return statements().iterator();
     }
 
     @Override

@@ -14,8 +14,8 @@ import com.phloc.css.reader.CSSReader;
 import com.salesforce.omakase.Omakase.Request;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.plugin.AutoRefiner;
-import com.salesforce.omakase.plugin.SyntaxTree;
+import com.salesforce.omakase.plugin.standard.AutoRefiner;
+import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
  * Performance testing of this parser with others.
@@ -33,7 +33,7 @@ public class PerfTest {
     private static final boolean USE_FACTORS = true;
 
     /** run phloc */
-    private static final boolean PHLOC = true;
+    private static final boolean PHLOC = false;
 
     /** output statistics */
     private static final boolean CONSOLE = true;
@@ -84,6 +84,7 @@ public class PerfTest {
             for (int i = 0; i < 150; i++) {
                 if (PHLOC) parse(Mode.PHLOC, original);
                 parse(Mode.OMAKASE, original);
+                parse(Mode.OMAKASE_FULL, original);
             }
         }
 
@@ -171,11 +172,6 @@ public class PerfTest {
         }
     }
 
-    /**
-     * TODO Description
-     * 
-     * @param string
-     */
     private static void print(String string) {
         if (CONSOLE) System.out.println(string);
     }

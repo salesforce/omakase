@@ -15,16 +15,15 @@ import com.salesforce.omakase.emitter.Subscribable;
 @Subscribable
 public class PseudoElementSelector extends AbstractLinkable<SelectorPart> implements SelectorPart {
     /**
-     * TODO
+     * Constructs a new {@link PseudoElementSelector} selector with the given name.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      */
     protected PseudoElementSelector(int line, int column) {
         super(line, column);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -39,8 +38,7 @@ public class PseudoElementSelector extends AbstractLinkable<SelectorPart> implem
 
     @Override
     public SelectorPartType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return SelectorPartType.PSEUDO_ELEMENT_SELECTOR;
     }
 
     @Override

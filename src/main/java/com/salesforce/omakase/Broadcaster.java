@@ -4,23 +4,24 @@
 package com.salesforce.omakase;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
- * TODO Description
+ * Responsible for broadcasting {@link Syntax} unit create or change events, usually to an {@link Emitter}.
  * 
  * @author nmcwilliams
  */
 public interface Broadcaster {
     /**
-     * TODO Description
+     * Broadcasts an event indicating that the given syntax unit has been created or changed.
      * 
      * @param <T>
-     *            TODO
+     *            The type of {@link Syntax} unit that was created or changed.
      * @param type
-     *            TODO
+     *            The event type (created or changed)
      * @param syntax
-     *            TODO
+     *            The {@link Syntax} unit instance that was created or changed.
      */
     public <T extends Syntax> void broadcast(SubscriptionType type, T syntax);
 }

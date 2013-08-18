@@ -18,10 +18,12 @@ public final class As {
     private final String name;
     private final List<Entry> entries = Lists.newArrayList();
 
+    /** use construction method instead */
     private As(Object object) {
         this(object.getClass().getSimpleName());
     }
 
+    /** use construction method instead */
     private As(String name) {
         this.name = name;
     }
@@ -139,7 +141,7 @@ public final class As {
      *            Name of the object being represented.
      * @return The helper instance.
      */
-    public static As named(String name) {
+    public static As stringNamed(String name) {
         return new As(name);
     }
 }

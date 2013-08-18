@@ -70,7 +70,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public String toString() {
-        return As.named("AbstractSyntax")
+        return As.stringNamed("AbstractSyntax")
             .add("line", line)
             .add("column", column)
             .add("comments", comments())

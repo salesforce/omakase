@@ -3,8 +3,7 @@
  */
 package com.salesforce.omakase.parser.token;
 
-import static com.google.common.base.CharMatcher.inRange;
-import static com.google.common.base.CharMatcher.is;
+import static com.google.common.base.CharMatcher.*;
 
 import com.google.common.base.CharMatcher;
 
@@ -14,6 +13,27 @@ import com.google.common.base.CharMatcher;
  * @author nmcwilliams
  */
 public enum Tokens implements Token {
+    /** upper or lower case alpha character */
+    ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
+
+    /** numerical digit */
+    DIGIT(inRange('0', '9'), "numerical digit [0-9]"),
+
+    /** dot, period, full-stop, etc... */
+    DOT(is('.'), "."),
+
+    /** hyphen or minus */
+    HYPHEN(is('-'), "-"),
+
+    /** a semicolon */
+    SEMICOLON(is(';'), ";"),
+
+    /** a regular colon */
+    COLON(is(':'), ":"),
+
+    /** comma */
+    COMMA(is(','), ","),
+
     /** open bracket */
     OPEN_BRACKET(is('{'), "opening bracket '{'"),
 
@@ -26,50 +46,26 @@ public enum Tokens implements Token {
     /** closing parenthesis */
     CLOSE_PAREN(is(')'), ")"),
 
-    /** a semicolon */
-    SEMICOLON(is(';'), ";"),
-
-    /** a regular colon */
-    COLON(is(':'), ":"),
-
-    /** comma */
-    COMMA(is(','), ","),
-
-    /** CSS escape character */
-    ESCAPE(is('\\'), "CSS escape character"),
-
-    /** forward slash */
-    FORWARD_SLASH(is('/'), "/"),
-
-    /** upper or lower case alpha character */
-    ALPHA(inRange('a', 'z').or(inRange('A', 'Z')), "alpha character [a-zA-Z]"),
-
-    /** numerical digit */
-    DIGIT(inRange('0', '9'), "numerical digit [0-9]"),
-
-    /** negative or positive sign */
-    SIGN(is('-').or(is('+')), "numerical sign (- or +)"),
-
     /** asterisk */
     STAR(is('*'), "universal selector"),
 
     /** hash mark */
     HASH(is('#'), "#"),
 
-    /** dot, period, full-stop, etc... */
-    DOT(is('.'), "."),
-
-    /** hyphen */
-    HYPHEN(is('-'), "-"),
-
     /** at symbol */
     AT_RULE(is('@'), "@"),
 
-    /** newline character */
-    NEWLINE(is('\n'), "newline"),
+    /** plus character, usually for the combinator symbol */
+    PLUS(is('+'), "+"),
 
-    /** color in hex format */
-    HEX_COLOR(inRange('a', 'f').or(inRange('0', '9')).or(inRange('A', 'F')), "hex color [a-fA-F0-9]{3,6}"),
+    /** tilde character, usually for the combinator symbol */
+    TILDE(is('~'), "~"),
+
+    /** greater than character, usually for the combinator symbol */
+    GREATER_THAN(is('>'), ">"),
+
+    /** forward slash */
+    FORWARD_SLASH(is('/'), "/"),
 
     /** double quote */
     DOUBLE_QUOTE(is('"'), "double quote"),
@@ -80,17 +76,23 @@ public enum Tokens implements Token {
     /** single space character */
     SINGLE_SPACE(is(' '), "single space character"),
 
-    /** greater than character, usually for the combinator symbol */
-    GREATER_THAN(is('>'), ">"),
+    /** newline character */
+    NEWLINE(is('\n'), "newline"),
 
-    /** plus character, usually for the combinator symbol */
-    PLUS(is('+'), "+"),
+    /** CSS escape character */
+    ESCAPE(is('\\'), "CSS escape character"),
 
-    /** tilde character, usually for the combinator symbol */
-    TILDE(is('~'), "~"),
+    /** whitespace as defined by the CSS spec */
+    WHITESPACE(anyOf("\u0020\t\r\n\f"), "whitespace"),
+
+    /** negative or positive sign */
+    SIGN(anyOf("+-"), "numerical sign (- or +)"),
+
+    /** color in hex format */
+    HEX_COLOR(inRange('a', 'f').or(inRange('0', '9')).or(inRange('A', 'F')), "hex color [a-fA-F0-9]{3,6}"),
 
     /** first allowed character in a css ident/name (ordered based on likelihood of occurrence) */
-    NMSTART(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z').or(is('_'))), "valid first identifier character"),
+    NMSTART(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z').or(is('_'))), "valid first identifier character (no digits)"),
 
     /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
     NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')),
@@ -102,7 +104,7 @@ public enum Tokens implements Token {
     private final String description;
 
     Tokens(CharMatcher matcher, String description) {
-        this.matcher = matcher;
+        this.matcher = matcher.precomputed();
         this.description = description;
     }
 

@@ -8,29 +8,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.salesforce.omakase.As;
 
 /**
- * TODO Description
+ * A keyword value (e.g., inline-block).
  * 
  * @author nmcwilliams
  */
-public class KeywordValue implements ExpressionTerm {
+public class KeywordValue implements Term {
     private String keyword;
 
     /**
-     * TODO
+     * Constructs a new {@link KeywordValue} instance.
      * 
      * @param keyword
-     *            TODO
+     *            The keyword.
      */
     public KeywordValue(String keyword) {
         this.keyword = keyword;
     }
 
     /**
-     * TODO Description
+     * Sets the keyword value.
      * 
      * @param keyword
-     *            TODO
-     * @return TODO
+     *            The keyword.
+     * @return this, for chaining.
      */
     public KeywordValue keyword(String keyword) {
         this.keyword = checkNotNull(keyword, "keyword cannot be null");
@@ -38,9 +38,9 @@ public class KeywordValue implements ExpressionTerm {
     }
 
     /**
-     * TODO Description
+     * Gets the keyword value.
      * 
-     * @return TODO
+     * @return The keyword.
      */
     public String keyword() {
         return keyword;
@@ -52,5 +52,4 @@ public class KeywordValue implements ExpressionTerm {
             .add("keyword", keyword)
             .toString();
     }
-
 }

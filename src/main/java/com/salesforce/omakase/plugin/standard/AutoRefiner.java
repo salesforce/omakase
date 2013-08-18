@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.plugin;
+package com.salesforce.omakase.plugin.standard;
 
 import java.util.Set;
 
@@ -9,7 +9,9 @@ import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.emitter.Subscribe;
+import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * Automatically refines all explicitly requested {@link Refinable} types.
@@ -20,16 +22,16 @@ import com.salesforce.omakase.emitter.Subscribe;
  * before the syntax unit will be exposed.
  * 
  * <p>
- * For example, suppose you have a subscription to {@link UrlFunction}. You have two options to ensure you receive the
+ * For example, suppose you have a subscription to {@link FunctionValue}. You have two options to ensure you receive the
  * appropriate events. First, and more performant, you can also subscribe to {@link Declaration}, check the property
  * name for an expected value (e.g., "background") and call {@link Refinable#refine()} on the {@link Declaration} if it
  * matches. This is the best choice if you only cared about urls from certain property names, or the set of properties
  * that use url is small.
  * 
  * <p>
- * However, for something like {@link UrlFunction} that can appear in many different properties, the second option is to
- * use an {@link AutoRefiner} to automatically call {@link Refinable#refine()} on <em>every</em> {@link Declaration},
- * which will ensure you get every {@link UrlFunction} within the CSS source. This is the potentially less performant
+ * However, for something like {@link FunctionValue} that can appear in many different properties, the second option is
+ * to use an {@link AutoRefiner} to automatically call {@link Refinable#refine()} on <em>every</em> {@link Declaration},
+ * which will ensure you get every {@link FunctionValue} within the CSS source. This is the potentially less performant
  * option, so make the choice judiciously.
  * 
  * <p>

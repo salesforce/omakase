@@ -6,8 +6,8 @@ package com.salesforce.omakase.ast.selector;
 import java.util.Iterator;
 
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.LinkableCollection;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.emitter.Subscribable;
 

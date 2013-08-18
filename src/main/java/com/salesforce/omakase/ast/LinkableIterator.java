@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase;
+package com.salesforce.omakase.ast;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -9,26 +9,27 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-import com.salesforce.omakase.ast.Linkable;
 
 /**
- * TODO Description
+ * An iterator over {@link Linkable} objects.
  * 
  * XXX {@link ListIterator}?
  * 
- * @author nmcwilliams
+ * @see LinkableCollection
+ * 
  * @param <T>
- *            TODO
+ *            Type of items the {@link Linkable}s contain.
+ * @author nmcwilliams
  */
 public class LinkableIterator<T extends Linkable<T>> implements Iterator<T> {
     private final T head;
     private T current;
 
     /**
-     * TODO
+     * Constructs a new {@link LinkableIterator} instances with the given head.
      * 
      * @param head
-     *            TODO
+     *            The first element in the collection
      */
     public LinkableIterator(T head) {
         this.head = checkNotNull(head, "head cannot be null");
@@ -59,13 +60,13 @@ public class LinkableIterator<T extends Linkable<T>> implements Iterator<T> {
     }
 
     /**
-     * TODO Description
+     * Constructor method to create a new instance {@link LinkableIterator} instance.
      * 
      * @param <T>
-     *            TODO
+     *            Type of items the {@link Linkable}s contain.
      * @param head
-     *            TODO
-     * @return TODO
+     *            The first element in the collection.
+     * @return The new {@link LinkableIterator} instance.
      */
     public static <T extends Linkable<T>> LinkableIterator<T> create(T head) {
         return new LinkableIterator<T>(head);

@@ -14,12 +14,12 @@ import com.salesforce.omakase.emitter.Subscribable;
 @Subscribable
 public class UniversalSelector extends AbstractLinkable<SelectorPart> implements SelectorPart {
     /**
-     * TODO
+     * Constructs a new {@link UniversalSelector} instance.
      * 
      * @param line
-     *            TODO
+     *            The line number.
      * @param column
-     *            TODO
+     *            The column number.
      */
     public UniversalSelector(int line, int column) {
         super(line, column);

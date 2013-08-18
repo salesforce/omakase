@@ -5,17 +5,21 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.LinkableCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorGroup;
 import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.plugin.SyntaxTree;
+import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
- * Represents a CSS Rule. Each rule has one {@link SelectorGroup}s and zero or more {@link Declaration}s.
+ * Represents a CSS Rule. Each rule has one {@link SelectorGroup}s and one or more {@link Declaration}s.
  * 
  * <p>
- * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
+ * Note that {@link Rule}s will not be created unless the {@link SyntaxTree} plugin is enabled.
+ * 
+ * <p>
+ * Note that the {@link SelectorGroup} cannot be changed, however you can freely add and remove {@link Selector}s from
+ * the group.
  * 
  * @author nmcwilliams
  */
@@ -25,12 +29,12 @@ public class Rule extends AbstractLinkable<Statement> implements Statement {
     private final Declaration declarationHead;
 
     /**
-     * TODO
+     * Creates a new {@link Rule} instance.
      * 
      * @param selectorGroup
-     *            TODO
+     *            The {@link SelectorGroup} instance.
      * @param declarationHead
-     *            TODO
+     *            The first {@link Declaration} in the rule.
      */
     public Rule(SelectorGroup selectorGroup, Declaration declarationHead) {
         super(selectorGroup.line(), selectorGroup.column());
@@ -39,18 +43,19 @@ public class Rule extends AbstractLinkable<Statement> implements Statement {
     }
 
     /**
-     * TODO Description
+     * Gets the {@link SelectorGroup}.
      * 
-     * @return TODO
+     * @return The {@link SelectorGroup}.
      */
     public SelectorGroup selectorGroup() {
         return selectorGroup;
     }
 
     /**
-     * TODO Description
+     * Gets the {@link Declaration}s. Note that moving forward and backwards from a specific {@link Declaration}
+     * instance is generally more preferred.
      * 
-     * @return TODO
+     * @return A {@link LinkableCollection} of the {@link Declaration}s.
      */
     public LinkableCollection<Declaration> declarations() {
         return LinkableCollection.of(declarationHead);

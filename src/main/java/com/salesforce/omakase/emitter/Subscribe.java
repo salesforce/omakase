@@ -5,6 +5,9 @@ package com.salesforce.omakase.emitter;
 
 import java.lang.annotation.*;
 
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
+
 /**
  * TODO Description
  * 
@@ -14,23 +17,33 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 public @interface Subscribe {
     /**
-     * TODO Description
+     * Subscribe to this type of event (default is {@link SubscriptionType#CREATED}).
      * 
-     * @return TODO
+     * @return The {@link SubscriptionType}.
      */
     SubscriptionType type() default SubscriptionType.CREATED;
 
     /**
-     * TODO Description
+     * Only receive events for Syntax units with a {@link Syntax#filterName()} matching this value. An example would be
+     * restricting {@link Declaration}s to a particular property name.
      * 
-     * @return TODO
+     * @return The filter
      */
     String filter() default "";
 
     /**
-     * TODO Description
+     * The order in which the method should be registered, with respect to <em>other methods within the same class</em>.
+     * Note that this does not have an effect on methods that subscribe to {@link Syntax} units within the same
+     * hierarchy. Within the same hierarchy, the more specifically typed subscription will be invoked before more
+     * generally
+     * typed one.
      * 
-     * @return TODO
+     * <p>
+     * Usage of this parameter is intended to ensure that validation subscriptions always run before or after rework
+     * subscriptions within the same class, as appropriate. Or to ensure that rework subscriptions of the exact same
+     * type within a class run in a specific order.
+     * 
+     * @return The ordering priority.
      */
     int priority() default -1;
 }

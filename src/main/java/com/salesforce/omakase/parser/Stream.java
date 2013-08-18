@@ -9,11 +9,9 @@ import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue;
+import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -25,15 +23,11 @@ import com.salesforce.omakase.parser.token.Tokens;
  * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of
  * the current line and column positions.
  * 
- * TODO review
- * 
- * FIXME this (or somewhere) needs to normalize newline chars
- * (http://dev.w3.org/csswg/css-syntax/#preprocessing-the-input-stream)
- * 
  * @author nmcwilliams
  */
 public final class Stream {
     private static final String EXPECTED = "Expected to find '%s'";
+    private static final String DECIMAL = "Expected to find decimal value";
     private static final String EXPECTED_CLOSING = "Expected to find closing '%s'";
     private static final String INVALID_HEX = "Expected a hex color of length 3 or 6, but found '%s'";
 
@@ -65,7 +59,7 @@ public final class Stream {
     private boolean inString = false;
 
     /** snapshots of a current index position and the associated line and column numbers */
-    private final Deque<Snapshot> snapshots = new ArrayDeque<Snapshot>();
+    private Deque<Snapshot> snapshots;
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
@@ -168,6 +162,61 @@ public final class Stream {
     }
 
     /**
+     * Gets the original source.
+     * 
+     * @return The full original source.
+     */
+    public String source() {
+        return source;
+    }
+
+    /**
+     * Gets the remaining text in the source, including the current character. This does not advance the current
+     * position.
+     * 
+     * @return A substring of the source from the current position to the end of the source.
+     */
+    public String remaining() {
+        return source.substring(index);
+    }
+
+    /**
+     * Gets the length of the source.
+     * 
+     * @return The number of characters in the source.
+     */
+    public int length() {
+        return length;
+    }
+
+    /**
+     * Whether we are currently inside of a comment block.
+     * 
+     * @return True if we are in a comment block.
+     */
+    public boolean inComment() {
+        return inComment;
+    }
+
+    /**
+     * Whether we are currently inside of a string.
+     * 
+     * @return True if we are inside of a string.
+     */
+    public boolean inString() {
+        return inString;
+    }
+
+    /**
+     * Gets whether we are at the end of the source.
+     * 
+     * @return True of we are at the end of the source.
+     */
+    public boolean eof() {
+        return index == length;
+    }
+
+    /**
      * Gets the character at the current position.
      * 
      * @return The character at the current position.
@@ -177,7 +226,14 @@ public final class Stream {
     }
 
     /**
-     * Advance to the next character.
+     * Advance to the next character. This will automatically update the current line and column number as well.
+     * 
+     * <p>
+     * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this
+     * preprocessing as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF
+     * then the line/column number reported by this stream (e.g., in error messages) will be incorrect. This seems
+     * acceptable as that information is mostly just useful for development purposes anyway.
+     * (http://dev.w3.org/csswg/css-syntax/#preprocessing-the-input-stream)
      * 
      * @return The next character (i.e., the character at the current position after the result of this call), or null
      *         if at the end of the stream.
@@ -193,6 +249,8 @@ public final class Stream {
         } else {
             column += 1;
         }
+
+        // FIXME update inString
 
         // increment index position
         index += 1;
@@ -236,9 +294,9 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Gets the previous character.
      * 
-     * @return TODO
+     * @return The previous character, or null if we are at the beginning.
      */
     public Character peekPrevious() {
         return (index > 0) ? source.charAt(index - 1) : null;
@@ -251,7 +309,7 @@ public final class Stream {
         if (eof()) return;
 
         // skip characters until the current character is not whitespace
-        while (CharMatcher.WHITESPACE.matches(current())) {
+        while (Tokens.WHITESPACE.matches(current())) {
             next();
         }
     }
@@ -259,11 +317,11 @@ public final class Stream {
     /**
      * Similar to {@link #next()}, this will advance to the next character, <b>but only</b> if the current character
      * matches the given {@link Token}. If the current character does not match then the current index will remain
-     * unchanged.
+     * unchanged. If you don't need the actual value, consider {@link #optionallyPresent(Token)} instead.
      * 
      * @param token
      *            The token to match.
-     * @return True if there was a match, false otherwise.
+     * @return The parsed character, or {@link Optional#absent()} if not matched.
      */
     public Optional<Character> optional(Token token) {
         // if the current character doesn't match then don't advance
@@ -274,11 +332,13 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Same as {@link #optional(Token)}, except it returns the result of {@link Optional#isPresent()}. Basically use
+     * this when you don't care about keeping the actual parsed value (e.g., because it's discarded, you already know
+     * what it is, etc...)
      * 
      * @param token
-     *            TODO
-     * @return TODO
+     *            The token to match.
+     * @return True if there was a match, false otherwise.
      */
     public boolean optionallyPresent(Token token) {
         return optional(token).isPresent();
@@ -292,10 +352,7 @@ public final class Stream {
      *            Ensure that the current token matches this {@link Token} before we advance.
      */
     public void expect(Token token) {
-        if (!token.matches(current())) {
-            String msg = EXPECTED;
-            throw new ParserException(this, String.format(msg, token.description()));
-        }
+        if (!token.matches(current())) throw new ParserException(this, String.format(EXPECTED, token.description()));
         next();
     }
 
@@ -357,15 +414,18 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing
+     * delimiter {@link Token}. The opening token must be present at the current position of this stream or an error
+     * will be thrown. In other words, don't call this until you've checked that the opening token is there, and only if
+     * you expect it to be properly closed.
      * 
      * @param openingToken
-     *            TODO
-     * @param closing
-     *            TODO
-     * @return TODO
+     *            The opening token.
+     * @param closingToken
+     *            The closing token.
+     * @return All content in between the opening and closing tokens (excluding the tokens themselves).
      */
-    public String chompEnclosedValue(Token openingToken, Token closing) {
+    public String chompEnclosedValue(Token openingToken, Token closingToken) {
         expect(openingToken);
 
         int start = index;
@@ -381,7 +441,7 @@ public final class Stream {
                 if (!Tokens.ESCAPE.matches(peekPrevious())) {
                     level++;
                 }
-            } else if (closing.matches(current())) {
+            } else if (closingToken.matches(current())) {
                 if (!Tokens.ESCAPE.matches(peekPrevious())) {
                     level--;
                     if (level == 0) {
@@ -394,69 +454,26 @@ public final class Stream {
 
             next();
         }
-        throw new ParserException(this, String.format(EXPECTED_CLOSING, closing.description()));
+        throw new ParserException(this, String.format(EXPECTED_CLOSING, closingToken.description()));
     }
 
     /**
-     * Gets the original source.
+     * Creates a snapshot of the current index, line, column, and other essential state information.
      * 
-     * @return The full original source.
-     */
-    public String source() {
-        return source;
-    }
-
-    /**
-     * Gets the remaining text in the source, including the current character. This does not advance the current
-     * position.
+     * <p>
+     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that
+     * the content does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. Snapshots
+     * are created on a stack, you can created multiple and rollback one at a time.
      * 
-     * @return A substring of the source from the current position to the end of the source.
-     */
-    public String remaining() {
-        return source.substring(index);
-    }
-
-    /**
-     * Gets the length of the source.
-     * 
-     * @return The number of characters in the source.
-     */
-    public int length() {
-        return length;
-    }
-
-    /**
-     * Whether we are currently inside of a comment block.
-     * 
-     * @return True if we are in a comment block.
-     */
-    public boolean inComment() {
-        return inComment;
-    }
-
-    /**
-     * Whether we are currently inside of a string.
-     * 
-     * @return True if we are inside of a string.
-     */
-    public boolean inString() {
-        return inString;
-    }
-
-    /**
-     * Gets whether we are at the end of the source.
-     * 
-     * @return True of we are at the end of the source.
-     */
-    public boolean eof() {
-        return index == length;
-    }
-
-    /**
-     * TODO Description
-     * 
+     * <p>
+     * This should be used sparingly, as in most cases you can ascertain the necessary information through
+     * {@link #peek()}, {@link #current()} and other methods on this class.
      */
     public void snapshot() {
+        if (snapshots == null) {
+            snapshots = new ArrayDeque<Snapshot>();
+        }
+
         Snapshot snapshot = new Snapshot();
         snapshot.index = index;
         snapshot.line = line;
@@ -467,12 +484,11 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Reverts to the last snapshot.
      * 
      * @return always returns <b>false</b> (convenience for inlining return statements in methods)
-     * 
      * @throws IllegalStateException
-     *             If no snapshot exists.
+     *             If no snapshots exist.
      */
     public boolean rollback() {
         checkState(snapshots.size() > 0, "no snapshots currently exist");
@@ -486,9 +502,9 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Reads an ident token.
      * 
-     * @return TODO
+     * @return The matched token, or {@link Optional#absent()} if not matched.
      */
     public Optional<String> readIdent() {
         if (Tokens.NMSTART.matches(current())) {
@@ -499,9 +515,9 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Reads a number (including optional sign and optional decimal point).
      * 
-     * @return TODO
+     * @return The parsed {@link NumericalValue}, or {@link Optional#absent()} if not matched.
      */
     public Optional<NumericalValue> readNumber() {
         snapshot();
@@ -517,7 +533,11 @@ public final class Stream {
         Integer decimal = null;
         if (optionallyPresent(Tokens.DOT)) {
             String decimalValue = chomp(Tokens.DIGIT);
-            decimal = decimalValue.isEmpty() ? null : Integer.valueOf(decimalValue);
+            if (decimalValue.isEmpty()) {
+                // there must be a number after a decimal
+                throw new ParserException(this, DECIMAL);
+            }
+            decimal = Integer.valueOf(decimalValue);
         }
 
         // integer value or decimal must be present
@@ -526,12 +546,15 @@ public final class Stream {
             return Optional.absent();
         }
 
+        // create the numerical value instance
         NumericalValue value = new NumericalValue(integer == null ? 0 : integer);
 
+        // add the decimal value if applicable
         if (decimal != null) {
             value.decimalValue(decimal);
         }
 
+        // add the sign if applicable
         if (sign.isPresent()) {
             value.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
         }
@@ -544,11 +567,12 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Reads a hex color value.
      * 
-     * @return TODO
+     * @return The hex color value, or {@link Optional#absent()} if not matched.
      */
-    public Optional<String> readHexColor() {
+    public Optional<HexColorValue> readHexColor() {
+        // starts with hash and then a valid hash character
         if (Tokens.HASH.matches(current()) && Tokens.HEX_COLOR.matches(peek())) {
             // skip the has mark
             next();
@@ -556,27 +580,22 @@ public final class Stream {
             // get the color value
             String value = chomp(Tokens.HEX_COLOR);
             if (value.length() != 6 && value.length() != 3) {
-                error(String.format(INVALID_HEX, value));
+                // incorrect length
+                throw new ParserException(this, String.format(INVALID_HEX, value));
             }
-            return Optional.of(value);
+
+            // return the hex color value
+            return Optional.of(new HexColorValue(value));
         }
+
         return Optional.absent();
     }
 
     /**
-     * TODO Description
+     * Reads a function value. This does not validate the arguments inside of the parenthesis, but only that the the
+     * opening and closing parenthesis are matched.
      * 
-     * @param msg
-     * @throws ParserException
-     */
-    private void error(String msg) {
-        throw new ParserException(this, msg);
-    }
-
-    /**
-     * TODO Description
-     * 
-     * @return TODO
+     * @return The function value, or {@link Optional#absent()} if not matched.
      */
     public Optional<FunctionValue> readFunction() {
         snapshot();
@@ -602,7 +621,7 @@ public final class Stream {
         // discard the snapshot
         snapshots.pop();
 
-        // return a new function value instance
+        // return the function value object
         return Optional.of(new FunctionValue(name.get(), args));
     }
 
@@ -611,6 +630,7 @@ public final class Stream {
         return String.format("%s»%s", source.substring(0, index), source.substring(index));
     }
 
+    /** data object */
     private static final class Snapshot {
         int index;
         int line;

@@ -34,16 +34,17 @@ public class Declaration extends AbstractLinkable<Declaration> implements Refina
      * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property
      * value). The property name and value can be further refined or validated by calling {@link #refine()}.
      * 
-     * <p> Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS.
-     * Hence really anything can technically be in there and we can't be sure it is proper formed until
-     * {@link #refine()} has been called.
+     * <p>
+     * Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS. Hence
+     * really anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has
+     * been called.
      * 
      * @param rawPropertyName
      *            The raw property name.
      * @param rawPropertyValue
      *            The raw property value.
      * @param broadcaster
-     *            TODO
+     *            The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, Broadcaster broadcaster) {
         super(rawPropertyName.line(), rawPropertyName.column());
