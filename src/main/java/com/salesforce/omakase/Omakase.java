@@ -1,11 +1,9 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
@@ -23,7 +21,6 @@ import com.salesforce.omakase.plugin.Plugin;
  * 
  * @author nmcwilliams
  */
-@NotThreadSafe
 public final class Omakase {
     /** do not construct */
     private Omakase() {}

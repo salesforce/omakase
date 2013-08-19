@@ -1,9 +1,7 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase.parser.raw;
-
-import javax.annotation.concurrent.Immutable;
 
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -14,7 +12,6 @@ import com.salesforce.omakase.parser.*;
  * 
  * @author nmcwilliams
  */
-@Immutable
 public class StylesheetParser extends AbstractParser {
     private static final String EXTRANEOUS = "Extraneous text found at the end of the source '%s'";
 

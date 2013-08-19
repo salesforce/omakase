@@ -6,8 +6,6 @@ package com.salesforce.omakase.ast;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
@@ -29,7 +27,7 @@ public final class LinkableCollection<T extends Linkable<T>> implements Iterable
      * @param head
      *            The first element in the collection.
      */
-    public LinkableCollection(@Nullable T head) {
+    public LinkableCollection(T head) {
         this.iterator = (head == null) ? Iterators.<T>emptyIterator() : LinkableIterator.create(head);
     }
 

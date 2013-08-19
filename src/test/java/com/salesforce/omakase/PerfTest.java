@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ADD LICENSE
  */
 package com.salesforce.omakase;
@@ -6,11 +6,8 @@ package com.salesforce.omakase;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.phloc.css.ECSSVersion;
-import com.phloc.css.reader.CSSReader;
 import com.salesforce.omakase.Omakase.Request;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -32,9 +29,6 @@ public class PerfTest {
     /** run tests for multiple LOC variations */
     private static final boolean USE_FACTORS = true;
 
-    /** run phloc */
-    private static final boolean PHLOC = false;
-
     /** output statistics */
     private static final boolean CONSOLE = true;
 
@@ -48,7 +42,6 @@ public class PerfTest {
     // END OPTIONS
 
     enum Mode {
-        PHLOC,
         OMAKASE,
         OMAKASE_FULL
     }
@@ -82,7 +75,6 @@ public class PerfTest {
         if (PRIME) {
             print("\nPriming");
             for (int i = 0; i < 150; i++) {
-                if (PHLOC) parse(Mode.PHLOC, original);
                 parse(Mode.OMAKASE, original);
                 parse(Mode.OMAKASE_FULL, original);
             }
@@ -102,23 +94,6 @@ public class PerfTest {
 
             // take an average of 7 runs
             final int runs = 7;
-
-            // phloc
-            if (PHLOC) {
-                List<Long> phlocParseTimes = Lists.newArrayListWithCapacity(runs);
-                for (int i = 0; i < runs; i++) {
-                    long start = System.currentTimeMillis();
-                    parse(Mode.PHLOC, actual);
-                    long end = System.currentTimeMillis();
-                    phlocParseTimes.add(end - start);
-                }
-                long phlocTotal = 0;
-                for (Long time : phlocParseTimes) {
-                    phlocTotal += time;
-                }
-                long phlocParseAvg = phlocTotal / phlocParseTimes.size();
-                print("phloc: " + phlocParseAvg + "ms");
-            }
 
             // omakase thin
             List<Long> omakaseParseTimes = Lists.newArrayListWithCapacity(runs);
@@ -155,9 +130,7 @@ public class PerfTest {
     }
 
     public static void parse(Mode mode, String src) {
-        if (mode == Mode.PHLOC) {
-            CSSReader.readFromString(src, Charsets.UTF_8, ECSSVersion.LATEST);
-        } else if (mode == Mode.OMAKASE) {
+        if (mode == Mode.OMAKASE) {
             Omakase.source(src).process();
         } else if (mode == Mode.OMAKASE_FULL) {
             Request request = Omakase.source(src);
