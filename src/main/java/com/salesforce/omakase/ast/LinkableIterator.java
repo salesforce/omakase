@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-
 /**
  * An iterator over {@link Linkable} objects.
  * 
@@ -69,6 +68,6 @@ public class LinkableIterator<T extends Linkable<T>> implements Iterator<T> {
      * @return The new {@link LinkableIterator} instance.
      */
     public static <T extends Linkable<T>> LinkableIterator<T> create(T head) {
-        return new LinkableIterator<T>(head);
+        return new LinkableIterator<>(head);
     }
 }

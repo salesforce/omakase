@@ -321,8 +321,12 @@ public final class Stream {
         // if the current character doesn't match then don't advance
         if (!token.matches(current())) return Optional.absent();
 
+        Optional<Character> value = Optional.of(current());
+
         // advance to the next character
-        return Optional.of(next());
+        next();
+
+        return value;
     }
 
     /**

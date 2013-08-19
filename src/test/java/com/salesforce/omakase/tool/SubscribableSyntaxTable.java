@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.tool;
 
 import java.util.Collections;
 import java.util.Comparator;

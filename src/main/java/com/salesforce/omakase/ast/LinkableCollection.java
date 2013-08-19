@@ -46,7 +46,7 @@ public final class LinkableCollection<T extends Linkable<T>> implements Iterable
      * @return The new {@link LinkableCollection} instance.
      */
     public static <T extends Linkable<T>> LinkableCollection<T> of(T head) {
-        return new LinkableCollection<T>(head);
+        return new LinkableCollection<>(head);
     }
 
     @Override

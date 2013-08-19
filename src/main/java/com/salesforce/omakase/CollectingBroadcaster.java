@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
@@ -24,7 +25,7 @@ import com.salesforce.omakase.emitter.SubscriptionType;
  * @author nmcwilliams
  */
 public class CollectingBroadcaster implements Broadcaster {
-    private final List<? super Syntax> collected = Lists.newArrayList();
+    private final List<Syntax> collected = Lists.newArrayList();
     private final Broadcaster relay;
 
     /**
@@ -54,6 +55,15 @@ public class CollectingBroadcaster implements Broadcaster {
         if (relay != null) {
             relay.broadcast(type, syntax);
         }
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public List<Syntax> all() {
+        return ImmutableList.copyOf(collected);
     }
 
     /**

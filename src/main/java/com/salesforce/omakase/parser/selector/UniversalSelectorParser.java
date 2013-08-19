@@ -11,7 +11,7 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * Parses {@link UniversalSelector}s.
+ * Parses a {@link UniversalSelector}.
  * 
  * @author nmcwilliams
  */

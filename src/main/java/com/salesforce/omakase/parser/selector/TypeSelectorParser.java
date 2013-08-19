@@ -13,6 +13,9 @@ import com.salesforce.omakase.parser.Stream;
 /**
  * Parses {@link TypeSelector}s.
  * 
+ * @see TypeSelector
+ * @see TypeSelectorParserTest
+ * 
  * @author nmcwilliams
  */
 public class TypeSelectorParser extends AbstractParser {
