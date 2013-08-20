@@ -42,8 +42,8 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
             fillSelector(".-class"));
     }
 
-    @Override
     @Test
+    @Override
     public void matchesExpectedBroadcastCount() {
         List<GenericParseResult> results = parse(
             fillSelector(".class"),
@@ -55,8 +55,8 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         }
     }
 
-    @Override
     @Test
+    @Override
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<String>> results = parse(
             withExpectedResult(fillSelector(".class"), "class"),
@@ -71,8 +71,8 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         }
     }
 
-    @Override
     @Test
+    @Override
     public void expectedStreamPositionOnSuccess() {
         List<ParseResult<Integer>> results = parse(
             withExpectedResult(fillSelector(".class .class2"), 6),

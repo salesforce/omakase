@@ -15,11 +15,11 @@ import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * Represents a CSS selector group.
+ * Represents a CSS selector list. (known as selector group in selectors level 3, selector list in selectors level 4).
  * 
  * <p>
  * A selector group is a list of {@link Selector}s, with each {@link Selector} separated by a comma. Each {@link Rule}
- * has one and only one {@link SelectorGroup}. For example, in
+ * has one and only one {@link SelectorList}. For example, in
  * 
  * <pre>.class #id, #id { ... } </pre>
  * The selector group is
@@ -30,16 +30,16 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 @Description(value = "group of comma-separated selectors", broadcasted = REFINED_SELECTOR)
-public class SelectorGroup extends AbstractSyntax implements Iterable<Selector> {
+public class SelectorList extends AbstractSyntax implements Iterable<Selector> {
     private final Selector head;
 
     /**
      * Creates a new instance with the given {@link Selector} at the beginning.
      * 
      * @param head
-     *            The first {@link Selector} in the {@link SelectorGroup}.
+     *            The first {@link Selector} in the {@link SelectorList}.
      */
-    public SelectorGroup(Selector head) {
+    public SelectorList(Selector head) {
         super(head.line(), head.column());
         this.head = head;
     }

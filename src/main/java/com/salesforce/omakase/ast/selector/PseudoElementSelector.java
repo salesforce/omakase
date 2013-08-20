@@ -5,7 +5,7 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractLinkable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -18,6 +18,8 @@ import com.salesforce.omakase.emitter.Subscribable;
 @Subscribable
 @Description(value = "pseudo element selector segment", broadcasted = REFINED_SELECTOR)
 public class PseudoElementSelector extends AbstractLinkable<SelectorPart> implements SelectorPart {
+    private String name;
+
     /**
      * Constructs a new {@link PseudoElementSelector} selector with the given name.
      * 
@@ -25,9 +27,26 @@ public class PseudoElementSelector extends AbstractLinkable<SelectorPart> implem
      *            The line number.
      * @param column
      *            The column number.
+     * @param name
+     *            Name of the pseudo element.
      */
-    protected PseudoElementSelector(int line, int column) {
+    public PseudoElementSelector(int line, int column, String name) {
         super(line, column);
+        this.name = name;
+    }
+
+    /**
+     * Gets the selector name (e.g., "hover").
+     * 
+     * @return The selector name.
+     */
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String filterName() {
+        return name;
     }
 
     @Override
@@ -52,9 +71,10 @@ public class PseudoElementSelector extends AbstractLinkable<SelectorPart> implem
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .indent()
+            .add("syntax", super.toString())
+            .add("name", name)
             .toString();
     }
 }

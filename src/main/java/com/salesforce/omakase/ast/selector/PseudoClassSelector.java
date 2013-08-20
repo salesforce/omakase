@@ -76,6 +76,7 @@ public class PseudoClassSelector extends AbstractLinkable<SelectorPart> implemen
     @Override
     public String toString() {
         return As.string(this)
+            .indent()
             .add("syntax", super.toString())
             .add("name", name)
             .toString();

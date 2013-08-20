@@ -73,12 +73,12 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link SelectorGroup}.
+     * of type {@link SelectorList}.
      * 
      * @param selectorGroup
-     *            The {@link SelectorGroup} instance.
+     *            The {@link SelectorList} instance.
      */
-    public void selectorGroup(SelectorGroup selectorGroup) {}
+    public void selectorGroup(SelectorList selectorGroup) {}
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units

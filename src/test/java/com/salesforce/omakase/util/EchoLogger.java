@@ -60,7 +60,7 @@ public final class EchoLogger extends BasePlugin {
 
     @Override
     @Subscribe(priority = 7)
-    public void selectorGroup(SelectorGroup selectorGroup) {
+    public void selectorGroup(SelectorList selectorGroup) {
         logger.debug("selectorGroup: {}", selectorGroup);
     }
 

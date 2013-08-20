@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractLinkable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -47,5 +48,13 @@ public class UniversalSelector extends AbstractLinkable<SelectorPart> implements
     @Override
     protected SelectorPart self() {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this)
+            .indent()
+            .add("syntax", super.toString())
+            .toString();
     }
 }

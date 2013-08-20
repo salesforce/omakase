@@ -19,16 +19,17 @@ import com.salesforce.omakase.parser.selector.*;
  * @author nmcwilliams
  */
 public final class ParserFactory {
-    /* parsers */
+    /* general parsers */
     private static final Parser stylesheet = new StylesheetParser();
     private static final Parser atRule = new AtRuleParser();
     private static final Parser rule = new RuleParser();
     private static final Parser statement = atRule.or(rule);
     private static final Parser rawDeclaration = new RawDeclarationParser();
-    private static final Parser selectorGroup = new SelectorGroupParser();
+    private static final Parser selectorList = new SelectorListParser();
     private static final Parser rawSelector = new RawSelectorParser();
-    private static final Parser refinedSelector = new RefinedSelectorParser();
 
+    /** refined selectors */
+    private static final Parser complexSelector = new ComplexSelectorParser();
     private static final Parser combinator = new CombinatorParser();
     private static final Parser classSelector = new ClassSelectorParser();
     private static final Parser idSelector = new IdSelectorParser();
@@ -39,10 +40,13 @@ public final class ParserFactory {
     private static final Parser pseudoElementSelector = new PseudoElementSelectorParser();
     private static final Parser negationSelector = new NegationSelectorParser();
 
-    private static final Parser simpleSelectorSequence = new SimpleSelectorSequenceParser();
-    private static final Parser simpleSelectorStart = typeSelector.or(universalSelector);
-    private static final Parser simpleSelector = idSelector.or(classSelector)
-        .or(attributeSelector).or(pseudoClassSelector).or(negationSelector);
+    private static final Parser simpleSelector = idSelector
+        .or(classSelector)
+        .or(attributeSelector)
+        .or(pseudoClassSelector)
+        .or(negationSelector);
+
+    private static final Parser simpleOrPseudoElement = simpleSelector.or(pseudoElementSelector);
 
     private static final Parser termList = new TermListParser();
 
@@ -91,12 +95,12 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link SelectorGroupParser}.
+     * Gets the {@link SelectorListParser}.
      * 
      * @return The parser instance.
      */
-    public static Parser selectorGroupParser() {
-        return selectorGroup;
+    public static Parser selectorListParser() {
+        return selectorList;
     }
 
     /**
@@ -109,30 +113,12 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link RefinedSelectorParser}.
+     * Gets the {@link ComplexSelectorParser}.
      * 
      * @return The parser instance.
      */
     public static Parser refinedSelectorParser() {
-        return refinedSelector;
-    }
-
-    /**
-     * Gets the {@link SimpleSelectorSequenceParser}.
-     * 
-     * @return The parser instance.
-     */
-    public static Parser simpleSelectorSequenceParser() {
-        return simpleSelectorSequence;
-    }
-
-    /**
-     * Gets a parser to parse the start of a simple selector.
-     * 
-     * @return The parser instance.
-     */
-    public static Parser simpleSelectorStartParser() {
-        return simpleSelectorStart;
+        return complexSelector;
     }
 
     /**
@@ -213,7 +199,7 @@ public final class ParserFactory {
      * 
      * @return The parser instance.
      */
-    public static Parser psuedoElementSelectorParser() {
+    public static Parser pseudoElementSelectorParser() {
         return pseudoElementSelector;
     }
 

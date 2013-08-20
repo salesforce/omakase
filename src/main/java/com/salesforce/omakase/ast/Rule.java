@@ -9,19 +9,19 @@ import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorGroup;
+import com.salesforce.omakase.ast.selector.SelectorList;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
- * Represents a CSS Rule. Each rule has one {@link SelectorGroup}s and one or more {@link Declaration}s.
+ * Represents a CSS Rule. Each rule has one {@link SelectorList}s and one or more {@link Declaration}s.
  * 
  * <p>
  * Note that {@link Rule}s will not be created unless the {@link SyntaxTree} plugin is enabled.
  * 
  * <p>
- * Note that the {@link SelectorGroup} cannot be changed, however you can freely add and remove {@link Selector}s from
+ * Note that the {@link SelectorList} cannot be changed, however you can freely add and remove {@link Selector}s from
  * the group.
  * 
  * @author nmcwilliams
@@ -29,29 +29,29 @@ import com.salesforce.omakase.plugin.standard.SyntaxTree;
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Rule extends AbstractLinkable<Statement> implements Statement {
-    private final SelectorGroup selectorGroup;
+    private final SelectorList selectorGroup;
     private final Declaration declarationHead;
 
     /**
      * Creates a new {@link Rule} instance.
      * 
      * @param selectorGroup
-     *            The {@link SelectorGroup} instance.
+     *            The {@link SelectorList} instance.
      * @param declarationHead
      *            The first {@link Declaration} in the rule.
      */
-    public Rule(SelectorGroup selectorGroup, Declaration declarationHead) {
+    public Rule(SelectorList selectorGroup, Declaration declarationHead) {
         super(selectorGroup.line(), selectorGroup.column());
         this.selectorGroup = selectorGroup;
         this.declarationHead = declarationHead;
     }
 
     /**
-     * Gets the {@link SelectorGroup}.
+     * Gets the {@link SelectorList}.
      * 
-     * @return The {@link SelectorGroup}.
+     * @return The {@link SelectorList}.
      */
-    public SelectorGroup selectorGroup() {
+    public SelectorList selectorGroup() {
         return selectorGroup;
     }
 

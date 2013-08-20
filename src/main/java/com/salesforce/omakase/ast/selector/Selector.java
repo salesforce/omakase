@@ -37,7 +37,7 @@ import com.salesforce.omakase.parser.Stream;
 @Description(broadcasted = AUTOMATIC)
 public class Selector extends AbstractLinkable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
     private static final String EXPECTED = "Expected to find a selector!";
-    private static final String UNRECOGNIZED = "Unable to parse remaining selector content";
+    private static final String UNRECOGNIZED = "Unable to parse remaining selector content (Check that the selector is valid and is allowed here)";
 
     private final Broadcaster broadcaster;
     private final RawSyntax rawContent;
