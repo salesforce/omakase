@@ -9,9 +9,12 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.selector.IdSelectorParser;
 
 /**
  * Represents a CSS ID selector.
+ * 
+ * @see IdSelectorParser
  * 
  * @author nmcwilliams
  */

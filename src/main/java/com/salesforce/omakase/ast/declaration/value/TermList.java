@@ -21,6 +21,11 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
  * example numbers, keywords, functions, hex colors, etc...
  * 
  * <p>
+ * If you need to change the contents of a the {@link TermList}, change the contents of the actual {@link Term} itself.
+ * If you need to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this
+ * one with instead.
+ * 
+ * <p>
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is
  * name now given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
  * 

@@ -23,7 +23,7 @@ public interface Parser {
      * @param stream
      *            The stream to parse.
      * @param broadcaster
-     *            TODO
+     *            The {@link Broadcaster} to receive any events from the parser.
      * 
      * @return true if we parsed <em>something</em> (excluding whitespace), false otherwise. Note that a return value of
      *         true does not indicate that the parsed content was actually valid grammar.

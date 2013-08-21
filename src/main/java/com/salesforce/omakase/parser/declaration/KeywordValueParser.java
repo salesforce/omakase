@@ -11,7 +11,7 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TODO Description
+ * Parses a {@link KeywordValue}.
  * 
  * @author nmcwilliams
  */

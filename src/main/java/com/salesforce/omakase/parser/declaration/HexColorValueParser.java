@@ -4,6 +4,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.HexColorValue;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
@@ -12,12 +13,11 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TODO Description
+ * Parses a {@link HexColorValue}.
  * 
  * @author nmcwilliams
  */
 public class HexColorValueParser extends AbstractParser {
-    private static final String INVALID_HEX = "Expected a hex color of length 3 or 6, but found '%s'";
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -31,10 +31,10 @@ public class HexColorValueParser extends AbstractParser {
 
             // get the color value
             String color = stream.chomp(Tokens.HEX_COLOR);
-            if (color.length() != 6 && color.length() != 3) {
-                // incorrect length
-                throw new ParserException(stream, String.format(INVALID_HEX, color));
-            }
+
+            // TODO move this to a validator
+            // check for a valid length
+            if (color.length() != 6 && color.length() != 3) throw new ParserException(stream, Message.INVALID_HEX, color);
 
             HexColorValue value = new HexColorValue(line, column, color);
 

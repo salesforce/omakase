@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
@@ -75,7 +76,9 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * @return this, for chaining.
      */
     public NumericalValue integerValue(Integer integerValue) {
-        this.integerValue = checkNotNull(integerValue, "integerValue cannot be null");
+        checkNotNull(integerValue, "integerValue cannot be null");
+        checkArgument(integerValue >= 0, "integerValue must be greater than 0 (use #explicitSign for negative values)");
+        this.integerValue = integerValue;
         return this;
     }
 
@@ -96,6 +99,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * @return this, for chaining.
      */
     public NumericalValue decimalValue(Integer decimalValue) {
+        if (decimalValue != null) checkArgument(integerValue >= 0, "decimalValue must be greater than 0");
         this.decimalValue = Optional.fromNullable(decimalValue);
         return this;
     }

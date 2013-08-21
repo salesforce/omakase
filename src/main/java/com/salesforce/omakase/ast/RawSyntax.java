@@ -4,13 +4,18 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.parser.raw.RawSelectorParser;
 
 /**
  * Represents raw, non-validated content. Usually used by {@link Refinable}s.
  * 
+ * @see RawDeclarationParser
+ * @see RawSelectorParser
+ * 
  * @author nmcwilliams
  */
-public class RawSyntax extends AbstractSyntax {
+public final class RawSyntax extends AbstractSyntax {
     private final String content;
 
     /**

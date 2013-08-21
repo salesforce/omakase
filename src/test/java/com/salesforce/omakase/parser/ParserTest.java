@@ -6,49 +6,43 @@ package com.salesforce.omakase.parser;
 import org.junit.Test;
 
 /**
- * TODO Description
+ * Base class for testing parsers.
  * 
  * @author nmcwilliams
  */
 public interface ParserTest {
     /**
-     * TODO Description
-     * 
+     * Tests that true is always returned when parsing is expected to be successful.
      */
     @Test
     public void returnsFalseOnFailure();
 
     /**
-     * TODO Description
-     * 
+     * Tests that false is always returned when parsing is expected to fail.
      */
     @Test
     public void returnsTrueOnSuccess();
 
     /**
-     * TODO Description
-     * 
+     * Tests the number of broadcasted syntax units is exactly as expected.
      */
     @Test
     public void matchesExpectedBroadcastCount();
 
     /**
-     * TODO Description
-     * 
+     * Tests that the content of the broadcasted syntax units is as expected.
      */
     @Test
     public void matchesExpectedBroadcastContent();
 
     /**
-     * TODO Description
-     * 
+     * Tests that the stream's index doesn't change if parsing is not successful.
      */
     @Test
     public void noChangeToStreamOnFailure();
 
     /**
-     * TODO Description
-     * 
+     * Tests that the stream advances to the expected index if parsing is successful.
      */
     @Test
     public void expectedStreamPositionOnSuccess();

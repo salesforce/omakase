@@ -7,16 +7,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TODO Description
+ * Base class for {@link Groupable}s.
  * 
  * @param <T>
- *            TODO
+ *            Same type as the {@link Groupable}.
+ * 
  * @author nmcwilliams
  */
-public abstract class AbstractGroupable<T> extends AbstractSyntax implements Groupable<T> {
-    SyntaxCollection<T> group;
+public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends AbstractSyntax implements Groupable<T> {
+    private SyntaxCollection<T> group;
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -37,14 +39,8 @@ public abstract class AbstractGroupable<T> extends AbstractSyntax implements Gro
      */
     protected abstract T self();
 
-    /**
-     * TODO Description
-     * 
-     * @param group
-     *            TODO
-     * @return TODO
-     */
-    public Groupable<T> group(SyntaxCollection<T> group) {
+    @Override
+    public Groupable<T> parent(SyntaxCollection<T> group) {
         this.group = group;
         return this;
     }
@@ -81,5 +77,4 @@ public abstract class AbstractGroupable<T> extends AbstractSyntax implements Gro
     public boolean isDetached() {
         return group == null;
     }
-
 }

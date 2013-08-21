@@ -5,6 +5,7 @@ package com.salesforce.omakase.parser.selector;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
@@ -24,7 +25,6 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public class IdSelectorParser extends AbstractParser {
-    private static final String MSG = "expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number)";
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -40,11 +40,12 @@ public class IdSelectorParser extends AbstractParser {
 
         // parse the id name.
         Optional<String> name = stream.readIdent();
-        if (!name.isPresent()) throw new ParserException(stream, MSG);
+        if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_ID);
 
         // broadcast the new class selector
         IdSelector selector = new IdSelector(line, column, name.get());
         broadcaster.broadcast(SubscriptionType.CREATED, selector);
         return true;
     }
+
 }

@@ -13,7 +13,7 @@ import com.salesforce.omakase.parser.Stream.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TODO Description
+ * Parses a {@link FunctionValue}.
  * 
  * <p>
  * This does not validate the arguments inside of the parenthesis, but only that the the opening and closing parenthesis

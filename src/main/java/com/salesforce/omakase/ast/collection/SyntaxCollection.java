@@ -13,7 +13,7 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * @author nmcwilliams
  */
-public interface SyntaxCollection<T extends Syntax> extends Iterable<T> {
+public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Iterable<T> {
 
     /**
      * Gets the number of units in the collection.
@@ -57,60 +57,71 @@ public interface SyntaxCollection<T extends Syntax> extends Iterable<T> {
     SyntaxCollection<T> prependAll(Iterable<T> units);
 
     /**
-     * TODO Description
+     * Prepends the given unit before the given existing unit.
      * 
-     * @param existingunit
-     * @param newunit
-     * @return
+     * @param existing
+     *            The unit to prepend.
+     * @param unit
+     *            Prepend this unit before the existing unit.
+     * @return this, for chaining.
+     * @throws IllegalArgumentException
+     *             If existing is not contained within this collection.
      */
-    SyntaxCollection<T> prependBefore(T existingunit, T newunit);
+    SyntaxCollection<T> prependBefore(T existing, T unit) throws IllegalArgumentException;
 
     /**
-     * TODO Description
+     * Appends the given unit to the end of this collection.
      * 
      * @param unit
-     * @return
+     *            The unit to append.
+     * @return this, for chaining.
      */
     SyntaxCollection<T> append(T unit);
 
     /**
-     * TODO Description
+     * Appends all of the given units to the end of this collection.
      * 
      * @param units
-     * @return
+     *            The units to append.
+     * @return this, for chaining.
      */
     SyntaxCollection<T> appendAll(Iterable<T> units);
 
     /**
-     * TODO Description
+     * Appends the given unit after the given existing unit.
      * 
-     * @param existingunit
-     * @param newunit
-     * @return
+     * @param existing
+     *            The unit that already exists in this collection.
+     * @param unit
+     *            The unit to append.
+     * @return this, for chaining.
+     * @throws IllegalArgumentException
+     *             If existing is not contained within this collection.
      */
-    SyntaxCollection<T> appendAfter(T existingunit, T newunit);
+    SyntaxCollection<T> appendAfter(T existing, T unit) throws IllegalArgumentException;
 
     /**
-     * TODO Description
+     * Replaces <b>all</b> existing units with the given units.
      * 
      * @param units
-     * @return
+     *            Replace all existing (if any) units with these.
+     * @return this, for chaining.
      */
     SyntaxCollection<T> replaceExistingWith(Iterable<T> units);
 
     /**
-     * TODO Description
+     * Removes a unit from this collection. If this collection does not contain the given unit nothing will happen.
      * 
      * @param unit
-     * @return
+     *            The unit to remove.
+     * @return this, for chaining.
      */
     SyntaxCollection<T> detach(T unit);
 
     /**
-     * TODO Description
+     * Detaches <b>all</b> units from this collection.
      * 
-     * @return
+     * @return The detached units.
      */
-    SyntaxCollection<T> clear();
-
+    Iterable<T> clear();
 }

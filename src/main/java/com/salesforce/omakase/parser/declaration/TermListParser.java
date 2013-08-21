@@ -13,12 +13,11 @@ import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.*;
 
 /**
- * Parses an {@link TermList}.
+ * Parses a {@link TermList}.
  * 
  * @author nmcwilliams
  */
 public class TermListParser extends AbstractParser {
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();

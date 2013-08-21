@@ -6,7 +6,6 @@ package com.salesforce.omakase.plugin;
 import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
-import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Subscribe;
 
@@ -70,15 +69,6 @@ public class BasePlugin implements Plugin {
      *            The {@link Rule} instance.
      */
     public void rule(Rule rule) {}
-
-    /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
-     * of type {@link SelectorList}.
-     * 
-     * @param selectorGroup
-     *            The {@link SelectorList} instance.
-     */
-    public void selectorGroup(SelectorList selectorGroup) {}
 
     /**
      * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
@@ -198,58 +188,65 @@ public class BasePlugin implements Plugin {
     public void propertyValue(PropertyValue propertyValue) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link Term}.
      * 
      * @param term
-     *            TODO
+     *            The {@link Term} instance.
      */
     public void term(Term term) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link TermList}.
      * 
      * @param termList
-     *            TODO
+     *            The {@link TermList} instance.
      */
     public void termList(TermList termList) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link FunctionValue}.
      * 
      * @param functionValue
-     *            TODO
+     *            The {@link FunctionValue} instance.
      */
     public void functionValue(FunctionValue functionValue) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link HexColorValue}.
      * 
      * @param hexColorValue
-     *            TODO
+     *            The {@link HexColorValue} instance.
      */
     public void hexColorValue(HexColorValue hexColorValue) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link KeywordValue}.
      * 
      * @param keywordValue
-     *            TODO
+     *            The {@link KeywordValue} instance.
      */
     public void keywordValue(KeywordValue keywordValue) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link NumericalValue}.
      * 
      * @param numericalValue
-     *            TODO
+     *            The {@link NumericalValue} instance.
      */
     public void numericalValue(NumericalValue numericalValue) {}
 
     /**
-     * TODO Description
+     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * of type {@link StringValue}.
      * 
      * @param stringValue
-     *            TODO
+     *            The {@link StringValue} instance.
      */
     public void stringValue(StringValue stringValue) {}
 }

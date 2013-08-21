@@ -4,7 +4,9 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.ast.declaration.value.Term;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.parser.declaration.*;
 import com.salesforce.omakase.parser.raw.*;
 import com.salesforce.omakase.parser.selector.*;
@@ -36,17 +38,16 @@ public final class ParserFactory {
     private static final Parser attributeSelector = new AttributeSelectorParser();
     private static final Parser typeSelector = new TypeSelectorParser();
     private static final Parser universalSelector = new UniversalSelectorParser();
-    private static final Parser pseudoClassSelector = new PseudoSelectorParser();
-    private static final Parser pseudoElementSelector = new PseudoElementSelectorParser();
+    private static final Parser pseudoSelector = new PseudoSelectorParser();
     private static final Parser negationSelector = new NegationSelectorParser();
 
-    private static final Parser simpleSelector = idSelector
-        .or(classSelector)
+    private static final Parser repeatableSelector = classSelector
+        .or(idSelector)
         .or(attributeSelector)
-        .or(pseudoClassSelector)
+        .or(pseudoSelector)
         .or(negationSelector);
 
-    private static final Parser simpleOrPseudoElement = simpleSelector.or(pseudoElementSelector);
+    private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
     private static final Parser termList = new TermListParser();
 
@@ -122,13 +123,22 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the parser to parse a {@link SimpleSelector}.
+     * Gets the parser to parse {@link SimpleSelector} (excluding type and universal selectors) or a
+     * {@link PseudoElementSelector}.
      * 
      * @return The parser instance.
      */
-    public static Parser simpleSelectorParser() {
-        // FIXME add pseudo element
-        return simpleSelector;
+    public static Parser repeatableSelector() {
+        return repeatableSelector;
+    }
+
+    /**
+     * Gets the parser to parse a {@link TypeSelector} or a {@link UniversalSelectorParser}.
+     * 
+     * @return The parser instance.
+     */
+    public static Parser typeOrUniversaleSelectorParser() {
+        return typeOrUniversal;
     }
 
     /**
@@ -190,17 +200,8 @@ public final class ParserFactory {
      * 
      * @return The parser instance.
      */
-    public static Parser pseudoClassSelectorParser() {
-        return pseudoClassSelector;
-    }
-
-    /**
-     * Gets the {@link PseudoElementSelectorParser}.
-     * 
-     * @return The parser instance.
-     */
-    public static Parser pseudoElementSelectorParser() {
-        return pseudoElementSelector;
+    public static Parser pseudoSelectorParser() {
+        return pseudoSelector;
     }
 
     /**

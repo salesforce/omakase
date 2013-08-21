@@ -11,7 +11,6 @@ import ch.qos.logback.classic.Level;
 import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
-import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Subscribe;
 import com.salesforce.omakase.plugin.BasePlugin;
@@ -56,12 +55,6 @@ public final class EchoLogger extends BasePlugin {
     @Subscribe(priority = 6)
     public void rule(Rule rule) {
         logger.debug("rule: {}", rule);
-    }
-
-    @Override
-    @Subscribe(priority = 7)
-    public void selectorGroup(SelectorList selectorGroup) {
-        logger.debug("selectorGroup: {}", selectorGroup);
     }
 
     @Override

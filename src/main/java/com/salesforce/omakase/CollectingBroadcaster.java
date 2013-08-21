@@ -58,9 +58,9 @@ public class CollectingBroadcaster implements Broadcaster {
     }
 
     /**
-     * TODO Description
+     * Retrieves all broadcasted events.
      * 
-     * @return TODO
+     * @return All broadcasted events.
      */
     public List<Syntax> all() {
         return ImmutableList.copyOf(collected);

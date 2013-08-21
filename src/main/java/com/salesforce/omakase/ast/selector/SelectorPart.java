@@ -11,7 +11,7 @@ import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * TODO Description
+ * A {@link SimpleSelector}, {@link PseudoElementSelector}, or {@link Combinator}.
  * 
  * @author nmcwilliams
  */
@@ -19,23 +19,23 @@ import com.salesforce.omakase.emitter.Subscribable;
 @Description(value = "parent interface for all selector segments", broadcasted = REFINED_SELECTOR)
 public interface SelectorPart extends Syntax, Groupable<SelectorPart> {
     /**
-     * TODO Description
+     * Gets whether this {@link SelectorPart} is a selector ({@link SimpleSelector} or {@link PseudoElementSelector}).
      * 
-     * @return TODO
+     * @return True if this {@link SelectorPart} is a selector.
      */
     boolean isSelector();
 
     /**
-     * TODO Description
+     * Gets whether this {@link SelectorPart} is a {@link Combinator}.
      * 
-     * @return TODO
+     * @return True if this {@link SelectorPart} is a {@link Combinator}.
      */
     boolean isCombinator();
 
     /**
-     * TODO Description
+     * Gets the {@link SelectorPartType} of this {@link SelectorPart}.
      * 
-     * @return TODO
+     * @return The {@link SelectorPartType}.
      */
     SelectorPartType type();
 }

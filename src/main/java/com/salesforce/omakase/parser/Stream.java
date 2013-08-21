@@ -7,6 +7,7 @@ import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
@@ -22,9 +23,6 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public final class Stream {
-    private static final String EXPECTED = "Expected to find '%s'";
-    private static final String EXPECTED_CLOSING = "Expected to find closing '%s'";
-
     /** the source to process */
     private final String source;
 
@@ -343,13 +341,14 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given
+     * enum (in the declared order) for a matching token.
      * 
      * @param <T>
-     *            TODO
+     *            Type of the enum.
      * @param klass
-     *            TODO
-     * @return TODO
+     *            Enum class.
+     * @return The matching enum instance, or {@link Optional#absent()} if none match.
      */
     public <T extends Enum<T> & TokenEnum<?>> Optional<T> optionalFromEnum(Class<T> klass) {
         for (T constant : klass.getEnumConstants()) {
@@ -366,7 +365,7 @@ public final class Stream {
      *            Ensure that the current token matches this {@link Token} before we advance.
      */
     public void expect(Token token) {
-        if (!token.matches(current())) throw new ParserException(this, String.format(EXPECTED, token.description()));
+        if (!token.matches(current())) throw new ParserException(this, Message.EXPECTED_TO_FIND, token.description());
         next();
     }
 
@@ -468,7 +467,8 @@ public final class Stream {
 
             next();
         }
-        throw new ParserException(this, String.format(EXPECTED_CLOSING, closingToken.description()));
+
+        throw new ParserException(this, Message.EXPECTED_CLOSING, closingToken.description());
     }
 
     /**
@@ -503,11 +503,11 @@ public final class Stream {
     }
 
     /**
-     * TODO Description
+     * Reverts to the state captured within the given snapshot.
      * 
      * @param snapshot
-     *            TODO
-     * @return TODO
+     *            Revert to this snapshot.
+     * @return always returns <b>false</b> (convenience for inlining return statements in methods)
      */
     public boolean rollback(Snapshot snapshot) {
         this.index = snapshot.index;
@@ -538,15 +538,15 @@ public final class Stream {
 
     /** data object */
     public static final class Snapshot {
-        /** TODO */
+        /** the captured index */
         public final int index;
-        /** TODO */
+        /** the line at the captured index */
         public final int line;
-        /** TODO */
+        /** the column at the captured index */
         public final int column;
-        /** TODO */
+        /** whether we are in a string at the captured index */
         public final boolean inString;
-        /** TODO */
+        /** whether we are in a comment at the capture index */
         public final boolean inComment;
 
         private Snapshot(int index, int line, int column, boolean inString, boolean inComment) {

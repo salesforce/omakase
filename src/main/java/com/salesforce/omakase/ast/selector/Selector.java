@@ -9,7 +9,7 @@ import com.salesforce.omakase.*;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.collection.BaseSyntaxCollection;
+import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -22,22 +22,14 @@ import com.salesforce.omakase.parser.Stream;
  * 
  * <p>
  * {@link Selector}s are lists of {@link SelectorPart}s. individual {@link Selector}s are separated by commas. For
- * example, in
- * 
- * <pre>.class, .class #id</pre>
- * there are two selectors,
- * 
- * <pre>.class</pre>
- * and
- * 
- * <pre>.class #id</pre>
+ * example, in <code>.class, .class #id</code> there are two selectors, <code>.class</code> and <code>.class #id</code>.
  * 
  * @author nmcwilliams
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
-    private final SyntaxCollection<SelectorPart> parts = BaseSyntaxCollection.create();
+    private final SyntaxCollection<SelectorPart> parts = StandardSyntaxCollection.create();
     private final Broadcaster broadcaster;
     private final RawSyntax rawContent;
 
@@ -48,7 +40,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
      * @param rawContent
      *            The selector content.
      * @param broadcaster
-     *            TODO
+     *            The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public Selector(RawSyntax rawContent, Broadcaster broadcaster) {
         super(rawContent.line(), rawContent.column());
@@ -80,7 +72,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
             ParserFactory.refinedSelectorParser().parse(stream, collector);
 
             // there should be nothing left
-            if (!stream.eof()) throw new ParserException(stream, Message.UNEXPECTED_CONTENT);
+            if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
 
             // store the parsed selector parts
             parts.appendAll(collector.filter(SelectorPart.class));

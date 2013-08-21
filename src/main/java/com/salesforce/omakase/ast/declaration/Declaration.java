@@ -6,9 +6,7 @@ package com.salesforce.omakase.ast.declaration;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
-import com.salesforce.omakase.Broadcaster;
-import com.salesforce.omakase.CollectingBroadcaster;
+import com.salesforce.omakase.*;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -16,22 +14,27 @@ import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.*;
+import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 
 /**
- * A CSS declaration, comprised of a property and value.
+ * Represents a CSS declaration.
+ * 
+ * @see RawDeclarationParser
+ * @see TermListParser
  * 
  * @author nmcwilliams
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class Declaration extends AbstractGroupable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration {
-    private static final String UNRECOGNIZED = "Unable to parse remaining declaration value";
-    private static final String EXPECTED = "Expected to parse a property value!";
-
     private final Broadcaster broadcaster;
+
+    /* unrefined */
     private final RawSyntax rawPropertyName;
     private final RawSyntax rawPropertyValue;
 
+    /* refined */
     private PropertyName propertyName;
     private PropertyValue propertyValue;
 
@@ -104,11 +107,11 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
             parser.parse(stream, collector);
 
             // there should be nothing left
-            if (!stream.eof()) throw new ParserException(stream, UNRECOGNIZED);
+            if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_VALUE);
 
             // store the parsed value
             Optional<PropertyValue> first = collector.find(PropertyValue.class);
-            if (!first.isPresent()) throw new ParserException(stream, EXPECTED);
+            if (!first.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALUE);
             propertyValue = first.get();
         }
 

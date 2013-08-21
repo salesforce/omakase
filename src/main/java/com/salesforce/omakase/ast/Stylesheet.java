@@ -9,10 +9,11 @@ import java.util.Iterator;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.ast.collection.BaseSyntaxCollection;
+import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
@@ -21,12 +22,14 @@ import com.salesforce.omakase.plugin.standard.SyntaxTree;
  * <p>
  * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
  * 
+ * @see StylesheetParser
+ * 
  * @author nmcwilliams
  */
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
-public final class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
-    private final SyntaxCollection<Statement> statements = BaseSyntaxCollection.create();
+public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
+    private final SyntaxCollection<Statement> statements = StandardSyntaxCollection.create();
 
     /**
      * Constructs a new {@link Stylesheet} instance.

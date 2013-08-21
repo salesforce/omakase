@@ -7,7 +7,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.collection.BaseSyntaxCollection;
+import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -26,8 +26,8 @@ import com.salesforce.omakase.plugin.standard.SyntaxTree;
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Rule extends AbstractGroupable<Statement> implements Statement {
-    private final SyntaxCollection<Selector> selectors = BaseSyntaxCollection.create();
-    private final SyntaxCollection<Declaration> declarations = BaseSyntaxCollection.create();
+    private final SyntaxCollection<Selector> selectors = StandardSyntaxCollection.create();
+    private final SyntaxCollection<Declaration> declarations = StandardSyntaxCollection.create();
 
     /**
      * Creates a new {@link Rule} instance.

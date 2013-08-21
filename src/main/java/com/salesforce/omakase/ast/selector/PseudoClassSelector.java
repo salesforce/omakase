@@ -9,6 +9,7 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
 
 /**
  * Represents a CSS pseudo class selector.
@@ -16,6 +17,8 @@ import com.salesforce.omakase.emitter.Subscribable;
  * <p>
  * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b>
  * considered pseudo classes in this library, but as {@link PseudoElementSelector}s.
+ * 
+ * @see PseudoSelectorParser
  * 
  * @author nmcwilliams
  */

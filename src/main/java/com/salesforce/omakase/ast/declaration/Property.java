@@ -8,9 +8,10 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.tool.PropertyToEnum;
 
 /**
- * Enum of all recognized CSS properties.
+ * Enum of all recognized CSS properties. Generated using {@link PropertyToEnum}.
  * 
  * @author nmcwilliams
  */

@@ -5,6 +5,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.emitter.SubscriptionType;
@@ -13,13 +14,11 @@ import com.salesforce.omakase.parser.Stream.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TODO Description
+ * Parses a {@link NumericalValue}.
  * 
  * @author nmcwilliams
  */
 public class NumericalValueParser extends AbstractParser {
-    private static final String DECIMAL = "Expected to find decimal value";
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         Snapshot snapshot = stream.snapshot();
@@ -37,7 +36,7 @@ public class NumericalValueParser extends AbstractParser {
             String decimalValue = stream.chomp(Tokens.DIGIT);
             if (decimalValue.isEmpty()) {
                 // there must be a number after a decimal
-                throw new ParserException(stream, DECIMAL);
+                throw new ParserException(stream, Message.EXPECTED_DECIMAL);
             }
             decimal = Integer.valueOf(decimalValue);
         }
@@ -68,5 +67,4 @@ public class NumericalValueParser extends AbstractParser {
         broadcaster.broadcast(SubscriptionType.CREATED, value);
         return true;
     }
-
 }

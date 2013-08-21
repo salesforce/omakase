@@ -32,11 +32,11 @@ final class AnnotationScanner {
         });
 
     /**
-     * TODO Description
+     * Create {@link Subscription} objects for each subscribed event on the given class.
      * 
      * @param subscriber
-     *            TODO
-     * @return TODO
+     *            The class with the subscription methods.
+     * @return A multimap of syntax object (event) to subscription object.
      */
     public Multimap<Class<?>, Subscription> scan(Object subscriber) {
         // linked multimap because insertion order is important

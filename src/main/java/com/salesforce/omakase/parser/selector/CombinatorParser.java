@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.parser.selector;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.CombinatorType;
@@ -33,29 +34,20 @@ public class CombinatorParser extends AbstractParser {
             stream.skipWhitepace();
         }
 
-        CombinatorType type = null;
-
-        // try parsing the other combinator symbols
-        if (stream.optionallyPresent(Tokens.PLUS)) {
-            type = CombinatorType.ADJACENT_SIBLING;
-        } else if (stream.optionallyPresent(Tokens.GREATER_THAN)) {
-            type = CombinatorType.CHILD;
-        } else if (stream.optionallyPresent(Tokens.TILDE)) {
-            type = CombinatorType.GENERAL_SIBLING;
-        }
+        Optional<CombinatorType> type = stream.optionalFromEnum(CombinatorType.class);
 
         // if no other combinator symbols are present, and we parsed at least one space earlier
         // then it's a descendant combinator
-        if (type == null && mightBeDescendant) {
-            type = CombinatorType.DESCENDANT;
+        if (!type.isPresent() && mightBeDescendant) {
+            type = Optional.of(CombinatorType.DESCENDANT);
         }
 
-        if (type != null) {
+        if (type.isPresent()) {
             // if we have parsed a combinator then we must skip past all subsequent whitespace.
             stream.skipWhitepace();
 
             // create and broadcast the combinator
-            Combinator combinator = new Combinator(line, column, type);
+            Combinator combinator = new Combinator(line, column, type.get());
             broadcaster.broadcast(SubscriptionType.CREATED, combinator);
             return true;
         }

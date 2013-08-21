@@ -6,6 +6,7 @@ package com.salesforce.omakase.parser.token;
 import static com.google.common.base.CharMatcher.*;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Predicates;
 
 /**
  * List of {@link Token}s.
@@ -96,7 +97,10 @@ public enum Tokens implements Token {
 
     /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
     NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')),
-            "valid identifier character")
+            "valid identifier character"),
+
+    /** a token that never matches */
+    NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches")
 
     ;
 

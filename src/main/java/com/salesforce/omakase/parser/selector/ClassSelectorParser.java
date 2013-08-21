@@ -15,7 +15,6 @@ import com.salesforce.omakase.parser.token.Tokens;
 /**
  * Parses a {@link ClassSelector}.
  * 
- * @see ClassSelector
  * @see ClassSelectorParserTest
  * 
  * @author nmcwilliams
