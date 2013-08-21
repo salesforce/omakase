@@ -6,6 +6,7 @@ package com.salesforce.omakase.ast.declaration.value;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -54,5 +55,12 @@ public class StringValue extends AbstractSyntax implements Term {
      */
     public String content() {
         return content;
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this)
+            .add("content", content)
+            .toString();
     }
 }

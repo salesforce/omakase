@@ -13,7 +13,6 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorList;
 import com.salesforce.omakase.emitter.Subscribe;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.plugin.DependentPlugin;
@@ -23,27 +22,25 @@ import com.salesforce.omakase.plugin.DependentPlugin;
  * 
  * @author nmcwilliams
  */
-public class SyntaxTree implements DependentPlugin {
+public final class SyntaxTree implements DependentPlugin {
     private Broadcaster broadcaster;
     private State state;
 
     private Stylesheet currentStylesheet;
     private Statement currentStatement;
     private Rule currentRule;
-    private SelectorList currentSelectorList;
-    private Selector currentSelector;
-    private Declaration currentDeclaration;
 
     private enum State {
         ROOT_LEVEL,
-        INSIDE_RULE,
-        INSIDE_SELECTOR_GROUP
+        INSIDE_SELECTOR_GROUP,
+        INSIDE_DECLARATION_BLOCK,
+        FROZEN
     }
 
     @Override
     public void before(Context context) {
         broadcaster = context;
-        state = State.ROOT_LEVEL;
+        startStylesheet();
     }
 
     @Override
@@ -68,21 +65,16 @@ public class SyntaxTree implements DependentPlugin {
      */
     @Subscribe
     public void startSelector(Selector selector) {
-        switch (state) {
-        case ROOT_LEVEL:
-            startSelectorList(selector);
-            break;
-        case INSIDE_RULE:
+        checkState(state != State.FROZEN, "syntax tree cannot be modified directly.");
+
+        if (state == State.ROOT_LEVEL) {
+            startRule(selector.line(), selector.column());
+        } else if (state == State.INSIDE_DECLARATION_BLOCK) {
             endRule();
-            startSelectorList(selector);
-            break;
-        case INSIDE_SELECTOR_GROUP:
-            checkState(currentSelector != null, "currentSelector not set");
-            currentSelector.append(selector);
-            break;
+            startRule(selector.line(), selector.column());
         }
 
-        currentSelector = selector;
+        currentRule.selectors().append(selector);
     }
 
     /**
@@ -93,24 +85,15 @@ public class SyntaxTree implements DependentPlugin {
      */
     @Subscribe
     public void startDeclaration(Declaration declaration) {
-        switch (state) {
-        case ROOT_LEVEL:
-            throw new IllegalStateException("cannot start a declaration at the root level");
-        case INSIDE_RULE:
-            currentDeclaration.append(declaration);
-            break;
-        case INSIDE_SELECTOR_GROUP:
-            startRule(declaration);
-            break;
-        }
+        checkState(state != State.FROZEN, "syntax tree cannot be modified directly.");
+        checkState(currentRule != null, "cannot add a declaration without a rule");
 
-        currentDeclaration = declaration;
+        currentRule.declarations().append(declaration);
+        state = State.INSIDE_DECLARATION_BLOCK;
     }
 
-    private void startStylesheet(Statement firstStatement) {
-        checkState(currentStylesheet == null, "previous stylesheet not ended");
-
-        currentStylesheet = new Stylesheet(firstStatement);
+    private void startStylesheet() {
+        currentStylesheet = new Stylesheet();
         state = State.ROOT_LEVEL;
     }
 
@@ -123,17 +106,15 @@ public class SyntaxTree implements DependentPlugin {
         }
 
         broadcaster.broadcast(SubscriptionType.CREATED, currentStylesheet);
-        state = State.ROOT_LEVEL;
+        state = State.FROZEN;
     }
 
-    private void startRule(Declaration firstDeclaration) {
+    private void startRule(int line, int column) {
         checkState(currentRule == null, "previous rule not ended");
-        checkState(currentSelectorList != null, "cannot start a rule without selectors");
 
-        currentRule = new Rule(currentSelectorList, firstDeclaration);
-        endSelectorList();
+        currentRule = new Rule(line, column);
         startStatement(currentRule);
-        state = State.INSIDE_RULE;
+        state = State.INSIDE_SELECTOR_GROUP;
     }
 
     private void endRule() {
@@ -145,36 +126,14 @@ public class SyntaxTree implements DependentPlugin {
     }
 
     private void startStatement(Statement statement) {
-        if (currentStylesheet == null) {
-            startStylesheet(statement);
-        }
-
-        if (currentStatement != null) {
-            currentStatement.append(statement);
-        }
-
         currentStatement = statement;
     }
 
     private void endStatement() {
         checkState(currentStatement != null, "currentStatement not set");
-
+        currentStylesheet.append(currentStatement);
         broadcaster.broadcast(SubscriptionType.CREATED, currentStatement);
-    }
-
-    private void startSelectorList(Selector firstSelector) {
-        checkState(currentSelectorList == null, "previous selectorList not ended");
-        checkState(state == State.ROOT_LEVEL, "cannot start selector group unless in root state");
-
-        currentSelectorList = new SelectorList(firstSelector);
-        state = State.INSIDE_SELECTOR_GROUP;
-    }
-
-    private void endSelectorList() {
-        checkState(currentSelectorList != null, "currentSelectorList not set");
-        broadcaster.broadcast(SubscriptionType.CREATED, currentSelectorList);
-        currentSelectorList = null;
-        state = State.ROOT_LEVEL;
+        currentStatement = null;
     }
 
     @Override

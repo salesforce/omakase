@@ -33,14 +33,9 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
 
     /**
      * Constructs a new {@link Stylesheet} instance.
-     * 
-     * @param line
-     *            The line number.
-     * @param column
-     *            The column number.
      */
-    public Stylesheet(int line, int column) {
-        super(line, column);
+    public Stylesheet() {
+        super(0, 0);
     }
 
     /**

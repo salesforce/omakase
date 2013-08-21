@@ -21,11 +21,11 @@ public class Debug {
         EchoLogger logger = new EchoLogger();
         SyntaxTree tree = new SyntaxTree();
         AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
-        Omakase.source(srca).request(tree, autoRefiner, logger).process();
+        Omakase.source(src3).request(tree, autoRefiner, logger).process();
         System.out.println(tree.toString());
     }
 
-    public static final String srca = "#id p::before{ padding: 3px; color: red; margin: 10px 5px; }";
+    public static final String src0 = "#id p::before{ padding: 3px; color: red; margin: 10px 5px; }";
     public static final String src1 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; }";
     public static final String src2 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; background-color: #fffeee; -moz-border-radius: 3px 4px 5px 6px; }";
 

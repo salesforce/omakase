@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
@@ -75,6 +76,7 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     public SyntaxCollection<T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
         list.add(unit);
+        unit.parent(this);
         return this;
     }
 
@@ -125,6 +127,14 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         }
 
         return detached;
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this)
+            .indent()
+            .add("items", list)
+            .toString();
     }
 
     /**
