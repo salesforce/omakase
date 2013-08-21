@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
@@ -18,7 +18,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 @Description(value = "individual function value", broadcasted = REFINED_DECLARATION)
-public class FunctionValue extends AbstractSyntax implements Term {
+public class FunctionValue extends AbstractGroupable<TermListMember> implements Term {
     private String name;
     private String args;
 
@@ -88,5 +88,10 @@ public class FunctionValue extends AbstractSyntax implements Term {
             .add("name", name)
             .add("args", args)
             .toString();
+    }
+
+    @Override
+    protected TermListMember self() {
+        return this;
     }
 }

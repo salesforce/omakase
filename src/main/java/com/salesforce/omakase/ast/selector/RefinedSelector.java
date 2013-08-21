@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.ast.LinkableCollection;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 
 /**
  * A refined {@link Selector}, with the selector's individual parts fully parsed.
@@ -17,5 +17,5 @@ public interface RefinedSelector extends Syntax {
      * 
      * @return The list of {@link SelectorPart} members.
      */
-    LinkableCollection<SelectorPart> parts();
+    SyntaxCollection<SelectorPart> parts();
 }

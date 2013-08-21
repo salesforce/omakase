@@ -5,80 +5,58 @@ package com.salesforce.omakase.ast;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
-import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.collection.AbstractGroupable;
+import com.salesforce.omakase.ast.collection.BaseSyntaxCollection;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorList;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
- * Represents a CSS Rule. Each rule has one {@link SelectorList}s and one or more {@link Declaration}s.
+ * Represents a CSS Rule.
  * 
  * <p>
  * Note that {@link Rule}s will not be created unless the {@link SyntaxTree} plugin is enabled.
- * 
- * <p>
- * Note that the {@link SelectorList} cannot be changed, however you can freely add and remove {@link Selector}s from
- * the group.
  * 
  * @author nmcwilliams
  */
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
-public class Rule extends AbstractLinkable<Statement> implements Statement {
-    private final SelectorList selectorGroup;
-    private final Declaration declarationHead;
+public class Rule extends AbstractGroupable<Statement> implements Statement {
+    private final SyntaxCollection<Selector> selectors = BaseSyntaxCollection.create();
+    private final SyntaxCollection<Declaration> declarations = BaseSyntaxCollection.create();
 
     /**
      * Creates a new {@link Rule} instance.
      * 
-     * @param selectorGroup
-     *            The {@link SelectorList} instance.
-     * @param declarationHead
-     *            The first {@link Declaration} in the rule.
+     * @param line
+     *            The line number.
+     * @param column
+     *            The column number.
      */
-    public Rule(SelectorList selectorGroup, Declaration declarationHead) {
-        super(selectorGroup.line(), selectorGroup.column());
-        this.selectorGroup = selectorGroup;
-        this.declarationHead = declarationHead;
+    public Rule(int line, int column) {
+        super(line, column);
     }
 
     /**
-     * Gets the {@link SelectorList}.
+     * Gets the collection of selectors for this {@link Rule}.
      * 
-     * @return The {@link SelectorList}.
+     * @return The selectors.
      */
-    public SelectorList selectorGroup() {
-        return selectorGroup;
+    public SyntaxCollection<Selector> selectors() {
+        return selectors;
     }
 
     /**
-     * Gets the {@link Declaration}s. Note that moving forward and backwards from a specific {@link Declaration}
-     * instance is generally more preferred.
+     * Gets the collection of declarations for this {@link Rule}.
      * 
-     * @return A {@link LinkableCollection} of the {@link Declaration}s.
+     * @return The declarations.
      */
-    public LinkableCollection<Declaration> declarations() {
-        return LinkableCollection.of(declarationHead);
-    }
-
-    /**
-     * TODO Description
-     * 
-     * <p>
-     * Avoid if possible, as this method is less efficient. Prefer instead to append the declaration directly to a
-     * specific instance of an existing one.
-     * 
-     * @param declaration
-     *            TODO
-     * @return this, for chaining.
-     */
-    public Rule appendDeclaration(Declaration declaration) {
-        Iterables.getLast(declarations()).append(declaration);
-        return this;
+    public SyntaxCollection<Declaration> declarations() {
+        return declarations;
     }
 
     @Override
@@ -91,8 +69,8 @@ public class Rule extends AbstractLinkable<Statement> implements Statement {
         return As.string(this)
             .indent()
             .add("syntax", super.toString())
-            .add("selectorGroup", selectorGroup)
-            .add("declarations", declarations())
+            .add("selectors", selectors)
+            .add("declarations", declarations)
             .toString();
     }
 }

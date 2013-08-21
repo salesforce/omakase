@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.OmakaseException;
 
 /**
@@ -12,6 +13,10 @@ import com.salesforce.omakase.OmakaseException;
  */
 public class ParserException extends OmakaseException {
     private static final long serialVersionUID = -8952238331167900360L;
+
+    public ParserException(Stream stream, Message msg) {
+        this(stream, msg.message());
+    }
 
     /**
      * Construct a new instance of a {@link ParserException}.

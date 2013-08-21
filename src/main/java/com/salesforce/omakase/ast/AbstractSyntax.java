@@ -15,7 +15,6 @@ import com.salesforce.omakase.As;
  * @author nmcwilliams
  */
 public abstract class AbstractSyntax implements Syntax {
-
     private final int line;
     private final int column;
     private List<String> comments;

@@ -16,6 +16,8 @@ public class AttributeSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
+        // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+
         // TODO Auto-generated method stub
         return false;
     }

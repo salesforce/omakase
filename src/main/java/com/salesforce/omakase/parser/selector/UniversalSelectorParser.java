@@ -19,6 +19,8 @@ public class UniversalSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
+        // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+
         // gather the line and column before advancing the stream
         int line = stream.line();
         int column = stream.column();

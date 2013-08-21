@@ -5,11 +5,12 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
-import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
-import com.salesforce.omakase.Broadcaster;
-import com.salesforce.omakase.CollectingBroadcaster;
-import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.*;
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.collection.AbstractGroupable;
+import com.salesforce.omakase.ast.collection.BaseSyntaxCollection;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
@@ -35,13 +36,10 @@ import com.salesforce.omakase.parser.Stream;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Selector extends AbstractLinkable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
-    private static final String EXPECTED = "Expected to find a selector!";
-    private static final String UNRECOGNIZED = "Unable to parse remaining selector content (Check that the selector is valid and is allowed here)";
-
+public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
+    private final SyntaxCollection<SelectorPart> parts = BaseSyntaxCollection.create();
     private final Broadcaster broadcaster;
     private final RawSyntax rawContent;
-    private SelectorPart head;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to
@@ -68,13 +66,13 @@ public class Selector extends AbstractLinkable<Selector> implements Refinable<Re
     }
 
     @Override
-    public LinkableCollection<SelectorPart> parts() {
-        return LinkableCollection.of(head);
+    public SyntaxCollection<SelectorPart> parts() {
+        return parts;
     }
 
     @Override
     public RefinedSelector refine() {
-        if (head == null) {
+        if (parts.isEmpty()) {
             CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
             Stream stream = new Stream(rawContent.content(), line(), column());
 
@@ -82,12 +80,10 @@ public class Selector extends AbstractLinkable<Selector> implements Refinable<Re
             ParserFactory.refinedSelectorParser().parse(stream, collector);
 
             // there should be nothing left
-            if (!stream.eof()) throw new ParserException(stream, UNRECOGNIZED);
+            if (!stream.eof()) throw new ParserException(stream, Message.UNEXPECTED_CONTENT);
 
             // store the parsed selector parts
-            Optional<SelectorPart> first = collector.find(SelectorPart.class);
-            if (!first.isPresent()) throw new ParserException(stream, EXPECTED);
-            head = first.get();
+            parts.appendAll(collector.filter(SelectorPart.class));
         }
 
         return this;

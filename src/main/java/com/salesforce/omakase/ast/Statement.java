@@ -5,12 +5,13 @@ package com.salesforce.omakase.ast;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
+import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.standard.SyntaxTree;
 
 /**
- * A top-level {@link Syntax} unit, for example a {@link Rule} or AtRule.
+ * A top-level {@link Syntax} unit, for example a {@link Rule} or {@link AtRule}.
  * 
  * <p>
  * Note that {@link Statement}s are not be created unless the {@link SyntaxTree} plugin is enabled.
@@ -19,5 +20,5 @@ import com.salesforce.omakase.plugin.standard.SyntaxTree;
  */
 @Subscribable
 @Description(value = "rule or at-rule", broadcasted = SYNTAX_TREE)
-public interface Statement extends Syntax, Linkable<Statement> {
+public interface Statement extends Syntax, Groupable<Statement> {
 }

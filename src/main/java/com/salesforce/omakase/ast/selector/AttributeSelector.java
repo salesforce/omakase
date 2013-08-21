@@ -6,7 +6,7 @@ package com.salesforce.omakase.ast.selector;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import com.google.common.base.Objects;
-import com.salesforce.omakase.ast.AbstractLinkable;
+import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
@@ -17,7 +17,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 @Description(value = "attribute selector segment", broadcasted = REFINED_SELECTOR)
-public class AttributeSelector extends AbstractLinkable<SelectorPart> implements SimpleSelector {
+public class AttributeSelector extends AbstractGroupable<SelectorPart> implements SimpleSelector {
     /**
      * Creates a new instance with the given line and column numbers.
      * 

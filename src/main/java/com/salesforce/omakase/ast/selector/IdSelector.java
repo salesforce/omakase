@@ -6,7 +6,7 @@ package com.salesforce.omakase.ast.selector;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.ast.AbstractLinkable;
+import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
@@ -17,7 +17,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 @Description(value = "id selector segment", broadcasted = REFINED_SELECTOR)
-public class IdSelector extends AbstractLinkable<SelectorPart> implements SimpleSelector {
+public class IdSelector extends AbstractGroupable<SelectorPart> implements SimpleSelector {
     private String name;
 
     /**

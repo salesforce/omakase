@@ -25,7 +25,7 @@ public final class ParserFactory {
     private static final Parser rule = new RuleParser();
     private static final Parser statement = atRule.or(rule);
     private static final Parser rawDeclaration = new RawDeclarationParser();
-    private static final Parser selectorList = new SelectorListParser();
+    private static final Parser selectorList = new SelectorGroupParser();
     private static final Parser rawSelector = new RawSelectorParser();
 
     /** refined selectors */
@@ -36,7 +36,7 @@ public final class ParserFactory {
     private static final Parser attributeSelector = new AttributeSelectorParser();
     private static final Parser typeSelector = new TypeSelectorParser();
     private static final Parser universalSelector = new UniversalSelectorParser();
-    private static final Parser pseudoClassSelector = new PseudoClassSelectorParser();
+    private static final Parser pseudoClassSelector = new PseudoSelectorParser();
     private static final Parser pseudoElementSelector = new PseudoElementSelectorParser();
     private static final Parser negationSelector = new NegationSelectorParser();
 
@@ -95,7 +95,7 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link SelectorListParser}.
+     * Gets the {@link SelectorGroupParser}.
      * 
      * @return The parser instance.
      */
@@ -186,7 +186,7 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link PseudoClassSelectorParser}.
+     * Gets the {@link PseudoSelectorParser}.
      * 
      * @return The parser instance.
      */

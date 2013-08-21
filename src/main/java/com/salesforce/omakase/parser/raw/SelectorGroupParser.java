@@ -4,17 +4,16 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Broadcaster;
-import com.salesforce.omakase.ast.selector.SelectorList;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * Parses a {@link SelectorList}.
+ * Parses a group of comma-separated selectors.
  * 
  * @author nmcwilliams
  */
-public class SelectorListParser extends AbstractParser {
+public class SelectorGroupParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();

@@ -33,6 +33,7 @@ public class OmakaseException extends RuntimeException {
         super(format(message), cause);
     }
 
+    /** formatting for every error message */
     private static String format(String message) {
         return String.format("Omakase CSS Parser: %s", message);
     }
