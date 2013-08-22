@@ -68,7 +68,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
             .add("selectors", selectors)
             .add("declarations", declarations)
             .toString();

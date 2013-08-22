@@ -6,7 +6,11 @@ package com.salesforce.omakase.parser;
 import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
 
+import java.util.List;
+
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.Token;
@@ -44,14 +48,20 @@ public final class Stream {
     /** column from the original source from which this sub-stream was derived */
     private final int anchorColumn;
 
-    /** if we are inside of a comment */
-    private boolean inComment = false;
-
     /** if we are inside of a string */
     private boolean inString = false;
 
+    /** if we are inside of a comment */
+    private boolean inComment = false;
+
+    /** whether comments are allowed at the current position */
+    private boolean commentsAllowed = true;
+
     /** snapshot of a previous index position and the associated line and column numbers */
     private Snapshot snapshot;
+
+    /** queue of encountered CSS comments */
+    private List<String> comments;
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
@@ -91,6 +101,9 @@ public final class Stream {
         this.length = source.length();
         this.anchorLine = anchorLine;
         this.anchorColumn = anchorColumn;
+
+        // collect any comments at the beginning
+        collectComments();
     }
 
     /**
@@ -182,15 +195,6 @@ public final class Stream {
     }
 
     /**
-     * Whether we are currently inside of a comment block.
-     * 
-     * @return True if we are in a comment block.
-     */
-    public boolean inComment() {
-        return inComment;
-    }
-
-    /**
      * Whether we are currently inside of a string.
      * 
      * @return True if we are inside of a string.
@@ -257,6 +261,11 @@ public final class Stream {
 
         // increment index position
         index += 1;
+
+        // collect comments
+        if (!inComment) {
+            collectComments();
+        }
 
         // return the current character
         return eof() ? null : current();
@@ -502,6 +511,99 @@ public final class Stream {
     }
 
     /**
+     * Collects all CSS comments into the queue.
+     */
+    private void collectComments() {
+        if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peek())) {
+            // check if comments are allowed at this location
+            if (!commentsAllowed) throw new ParserException(this, Message.COMMENTS_NOT_ALLOWED);
+
+            // setting true prevents us from checking for more comments on every #next() call while
+            // inside of this method
+            inComment = true;
+
+            // save the current position so we can grab the comment contents later
+            int start = index;
+
+            // skip the opening "/*" part
+            forward(2);
+
+            // continue until we reach the end of the comment
+            while (inComment) {
+                if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peekPrevious())) {
+                    inComment = false;
+
+                    // grab the comment contents
+                    String comment = source.substring(start + 2, index - 1);
+
+                    // delayed (re)creation of the comment queue
+                    if (comments == null) {
+                        comments = Lists.newArrayListWithExpectedSize(2);
+                    }
+                    comments.add(comment);
+                } else {
+                    if (eof()) throw new ParserException(this, Message.MISSING_COMMENT_CLOSE);
+                    next();
+                }
+            }
+
+            // skip the closing slash. Doing it here because there may be a comment immediately after.
+            next();
+        }
+    }
+
+    /**
+     * Returns the current queue of CSS comments.
+     * 
+     * <p>
+     * CSS comments are automatically read and queued from the source. After calling this method, the queue will be
+     * emptied.
+     * 
+     * @return The current queue of CSS comments.
+     */
+    public Iterable<String> flushComments() {
+        // gather the comments from the queue
+        Iterable<String> flushed = (comments == null) ? ImmutableList.<String>of() : comments;
+
+        // reset the queue
+        comments = null;
+
+        // return the previously queued comments
+        return flushed;
+    }
+
+    /**
+     * Causes an exception to be thrown if any comments are encountered in the source, until {@link #enableComments()}
+     * is called. This also flushes any comments currently in the queue.
+     * 
+     * <p>
+     * This behavior is not part of the official CSS spec, as the spec allows comments just about anywhere, however in
+     * practice there are places where comments should never be placed. This method should be used in situations where
+     * the removal of a comment would change the CSS source. For example, in
+     * 
+     * <pre>margin: 1px/*abc*&#47;1px;</pre>
+     * 
+     * after removing the comment it would be
+     * 
+     * <pre>margin:1px1px;</pre>
+     * 
+     * In order to prevent this situation, the parser should call {@link #rejectComments()} before parsing and
+     * {@link #enableComments()} after it is done. A less restrictive enforcement would be to check that a term operator
+     * or selector combinator is directly before or after the comment.
+     */
+    public void rejectComments() {
+        flushComments();
+        commentsAllowed = false;
+    }
+
+    /**
+     * Allows comments to be encountered and queued.
+     */
+    public void enableComments() {
+        commentsAllowed = true;
+    }
+
+    /**
      * Creates a snapshot of the current index, line, column, and other essential state information.
      * 
      * <p>
@@ -516,7 +618,7 @@ public final class Stream {
      * @return The created snapshot.
      */
     public Snapshot snapshot() {
-        snapshot = new Snapshot(index, line, column, inString, inComment);
+        snapshot = new Snapshot(index, line, column, inString);
         return snapshot;
     }
 
@@ -544,7 +646,6 @@ public final class Stream {
         this.line = snapshot.line;
         this.column = snapshot.column;
         this.inString = snapshot.inString;
-        this.inComment = snapshot.inComment;
         return false;
     }
 
@@ -576,15 +677,12 @@ public final class Stream {
         public final int column;
         /** whether we are in a string at the captured index */
         public final boolean inString;
-        /** whether we are in a comment at the capture index */
-        public final boolean inComment;
 
-        private Snapshot(int index, int line, int column, boolean inString, boolean inComment) {
+        private Snapshot(int index, int line, int column, boolean inString) {
             this.index = index;
             this.line = line;
             this.column = column;
             this.inString = inString;
-            this.inComment = inComment;
         }
     }
 }

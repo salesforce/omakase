@@ -39,9 +39,12 @@ public class RawDeclarationParser extends AbstractParser {
         content = stream.until(tokenFactory().declarationEnd());
         RawSyntax value = new RawSyntax(line, column, content.trim());
 
-        // notifier listeners of new declaration
-        broadcaster.broadcast(SubscriptionType.CREATED, new Declaration(property, value, broadcaster));
+        // create the new declaration and associate comments
+        Declaration declaration = new Declaration(property, value, broadcaster);
+        declaration.comments(stream.flushComments());
 
+        // notifier listeners of new declaration
+        broadcaster.broadcast(SubscriptionType.CREATED, declaration);
         return true;
     }
 }

@@ -3,10 +3,6 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 
 /**
@@ -17,7 +13,6 @@ import com.salesforce.omakase.As;
 public abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
-    private List<String> comments;
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -48,31 +43,10 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public Syntax comment(String comment) {
-        if (comments == null) {
-            comments = Lists.newArrayList();
-        }
-        comments.add(comment);
-        return this;
-    }
-
-    @Override
-    public List<String> comments() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<String> ownComments() {
-        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
-    }
-
-    @Override
     public String toString() {
-        return As.stringNamed("AbstractSyntax")
+        return As.stringNamed("")
             .add("line", line)
             .add("column", column)
-            .add("comments", comments())
             .toString();
     }
 }

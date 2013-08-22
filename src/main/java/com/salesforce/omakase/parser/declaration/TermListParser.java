@@ -21,6 +21,7 @@ public class TermListParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
+        stream.rejectComments();
 
         // grab the line and column number before parsing anything
         int line = stream.line();
@@ -65,6 +66,9 @@ public class TermListParser extends AbstractParser {
 
         // if any term was parsed then broadcast the term list
         if (termList == null) return false;
+
+        // allow comments again
+        stream.enableComments();
 
         // broadcast the new term list
         broadcaster.broadcast(SubscriptionType.CREATED, termList);

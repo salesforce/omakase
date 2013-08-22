@@ -5,8 +5,14 @@ package com.salesforce.omakase.ast.declaration;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
+import java.util.List;
+
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.*;
+import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -27,8 +33,10 @@ import com.salesforce.omakase.parser.raw.RawDeclarationParser;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Declaration extends AbstractGroupable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration {
+public class Declaration extends AbstractGroupable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration,
+        Commentable {
     private final Broadcaster broadcaster;
+    private List<String> comments;
 
     /* unrefined */
     private final RawSyntax rawPropertyName;
@@ -119,6 +127,20 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     @Override
+    public Declaration comments(Iterable<String> commentsToAdd) {
+        if (comments == null) {
+            comments = Lists.newArrayList();
+        }
+        Iterables.addAll(comments, commentsToAdd);
+        return this;
+    }
+
+    @Override
+    public List<String> comments() {
+        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
+    }
+
+    @Override
     protected Declaration self() {
         return this;
     }
@@ -127,7 +149,8 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
+            .add("comments", comments)
             .add("rawProperty", rawPropertyName)
             .add("rawValue", rawPropertyValue)
             .add("refinedProperty", propertyName)

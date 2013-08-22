@@ -76,7 +76,7 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
             .add("name", name)
             .toString();
     }

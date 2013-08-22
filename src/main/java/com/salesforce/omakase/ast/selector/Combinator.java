@@ -72,7 +72,7 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
             .add("type", type)
             .toString();
 

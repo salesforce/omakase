@@ -23,6 +23,7 @@ public class ComplexSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
+        stream.rejectComments();
 
         // setup inner parsers
         Parser combinator = ParserFactory.combinatorParser();
@@ -48,7 +49,7 @@ public class ComplexSelectorParser extends AbstractParser {
             couldHaveMore = combinator.parse(stream, broadcaster);
         }
 
-        // TODO validation that pseudo element is last
+        // TODO validator that pseudo element is last
 
         // check for known possible errors
         if (!stream.eof()) {
@@ -58,6 +59,9 @@ public class ComplexSelectorParser extends AbstractParser {
                 throw new ParserException(stream, Message.NAME_SELECTORS_NOT_ALLOWED);
             }
         }
+
+        // allow comments again
+        stream.enableComments();
 
         return matchedTypeOrUniversal || matchedOther;
     }

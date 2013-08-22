@@ -5,7 +5,13 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.*;
+import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -28,10 +34,12 @@ import com.salesforce.omakase.parser.Stream;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector {
+public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector, Commentable {
     private final SyntaxCollection<SelectorPart> parts = StandardSyntaxCollection.create();
     private final Broadcaster broadcaster;
     private final RawSyntax rawContent;
+
+    private List<String> comments;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to
@@ -82,6 +90,20 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     }
 
     @Override
+    public Selector comments(Iterable<String> commentsToAdd) {
+        if (comments == null) {
+            comments = Lists.newArrayList();
+        }
+        Iterables.addAll(comments, commentsToAdd);
+        return this;
+    }
+
+    @Override
+    public List<String> comments() {
+        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
+    }
+
+    @Override
     protected Selector self() {
         return this;
     }
@@ -90,7 +112,8 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
+            .add("comments", comments)
             .add("raw", rawContent)
             .add("parts", parts())
             .toString();

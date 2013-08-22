@@ -27,13 +27,18 @@ public class RuleParser extends AbstractParser {
         // parse the declaration block
         stream.expect(tokenFactory().declarationBlockBegin());
 
+        // parse all declarations
         do {
             stream.skipWhitepace();
             ParserFactory.rawDeclarationParser().parse(stream, broadcaster);
             stream.skipWhitepace();
         } while (stream.optionallyPresent(tokenFactory().declarationDelimiter()));
 
+        // parse the end of the block
         stream.expect(tokenFactory().declarationBlockEnd());
+
+        // ignore any comments orphaned at the end of the block
+        stream.flushComments();
 
         return true;
     }

@@ -25,7 +25,7 @@ public class Debug {
         System.out.println(tree.toString());
     }
 
-    public static final String src0 = "#id{ font-family: \"Times new Roman\", Verdana, \"Times\" }";
+    public static final String src0 = "/*c*/.class.class{ /*c*/ margin:/*4px*/ 5px  4px;}";
     public static final String src1 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; }";
     public static final String src2 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; background-color: #fffeee; -moz-border-radius: 3px 4px 5px 6px; }";
 

@@ -80,7 +80,7 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
             .add("name", name)
             .toString();
     }

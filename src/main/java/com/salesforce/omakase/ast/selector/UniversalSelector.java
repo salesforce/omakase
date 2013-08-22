@@ -54,7 +54,7 @@ public class UniversalSelector extends AbstractGroupable<SelectorPart> implement
     public String toString() {
         return As.string(this)
             .indent()
-            .add("syntax", super.toString())
+            .add("position", super.toString())
             .toString();
     }
 }

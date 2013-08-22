@@ -5,7 +5,7 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
-import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -52,9 +52,9 @@ public class AttributeSelector extends AbstractGroupable<SelectorPart> implement
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("line", line())
-            .add("column", column())
+        return As.string(this)
+            .indent()
+            .add("position", super.toString())
             .toString();
     }
 }

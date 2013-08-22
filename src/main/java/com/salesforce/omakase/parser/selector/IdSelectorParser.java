@@ -38,7 +38,7 @@ public class IdSelectorParser extends AbstractParser {
         if (!Tokens.HASH.matches(stream.current())) return false;
         stream.next();
 
-        // parse the id name.
+        // parse the id name
         Optional<String> name = stream.readIdent();
         if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_ID);
 

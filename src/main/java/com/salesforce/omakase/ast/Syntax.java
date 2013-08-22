@@ -3,9 +3,6 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.util.List;
-
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 
@@ -50,40 +47,4 @@ public interface Syntax {
      * @return TODO
      */
     String filterName();
-
-    /**
-     * TODO Description
-     * 
-     * @param comment
-     *            TODO
-     * @return TODO
-     */
-    Syntax comment(String comment);
-
-    /**
-     * Gets all comments <em>associated</em> with this {@link Syntax} unit.
-     * 
-     * <p>
-     * A comment is associated if it either directly belongs to this {@link Syntax} unit, or if it belongs to any of the
-     * child {@link Syntax} units within this one.
-     * 
-     * <p>
-     * This is generally the method you want. To get only the comments directly associated with this {@link Syntax} unit
-     * (i.e., appear at the beginning of the content of this unit) use {@link #ownComments()} instead.
-     * 
-     * @return The list of comments.
-     */
-    List<String> comments();
-
-    /**
-     * Gets only the comments that are at the beginning of the content of this {@link Syntax} unit.
-     * 
-     * <p>
-     * If this {@link Syntax} unit has direct content associated with it (e.g., a {@link Selector}, this will be any
-     * comments at the beginning of the content. Otherwise if this {@link Syntax} unit only has child {@link Syntax}
-     * units, this will be any comments at the beginning of the first child unit with actual content.
-     * 
-     * @return All comments at the beginning of this {@link Syntax} unit.
-     */
-    List<String> ownComments();
 }

@@ -47,7 +47,6 @@ public final class RawSyntax extends AbstractSyntax {
         return As.string(this)
             .add("line", line())
             .add("column", column())
-            .add("comments", comments())
             .add("content", content)
             .toString();
     }

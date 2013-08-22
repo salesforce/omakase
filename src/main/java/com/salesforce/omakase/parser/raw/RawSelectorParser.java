@@ -31,8 +31,12 @@ public class RawSelectorParser extends AbstractParser {
         String content = stream.until(tokenFactory().selectorEnd());
         RawSyntax raw = new RawSyntax(line, column, content.trim());
 
+        // create selector and associate comments
+        Selector selector = new Selector(raw, broadcaster);
+        selector.comments(stream.flushComments());
+
         // notify listeners of new selector
-        broadcaster.broadcast(SubscriptionType.CREATED, new Selector(raw, broadcaster));
+        broadcaster.broadcast(SubscriptionType.CREATED, selector);
         return true;
     }
 
