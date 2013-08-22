@@ -3,7 +3,6 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.util.Templates.fillSelector;
 import static com.salesforce.omakase.util.Templates.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -13,6 +12,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 
 /**
@@ -23,35 +23,37 @@ import com.salesforce.omakase.parser.ParserException;
 @SuppressWarnings("javadoc")
 public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorParser> {
     @Override
-    List<String> invalidSources() {
+    public List<String> invalidSources() {
         return Lists.newArrayList(
-            fillSelector("#id"),
-            fillSelector(" .class"),
-            fillSelector("cla.ss"),
-            fillSelector("#a.class"),
-            fillSelector("class"));
+            "#id",
+            " .class",
+            "cla.ss",
+            "#a.class",
+            "class");
     }
 
     @Override
-    List<String> validSources() {
+    public List<String> validSources() {
         return Lists.newArrayList(
-            fillSelector(".class"),
-            fillSelector(".CLASS"),
-            fillSelector("._class"),
-            fillSelector(".c1ass"),
-            fillSelector(".-class"));
+            ".class",
+            ".CLASS",
+            "._class",
+            ".c1ass",
+            ".-class");
     }
 
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
         List<GenericParseResult> results = parse(
-            fillSelector(".class"),
-            fillSelector(".class .class"),
-            fillSelector(".class.class2"));
+            ".class",
+            ".class .class",
+            ".class.class2");
 
         for (GenericParseResult result : results) {
-            assertThat(result.broadcasted).hasSize(1);
+            assertThat(result.broadcasted)
+                .describedAs(result.stream.toString())
+                .hasSize(1);
         }
     }
 
@@ -59,15 +61,17 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
     @Override
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<String>> results = parse(
-            withExpectedResult(fillSelector(".class"), "class"),
-            withExpectedResult(fillSelector(".CLASS"), "CLASS"),
-            withExpectedResult(fillSelector("._clasZ"), "_clasZ"),
-            withExpectedResult(fillSelector(".-class-abc"), "-class-abc"),
-            withExpectedResult(fillSelector(".claz1"), "claz1"));
+            withExpectedResult(".class", "class"),
+            withExpectedResult(".CLASS", "CLASS"),
+            withExpectedResult("._clasZ", "_clasZ"),
+            withExpectedResult(".-class-abc", "-class-abc"),
+            withExpectedResult(".claz1", "claz1"));
 
         for (ParseResult<String> result : results) {
             ClassSelector selector = result.broadcaster.findOnly(ClassSelector.class).get();
-            assertThat(selector.name()).isEqualTo(result.expected);
+            assertThat(selector.name())
+                .describedAs(result.stream.toString())
+                .isEqualTo(result.expected);
         }
     }
 
@@ -75,13 +79,15 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
     @Override
     public void expectedStreamPositionOnSuccess() {
         List<ParseResult<Integer>> results = parse(
-            withExpectedResult(fillSelector(".class .class2"), 6),
-            withExpectedResult(fillSelector(".class.class2"), 6),
-            withExpectedResult(fillSelector(".class-abc-abc"), 15),
-            withExpectedResult(fillSelector(".claz1#id"), 6));
+            withExpectedResult(".class .class2", 7),
+            withExpectedResult(".class.class2", 7),
+            withExpectedResult(".class-abc-abc", 15),
+            withExpectedResult(".claz#id", 6));
 
         for (ParseResult<Integer> result : results) {
-            assertThat(result.stream.column()).isEqualTo(result.expected);
+            assertThat(result.stream.column())
+                .describedAs(result.stream.toString())
+                .isEqualTo(result.expected);
         }
     }
 
@@ -89,14 +95,14 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
     public void errorsIfInvalidClassNameAfterDot() {
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
-        parse(fillSelector(".#class"));
+        parse(".#class");
 
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
-        parse(fillSelector("..class"));
+        parse("..class");
 
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
-        parse(fillSelector(".9class"));
+        parse(".9class");
     }
 }

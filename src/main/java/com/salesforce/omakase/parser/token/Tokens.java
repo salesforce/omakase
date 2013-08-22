@@ -69,11 +69,10 @@ public enum Tokens implements Token {
     FORWARD_SLASH(is('/'), "/"),
 
     /** double quote */
-    DOUBLE_QUOTE(is('"'), "double quote"),
+    DOUBLE_QUOTE(is('"'), "\" (double quote)"),
 
     /** single quote */
-    SINGLE_QUOTE(is('\''), "single quote"),
-
+    SINGLE_QUOTE(is('\''), "' (single quote)"),
     /** single space character */
     SINGLE_SPACE(is(' '), "single space character"),
 

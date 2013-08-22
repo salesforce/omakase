@@ -10,6 +10,7 @@ package com.salesforce.omakase.util;
  */
 public final class Templates {
     private static final String TEMPLATE_SELECTOR = "%s { color: red; }";
+    private static final String TEMPLATE_PROPERTY_VALUE = ".test { %s: %s; }";
 
     /**
      * Gets a basic rule with the given selector.
@@ -20,6 +21,19 @@ public final class Templates {
      */
     public static String fillSelector(String selector) {
         return String.format(TEMPLATE_SELECTOR, selector);
+    }
+
+    /**
+     * Gets a basic rule with the given property name and value.
+     * 
+     * @param name
+     *            The property name.
+     * @param value
+     *            The property value.
+     * @return The CSS source code.
+     */
+    public static String fillDeclaration(String name, String value) {
+        return String.format(TEMPLATE_PROPERTY_VALUE, name, value);
     }
 
     /**

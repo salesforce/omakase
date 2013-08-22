@@ -10,9 +10,12 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.declaration.StringValueParser;
 
 /**
  * A string value.
+ * 
+ * @see StringValueParser
  * 
  * @author nmcwilliams
  */

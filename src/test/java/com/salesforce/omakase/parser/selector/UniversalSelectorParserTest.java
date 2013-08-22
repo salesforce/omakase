@@ -3,7 +3,6 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.util.Templates.fillSelector;
 import static com.salesforce.omakase.util.Templates.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -13,6 +12,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.selector.UniversalSelector;
+import com.salesforce.omakase.parser.AbstractParserTest;
 
 /**
  * Unit tests for {@link UniversalSelectorParser}.
@@ -21,39 +21,41 @@ import com.salesforce.omakase.ast.selector.UniversalSelector;
  */
 public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSelectorParser> {
     @Override
-    List<String> invalidSources() {
+    public List<String> invalidSources() {
         return Lists.newArrayList(
-            fillSelector(".class"),
-            fillSelector("#id"),
-            fillSelector(" *"),
-            fillSelector("div*"));
+            ".class",
+            "#id",
+            " *",
+            "div*");
     }
 
     @Override
-    List<String> validSources() {
+    public List<String> validSources() {
         return Lists.newArrayList(
-            fillSelector("*"),
-            fillSelector("*#id"),
-            fillSelector("*.cname"));
+            "*",
+            "*#id",
+            "*.cname");
     }
 
     @Override
     @Test
     public void matchesExpectedBroadcastCount() {
         List<GenericParseResult> results = parse(
-            fillSelector("* .class *"),
-            fillSelector("*.class"),
-            fillSelector("*#id"));
+            "* .class *",
+            "*.class",
+            "*#id");
 
         for (GenericParseResult result : results) {
-            assertThat(result.broadcasted).hasSize(1);
+            assertThat(result.broadcasted)
+                .describedAs(result.stream.toString())
+                .hasSize(1);
         }
     }
 
     @Override
     @Test
     public void matchesExpectedBroadcastContent() {
-        List<GenericParseResult> results = parse(fillSelector("*"));
+        List<GenericParseResult> results = parse("*");
         results.get(0).broadcaster.findOnly(UniversalSelector.class).get();
     }
 
@@ -61,12 +63,14 @@ public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSel
     @Test
     public void expectedStreamPositionOnSuccess() {
         List<ParseResult<Integer>> results = parse(
-            withExpectedResult(fillSelector("*#div"), 2),
-            withExpectedResult(fillSelector("*.class"), 2),
-            withExpectedResult(fillSelector("* class"), 2));
+            withExpectedResult("*#div", 2),
+            withExpectedResult("*.class", 2),
+            withExpectedResult("* class", 2));
 
         for (ParseResult<Integer> result : results) {
-            assertThat(result.stream.column()).isEqualTo(result.expected);
+            assertThat(result.stream.column())
+                .describedAs(result.stream.toString())
+                .isEqualTo(result.expected);
         }
     }
 }

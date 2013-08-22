@@ -200,6 +200,17 @@ public final class Stream {
     }
 
     /**
+     * Gets whether the current character is preceded by the escape character
+     * 
+     * @see Tokens#ESCAPE
+     * 
+     * @return If the current character is escaped.
+     */
+    public boolean isEscaped() {
+        return Tokens.ESCAPE.matches(peekPrevious());
+    }
+
+    /**
      * Gets whether we are at the end of the source.
      * 
      * @return True of we are at the end of the source.
@@ -428,9 +439,16 @@ public final class Stream {
 
     /**
      * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing
-     * delimiter {@link Token}. The opening token must be present at the current position of this stream or an error
-     * will be thrown. In other words, don't call this until you've checked that the opening token is there, and only if
-     * you expect it to be properly closed.
+     * delimiter {@link Token}.
+     * 
+     * <p>
+     * The opening token must be present at the current position of this stream or an error will be thrown. In other
+     * words, don't call this until you've checked that the opening token is there, and only if you expect it to be
+     * properly closed.
+     * 
+     * <p>
+     * The closing token will be skipped if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about
+     * handling escaping).
      * 
      * @param openingToken
      *            The opening token.
@@ -439,32 +457,44 @@ public final class Stream {
      * @return All content in between the opening and closing tokens (excluding the tokens themselves).
      */
     public String chompEnclosedValue(Token openingToken, Token closingToken) {
+        // the opening token is required
         expect(openingToken);
 
+        // save the current position
         int start = index;
+
+        // set initial nesting level
         int level = 1;
 
+        // track depth (nesting), unless the opening and closing tokens are the same
+        boolean allowNesting = !openingToken.equals(closingToken);
+
+        // unless the closing token is a string, skip over all string content
+        boolean skipString = closingToken.equals(Tokens.DOUBLE_QUOTE) || closingToken.equals(Tokens.SINGLE_QUOTE);
+
+        // keep parsing until we find the closing token
         while (!eof()) {
             // if we are in a string continue until we are out of it
-            if (inString()) {
+            if (skipString && inString()) {
                 next();
             }
 
-            if (openingToken.matches(current())) {
-                if (!Tokens.ESCAPE.matches(peekPrevious())) {
-                    level++;
-                }
-            } else if (closingToken.matches(current())) {
-                if (!Tokens.ESCAPE.matches(peekPrevious())) {
-                    level--;
-                    if (level == 0) {
-                        // skip closing token
-                        next();
-                        return source.substring(start, index - 1);
-                    }
+            // if nesting is allowed then another occurrence of the openingToken increases the nesting level,
+            // unless preceded by the escape symbol.
+            if (allowNesting && openingToken.matches(current()) && !isEscaped()) {
+                level++;
+            } else if (closingToken.matches(current()) && !isEscaped()) {
+                // decrement the nesting level
+                level--;
+
+                // once the nesting level reaches 0 then we have found the correct closing token
+                if (level == 0) {
+                    next(); // move past the closing token
+                    return source.substring(start, index - 1);
                 }
             }
 
+            // we haven't found the correct closing token, so continue
             next();
         }
 

@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.parser.selector;
+package com.salesforce.omakase.parser;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -15,9 +15,6 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.CollectingBroadcaster;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.ParserTest;
-import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
 
 /**
@@ -42,16 +39,18 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
-    abstract List<String> invalidSources();
+    public abstract List<String> invalidSources();
 
-    abstract List<String> validSources();
+    public abstract List<String> validSources();
 
     @Test
     @Override
     public void returnsFalseOnFailure() {
         List<GenericParseResult> results = parse(invalidSources().toArray(new String[] {}));
         for (GenericParseResult result : results) {
-            assertThat(result.success).isFalse();
+            assertThat(result.success)
+                .describedAs(result.stream.toString())
+                .isFalse();
         }
     }
 
@@ -60,7 +59,9 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void returnsTrueOnSuccess() {
         List<GenericParseResult> results = parse(validSources().toArray(new String[] {}));
         for (GenericParseResult result : results) {
-            assertThat(result.success).isTrue();
+            assertThat(result.success)
+                .describedAs(result.stream.toString())
+                .isTrue();
         }
     }
 
@@ -69,8 +70,12 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void noChangeToStreamOnFailure() {
         List<GenericParseResult> results = parse(invalidSources().toArray(new String[] {}));
         for (GenericParseResult result : results) {
-            assertThat(result.stream.line()).isEqualTo(1);
-            assertThat(result.stream.column()).isEqualTo(1);
+            assertThat(result.stream.line())
+                .describedAs(result.stream.toString())
+                .isEqualTo(1);
+            assertThat(result.stream.column())
+                .describedAs(result.stream.toString())
+                .isEqualTo(1);
         }
     }
 
@@ -102,6 +107,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
             result.success = parser.parse(result.stream, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
             result.expected = ts.expected;
+            results.add(result);
         }
 
         return results;
@@ -109,11 +115,11 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     /** helper object */
     public static class ParseResult<T> {
-        CollectingBroadcaster broadcaster;
-        List<Syntax> broadcasted;
-        boolean success;
-        Stream stream;
-        T expected;
+        public CollectingBroadcaster broadcaster;
+        public List<Syntax> broadcasted;
+        public boolean success;
+        public Stream stream;
+        public T expected;
     }
 
     /** helper object */

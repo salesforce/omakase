@@ -96,7 +96,7 @@ public class CollectingBroadcaster implements Broadcaster {
     }
 
     /**
-     * Similar to {@link #find(Class)}, except that this expects one and only one broadcasted event to have occurred.
+     * Similar to {@link #find(Class)}, except that this verifies at most one broadcasted event to have occurred.
      * 
      * @param <T>
      *            Type of the {@link Syntax} unit.
@@ -106,7 +106,10 @@ public class CollectingBroadcaster implements Broadcaster {
      *         {@link Optional#absent()} if not present.
      */
     public <T extends Syntax> Optional<T> findOnly(Class<T> klass) {
-        checkState(collected.size() == 1, "unexpected number of broadcasted events");
-        return find(klass);
+        Optional<T> found = find(klass);
+        if (found.isPresent()) {
+            checkState(collected.size() == 1, "expected to find only one broadcasted event");
+        }
+        return found;
     }
 }
