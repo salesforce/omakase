@@ -63,6 +63,12 @@ public final class Stream {
     /** queue of encountered CSS comments */
     private List<String> comments;
 
+    /** the character that opened the last string */
+    private Token stringToken = null;
+
+    /** whether we should monitor if we are in a string or not (optional for perf) */
+    private boolean checkInString = true;
+
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
      * 
@@ -257,8 +263,6 @@ public final class Stream {
             column += 1;
         }
 
-        // FIXME update inString
-
         // increment index position
         index += 1;
 
@@ -267,8 +271,13 @@ public final class Stream {
             collectComments();
         }
 
+        // check if we are in a string
+        if (checkInString) {
+            udpateInString();
+        }
+
         // return the current character
-        return eof() ? null : current();
+        return current();
     }
 
     /**
@@ -399,29 +408,29 @@ public final class Stream {
      *         {@link Token}.
      */
     public String until(Token token) {
-        // if we are already at the end then there is nothing to do
-        if (eof()) return "";
+        assert checkInString == true : "checkInString should not be turned off";
 
-        String sequence; // to hold the sequence of characters to return
+        // save the current index so we can return the matched substring
+        int start = index;
 
-        // find the first character that matches the given token starting from the current position
-        int found = token.matcher().indexIn(source, index);
+        // continually parse until we reach the token or eof
+        while (!eof()) {
 
-        if (found > -1) {
-            // grab the characters from the current position up to and excluding the matched token
-            sequence = source.substring(index, found);
+            if (inString) {
+                // can't match when inside of a string
+                next();
+            } else if (token.matches(current()) && !isEscaped()) {
+                // if unescaped then this is the matching token
+                return source.substring(start, index);
+            } else {
+                // else continue to the next character
+                next();
+            }
 
-            // move the index to character that matched
-            forward(found);
-        } else {
-            // from the current position until the end of the source
-            sequence = source.substring(index);
-
-            // move the index straight to the end
-            index = length;
         }
 
-        return sequence;
+        // closing token wasn't found, so return the substring from the start to the end of the stream
+        return source.substring(start);
     }
 
     /**
@@ -456,7 +465,7 @@ public final class Stream {
      * properly closed.
      * 
      * <p>
-     * The closing token will be skipped if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about
+     * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about
      * handling escaping).
      * 
      * @param openingToken
@@ -479,7 +488,7 @@ public final class Stream {
         boolean allowNesting = !openingToken.equals(closingToken);
 
         // unless the closing token is a string, skip over all string content
-        boolean skipString = closingToken.equals(Tokens.DOUBLE_QUOTE) || closingToken.equals(Tokens.SINGLE_QUOTE);
+        boolean skipString = !closingToken.equals(Tokens.DOUBLE_QUOTE) && !closingToken.equals(Tokens.SINGLE_QUOTE);
 
         // keep parsing until we find the closing token
         while (!eof()) {
@@ -590,17 +599,67 @@ public final class Stream {
      * In order to prevent this situation, the parser should call {@link #rejectComments()} before parsing and
      * {@link #enableComments()} after it is done. A less restrictive enforcement would be to check that a term operator
      * or selector combinator is directly before or after the comment.
+     * 
+     * @return this, for chaining.
      */
-    public void rejectComments() {
+    public Stream rejectComments() {
         flushComments();
         commentsAllowed = false;
+        return this;
     }
 
     /**
      * Allows comments to be encountered and queued.
+     * 
+     * @return this, for chaining.
      */
-    public void enableComments() {
+    public Stream enableComments() {
         commentsAllowed = true;
+        return this;
+    }
+
+    /**
+     * Specifies that we should not check and maintain whether we are currently in a string or not. Do not use this if
+     * {@link #until(Token)} will be utilized on the stream.
+     * 
+     * @return this, for chaining.
+     */
+    public Stream skipInStringCheck() {
+        this.checkInString = false;
+        return this;
+    }
+
+    /**
+     * Updates the status about whether we are in a string.
+     * 
+     * <p>
+     * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We
+     * remain in this status until the matching quote symbol is encountered again, unescaped.
+     */
+    private void udpateInString() {
+        final Character current = current();
+
+        if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) {
+            if (inString && stringToken.equals(Tokens.DOUBLE_QUOTE)) {
+                // closing quote
+                stringToken = null;
+                inString = false;
+            } else {
+                // opening quote
+                stringToken = Tokens.DOUBLE_QUOTE;
+                inString = true;
+            }
+        } else if (Tokens.SINGLE_QUOTE.matches(current) && !isEscaped()) {
+            if (inString && stringToken.equals(Tokens.SINGLE_QUOTE)) {
+                // closing quote
+                stringToken = null;
+                inString = false;
+            } else {
+                // opening quote
+                stringToken = Tokens.SINGLE_QUOTE;
+                inString = true;
+            }
+        }
     }
 
     /**

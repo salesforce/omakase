@@ -15,9 +15,9 @@ public enum Message {
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_VALUE("Unable to parse remaining declaration value"),
     EXPECTED_VALUE("Expected to parse a property value!"),
-    EXPECTED_TO_FIND("Expected to find '%s'"),
-    EXPECTED_CLOSING("Expected to find closing '%s'"),
-    INVALID_HEX("Expected a hex color of length 3 or 6, but found '%s'"),
+    EXPECTED_TO_FIND("Expected to find %s"),
+    EXPECTED_CLOSING("Expected to find closing %s"),
+    INVALID_HEX("Expected a hex color of length 3 or 6, but found %s"),
     EXPECTED_DECIMAL("Expected to find decimal value"),
     NAME_SELECTORS_NOT_ALLOWED("universal or type selector not allowed here"),
     COMMENTS_NOT_ALLOWED("Comments not allowed in this location. Please place the comment at the beginning of the declaration" +

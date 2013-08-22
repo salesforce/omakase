@@ -4,6 +4,7 @@
 package com.salesforce.omakase.parser.token;
 
 import com.google.common.base.CharMatcher;
+import com.salesforce.omakase.As;
 
 /**
  * A combination matcher that does an OR comparison of two {@link Token}s.
@@ -51,5 +52,10 @@ public class CompoundToken implements Token {
     @Override
     public Token or(Token other) {
         return new CompoundToken(this, other);
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).add("description", description).toString();
     }
 }

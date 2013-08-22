@@ -74,7 +74,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     public RefinedSelector refine() {
         if (parts.isEmpty()) {
             CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
-            Stream stream = new Stream(rawContent.content(), line(), column());
+            Stream stream = new Stream(rawContent.content(), line(), column()).skipInStringCheck();
 
             // parse the contents
             ParserFactory.refinedSelectorParser().parse(stream, collector);

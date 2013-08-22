@@ -80,7 +80,7 @@ public class PerfTestLight {
         // prime
         if (PRIME) {
             print("\nPriming");
-            for (int i = 0; i < 150; i++) {
+            for (int i = 0; i < 1000; i++) {
                 parse(Mode.OMAKASE, original);
                 parse(Mode.OMAKASE_FULL, original);
             }
