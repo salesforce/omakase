@@ -46,7 +46,7 @@ public class CompoundToken implements Token {
 
     @Override
     public boolean matches(Character c) {
-        return matcher.matches(c);
+        return c == null ? false : matcher.matches(c);
     }
 
     @Override

@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase;
+package com.salesforce.omakase.error;
 
 /**
  * Generic parent for all Omakase CSS Parser related exceptions.
@@ -18,7 +18,7 @@ public class OmakaseException extends RuntimeException {
      *            The description of the exception.
      */
     protected OmakaseException(String message) {
-        super(format(message));
+        super(message);
     }
 
     /**
@@ -30,11 +30,6 @@ public class OmakaseException extends RuntimeException {
      *            The cause of the exception.
      */
     protected OmakaseException(String message, Throwable cause) {
-        super(format(message), cause);
-    }
-
-    /** formatting for every error message */
-    private static String format(String message) {
-        return String.format("Omakase CSS Parser: %s", message);
+        super(message, cause);
     }
 }

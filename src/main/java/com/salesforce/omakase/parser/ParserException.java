@@ -4,7 +4,7 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.OmakaseException;
+import com.salesforce.omakase.error.OmakaseException;
 
 /**
  * An error encountered while parsing.

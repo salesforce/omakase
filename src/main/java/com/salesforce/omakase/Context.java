@@ -15,7 +15,6 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.validator.SyntaxValidator;
@@ -37,9 +36,6 @@ public final class Context implements Broadcaster {
 
     /** used for propagating new syntax unit created or change events */
     private final Emitter emitter = new Emitter();
-
-    /** used to handle parsing and validation errors */
-    private ErrorManager em = new ThrowingErrorManager();
 
     /** internal construction only */
     Context() {}
@@ -140,8 +136,11 @@ public final class Context implements Broadcaster {
      * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that
      * are interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s
      * using {@link #require(Class)}.
+     * 
+     * @param em
+     *            TODO
      */
-    protected void before() {
+    protected void before(ErrorManager em) {
         for (SyntaxValidator plugin : validatorPlugins) {
             plugin.errorManager(em);
         }

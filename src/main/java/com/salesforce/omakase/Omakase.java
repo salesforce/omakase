@@ -5,8 +5,8 @@ package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.error.ThrowingErrorManager;
+import com.salesforce.omakase.error.*;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.plugin.Plugin;
@@ -48,9 +48,20 @@ public final class Omakase {
         private ErrorManager em;
 
         Request(CharSequence source) {
-            this.stream = new Stream(source.toString());
             this.context = new Context();
             this.em = new ThrowingErrorManager();
+            this.stream = new Stream(source.toString());
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param plugins
+         *            TODO
+         * @return TODO
+         */
+        public Request add(Plugin... plugins) {
+            return request(plugins);
         }
 
         /**
@@ -63,17 +74,6 @@ public final class Omakase {
         public Request request(Plugin... plugins) {
             context.plugins(plugins);
             return this;
-        }
-
-        /**
-         * TODO Description
-         * 
-         * @param plugins
-         *            TODO
-         * @return TODO
-         */
-        public Request add(Plugin... plugins) {
-            return request(plugins);
         }
 
         /**
@@ -94,9 +94,16 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
-            context.before();
-            ParserFactory.stylesheetParser().parse(stream, context);
+            context.before(em);
+
+            try {
+                ParserFactory.stylesheetParser().parse(stream, context);
+            } catch (ParserException e) {
+                em.report(ErrorId.PARSING, ErrorLevel.FATAL, e.getMessage());
+            }
+
             context.after();
+
             return context;
         }
     }

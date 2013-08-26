@@ -12,5 +12,11 @@ import com.salesforce.omakase.plugin.Plugin;
  * @author nmcwilliams
  */
 public interface SyntaxValidator extends Plugin {
+    /**
+     * This method passes in the {@link ErrorManager} instance to be used for reporting all validation errors.
+     * 
+     * @param em
+     *            The {@link ErrorManager} instance.
+     */
     void errorManager(ErrorManager em);
 }

@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.emitter;
 
-import com.salesforce.omakase.OmakaseException;
+import com.salesforce.omakase.error.OmakaseException;
 
 /**
  * An error that occurs while invoking a method annotated with {@link Subscribe}.
