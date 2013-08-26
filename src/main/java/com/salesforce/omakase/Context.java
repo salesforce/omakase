@@ -6,17 +6,19 @@ package com.salesforce.omakase;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.MutableClassToInstanceMap;
+import com.google.common.collect.*;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionType;
+import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.validator.SyntaxValidator;
 
 /**
  * TODO Description
@@ -24,17 +26,20 @@ import com.salesforce.omakase.plugin.Plugin;
  * @author nmcwilliams
  */
 public final class Context implements Broadcaster {
-    private static final String NO_SUPPLER = "No supplier defined for %s. Use require(Class, Supplier) instead.";
-    private static final String DUPLICATE = "Only one plugin instance of each type allowed: %s";
-
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
 
     /** list of all plugins that have dependencies (e.g., needs access to this {@link Context} */
     private final List<DependentPlugin> dependentPlugins = Lists.newArrayList();
 
+    /** list of all plugins that need access to the error manager */
+    private final Set<SyntaxValidator> validatorPlugins = Sets.newHashSet();
+
     /** used for propagating new syntax unit created or change events */
     private final Emitter emitter = new Emitter();
+
+    /** used to handle parsing and validation errors */
+    private ErrorManager em = new ThrowingErrorManager();
 
     /** internal construction only */
     Context() {}
@@ -56,7 +61,7 @@ public final class Context implements Broadcaster {
             Class<? extends Plugin> klass = plugin.getClass();
 
             // only one instance allowed per plugin type
-            checkArgument(!registry.containsKey(klass), String.format(DUPLICATE, klass));
+            checkArgument(!registry.containsKey(klass), Message.DUPLICATE_PLUGIN.message(klass));
 
             // add the plugin to the registry
             registry.put(klass, plugin);
@@ -67,6 +72,10 @@ public final class Context implements Broadcaster {
             // check if the plugin has dependencies on other plugins
             if (plugin instanceof DependentPlugin) {
                 dependentPlugins.add((DependentPlugin)plugin);
+            }
+
+            if (plugin instanceof SyntaxValidator) {
+                validatorPlugins.add((SyntaxValidator)plugin);
             }
         }
     }
@@ -82,7 +91,7 @@ public final class Context implements Broadcaster {
      */
     public <T extends Plugin> T require(Class<T> klass) {
         Optional<Supplier<T>> supplier = Suppliers.get(klass);
-        checkArgument(supplier.isPresent(), String.format(NO_SUPPLER, klass));
+        checkArgument(supplier.isPresent(), Message.NO_SUPPLIER.message(klass));
         return require(klass, supplier.get());
     }
 
@@ -133,6 +142,10 @@ public final class Context implements Broadcaster {
      * using {@link #require(Class)}.
      */
     protected void before() {
+        for (SyntaxValidator plugin : validatorPlugins) {
+            plugin.errorManager(em);
+        }
+
         for (DependentPlugin plugin : dependentPlugins) {
             plugin.before(this);
         }

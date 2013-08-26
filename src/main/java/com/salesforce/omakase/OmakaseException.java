@@ -17,7 +17,7 @@ public class OmakaseException extends RuntimeException {
      * @param message
      *            The description of the exception.
      */
-    public OmakaseException(String message) {
+    protected OmakaseException(String message) {
         super(format(message));
     }
 
@@ -29,7 +29,7 @@ public class OmakaseException extends RuntimeException {
      * @param cause
      *            The cause of the exception.
      */
-    public OmakaseException(String message, Throwable cause) {
+    protected OmakaseException(String message, Throwable cause) {
         super(format(message), cause);
     }
 

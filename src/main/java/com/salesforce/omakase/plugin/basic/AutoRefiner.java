@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.plugin.standard;
+package com.salesforce.omakase.plugin.basic;
 
 import java.util.Set;
 

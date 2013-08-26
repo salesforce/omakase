@@ -13,8 +13,8 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.Omakase.Request;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.plugin.standard.AutoRefiner;
-import com.salesforce.omakase.plugin.standard.SyntaxTree;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * Performance testing of this parser (more extensive tests + csv writer is in perf-test branch).

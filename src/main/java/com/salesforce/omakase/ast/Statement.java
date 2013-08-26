@@ -8,7 +8,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.plugin.standard.SyntaxTree;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * A top-level {@link Syntax} unit, for example a {@link Rule} or {@link AtRule}.

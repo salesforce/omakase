@@ -14,7 +14,7 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
-import com.salesforce.omakase.plugin.standard.SyntaxTree;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * The root-level {@link Syntax} object.

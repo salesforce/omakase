@@ -5,8 +5,8 @@ package com.salesforce.omakase.emitter;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.plugin.standard.AutoRefiner;
-import com.salesforce.omakase.plugin.standard.SyntaxTree;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * Indicates the conditions for a {@link Subscribable} type to be broadcasted.

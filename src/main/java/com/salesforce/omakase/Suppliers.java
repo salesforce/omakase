@@ -9,8 +9,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.standard.AutoRefiner;
-import com.salesforce.omakase.plugin.standard.SyntaxTree;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * Helper for creating instances of library-provided {@link Plugin}s.

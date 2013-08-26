@@ -5,6 +5,8 @@ package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.plugin.Plugin;
@@ -41,11 +43,14 @@ public final class Omakase {
      * TODO Description
      */
     public static final class Request {
-        private final Context context = new Context();
+        private final Context context;
         private final Stream stream;
+        private ErrorManager em;
 
         Request(CharSequence source) {
             this.stream = new Stream(source.toString());
+            this.context = new Context();
+            this.em = new ThrowingErrorManager();
         }
 
         /**
@@ -69,6 +74,18 @@ public final class Omakase {
          */
         public Request add(Plugin... plugins) {
             return request(plugins);
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param em
+         *            TODO
+         * @return TODO
+         */
+        public Request errorManager(ErrorManager em) {
+            this.em = checkNotNull(em, "the error manager cannot be null");
+            return this;
         }
 
         /**
