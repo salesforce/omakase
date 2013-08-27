@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.collection;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
@@ -37,6 +38,20 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * @return True if the unit is contained within this collection.
      */
     boolean contains(T unit);
+
+    /**
+     * Gets the first unit in the collection.
+     * 
+     * @return the first unit in the collection, or {@link Optional#absent()} if empty.
+     */
+    Optional<T> first();
+
+    /**
+     * Gets the last unit in the collection.
+     * 
+     * @return the last unit in the collection, or {@link Optional#absent()} if empty.
+     */
+    Optional<T> last();
 
     /**
      * Prepends the given unit the beginning of this collection.

@@ -6,6 +6,10 @@ package com.salesforce.omakase;
 /**
  * Error messages.
  * 
+ * <p>
+ * Error messages are gathered in one place like this to keep code less cluttered. It also achieves greater message
+ * consistency since all the messages are placed and can be reviewed together.
+ * 
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
@@ -26,6 +30,7 @@ public enum Message {
             " or selector sequence. (While the CSS specification does allow comments here," +
             " it could result in unexpected behavior after minification and removal of the comment.)"),
     MISSING_COMMENT_CLOSE("Unclosed comment"),
+    PSEUDO_ELEMENT_LAST("Pseudo elements must be last in the selector sequence"),
 
     ;
 

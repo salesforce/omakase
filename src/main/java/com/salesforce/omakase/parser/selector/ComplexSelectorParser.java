@@ -3,9 +3,9 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.*;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
 

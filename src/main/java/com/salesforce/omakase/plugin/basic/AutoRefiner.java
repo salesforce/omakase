@@ -10,7 +10,7 @@ import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.emitter.Subscribe;
+import com.salesforce.omakase.emitter.Rework;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -69,7 +69,7 @@ public class AutoRefiner implements Plugin {
      * @param refinable
      *            A refinable object.
      */
-    @Subscribe
+    @Rework
     public void refine(Refinable<?> refinable) {
         if (refinables.contains(refinable.getClass())) refinable.refine();
     }

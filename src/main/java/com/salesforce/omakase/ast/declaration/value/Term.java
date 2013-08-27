@@ -3,12 +3,12 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_DECLARATION;
 
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 
 /**
  * A {@link TermListMember} within a {@link TermList} representing a single segment of the {@link Declaration} value.
@@ -18,7 +18,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description(value = "a single segment of a property value", broadcasted = REFINED_DECLARATION)
 public interface Term extends TermListMember, Syntax {
 }

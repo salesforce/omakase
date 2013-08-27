@@ -9,11 +9,11 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
- * Indicates the conditions for a {@link Subscribable} type to be broadcasted.
+ * Indicates the conditions for an {@link Emittable} type to be broadcasted.
  * 
  * @author nmcwilliams
  */
-public enum SubscribableRequirement {
+public enum EmittableRequirement {
     /** automatically broadcasted (except for Syntax, where some syntax items are only broadcasted during refinement) */
     AUTOMATIC("Automatic"),
 
@@ -28,7 +28,7 @@ public enum SubscribableRequirement {
 
     private final String description;
 
-    private SubscribableRequirement(String description) {
+    private EmittableRequirement(String description) {
         this.description = description;
     }
 

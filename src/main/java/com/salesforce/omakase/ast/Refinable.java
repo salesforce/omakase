@@ -4,7 +4,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 
 /**
  * Designates that an object is <em>refinable</em> to a more specified or detailed representation.
@@ -20,7 +20,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description("raw syntax that can be further refined")
 public interface Refinable<T> extends Syntax {
     /**

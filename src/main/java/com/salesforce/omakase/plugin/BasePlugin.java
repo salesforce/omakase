@@ -7,7 +7,7 @@ import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.selector.*;
-import com.salesforce.omakase.emitter.Subscribe;
+import com.salesforce.omakase.emitter.Rework;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
@@ -26,7 +26,7 @@ import com.salesforce.omakase.emitter.Subscribe;
 @SuppressWarnings("unused")
 public class BasePlugin implements Plugin {
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Syntax}.
      * 
      * @param syntax
@@ -35,7 +35,7 @@ public class BasePlugin implements Plugin {
     public void syntax(Syntax syntax) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Refinable}.
      * 
      * @param refinable
@@ -44,7 +44,7 @@ public class BasePlugin implements Plugin {
     public void refinable(Refinable<?> refinable) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Stylesheet}.
      * 
      * @param stylesheet
@@ -53,7 +53,7 @@ public class BasePlugin implements Plugin {
     public void stylesheet(Stylesheet stylesheet) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Statement}.
      * 
      * @param statement
@@ -62,7 +62,7 @@ public class BasePlugin implements Plugin {
     public void statement(Statement statement) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Rule}.
      * 
      * @param rule
@@ -71,7 +71,7 @@ public class BasePlugin implements Plugin {
     public void rule(Rule rule) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Selector}.
      * 
      * @param selector
@@ -80,7 +80,7 @@ public class BasePlugin implements Plugin {
     public void selector(Selector selector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link SelectorPart} ({@link SimpleSelector}s or {@link Combinator}s).
      * 
      * @param selectorPart
@@ -89,7 +89,7 @@ public class BasePlugin implements Plugin {
     public void selectorPart(SelectorPart selectorPart) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link SimpleSelector}.
      * 
      * @param simpleSelector
@@ -98,7 +98,7 @@ public class BasePlugin implements Plugin {
     public void simpleSelector(SimpleSelector simpleSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Combinator}.
      * 
      * @param combinator
@@ -107,7 +107,7 @@ public class BasePlugin implements Plugin {
     public void combinator(Combinator combinator) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link TypeSelector}.
      * 
      * @param typeSelector
@@ -116,7 +116,7 @@ public class BasePlugin implements Plugin {
     public void typeSelector(TypeSelector typeSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link UniversalSelector}.
      * 
      * @param universalSelector
@@ -125,7 +125,7 @@ public class BasePlugin implements Plugin {
     public void universalSelector(UniversalSelector universalSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link IdSelector}.
      * 
      * @param idSelector
@@ -134,7 +134,7 @@ public class BasePlugin implements Plugin {
     public void idSelector(IdSelector idSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link ClassSelector}.
      * 
      * @param classSelector
@@ -143,7 +143,7 @@ public class BasePlugin implements Plugin {
     public void classSelector(ClassSelector classSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link AttributeSelector}.
      * 
      * @param attributeSelector
@@ -152,7 +152,7 @@ public class BasePlugin implements Plugin {
     public void attributeSelector(AttributeSelector attributeSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link PseudoClassSelector}.
      * 
      * @param pseudoClassSelector
@@ -161,7 +161,7 @@ public class BasePlugin implements Plugin {
     public void pseudoClassSelector(PseudoClassSelector pseudoClassSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link PseudoElementSelector}.
      * 
      * @param pseudoElementSelector
@@ -170,7 +170,7 @@ public class BasePlugin implements Plugin {
     public void pseudoElementSelector(PseudoElementSelector pseudoElementSelector) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Declaration}.
      * 
      * @param declaration
@@ -179,7 +179,7 @@ public class BasePlugin implements Plugin {
     public void declaration(Declaration declaration) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link PropertyValue}.
      * 
      * @param propertyValue
@@ -188,7 +188,7 @@ public class BasePlugin implements Plugin {
     public void propertyValue(PropertyValue propertyValue) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link Term}.
      * 
      * @param term
@@ -197,7 +197,7 @@ public class BasePlugin implements Plugin {
     public void term(Term term) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link TermList}.
      * 
      * @param termList
@@ -206,7 +206,7 @@ public class BasePlugin implements Plugin {
     public void termList(TermList termList) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link FunctionValue}.
      * 
      * @param functionValue
@@ -215,7 +215,7 @@ public class BasePlugin implements Plugin {
     public void functionValue(FunctionValue functionValue) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link HexColorValue}.
      * 
      * @param hexColorValue
@@ -224,7 +224,7 @@ public class BasePlugin implements Plugin {
     public void hexColorValue(HexColorValue hexColorValue) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link KeywordValue}.
      * 
      * @param keywordValue
@@ -233,7 +233,7 @@ public class BasePlugin implements Plugin {
     public void keywordValue(KeywordValue keywordValue) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link NumericalValue}.
      * 
      * @param numericalValue
@@ -242,7 +242,7 @@ public class BasePlugin implements Plugin {
     public void numericalValue(NumericalValue numericalValue) {}
 
     /**
-     * Override this method and add the {@link Subscribe} annotation in order to receive events for {@link Syntax} units
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units
      * of type {@link StringValue}.
      * 
      * @param stringValue

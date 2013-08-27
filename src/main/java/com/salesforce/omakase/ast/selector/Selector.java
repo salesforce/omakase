@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+import static com.salesforce.omakase.emitter.EmittableRequirement.AUTOMATIC;
 
 import java.util.List;
 
@@ -17,8 +17,10 @@ import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
@@ -32,7 +34,7 @@ import com.salesforce.omakase.parser.Stream;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description(broadcasted = AUTOMATIC)
 public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector, Commentable {
     private final SyntaxCollection<SelectorPart> parts = StandardSyntaxCollection.create();

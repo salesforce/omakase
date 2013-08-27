@@ -5,6 +5,7 @@ package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.error.*;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
@@ -72,6 +73,29 @@ public final class Omakase {
          * @return TODO
          */
         public Request request(Plugin... plugins) {
+            context.plugins(Lists.newArrayList(plugins));
+            return this;
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param plugins
+         *            TODO
+         * @return TODO
+         */
+        public Request add(Iterable<? extends Plugin> plugins) {
+            return request(plugins);
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param plugins
+         *            TODO
+         * @return TODO
+         */
+        public Request request(Iterable<? extends Plugin> plugins) {
             context.plugins(plugins);
             return this;
         }
@@ -94,12 +118,12 @@ public final class Omakase {
          * @return TODO
          */
         public Context process() {
-            context.before(em);
+            context.before();
 
             try {
                 ParserFactory.stylesheetParser().parse(stream, context);
             } catch (ParserException e) {
-                em.report(ErrorId.PARSING, ErrorLevel.FATAL, e.getMessage());
+                em.report(ErrorLevel.FATAL, e.getMessage());
             }
 
             context.after();

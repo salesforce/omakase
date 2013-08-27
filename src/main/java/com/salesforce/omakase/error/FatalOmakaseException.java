@@ -9,7 +9,7 @@ package com.salesforce.omakase.error;
  * 
  * @author nmcwilliams
  */
-public class FatalOmakaseException extends OmakaseException {
+public final class FatalOmakaseException extends OmakaseException {
     private static final long serialVersionUID = 2723924358238169904L;
 
     /**

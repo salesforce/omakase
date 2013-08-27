@@ -12,7 +12,5 @@ public enum ErrorLevel {
     /** A non-fatal warning */
     WARNING,
     /** A fatal error */
-    FATAL,
-    /** the error should be ignored */
-    IGNORE
+    FATAL
 }

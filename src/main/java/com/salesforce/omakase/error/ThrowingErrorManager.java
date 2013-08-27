@@ -12,21 +12,16 @@ import org.slf4j.LoggerFactory;
  * 
  * @author nmcwilliams
  */
-public final class ThrowingErrorManager extends AbstractErrorManager {
+public final class ThrowingErrorManager implements ErrorManager {
     private static final Logger logger = LoggerFactory.getLogger(ErrorManager.class);
 
     @Override
-    public void report(String id, ErrorLevel defaultLevel, String message) {
-        ErrorLevel level = getLevel(id, defaultLevel);
-
+    public void report(ErrorLevel level, String message) {
         switch (level) {
         case FATAL:
             throw new FatalOmakaseException(format(message));
         case WARNING:
             logger.warn(format(message));
-        case IGNORE:
-            logger.debug(format(message));
-            break;
         }
     }
 

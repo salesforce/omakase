@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.selector.UniversalSelector;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;

@@ -20,6 +20,16 @@ import com.salesforce.omakase.ast.Syntax;
 public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends AbstractSyntax implements Groupable<T> {
     private SyntaxCollection<T> group;
 
+    @Override
+    public boolean isFirst() {
+        return isDetached() ? false : group.first().equals(this);
+    }
+
+    @Override
+    public boolean isLast() {
+        return isDetached() ? false : group.last().equals(this);
+    }
+
     /**
      * Creates a new instance with the given line and column numbers.
      * 

@@ -6,7 +6,7 @@ package com.salesforce.omakase.emitter;
 import java.lang.annotation.*;
 
 /**
- * Description of a {@link Subscribable} type.
+ * Description of a {@link Emittable} type.
  * 
  * @author nmcwilliams
  */
@@ -25,5 +25,5 @@ public @interface Description {
      * 
      * @return The conditions for this type of object to be broadcasted.
      */
-    SubscribableRequirement broadcasted() default SubscribableRequirement.AUTOMATIC;
+    EmittableRequirement broadcasted() default EmittableRequirement.AUTOMATIC;
 }

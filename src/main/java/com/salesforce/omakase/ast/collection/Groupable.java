@@ -15,6 +15,21 @@ import com.salesforce.omakase.ast.Syntax;
  * @author nmcwilliams
  */
 public interface Groupable<T extends Syntax & Groupable<T>> {
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    boolean isFirst();
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    boolean isLast();
+
     /**
      * Gets the parent {@link SyntaxCollection} this unit belongs to.
      * 
@@ -62,7 +77,7 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
     boolean isDetached();
 
     /**
-     * Sets the parent group. This should only be called internally-- calling it yourself may result in expected
+     * Sets the parent group. This should only be called internally... calling it yourself may result in expected
      * behavior.
      * 
      * @param group

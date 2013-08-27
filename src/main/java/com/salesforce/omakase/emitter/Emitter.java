@@ -20,7 +20,7 @@ import com.google.common.reflect.TypeToken;
 public final class Emitter {
     private static final AnnotationScanner scanner = new AnnotationScanner();
 
-    /** cache of class -> (class + supers). Only supers marked as {@link Subscribable} are stored */
+    /** cache of class -> (class + supers). Only supers marked as {@link Emittable} are stored */
     private static final LoadingCache<Class<?>, Set<Class<?>>> cache = CacheBuilder.newBuilder()
         .weakKeys() // use weak references for keys (classes)
         .initialCapacity(32) // expected number of subscribable syntax classes
@@ -29,7 +29,7 @@ public final class Emitter {
             public Set<Class<?>> load(Class<?> klass) {
                 final Builder<Class<?>> builder = ImmutableSet.<Class<?>>builder();
                 for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
-                    if (type.isAnnotationPresent(Subscribable.class)) {
+                    if (type.isAnnotationPresent(Emittable.class)) {
                         builder.add(type);
                     }
                 }

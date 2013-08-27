@@ -4,7 +4,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 
 /**
  * A distinct unit of syntax within CSS.
@@ -24,7 +24,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description("parent interface of all subscribable units")
 public interface Syntax {
     /**

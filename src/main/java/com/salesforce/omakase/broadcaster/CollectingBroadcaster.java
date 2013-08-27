@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase;
+package com.salesforce.omakase.broadcaster;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -41,7 +41,7 @@ public class CollectingBroadcaster implements Broadcaster {
      * {@link Broadcaster}.
      * 
      * @param relay
-     *            Relay all events to this {@link Broadcaster}.
+     *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public CollectingBroadcaster(Broadcaster relay) {
         this.relay = relay;

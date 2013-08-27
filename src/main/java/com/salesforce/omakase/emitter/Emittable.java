@@ -19,5 +19,5 @@ import com.salesforce.omakase.plugin.Plugin;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Subscribable {
+public @interface Emittable {
 }

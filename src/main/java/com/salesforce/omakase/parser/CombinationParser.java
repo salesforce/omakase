@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 
 /**
  * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second

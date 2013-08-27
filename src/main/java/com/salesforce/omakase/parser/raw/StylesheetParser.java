@@ -3,8 +3,8 @@
  */
 package com.salesforce.omakase.parser.raw;
 
-import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.*;
 
 /**

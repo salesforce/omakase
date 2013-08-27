@@ -4,11 +4,11 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.Broadcaster;
-import com.salesforce.omakase.CollectingBroadcaster;
 import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
+import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.*;
 

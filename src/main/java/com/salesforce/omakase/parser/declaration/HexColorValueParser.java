@@ -3,9 +3,9 @@
  */
 package com.salesforce.omakase.parser.declaration;
 
-import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.HexColorValue;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;

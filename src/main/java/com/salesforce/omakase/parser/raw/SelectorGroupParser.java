@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser.raw;
 
-import com.salesforce.omakase.Broadcaster;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;

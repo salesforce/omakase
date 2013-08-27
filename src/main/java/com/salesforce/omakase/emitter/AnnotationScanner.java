@@ -11,6 +11,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.*;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -56,8 +57,8 @@ final class AnnotationScanner {
 
         for (Method method : klass.getMethods()) {
 
-            if (method.isAnnotationPresent(Subscribe.class)) {
-                Subscribe subscribe = method.getAnnotation(Subscribe.class);
+            if (method.isAnnotationPresent(Rework.class)) {
+                Rework subscribe = method.getAnnotation(Rework.class);
                 Class<?>[] parameterTypes = method.getParameterTypes();
                 SubscriptionMetadata metadata = new SubscriptionMetadata();
 
@@ -66,8 +67,6 @@ final class AnnotationScanner {
 
                 metadata.method = method;
                 metadata.type = subscribe.type();
-                metadata.priority = subscribe.priority();
-                metadata.filter = subscribe.filter();
 
                 set.add(metadata);
             }
@@ -77,49 +76,40 @@ final class AnnotationScanner {
     }
 
     /**
-     * Metadata parsed from a method annotated with {@link Subscribe}. Note that this implements {@link Comparable} to
+     * Metadata parsed from a method annotated with {@link Rework}. Note that this implements {@link Comparable} to
      * allow subscription methods within the same class to be explicitly or predictably ordered.
      */
     private static final class SubscriptionMetadata implements Comparable<SubscriptionMetadata> {
-        int priority;
         Method method;
-        String filter;
         SubscriptionType type;
 
         @Override
         public int compareTo(SubscriptionMetadata o) {
             return ComparisonChain.start()
-                .compare(priority, o.priority)
                 .compare(type, o.type)
                 .compare(method, o.method, Ordering.arbitrary())
-                .compare(filter, o.filter)
                 .result();
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(priority, type, method, filter);
+            return Objects.hashCode(type, method);
         }
 
         @Override
         public boolean equals(Object object) {
             if (object instanceof SubscriptionMetadata) {
                 SubscriptionMetadata that = (SubscriptionMetadata)object;
-                return Objects.equal(priority, that.priority)
-                        && Objects.equal(type, that.type)
-                        && Objects.equal(method, that.method)
-                        && Objects.equal(filter, that.filter);
+                return Objects.equal(type, that.type) && Objects.equal(method, that.method);
             }
             return false;
         }
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
-                .add("method", method.getName())
-                .add("priority", priority)
+            return As.string(this)
                 .add("type", type)
-                .add("filter", filter)
+                .add("method", method.getName())
                 .toString();
         }
     }

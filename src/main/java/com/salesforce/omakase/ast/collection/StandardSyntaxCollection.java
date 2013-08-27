@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
@@ -43,6 +44,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     @Override
     public boolean contains(T unit) {
         return list.contains(unit);
+    }
+
+    @Override
+    public Optional<T> first() {
+        return list.isEmpty() ? Optional.<T>absent() : Optional.of(list.peekFirst());
+    }
+
+    @Override
+    public Optional<T> last() {
+        return list.isEmpty() ? Optional.<T>absent() : Optional.of(list.peekLast());
     }
 
     @Override
@@ -148,4 +159,5 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
         return new StandardSyntaxCollection<>();
     }
+
 }

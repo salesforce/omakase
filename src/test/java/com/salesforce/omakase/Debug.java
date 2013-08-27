@@ -5,10 +5,7 @@ package com.salesforce.omakase;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.validator.Validation;
 import com.salesforce.omakase.util.EchoLogger;
 
 /**
@@ -19,13 +16,17 @@ public class Debug {
     @Test
     public void develop() {
         EchoLogger logger = new EchoLogger();
-        SyntaxTree tree = new SyntaxTree();
-        AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
-        Omakase.source(src0).request(tree, autoRefiner, logger).process();
-        System.out.println(tree.toString());
+        // SyntaxTree tree = new SyntaxTree();
+        // AutoRefiner autoRefiner = new AutoRefiner().include(Selector.class).include(Declaration.class);
+        Omakase.source(src0)
+            .request(Validation.normal())
+            .request(logger)
+            .process();
+
+        // System.out.println(tree.toString());
     }
 
-    public static final String src0 = ".class{\n" +
+    public static final String src0 = ".class:before:hover{\n" +
             "background: url('sfsfs;');\n" +
             "color: red;\n" +
             "}";

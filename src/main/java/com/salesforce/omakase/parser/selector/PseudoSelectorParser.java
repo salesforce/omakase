@@ -10,12 +10,12 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.Broadcaster;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;

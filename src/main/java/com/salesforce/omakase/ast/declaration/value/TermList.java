@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_DECLARATION;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 
 /**
@@ -35,7 +35,7 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description(value = "default, generic property value", broadcasted = REFINED_DECLARATION)
 public class TermList extends AbstractSyntax implements PropertyValue {
     private final List<TermListMember> terms = Lists.newArrayListWithCapacity(4);

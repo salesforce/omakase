@@ -12,7 +12,7 @@ import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.selector.*;
-import com.salesforce.omakase.emitter.Subscribe;
+import com.salesforce.omakase.emitter.Observe;
 import com.salesforce.omakase.plugin.BasePlugin;
 
 /**
@@ -27,152 +27,152 @@ import com.salesforce.omakase.plugin.BasePlugin;
 public final class EchoLogger extends BasePlugin {
     private static final Logger logger = LoggerFactory.getLogger(EchoLogger.class);
 
+    @Observe
     @Override
-    @Subscribe(priority = 1)
     public void syntax(Syntax syntax) {
         logger.trace("syntax: {}", syntax);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 3)
     public void refinable(Refinable<?> refinable) {
         logger.trace("refinable: {}", refinable);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 4)
     public void stylesheet(Stylesheet stylesheet) {
         logger.debug("stylesheet: {}", stylesheet);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 5)
     public void statement(Statement statement) {
         logger.trace("statement: {}", statement);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 6)
     public void rule(Rule rule) {
         logger.debug("rule: {}", rule);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 8)
     public void selector(Selector selector) {
         logger.info("selector: {}", selector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 9)
     public void selectorPart(SelectorPart selectorPart) {
         logger.trace("selectorPart: {}", selectorPart);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 9)
     public void simpleSelector(SimpleSelector simpleSelector) {
         logger.trace("simpleSelector: {}", simpleSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 10)
     public void combinator(Combinator combinator) {
         logger.info("combinator: {}", combinator);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 11)
     public void typeSelector(TypeSelector typeSelector) {
         logger.info("typeSelector: {}", typeSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 12)
     public void idSelector(IdSelector idSelector) {
         logger.info("idSelector: {}", idSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 13)
     public void classSelector(ClassSelector classSelector) {
         logger.info("classSelector: {}", classSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 14)
     public void attributeSelector(AttributeSelector attributeSelector) {
         logger.info("attributeSelector: {}", attributeSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 15)
     public void pseudoClassSelector(PseudoClassSelector pseudoClassSelector) {
         logger.info("pseudoClassSelector: {}", pseudoClassSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 16)
     public void pseudoElementSelector(PseudoElementSelector pseudoElementSelector) {
         logger.info("pseudoElementSelector: {}", pseudoElementSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 17)
     public void universalSelector(UniversalSelector universalSelector) {
         logger.info("universalSelector: {}", universalSelector);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 18)
     public void declaration(Declaration declaration) {
         logger.info("declaration: {}", declaration);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void propertyValue(PropertyValue propertyValue) {
         logger.trace("propertyValue: {}", propertyValue);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void term(Term term) {
         logger.trace("term: {}", term);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void termList(TermList termList) {
         logger.info("termList: {}", termList);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void functionValue(FunctionValue functionValue) {
         logger.trace("functionValue: {}", functionValue);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void hexColorValue(HexColorValue hexColorValue) {
         logger.trace("hexColorValue: {}", hexColorValue);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void keywordValue(KeywordValue keywordValue) {
         logger.trace("keywordValue: {}", keywordValue);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void numericalValue(NumericalValue numericalValue) {
         logger.trace("numericalValue: {}", numericalValue);
     }
 
+    @Observe
     @Override
-    @Subscribe(priority = 20)
     public void stringValue(StringValue stringValue) {
         logger.trace("stringValue: {}", stringValue);
     }

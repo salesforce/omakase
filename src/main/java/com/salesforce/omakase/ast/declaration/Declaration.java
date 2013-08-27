@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+import static com.salesforce.omakase.emitter.EmittableRequirement.AUTOMATIC;
 
 import java.util.List;
 
@@ -17,8 +17,10 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
+import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 import com.salesforce.omakase.parser.*;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
@@ -31,7 +33,7 @@ import com.salesforce.omakase.parser.raw.RawDeclarationParser;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description(broadcasted = AUTOMATIC)
 public class Declaration extends AbstractGroupable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration,
         Commentable {

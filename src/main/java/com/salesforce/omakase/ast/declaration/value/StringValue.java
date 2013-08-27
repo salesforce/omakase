@@ -4,12 +4,12 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_DECLARATION;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.Emittable;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
 
 /**
@@ -19,7 +19,7 @@ import com.salesforce.omakase.parser.declaration.StringValueParser;
  * 
  * @author nmcwilliams
  */
-@Subscribable
+@Emittable
 @Description(value = "individual string value", broadcasted = REFINED_DECLARATION)
 public class StringValue extends AbstractSyntax implements Term {
     private String content;

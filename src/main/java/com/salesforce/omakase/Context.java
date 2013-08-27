@@ -6,18 +6,21 @@ package com.salesforce.omakase;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.collect.*;
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.MutableClassToInstanceMap;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcaster.EmittingBroadcaster;
+import com.salesforce.omakase.broadcaster.QueuingBroadcaster;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionType;
-import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.validator.SyntaxValidator;
+import com.salesforce.omakase.plugin.PostProcessingPlugin;
 
 /**
  * TODO Description
@@ -28,14 +31,17 @@ public final class Context implements Broadcaster {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
 
-    /** list of all plugins that have dependencies (e.g., needs access to this {@link Context} */
+    /** list of all plugins that have dependencies (e.g., needs access to this {@link Context}. Order is important. */
     private final List<DependentPlugin> dependentPlugins = Lists.newArrayList();
 
-    /** list of all plugins that need access to the error manager */
-    private final Set<SyntaxValidator> validatorPlugins = Sets.newHashSet();
+    /** list of all plugins that want to know when processing is complete. Order is important. */
+    private final List<PostProcessingPlugin> postProcessingPlugins = Lists.newArrayList();
 
-    /** used for propagating new syntax unit created or change events */
-    private final Emitter emitter = new Emitter();
+    /** uses an {@link Emitter} to broadcast events */
+    private final EmittingBroadcaster emittingBroadcaster = new EmittingBroadcaster();
+
+    /** handles broadcast queuing */
+    private final QueuingBroadcaster broadcaster = new QueuingBroadcaster(emittingBroadcaster);
 
     /** internal construction only */
     Context() {}
@@ -51,28 +57,38 @@ public final class Context implements Broadcaster {
      * @param plugins
      *            The {@link Plugin}(s) to register.
      */
-    public void plugins(Plugin... plugins) {
+    protected void plugins(Iterable<? extends Plugin> plugins) {
         for (Plugin plugin : plugins) {
-            // get the class of the plugin, which we will use to index this instance in the registry
-            Class<? extends Plugin> klass = plugin.getClass();
+            plugin(plugin);
+        }
+    }
 
-            // only one instance allowed per plugin type
-            checkArgument(!registry.containsKey(klass), Message.DUPLICATE_PLUGIN.message(klass));
+    /**
+     * TODO Description
+     * 
+     * @param plugin
+     *            TODO
+     */
+    protected void plugin(Plugin plugin) {
+        // get the class of the plugin, which we will use to index this instance in the registry
+        Class<? extends Plugin> klass = plugin.getClass();
 
-            // add the plugin to the registry
-            registry.put(klass, plugin);
+        // only one instance allowed per plugin type
+        checkArgument(!registry.containsKey(klass), Message.DUPLICATE_PLUGIN.message(klass));
 
-            // hook up the plugin for events
-            emitter.register(plugin);
+        // add the plugin to the registry
+        registry.put(klass, plugin);
 
-            // check if the plugin has dependencies on other plugins
-            if (plugin instanceof DependentPlugin) {
-                dependentPlugins.add((DependentPlugin)plugin);
-            }
+        // hook up the plugin for events
+        emittingBroadcaster.register(plugin);
 
-            if (plugin instanceof SyntaxValidator) {
-                validatorPlugins.add((SyntaxValidator)plugin);
-            }
+        // check if the plugin has dependencies on other plugins
+        if (plugin instanceof DependentPlugin) {
+            dependentPlugins.add((DependentPlugin)plugin);
+        }
+
+        if (plugin instanceof PostProcessingPlugin) {
+            postProcessingPlugins.add((PostProcessingPlugin)plugin);
         }
     }
 
@@ -107,7 +123,7 @@ public final class Context implements Broadcaster {
 
         if (instance == null) {
             instance = supplier.get();
-            plugins(instance);
+            plugin(instance);
         }
 
         return instance;
@@ -129,24 +145,31 @@ public final class Context implements Broadcaster {
 
     @Override
     public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
-        emitter.emit(type, syntax);
+        broadcaster.broadcast(type, syntax);
+    }
+
+    /**
+     * See {@link QueuingBroadcaster#pause()}.
+     */
+    public void pauseBroadcasts() {
+        broadcaster.pause();
+    }
+
+    /**
+     * See {@link QueuingBroadcaster#resume()}.
+     */
+    public void resumeBroadcasts() {
+        broadcaster.resume();
     }
 
     /**
      * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that
      * are interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s
      * using {@link #require(Class)}.
-     * 
-     * @param em
-     *            TODO
      */
-    protected void before(ErrorManager em) {
-        for (SyntaxValidator plugin : validatorPlugins) {
-            plugin.errorManager(em);
-        }
-
+    protected void before() {
         for (DependentPlugin plugin : dependentPlugins) {
-            plugin.before(this);
+            plugin.dependencies(this);
         }
     }
 
@@ -156,8 +179,10 @@ public final class Context implements Broadcaster {
      * and/or declarations in the source have been parsed.
      */
     protected void after() {
-        for (DependentPlugin plugin : dependentPlugins) {
+        for (PostProcessingPlugin plugin : postProcessingPlugins) {
             plugin.after(this);
         }
+
+        // TODO validators
     }
 }

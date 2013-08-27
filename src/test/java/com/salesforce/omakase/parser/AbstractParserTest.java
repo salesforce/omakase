@@ -13,8 +13,8 @@ import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
-import com.salesforce.omakase.CollectingBroadcaster;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
 
 /**
