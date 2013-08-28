@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import com.google.common.base.Objects;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.error.OmakaseException;
 
 /**
  * Metadata class to wrap the details around a subscription method. For internal use only.
@@ -91,7 +92,8 @@ final class Subscription {
         } catch (IllegalAccessException e) {
             throw new SubscriptionException("Subscription method is not accessible", e);
         } catch (InvocationTargetException e) {
-            throw new SubscriptionException("There was a problem invoking the subscription method", e);
+            if (e.getCause() instanceof OmakaseException) throw (OmakaseException)e.getCause();
+            throw new SubscriptionException("A problem was encountered while invoking the subscription method", e);
         }
     }
 

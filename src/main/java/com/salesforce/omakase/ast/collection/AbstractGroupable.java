@@ -22,12 +22,12 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
 
     @Override
     public boolean isFirst() {
-        return isDetached() ? false : group.first().equals(this);
+        return isDetached() ? false : group.first().get().equals(this);
     }
 
     @Override
     public boolean isLast() {
-        return isDetached() ? false : group.last().equals(this);
+        return isDetached() ? false : group.last().get().equals(this);
     }
 
     /**

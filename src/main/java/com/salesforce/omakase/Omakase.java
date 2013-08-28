@@ -164,7 +164,7 @@ public final class Omakase {
             try {
                 ParserFactory.stylesheetParser().parse(stream, context);
             } catch (ParserException e) {
-                em.report(ErrorLevel.FATAL, e.getMessage());
+                em.report(ErrorLevel.FATAL, e);
             }
 
             context.after();

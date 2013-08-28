@@ -32,7 +32,7 @@ public class Debug {
         System.out.println(tree.toString());
     }
 
-    public static final String src0 = ".class:before:hover{\n" +
+    public static final String src0 = ".class:before, {\n" +
             "background: url('sfsfs;');\n" +
             "color: red;\n" +
             "}";

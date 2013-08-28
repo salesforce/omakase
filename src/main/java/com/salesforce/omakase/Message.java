@@ -32,8 +32,8 @@ public enum Message {
             " it could result in unexpected behavior after minification and removal of the comment.)"),
     MISSING_COMMENT_CLOSE("Unclosed comment"),
     PSEUDO_ELEMENT_LAST("Pseudo elements must be last in the selector sequence"),
-    ONE_PARAM(
-            "Methods annotated with @PreProcess, @Observe or @Rework must have exactly one parameter (the Syntax type): on method %s"),
+    ONE_PARAM("Methods annotated with @PreProcess, @Observe or @Rework must have exactly " +
+            "one parameter (the Syntax type): on method %s"),
     TWO_PARAMS("Methods annotated with @Validate must have exactly two parameters" +
             " (first being the Syntax type, second being an ErrorManager): on method %s"),
     ANNOTATION_EXCLUSIVE("The @PreProcess, @Observe, @Rework and @Validate annotations are mutually exclusive: '%s"),

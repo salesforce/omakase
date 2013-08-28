@@ -3,7 +3,10 @@
  */
 package com.salesforce.omakase.ast.collection;
 
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.emitter.PreProcess;
 import com.salesforce.omakase.emitter.Rework;
 import com.salesforce.omakase.emitter.Validate;
@@ -34,6 +37,10 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
      * Gets whether this unit is the first within its group.
      * 
      * <p>
+     * Some units will not be linked if the {@link SyntaxTree} plugin is not enabled. For example, {@link Rule},
+     * {@link Selector}, {@link Declaration} (and if unlinked this will always return false).
+     * 
+     * <p>
      * Please note, if you are making decisions based on this value there are a few things to keep in mind. First, if
      * you are doing something in a {@link PreProcess} method, there is a good chance there are still more units to be
      * added, so while this unit may be first or last now that could shortly change. Secondly, any rework plugins may
@@ -47,6 +54,10 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
 
     /**
      * Gets whether this unit is the last within its group.
+     * 
+     * <p>
+     * Some units will not be linked if the {@link SyntaxTree} plugin is not enabled. For example, {@link Rule},
+     * {@link Selector}, {@link Declaration} (and if unlinked this will always return false).
      * 
      * <p>
      * Please note, if you are making decisions based on this value there are a few things to keep in mind. First, if

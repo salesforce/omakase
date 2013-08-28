@@ -9,7 +9,7 @@ package com.salesforce.omakase.error;
  * 
  * @author nmcwilliams
  */
-public final class FatalOmakaseException extends OmakaseException {
+public final class FatalException extends OmakaseException {
     private static final long serialVersionUID = 2723924358238169904L;
 
     /**
@@ -18,7 +18,7 @@ public final class FatalOmakaseException extends OmakaseException {
      * @param message
      *            The description of the exception.
      */
-    protected FatalOmakaseException(String message) {
+    protected FatalException(String message) {
         super(message);
     }
 
@@ -30,7 +30,7 @@ public final class FatalOmakaseException extends OmakaseException {
      * @param cause
      *            The cause of the exception.
      */
-    public FatalOmakaseException(String message, Throwable cause) {
+    public FatalException(String message, Throwable cause) {
         super(message, cause);
     }
 }

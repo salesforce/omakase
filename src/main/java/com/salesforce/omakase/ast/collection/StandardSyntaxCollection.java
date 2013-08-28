@@ -93,7 +93,9 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
 
     @Override
     public SyntaxCollection<T> appendAll(Iterable<T> units) {
-        list.addAll(Lists.newArrayList(units));
+        for (T unit : units) {
+            append(unit);
+        }
         return this;
     }
 
