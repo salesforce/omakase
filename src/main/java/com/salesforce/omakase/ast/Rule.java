@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.SYNTAX_TREE;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -12,7 +12,7 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
@@ -23,7 +23,7 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Rule extends AbstractGroupable<Statement> implements Statement {
     private final SyntaxCollection<Selector> selectors = StandardSyntaxCollection.create();

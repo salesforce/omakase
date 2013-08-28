@@ -159,5 +159,4 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
         return new StandardSyntaxCollection<>();
     }
-
 }

@@ -7,7 +7,7 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * Used to an aspect of CSS source code.
+ * Used to parse an aspect of CSS source code.
  * 
  * <p>
  * {@link Parser}s must <em>not</em> maintain any state or persistence from one parse operation to another. They should

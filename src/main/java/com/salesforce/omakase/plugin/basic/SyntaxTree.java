@@ -6,24 +6,23 @@ package com.salesforce.omakase.plugin.basic;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.Context;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Rework;
+import com.salesforce.omakase.emitter.PreProcess;
 import com.salesforce.omakase.emitter.SubscriptionType;
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.PostProcessingPlugin;
+import com.salesforce.omakase.plugin.BroadcastingPlugin;
+import com.salesforce.omakase.plugin.PreProcessingPlugin;
 
 /**
  * TODO Description
  * 
  * @author nmcwilliams
  */
-public final class SyntaxTree implements DependentPlugin, PostProcessingPlugin {
+public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin {
     private Broadcaster broadcaster;
     private State state;
 
@@ -39,13 +38,17 @@ public final class SyntaxTree implements DependentPlugin, PostProcessingPlugin {
     }
 
     @Override
-    public void dependencies(Context context) {
-        broadcaster = context;
+    public void broadcaster(Broadcaster broadcaster) {
+        this.broadcaster = broadcaster;
+    }
+
+    @Override
+    public void beforePreProcess() {
         startStylesheet();
     }
 
     @Override
-    public void after(Context context) {
+    public void afterPreProcess() {
         endStylesheet();
     }
 
@@ -64,7 +67,7 @@ public final class SyntaxTree implements DependentPlugin, PostProcessingPlugin {
      * @param selector
      *            The new selector.
      */
-    @Rework
+    @PreProcess
     public void startSelector(Selector selector) {
         checkState(state != State.FROZEN, "syntax tree cannot be modified directly.");
 
@@ -84,7 +87,7 @@ public final class SyntaxTree implements DependentPlugin, PostProcessingPlugin {
      * @param declaration
      *            The new declaration.
      */
-    @Rework
+    @PreProcess
     public void startDeclaration(Declaration declaration) {
         checkState(state != State.FROZEN, "syntax tree cannot be modified directly.");
         checkState(currentRule != null, "cannot add a declaration without a rule");
@@ -141,4 +144,5 @@ public final class SyntaxTree implements DependentPlugin, PostProcessingPlugin {
     public String toString() {
         return As.string(this).indent().add("stylesheet", currentStylesheet).toString();
     }
+
 }

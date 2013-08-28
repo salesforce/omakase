@@ -8,7 +8,7 @@ import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
+import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.*;
 
@@ -38,7 +38,7 @@ public class TermListParser extends AbstractParser {
             stream.skipWhitepace();
 
             // try to parse a term
-            CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
+            QueryableBroadcaster collector = new QueryableBroadcaster(broadcaster);
             termParser.parse(stream, collector);
             Optional<Term> term = collector.findOnly(Term.class);
 

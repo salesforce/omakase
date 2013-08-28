@@ -18,6 +18,7 @@ public enum Message {
     NO_SUPPLIER("No supplier defined for %s. Use require(Class, Supplier) instead."),
     MISSING_PSEUDO_NAME("expected to find a valid pseudo element or class name ([-_0-9a-zA-Z], cannot start with a number)"),
     EXPECTED_VALID_ID("expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number)"),
+    EXPECTED_VALID_CLASS("expected to find a valid class name ([-_0-9a-zA-Z], cannot start with a number)"),
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_VALUE("Unable to parse remaining declaration value"),
     EXPECTED_VALUE("Expected to parse a property value!"),
@@ -31,10 +32,16 @@ public enum Message {
             " it could result in unexpected behavior after minification and removal of the comment.)"),
     MISSING_COMMENT_CLOSE("Unclosed comment"),
     PSEUDO_ELEMENT_LAST("Pseudo elements must be last in the selector sequence"),
+    ONE_PARAM(
+            "Methods annotated with @PreProcess, @Observe or @Rework must have exactly one parameter (the Syntax type): on method %s"),
+    TWO_PARAMS("Methods annotated with @Validate must have exactly two parameters" +
+            " (first being the Syntax type, second being an ErrorManager): on method %s"),
+    ANNOTATION_EXCLUSIVE("The @PreProcess, @Observe, @Rework and @Validate annotations are mutually exclusive: '%s"),
+    MISSING_ERROR_MANAGER("The second paramenter for methods annotated with @Validate must be of type ErrorManager: on method %s"),
 
     ;
 
-    private String message;
+    private final String message;
 
     Message(String message) {
         this.message = message;

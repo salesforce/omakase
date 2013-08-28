@@ -3,34 +3,34 @@
  */
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.Context;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
- * A {@link Plugin} that is dependent on another {@link Plugin}, or for some other reason needs access to the
- * {@link Context}. The {@link Context} will be provided before and after high-level processing.
+ * A {@link Plugin} that have dependencies on other {@link Plugin}s.
  * 
  * @author nmcwilliams
  */
 public interface DependentPlugin extends Plugin {
     /**
-     * This method will be called just before source processing begins.
+     * This method will be called just before source code processing begins.
      * 
      * <p>
      * The main purpose of this method is to allow you to specify a dependency on and/or configure another
-     * {@link Plugin}. This is usually required when subscribing to a {@link Syntax} unit more specific than a
-     * {@link Selector} or {@link Declaration}. See the comments on {@link Plugin} for more details.
+     * {@link Plugin}. In many cases a dependency on {@link SyntaxTree} or {@link AutoRefiner} is required. See the
+     * comments on {@link Plugin} for more details.
      * 
      * <p>
-     * You can also store the {@link Context} instance for later usage if you will need it.
+     * The order in which this will be invoked (between plugins) is the same order that the {@link Plugin} was
+     * registered.
      * 
-     * <p>
-     * The order in which this will be received is the same order that the {@link Plugin} was registered.
+     * @see PluginRegistry#require(Class)
+     * @see PluginRegistry#require(Class, com.google.common.base.Supplier)
+     * @see PluginRegistry#retrieve(Class)
      * 
-     * @param context
-     *            The {@link Context} instance.
+     * @param registry
+     *            The {@link PluginRegistry} instance.
      */
-    void dependencies(Context context);
+    void dependencies(PluginRegistry registry);
 }

@@ -3,14 +3,15 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.AUTOMATIC;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.*;
+import com.salesforce.omakase.As;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
@@ -18,9 +19,9 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
+import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
@@ -29,12 +30,12 @@ import com.salesforce.omakase.parser.Stream;
  * Represents a CSS selector.
  * 
  * <p>
- * {@link Selector}s are lists of {@link SelectorPart}s. individual {@link Selector}s are separated by commas. For
+ * {@link Selector}s are lists of {@link SelectorPart}s. Individual {@link Selector}s are separated by commas. For
  * example, in <code>.class, .class #id</code> there are two selectors, <code>.class</code> and <code>.class #id</code>.
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector, Commentable {
     private final SyntaxCollection<SelectorPart> parts = StandardSyntaxCollection.create();
@@ -75,17 +76,17 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     @Override
     public RefinedSelector refine() {
         if (parts.isEmpty()) {
-            CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
+            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
             Stream stream = new Stream(rawContent.content(), line(), column()).skipInStringCheck();
 
             // parse the contents
-            ParserFactory.refinedSelectorParser().parse(stream, collector);
+            ParserFactory.refinedSelectorParser().parse(stream, qb);
 
             // there should be nothing left
             if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
 
             // store the parsed selector parts
-            parts.appendAll(collector.filter(SelectorPart.class));
+            parts.appendAll(qb.filter(SelectorPart.class));
         }
 
         return this;

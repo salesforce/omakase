@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.AUTOMATIC;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 import java.util.List;
 
@@ -11,16 +11,17 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.*;
+import com.salesforce.omakase.As;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
+import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.*;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
@@ -33,10 +34,11 @@ import com.salesforce.omakase.parser.raw.RawDeclarationParser;
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class Declaration extends AbstractGroupable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration,
         Commentable {
+
     private final Broadcaster broadcaster;
     private List<String> comments;
 
@@ -109,18 +111,18 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
         if (propertyName == null) {
             propertyName = Property.named(rawPropertyName.content());
 
-            CollectingBroadcaster collector = new CollectingBroadcaster(broadcaster);
+            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
             Stream stream = new Stream(rawPropertyValue.content(), line(), column());
 
             // parse the contents
             Parser parser = ParserStrategy.getValueParser(propertyName);
-            parser.parse(stream, collector);
+            parser.parse(stream, qb);
 
             // there should be nothing left
             if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_VALUE);
 
             // store the parsed value
-            Optional<PropertyValue> first = collector.find(PropertyValue.class);
+            Optional<PropertyValue> first = qb.find(PropertyValue.class);
             if (!first.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALUE);
             propertyValue = first.get();
         }

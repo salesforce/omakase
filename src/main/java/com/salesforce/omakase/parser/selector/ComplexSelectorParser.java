@@ -19,7 +19,6 @@ import com.salesforce.omakase.parser.raw.RawSelectorParser;
  * @author nmcwilliams
  */
 public class ComplexSelectorParser extends AbstractParser {
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
@@ -48,8 +47,6 @@ public class ComplexSelectorParser extends AbstractParser {
             // parse combinator
             couldHaveMore = combinator.parse(stream, broadcaster);
         }
-
-        // TODO validator that pseudo element is last
 
         // check for known possible errors
         if (!stream.eof()) {

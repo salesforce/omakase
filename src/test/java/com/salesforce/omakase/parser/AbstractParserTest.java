@@ -14,7 +14,7 @@ import org.junit.rules.ExpectedException;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcaster.CollectingBroadcaster;
+import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
 
 /**
@@ -85,7 +85,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
         for (String source : sources) {
             GenericParseResult result = new GenericParseResult();
-            result.broadcaster = new CollectingBroadcaster();
+            result.broadcaster = new QueryableBroadcaster();
             result.stream = new Stream(source);
             result.success = parser.parse(result.stream, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
@@ -102,7 +102,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
         for (SourceWithExpectedResult<R> ts : sources) {
             ParseResult<R> result = new ParseResult<>();
-            result.broadcaster = new CollectingBroadcaster();
+            result.broadcaster = new QueryableBroadcaster();
             result.stream = new Stream(ts.source);
             result.success = parser.parse(result.stream, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
@@ -115,7 +115,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     /** helper object */
     public static class ParseResult<T> {
-        public CollectingBroadcaster broadcaster;
+        public QueryableBroadcaster broadcaster;
         public List<Syntax> broadcasted;
         public boolean success;
         public Stream stream;

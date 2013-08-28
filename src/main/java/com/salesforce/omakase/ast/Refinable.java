@@ -4,7 +4,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * Designates that an object is <em>refinable</em> to a more specified or detailed representation.
@@ -15,12 +15,13 @@ import com.salesforce.omakase.emitter.Emittable;
  * more detailed representation as applicable.
  * 
  * @see Syntax
+ * 
  * @param <T>
  *            Refine to this Type of object.
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description("raw syntax that can be further refined")
 public interface Refinable<T> extends Syntax {
     /**
@@ -28,7 +29,7 @@ public interface Refinable<T> extends Syntax {
      * with its internal state altered, or it may return a new object altogether.
      * 
      * <p>
-     * For implementations, this operation must be <em>idempotent</em>.
+     * <b>Important</b>: for implementations, this operation must be <em>idempotent</em>.
      * 
      * @return The refined object.
      */

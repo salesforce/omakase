@@ -5,9 +5,15 @@ package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * A collection of related {@link Syntax} units.
+ * 
+ * <p>
+ * If you are using any of these methods in a plugin you will need to register the {@link SyntaxTree} as a dependency.
+ * See {@link DependentPlugin} for more details.
  * 
  * @param <T>
  *            The type of {@link Syntax} contained within the collection.
@@ -42,14 +48,14 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
     /**
      * Gets the first unit in the collection.
      * 
-     * @return the first unit in the collection, or {@link Optional#absent()} if empty.
+     * @return The first unit in the collection, or {@link Optional#absent()} if empty.
      */
     Optional<T> first();
 
     /**
      * Gets the last unit in the collection.
      * 
-     * @return the last unit in the collection, or {@link Optional#absent()} if empty.
+     * @return The last unit in the collection, or {@link Optional#absent()} if empty.
      */
     Optional<T> last();
 

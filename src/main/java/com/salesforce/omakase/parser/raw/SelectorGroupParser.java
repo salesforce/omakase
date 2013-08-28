@@ -14,6 +14,7 @@ import com.salesforce.omakase.parser.Stream;
  * @author nmcwilliams
  */
 public class SelectorGroupParser extends AbstractParser {
+
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
@@ -29,4 +30,5 @@ public class SelectorGroupParser extends AbstractParser {
 
         return true;
     }
+
 }

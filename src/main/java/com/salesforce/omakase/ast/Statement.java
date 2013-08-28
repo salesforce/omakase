@@ -3,11 +3,11 @@
  */
 package com.salesforce.omakase.ast;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.SYNTAX_TREE;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
@@ -18,7 +18,7 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(value = "rule or at-rule", broadcasted = SYNTAX_TREE)
 public interface Statement extends Syntax, Groupable<Statement> {
 }

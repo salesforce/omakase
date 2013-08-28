@@ -13,10 +13,10 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
- * Lists all {@link Emittable} {@link Syntax} units.
+ * Lists all {@link Subscribable} {@link Syntax} units.
  * 
  * @author nmcwilliams
  */
@@ -24,7 +24,7 @@ import com.salesforce.omakase.emitter.Emittable;
 public final class SubscribableSyntaxTable {
     public static void main(String[] args) {
         Reflections reflections = new Reflections("com.salesforce.omakase.ast");
-        List<Class<?>> list = Lists.newArrayList(reflections.getTypesAnnotatedWith(Emittable.class));
+        List<Class<?>> list = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class));
 
         Collections.sort(list, new Comparator<Class<?>>() {
             @Override

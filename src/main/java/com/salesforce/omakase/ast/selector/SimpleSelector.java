@@ -3,10 +3,10 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_SELECTOR;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A simple selector, as defined by the Selectors Level 3 spec: "A simple selector is either a type selector, universal
@@ -17,7 +17,7 @@ import com.salesforce.omakase.emitter.Emittable;
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(value = "parent interface for simple selectors", broadcasted = REFINED_SELECTOR)
 public interface SimpleSelector extends SelectorPart {
 }

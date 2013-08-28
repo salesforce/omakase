@@ -3,19 +3,19 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_SELECTOR;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A {@link SimpleSelector}, {@link PseudoElementSelector}, or {@link Combinator}.
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(value = "parent interface for all selector segments", broadcasted = REFINED_SELECTOR)
 public interface SelectorPart extends Syntax, Groupable<SelectorPart> {
 

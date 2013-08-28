@@ -8,7 +8,7 @@ import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
- * Responsible for broadcasting {@link Syntax} unit create or change events, usually to an {@link Emitter}.
+ * Responsible for broadcasting {@link Syntax} unit create or change events, ultimately to an {@link Emitter}.
  * 
  * <p>
  * Implementations should follow the decorator pattern, allowing for nesting of different broadcasters (like Reader).
@@ -22,7 +22,7 @@ public interface Broadcaster {
      * @param <T>
      *            The type of {@link Syntax} unit that was created or changed.
      * @param type
-     *            The event type (created or changed)
+     *            The event type (created or changed).
      * @param syntax
      *            The {@link Syntax} unit instance that was created or changed.
      */

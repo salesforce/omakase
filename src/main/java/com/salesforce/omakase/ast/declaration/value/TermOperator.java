@@ -36,7 +36,7 @@ public enum TermOperator implements TermListMember, TokenEnum<TermOperator> {
     /**
      * TODO this is for output?
      * 
-     * @return TODO
+     * @return the symbol.
      */
     public char symbol() {
         return symbol;

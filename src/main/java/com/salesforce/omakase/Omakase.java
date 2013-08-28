@@ -6,21 +6,39 @@ package com.salesforce.omakase;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.error.*;
+import com.salesforce.omakase.error.ErrorLevel;
+import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * TODO Description
+ * Main entry point for the Omakase CSS Parser.
  * 
  * <p>
- * doesn't support namespaces, imports, charset, at-page, cdo, cdc, most escaping, font-face, media queries, comments,
- * strings?
+ * For usage information, see the readme.md file, or check out (link).
  * 
  * <p>
- * This library is <em>not</em> thread-safe.
+ * Please note that the parser does not currently support the following:
+ * 
+ * <ul>
+ * <li>@namespace
+ * <li>@import
+ * <li>@charset
+ * <li>@page
+ * <li>@font-face
+ * <li>@media (media queries)
+ * <li>cdo and cdc
+ * <li>escaping (in most cases)
+ * <li>!important
+ * </ul>
+ * 
+ * <p>
+ * This library is <em>not</em> thread-safe. Don't even try it without reviewing and fixing every class in this library.
+ * 
+ * @example TODO
  * 
  * @author nmcwilliams
  */
@@ -29,11 +47,16 @@ public final class Omakase {
     private Omakase() {}
 
     /**
-     * TODO Description
+     * Specifies the CSS source to parse.
+     * 
+     * <p>
+     * Omakase calls begin with this method, you then usually add some plugins and then finally end with
+     * <code>.process()</code>
      * 
      * @param source
-     *            TODO
-     * @return TODO
+     *            The CSS source code.
+     * @return The processed request (see {@link Request}), usually you don't need this reference unless you can't
+     *         inline/chain the whole call).
      */
     public static Omakase.Request source(CharSequence source) {
         checkNotNull(source, "source cannot be null");
@@ -41,7 +64,15 @@ public final class Omakase {
     }
 
     /**
-     * TODO Description
+     * Represents a request to process CSS.
+     * 
+     * <p>
+     * This object allows you to add plugins in order to specify the validation, rework, etc... performed on the
+     * processed code. See {@link Plugin} for more information.
+     * 
+     * <p>
+     * Use {@link #errorManager(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager}
+     * is used by default.
      */
     public static final class Request {
         private final Context context;
@@ -55,57 +86,64 @@ public final class Omakase {
         }
 
         /**
-         * TODO Description
+         * Registers a plugin to process or utilize the parsed source code. This is equivalent to
+         * {@link #request(Plugin...)}. Choose based on which reads better for your usage ("request" is preferred,
+         * however "add" is more fluent when you can't inline the whole request and must make individual calls instead).
          * 
          * @param plugins
-         *            TODO
-         * @return TODO
+         *            The plugins to add.
+         * @return this, for chaining.
          */
         public Request add(Plugin... plugins) {
             return request(plugins);
         }
 
         /**
-         * TODO Description
+         * Registers a plugin to process or utilize the parsed source code. This is equivalent to
+         * {@link #add(Plugin...)}. Choose based on which reads better for your usage ("request" is preferred, however
+         * "add" is more fluent when you can't inline the whole request and must make individual calls instead).
          * 
          * @param plugins
-         *            TODO
-         * @return TODO
+         *            The plugins to add.
+         * @return this, for chaining.
          */
         public Request request(Plugin... plugins) {
-            context.plugins(Lists.newArrayList(plugins));
-            return this;
+            return request(Lists.newArrayList(plugins));
         }
 
         /**
-         * TODO Description
+         * Registers a plugin to process or utilize the parsed source code. This is equivalent to
+         * {@link #request(Iterable)}. Choose based on which reads better for your usage ("request" is preferred,
+         * however "add" is more fluent when you can't inline the whole request and must make individual calls instead).
          * 
          * @param plugins
-         *            TODO
-         * @return TODO
+         *            The plugins to add.
+         * @return this, for chaining.
          */
         public Request add(Iterable<? extends Plugin> plugins) {
             return request(plugins);
         }
 
         /**
-         * TODO Description
+         * Registers a plugin to process or utilize the parsed source code. This method is equivalent to
+         * {@link #add(Iterable)}. Choose based on which reads better for your usage ("request" is preferred, however
+         * "add" is more fluent when you can't inline the whole request and must make individual calls instead).
          * 
          * @param plugins
-         *            TODO
-         * @return TODO
+         *            The plugins to add.
+         * @return this, for chaining.
          */
         public Request request(Iterable<? extends Plugin> plugins) {
-            context.plugins(plugins);
+            context.register(plugins);
             return this;
         }
 
         /**
-         * TODO Description
+         * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
          * 
          * @param em
-         *            TODO
-         * @return TODO
+         *            The error manager.
+         * @return this, for chaining.
          */
         public Request errorManager(ErrorManager em) {
             this.em = checkNotNull(em, "the error manager cannot be null");
@@ -113,12 +151,15 @@ public final class Omakase {
         }
 
         /**
-         * TODO Description
+         * Processes the CSS source code, invoking registered plugins as applicable. It's only expected that you call
+         * this method at most once. To process difference source code, or to reprocess the same source code under
+         * different conditions or plugins, start new with {@link Omakase#source(CharSequence)}.
          * 
-         * @return TODO
+         * @return The {@link PluginRegistry} containing all registered plugins. This allows you to retrieve plugins if
+         *         applicable for further processing or information retrieval.
          */
-        public Context process() {
-            context.before();
+        public PluginRegistry process() {
+            context.before(em);
 
             try {
                 ParserFactory.stylesheetParser().parse(stream, context);
@@ -127,7 +168,6 @@ public final class Omakase {
             }
 
             context.after();
-
             return context;
         }
     }

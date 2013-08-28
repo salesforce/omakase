@@ -15,6 +15,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public class AtRuleParser extends AbstractParser {
+
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
@@ -22,6 +23,7 @@ public class AtRuleParser extends AbstractParser {
         // must begin with '@'
         if (!Tokens.AT_RULE.matches(stream.current())) return false;
 
-        return false; // TODO
+        return false;
     }
+
 }

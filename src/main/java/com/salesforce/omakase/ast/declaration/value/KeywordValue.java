@@ -4,19 +4,19 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A keyword value (e.g., inline-block).
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(value = "individual keyword value", broadcasted = REFINED_DECLARATION)
 public class KeywordValue extends AbstractSyntax implements Term {
     private String keyword;

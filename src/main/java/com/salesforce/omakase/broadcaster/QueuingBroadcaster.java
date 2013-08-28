@@ -12,11 +12,11 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
- * TODO Description
+ * A broadcaster that queues broadcasts.
  * 
  * @author nmcwilliams
  */
-public class QueuingBroadcaster implements Broadcaster {
+public final class QueuingBroadcaster implements Broadcaster {
     private final Deque<QueuedBroadcast> queue = new ArrayDeque<>();
     private final Broadcaster relay;
 
@@ -29,26 +29,25 @@ public class QueuingBroadcaster implements Broadcaster {
     }
 
     /**
-     * TODO
+     * Constructs a new {@link QueuingBroadcaster} instance that will relay all events to the given {@link Broadcaster}.
      * 
      * @param relay
-     *            TODO
+     *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public QueuingBroadcaster(Broadcaster relay) {
         this.relay = checkNotNull(relay, "relay cannot be null");
     }
 
     /**
-     * TODO Description
-     * 
+     * Pauses the queue. While pause, all broadcasts will be stored and will not be relayed until {@link #resume()} is
+     * called.
      */
     public void pause() {
         state = State.PAUSED;
     }
 
     /**
-     * TODO Description
-     * 
+     * Resumes broadcasts. Any broadcasts currently in the queue will be immediately sent out.
      */
     public void resume() {
         flush();
@@ -56,8 +55,7 @@ public class QueuingBroadcaster implements Broadcaster {
     }
 
     /**
-     * TODO Description
-     * 
+     * Broadcasts all events currently in the queue, until the queue is empty.
      */
     private void flush() {
         while (!queue.isEmpty()) {
@@ -75,6 +73,7 @@ public class QueuingBroadcaster implements Broadcaster {
         flush();
     }
 
+    /** data object */
     private static final class QueuedBroadcast {
         final SubscriptionType type;
         final Syntax syntax;

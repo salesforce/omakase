@@ -23,7 +23,7 @@ public final class As {
         this(object.getClass().getSimpleName());
     }
 
-    /** use construction method instead */
+    /** use a constructor method instead */
     private As(String name) {
         this.name = name;
     }

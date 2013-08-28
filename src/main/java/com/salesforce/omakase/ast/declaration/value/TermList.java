@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 
 /**
@@ -21,9 +21,9 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
  * example numbers, keywords, functions, hex colors, etc...
  * 
  * <p>
- * If you need to change the contents of a the {@link TermList}, change the contents of the actual {@link Term} itself.
- * If you need to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this
- * one with instead.
+ * If you need to change the contents of the {@link TermList}, change the contents of the actual {@link Term} itself. If
+ * you need to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this one
+ * with instead. (ACTUALLY I'm not sure why this comment is here. maybe it can be ignored).
  * 
  * <p>
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is
@@ -35,7 +35,7 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(value = "default, generic property value", broadcasted = REFINED_DECLARATION)
 public class TermList extends AbstractSyntax implements PropertyValue {
     private final List<TermListMember> terms = Lists.newArrayListWithCapacity(4);

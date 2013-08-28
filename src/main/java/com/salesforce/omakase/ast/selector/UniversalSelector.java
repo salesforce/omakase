@@ -3,19 +3,19 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.EmittableRequirement.REFINED_SELECTOR;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * Represents the CSS universal selector, i.e., "*".
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description(value = "universal selector segment", broadcasted = REFINED_SELECTOR)
 public class UniversalSelector extends AbstractGroupable<SelectorPart> implements SelectorPart {
     /**

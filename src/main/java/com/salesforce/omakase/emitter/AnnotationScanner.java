@@ -6,12 +6,14 @@ package com.salesforce.omakase.emitter;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import com.google.common.base.Objects;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.*;
-import com.salesforce.omakase.As;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import com.salesforce.omakase.Message;
+import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -20,8 +22,6 @@ import com.salesforce.omakase.plugin.Plugin;
  * @author nmcwilliams
  */
 final class AnnotationScanner {
-    private static final String ONE_ARG = "Methods annotated with @Subscribe must have exactly one argument: '%s'";
-
     /** cache of which methods on a {@link Plugin} are {@link Subscription} methods */
     private static final LoadingCache<Class<?>, Set<SubscriptionMetadata>> cache = CacheBuilder.newBuilder()
         .weakKeys()
@@ -33,84 +33,102 @@ final class AnnotationScanner {
         });
 
     /**
-     * Create {@link Subscription} objects for each subscribed event on the given class.
+     * Creates subscription objects for each subscribed event on the class of the given instance.
      * 
      * @param subscriber
      *            The class with the subscription methods.
      * @return A multimap of syntax object (event) to subscription object.
      */
     public Multimap<Class<?>, Subscription> scan(Object subscriber) {
-        // linked multimap because insertion order is important
+        // linked multimap because we need to maintain insertion order
         Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
 
         for (SubscriptionMetadata md : cache.getUnchecked(subscriber.getClass())) {
-            Class<?> event = md.method.getParameterTypes()[0];
-            Subscription s = new Subscription(md.type, subscriber, md.method, md.filter);
-            subscriptions.put(event, s);
+            subscriptions.put(md.event, new Subscription(md.phase, md.type, subscriber, md.method));
         }
+
         return subscriptions;
     }
 
     private static Set<SubscriptionMetadata> parse(Class<?> klass) {
-        // using tree set to maintain a predictable order.
-        Set<SubscriptionMetadata> set = Sets.newTreeSet();
+        Set<SubscriptionMetadata> set = Sets.newHashSet();
 
         for (Method method : klass.getMethods()) {
+            boolean annotated = false;
 
+            // the preprocess annotation
+            if (method.isAnnotationPresent(PreProcess.class)) {
+                annotated = true;
+
+                // must have exactly one parameter
+                Class<?>[] params = method.getParameterTypes();
+                if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
+
+                // add the metadata
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionType.CREATED, SubscriptionPhase.PREPROCESS));
+            }
+
+            // the observe annotation
+            if (method.isAnnotationPresent(Observe.class)) {
+                if (annotated == true) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                annotated = true;
+
+                // must have exactly one parameter
+                Class<?>[] params = method.getParameterTypes();
+                if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
+
+                // add the metadata
+                Observe observe = method.getAnnotation(Observe.class);
+                set.add(new SubscriptionMetadata(method, params[0], observe.type(), SubscriptionPhase.PROCESS));
+            }
+
+            // the rework annotation
             if (method.isAnnotationPresent(Rework.class)) {
-                Rework subscribe = method.getAnnotation(Rework.class);
-                Class<?>[] parameterTypes = method.getParameterTypes();
-                SubscriptionMetadata metadata = new SubscriptionMetadata();
+                if (annotated == true) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                annotated = true;
 
-                // must have exactly one argument
-                if (parameterTypes.length != 1) { throw new SubscriptionException(String.format(ONE_ARG, method)); }
+                // must have exactly one parameter
+                Class<?>[] params = method.getParameterTypes();
+                if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
-                metadata.method = method;
-                metadata.type = subscribe.type();
+                // add the metadata
+                Rework rework = method.getAnnotation(Rework.class);
+                set.add(new SubscriptionMetadata(method, params[0], rework.type(), SubscriptionPhase.PROCESS));
+            }
 
-                set.add(metadata);
+            // the validate annotation
+            if (method.isAnnotationPresent(Validate.class)) {
+                if (annotated == true) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                annotated = true;
+
+                // must have exactly two parameters
+                Class<?>[] params = method.getParameterTypes();
+                if (params.length != 2) throw new SubscriptionException(Message.TWO_PARAMS, method);
+
+                // second param must be an error manager
+                boolean errorManager = ErrorManager.class.isAssignableFrom(params[1]);
+                if (!errorManager) throw new SubscriptionException(Message.MISSING_ERROR_MANAGER, method);
+
+                // add the metadata
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionType.CHANGED, SubscriptionPhase.VALIDATE));
             }
         }
 
         return set;
     }
 
-    /**
-     * Metadata parsed from a method annotated with {@link Rework}. Note that this implements {@link Comparable} to
-     * allow subscription methods within the same class to be explicitly or predictably ordered.
-     */
-    private static final class SubscriptionMetadata implements Comparable<SubscriptionMetadata> {
-        Method method;
-        SubscriptionType type;
+    /** data object */
+    private static final class SubscriptionMetadata {
+        final Method method;
+        final Class<?> event;
+        final SubscriptionType type;
+        final SubscriptionPhase phase;
 
-        @Override
-        public int compareTo(SubscriptionMetadata o) {
-            return ComparisonChain.start()
-                .compare(type, o.type)
-                .compare(method, o.method, Ordering.arbitrary())
-                .result();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(type, method);
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (object instanceof SubscriptionMetadata) {
-                SubscriptionMetadata that = (SubscriptionMetadata)object;
-                return Objects.equal(type, that.type) && Objects.equal(method, that.method);
-            }
-            return false;
-        }
-
-        @Override
-        public String toString() {
-            return As.string(this)
-                .add("type", type)
-                .add("method", method.getName())
-                .toString();
+        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionType type, SubscriptionPhase phase) {
+            this.method = method;
+            this.event = event;
+            this.type = type;
+            this.phase = phase;
         }
     }
 }

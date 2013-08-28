@@ -16,34 +16,33 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
- * A {@link Broadcaster} that stores each event for later querying and retrieval. It can also optionally relay each
- * event to another {@link Broadcaster}.
+ * A {@link Broadcaster} that stores each event for later querying and retrieval.
  * 
  * <p>
  * Note that currently only {@link SubscriptionType#CREATED} events are stored.
  * 
  * @author nmcwilliams
  */
-public class CollectingBroadcaster implements Broadcaster {
+public final class QueryableBroadcaster implements Broadcaster {
     private final List<Syntax> collected = Lists.newArrayList();
     private final Broadcaster relay;
 
     /**
-     * Constructs a new {@link CollectingBroadcaster} instance that will <em>not</em> relay any events to another
+     * Constructs a new {@link QueryableBroadcaster} instance that will <em>not</em> relay any events to another
      * {@link Broadcaster}.
      */
-    public CollectingBroadcaster() {
+    public QueryableBroadcaster() {
         this(null);
     }
 
     /**
-     * Constructs a new {@link CollectingBroadcaster} instance that will relay all events to the given
+     * Constructs a new {@link QueryableBroadcaster} instance that will relay all events to the given
      * {@link Broadcaster}.
      * 
      * @param relay
      *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
-    public CollectingBroadcaster(Broadcaster relay) {
+    public QueryableBroadcaster(Broadcaster relay) {
         this.relay = relay;
     }
 
@@ -86,7 +85,7 @@ public class CollectingBroadcaster implements Broadcaster {
      *            Type of the {@link Syntax} unit.
      * @param klass
      *            Get the first {@link Syntax} unit that is an instance of this class.
-     * @return The single matching {@link Syntax} unit that is an instance of the given class, or
+     * @return The first matching {@link Syntax} unit that is an instance of the given class, or
      *         {@link Optional#absent()} if not present.
      */
     @SuppressWarnings("unchecked")

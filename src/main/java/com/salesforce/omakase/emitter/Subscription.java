@@ -9,23 +9,34 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.google.common.base.Objects;
+import com.salesforce.omakase.As;
+import com.salesforce.omakase.error.ErrorManager;
 
 /**
  * Metadata class to wrap the details around a subscription method. For internal use only.
  * 
  * @author nmcwilliams
  */
-public final class Subscription {
+final class Subscription {
+    private final SubscriptionPhase phase;
     private final SubscriptionType type;
     private final Object subscriber;
     private final Method method;
-    private final String filter;
 
-    Subscription(SubscriptionType type, Object subscriber, Method method, String filter) {
+    Subscription(SubscriptionPhase phase, SubscriptionType type, Object subscriber, Method method) {
+        this.phase = phase;
         this.type = type;
         this.subscriber = subscriber;
         this.method = method;
-        this.filter = filter;
+    }
+
+    /**
+     * Gets the {@link SubscriptionPhase} this subscription takes part in.
+     * 
+     * @return The {@link SubscriptionPhase}.
+     */
+    public SubscriptionPhase phase() {
+        return phase;
     }
 
     /**
@@ -38,15 +49,6 @@ public final class Subscription {
     }
 
     /**
-     * The filter name.
-     * 
-     * @return the filter name.
-     */
-    public String filter() {
-        return filter;
-    }
-
-    /**
      * Inform this subscription that a particular event of a given type occurred. The subscription method may not be
      * invoked, dependent on how restrictive it is with respect to the {@link SubscriptionType}, etc...
      * 
@@ -54,11 +56,18 @@ public final class Subscription {
      *            The type of event.
      * @param event
      *            The event object (e.g., syntax instance).
+     * @param em
+     *            The {@link ErrorManager} instance.
      */
-    public void inform(SubscriptionType type, Object event) {
+    public void inform(SubscriptionType type, Object event, ErrorManager em) {
         checkNotNull(event, "event cannot be null");
-        if (this.type == type) {
-            deliver(event);
+
+        if (type == SubscriptionType.CREATED) {
+            // create events are broadcast to both CREATED and CHANGED
+            deliver(event, em);
+        } else if (this.type == type) {
+            // only broadcast CHANGED events to subscriptions with type CHANGED
+            deliver(event, em);
         }
     }
 
@@ -67,10 +76,16 @@ public final class Subscription {
      * 
      * @param event
      *            The event object (e.g., syntax instance).
+     * @param em
+     *            The {@link ErrorManager} instance to use for validation methods.
      */
-    private void deliver(Object event) {
+    private void deliver(Object event, ErrorManager em) {
         try {
-            method.invoke(subscriber, event);
+            if (phase == SubscriptionPhase.VALIDATE) {
+                method.invoke(subscriber, event, em);
+            } else {
+                method.invoke(subscriber, event);
+            }
         } catch (IllegalArgumentException e) {
             throw new SubscriptionException("Invalid arguments for subscription method", e);
         } catch (IllegalAccessException e) {
@@ -96,11 +111,12 @@ public final class Subscription {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return As.string(this)
+            .indent()
             .add("method", method.getName())
             .add("subscriber", subscriber)
+            .add("phase", phase)
             .add("type", type)
-            .add("filter", filter)
             .toString();
     }
 }

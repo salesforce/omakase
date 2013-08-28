@@ -23,7 +23,7 @@ public interface Commentable extends Syntax {
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.
      * 
-     * @return The list of comments.
+     * @return The list of comments. Never returns null.
      */
     List<String> comments();
 }

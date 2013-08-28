@@ -3,8 +3,10 @@
  */
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Emittable;
+import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A distinct unit of syntax within CSS.
@@ -24,7 +26,7 @@ import com.salesforce.omakase.emitter.Emittable;
  * 
  * @author nmcwilliams
  */
-@Emittable
+@Subscribable
 @Description("parent interface of all subscribable units")
 public interface Syntax {
     /**
@@ -42,9 +44,16 @@ public interface Syntax {
     int column();
 
     /**
-     * TODO Description
+     * Gets the name of this syntax unit for filtering purposes.
      * 
-     * @return TODO
+     * <p>
+     * The primary purpose of this is to allow checking the name of something before actually refining it. For example,
+     * for {@link Declaration}s this returns the property-name, which you may want to check first before performing
+     * rework (which may require refinement of the declaration). Many syntax units return a useful value here (e.g., for
+     * {@link ClassSelector} it returns the class name), however for units without an associated logical "name" an empty
+     * string is returned.
+     * 
+     * @return The name, or an empty string if there isn't one.
      */
     String filterName();
 }

@@ -4,6 +4,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.SubscriptionType;
@@ -20,7 +21,6 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public class ClassSelectorParser extends AbstractParser {
-    private static final String MSG = "expected to find a valid class name ([-_0-9a-zA-Z], cannot start with a number)";
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -36,11 +36,12 @@ public class ClassSelectorParser extends AbstractParser {
 
         // parse the class name
         Optional<String> name = stream.readIdent();
-        if (!name.isPresent()) throw new ParserException(stream, MSG);
+        if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_CLASS);
 
         // broadcast the new class selector
         ClassSelector selector = new ClassSelector(line, column, name.get());
         broadcaster.broadcast(SubscriptionType.CREATED, selector);
         return true;
     }
+
 }
