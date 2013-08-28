@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser.declaration;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.HexColorValue;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
@@ -38,7 +37,7 @@ public class HexColorValueParser extends AbstractParser {
 
             HexColorValue value = new HexColorValue(line, column, color);
 
-            broadcaster.broadcast(SubscriptionType.CREATED, value);
+            broadcaster.broadcast(value);
             return true;
         }
 

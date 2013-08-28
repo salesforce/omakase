@@ -3,8 +3,6 @@
  */
 package com.salesforce.omakase.emitter;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -20,13 +18,11 @@ import com.salesforce.omakase.error.OmakaseException;
  */
 final class Subscription {
     private final SubscriptionPhase phase;
-    private final SubscriptionType type;
     private final Object subscriber;
     private final Method method;
 
-    Subscription(SubscriptionPhase phase, SubscriptionType type, Object subscriber, Method method) {
+    Subscription(SubscriptionPhase phase, Object subscriber, Method method) {
         this.phase = phase;
-        this.type = type;
         this.subscriber = subscriber;
         this.method = method;
     }
@@ -41,38 +37,6 @@ final class Subscription {
     }
 
     /**
-     * The type of subscription.
-     * 
-     * @return The type of subscription.
-     */
-    public SubscriptionType type() {
-        return type;
-    }
-
-    /**
-     * Inform this subscription that a particular event of a given type occurred. The subscription method may not be
-     * invoked, dependent on how restrictive it is with respect to the {@link SubscriptionType}, etc...
-     * 
-     * @param type
-     *            The type of event.
-     * @param event
-     *            The event object (e.g., syntax instance).
-     * @param em
-     *            The {@link ErrorManager} instance.
-     */
-    public void inform(SubscriptionType type, Object event, ErrorManager em) {
-        checkNotNull(event, "event cannot be null");
-
-        if (type == SubscriptionType.CREATED) {
-            // create events are broadcast to both CREATED and CHANGED
-            deliver(event, em);
-        } else if (this.type == type) {
-            // only broadcast CHANGED events to subscriptions with type CHANGED
-            deliver(event, em);
-        }
-    }
-
-    /**
      * Invokes the subscription method.
      * 
      * @param event
@@ -80,7 +44,7 @@ final class Subscription {
      * @param em
      *            The {@link ErrorManager} instance to use for validation methods.
      */
-    private void deliver(Object event, ErrorManager em) {
+    public void deliver(Object event, ErrorManager em) {
         try {
             if (phase == SubscriptionPhase.VALIDATE) {
                 method.invoke(subscriber, event, em);
@@ -118,7 +82,6 @@ final class Subscription {
             .add("method", method.getName())
             .add("subscriber", subscriber)
             .add("phase", phase)
-            .add("type", type)
             .toString();
     }
 }

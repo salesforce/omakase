@@ -13,7 +13,6 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.PreProcess;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.PreProcessingPlugin;
 
@@ -109,7 +108,7 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
             endStatement();
         }
 
-        broadcaster.broadcast(SubscriptionType.CREATED, currentStylesheet);
+        broadcaster.broadcast(currentStylesheet);
         state = State.FROZEN;
     }
 
@@ -136,7 +135,7 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
     private void endStatement() {
         checkState(currentStatement != null, "currentStatement not set");
         currentStylesheet.append(currentStatement);
-        broadcaster.broadcast(SubscriptionType.CREATED, currentStatement);
+        broadcaster.broadcast(currentStatement);
         currentStatement = null;
     }
 

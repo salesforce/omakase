@@ -13,13 +13,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
  * A {@link Broadcaster} that stores each event for later querying and retrieval.
- * 
- * <p>
- * Note that currently only {@link SubscriptionType#CREATED} events are stored.
  * 
  * @author nmcwilliams
  */
@@ -47,12 +43,11 @@ public final class QueryableBroadcaster implements Broadcaster {
     }
 
     @Override
-    public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
-        if (type == SubscriptionType.CREATED) {
-            collected.add(syntax);
-        }
+    public <T extends Syntax> void broadcast(T syntax) {
+        collected.add(syntax);
+
         if (relay != null) {
-            relay.broadcast(type, syntax);
+            relay.broadcast(syntax);
         }
     }
 
@@ -66,7 +61,7 @@ public final class QueryableBroadcaster implements Broadcaster {
     }
 
     /**
-     * Gets all broadcasted events of type {@link SubscriptionType#CREATED} that are instances of the given class.
+     * Gets all broadcasted events that are instances of the given class.
      * 
      * @param <T>
      *            Type of the {@link Syntax} unit.

@@ -23,10 +23,4 @@ import com.salesforce.omakase.ast.Syntax;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Observe {
-    /**
-     * Subscribe to this type of event (default is {@link SubscriptionType#CREATED}).
-     * 
-     * @return The {@link SubscriptionType}.
-     */
-    SubscriptionType type() default SubscriptionType.CREATED;
 }

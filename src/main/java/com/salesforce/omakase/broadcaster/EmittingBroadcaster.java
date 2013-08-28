@@ -6,7 +6,6 @@ package com.salesforce.omakase.broadcaster;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
@@ -73,11 +72,11 @@ public final class EmittingBroadcaster implements Broadcaster {
     }
 
     @Override
-    public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
-        emitter.emit(type, syntax, em);
+    public <T extends Syntax> void broadcast(T syntax) {
+        emitter.emit(syntax, em);
 
         if (relay != null) {
-            relay.broadcast(type, syntax);
+            relay.broadcast(syntax);
         }
     }
 }

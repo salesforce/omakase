@@ -7,7 +7,6 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
@@ -44,7 +43,7 @@ public class IdSelectorParser extends AbstractParser {
 
         // broadcast the new class selector
         IdSelector selector = new IdSelector(line, column, name.get());
-        broadcaster.broadcast(SubscriptionType.CREATED, selector);
+        broadcaster.broadcast(selector);
         return true;
     }
 

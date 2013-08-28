@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
@@ -27,7 +26,7 @@ public class KeywordValueParser extends AbstractParser {
 
         KeywordValue value = new KeywordValue(line, column, keyword.get());
 
-        broadcaster.broadcast(SubscriptionType.CREATED, value);
+        broadcaster.broadcast(value);
         return true;
     }
 

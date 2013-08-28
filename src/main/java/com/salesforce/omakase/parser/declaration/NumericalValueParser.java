@@ -8,7 +8,6 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.*;
 import com.salesforce.omakase.parser.Stream.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -64,7 +63,7 @@ public class NumericalValueParser extends AbstractParser {
             value.unit(unit.get());
         }
 
-        broadcaster.broadcast(SubscriptionType.CREATED, value);
+        broadcaster.broadcast(value);
         return true;
     }
 }

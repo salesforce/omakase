@@ -7,7 +7,6 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.CombinatorType;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -48,7 +47,7 @@ public class CombinatorParser extends AbstractParser {
 
             // create and broadcast the combinator
             Combinator combinator = new Combinator(line, column, type.get());
-            broadcaster.broadcast(SubscriptionType.CREATED, combinator);
+            broadcaster.broadcast(combinator);
             return true;
         }
         return false;

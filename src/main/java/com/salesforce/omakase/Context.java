@@ -16,7 +16,6 @@ import com.salesforce.omakase.broadcaster.EmittingBroadcaster;
 import com.salesforce.omakase.broadcaster.VisitingBroadcaster;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.*;
 
@@ -86,8 +85,8 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     @Override
-    public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
-        broadcaster.broadcast(type, syntax);
+    public <T extends Syntax> void broadcast(T syntax) {
+        broadcaster.broadcast(syntax);
     }
 
     /** helper method to get only plugins of a certain type */

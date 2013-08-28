@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser.raw;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
@@ -45,7 +44,7 @@ public class RawDeclarationParser extends AbstractParser {
         declaration.comments(stream.flushComments());
 
         // notifier listeners of new declaration
-        broadcaster.broadcast(SubscriptionType.CREATED, declaration);
+        broadcaster.broadcast(declaration);
         return true;
     }
 

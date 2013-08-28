@@ -5,7 +5,6 @@ package com.salesforce.omakase.parser.selector;
 
 import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -31,7 +30,7 @@ public class UniversalSelectorParser extends AbstractParser {
 
         // broadcast the new selector
         UniversalSelector selector = new UniversalSelector(line, column);
-        broadcaster.broadcast(SubscriptionType.CREATED, selector);
+        broadcaster.broadcast(selector);
         return true;
     }
 

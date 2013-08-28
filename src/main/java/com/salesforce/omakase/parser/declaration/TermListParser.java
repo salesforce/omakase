@@ -9,7 +9,6 @@ import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.*;
 
 /**
@@ -71,7 +70,7 @@ public class TermListParser extends AbstractParser {
         stream.enableComments();
 
         // broadcast the new term list
-        broadcaster.broadcast(SubscriptionType.CREATED, termList);
+        broadcaster.broadcast(termList);
         return true;
     }
 }

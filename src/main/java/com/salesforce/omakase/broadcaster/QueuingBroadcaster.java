@@ -9,7 +9,6 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.emitter.SubscriptionType;
 
 /**
  * A broadcaster that queues broadcasts.
@@ -17,7 +16,7 @@ import com.salesforce.omakase.emitter.SubscriptionType;
  * @author nmcwilliams
  */
 public final class QueuingBroadcaster implements Broadcaster {
-    private final Deque<QueuedBroadcast> queue = new ArrayDeque<>();
+    private final Deque<Syntax> queue = new ArrayDeque<>();
     private final Broadcaster relay;
 
     private State state = State.READY;
@@ -59,28 +58,18 @@ public final class QueuingBroadcaster implements Broadcaster {
      */
     private void flush() {
         while (!queue.isEmpty()) {
-            QueuedBroadcast queued = queue.pop();
-            relay.broadcast(queued.type, queued.syntax);
+            Syntax queued = queue.pop();
+            relay.broadcast(queued);
         }
     }
 
     @Override
-    public <T extends Syntax> void broadcast(SubscriptionType type, T syntax) {
-        queue.push(new QueuedBroadcast(type, syntax));
+    public <T extends Syntax> void broadcast(T syntax) {
+        queue.push(syntax);
 
         if (state == State.PAUSED || state == State.BROADCASTING) return;
 
         flush();
     }
 
-    /** data object */
-    private static final class QueuedBroadcast {
-        final SubscriptionType type;
-        final Syntax syntax;
-
-        public QueuedBroadcast(SubscriptionType type, Syntax syntax) {
-            this.type = type;
-            this.syntax = syntax;
-        }
-    }
 }

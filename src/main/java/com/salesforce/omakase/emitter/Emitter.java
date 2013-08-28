@@ -97,34 +97,28 @@ public final class Emitter {
      * "event" here usually refers to an instance of a {@link Syntax} unit (but this class is built generically to emit
      * anything really).
      * 
-     * <p>
-     * Subscribers will only receive the event if we are in the applicable {@link SubscriptionPhase}, and with a
-     * matching {@link SubscriptionType}.
-     * 
-     * @param type
-     *            The type of event that has occurred, e.g., a creation event or a changed event.
      * @param event
      *            The event instance. "event" here usually is an instance of an object (e.g., one of the {@link Syntax}
      *            objects).
      * @param em
      *            The {@link ErrorManager} instance.
      */
-    public void emit(SubscriptionType type, Object event, ErrorManager em) {
+    public void emit(Object event, ErrorManager em) {
         switch (phase) {
         case PREPROCESS:
-            emit(preprocessors, type, event, em);
+            emit(preprocessors, event, em);
             break;
         case PROCESS:
-            emit(processors, type, event, em);
+            emit(processors, event, em);
             break;
         case VALIDATE:
-            emit(validators, type, event, em);
+            emit(validators, event, em);
             break;
         }
     }
 
     /** handles emits for a particular phase */
-    private void emit(Multimap<Class<?>, Subscription> multimap, SubscriptionType type, Object event, ErrorManager em) {
+    private void emit(Multimap<Class<?>, Subscription> multimap, Object event, ErrorManager em) {
         Class<? extends Object> eventType = event.getClass();
 
         // perf - if we don't have a subscription for this class skip the cache check or load
@@ -133,7 +127,7 @@ public final class Emitter {
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Class<?> klass : hierarchy(eventType)) {
             for (Subscription subscription : multimap.get(klass)) {
-                subscription.inform(type, event, em);
+                subscription.deliver(event, em);
             }
         }
     }

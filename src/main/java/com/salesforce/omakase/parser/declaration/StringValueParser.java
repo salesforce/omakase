@@ -5,7 +5,6 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -33,7 +32,7 @@ public class StringValueParser extends AbstractParser {
         }
 
         StringValue string = new StringValue(line, column, value);
-        broadcaster.broadcast(SubscriptionType.CREATED, string);
+        broadcaster.broadcast(string);
         return true;
     }
 

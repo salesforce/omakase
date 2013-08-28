@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser.selector;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
@@ -35,7 +34,7 @@ public class TypeSelectorParser extends AbstractParser {
 
         // create and broadcast the new selector
         TypeSelector selector = new TypeSelector(line, column, name.get());
-        broadcaster.broadcast(SubscriptionType.CREATED, selector);
+        broadcaster.broadcast(selector);
         return true;
     }
 

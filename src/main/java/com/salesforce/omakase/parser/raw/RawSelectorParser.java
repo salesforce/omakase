@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser.raw;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.SubscriptionType;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
@@ -36,7 +35,7 @@ public class RawSelectorParser extends AbstractParser {
         selector.comments(stream.flushComments());
 
         // notify listeners of new selector
-        broadcaster.broadcast(SubscriptionType.CREATED, selector);
+        broadcaster.broadcast(selector);
         return true;
     }
 

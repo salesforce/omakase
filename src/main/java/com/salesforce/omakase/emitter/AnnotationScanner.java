@@ -44,7 +44,7 @@ final class AnnotationScanner {
         Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
 
         for (SubscriptionMetadata md : cache.getUnchecked(subscriber.getClass())) {
-            subscriptions.put(md.event, new Subscription(md.phase, md.type, subscriber, md.method));
+            subscriptions.put(md.event, new Subscription(md.phase, subscriber, md.method));
         }
 
         return subscriptions;
@@ -65,7 +65,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionType.CREATED, SubscriptionPhase.PREPROCESS));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PREPROCESS));
             }
 
             // the observe annotation
@@ -78,8 +78,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                Observe observe = method.getAnnotation(Observe.class);
-                set.add(new SubscriptionMetadata(method, params[0], observe.type(), SubscriptionPhase.PROCESS));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS));
             }
 
             // the rework annotation
@@ -92,8 +91,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                Rework rework = method.getAnnotation(Rework.class);
-                set.add(new SubscriptionMetadata(method, params[0], rework.type(), SubscriptionPhase.PROCESS));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS));
             }
 
             // the validate annotation
@@ -110,7 +108,7 @@ final class AnnotationScanner {
                 if (!errorManager) throw new SubscriptionException(Message.MISSING_ERROR_MANAGER, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionType.CHANGED, SubscriptionPhase.VALIDATE));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.VALIDATE));
             }
         }
 
@@ -121,13 +119,11 @@ final class AnnotationScanner {
     private static final class SubscriptionMetadata {
         final Method method;
         final Class<?> event;
-        final SubscriptionType type;
         final SubscriptionPhase phase;
 
-        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionType type, SubscriptionPhase phase) {
+        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionPhase phase) {
             this.method = method;
             this.event = event;
-            this.type = type;
             this.phase = phase;
         }
     }
