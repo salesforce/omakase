@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import com.salesforce.omakase.As;
@@ -36,6 +37,18 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
     public ClassSelector(int line, int column, String name) {
         super(line, column);
         this.name = name;
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param name
+     *            The new class name.
+     * @return this, for chaining.
+     */
+    public ClassSelector name(String name) {
+        this.name = checkNotNull(name, "name cannot be null");
+        return this;
     }
 
     /**
