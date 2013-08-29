@@ -74,7 +74,7 @@ public final class Emitter {
         for (Entry<Class<?>, Subscription> entry : scanner.scan(subscriber).entries()) {
             Subscription subscription = entry.getValue();
 
-            // segment the subscriber to the correct phase bucket
+            // perf -- segment the subscriber to the correct phase bucket
             switch (subscription.phase()) {
             case PREPROCESS:
                 preprocessors.put(entry.getKey(), subscription);
@@ -121,11 +121,12 @@ public final class Emitter {
     private void emit(Multimap<Class<?>, Subscription> multimap, Object event, ErrorManager em) {
         Class<? extends Object> eventType = event.getClass();
 
-        // perf - if we don't have a subscription for this class skip the cache check or load
-        // if (!multimap.containsKey(eventType)) return;
-
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Class<?> klass : hierarchy(eventType)) {
+
+            // perf -- skip the multimap check if it doesn't contain the key
+            if (!multimap.containsKey(klass)) continue;
+
             for (Subscription subscription : multimap.get(klass)) {
                 subscription.deliver(event, em);
             }

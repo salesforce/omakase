@@ -11,8 +11,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.Omakase.Request;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
@@ -54,7 +52,7 @@ public class PerfTestLight {
     public static void main(String[] args) throws IOException {
         env(true);
         run();
-        env(false);
+        env(true);
     }
 
     public static void env(boolean full) {
@@ -62,10 +60,10 @@ public class PerfTestLight {
         Runtime runtime = Runtime.getRuntime();
 
         print("##### Heap utilization statistics [MB] #####");
+        if (full) print("Max Memory:" + runtime.maxMemory() / mb);
+        if (full) print("Availiable Memory:" + runtime.totalMemory() / mb);
         print("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);
         print("Free Memory:" + runtime.freeMemory() / mb);
-        if (full) print("Total Memory:" + runtime.totalMemory() / mb);
-        if (full) print("Max Memory:" + runtime.maxMemory() / mb);
     }
 
     /**
@@ -80,7 +78,7 @@ public class PerfTestLight {
         // prime
         if (PRIME) {
             print("\nPriming");
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 200; i++) {
                 parse(Mode.OMAKASE, original);
                 parse(Mode.OMAKASE_FULL, original);
             }
@@ -149,8 +147,7 @@ public class PerfTestLight {
 
             request.add(new SyntaxTree());
 
-            AutoRefiner autoRefiner = new AutoRefiner();
-            autoRefiner.include(Selector.class).include(Declaration.class);
+            AutoRefiner autoRefiner = new AutoRefiner().all();
             request.add(autoRefiner);
 
             request.process();

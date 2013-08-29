@@ -51,7 +51,7 @@ final class Context implements Broadcaster, PluginRegistry {
         Class<? extends Plugin> klass = plugin.getClass();
 
         // only one instance allowed per plugin type
-        checkArgument(!registry.containsKey(klass), Message.DUPLICATE_PLUGIN.message(klass));
+        if (registry.containsKey(klass)) throw new IllegalArgumentException(Message.DUPLICATE_PLUGIN.message(klass));
 
         // add the plugin to the registry
         registry.put(klass, plugin);

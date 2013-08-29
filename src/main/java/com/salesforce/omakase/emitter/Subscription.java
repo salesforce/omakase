@@ -70,6 +70,7 @@ final class Subscription {
     public boolean equals(Object object) {
         if (object instanceof Subscription) {
             Subscription other = (Subscription)object;
+            // must be same instance of the same class (identity)
             return subscriber == other.subscriber && Objects.equal(this.method, other.method);
         }
         return false;

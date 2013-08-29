@@ -273,7 +273,7 @@ public final class Stream {
 
         // check if we are in a string
         if (checkInString) {
-            udpateInString();
+            updateInString();
         }
 
         // return the current character
@@ -636,7 +636,7 @@ public final class Stream {
      * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We
      * remain in this status until the matching quote symbol is encountered again, unescaped.
      */
-    private void udpateInString() {
+    private void updateInString() {
         final Character current = current();
 
         if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) {
