@@ -7,11 +7,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
+import java.io.IOException;
+
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * A numerical value (e.g., 1 or 1px or 3.5em).
@@ -153,6 +157,23 @@ public class NumericalValue extends AbstractSyntax implements Term {
      */
     public Optional<Sign> explicitSign() {
         return explicitSign;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (explicitSign.isPresent()) {
+            appendable.append(explicitSign.get().symbol);
+        }
+        if (integerValue.intValue() != 0) {
+            appendable.append(integerValue.toString());
+        }
+        if (decimalValue.isPresent()) {
+            appendable.append('.');
+            appendable.append(decimalValue.get().toString());
+        }
+        if (unit.isPresent()) {
+            appendable.append(unit.get());
+        }
     }
 
     @Override

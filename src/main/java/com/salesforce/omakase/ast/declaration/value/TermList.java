@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast.declaration.value;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -15,6 +16,8 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * The generic and default {@link Declaration}'s {@link PropertyValue}. This contains a list of {@link Term}s, for
@@ -38,7 +41,7 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
 @Subscribable
 @Description(value = "default, generic property value", broadcasted = REFINED_DECLARATION)
 public class TermList extends AbstractSyntax implements PropertyValue {
-    private final List<TermListMember> terms = Lists.newArrayListWithCapacity(4);
+    private final List<TermListMember> members = Lists.newArrayListWithCapacity(4);
 
     /**
      * Constructs a new {@link TermList} instance.
@@ -60,7 +63,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      * @return this, for chaining.
      */
     public TermList add(TermListMember member) {
-        this.terms.add(member);
+        this.members.add(member);
         return this;
     }
 
@@ -69,8 +72,15 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      * 
      * @return All {@link TermListMember}s.
      */
-    public ImmutableList<TermListMember> terms() {
-        return ImmutableList.copyOf(terms);
+    public ImmutableList<TermListMember> members() {
+        return ImmutableList.copyOf(members);
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        for (TermListMember member : members) {
+            writer.write(member, appendable);
+        }
     }
 
     @Override
@@ -78,7 +88,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
         return As.string(this)
             .indent()
             .add("position", super.toString())
-            .add("terms", terms)
+            .add("members", members)
             .toString();
     }
 }

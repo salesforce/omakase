@@ -6,11 +6,15 @@ package com.salesforce.omakase.ast.declaration.value;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * A string value, e.g., "Times New Roman".
@@ -22,20 +26,36 @@ import com.salesforce.omakase.parser.declaration.StringValueParser;
 @Subscribable
 @Description(value = "individual string value", broadcasted = REFINED_DECLARATION)
 public class StringValue extends AbstractSyntax implements Term {
+    private final QuotationMode mode;
     private String content;
+
+    /** Type of quotation mark */
+    public enum QuotationMode {
+        /** single quotes */
+        SINGLE,
+        /** double quotes */
+        DOUBLE
+    }
 
     /**
      * Constructs a new {@link StringValue} instance.
+     * 
+     * <p>
+     * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source.
+     * Performance-wise, there is no reason to change it, and also it keeps us from having to mess around with escaping.
      * 
      * @param line
      *            The line number.
      * @param column
      *            The column number.
+     * @param mode
+     *            The {@link QuotationMode} to use when printing out the value.
      * @param content
      *            The content of the string.
      */
-    public StringValue(int line, int column, String content) {
+    public StringValue(int line, int column, QuotationMode mode, String content) {
         super(line, column);
+        this.mode = mode;
         this.content = content;
     }
 
@@ -58,6 +78,15 @@ public class StringValue extends AbstractSyntax implements Term {
      */
     public String content() {
         return content;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (mode == QuotationMode.SINGLE) {
+            appendable.append('\'').append(content).append('\'');
+        } else {
+            appendable.append('"').append(content).append('"');
+        }
     }
 
     @Override

@@ -5,11 +5,15 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.selector.CombinatorParser;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS selector part combinator.
@@ -51,12 +55,12 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
     @Override
     public SelectorPartType type() {
         switch (type) {
-        case ADJACENT_SIBLING:
-            return SelectorPartType.ADJACENT_SIBLING_COMBINATOR;
-        case CHILD:
-            return SelectorPartType.CHILD_COMBINATOR;
         case DESCENDANT:
             return SelectorPartType.DESCENDANT_COMBINATOR;
+        case CHILD:
+            return SelectorPartType.CHILD_COMBINATOR;
+        case ADJACENT_SIBLING:
+            return SelectorPartType.ADJACENT_SIBLING_COMBINATOR;
         case GENERAL_SIBLING:
             return SelectorPartType.GENERAL_SIBLING_COMBINATOR;
         }
@@ -69,12 +73,35 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
     }
 
     @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        switch (type) {
+        case DESCENDANT:
+            appendable.append(' ');
+            break;
+        case CHILD:
+            appendable.spaceIf(writer.verbose());
+            appendable.append('>');
+            appendable.spaceIf(writer.verbose());
+            break;
+        case ADJACENT_SIBLING:
+            appendable.spaceIf(writer.verbose());
+            appendable.append('+');
+            appendable.spaceIf(writer.verbose());
+            break;
+        case GENERAL_SIBLING:
+            appendable.spaceIf(writer.verbose());
+            appendable.append('~');
+            appendable.spaceIf(writer.verbose());
+            break;
+        }
+    }
+
+    @Override
     public String toString() {
         return As.string(this)
             .indent()
             .add("position", super.toString())
             .add("type", type)
             .toString();
-
     }
 }

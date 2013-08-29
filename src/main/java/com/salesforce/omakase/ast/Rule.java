@@ -5,6 +5,8 @@ package com.salesforce.omakase.ast;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -14,6 +16,8 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS Rule.
@@ -62,6 +66,41 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     @Override
     protected Statement self() {
         return this;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        // selectors
+        for (Selector selector : selectors) {
+            selector.write(writer, appendable);
+            if (!selector.isLast()) {
+                appendable.append(',');
+                appendable.spaceIf(!writer.compressed());
+            }
+        }
+
+        // open declaration block
+        appendable.spaceIf(!writer.compressed());
+        appendable.append('{');
+        appendable.newlineIf(writer.verbose());
+
+        // declarations
+        for (Declaration declaration : declarations) {
+            appendable.indentIf(writer.verbose());
+            writer.write(declaration, appendable);
+            if (writer.verbose() || !declaration.isLast()) appendable.append(';');
+            appendable.spaceIf(writer.inline() && !declaration.isLast());
+            appendable.newlineIf(writer.verbose());
+        }
+
+        // close declaration block
+        appendable.append('}');
+
+        // newlines (unless last statement)
+        if (!writer.compressed() && !isLast()) {
+            appendable.newline();
+            appendable.newlineIf(writer.verbose());
+        }
     }
 
     @Override

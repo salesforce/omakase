@@ -6,10 +6,14 @@ package com.salesforce.omakase.ast.declaration.value;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * A hex color value (e.g., "fffeee").
@@ -64,6 +68,16 @@ public class HexColorValue extends AbstractSyntax implements Term {
      */
     public boolean isShorthand() {
         return color.length() == 3;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (writer.compressed()) {
+            // FIXME optimizations
+            appendable.append('#').append(color);
+        } else {
+            appendable.append('#').append(color);
+        }
     }
 
     @Override

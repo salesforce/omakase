@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast.selector;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -25,6 +26,8 @@ import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS selector.
@@ -74,8 +77,13 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     }
 
     @Override
+    public boolean isRefined() {
+        return !parts.isEmpty();
+    }
+
+    @Override
     public RefinedSelector refine() {
-        if (parts.isEmpty()) {
+        if (!isRefined()) {
             QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
             Stream stream = new Stream(rawContent.content(), line(), column()).skipInStringCheck();
 
@@ -109,6 +117,17 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     @Override
     protected Selector self() {
         return this;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isRefined()) {
+            for (SelectorPart part : parts) {
+                writer.write(part, appendable);
+            }
+        } else {
+            writer.write(rawContent, appendable);
+        }
     }
 
     @Override

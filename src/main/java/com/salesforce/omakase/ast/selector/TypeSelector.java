@@ -3,12 +3,17 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
+import java.io.IOException;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS type selector (also known as an element type selector).
@@ -32,7 +37,20 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
      */
     public TypeSelector(int line, int column, String name) {
         super(line, column);
-        this.name = name;
+        this.name = name.toLowerCase();
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param name
+     *            TODO
+     * @return TODO
+     */
+    public TypeSelector name(String name) {
+        checkNotNull(name, "name cannot be null");
+        this.name = name.toLowerCase();
+        return this;
     }
 
     /**
@@ -67,6 +85,11 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
     @Override
     protected SelectorPart self() {
         return this;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.append(name);
     }
 
     @Override

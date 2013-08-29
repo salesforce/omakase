@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast.declaration;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Optional;
@@ -25,6 +26,8 @@ import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.*;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS declaration.
@@ -107,8 +110,13 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     @Override
+    public boolean isRefined() {
+        return propertyName != null;
+    }
+
+    @Override
     public RefinedDeclaration refine() {
-        if (propertyName == null) {
+        if (!isRefined()) {
             propertyName = Property.named(rawPropertyName.content());
 
             QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
@@ -147,6 +155,31 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     @Override
     protected Declaration self() {
         return this;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isRefined()) {
+            // property name
+            writer.write(propertyName, appendable);
+
+            // colon
+            appendable.append(':');
+            appendable.spaceIf(writer.verbose());
+
+            // property value
+            writer.write(propertyValue, appendable);
+        } else {
+            // property name
+            writer.write(rawPropertyName, appendable);
+
+            // colon
+            appendable.append(':');
+            appendable.spaceIf(writer.verbose());
+
+            // property value
+            writer.write(rawPropertyValue, appendable);
+        }
     }
 
     @Override

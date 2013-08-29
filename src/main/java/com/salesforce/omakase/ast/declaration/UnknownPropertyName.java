@@ -5,7 +5,11 @@ package com.salesforce.omakase.ast.declaration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * A {@link PropertyName} that is currently unknown to this library.
@@ -28,6 +32,11 @@ public final class UnknownPropertyName implements PropertyName {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.append(name);
     }
 
     @Override

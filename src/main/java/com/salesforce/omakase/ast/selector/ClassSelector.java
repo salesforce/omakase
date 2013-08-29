@@ -6,11 +6,15 @@ package com.salesforce.omakase.ast.selector;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.selector.ClassSelectorParser;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS class selector.
@@ -83,6 +87,11 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
     @Override
     protected SelectorPart self() {
         return this;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.append('.').append(name);
     }
 
     @Override

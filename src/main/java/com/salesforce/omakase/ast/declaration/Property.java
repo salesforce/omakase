@@ -3,11 +3,14 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
+import java.io.IOException;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Enum of all recognized CSS properties. Generated using {@link com.salesforce.omakase.tool.PropertyToEnum}.
@@ -625,6 +628,16 @@ public enum Property implements PropertyName {
         return name;
     }
 
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.append(name);
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).add("name", name).toString();
+    }
+
     /**
      * Gets the {@link PropertyName} associated with the given String name.
      * 
@@ -637,8 +650,4 @@ public enum Property implements PropertyName {
         return matched != null ? matched : new UnknownPropertyName(name);
     }
 
-    @Override
-    public String toString() {
-        return As.string(this).add("name", name).toString();
-    }
 }

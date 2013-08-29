@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 import com.google.common.collect.Lists;
@@ -15,6 +16,8 @@ import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * The root-level {@link Syntax} object.
@@ -62,6 +65,13 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     @Override
     public Iterator<Statement> iterator() {
         return statements().iterator();
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        for (Statement statement : statements) {
+            writer.write(statement, appendable);
+        }
     }
 
     @Override

@@ -6,10 +6,14 @@ package com.salesforce.omakase.ast.declaration.value;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * A generic function value with non-validated arguments. By not validating arguments here, we allow for new CSS
@@ -81,6 +85,12 @@ public class FunctionValue extends AbstractSyntax implements Term {
      */
     public String args() {
         return args;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        // FIXME Util.compress args
+        appendable.append(name).append('(').append(args).append(')');
     }
 
     @Override

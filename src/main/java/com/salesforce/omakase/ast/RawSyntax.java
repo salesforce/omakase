@@ -3,9 +3,13 @@
  */
 package com.salesforce.omakase.ast;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents raw, non-validated content. Usually used by {@link Refinable}s.
@@ -40,6 +44,16 @@ public final class RawSyntax extends AbstractSyntax {
      */
     public String content() {
         return content;
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (writer.compressed()) {
+            // FIXME compression util
+            appendable.append(content);
+        } else {
+            appendable.append(content);
+        }
     }
 
     @Override

@@ -3,9 +3,13 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * An operator, or separator, between {@link Term}s in a {@link TermList}.
@@ -33,12 +37,8 @@ public enum TermOperator implements TermListMember, TokenEnum<TermOperator> {
         return token;
     }
 
-    /**
-     * TODO this is for output?
-     * 
-     * @return the symbol.
-     */
-    public char symbol() {
-        return symbol;
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.append(symbol);
     }
 }

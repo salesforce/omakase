@@ -6,10 +6,8 @@ package com.salesforce.omakase.parser.selector;
 import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_CLASS_SELECTOR;
 import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_ELEMENT_SELECTOR;
 
-import java.util.Set;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
@@ -27,9 +25,6 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  */
 public class PseudoSelectorParser extends AbstractParser {
-    /** these can use pseudo class syntax but are actually pseudo elements */
-    static final Set<String> POSERS = Sets.newHashSet("first-line", "first-letter", "before", "after");
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
@@ -51,7 +46,7 @@ public class PseudoSelectorParser extends AbstractParser {
         if (!name.isPresent()) throw new ParserException(stream, Message.MISSING_PSEUDO_NAME);
 
         // certain pseudo elements can still use pseudo class syntax
-        if (POSERS.contains(name.get())) {
+        if (PseudoElementSelector.POSERS.contains(name.get())) {
             type = PSEUDO_ELEMENT_SELECTOR;
         }
 

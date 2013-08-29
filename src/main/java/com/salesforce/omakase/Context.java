@@ -5,11 +5,11 @@ package com.salesforce.omakase;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.util.Set;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.MutableClassToInstanceMap;
+import com.google.common.collect.*;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.EmittingBroadcaster;
@@ -105,14 +105,20 @@ final class Context implements Broadcaster, PluginRegistry {
         // set the error manager
         emittingBroadcaster.errorManager(em);
 
+        // let plugins register their dependencies. dependencies can result in their own new dependencies, so this gets
+        // a little hairy... guava to the rescue.
+        Set<DependentPlugin> unprocessed = ImmutableSet.copyOf(filter(DependentPlugin.class));
+        while (!unprocessed.isEmpty()) {
+            for (DependentPlugin plugin : unprocessed) {
+                plugin.dependencies(this);
+            }
+            Set<DependentPlugin> updated = ImmutableSet.copyOf(filter(DependentPlugin.class));
+            unprocessed = Sets.difference(updated, unprocessed);
+        }
+
         // distribute the broadcaster to plugins that need it
         for (BroadcastingPlugin plugin : filter(BroadcastingPlugin.class)) {
             plugin.broadcaster(this);
-        }
-
-        // let plugins register their dependencies
-        for (DependentPlugin plugin : filter(DependentPlugin.class)) {
-            plugin.dependencies(this);
         }
     }
 

@@ -34,4 +34,11 @@ public interface Refinable<T> extends Syntax {
      * @return The refined object.
      */
     T refine();
+
+    /**
+     * Gets whether this unit is refined.
+     * 
+     * @return True if this unit is refined.
+     */
+    boolean isRefined();
 }

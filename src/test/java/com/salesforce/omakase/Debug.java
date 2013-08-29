@@ -3,12 +3,11 @@
  */
 package com.salesforce.omakase;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.validator.Validation;
-import com.salesforce.omakase.util.EchoLogger;
+import com.salesforce.omakase.tool.QuickWriter;
 
 /**
  * Temp test for debugging.
@@ -16,20 +15,24 @@ import com.salesforce.omakase.util.EchoLogger;
 @SuppressWarnings("javadoc")
 public class Debug {
     @Test
-    public void develop() {
-        AutoRefiner refinement = new AutoRefiner().all();
-        EchoLogger logging = new EchoLogger();
-        SyntaxTree tree = new SyntaxTree();
+    public void develop() throws IOException {
+        // AutoRefiner refinement = new AutoRefiner().all();
+        // EchoLogger logging = new EchoLogger();
+        // SyntaxTree tree = new SyntaxTree();
+        // SyntaxWriter writer = new SyntaxWriter();
 
-        Omakase.source(src0)
-            .request(tree)
-            .request(refinement)
-            .request(logging)
-            .request(Validation.normal())
-            .process();
+        // Omakase.source(src0)
+        // .request(tree)
+        // .request(refinement)
+        // .request(logging)
+        // .request(Validation.normal())
+        // .request(writer)
+        // .process();
 
-        System.out.println();
-        System.out.println(tree.toString());
+        // System.out.println();
+        // System.out.println(tree.toString());
+
+        QuickWriter.writeAllModes(src2);
     }
 
     public static final String src0 = ".class:before, {\n" +

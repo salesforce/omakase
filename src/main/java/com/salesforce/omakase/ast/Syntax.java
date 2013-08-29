@@ -28,7 +28,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  */
 @Subscribable
 @Description("parent interface of all subscribable units")
-public interface Syntax {
+public interface Syntax extends Writeable {
     /**
      * The line number within the source where this {@link Syntax} unit was parsed.
      * 
