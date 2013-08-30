@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.parser.AbstractParserTest;
@@ -82,6 +83,21 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
         for (ParseResult<SelectorPartType> result : results) {
             Combinator combinator = result.broadcaster.findOnly(Combinator.class).get();
             assertThat(combinator.type()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+        }
+    }
+
+    @Test
+    @Override
+    public void correctLineAndColumnNumber() {
+        List<GenericParseResult> results = parse(validSources());
+        for (GenericParseResult result : results) {
+            Syntax first = result.broadcasted.get(0);
+            assertThat(first.line())
+                .describedAs(result.stream.toString())
+                .isEqualTo(1);
+            assertThat(first.column())
+                .describedAs(result.stream.toString())
+                .isEqualTo(1);
         }
     }
 }

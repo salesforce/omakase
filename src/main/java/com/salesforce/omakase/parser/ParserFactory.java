@@ -118,7 +118,7 @@ public final class ParserFactory {
      * 
      * @return The parser instance.
      */
-    public static Parser refinedSelectorParser() {
+    public static Parser complexSelectorParser() {
         return complexSelector;
     }
 

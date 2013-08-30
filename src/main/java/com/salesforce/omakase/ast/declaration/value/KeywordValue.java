@@ -12,11 +12,14 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * TESTME A keyword value (e.g., inline-block).
+ * 
+ * @see KeywordValueParser
  * 
  * @author nmcwilliams
  */

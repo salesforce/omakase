@@ -18,6 +18,8 @@ import com.salesforce.omakase.writer.StyleWriter;
 /**
  * TESTME A hex color value (e.g., "fffeee").
  * 
+ * @see HexColorValue
+ * 
  * @author nmcwilliams
  */
 @Subscribable

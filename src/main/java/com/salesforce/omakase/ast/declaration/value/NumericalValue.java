@@ -14,6 +14,7 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -31,6 +32,8 @@ import com.salesforce.omakase.writer.StyleWriter;
  * <p>
  * We use two integers instead of a double because we want to preserve the information regarding the presence of the
  * decimal point as authored.
+ * 
+ * @see NumericalValueParser
  * 
  * @author nmcwilliams
  */

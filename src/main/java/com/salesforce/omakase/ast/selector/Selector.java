@@ -26,6 +26,7 @@ import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -35,6 +36,8 @@ import com.salesforce.omakase.writer.StyleWriter;
  * <p>
  * {@link Selector}s are lists of {@link SelectorPart}s. Individual {@link Selector}s are separated by commas. For
  * example, in <code>.class, .class #id</code> there are two selectors, <code>.class</code> and <code>.class #id</code>.
+ * 
+ * @see ComplexSelectorParser
  * 
  * @author nmcwilliams
  */
@@ -88,7 +91,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
             Stream stream = new Stream(rawContent.content(), line(), column()).skipInStringCheck();
 
             // parse the contents
-            ParserFactory.refinedSelectorParser().parse(stream, qb);
+            ParserFactory.complexSelectorParser().parse(stream, qb);
 
             // there should be nothing left
             if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
