@@ -32,7 +32,7 @@ public class Debug {
         // System.out.println();
         // System.out.println(tree.toString());
 
-        QuickWriter.writeAllModes(src2);
+        QuickWriter.writeAllModes(src3);
     }
 
     public static final String src0 = ".class:before, {\n" +

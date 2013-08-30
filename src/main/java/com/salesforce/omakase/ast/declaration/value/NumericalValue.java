@@ -164,7 +164,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
         if (explicitSign.isPresent()) {
             appendable.append(explicitSign.get().symbol);
         }
-        if (integerValue.intValue() != 0) {
+        if (!decimalValue.isPresent() || integerValue.intValue() != 0) {
             appendable.append(integerValue.toString());
         }
         if (decimalValue.isPresent()) {

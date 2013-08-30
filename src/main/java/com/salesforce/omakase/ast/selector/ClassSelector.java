@@ -44,7 +44,7 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
     }
 
     /**
-     * TODO Description
+     * Sets the class name.
      * 
      * @param name
      *            The new class name.

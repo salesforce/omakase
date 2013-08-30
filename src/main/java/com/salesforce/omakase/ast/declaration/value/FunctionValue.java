@@ -89,7 +89,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // FIXME Util.compress args
+        // TODO Util.compress args
         appendable.append(name).append('(').append(args).append(')');
     }
 

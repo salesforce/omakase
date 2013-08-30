@@ -3,18 +3,20 @@
  */
 package com.salesforce.omakase.writer;
 
+import com.salesforce.omakase.ast.Rule;
+
 /**
- * TODO Description
+ * The various levels of compression and minification for output.
  * 
  * @author nmcwilliams
  */
 public enum WriterMode {
-    /** TODO */
+    /** Outputs newlines, whitespace, etc... Usually for development mode or testing. */
     VERBOSE,
 
-    /** TODO */
+    /** Outputs each {@link Rule} on a single line, mostly minified. Useful for testing or debugging. */
     INLINE,
 
-    /** TODO */
-    COMPRESSED
+    /** Outputs fully minified and compressed code. Usually for production environments. */
+    COMPRESSED;
 }

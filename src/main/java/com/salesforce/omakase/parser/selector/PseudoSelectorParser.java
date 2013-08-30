@@ -6,7 +6,6 @@ package com.salesforce.omakase.parser.selector;
 import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_CLASS_SELECTOR;
 import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_ELEMENT_SELECTOR;
 
-
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
@@ -50,7 +49,7 @@ public class PseudoSelectorParser extends AbstractParser {
             type = PSEUDO_ELEMENT_SELECTOR;
         }
 
-        // FIXME pseudos with functions
+        // TODO pseudos with functions
 
         // create the selector and broadcast it
         Syntax selector = (type == PSEUDO_CLASS_SELECTOR) ?

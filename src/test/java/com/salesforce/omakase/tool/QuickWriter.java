@@ -11,18 +11,19 @@ import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
 /**
- * TODO Description
+ * Utility for visually checking the results of writing processed CSS, in every available mode, both when refined and
+ * unrefined.
  * 
  * @author nmcwilliams
  */
 public class QuickWriter {
     /**
-     * TODO Description
+     * Parses and writes out the given input in every available mode, both refined and unrefined.
      * 
      * @param input
-     *            TODO
+     *            The CSS source code.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public static void writeAllModes(CharSequence input) throws IOException {
         StyleWriter writer = new StyleWriter();

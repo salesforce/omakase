@@ -8,7 +8,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.IOException;
 
 /**
- * TODO Description
+ * A wrapper around an {@link Appendable} that provides a few convenience functions.
+ * 
+ * <p>
+ * When not specifying a particular {@link Appendable} then use {@link #toString()} to get the final output.
  * 
  * @author nmcwilliams
  */
@@ -16,30 +19,31 @@ public final class StyleAppendable {
     private final Appendable appendable;
 
     /**
-     * TODO
+     * Creates a new {@link StyleAppendable} using a {@link StringBuilder}. Use {@link #toString()} to get the final
+     * output.
      */
     public StyleAppendable() {
         this(new StringBuilder(256));
     }
 
     /**
-     * TODO
+     * Creates a new {@link StyleAppendable} using the given {@link Appendable}.
      * 
      * @param appendable
-     *            TODO
+     *            Write to this {@link Appendable}.
      */
     public StyleAppendable(Appendable appendable) {
         this.appendable = checkNotNull(appendable, "appendable canot be null");
     }
 
     /**
-     * TODO Description
+     * Appends the specified character. Prefer this over {@link #append(CharSequence)}.
      * 
      * @param c
-     *            TODO
-     * @return TODO
+     *            The character to write.
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable append(char c) throws IOException {
         appendable.append(c);
@@ -47,13 +51,13 @@ public final class StyleAppendable {
     }
 
     /**
-     * TODO Description
+     * Appends the specified {@link CharSequence} or String.
      * 
      * @param sequence
-     *            TODO
-     * @return TODO
+     *            The character sequence to append.
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable append(CharSequence sequence) throws IOException {
         appendable.append(sequence);
@@ -61,24 +65,24 @@ public final class StyleAppendable {
     }
 
     /**
-     * TODO Description
+     * Appends a newline character.
      * 
-     * @return TODO
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable newline() throws IOException {
         return append('\n');
     }
 
     /**
-     * TODO Description
+     * Appends a newline character only if the given condition is true.
      * 
      * @param condition
-     *            TODO
-     * @return TODO
+     *            Only append a newline if this condition is true.
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable newlineIf(boolean condition) throws IOException {
         if (condition) newline();
@@ -86,24 +90,24 @@ public final class StyleAppendable {
     }
 
     /**
-     * TODO Description
+     * Appends a single space character.
      * 
-     * @return TODO
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable space() throws IOException {
         return append(' ');
     }
 
     /**
-     * TODO Description
+     * Appends a single space character only if the given condition is true.
      * 
      * @param condition
-     *            TODO
-     * @return TODO
+     *            Only append a newline if this condition is true.
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable spaceIf(boolean condition) throws IOException {
         if (condition) space();
@@ -111,24 +115,24 @@ public final class StyleAppendable {
     }
 
     /**
-     * TODO Description
+     * Appends spaces for indentation.
      * 
-     * @return TODO
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable indent() throws IOException {
         return append(' ').append(' ');
     }
 
     /**
-     * TODO Description
+     * Appends spaces for indentation only if the given condition is true.
      * 
      * @param condition
-     *            TODO
-     * @return TODO
+     *            Only append a newline if this condition is true.
+     * @return this, for chaining.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public StyleAppendable indentIf(boolean condition) throws IOException {
         if (condition) indent();

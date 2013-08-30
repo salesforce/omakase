@@ -49,11 +49,11 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
     }
 
     /**
-     * TODO Description
+     * Sets the name of the selector.
      * 
      * @param name
-     *            TODO
-     * @return TODO
+     *            The new name.
+     * @return this, for chaining.
      */
     public PseudoElementSelector name(String name) {
         checkNotNull(name, "name cannot be null");

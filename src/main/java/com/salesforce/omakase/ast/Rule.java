@@ -75,31 +75,31 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
             selector.write(writer, appendable);
             if (!selector.isLast()) {
                 appendable.append(',');
-                appendable.spaceIf(!writer.compressed());
+                appendable.spaceIf(!writer.isCompressed());
             }
         }
 
         // open declaration block
-        appendable.spaceIf(!writer.compressed());
+        appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
-        appendable.newlineIf(writer.verbose());
+        appendable.newlineIf(writer.isVerbose());
 
         // declarations
         for (Declaration declaration : declarations) {
-            appendable.indentIf(writer.verbose());
+            appendable.indentIf(writer.isVerbose());
             writer.write(declaration, appendable);
-            if (writer.verbose() || !declaration.isLast()) appendable.append(';');
-            appendable.spaceIf(writer.inline() && !declaration.isLast());
-            appendable.newlineIf(writer.verbose());
+            if (writer.isVerbose() || !declaration.isLast()) appendable.append(';');
+            appendable.spaceIf(writer.isInline() && !declaration.isLast());
+            appendable.newlineIf(writer.isVerbose());
         }
 
         // close declaration block
         appendable.append('}');
 
         // newlines (unless last statement)
-        if (!writer.compressed() && !isLast()) {
+        if (!writer.isCompressed() && !isLast()) {
             appendable.newline();
-            appendable.newlineIf(writer.verbose());
+            appendable.newlineIf(writer.isVerbose());
         }
     }
 

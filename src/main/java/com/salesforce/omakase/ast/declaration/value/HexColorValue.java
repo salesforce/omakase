@@ -37,7 +37,7 @@ public class HexColorValue extends AbstractSyntax implements Term {
      */
     public HexColorValue(int line, int column, String color) {
         super(line, column);
-        this.color = color;
+        this.color = color.toLowerCase();
     }
 
     /**
@@ -48,7 +48,8 @@ public class HexColorValue extends AbstractSyntax implements Term {
      * @return this, for chaining.
      */
     public HexColorValue color(String color) {
-        this.color = checkNotNull(color, "color cannot be null");
+        checkNotNull(color, "color cannot be null");
+        this.color = color.toLowerCase();
         return this;
     }
 
@@ -72,8 +73,8 @@ public class HexColorValue extends AbstractSyntax implements Term {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (writer.compressed()) {
-            // FIXME optimizations
+        if (writer.isCompressed()) {
+            // TODO optimizations
             appendable.append('#').append(color);
         } else {
             appendable.append('#').append(color);

@@ -165,7 +165,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
             // colon
             appendable.append(':');
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
 
             // property value
             writer.write(propertyValue, appendable);
@@ -175,7 +175,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
             // colon
             appendable.append(':');
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
 
             // property value
             writer.write(rawPropertyValue, appendable);

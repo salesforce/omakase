@@ -79,19 +79,19 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
             appendable.append(' ');
             break;
         case CHILD:
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
             appendable.append('>');
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
             break;
         case ADJACENT_SIBLING:
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
             appendable.append('+');
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
             break;
         case GENERAL_SIBLING:
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
             appendable.append('~');
-            appendable.spaceIf(writer.verbose());
+            appendable.spaceIf(writer.isVerbose());
             break;
         }
     }

@@ -18,6 +18,9 @@ import com.salesforce.omakase.writer.StyleWriter;
 /**
  * Represents a CSS type selector (also known as an element type selector).
  * 
+ * <p>
+ * Do not use this for universal "*" selectors, but use {@link UniversalSelector} instead.
+ * 
  * @author nmcwilliams
  */
 @Subscribable
@@ -41,11 +44,11 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
     }
 
     /**
-     * TODO Description
+     * Sets the name.
      * 
      * @param name
-     *            TODO
-     * @return TODO
+     *            The element name.
+     * @return this, for chaining.
      */
     public TypeSelector name(String name) {
         checkNotNull(name, "name cannot be null");

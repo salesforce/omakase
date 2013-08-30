@@ -24,7 +24,7 @@ public class SelectorGroupParser extends AbstractParser {
 
         do {
             stream.skipWhitepace();
-            // FIXME this should return true, otherwise we have a trailing delimiter
+            // FIXME this must return true, otherwise we have a trailing delimiter
             ParserFactory.rawSelectorParser().parse(stream, broadcaster);
             stream.skipWhitepace();
         } while (stream.optionallyPresent(tokenFactory().selectorDelimiter()));

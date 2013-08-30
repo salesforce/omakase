@@ -11,32 +11,56 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.Writeable;
+import com.salesforce.omakase.ast.Writable;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
- * TODO Description
+ * The main class for writing processed CSS content.
+ * 
+ * <p>
+ * To use, add an instance of this class to the Omakase request. Examples:
+ * 
+ * <pre><code>
+ * StyleWriter verbose = StyleWriter.verbose();
+ * Omakase.source(input).request(verbose).process();
+ * String css = verbose.write();
+ * </code></pre>
+ * 
+ * <pre><code>
+ * StyleWriter compressed = StyleWriter.compressed();
+ * Omakase.source(input).request(compressed).process();
+ * String css = compressed.write();
+ * </code></pre>
+ * 
+ * <pre><code>
+ * StyleWriter verbose = StyleWriter.verbose();
+ * Omakase.source(input).request(verbose).process();
+ * verbose.write(System.out);
+ * </code></pre>
+ * 
+ * <p>
+ * Unless specified, {@link WriterMode#INLINE} will be used.
  * 
  * @author nmcwilliams
  */
 public class StyleWriter implements DependentPlugin {
-    private Map<Class<? extends Writeable>, CustomWriter<?>> overrides = new HashMap<>();
+    private Map<Class<? extends Writable>, CustomWriter<?>> overrides = new HashMap<>();
     private SyntaxTree tree;
     private WriterMode mode;
 
     /**
-     * TODO
+     * Creates a new {@link StyleWriter} instance using {@link WriterMode#INLINE}.
      */
     public StyleWriter() {
         this(WriterMode.INLINE);
     }
 
     /**
-     * TODO
+     * Creates a new {@link StyleWriter} instance using the given {@link WriterMode}.
      * 
      * @param mode
-     *            TODO
+     *            The {@link WriterMode} to use.
      */
     public StyleWriter(WriterMode mode) {
         this.mode = mode;
@@ -48,11 +72,11 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * TODO Description
+     * Sets the {@link WriterMode}.
      * 
      * @param mode
-     *            TODO
-     * @return TODO
+     *            The new {@link WriterMode}.
+     * @return this, for chaining.
      */
     public StyleWriter mode(WriterMode mode) {
         this.mode = checkNotNull(mode, "mode cannot be null");
@@ -60,54 +84,55 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * TODO Description
+     * Gets whether the current {@link WriterMode} is {@link WriterMode#VERBOSE}.
      * 
-     * @return TODO
+     * @return True if the current {@link WriterMode} is verbose.
      */
-    public boolean verbose() {
+    public boolean isVerbose() {
         return mode == WriterMode.VERBOSE;
     }
 
     /**
-     * TODO Description
+     * Gets whether the current {@link WriterMode} is {@link WriterMode#INLINE}.
      * 
-     * @return TODO
+     * @return True if the current {@link WriterMode} is inline.
      */
-    public boolean inline() {
+    public boolean isInline() {
         return mode == WriterMode.INLINE;
     }
 
     /**
-     * TODO Description
+     * Gets whether the current {@link WriterMode} is {@link WriterMode#COMPRESSED}.
      * 
-     * @return TODO
+     * @return True if the current {@link WriterMode} is compressed.
      */
-    public boolean compressed() {
+    public boolean isCompressed() {
         return mode == WriterMode.COMPRESSED;
     }
 
     /**
-     * TODO Description
+     * Overrides the writing of a unit with the given {@link CustomWriter} instance. See {@link CustomWriter} for more
+     * details on overriding.
      * 
      * @param <T>
-     *            TODO
-     * @param writeable
-     *            TODO
+     *            The Type of unit being overridden.
+     * @param writable
+     *            The class of the unit to override.
      * @param writer
-     *            TODO
-     * @return TODO
+     *            The {@link CustomWriter} override.
+     * @return this, for chaining.
      */
-    public <T extends Writeable> StyleWriter override(Class<T> writeable, CustomWriter<T> writer) {
-        overrides.put(writeable, writer);
+    public <T extends Writable> StyleWriter override(Class<T> writable, CustomWriter<T> writer) {
+        overrides.put(writable, writer);
         return this;
     }
 
     /**
-     * TODO Description
+     * Writes the processed CSS source to a string.
      * 
-     * @return TODO
+     * @return The CSS output.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public String write() throws IOException {
         checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
@@ -118,53 +143,53 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * TODO Description
+     * Writes the processed CSS source code to the given {@link Appendable}.
      * 
      * @param appendable
-     *            TODO
+     *            Write the processed CSS source code to this appendable.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     public void write(Appendable appendable) throws IOException {
         write(new StyleAppendable(appendable));
     }
 
     /**
-     * TODO Description
+     * Writes the processed CSS source code to the given {@link StyleAppendable}.
      * 
-     * @param out
-     *            TODO
+     * @param appendable
+     *            Write the processed CSS source code to this appendable.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
-    public void write(StyleAppendable out) throws IOException {
-        checkNotNull(out, "out cannot be null");
+    public void write(StyleAppendable appendable) throws IOException {
+        checkNotNull(appendable, "appendable cannot be null");
         checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
-
-        write(tree.stylesheet(), out);
+        write(tree.stylesheet(), appendable);
     }
 
     /**
-     * TODO Description
+     * Writes the given syntax unit to the given {@link StyleAppendable}, taking into account any {@link CustomWriter}
+     * overrides specified on this {@link StyleWriter}.
      * 
      * @param <T>
-     *            TODO
-     * @param writeable
-     *            TODO
-     * @param builder
-     *            TODO
+     *            Type of the unit to write.
+     * @param writable
+     *            The unit to write.
+     * @param appendable
+     *            Write the unit's output to this {@link StyleAppendable}.
      * @throws IOException
-     *             TODO
+     *             If an I/O error occurs.
      */
     @SuppressWarnings("unchecked")
-    public <T extends Writeable> void write(T writeable, StyleAppendable builder) throws IOException {
-        Class<? extends Writeable> klass = writeable.getClass();
+    public <T extends Writable> void write(T writable, StyleAppendable appendable) throws IOException {
+        Class<? extends Writable> klass = writable.getClass();
 
         if (overrides.containsKey(klass)) {
             // cast is safe as long as the map is guarded by #override
-            ((CustomWriter<T>)overrides.get(klass)).write(writeable, builder);
+            ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
         } else {
-            writeable.write(this, builder);
+            writable.write(this, appendable);
         }
     }
 }
