@@ -23,7 +23,7 @@ public enum Tokens implements Token {
     /** dot, period, full-stop, etc... */
     DOT(is('.'), "."),
 
-    /** hyphen or minus */
+    /** hyphen/minus/dash */
     HYPHEN(is('-'), "-"),
 
     /** a semicolon */
@@ -97,6 +97,9 @@ public enum Tokens implements Token {
     /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
     NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')),
             "valid identifier character"),
+
+    /** hyphen or digit */
+    HYPHEN_OR_DIGIT(is('-').or(inRange('0', '9')), "hyphen or digit"),
 
     /** a token that never matches */
     NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches")

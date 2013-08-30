@@ -12,7 +12,10 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME Parses {@link Combinator}s.
+ * Parses {@link Combinator}s.
+ * 
+ * @see Combinator
+ * @see CombinatorParserTest
  * 
  * @author nmcwilliams
  */

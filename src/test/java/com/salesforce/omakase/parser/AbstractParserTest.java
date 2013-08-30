@@ -108,6 +108,21 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
+    @Test
+    @Override
+    public void correctLineAndColumnNumber() {
+        List<GenericParseResult> results = parse(validSources());
+        for (GenericParseResult result : results) {
+            Syntax first = result.broadcasted.get(0);
+            assertThat(first.line())
+                .describedAs(result.stream.toString())
+                .isEqualTo(1);
+            assertThat(first.column())
+                .describedAs(result.stream.toString())
+                .isEqualTo(1);
+        }
+    }
+
     /** helper method */
     protected List<GenericParseResult> parse(String... sources) {
         return parse(Lists.newArrayList(sources));

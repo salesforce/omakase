@@ -40,7 +40,8 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
             ".CLASS",
             "._class",
             ".c1ass",
-            ".-class");
+            ".-class",
+            "._NAMEname1_aAz234ABCdefafklsjfseufhuise____hfie");
     }
 
     @Override
@@ -85,5 +86,17 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         exception.expect(ParserException.class);
         exception.expectMessage(msg);
         parse(".9class");
+
+        exception.expect(ParserException.class);
+        exception.expectMessage(msg);
+        parse(".-9class");
+
+        exception.expect(ParserException.class);
+        exception.expectMessage(msg);
+        parse(".--class");
+
+        exception.expect(ParserException.class);
+        exception.expectMessage(msg);
+        parse(". class");
     }
 }

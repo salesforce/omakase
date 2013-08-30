@@ -1,0 +1,87 @@
+/**
+ * ADD LICENSE
+ */
+package com.salesforce.omakase.parser.selector;
+
+import static com.salesforce.omakase.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.selector.Combinator;
+import com.salesforce.omakase.ast.selector.SelectorPartType;
+import com.salesforce.omakase.parser.AbstractParserTest;
+import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+
+/**
+ * Unit tests for {@link CombinatorParser}.
+ * 
+ * @author nmcwilliams
+ */
+public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
+
+    @Override
+    public List<String> invalidSources() {
+        return ImmutableList.of(
+            ".class",
+            "#id",
+            "p div"
+            );
+    }
+
+    @Override
+    public List<String> validSources() {
+        return ImmutableList.of(
+            " .class",
+            "   .class",
+            "> .class",
+            " > .class",
+            ">.class",
+            "+ div",
+            " + .class",
+            "+.class",
+            "~ .class",
+            " ~ #id",
+            "~.class"
+            );
+    }
+
+    @Override
+    public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
+        return ImmutableList.of(
+            withExpectedResult(" .class", 2),
+            withExpectedResult("  .class", 3),
+            withExpectedResult("> .class", 3),
+            withExpectedResult(" > .class", 4),
+            withExpectedResult(">.class", 2),
+            withExpectedResult("   +   .class", 8),
+            withExpectedResult("   +.class", 5),
+            withExpectedResult("~.class", 2));
+    }
+
+    @Test
+    @Override
+    public void matchesExpectedBroadcastContent() {
+        List<ParseResult<SelectorPartType>> results = parseWithExpected(
+            withExpectedResult(" .class", SelectorPartType.DESCENDANT_COMBINATOR),
+            withExpectedResult("   .class", SelectorPartType.DESCENDANT_COMBINATOR),
+            withExpectedResult("> .class", SelectorPartType.CHILD_COMBINATOR),
+            withExpectedResult(" > .class", SelectorPartType.CHILD_COMBINATOR),
+            withExpectedResult(">.class", SelectorPartType.CHILD_COMBINATOR),
+            withExpectedResult("+ div", SelectorPartType.ADJACENT_SIBLING_COMBINATOR),
+            withExpectedResult(" + .class", SelectorPartType.ADJACENT_SIBLING_COMBINATOR),
+            withExpectedResult("    +    .class", SelectorPartType.ADJACENT_SIBLING_COMBINATOR),
+            withExpectedResult("+.class", SelectorPartType.ADJACENT_SIBLING_COMBINATOR),
+            withExpectedResult("~ .class", SelectorPartType.GENERAL_SIBLING_COMBINATOR),
+            withExpectedResult(" ~ #id", SelectorPartType.GENERAL_SIBLING_COMBINATOR),
+            withExpectedResult("~.class", SelectorPartType.GENERAL_SIBLING_COMBINATOR));
+
+        for (ParseResult<SelectorPartType> result : results) {
+            Combinator combinator = result.broadcaster.findOnly(Combinator.class).get();
+            assertThat(combinator.type()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+        }
+    }
+}

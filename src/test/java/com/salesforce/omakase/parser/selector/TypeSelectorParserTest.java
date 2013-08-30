@@ -54,7 +54,10 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("p", "p"),
+            withExpectedResult("P", "p"),
             withExpectedResult("div", "div"),
+            withExpectedResult("DIV", "div"),
+            withExpectedResult("A", "a"),
             withExpectedResult("somethingnew", "somethingnew"));
 
         for (ParseResult<String> result : results) {

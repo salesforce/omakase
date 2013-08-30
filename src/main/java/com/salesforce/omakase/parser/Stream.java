@@ -711,12 +711,19 @@ public final class Stream {
     /**
      * Reads an ident token.
      * 
+     * XXX the spec allows for non ascii and escaped characters here as well.
+     * 
      * @return The matched token, or {@link Optional#absent()} if not matched.
      */
     public Optional<String> readIdent() {
-        if (Tokens.NMSTART.matches(current())) {
-            String ident = chomp(Tokens.NMCHAR);
-            return Optional.of(ident);
+        final Character current = current();
+
+        if (Tokens.NMSTART.matches(current)) {
+            // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
+            if (Tokens.HYPHEN.matches(current) && Tokens.HYPHEN_OR_DIGIT.matches(peek())) return Optional.absent();
+
+            // return the full ident token
+            return Optional.of(chomp(Tokens.NMCHAR));
         }
         return Optional.absent();
     }
