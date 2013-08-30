@@ -7,7 +7,7 @@ import com.google.common.base.CharMatcher;
 import com.salesforce.omakase.As;
 
 /**
- * TESTME A combination matcher that does an OR comparison of two {@link Token}s.
+ * A combination matcher that does an OR comparison of two {@link Token}s.
  * 
  * @author nmcwilliams
  */

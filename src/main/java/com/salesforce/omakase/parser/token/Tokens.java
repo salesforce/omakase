@@ -9,7 +9,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicates;
 
 /**
- * TESTME List of {@link Token}s.
+ * List of {@link Token}s.
  * 
  * @author nmcwilliams
  */
