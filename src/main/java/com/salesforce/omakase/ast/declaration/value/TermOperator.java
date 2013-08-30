@@ -12,7 +12,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * An operator, or separator, between {@link Term}s in a {@link TermList}.
+ * TESTME An operator, or separator, between {@link Term}s in a {@link TermList}.
  * 
  * @author nmcwilliams
  */

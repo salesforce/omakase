@@ -16,7 +16,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Represents a CSS selector part combinator.
+ * TESTME Represents a CSS selector part combinator.
  * 
  * @see CombinatorParser
  * 

@@ -12,7 +12,7 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.OmakaseException;
 
 /**
- * Metadata class to wrap the details around a subscription method. For internal use only.
+ * TESTME Metadata class to wrap the details around a subscription method. For internal use only.
  * 
  * @author nmcwilliams
  */

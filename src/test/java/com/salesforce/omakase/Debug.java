@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.salesforce.omakase.tool.QuickWriter;
+import com.salesforce.omakase.util.tool.QuickWriter;
 
 /**
  * Temp test for debugging.

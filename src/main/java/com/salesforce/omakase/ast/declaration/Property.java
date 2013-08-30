@@ -13,7 +13,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Enum of all recognized CSS properties. Generated using {@link com.salesforce.omakase.tool.PropertyToEnum}.
+ * TESTME Enum of all recognized CSS properties. Generated using {@link com.salesforce.omakase.util.tool.PropertyToEnum}.
  * 
  * @author nmcwilliams
  */

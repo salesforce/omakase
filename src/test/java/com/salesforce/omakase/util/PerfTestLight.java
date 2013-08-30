@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.perf;
+package com.salesforce.omakase.util;
 
 import java.io.IOException;
 import java.util.List;

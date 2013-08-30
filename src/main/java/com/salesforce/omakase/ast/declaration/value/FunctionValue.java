@@ -16,7 +16,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * A generic function value with non-validated arguments. By not validating arguments here, we allow for new CSS
+ * TESTME A generic function value with non-validated arguments. By not validating arguments here, we allow for new CSS
  * specifications as well as custom functions with any arbitrary content.
  * 
  * @author nmcwilliams
@@ -89,7 +89,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // TODO Util.compress args
+        // TODO Util.compress args (compression here is tricky, probably sufficient to reduce repeating whitespace)
         appendable.append(name).append('(').append(args).append(')');
     }
 

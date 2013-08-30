@@ -21,7 +21,7 @@ import com.salesforce.omakase.plugin.*;
 
 /**
  * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting events (see
- * {@link Broadcaster}). Note: this class is not exposed as an API itself.
+ * {@link Broadcaster}). Note: this class is not exposed as an API itself. TESTME
  * 
  * @author nmcwilliams
  */

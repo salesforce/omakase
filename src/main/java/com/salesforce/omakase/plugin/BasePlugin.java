@@ -10,7 +10,8 @@ import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Rework;
 
 /**
- * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
+ * TESTME (test number of subscribables equals number methods here). An optional base {@link Plugin} that can be
+ * extended from or used to see which types of subscriptions are possible.
  * 
  * <p>
  * It is <em>not</em> recommended that you override each one of these methods. Note that some methods are more generic

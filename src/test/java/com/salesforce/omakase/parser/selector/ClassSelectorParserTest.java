@@ -10,10 +10,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link ClassSelectorParser}.
@@ -24,7 +25,7 @@ import com.salesforce.omakase.parser.ParserException;
 public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorParser> {
     @Override
     public List<String> invalidSources() {
-        return Lists.newArrayList(
+        return ImmutableList.of(
             "#id",
             " .class",
             "cla.ss",
@@ -34,7 +35,7 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
 
     @Override
     public List<String> validSources() {
-        return Lists.newArrayList(
+        return ImmutableList.of(
             ".class",
             ".CLASS",
             "._class",
@@ -42,25 +43,19 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
             ".-class");
     }
 
-    @Test
     @Override
-    public void matchesExpectedBroadcastCount() {
-        List<GenericParseResult> results = parse(
-            ".class",
-            ".class .class",
-            ".class.class2");
-
-        for (GenericParseResult result : results) {
-            assertThat(result.broadcasted)
-                .describedAs(result.stream.toString())
-                .hasSize(1);
-        }
+    public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
+        return ImmutableList.of(
+            withExpectedResult(".class .class2", 7),
+            withExpectedResult(".class.class2", 7),
+            withExpectedResult(".class-abc-abc", 15),
+            withExpectedResult(".claz#id", 6));
     }
 
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        List<ParseResult<String>> results = parse(
+        List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(".class", "class"),
             withExpectedResult(".CLASS", "CLASS"),
             withExpectedResult("._clasZ", "_clasZ"),
@@ -76,33 +71,19 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
     }
 
     @Test
-    @Override
-    public void expectedStreamPositionOnSuccess() {
-        List<ParseResult<Integer>> results = parse(
-            withExpectedResult(".class .class2", 7),
-            withExpectedResult(".class.class2", 7),
-            withExpectedResult(".class-abc-abc", 15),
-            withExpectedResult(".claz#id", 6));
-
-        for (ParseResult<Integer> result : results) {
-            assertThat(result.stream.column())
-                .describedAs(result.stream.toString())
-                .isEqualTo(result.expected);
-        }
-    }
-
-    @Test
     public void errorsIfInvalidClassNameAfterDot() {
+        final String msg = "expected to find a valid class name";
+
         exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid class name");
+        exception.expectMessage(msg);
         parse(".#class");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid class name");
+        exception.expectMessage(msg);
         parse("..class");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid class name");
+        exception.expectMessage(msg);
         parse(".9class");
     }
 }

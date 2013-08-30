@@ -16,7 +16,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Represents a CSS type selector (also known as an element type selector).
+ * TESTME Represents a CSS type selector (also known as an element type selector).
  * 
  * <p>
  * Do not use this for universal "*" selectors, but use {@link UniversalSelector} instead.

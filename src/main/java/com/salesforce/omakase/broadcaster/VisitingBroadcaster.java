@@ -12,8 +12,8 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * A {@link Broadcaster} that will store all broadcasted events. Replay the broadcasts using {@link #visit()}. The
- * broadcasts can be replayed multiple times.
+ * TESTME A {@link Broadcaster} that will store all broadcasted events. Replay the broadcasts using {@link #visit()}.
+ * The broadcasts can be replayed multiple times.
  * 
  * @author nmcwilliams
  */

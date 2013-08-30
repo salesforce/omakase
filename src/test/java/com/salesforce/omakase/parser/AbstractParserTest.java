@@ -43,10 +43,12 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     public abstract List<String> validSources();
 
+    public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
+
     @Test
     @Override
     public void returnsFalseOnFailure() {
-        List<GenericParseResult> results = parse(invalidSources().toArray(new String[] {}));
+        List<GenericParseResult> results = parse(invalidSources());
         for (GenericParseResult result : results) {
             assertThat(result.success)
                 .describedAs(result.stream.toString())
@@ -57,7 +59,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void returnsTrueOnSuccess() {
-        List<GenericParseResult> results = parse(validSources().toArray(new String[] {}));
+        List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
             assertThat(result.success)
                 .describedAs(result.stream.toString())
@@ -65,10 +67,25 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
+    /**
+     * Override in subclass if expected count isn't 1.
+     */
+    @Test
+    @Override
+    public void matchesExpectedBroadcastCount() {
+        List<GenericParseResult> results = parse(validSources());
+
+        for (GenericParseResult result : results) {
+            assertThat(result.broadcasted)
+                .describedAs(result.stream.toString())
+                .hasSize(1);
+        }
+    }
+
     @Test
     @Override
     public void noChangeToStreamOnFailure() {
-        List<GenericParseResult> results = parse(invalidSources().toArray(new String[] {}));
+        List<GenericParseResult> results = parse(invalidSources());
         for (GenericParseResult result : results) {
             assertThat(result.stream.line())
                 .describedAs(result.stream.toString())
@@ -79,8 +96,25 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
+    @Test
+    @Override
+    public void expectedStreamPositionOnSuccess() {
+        List<ParseResult<Integer>> results = parseWithExpected(validSourcesWithExpectedEndIndex());
+
+        for (ParseResult<Integer> result : results) {
+            assertThat(result.stream.column())
+                .describedAs(result.stream.toString())
+                .isEqualTo(result.expected);
+        }
+    }
+
     /** helper method */
     protected List<GenericParseResult> parse(String... sources) {
+        return parse(Lists.newArrayList(sources));
+    }
+
+    /** helper method */
+    protected List<GenericParseResult> parse(Iterable<String> sources) {
         List<GenericParseResult> results = Lists.newArrayList();
 
         for (String source : sources) {
@@ -95,9 +129,14 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         return results;
     }
 
-    @SafeVarargs
     /** helper method */
-    protected final <R> List<ParseResult<R>> parse(SourceWithExpectedResult<R>... sources) {
+    @SafeVarargs
+    protected final <R> List<ParseResult<R>> parseWithExpected(SourceWithExpectedResult<R>... sources) {
+        return parseWithExpected(Lists.newArrayList(sources));
+    }
+
+    /** helper method */
+    protected final <R> List<ParseResult<R>> parseWithExpected(Iterable<SourceWithExpectedResult<R>> sources) {
         List<ParseResult<R>> results = Lists.newArrayList();
 
         for (SourceWithExpectedResult<R> ts : sources) {

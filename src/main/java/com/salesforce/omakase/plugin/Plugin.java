@@ -19,5 +19,4 @@ package com.salesforce.omakase.plugin;
  * @author nmcwilliams
  */
 public interface Plugin {
-
 }

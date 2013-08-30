@@ -17,7 +17,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * A string value, e.g., "Times New Roman".
+ * TESTME A string value, e.g., "Times New Roman".
  * 
  * @see StringValueParser
  * 

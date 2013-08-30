@@ -17,7 +17,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Represents a CSS class selector.
+ * TESTME Represents a CSS class selector.
  * 
  * @see ClassSelectorParser
  * 

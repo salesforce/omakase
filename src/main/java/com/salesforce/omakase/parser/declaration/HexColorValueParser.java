@@ -12,7 +12,7 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * Parses a {@link HexColorValue}.
+ * TESTME Parses a {@link HexColorValue}.
  * 
  * @author nmcwilliams
  */

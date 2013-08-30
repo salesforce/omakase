@@ -7,7 +7,7 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.error.OmakaseException;
 
 /**
- * An error encountered while parsing.
+ * TESTME An error encountered while parsing.
  * 
  * @author nmcwilliams
  */

@@ -19,7 +19,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Represents a CSS pseudo element selector.
+ * TESTME Represents a CSS pseudo element selector.
  * 
  * @see PseudoSelectorParser
  * 

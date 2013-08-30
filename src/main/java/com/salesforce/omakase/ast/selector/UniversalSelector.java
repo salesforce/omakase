@@ -15,7 +15,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Represents the CSS universal selector, i.e., "*".
+ * TESTME Represents the CSS universal selector, i.e., "*".
  * 
  * @author nmcwilliams
  */

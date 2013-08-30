@@ -7,7 +7,6 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
 
 import java.io.IOException;
 
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
@@ -16,7 +15,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * Represents a CSS attribute selector.
+ * TESTME Represents a CSS attribute selector.
  * 
  * TODO unimplemented!
  * 

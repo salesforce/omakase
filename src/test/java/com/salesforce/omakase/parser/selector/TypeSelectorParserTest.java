@@ -10,9 +10,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
+import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link TypeSelectorParser}.
@@ -22,40 +23,36 @@ import com.salesforce.omakase.parser.AbstractParserTest;
 public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParser> {
     @Override
     public List<String> invalidSources() {
-        return Lists.newArrayList(
+        return ImmutableList.of(
             "#id",
             ".class",
             ".p",
             ".class div",
-            " div");
+            " div",
+            "*");
     }
 
     @Override
     public List<String> validSources() {
-        return Lists.newArrayList(
+        return ImmutableList.of(
             "p",
-            "div p");
+            "div p",
+            "a:link");
     }
 
     @Override
-    @Test
-    public void matchesExpectedBroadcastCount() {
-        List<GenericParseResult> results = parse(
-            "p",
-            "p#div div",
-            "div p");
-
-        for (GenericParseResult result : results) {
-            assertThat(result.broadcasted)
-                .describedAs(result.stream.toString())
-                .hasSize(1);
-        }
+    public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
+        return ImmutableList.of(
+            withExpectedResult("p div", 2),
+            withExpectedResult("p#div", 2),
+            withExpectedResult("div.class", 4),
+            withExpectedResult("div div div", 4));
     }
 
-    @Override
     @Test
+    @Override
     public void matchesExpectedBroadcastContent() {
-        List<ParseResult<String>> results = parse(
+        List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("p", "p"),
             withExpectedResult("div", "div"),
             withExpectedResult("somethingnew", "somethingnew"));
@@ -63,22 +60,6 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
         for (ParseResult<String> result : results) {
             TypeSelector selector = result.broadcaster.findOnly(TypeSelector.class).get();
             assertThat(selector.name())
-                .describedAs(result.stream.toString())
-                .isEqualTo(result.expected);
-        }
-    }
-
-    @Override
-    @Test
-    public void expectedStreamPositionOnSuccess() {
-        List<ParseResult<Integer>> results = parse(
-            withExpectedResult("p div", 2),
-            withExpectedResult("p#div", 2),
-            withExpectedResult("div.class", 4),
-            withExpectedResult("div div div", 4));
-
-        for (ParseResult<Integer> result : results) {
-            assertThat(result.stream.column())
                 .describedAs(result.stream.toString())
                 .isEqualTo(result.expected);
         }

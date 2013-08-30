@@ -16,7 +16,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * A hex color value (e.g., "fffeee").
+ * TESTME A hex color value (e.g., "fffeee").
  * 
  * @author nmcwilliams
  */

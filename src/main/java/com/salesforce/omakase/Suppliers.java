@@ -13,7 +13,7 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
- * Helper for creating instances of library-provided {@link Plugin}s.
+ * TESTME Helper for creating instances of library-provided {@link Plugin}s.
  * 
  * @author nmcwilliams
  */

@@ -17,7 +17,7 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * Scans for annotated methods on classes.
+ * TESTME Scans for annotated methods on classes.
  * 
  * @author nmcwilliams
  */

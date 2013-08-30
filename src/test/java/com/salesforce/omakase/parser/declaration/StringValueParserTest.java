@@ -10,15 +10,16 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link StringValueParser}.
  * 
- * TODO the spec allows for escaped newlines in strings as well, see http://www.w3.org/TR/css3-values/#strings
+ * XXX the spec allows for escaped newlines in strings as well, see http://www.w3.org/TR/css3-values/#strings
  * 
  * @author nmcwilliams
  */
@@ -27,7 +28,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
 
     @Override
     public List<String> invalidSources() {
-        return Lists.newArrayList(
+        return ImmutableList.of(
             "abc'",
             "afa",
             "afafa\"",
@@ -38,7 +39,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
 
     @Override
     public List<String> validSources() {
-        return Lists.newArrayList(
+        return ImmutableList.of(
             "\"agg\"",
             "\"af\\\"afa\"",
             "'sfsfs'",
@@ -51,26 +52,19 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
             );
     }
 
-    @Test
     @Override
-    public void matchesExpectedBroadcastCount() {
-        List<GenericParseResult> results = parse(
-            "\"this is a 'string'.\"",
-            "\"this is a \\\"string\\\".\"",
-            "'this is a \"string\".'",
-            "'this is a \\'string\\'.'");
-
-        for (GenericParseResult result : results) {
-            assertThat(result.broadcasted)
-                .describedAs(result.stream.toString())
-                .hasSize(1);
-        }
+    public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
+        return ImmutableList.of(
+            withExpectedResult("\"this is a 'string'.\", afafaf", 22),
+            withExpectedResult("\"this is a \\\"string\\\".\", afa'f\"ad", 24),
+            withExpectedResult("'this is a \"string\".' 'afafafa'", 22),
+            withExpectedResult("'this is a \\'string\\'.'\"afa\"", 24));
     }
 
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        List<ParseResult<String>> results = parse(
+        List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("\"this is a 'string'.\"", "this is a 'string'."),
             withExpectedResult("\"this is a \\\"string\\\".\"", "this is a \\\"string\\\"."),
             withExpectedResult("'this is a \"string\".'", "this is a \"string\"."),
@@ -85,56 +79,44 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
     }
 
     @Test
-    @Override
-    public void expectedStreamPositionOnSuccess() {
-        List<ParseResult<Integer>> results = parse(
-            withExpectedResult("\"this is a 'string'.\", afafaf", 22),
-            withExpectedResult("\"this is a \\\"string\\\".\", afa'f\"ad", 24),
-            withExpectedResult("'this is a \"string\".' 'afafafa'", 22),
-            withExpectedResult("'this is a \\'string\\'.'\"afa\"", 24));
+    public void errorsOnUnclosedDoubleQuote() {
+        final String msg = "Expected to find closing";
 
-        for (ParseResult<Integer> result : results) {
-            assertThat(result.stream.column())
-                .describedAs(result.stream.toString())
-                .isEqualTo(result.expected);
-        }
-    }
-
-    @Test
-    public void errorsInUnclosedDoubleQuote() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("\"afafafafa");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("\"afafafafa\\\"");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("\"afafafafa'");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("\"afafafafa\\\"afafafafa\\\"afafa");
     }
 
     @Test
     public void errorsOnUnclosedSingleQuote() {
+        final String msg = "Expected to find closing";
+
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("'afafafafaf");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("'afafafafaf\\'");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("'afafafafa\"");
 
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
+        exception.expectMessage(msg);
         parse("'asfasfs\\'asfasfas\\'sfsf");
     }
 }

@@ -15,7 +15,7 @@ import com.salesforce.omakase.emitter.PreProcess;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * Automatically refines all explicitly requested {@link Refinable} types.
+ * TESTME Automatically refines all explicitly requested {@link Refinable} types.
  * 
  * <p>
  * Generally this is used when your plugin has a subscription to a particular detailed {@link Syntax} unit not exposed
