@@ -40,8 +40,8 @@ import com.salesforce.omakase.writer.StyleWriter;
 @Subscribable
 @Description(value = "individual numerical value", broadcasted = REFINED_DECLARATION)
 public class NumericalValue extends AbstractSyntax implements Term {
-    private Integer integerValue;
-    private Optional<Integer> decimalValue = Optional.absent();
+    private Long integerValue;
+    private Optional<Long> decimalValue = Optional.absent();
     private Optional<String> unit = Optional.absent();
     private Optional<Sign> explicitSign = Optional.absent();
 
@@ -70,7 +70,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * @param integerValue
      *            The integer value.
      */
-    public NumericalValue(int line, int column, Integer integerValue) {
+    public NumericalValue(int line, int column, Long integerValue) {
         super(line, column);
         this.integerValue = integerValue;
     }
@@ -82,7 +82,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
      *            The integer value.
      * @return this, for chaining.
      */
-    public NumericalValue integerValue(Integer integerValue) {
+    public NumericalValue integerValue(Long integerValue) {
         checkNotNull(integerValue, "integerValue cannot be null");
         checkArgument(integerValue >= 0, "integerValue must be greater than 0 (use #explicitSign for negative values)");
         this.integerValue = integerValue;
@@ -94,7 +94,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * 
      * @return The integer value.
      */
-    public Integer integerValue() {
+    public Long integerValue() {
         return integerValue;
     }
 
@@ -105,7 +105,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
      *            The decimal value.
      * @return this, for chaining.
      */
-    public NumericalValue decimalValue(Integer decimalValue) {
+    public NumericalValue decimalValue(Long decimalValue) {
         if (decimalValue != null) checkArgument(integerValue >= 0, "decimalValue must be greater than 0");
         this.decimalValue = Optional.fromNullable(decimalValue);
         return this;
@@ -116,7 +116,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * 
      * @return The decimal value, or {@link Optional#absent()} if not set.
      */
-    public Optional<Integer> decimalValue() {
+    public Optional<Long> decimalValue() {
         return decimalValue;
     }
 

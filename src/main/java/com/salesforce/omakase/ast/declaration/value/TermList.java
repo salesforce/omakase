@@ -32,6 +32,10 @@ import com.salesforce.omakase.writer.StyleWriter;
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is
  * name now given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
  * 
+ * XXX This setup is perhaps inconsistent with the rest of the project, with respect to the term members being directly
+ * added instead of broadcasted. Also, as noted above, this doesn't allow for additions/removals from the list, which
+ * would be nice to support.
+ * 
  * @see Term
  * @see TermListParser
  * @see TermListMember

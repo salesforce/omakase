@@ -27,6 +27,7 @@ public enum Message {
     EXPECTED_CLOSING("Expected to find closing %s"),
     INVALID_HEX("Expected a hex color of length 3 or 6, but found %s"),
     EXPECTED_DECIMAL("Expected to find decimal value"),
+    EXPECTED_TERM("Expected to find another term following the term operator (%s)"),
     NAME_SELECTORS_NOT_ALLOWED("universal or type selector not allowed here"),
     COMMENTS_NOT_ALLOWED("Comments not allowed in this location. Please place the comment at the beginning of the declaration" +
             " or selector sequence. (While the CSS specification does allow comments here," +

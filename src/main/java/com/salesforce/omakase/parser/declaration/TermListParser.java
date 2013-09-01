@@ -4,15 +4,20 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.parser.*;
+import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME Parses a {@link TermList}.
+ * Parses a {@link TermList}.
+ * 
+ * @see TermList
+ * @see TermListParserTest
  * 
  * @author nmcwilliams
  */
@@ -31,18 +36,29 @@ public class TermListParser extends AbstractParser {
         Optional<TermOperator> operator = Optional.absent();
         Parser termParser = ParserFactory.termParser();
 
+        QueryableBroadcaster collector = null;
+        Optional<Term> term = null;
+
+        // TODO complicated logic needs to be broken up. Make it similar to how complex selector is done
+
         // try parsing another term until there are no more term operators
         do {
-            // whitespace should only be skipped at the beginning of a term
+            // whitespace should only be skipped at the beginning of a term, otherwise we could accidently skip over a
+            // term operator.
             stream.skipWhitepace();
 
             // try to parse a term
-            QueryableBroadcaster collector = new QueryableBroadcaster(broadcaster);
+            collector = new QueryableBroadcaster(broadcaster);
             termParser.parse(stream, collector);
-            Optional<Term> term = collector.findOnly(Term.class);
+            term = collector.findOnly(Term.class);
 
             // if we have a term, add it to the list
             if (term.isPresent()) {
+                // add the previous operator as a member to term list
+                if (operator.isPresent()) {
+                    termList.add(operator.get());
+                }
+
                 // delayed creation of the term list
                 if (termList == null) {
                     termList = new TermList(line, column);
@@ -51,19 +67,31 @@ public class TermListParser extends AbstractParser {
                 // add the term to the list
                 termList.add(term.get());
 
-                // try to parse a term operator
+                // try to parse another term operator. The presence of a space *could* be the "single space" term
+                // operator. Or it could just be whitespace around another term operator
+                boolean mightBeSpaceOperator = stream.optionallyPresent(Tokens.SINGLE_SPACE);
+
+                if (mightBeSpaceOperator) {
+                    // if we already know that a space is present, we must skip past all other whitespace
+                    stream.skipWhitepace();
+                }
+
                 operator = stream.optionalFromEnum(TermOperator.class);
 
-                // add the operator as a member to term list, so we know what to print out
-                if (operator.isPresent()) {
-                    termList.add(operator.get());
+                // if no operator is parsed and we parsed at least one space then we know it's a single space operator
+                if (mightBeSpaceOperator && !operator.isPresent()) {
+                    operator = Optional.of(TermOperator.SINGLE_SPACE);
                 }
             } else {
+                if (operator.isPresent() && operator.get() != TermOperator.SINGLE_SPACE) {
+                    // it's a trailing operator
+                    throw new ParserException(stream, Message.EXPECTED_TERM, operator.get());
+                }
                 operator = Optional.absent();
             }
         } while (operator.isPresent());
 
-        // if any term was parsed then broadcast the term list
+        // if no terms were parsed then return false
         if (termList == null) return false;
 
         // allow comments again

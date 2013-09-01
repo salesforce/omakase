@@ -12,7 +12,10 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME Parses a {@link HexColorValue}.
+ * Parses a {@link HexColorValue}.
+ * 
+ * @see HexColorValue
+ * @see HexColorValueParserTest
  * 
  * @author nmcwilliams
  */
@@ -23,7 +26,7 @@ public class HexColorValueParser extends AbstractParser {
         int line = stream.line();
         int column = stream.column();
 
-        // starts with hash and then a valid hash character
+        // starts with hash and then a valid hex character
         if (Tokens.HASH.matches(stream.current()) && Tokens.HEX_COLOR.matches(stream.peek())) {
             // skip the has mark
             stream.next();
@@ -31,7 +34,6 @@ public class HexColorValueParser extends AbstractParser {
             // get the color value
             String color = stream.chomp(Tokens.HEX_COLOR);
 
-            // TODO move this to a validator
             // check for a valid length
             if (color.length() != 6 && color.length() != 3) throw new ParserException(stream, Message.INVALID_HEX, color);
 

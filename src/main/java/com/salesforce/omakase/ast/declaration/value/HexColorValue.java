@@ -16,7 +16,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /**
- * TESTME A hex color value (e.g., "fffeee").
+ * TESTME A hex color value (e.g., "fffeee"). The value is always converted to lower-case.
  * 
  * @see HexColorValue
  * 
@@ -43,7 +43,7 @@ public class HexColorValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * Sets the value of the color
+     * Sets the value of the color (converted to lower-case).
      * 
      * @param color
      *            The hex color (do not include the #).

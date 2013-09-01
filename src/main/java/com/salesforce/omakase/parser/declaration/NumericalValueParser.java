@@ -27,24 +27,24 @@ public class NumericalValueParser extends AbstractParser {
 
         // integer value
         String integerValue = stream.chomp(Tokens.DIGIT);
-        Integer integer = integerValue.isEmpty() ? null : Integer.valueOf(integerValue);
+        Long integer = integerValue.isEmpty() ? null : Long.valueOf(integerValue);
 
         // decimal
-        Integer decimal = null;
+        Long decimal = null;
         if (stream.optionallyPresent(Tokens.DOT)) {
             String decimalValue = stream.chomp(Tokens.DIGIT);
             if (decimalValue.isEmpty()) {
                 // there must be a number after a decimal
                 throw new ParserException(stream, Message.EXPECTED_DECIMAL);
             }
-            decimal = Integer.valueOf(decimalValue);
+            decimal = Long.valueOf(decimalValue);
         }
 
         // integer value or decimal must be present
         if (integer == null && decimal == null) return stream.rollback();
 
         // create the numerical value instance
-        int realIntegerValue = integer == null ? 0 : integer;
+        Long realIntegerValue = integer == null ? 0 : integer;
         NumericalValue value = new NumericalValue(snapshot.line, snapshot.column, realIntegerValue);
 
         // add the decimal value if applicable
