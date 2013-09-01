@@ -51,6 +51,8 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
                 "1 3 3px 2 / 1 2 3px 1em",
                 " 50%",
                 "8 auto",
+                "1px\n1px",
+                "1px\t1px",
                 "  #ffcc11",
                 "1px solid red",
                 "rgb(0, 255, 255)",
@@ -88,6 +90,8 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("0", 1),
             withExpectedResult("#ffcc11 ", 1),
+            withExpectedResult("1px\n1px", 2),
+            withExpectedResult("1px\t1px", 2),
             withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 3),
             withExpectedResult("-1px 1px 0 #222", 4),
             withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 8),
@@ -104,7 +108,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
     @Override
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = Iterables
-            .getOnlyElement(parse("0 1px 3px / 1em   rgba(0, 0, 0, 0.7),0 1px , 0 rgba(0, 0, 0, 0.3) "));
+            .getOnlyElement(parse("0 1px\n3px /1em   rgba(0, 0, 0, 0.7),0 1px , 0 rgba(0, 0, 0, 0.3) "));
 
         TermList tl = result.broadcaster.find(TermList.class).get();
         List<TermListMember> members = tl.members();

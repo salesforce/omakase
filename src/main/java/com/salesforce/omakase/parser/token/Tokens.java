@@ -73,8 +73,6 @@ public enum Tokens implements Token {
 
     /** single quote */
     SINGLE_QUOTE(is('\''), "' (single quote)"),
-    /** single space character */
-    SINGLE_SPACE(is(' '), "single space character"),
 
     /** newline character */
     NEWLINE(is('\n'), "newline"),

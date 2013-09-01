@@ -24,6 +24,8 @@ import com.salesforce.omakase.parser.token.Tokens;
  * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of
  * the current line and column positions.
  * 
+ * @see StreamTest
+ * 
  * @author nmcwilliams
  */
 public final class Stream {
@@ -495,25 +497,25 @@ public final class Stream {
             // if we are in a string continue until we are out of it
             if (skipString && inString()) {
                 next();
-            }
+            } else {
+                // if nesting is allowed then another occurrence of the openingToken increases the nesting level,
+                // unless preceded by the escape symbol.
+                if (allowNesting && openingToken.matches(current()) && !isEscaped()) {
+                    level++;
+                } else if (closingToken.matches(current()) && !isEscaped()) {
+                    // decrement the nesting level
+                    level--;
 
-            // if nesting is allowed then another occurrence of the openingToken increases the nesting level,
-            // unless preceded by the escape symbol.
-            if (allowNesting && openingToken.matches(current()) && !isEscaped()) {
-                level++;
-            } else if (closingToken.matches(current()) && !isEscaped()) {
-                // decrement the nesting level
-                level--;
-
-                // once the nesting level reaches 0 then we have found the correct closing token
-                if (level == 0) {
-                    next(); // move past the closing token
-                    return source.substring(start, index - 1);
+                    // once the nesting level reaches 0 then we have found the correct closing token
+                    if (level == 0) {
+                        next(); // move past the closing token
+                        return source.substring(start, index - 1);
+                    }
                 }
-            }
 
-            // we haven't found the correct closing token, so continue
-            next();
+                // we haven't found the correct closing token, so continue
+                next();
+            }
         }
 
         throw new ParserException(this, Message.EXPECTED_CLOSING, closingToken.description());

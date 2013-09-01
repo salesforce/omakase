@@ -69,7 +69,7 @@ public class TermListParser extends AbstractParser {
 
                 // try to parse another term operator. The presence of a space *could* be the "single space" term
                 // operator. Or it could just be whitespace around another term operator
-                boolean mightBeSpaceOperator = stream.optionallyPresent(Tokens.SINGLE_SPACE);
+                boolean mightBeSpaceOperator = stream.optionallyPresent(Tokens.WHITESPACE);
 
                 if (mightBeSpaceOperator) {
                     // if we already know that a space is present, we must skip past all other whitespace
@@ -80,10 +80,10 @@ public class TermListParser extends AbstractParser {
 
                 // if no operator is parsed and we parsed at least one space then we know it's a single space operator
                 if (mightBeSpaceOperator && !operator.isPresent()) {
-                    operator = Optional.of(TermOperator.SINGLE_SPACE);
+                    operator = Optional.of(TermOperator.SPACE);
                 }
             } else {
-                if (operator.isPresent() && operator.get() != TermOperator.SINGLE_SPACE) {
+                if (operator.isPresent() && operator.get() != TermOperator.SPACE) {
                     // it's a trailing operator
                     throw new ParserException(stream, Message.EXPECTED_TERM, operator.get());
                 }

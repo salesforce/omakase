@@ -46,7 +46,9 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
             "+.class",
             "~ .class",
             " ~ #id",
-            "~.class"
+            "~.class",
+            "\n.class",
+            "\t.class"
             );
     }
 
@@ -78,7 +80,9 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
             withExpectedResult("+.class", SelectorPartType.ADJACENT_SIBLING_COMBINATOR),
             withExpectedResult("~ .class", SelectorPartType.GENERAL_SIBLING_COMBINATOR),
             withExpectedResult(" ~ #id", SelectorPartType.GENERAL_SIBLING_COMBINATOR),
-            withExpectedResult("~.class", SelectorPartType.GENERAL_SIBLING_COMBINATOR));
+            withExpectedResult("~.class", SelectorPartType.GENERAL_SIBLING_COMBINATOR),
+            withExpectedResult("\n.class", SelectorPartType.DESCENDANT_COMBINATOR),
+            withExpectedResult("\t.class", SelectorPartType.DESCENDANT_COMBINATOR));
 
         for (ParseResult<SelectorPartType> result : results) {
             Combinator combinator = result.broadcaster.findOnly(Combinator.class).get();
@@ -88,6 +92,7 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
 
     @Test
     @Override
+    /** overridden because whitespace can be a descendant combinator */
     public void correctLineAndColumnNumber() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {

@@ -23,7 +23,7 @@ public enum TermOperator implements TermListMember, TokenEnum<TermOperator> {
     /** slash separator */
     SLASH(Tokens.FORWARD_SLASH, '/'),
     /** white space separator */
-    SINGLE_SPACE(Tokens.SINGLE_SPACE, ' ');
+    SPACE(Tokens.WHITESPACE, ' ');
 
     private final Token token;
     private final char symbol;

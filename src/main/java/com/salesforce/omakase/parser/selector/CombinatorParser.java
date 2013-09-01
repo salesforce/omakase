@@ -29,7 +29,7 @@ public class CombinatorParser extends AbstractParser {
 
         // the presence of a space *could* be a descendant selector. Or it could just be whitespace around other
         // combinators. We won't know until later.
-        boolean mightBeDescendant = stream.optionallyPresent(Tokens.SINGLE_SPACE);
+        boolean mightBeDescendant = stream.optionallyPresent(Tokens.WHITESPACE);
 
         if (mightBeDescendant) {
             // if we already know that a space is present, we must skip past all other whitespace
