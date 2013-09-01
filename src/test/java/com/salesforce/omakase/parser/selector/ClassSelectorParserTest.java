@@ -73,30 +73,49 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
 
     @Test
     public void errorsIfInvalidClassNameAfterDot() {
-        final String msg = "expected to find a valid class name";
-
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid class name");
         parse(".#class");
 
+    }
+
+    @Test
+    public void errorsIfDotDot() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid class name");
         parse("..class");
 
+    }
+
+    @Test
+    public void errorsIfDotNumber() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid class name");
         parse(".9class");
 
+    }
+
+    @Test
+    public void errorsIfDashNumber() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid class name");
         parse(".-9class");
 
+    }
+
+    @Test
+    public void errorsIfDashDash() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid class name");
         parse(".--class");
 
+    }
+
+    @Test
+    public void errorsIfSpace() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid class name");
         parse(". class");
     }
+
 }

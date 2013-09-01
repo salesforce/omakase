@@ -91,31 +91,44 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
     }
 
     @Test
-    public void throwsErrorOnInvalidLength() {
-        final String msg = "Expected a hex color of length 3 or 6";
-
+    public void throwsErrorOnInvalidLength1() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected a hex color of length 3 or 6");
         parse("#a");
+    }
 
+    @Test
+    public void throwsErrorOnLength2() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected a hex color of length 3 or 6");
         parse("#ab");
+    }
 
+    @Test
+    public void throwsErrorOnLength4() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected a hex color of length 3 or 6");
         parse("#aaaa");
+    }
 
+    @Test
+    public void throwsErrorOnLength5() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected a hex color of length 3 or 6");
         parse("#12345");
+    }
 
+    @Test
+    public void throwsErrorOnLength7() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected a hex color of length 3 or 6");
         parse("#1234567");
+    }
 
+    @Test
+    public void throwsErrorOnLength8() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected a hex color of length 3 or 6");
         parse("#123456ab");
     }
 }

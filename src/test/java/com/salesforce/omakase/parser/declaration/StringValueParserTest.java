@@ -80,43 +80,59 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
 
     @Test
     public void errorsOnUnclosedDoubleQuote() {
-        final String msg = "Expected to find closing";
-
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("\"afafafafa");
 
+    }
+
+    @Test
+    public void errorsOnUnclosedDoubleQuoteEscaped() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("\"afafafafa\\\"");
+    }
 
+    @Test
+    public void errorsOnUnclosedDoubleQuoteSingleQuote() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("\"afafafafa'");
+    }
 
+    @Test
+    public void errorsOnUnclosedDoubleQuoteThreeEscapes() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("\"afafafafa\\\"afafafafa\\\"afafa");
     }
 
     @Test
     public void errorsOnUnclosedSingleQuote() {
-        final String msg = "Expected to find closing";
-
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("'afafafafaf");
+    }
 
+    @Test
+    public void errorsOnUnclosedSingleQuoteEscaped() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("'afafafafaf\\'");
+    }
 
+    @Test
+    public void errorsOnUnclosedSingleQuoteSingleQuote() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("'afafafafa\"");
 
+    }
+
+    @Test
+    public void errorsOnUnclosedSingleQuoteThreeEscapes() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("Expected to find closing");
         parse("'asfasfs\\'asfasfas\\'sfsf");
     }
 }

@@ -83,31 +83,37 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
     }
 
     @Test
-    public void errorsIfInvalidCharAfterHash() {
-        final String msg = "expected to find a valid id name";
-
+    public void errorsIfDoubleHash() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
-        parse(".##id");
+        exception.expectMessage("expected to find a valid id name");
+        parse("##id");
+    }
 
+    @Test
+    public void errorsIfDoubleDash() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
-        parse(".#123abc");
-
-        exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid id name");
         parse("#--abc");
+    }
 
+    @Test
+    public void errorsIfDashNumber() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid id name");
         parse("#-1abc");
+    }
 
+    @Test
+    public void errorsIfDashDot() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid id name");
         parse("#.class");
+    }
 
+    @Test
+    public void errorsIfSpace() {
         exception.expect(ParserException.class);
-        exception.expectMessage(msg);
+        exception.expectMessage("expected to find a valid id name");
         parse("# abc");
     }
 }

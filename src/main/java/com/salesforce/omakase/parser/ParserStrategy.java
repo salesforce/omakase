@@ -9,7 +9,7 @@ import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 
 /**
- * TESTME Helper for getting an appropriate {@link Parser} for a given {@link PropertyName}.
+ * Helper for getting an appropriate {@link Parser} for a given {@link PropertyName}.
  * 
  * @author nmcwilliams
  */

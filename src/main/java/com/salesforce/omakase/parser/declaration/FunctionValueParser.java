@@ -29,7 +29,7 @@ public class FunctionValueParser extends AbstractParser {
 
         // read the function name
         Optional<String> name = stream.readIdent();
-        if (!name.isPresent()) return stream.rollback();
+        if (!name.isPresent()) return false;
 
         // must be an open parenthesis
         if (!Tokens.OPEN_PAREN.matches(stream.current())) return stream.rollback();

@@ -20,6 +20,7 @@ public enum Message {
             "([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_ID("expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_CLASS("expected to find a valid class name  ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
+    EXTRANEOUS("Extraneous text found at the end of the source '%s'"),
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_VALUE("Unable to parse remaining declaration value"),
     EXPECTED_VALUE("Expected to parse a property value!"),

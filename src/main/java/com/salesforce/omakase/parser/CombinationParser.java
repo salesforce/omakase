@@ -6,8 +6,8 @@ package com.salesforce.omakase.parser;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 
 /**
- * TESTME Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the
- * second parse will be tried.
+ * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second
+ * parse will be tried.
  * 
  * @author nmcwilliams
  */

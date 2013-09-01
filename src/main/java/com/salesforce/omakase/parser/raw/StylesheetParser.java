@@ -3,17 +3,19 @@
  */
 package com.salesforce.omakase.parser.raw;
 
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.*;
 
 /**
- * TESTME Parses a top-level {@link Stylesheet}.
+ * Parses a top-level {@link Stylesheet}.
+ * 
+ * @see StylesheetParserTest
  * 
  * @author nmcwilliams
  */
 public class StylesheetParser extends AbstractParser {
-    private static final String EXTRANEOUS = "Extraneous text found at the end of the source '%s'";
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -26,7 +28,7 @@ public class StylesheetParser extends AbstractParser {
             stream.skipWhitepace();
 
             // after all rules and content is parsed, there should be nothing left in the stream
-            if (!matched && !stream.eof()) throw new ParserException(stream, String.format(EXTRANEOUS, stream.remaining()));
+            if (!matched && !stream.eof()) throw new ParserException(stream, Message.EXTRANEOUS, stream.remaining());
         }
 
         return true;
