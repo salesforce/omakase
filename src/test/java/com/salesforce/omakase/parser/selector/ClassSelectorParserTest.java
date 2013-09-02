@@ -47,10 +47,10 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult(".class .class2", 7),
-            withExpectedResult(".class.class2", 7),
-            withExpectedResult(".class-abc-abc", 15),
-            withExpectedResult(".claz#id", 6));
+            withExpectedResult(".class .class2", 6),
+            withExpectedResult(".class.class2", 6),
+            withExpectedResult(".class-abc-abc", 14),
+            withExpectedResult(".claz#id", 5));
     }
 
     @Test
@@ -71,12 +71,16 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         }
     }
 
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
+    }
+
     @Test
     public void errorsIfInvalidClassNameAfterDot() {
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
         parse(".#class");
-
     }
 
     @Test

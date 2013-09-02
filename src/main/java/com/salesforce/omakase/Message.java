@@ -16,6 +16,7 @@ package com.salesforce.omakase;
 public enum Message {
     DUPLICATE_PLUGIN("Only one plugin instance of each type allowed: %s"),
     NO_SUPPLIER("No supplier defined for %s. Use require(Class, Supplier) instead."),
+    EXPECTED_SELECTOR("Expected to find a selector (after the trailing '%s')"),
     MISSING_PSEUDO_NAME("expected to find a valid pseudo element or class name " +
             "([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_ID("expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),

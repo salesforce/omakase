@@ -27,7 +27,7 @@ public final class ParserFactory {
     private static final Parser rule = new RuleParser();
     private static final Parser statement = atRule.or(rule);
     private static final Parser rawDeclaration = new RawDeclarationParser();
-    private static final Parser selectorList = new SelectorGroupParser();
+    private static final Parser selectorGroup = new SelectorGroupParser();
     private static final Parser rawSelector = new RawSelectorParser();
 
     /** refined selectors */
@@ -100,8 +100,8 @@ public final class ParserFactory {
      * 
      * @return The parser instance.
      */
-    public static Parser selectorListParser() {
-        return selectorList;
+    public static Parser selectorGroupParser() {
+        return selectorGroup;
     }
 
     /**

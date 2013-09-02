@@ -67,17 +67,22 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("1", 2),
-            withExpectedResult("01", 3),
-            withExpectedResult("1px", 4),
-            withExpectedResult("1 px", 2),
-            withExpectedResult("+1 .1em ", 3),
-            withExpectedResult("0.1em", 6),
-            withExpectedResult("123456713131890.1234567713188912px", 35),
-            withExpectedResult("123323123120001 11", 16),
-            withExpectedResult("-1px -", 5),
-            withExpectedResult("1px red", 4),
-            withExpectedResult("1px\nred", 4));
+            withExpectedResult("1", 1),
+            withExpectedResult("01", 2),
+            withExpectedResult("1px", 3),
+            withExpectedResult("1 px", 1),
+            withExpectedResult("+1 .1em ", 2),
+            withExpectedResult("0.1em", 5),
+            withExpectedResult("123456713131890.1234567713188912px", 34),
+            withExpectedResult("123323123120001 11", 15),
+            withExpectedResult("-1px -", 4),
+            withExpectedResult("1px red", 3),
+            withExpectedResult("1px\nred", 3));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

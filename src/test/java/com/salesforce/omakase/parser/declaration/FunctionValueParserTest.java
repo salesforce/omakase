@@ -71,19 +71,24 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList
             .of(
-                withExpectedResult("url(/one.png) url(/one.png)", 14),
-                withExpectedResult("url(/one/one.png)    ", 18),
-                withExpectedResult("url(one two three)", 19),
-                withExpectedResult("calc(50% + 20px )", 18),
+                withExpectedResult("url(/one.png) url(/one.png)", 13),
+                withExpectedResult("url(/one/one.png)    ", 17),
+                withExpectedResult("url(one two three)", 18),
+                withExpectedResult("calc(50% + 20px )", 17),
                 withExpectedResult(
                     "url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7)",
-                    316),
+                    315),
                 withExpectedResult(
                     "url('data:image/gif;base64,R0lGOD(lhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7')",
-                    319),
-                withExpectedResult("blahblah(1,1,1,2$*_918930939, , , , ,    ,, ~-``9289)", 54),
-                withExpectedResult("abc()", 6),
-                withExpectedResult("-one-two-three--four__abc(1)", 29));
+                    318),
+                withExpectedResult("blahblah(1,1,1,2$*_918930939, , , , ,    ,, ~-``9289)", 53),
+                withExpectedResult("abc()", 5),
+                withExpectedResult("-one-two-three--four__abc(1)", 28));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

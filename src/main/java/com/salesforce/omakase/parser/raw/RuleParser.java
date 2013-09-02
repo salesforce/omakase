@@ -21,7 +21,7 @@ public class RuleParser extends AbstractParser {
         stream.skipWhitepace();
 
         // if there wasn't a selector then we aren't at a rule
-        if (!ParserFactory.selectorListParser().parse(stream, broadcaster)) return false;
+        if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster)) return false;
 
         stream.skipWhitepace();
 

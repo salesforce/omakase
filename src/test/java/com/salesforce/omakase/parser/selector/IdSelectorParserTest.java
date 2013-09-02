@@ -51,14 +51,19 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("#id .class", 4),
-            withExpectedResult("#ID #id", 4),
-            withExpectedResult("#_id>p>div#id", 5),
-            withExpectedResult("#_1  ", 4),
-            withExpectedResult("#_1id", 6),
-            withExpectedResult("#id123", 7),
-            withExpectedResult("#-name~a", 7),
-            withExpectedResult("#-NAMEname1_aAz234ABCdefafklsjfseuf+.huise____hfie", 36));
+            withExpectedResult("#id .class", 3),
+            withExpectedResult("#ID #id", 3),
+            withExpectedResult("#_id>p>div#id", 4),
+            withExpectedResult("#_1  ", 3),
+            withExpectedResult("#_1id", 5),
+            withExpectedResult("#id123", 6),
+            withExpectedResult("#-name~a", 6),
+            withExpectedResult("#-NAMEname1_aAz234ABCdefafklsjfseuf+.huise____hfie", 35));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

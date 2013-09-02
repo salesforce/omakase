@@ -57,14 +57,19 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("abc 123", 4),
-            withExpectedResult("abc1234", 8),
-            withExpectedResult("abc abc abc", 4),
-            withExpectedResult("BLACK", 6),
-            withExpectedResult("-afauf-afaf___afaf _af", 19),
-            withExpectedResult("_1afafkslf", 11),
-            withExpectedResult("afa____--___---___-afafaf---123123afafa afafa", 40),
-            withExpectedResult("red 1red-1red red", 4));
+            withExpectedResult("abc 123", 3),
+            withExpectedResult("abc1234", 7),
+            withExpectedResult("abc abc abc", 3),
+            withExpectedResult("BLACK", 5),
+            withExpectedResult("-afauf-afaf___afaf _af", 18),
+            withExpectedResult("_1afafkslf", 10),
+            withExpectedResult("afa____--___---___-afafaf---123123afafa afafa", 39),
+            withExpectedResult("red 1red-1red red", 3));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

@@ -77,11 +77,16 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("0", 2),
-            withExpectedResult("#ffcc11 ", 9),
-            withExpectedResult("1px 1px $ 1px", 9),
-            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 43),
-            withExpectedResult("-1px 1px 0 #222", 16));
+            withExpectedResult("0", 1),
+            withExpectedResult("#ffcc11 ", 8),
+            withExpectedResult("1px 1px $ 1px", 8),
+            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 42),
+            withExpectedResult("-1px 1px 0 #222", 15));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return true;
     }
 
     @Test
@@ -133,11 +138,6 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         assertThat(members.get(14)).isInstanceOf(NumericalValue.class);
         assertThat(members.get(15)).isInstanceOf(TermOperator.class);
         assertThat(members.get(16)).isInstanceOf(FunctionValue.class);
-    }
-
-    @Override
-    public void noChangeToStreamOnFailure() {
-        // it's ok that whitespace is skipped.
     }
 
     @Test

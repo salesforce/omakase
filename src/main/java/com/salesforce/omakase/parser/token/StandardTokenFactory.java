@@ -13,7 +13,7 @@ import com.salesforce.omakase.parser.Parser;
  * @author nmcwilliams
  */
 public class StandardTokenFactory implements TokenFactory {
-    private static final Token SELETOR_BEGIN = ALPHA.or(STAR).or(HASH).or(DOT);
+    private static final Token SELETOR_BEGIN = DOT.or(HASH).or(ALPHA).or(COLON).or(STAR);
     private static final Token SELECTOR_DELIMITER = COMMA;
     private static final Token SELECTOR_END = SELECTOR_DELIMITER.or(OPEN_BRACKET);
     private static final Token PROPERTY_START = ALPHA.or(HYPHEN);

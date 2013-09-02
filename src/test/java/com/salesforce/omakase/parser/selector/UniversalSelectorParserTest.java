@@ -41,9 +41,14 @@ public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSel
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("*#div", 2),
-            withExpectedResult("*.class", 2),
-            withExpectedResult("* class", 2));
+            withExpectedResult("*#div", 1),
+            withExpectedResult("*.class", 1),
+            withExpectedResult("* class", 1));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

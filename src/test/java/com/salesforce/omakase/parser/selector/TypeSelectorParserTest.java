@@ -43,10 +43,15 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("p div", 2),
-            withExpectedResult("p#div", 2),
-            withExpectedResult("div.class", 4),
-            withExpectedResult("div div div", 4));
+            withExpectedResult("p div", 1),
+            withExpectedResult("p#div", 1),
+            withExpectedResult("div.class", 3),
+            withExpectedResult("div div div", 3));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

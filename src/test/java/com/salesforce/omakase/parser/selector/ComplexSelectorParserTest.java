@@ -83,10 +83,15 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult(".class .class2", 15),
-            withExpectedResult(".class.class2", 14),
-            withExpectedResult(".class-abc-abc", 15),
-            withExpectedResult(".claz#id", 9));
+            withExpectedResult(".class .class2", 14),
+            withExpectedResult(".class.class2", 13),
+            withExpectedResult(".class-abc-abc", 14),
+            withExpectedResult(".claz#id", 8));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return true;
     }
 
     @Test
@@ -134,11 +139,6 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         assertThat(broadcasted.get(13)).isInstanceOf(Combinator.class);
         assertThat(broadcasted.get(14)).isInstanceOf(TypeSelector.class);
         assertThat(broadcasted.get(15)).isInstanceOf(PseudoElementSelector.class);
-    }
-
-    @Override
-    public void noChangeToStreamOnFailure() {
-        // it's ok that whitespace is skipped.
     }
 
     @Test

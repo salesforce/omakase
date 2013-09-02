@@ -55,14 +55,19 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult(" .class", 2),
-            withExpectedResult("  .class", 3),
-            withExpectedResult("> .class", 3),
-            withExpectedResult(" > .class", 4),
-            withExpectedResult(">.class", 2),
-            withExpectedResult("   +   .class", 8),
-            withExpectedResult("   +.class", 5),
-            withExpectedResult("~.class", 2));
+            withExpectedResult(" .class", 1),
+            withExpectedResult("  .class", 2),
+            withExpectedResult("> .class", 2),
+            withExpectedResult(" > .class", 3),
+            withExpectedResult(">.class", 1),
+            withExpectedResult("   +   .class", 7),
+            withExpectedResult("   +.class", 4),
+            withExpectedResult("~.class", 1));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

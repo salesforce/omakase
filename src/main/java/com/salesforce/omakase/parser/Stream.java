@@ -133,6 +133,16 @@ public final class Stream {
     }
 
     /**
+     * Gets the current index position within the original source. Not to be confused with the current column position,
+     * which is found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
+     * 
+     * @return The current index position.
+     */
+    public int index() {
+        return index;
+    }
+
+    /**
      * Gets the original line of this {@link Stream} within the original source. This is mainly useful for sub-sequences
      * (sequences created from a substring of the original source).
      * 

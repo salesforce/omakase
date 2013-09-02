@@ -55,10 +55,15 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("\"this is a 'string'.\", afafaf", 22),
-            withExpectedResult("\"this is a \\\"string\\\".\", afa'f\"ad", 24),
-            withExpectedResult("'this is a \"string\".' 'afafafa'", 22),
-            withExpectedResult("'this is a \\'string\\'.'\"afa\"", 24));
+            withExpectedResult("\"this is a 'string'.\", afafaf", 21),
+            withExpectedResult("\"this is a \\\"string\\\".\", afa'f\"ad", 23),
+            withExpectedResult("'this is a \"string\".' 'afafafa'", 21),
+            withExpectedResult("'this is a \\'string\\'.'\"afa\"", 23));
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

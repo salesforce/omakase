@@ -57,15 +57,15 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult("#ffffff red", 8),
-            withExpectedResult("#fff red", 5),
-            withExpectedResult("#123456 #123456", 8),
-            withExpectedResult("#ffeeff fff", 8),
-            withExpectedResult("#abcfef red", 8),
-            withExpectedResult("#defdef", 8),
-            withExpectedResult("#123", 5),
-            withExpectedResult("#AFE", 5),
-            withExpectedResult("#000", 5));
+            withExpectedResult("#ffffff red", 7),
+            withExpectedResult("#fff red", 4),
+            withExpectedResult("#123456 #123456", 7),
+            withExpectedResult("#ffeeff fff", 7),
+            withExpectedResult("#abcfef red", 7),
+            withExpectedResult("#defdef", 7),
+            withExpectedResult("#123", 4),
+            withExpectedResult("#AFE", 4),
+            withExpectedResult("#000", 4));
     }
 
     @Override
@@ -87,7 +87,11 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
             HexColorValue hex = result.broadcaster.findOnly(HexColorValue.class).get();
             assertThat(hex.color()).isEqualTo(result.expected);
         }
+    }
 
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
     }
 
     @Test

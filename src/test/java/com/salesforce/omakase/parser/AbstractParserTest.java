@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
@@ -45,14 +46,14 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
 
+    public abstract boolean allowedToTrimLeadingWhitespace();
+
     @Test
     @Override
     public void returnsFalseOnFailure() {
         List<GenericParseResult> results = parse(invalidSources());
         for (GenericParseResult result : results) {
-            assertThat(result.success)
-                .describedAs(result.stream.toString())
-                .isFalse();
+            assertThat(result.success).describedAs(result.stream.toString()).isFalse();
         }
     }
 
@@ -61,9 +62,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void returnsTrueOnSuccess() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
-            assertThat(result.success)
-                .describedAs(result.stream.toString())
-                .isTrue();
+            assertThat(result.success).describedAs(result.stream.toString()).isTrue();
         }
     }
 
@@ -73,56 +72,46 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
-        List<GenericParseResult> results = parse(validSources());
-
-        for (GenericParseResult result : results) {
-            assertThat(result.broadcasted)
-                .describedAs(result.stream.toString())
-                .hasSize(1);
+        for (GenericParseResult result : parse(validSources())) {
+            assertThat(result.broadcasted).describedAs(result.stream.toString()).hasSize(1);
         }
     }
 
     @Test
     @Override
     public void noChangeToStreamOnFailure() {
-        List<GenericParseResult> results = parse(invalidSources());
-        for (GenericParseResult result : results) {
-            assertThat(result.stream.line())
-                .describedAs(result.stream.toString())
-                .isEqualTo(1);
-            assertThat(result.stream.column())
-                .describedAs(result.stream.toString())
-                .isEqualTo(1);
+        for (GenericParseResult result : parse(invalidSources())) {
+            // parsers skipping past whitespace is ok
+            if (allowedToTrimLeadingWhitespace()) {
+                final String source = result.stream.source();
+                int index = source.length() - CharMatcher.WHITESPACE.trimLeadingFrom(source).length();
+                assertThat(result.stream.index()).describedAs(result.stream.toString()).isEqualTo(index);
+            } else {
+                assertThat(result.stream.index()).describedAs(result.stream.toString()).isEqualTo(0);
+            }
         }
     }
 
     @Test
     @Override
     public void expectedStreamPositionOnSuccess() {
-        List<ParseResult<Integer>> results = parseWithExpected(validSourcesWithExpectedEndIndex());
-
-        for (ParseResult<Integer> result : results) {
-            assertThat(result.stream.column())
-                .describedAs(result.stream.toString())
-                .isEqualTo(result.expected);
+        for (ParseResult<Integer> result : parseWithExpected(validSourcesWithExpectedEndIndex())) {
+            assertThat(result.stream.index()).describedAs(result.stream.toString()).isEqualTo(result.expected);
         }
     }
 
     @Test
     @Override
     public void correctLineAndColumnNumber() {
-        List<GenericParseResult> results = parse(validSources());
-        for (GenericParseResult result : results) {
+        for (GenericParseResult result : parse(validSources())) {
             Syntax first = result.broadcasted.get(0);
-            assertThat(first.line())
-                .describedAs(result.stream.toString())
-                .isEqualTo(1);
+
+            assertThat(first.line()).describedAs(result.stream.toString()).isEqualTo(1);
 
             String trim = result.stream.source().trim();
             int column = result.stream.source().indexOf(trim) + 1;
-            assertThat(first.column())
-                .describedAs(result.stream.toString())
-                .isEqualTo(column);
+
+            assertThat(first.column()).describedAs(result.stream.toString()).isEqualTo(column);
         }
     }
 
