@@ -5,8 +5,6 @@ package com.salesforce.omakase;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
 import com.salesforce.omakase.util.tool.QuickWriter;
 
 /**
@@ -14,7 +12,7 @@ import com.salesforce.omakase.util.tool.QuickWriter;
  */
 @SuppressWarnings("javadoc")
 public class Debug {
-    @Test
+
     public void develop() throws IOException {
         // AutoRefiner refinement = new AutoRefiner().all();
         // EchoLogger logging = new EchoLogger();

@@ -10,7 +10,10 @@ import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TESTME Parses a {@link Rule}.
+ * Parses a {@link Rule}.
+ * 
+ * @see Rule
+ * @see RuleParserTest
  * 
  * @author nmcwilliams
  */

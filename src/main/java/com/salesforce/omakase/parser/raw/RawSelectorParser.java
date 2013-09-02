@@ -10,7 +10,10 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TESTME Parses a {@link Selector}.
+ * Parses a {@link Selector}.
+ * 
+ * @see Selector
+ * @see RawSelectorParserTest
  * 
  * @author nmcwilliams
  */
@@ -26,13 +29,16 @@ public class RawSelectorParser extends AbstractParser {
         int line = stream.line();
         int column = stream.column();
 
+        // grab the comments now so we can ignore comments at the end of the selector group (see SelectorGroupParser)
+        Iterable<String> comments = stream.flushComments();
+
         // grab everything until the end of the selector
         String content = stream.until(tokenFactory().selectorEnd());
         RawSyntax raw = new RawSyntax(line, column, content.trim());
 
         // create selector and associate comments
         Selector selector = new Selector(raw, broadcaster);
-        selector.comments(stream.flushComments());
+        selector.comments(comments);
 
         // notify listeners of new selector
         broadcaster.broadcast(selector);

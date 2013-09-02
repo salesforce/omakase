@@ -108,10 +108,13 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
             assertThat(first.line()).describedAs(result.stream.toString()).isEqualTo(1);
 
-            String trim = result.stream.source().trim();
-            int column = result.stream.source().indexOf(trim) + 1;
-
-            assertThat(first.column()).describedAs(result.stream.toString()).isEqualTo(column);
+            if (allowedToTrimLeadingWhitespace()) {
+                String trim = result.stream.source().trim();
+                int column = result.stream.source().indexOf(trim) + 1;
+                assertThat(first.column()).describedAs(result.stream.toString()).isEqualTo(column);
+            } else {
+                assertThat(first.column()).describedAs(result.stream.toString()).isEqualTo(1);
+            }
         }
     }
 

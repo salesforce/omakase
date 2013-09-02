@@ -43,6 +43,9 @@ public class SelectorGroupParser extends AbstractParser {
             foundDelimiter = stream.optionallyPresent(tokenFactory().selectorDelimiter());
         } while (foundDelimiter);
 
+        // ignore any comments between the last selector and opening of the declaration block
+        stream.flushComments();
+
         return true;
     }
 
