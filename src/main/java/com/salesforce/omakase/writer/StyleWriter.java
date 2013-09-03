@@ -131,14 +131,16 @@ public class StyleWriter implements DependentPlugin {
      * Writes the processed CSS source to a string.
      * 
      * @return The CSS output.
-     * @throws IOException
-     *             If an I/O error occurs.
      */
-    public String write() throws IOException {
+    public String write() {
         checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
 
         StyleAppendable appendable = new StyleAppendable();
-        write(appendable);
+        try {
+            write(appendable);
+        } catch (IOException e) {
+            throw new RuntimeException("Using a StringBuilder shouldn't cause an IOException.", e);
+        }
         return appendable.toString();
     }
 
@@ -191,5 +193,23 @@ public class StyleWriter implements DependentPlugin {
         } else {
             writable.write(this, appendable);
         }
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static StyleWriter verbose() {
+        return new StyleWriter(WriterMode.VERBOSE);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    public static StyleWriter compressed() {
+        return new StyleWriter(WriterMode.COMPRESSED);
     }
 }

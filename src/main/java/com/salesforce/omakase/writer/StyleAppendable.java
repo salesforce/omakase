@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.IOException;
 
 /**
- * TESTME A wrapper around an {@link Appendable} that provides a few convenience functions.
+ * A wrapper around an {@link Appendable} that provides a few convenience functions.
  * 
  * <p>
  * When not specifying a particular {@link Appendable} then use {@link #toString()} to get the final output.

@@ -7,13 +7,23 @@ import java.io.IOException;
 
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.Writable;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
- * TESTME Customizes the writing of a particular {@link Syntax} unit.
+ * Customizes the writing of a particular {@link Syntax} unit.
  * 
  * <p>
  * This allows you to override (or augment) the writing of any {@link Syntax} unit. For example, to check the comments
  * for a directive that dictates how the unit should be written.
+ * 
+ * <p>
+ * <b>Important</b>: Some syntax units will not have their overrides kick in unless the parent unit is refined. For
+ * example, a {@link ClassSelector} override will not be utilized unless {@link Selector#refine()} is called on the
+ * parent {@link Selector}. An easy way to handle this is with an {@link AutoRefiner}.
+ * 
+ * @see CustomWriterTest
  * 
  * @param <T>
  *            The Type of object being overridden.

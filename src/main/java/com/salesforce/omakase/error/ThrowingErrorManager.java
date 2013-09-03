@@ -11,8 +11,8 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.parser.ParserException;
 
 /**
- * TESTME An {@link ErrorManager} that will throw an exception on the first reported {@link ErrorLevel#FATAL} error.
- * Errors of level {@link ErrorLevel#WARNING} will be logged.
+ * An {@link ErrorManager} that will throw an exception on the first reported {@link ErrorLevel#FATAL} error. Errors of
+ * level {@link ErrorLevel#WARNING} will be logged.
  * 
  * @author nmcwilliams
  */

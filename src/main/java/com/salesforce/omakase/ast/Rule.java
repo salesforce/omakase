@@ -72,7 +72,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // selectors
         for (Selector selector : selectors) {
-            selector.write(writer, appendable);
+            writer.write(selector, appendable);
             if (!selector.isLast()) {
                 appendable.append(',');
                 appendable.spaceIf(!writer.isCompressed());

@@ -10,7 +10,7 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * TESTME The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
+ * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
  * 
  * @see Emitter
  * 
