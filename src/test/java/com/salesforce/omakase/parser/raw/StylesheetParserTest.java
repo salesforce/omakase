@@ -41,7 +41,7 @@ public class StylesheetParserTest {
     }
 
     @Test
-    public void commentsAfterLastDeclarationShouldBeIgnored() {
+    public void commentsAfterLastSemicolonShouldBeIgnored() {
         final QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         new StylesheetParser().parse(new Stream(".class { color: red; /*comment*/ }"), broadcaster);
         for (Commentable c : broadcaster.filter(Commentable.class)) {

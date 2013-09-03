@@ -88,7 +88,6 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
         }
     }
 
-    @Override
     public void correctLineAndColumnNumber() {
         // n/a
     }

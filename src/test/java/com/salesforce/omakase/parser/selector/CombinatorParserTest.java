@@ -22,6 +22,7 @@ import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
  * 
  * @author nmcwilliams
  */
+@SuppressWarnings("javadoc")
 public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
 
     @Override
@@ -96,7 +97,6 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     }
 
     @Test
-    @Override
     /** overridden because whitespace can be a descendant combinator */
     public void correctLineAndColumnNumber() {
         List<GenericParseResult> results = parse(validSources());

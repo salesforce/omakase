@@ -45,8 +45,8 @@ public interface ParserTest {
      * Tests that the line and column number are from the beginning of the matched content (e.g., that it was saved off
      * before parsing the stream).
      */
-    @Test
-    public void correctLineAndColumnNumber();
+    // @Test
+    // public void correctLineAndColumnNumber();
 
     /**
      * Tests that the stream advances to the expected index if parsing is successful.

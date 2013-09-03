@@ -114,7 +114,6 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
     }
 
     @Test
-    @Override
     public void correctLineAndColumnNumber() {
         Syntax syntax = parse("\n  .class1").get(0).broadcasted.get(0);
         assertThat(syntax.line()).isEqualTo(2);

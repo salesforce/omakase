@@ -385,6 +385,9 @@ public final class Stream {
      * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given
      * enum (in the declared order) for a matching token.
      * 
+     * <p>
+     * As with {@link #optional(Token)}, if the current character matches the index will be advanced by one.
+     * 
      * @param <T>
      *            Type of the enum.
      * @param klass

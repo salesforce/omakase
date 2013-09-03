@@ -10,7 +10,10 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TESTME Parses a {@link Declaration}.
+ * Parses a {@link Declaration}.
+ * 
+ * @see Declaration
+ * @see RawDeclarationParserTest
  * 
  * @author nmcwilliams
  */
