@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 /**
- * Helper for constructing toString methods...cuz guava's helper just doesn't get the job done. TESTME
+ * Helper for constructing toString methods...cuz guava's helper just doesn't get the job done.
  * 
  * @example <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
  * @author nmcwilliams

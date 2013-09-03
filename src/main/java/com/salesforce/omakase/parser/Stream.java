@@ -18,7 +18,7 @@ import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME A tool for reading a String source one character at a time.
+ * A tool for reading a String source one character at a time.
  * 
  * <p>
  * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of

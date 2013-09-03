@@ -4,7 +4,6 @@
 package com.salesforce.omakase.parser;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -257,72 +256,134 @@ public class StreamTest {
 
     @Test
     public void until() {
-        fail("unimplemented");
+        Stream stream = new Stream("123___*\n\n123  abc} \n 123");
+        String content = stream.until(Tokens.CLOSE_BRACKET);
+        assertThat(content).isEqualTo("123___*\n\n123  abc");
+        assertThat(stream.index()).isEqualTo(17);
+    }
+
+    @Test
+    public void untilWhenAtEof() {
+        Stream stream = new Stream("a}");
+        stream.next();
+        stream.next();
+        String content = stream.until(Tokens.CLOSE_BRACKET);
+        assertThat(stream.eof()).isTrue();
+        assertThat(content).isEmpty();
     }
 
     @Test
     public void untilSkipString() {
-        fail("unimplemented");
+        Stream stream = new Stream("abc\"111\"abc1");
+        String contents = stream.until(Tokens.DIGIT);
+        assertThat(contents).isEqualTo("abc\"111\"abc");
+        assertThat(stream.index()).isEqualTo(11);
     }
 
     @Test
     public void untilNotPresent() {
-        fail("unimplemented");
+        Stream stream = new Stream("abc\n");
+        String content = stream.until(Tokens.DIGIT);
+        assertThat(content).isEqualTo("abc\n");
+        assertThat(stream.eof());
     }
 
     @Test
     public void untilSkipEscaped() {
-        fail("unimplemented");
-    }
-
-    @Test
-    public void chompEof() {
-        fail("unimplemented");
+        Stream stream = new Stream("abc\\)123)");
+        String content = stream.until(Tokens.CLOSE_PAREN);
+        assertThat(content).isEqualTo("abc\\)123");
+        assertThat(stream.index()).isEqualTo(8);
     }
 
     @Test
     public void chompMatches() {
-        fail("unimplemented");
+        Stream stream = new Stream("abcdefgABCDEFG1abc");
+        String chomped = stream.chomp(Tokens.ALPHA);
+        assertThat(chomped).isEqualTo("abcdefgABCDEFG");
+        assertThat(stream.index()).isEqualTo(14);
     }
 
     @Test
     public void chompDoesntMatch() {
-        fail("unimplemented");
+        Stream stream = new Stream("abcdefgABCDEFG");
+        String chomped = stream.chomp(Tokens.ALPHA);
+        assertThat(chomped).isEqualTo("abcdefgABCDEFG");
+        assertThat(stream.eof()).isTrue();
+    }
+
+    @Test
+    public void chompEof() {
+        Stream stream = new Stream("a");
+        stream.next();
+        String content = stream.chomp(Tokens.ALPHA);
+        assertThat(content).isEmpty();
+        assertThat(stream.eof()).isTrue();
     }
 
     @Test
     public void chompEnclosedDifferentDelimiters() {
-        fail("unimplemented");
+        Stream stream = new Stream("(abcdefg) 1");
+        String chomped = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+        assertThat(chomped).isEqualTo("abcdefg");
+        assertThat(stream.index()).isEqualTo(9);
     }
 
     @Test
     public void chompEnclosedSameDelimiters() {
-        fail("unimplemented");
+        Stream stream = new Stream("1abcd_efg1");
+        String chomped = stream.chompEnclosedValue(Tokens.DIGIT, Tokens.DIGIT);
+        assertThat(chomped).isEqualTo("abcd_efg");
+        assertThat(stream.index()).isEqualTo(10);
     }
 
     @Test
     public void chompEnclosedInDoubleQuotes() {
-        fail("unimplemented");
+        Stream stream = new Stream("\"abcd\\\"efg\" 1");
+        String chomped = stream.chompEnclosedValue(Tokens.DOUBLE_QUOTE, Tokens.DOUBLE_QUOTE);
+        assertThat(chomped).isEqualTo("abcd\\\"efg");
+        assertThat(stream.index()).isEqualTo(11);
     }
 
     @Test
     public void chompEnclosedInSingleQuotes() {
-        fail("unimplemented");
+        Stream stream = new Stream("'abc\\'defg' 1");
+        String chomped = stream.chompEnclosedValue(Tokens.SINGLE_QUOTE, Tokens.SINGLE_QUOTE);
+        assertThat(chomped).isEqualTo("abc\\'defg");
+        assertThat(stream.index()).isEqualTo(11);
     }
 
     @Test
     public void chompEnclosedWithNesting() {
-        fail("unimplemented");
+        Stream stream = new Stream("(abc(abc)ab\nc)");
+        String chomped = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+        assertThat(chomped).isEqualTo("abc(abc)ab\nc");
+        assertThat(stream.index()).isEqualTo(14);
     }
 
     @Test
     public void chompEnclosedWithEscaped() {
-        fail("unimplemented");
+        Stream stream = new Stream("(abc(abc)ab\nc)");
+        String chomped = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+        assertThat(chomped).isEqualTo("abc(abc)ab\nc");
+        assertThat(stream.index()).isEqualTo(14);
     }
 
     @Test
     public void chompEnclosedDoesntMatch() {
-        fail("unimplemented");
+        Stream stream = new Stream("(abc");
+
+        exception.expect(ParserException.class);
+        exception.expectMessage("Expected to find closing");
+        stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+    }
+
+    @Test
+    public void chompUnclosedUnmatchedNested() {
+        Stream stream = new Stream("(abc(abc)ab\nc");
+        exception.expect(ParserException.class);
+        exception.expectMessage("Expected to find closing");
+        stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
     }
 
     @Test
