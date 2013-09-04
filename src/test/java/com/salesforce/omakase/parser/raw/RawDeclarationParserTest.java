@@ -174,7 +174,6 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
         GenericParseResult result = parse("/*comment*/color: red").get(0);
         Declaration d = result.broadcaster.findOnly(Declaration.class).get();
         assertThat(d.comments()).hasSize(1);
-
     }
 
     @Test

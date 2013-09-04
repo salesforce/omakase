@@ -6,9 +6,11 @@ package com.salesforce.omakase.plugin.basic;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
@@ -60,41 +62,6 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
         return currentStylesheet;
     }
 
-    /**
-     * Subscription method. Do not call directly.
-     * 
-     * @param selector
-     *            The new selector.
-     */
-    @PreProcess
-    public void startSelector(Selector selector) {
-        checkState(state != State.FROZEN, "syntax tree cannot be modified directly.");
-
-        if (state == State.ROOT_LEVEL) {
-            startRule(selector.line(), selector.column());
-        } else if (state == State.INSIDE_DECLARATION_BLOCK) {
-            endRule();
-            startRule(selector.line(), selector.column());
-        }
-
-        currentRule.selectors().append(selector);
-    }
-
-    /**
-     * Subscription method. Do not call directly.
-     * 
-     * @param declaration
-     *            The new declaration.
-     */
-    @PreProcess
-    public void startDeclaration(Declaration declaration) {
-        checkState(state != State.FROZEN, "syntax tree cannot be modified directly.");
-        checkState(currentRule != null, "cannot add a declaration without a rule");
-
-        currentRule.declarations().append(declaration);
-        state = State.INSIDE_DECLARATION_BLOCK;
-    }
-
     private void startStylesheet() {
         currentStylesheet = new Stylesheet();
         state = State.ROOT_LEVEL;
@@ -105,11 +72,36 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
 
         // end the last statement
         if (currentStatement != null) {
-            endStatement();
+            endStatement(true);
         }
 
         broadcaster.broadcast(currentStylesheet);
         state = State.FROZEN;
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     * 
+     * @param atRule
+     *            The new {@link AtRule}.
+     */
+    @PreProcess
+    public void startAtRule(AtRule atRule) {
+        switch (state) {
+        case ROOT_LEVEL:
+            startStatement(atRule);
+            endStatement(false);
+            break;
+        case INSIDE_DECLARATION_BLOCK:
+            endRule();
+            startStatement(atRule);
+            endStatement(false);
+            break;
+        case INSIDE_SELECTOR_GROUP:
+            throw new IllegalStateException("at-rules currently not allowed here");
+        case FROZEN:
+            throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
+        }
     }
 
     private void startRule(int line, int column) {
@@ -123,25 +115,77 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
     private void endRule() {
         checkState(currentRule != null, "currentRule not set");
 
-        endStatement();
+        endStatement(true);
         currentRule = null;
         state = State.ROOT_LEVEL;
     }
 
     private void startStatement(Statement statement) {
+        checkState(currentStatement == null, "previous statement not ended");
         currentStatement = statement;
     }
 
-    private void endStatement() {
+    private void endStatement(boolean broadcast) {
         checkState(currentStatement != null, "currentStatement not set");
+
         currentStylesheet.append(currentStatement);
-        broadcaster.broadcast(currentStatement);
+
+        if (broadcast) {
+            broadcaster.broadcast(currentStatement);
+        }
+
         currentStatement = null;
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     * 
+     * @param selector
+     *            The new {@link Selector}.
+     */
+    @PreProcess
+    public void startSelector(Selector selector) {
+        switch (state) {
+        case ROOT_LEVEL:
+            startRule(selector.line(), selector.column());
+            currentRule.selectors().append(selector);
+            break;
+        case INSIDE_DECLARATION_BLOCK:
+            endRule();
+            startRule(selector.line(), selector.column());
+            currentRule.selectors().append(selector);
+            break;
+        case INSIDE_SELECTOR_GROUP:
+            throw new IllegalStateException("at-rules currently not allowed here");
+        case FROZEN:
+            throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
+        }
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     * 
+     * @param declaration
+     *            The new {@link Declaration}.
+     */
+    @PreProcess
+    public void startDeclaration(Declaration declaration) {
+        switch (state) {
+        case ROOT_LEVEL:
+            throw new IllegalStateException("declarations are not allowed at the root level");
+        case INSIDE_DECLARATION_BLOCK:
+        case INSIDE_SELECTOR_GROUP:
+            currentRule.declarations().append(declaration);
+            break;
+        case FROZEN:
+            throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
+        }
+
+        state = State.INSIDE_DECLARATION_BLOCK;
     }
 
     @Override
     public String toString() {
         return As.string(this).indent().add("stylesheet", currentStylesheet).toString();
     }
-
 }

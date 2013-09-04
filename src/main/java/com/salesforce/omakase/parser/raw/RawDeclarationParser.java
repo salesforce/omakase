@@ -46,7 +46,7 @@ public class RawDeclarationParser extends AbstractParser {
         Declaration declaration = new Declaration(property, value, broadcaster);
         declaration.comments(stream.flushComments());
 
-        // notifier listeners of new declaration
+        // notifier listeners of the new declaration
         broadcaster.broadcast(declaration);
         return true;
     }

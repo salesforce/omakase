@@ -32,6 +32,10 @@ import com.salesforce.omakase.writer.StyleWriter;
 /**
  * TESTME Represents a CSS declaration.
  * 
+ * <p>
+ * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
+ * basic grammar validation. See the notes on {@link Refinable}.
+ * 
  * @see RawDeclarationParser
  * @see TermListParser
  * 
@@ -76,6 +80,11 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
         this.broadcaster = broadcaster;
     }
 
+    @Override
+    public String filterName() {
+        return (propertyName() != null) ? propertyName().getName() : rawPropertyName.filterName();
+    }
+
     /**
      * Gets the original, raw, non-validated property name.
      * 
@@ -97,11 +106,6 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     @Override
     public PropertyName propertyName() {
         return propertyName;
-    }
-
-    @Override
-    public String filterName() {
-        return (propertyName() != null) ? propertyName().getName() : rawPropertyName.filterName();
     }
 
     @Override

@@ -23,7 +23,7 @@ import com.salesforce.omakase.parser.selector.*;
 public final class ParserFactory {
     /* general parsers */
     private static final Parser stylesheet = new StylesheetParser();
-    private static final Parser atRule = new AtRuleParser();
+    private static final Parser atRule = new RawAtRuleParser();
     private static final Parser rule = new RuleParser();
     private static final Parser statement = atRule.or(rule);
     private static final Parser rawDeclaration = new RawDeclarationParser();
@@ -78,7 +78,7 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link AtRuleParser}.
+     * Gets the {@link RawAtRuleParser}.
      * 
      * @return The parser instance.
      */

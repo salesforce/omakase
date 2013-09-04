@@ -5,37 +5,49 @@ package com.salesforce.omakase;
 
 import java.io.IOException;
 
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.util.EchoLogger;
 import com.salesforce.omakase.util.tool.QuickWriter;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Temp test for debugging.
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "unused" })
 public class Debug {
 
     public void develop() throws IOException {
-        // AutoRefiner refinement = new AutoRefiner().all();
-        // EchoLogger logging = new EchoLogger();
-        // SyntaxTree tree = new SyntaxTree();
-        // SyntaxWriter writer = new SyntaxWriter();
+        AutoRefiner refinement = new AutoRefiner().all();
+        EchoLogger logging = new EchoLogger();
+        SyntaxTree tree = new SyntaxTree();
+        StyleWriter writer = StyleWriter.compressed();
 
         // Omakase.source(src0)
         // .request(tree)
-        // .request(refinement)
+        // // .request(refinement)
         // .request(logging)
         // .request(Validation.normal())
         // .request(writer)
         // .process();
-
+        //
         // System.out.println();
         // System.out.println(tree.toString());
 
-        QuickWriter.writeAllModes(src3);
+        QuickWriter
+            .writeAllModes("@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}");
     }
 
-    public static final String src0 = ".class:before, {\n" +
-            "background: url('sfsfs;');\n" +
-            "color: red;\n" +
+    public static final String src0 = ".class {" +
+            "  color: red\n" +
+            "}\n" +
+            "@media(min-width: 800px) {\n" +
+            "  .abc {\n" +
+            "    color: red;\n" +
+            "  }\n" +
+            "}\n" +
+            "#id {\n" +
+            "  color:red\n" +
             "}";
     public static final String src1 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; }";
     public static final String src2 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; background-color: #fffeee; -moz-border-radius: 3px 4px 5px 6px; }";

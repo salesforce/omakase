@@ -13,6 +13,10 @@ import com.salesforce.omakase.parser.Parser;
  * @author nmcwilliams
  */
 public class StandardTokenFactory implements TokenFactory {
+    private static final Token AT_RULE_BLOCK_BEGIN = OPEN_BRACKET;
+    private static final Token AT_RULE_BLOCK_END = CLOSE_BRACKET;
+    private static final Token AT_RULE_TERMINATION = SEMICOLON;
+    private static final Token AT_RULE_EXPRESSION_END = AT_RULE_TERMINATION.or(AT_RULE_BLOCK_BEGIN);
     private static final Token SELETOR_BEGIN = DOT.or(HASH).or(ALPHA).or(COLON).or(STAR);
     private static final Token SELECTOR_DELIMITER = COMMA;
     private static final Token SELECTOR_END = SELECTOR_DELIMITER.or(OPEN_BRACKET);
@@ -31,6 +35,26 @@ public class StandardTokenFactory implements TokenFactory {
      */
     public static TokenFactory instance() {
         return instance;
+    }
+
+    @Override
+    public Token atRuleExpressionEnd() {
+        return AT_RULE_EXPRESSION_END;
+    }
+
+    @Override
+    public Token atRuleTermination() {
+        return AT_RULE_TERMINATION;
+    }
+
+    @Override
+    public Token atRuleBlockBegin() {
+        return AT_RULE_BLOCK_BEGIN;
+    }
+
+    @Override
+    public Token atRuleBlockEnd() {
+        return AT_RULE_BLOCK_END;
     }
 
     @Override

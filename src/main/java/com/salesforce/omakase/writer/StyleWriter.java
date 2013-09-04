@@ -196,18 +196,18 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * TODO Description
+     * Creates a new {@link StyleWriter} with {@link WriterMode#VERBOSE} mode.
      * 
-     * @return TODO
+     * @return The new {@link StyleWriter} instance.
      */
     public static StyleWriter verbose() {
         return new StyleWriter(WriterMode.VERBOSE);
     }
 
     /**
-     * TODO Description
+     * Creates a new {@link StyleWriter} with {@link WriterMode#COMPRESSED} mode.
      * 
-     * @return TODO
+     * @return The new {@link StyleWriter} instance.
      */
     public static StyleWriter compressed() {
         return new StyleWriter(WriterMode.COMPRESSED);

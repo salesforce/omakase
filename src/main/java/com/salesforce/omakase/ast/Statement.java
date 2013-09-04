@@ -5,6 +5,8 @@ package com.salesforce.omakase.ast;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
+
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;

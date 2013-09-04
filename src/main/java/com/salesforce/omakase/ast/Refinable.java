@@ -14,6 +14,11 @@ import com.salesforce.omakase.emitter.Subscribable;
  * for performance reasons, where each unrefined object can be further refined on demand to obtain and work with the
  * more detailed representation as applicable.
  * 
+ * <p>
+ * It's important to remember that <em>before being refined</em> refinable objects may actually contain invalid CSS.
+ * Simply refining the object will verify it's grammatical compliance, which can be coupled with custom validation to
+ * ensure correct usage.
+ * 
  * @see Syntax
  * 
  * @param <T>

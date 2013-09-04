@@ -19,6 +19,34 @@ import com.salesforce.omakase.parser.Parser;
  */
 public interface TokenFactory {
     /**
+     * Gets the {@link Token} representing the end of an at-rule's expression.
+     * 
+     * @return {@link Token} representing the end of an at-rule's expression.
+     */
+    Token atRuleExpressionEnd();
+
+    /**
+     * Gets the {@link Token} designating that the content of an at-rule is terminated (usually a semi-colon).
+     * 
+     * @return {@link Token} designating that the content of an at-rule is terminated.
+     */
+    Token atRuleTermination();
+
+    /**
+     * Gets the {@link Token} representing the opening of an at-rule block.
+     * 
+     * @return {@link Token} representing the opening of an at-rule block.
+     */
+    Token atRuleBlockBegin();
+
+    /**
+     * Gets the {@link Token} representing the closing of an at-rule block.
+     * 
+     * @return {@link Token} representing the closing of an at-rule block.
+     */
+    Token atRuleBlockEnd();
+
+    /**
      * Gets the {@link Token} representing what the first character of a {@link Selector} must be.
      * 
      * @return {@link Token} representing the first character of a {@link Selector}.

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 
 import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.selector.*;
@@ -55,6 +56,12 @@ public final class EchoLogger extends BasePlugin {
     @Override
     public void rule(Rule rule) {
         logger.debug("rule: {}", rule);
+    }
+
+    @Observe
+    @Override
+    public void atRule(AtRule rule) {
+        logger.debug("at-rule: {}", rule);
     }
 
     @Observe

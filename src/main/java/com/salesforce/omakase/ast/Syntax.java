@@ -22,7 +22,7 @@ import com.salesforce.omakase.emitter.Subscribable;
  * <p>
  * It's important to remember that <em>unrefined</em> Syntax objects, unless validation is performed, may actually
  * contain invalid CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled
- * with (linting?) to ensure correct usage.
+ * with custom validation to ensure correct usage.
  * 
  * @author nmcwilliams
  */

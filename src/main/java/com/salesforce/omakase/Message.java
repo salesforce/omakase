@@ -20,7 +20,8 @@ public enum Message {
     MISSING_PSEUDO_NAME("expected to find a valid pseudo element or class name " +
             "([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_ID("expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
-    EXPECTED_VALID_CLASS("expected to find a valid class name  ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
+    EXPECTED_VALID_CLASS("expected to find a valid class name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
+    MISSING_AT_RULE_NAME("Expected to find a valid at-rule name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXTRANEOUS("Extraneous text found at the end of the source '%s'"),
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_VALUE("Unable to parse remaining declaration value"),
@@ -42,6 +43,8 @@ public enum Message {
             " (first being the Syntax type, second being an ErrorManager): on method %s"),
     ANNOTATION_EXCLUSIVE("The @PreProcess, @Observe, @Rework and @Validate annotations are mutually exclusive: '%s"),
     MISSING_ERROR_MANAGER("The second paramenter for methods annotated with @Validate must be of type ErrorManager: on method %s"),
+    MISSING_AT_RULE_VALUE("Expected to find an at-rule expression, block, or both"),
+    CANT_MODIFY_SYNTAX_TREE("Cannot modify syntax tree after it has been frozen"),
 
     ;
 

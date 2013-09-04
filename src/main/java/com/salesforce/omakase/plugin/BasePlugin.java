@@ -4,6 +4,7 @@
 package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.selector.*;
@@ -69,6 +70,15 @@ public class BasePlugin implements Plugin {
      *            The {@link Rule} instance.
      */
     public void rule(Rule rule) {}
+
+    /**
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
+     * type {@link AtRule}.
+     * 
+     * @param rule
+     *            The {@link AtRule} instance.
+     */
+    public void atRule(AtRule rule) {}
 
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
