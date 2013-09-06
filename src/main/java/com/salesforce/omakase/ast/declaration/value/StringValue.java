@@ -3,11 +3,6 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
@@ -16,11 +11,16 @@ import com.salesforce.omakase.parser.declaration.StringValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+
 /**
  * TESTME A string value, e.g., "Times New Roman".
- * 
+ *
  * @see StringValueParser
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -39,11 +39,11 @@ public class StringValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new {@link StringValue} instance.
-     * 
+     *
      * <p>
      * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source.
      * Performance-wise, there is no reason to change it, and also it keeps us from having to mess around with escaping.
-     * 
+     *
      * @param line
      *            The line number.
      * @param column
@@ -61,7 +61,7 @@ public class StringValue extends AbstractSyntax implements Term {
 
     /**
      * TODO
-     * 
+     *
      * @param mode
      *            TODO
      * @param content
@@ -73,7 +73,7 @@ public class StringValue extends AbstractSyntax implements Term {
 
     /**
      * Sets the content of the string.
-     * 
+     *
      * @param mode
      *            The {@link QuotationMode} to use when printing out the value.
      * @param content
@@ -88,7 +88,7 @@ public class StringValue extends AbstractSyntax implements Term {
 
     /**
      * Gets the content of the string.
-     * 
+     *
      * @return The content of the string.
      */
     public String content() {

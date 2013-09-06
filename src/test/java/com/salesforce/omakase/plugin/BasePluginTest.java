@@ -1,12 +1,10 @@
 package com.salesforce.omakase.plugin;
-import static org.fest.assertions.api.Assertions.assertThat;
-
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.emitter.Subscribable;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.plugin.BasePlugin;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * ADD LICENSE
@@ -14,10 +12,10 @@ import com.salesforce.omakase.plugin.BasePlugin;
 
 /**
  * Unit tests for {@link BasePlugin}.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({"javadoc", "JavaDoc"})
 public class BasePluginTest {
 
     @Test

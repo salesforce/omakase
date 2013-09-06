@@ -1,12 +1,21 @@
-﻿.metadata/
-target
+# eclipse
+.metadata
 .project
-release.properties
-pom.xml.releaseBackup
-*.log
 .settings
-*.pyc
+
+# idea
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/misc.xml
+
+# platform
 .DS_Store
-.idea/*
+
+# misc
+target
+*.log
+*.out
 .clover
 .classpath
+

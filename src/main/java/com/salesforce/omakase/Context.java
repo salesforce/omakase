@@ -20,8 +20,8 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.*;
 
 /**
- * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting events (see
- * {@link Broadcaster}). Note: this class is not exposed as an API itself. TESTME
+ * TESTME Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see
+ * {@link Broadcaster}). Note: this class is not exposed as an API itself.
  * 
  * @author nmcwilliams
  */
@@ -35,7 +35,7 @@ final class Context implements Broadcaster, PluginRegistry {
     /** used to visit each broadcasted unit per phase */
     private final VisitingBroadcaster visitor = new VisitingBroadcaster(emittingBroadcaster);
 
-    /** main broadcaster */
+    /** main broadcaster - consumer changeable via {@link #broadcaster(Broadcaster)} */
     private Broadcaster broadcaster = visitor;
 
     /** internal construction only */

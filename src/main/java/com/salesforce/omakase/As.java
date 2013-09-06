@@ -3,20 +3,22 @@
  */
 package com.salesforce.omakase;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 
+import java.util.List;
+
 /**
- * Helper for constructing toString methods...cuz guava's helper just doesn't get the job done.
- * 
+ * Helper for constructing toString() methods...cuz guava's helper just doesn't get the job done.
+ *
  * @example <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
+ *
  * @author nmcwilliams
  */
 public final class As {
-    private boolean indent;
-    private final String name;
     private final List<Entry> entries = Lists.newArrayList();
+    private final String name;
+
+    private boolean indent;
 
     /** use construction method instead */
     private As(Object object) {
@@ -30,7 +32,7 @@ public final class As {
 
     /**
      * Specifies that this toString representation should indent and write each member on a separate line.
-     * 
+     *
      * @return this, for chaining.
      */
     public As indent() {
@@ -40,7 +42,7 @@ public final class As {
 
     /**
      * Adds a member to this toString representation.
-     * 
+     *
      * @param name
      *            Name of the member.
      * @param value
@@ -54,7 +56,7 @@ public final class As {
     /**
      * Adds a member to this toString representation. This is for iterables, which will automatically have their
      * indentation level increased (if indent is turned on).
-     * 
+     *
      * @param name
      *            Name of the member.
      * @param collection
@@ -74,6 +76,7 @@ public final class As {
         entries.add(entry);
         return this;
     }
+
 
     @Override
     public String toString() {
@@ -125,7 +128,7 @@ public final class As {
 
     /**
      * Creates a new string representation helper for the given object. Usually used inside of toString methods.
-     * 
+     *
      * @param object
      *            Create a string representation of this object.
      * @return The helper instance.
@@ -136,7 +139,7 @@ public final class As {
 
     /**
      * Creates a new string representation helper described by the given name. Usually used inside of toString methods.
-     * 
+     *
      * @param name
      *            Name of the object being represented.
      * @return The helper instance.

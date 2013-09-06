@@ -3,11 +3,6 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
@@ -16,12 +11,16 @@ import com.salesforce.omakase.parser.selector.ClassSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
  * TESTME Represents a CSS class selector.
- * 
- * @see ClassSelectorParser
- * 
+ *
  * @author nmcwilliams
+ * @see ClassSelectorParser
  */
 @Subscribable
 @Description(value = "class selector segment", broadcasted = REFINED_SELECTOR)
@@ -30,13 +29,13 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
 
     /**
      * Creates a new instance with the given line and column numbers.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param name
-     *            The name of the class.
+     *     The name of the class.
      */
     public ClassSelector(int line, int column, String name) {
         super(line, column);
@@ -45,20 +44,19 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
 
     /**
      * TODO
-     * 
+     *
      * @param name
-     *            TODO
+     *     TODO
      */
     public ClassSelector(String name) {
         name(name);
     }
 
+
     /**
-     * Sets the class name.
-     * 
      * @param name
-     *            The new class name.
-     * @return this, for chaining.
+     *
+     * @return
      */
     public ClassSelector name(String name) {
         this.name = checkNotNull(name, "name cannot be null");
@@ -67,7 +65,7 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
 
     /**
      * Gets the class name.
-     * 
+     *
      * @return The class name.
      */
     public String name() {
