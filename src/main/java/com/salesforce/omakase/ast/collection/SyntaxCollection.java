@@ -11,41 +11,40 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * A collection of related {@link Syntax} units.
- * 
- * <p>
+ *
  * If you are using any of these methods in a plugin you will need to register the {@link SyntaxTree} as a dependency.
  * See {@link DependentPlugin} for more details.
- * 
+ *
  * @param <T>
  *            The type of {@link Syntax} contained within the collection.
- * 
+ *
  * @author nmcwilliams
  */
 public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Iterable<T> {
     /**
      * Gets the number of units in the collection.
-     * 
+     *
      * @return Size of this collection.
      */
     int size();
 
     /**
      * Gets whether this collection contains any units.
-     * 
+     *
      * @return True if there are no units in this collection.
      */
     boolean isEmpty();
 
     /**
      * TODO Description
-     * 
+     *
      * @return TODO
      */
     boolean isEmptyOrAllDetached();
 
     /**
      * Gets whether the given unit is contained within this collection.
-     * 
+     *
      * @param unit
      *            Check if this unit is contained within this collection.
      * @return True if the unit is contained within this collection.
@@ -54,21 +53,21 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Gets the first unit in the collection.
-     * 
+     *
      * @return The first unit in the collection, or {@link Optional#absent()} if empty.
      */
     Optional<T> first();
 
     /**
      * Gets the last unit in the collection.
-     * 
+     *
      * @return The last unit in the collection, or {@link Optional#absent()} if empty.
      */
     Optional<T> last();
 
     /**
      * Prepends the given unit the beginning of this collection.
-     * 
+     *
      * @param unit
      *            The unit to prepend.
      * @return this, for chaining.
@@ -77,7 +76,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Prepends all of the given units to the beginning of this collection.
-     * 
+     *
      * @param units
      *            The units to add.
      * @return this, for chaining.
@@ -86,7 +85,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Prepends the given unit before the given existing unit.
-     * 
+     *
      * @param existing
      *            The unit to prepend.
      * @param unit
@@ -99,7 +98,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Appends the given unit to the end of this collection.
-     * 
+     *
      * @param unit
      *            The unit to append.
      * @return this, for chaining.
@@ -108,7 +107,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Appends all of the given units to the end of this collection.
-     * 
+     *
      * @param units
      *            The units to append.
      * @return this, for chaining.
@@ -117,7 +116,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Appends the given unit after the given existing unit.
-     * 
+     *
      * @param existing
      *            The unit that already exists in this collection.
      * @param unit
@@ -130,7 +129,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Replaces <b>all</b> existing units with the given units.
-     * 
+     *
      * @param units
      *            Replace all existing (if any) units with these.
      * @return this, for chaining.
@@ -139,7 +138,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Removes a unit from this collection. If this collection does not contain the given unit nothing will happen.
-     * 
+     *
      * @param unit
      *            The unit to remove.
      * @return this, for chaining.
@@ -148,14 +147,14 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * Detaches <b>all</b> units from this collection.
-     * 
+     *
      * @return The detached units.
      */
     Iterable<T> clear();
 
     /**
      * TODO Description
-     * 
+     *
      * @param broadcaster
      *            TODO
      * @return TODO
@@ -164,7 +163,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
 
     /**
      * TODO Description
-     * 
+     *
      * @param broadcaster
      *            TODO
      */

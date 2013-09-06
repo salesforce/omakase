@@ -5,20 +5,19 @@ package com.salesforce.omakase;
 
 /**
  * Error messages.
- * 
- * <p>
- * Error messages are gathered in one place like this to keep code less cluttered. It also achieves greater message
- * consistency since all the messages are placed and can be reviewed together.
- * 
+ * <p/>
+ * Error messages are gathered in one place like this to keep code less cluttered. It also achieves greater message consistency
+ * since all the messages are placed and can be reviewed together.
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public enum Message {
     DUPLICATE_PLUGIN("Only one plugin instance of each type allowed: %s"),
     NO_SUPPLIER("No supplier defined for %s. Use require(Class, Supplier) instead."),
     EXPECTED_SELECTOR("Expected to find a selector (after the trailing '%s')"),
     MISSING_PSEUDO_NAME("expected to find a valid pseudo element or class name " +
-            "([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
+        "([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_ID("expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_CLASS("expected to find a valid class name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     MISSING_AT_RULE_NAME("Expected to find a valid at-rule name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
@@ -33,21 +32,18 @@ public enum Message {
     EXPECTED_TERM("Expected to find another term following the term operator (%s)"),
     NAME_SELECTORS_NOT_ALLOWED("universal or type selector not allowed here"),
     COMMENTS_NOT_ALLOWED("Comments not allowed in this location. Please place the comment at the beginning of the declaration" +
-            " or selector sequence. (While the CSS specification does allow comments here," +
-            " it could result in unexpected behavior after minification and removal of the comment.)"),
+        " or selector sequence. (While the CSS specification does allow comments here," +
+        " it could result in unexpected behavior after minification and removal of the comment.)"),
     MISSING_COMMENT_CLOSE("Unclosed comment"),
     PSEUDO_ELEMENT_LAST("Pseudo elements must be last in the selector sequence"),
     ONE_PARAM("Methods annotated with @PreProcess, @Observe or @Rework must have exactly " +
-            "one parameter (the Syntax type): on method %s"),
+        "one parameter (the Syntax type): on method %s"),
     TWO_PARAMS("Methods annotated with @Validate must have exactly two parameters" +
-            " (first being the Syntax type, second being an ErrorManager): on method %s"),
+        " (first being the Syntax type, second being an ErrorManager): on method %s"),
     ANNOTATION_EXCLUSIVE("The @PreProcess, @Observe, @Rework and @Validate annotations are mutually exclusive: '%s"),
-    MISSING_ERROR_MANAGER("The second paramenter for methods annotated with @Validate must be of type ErrorManager: on method %s"),
+    MISSING_ERROR_MANAGER("The second parameter for methods annotated with @Validate must be of type ErrorManager: on method %s"),
     MISSING_AT_RULE_VALUE("Expected to find an at-rule expression, block, or both"),
-    CANT_MODIFY_SYNTAX_TREE("Cannot modify syntax tree after it has been frozen"),
-
-    ;
-
+    CANT_MODIFY_SYNTAX_TREE("Cannot modify syntax tree after it has been frozen"),;
     private final String message;
 
     Message(String message) {
@@ -55,8 +51,8 @@ public enum Message {
     }
 
     /**
-     * Gets the error message. If the message contains parameters for {@link String#format(String, Object...)} , use
-     * {@link #message(String...)} instead.
+     * Gets the error message. If the message contains parameters for {@link String#format(String, Object...)} , use {@link
+     * #message(Object...)} instead.
      */
     public String message() {
         return message;
@@ -64,9 +60,10 @@ public enum Message {
 
     /**
      * Gets the error message, passing in the given arguments to {@link String#format(String, Object...)}.
-     * 
+     *
      * @param parameters
-     *            Arguments to {@link String#format(String, Object...)}.
+     *     Arguments to {@link String#format(String, Object...)}.
+     *
      * @return The formatted message.
      */
     public String message(Object... parameters) {

@@ -27,13 +27,12 @@ import com.salesforce.omakase.writer.StyleWriter;
 /**
  * TESTME Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes,
  * etc...
- * 
- * <p>
+ *
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
  * basic grammar validation. See the notes on {@link Refinable}.
- * 
+ *
  * @see RawAtRuleParser
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -52,7 +51,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * Constructs a new {@link AtRule} instance.
-     * 
+     *
      * @param line
      *            The line number.
      * @param column
@@ -76,7 +75,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * TODO
-     * 
+     *
      * @param name
      *            TODO
      * @param expression
@@ -99,7 +98,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * Gets the name of this {@link AtRule}.
-     * 
+     *
      * @return The name.
      */
     public String name() {
@@ -108,7 +107,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * Gets the original, raw, non-validated expression if present (e.g., "utf-8", or "all and (min-width: 800px)".
-     * 
+     *
      * @return The raw expression, or {@link Optional#absent()} if not present.
      */
     public Optional<RawSyntax> rawExpression() {
@@ -117,7 +116,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * Gets the original, raw, non-validated at-rule block, if present.
-     * 
+     *
      * @return The at-rule block, or {@link Optional#absent()} if not present.
      */
     public Optional<RawSyntax> rawBlock() {
@@ -126,7 +125,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * Gets the at-rule expression, if present.
-     * 
+     *
      * @return The expression, or {@link Optional#absent()} if not present.
      */
     public Optional<AtRuleExpression> expression() {
@@ -135,7 +134,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     /**
      * Gets the at-rule block, if present.
-     * 
+     *
      * @return The block, or {@link Optional#absent()} if not present.
      */
     public Optional<AtRuleBlock> block() {

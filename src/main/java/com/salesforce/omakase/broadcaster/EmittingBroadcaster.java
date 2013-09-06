@@ -12,12 +12,11 @@ import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
- * 
- * <p>
+ *
  * TODO note about broadcast status and phases
- * 
+ *
  * @see Emitter
- * 
+ *
  * @author nmcwilliams
  */
 public final class EmittingBroadcaster extends AbstractBroadcaster {
@@ -35,7 +34,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
     /**
      * Constructs a new {@link EmittingBroadcaster} instance that will relay all broadcasted events to the given
      * {@link Broadcaster}.
-     * 
+     *
      * @param relay
      *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
@@ -45,7 +44,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
 
     /**
      * Specifies the {@link ErrorManager} to use.
-     * 
+     *
      * @param em
      *            The {@link ErrorManager} instance.
      */
@@ -55,10 +54,10 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
 
     /**
      * See {@link Emitter#register(Object)}.
-     * 
+     *
      * @param subscriber
      *            The {@link Plugin} class.
-     * 
+     *
      */
     public void register(Object subscriber) {
         emitter.register(subscriber);
@@ -66,7 +65,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
 
     /**
      * See {@link Emitter#phase(SubscriptionPhase)}.
-     * 
+     *
      * @param phase
      *            The new {@link SubscriptionPhase}.
      */

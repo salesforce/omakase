@@ -3,51 +3,51 @@
  */
 package com.salesforce.omakase.ast;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * TESTME Base class for {@link Syntax} units.
- * 
+ * TESTME
+ * Base class for {@link Syntax} units.
+ *
  * @author nmcwilliams
  */
 public abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
-    private Broadcaster broadcaster;
 
+    private Broadcaster broadcaster;
     private Status status = Status.UNBROADCASTED;
 
-    /**
-     * 
-     */
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units. */
     public AbstractSyntax() {
         this(-1, -1);
     }
 
     /**
      * Creates a new instance with the given line and column numbers.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      */
     public AbstractSyntax(int line, int column) {
         this(line, column, null);
     }
 
     /**
-     * TODO
-     * 
+     * Creates a new instance with the given line and column numbers, and the given {@link Broadcaster} to be used for
+     * broadcasting new units.
+     *
      * @param line
-     *            TODO
+     *     The line number.
      * @param column
-     *            TODO
+     *     The column number.
      * @param broadcaster
-     *            TODO
+     *     Used to broadcast new {@link Syntax} units.
      */
     public AbstractSyntax(int line, int column, Broadcaster broadcaster) {
         this.line = line;
@@ -83,7 +83,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public Syntax broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = broadcaster;
+        this.broadcaster = checkNotNull(broadcaster, "broadcaster cannot be null");
         return this;
     }
 
@@ -94,7 +94,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        // broadcast ourselves if we haven't been broadcasted yet
+        // only broadcast ourselves once
         if (this.status() == Status.UNBROADCASTED) {
             broadcaster.broadcast(this);
         }

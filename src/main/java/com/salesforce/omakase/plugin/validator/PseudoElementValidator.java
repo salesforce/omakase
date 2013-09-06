@@ -17,12 +17,11 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 /**
  * TESTME Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last
  * {@link SelectorPart} within a {@link Selector}).
- * 
- * <p>
+ *
  * <q>A selector is a chain of one or more sequences of simple selectors separated by combinators. <b>One pseudo-element
  * may be appended to the last sequence of simple selectors in a selector.</b></q>
  * (http://www.w3.org/TR/css3-selectors/#selector-syntax).
- * 
+ *
  * @author nmcwilliams
  */
 public class PseudoElementValidator implements DependentPlugin {
@@ -34,7 +33,7 @@ public class PseudoElementValidator implements DependentPlugin {
 
     /**
      * Validates that the pseudo element is always last, as according to the CSS spec.
-     * 
+     *
      * @param selector
      *            The pseudo element.
      * @param em

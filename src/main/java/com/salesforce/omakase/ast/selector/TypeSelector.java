@@ -17,10 +17,9 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * TESTME Represents a CSS type selector (also known as an element type selector).
- * 
- * <p>
+ *
  * Do not use this for universal "*" selectors, but use {@link UniversalSelector} instead.
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -30,7 +29,7 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
 
     /**
      * Constructs a new {@link TypeSelector} instance with the given name.
-     * 
+     *
      * @param line
      *            The line number.
      * @param column
@@ -45,7 +44,7 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
 
     /**
      * TODO
-     * 
+     *
      * @param name
      *            TODO
      */
@@ -55,7 +54,7 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
 
     /**
      * Sets the name.
-     * 
+     *
      * @param name
      *            The element name.
      * @return this, for chaining.
@@ -68,7 +67,7 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
 
     /**
      * Gets the name of the selector.
-     * 
+     *
      * @return The name.
      */
     public String name() {

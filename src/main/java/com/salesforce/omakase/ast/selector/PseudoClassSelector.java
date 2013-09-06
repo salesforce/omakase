@@ -19,13 +19,12 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * TESTME Represents a CSS pseudo class selector.
- * 
- * <p>
+ *
  * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b>
  * considered pseudo classes in this library, but as {@link PseudoElementSelector}s.
- * 
+ *
  * @see PseudoSelectorParser
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -35,7 +34,7 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
 
     /**
      * Constructs a new {@link PseudoClassSelector} instance with the given name.
-     * 
+     *
      * @param line
      *            The line number.
      * @param column
@@ -50,7 +49,7 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
 
     /**
      * TODO
-     * 
+     *
      * @param name
      *            TODO
      */
@@ -60,7 +59,7 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
 
     /**
      * Sets the name of the selector.
-     * 
+     *
      * @param name
      *            The new name.
      * @return this, for chaining.
@@ -75,7 +74,7 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
 
     /**
      * Gets the selector name (e.g., "hover").
-     * 
+     *
      * @return The selector name.
      */
     public String name() {

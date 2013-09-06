@@ -10,20 +10,18 @@ import com.salesforce.omakase.writer.Writable;
 
 /**
  * A distinct unit of syntax within CSS.
- * 
- * <p>
- * {@link Syntax} objects are used to represent the individual pieces of content of the parsed CSS source, and are the
- * primary objects used to construct the AST (Abstract Syntax Tree). Not all {@link Syntax} objects have content
- * directly associated with them. Some are used to represent the logical grouping of content, such as the {@link Rule}.
- * 
- * <p>
- * Each unit has a particular line and column indicating where it was parsed within the source.
- * 
- * <p>
- * It's important to remember that <em>unrefined</em> Syntax objects, unless validation is performed, may actually
- * contain invalid CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled
- * with custom validation to ensure correct usage.
- * 
+ * <p/>
+ * {@link Syntax} objects are used to represent the individual pieces of content of the parsed CSS source, and are the primary
+ * objects used to construct the AST (Abstract Syntax Tree). Not all {@link Syntax} objects have content directly associated with
+ * them. Some are used to represent the logical grouping of content, such as the {@link Rule}.
+ * <p/>
+ * Each unit has a particular line and column indicating where it was parsed within the source, except for dynamically created
+ * units. You can check {@link #hasSourcePosition()} to see if a unit is dynamically created.
+ * <p/>
+ * It's important to remember that <em>unrefined</em> Syntax objects, unless validation is performed, may actually contain invalid
+ * CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled with custom validation to
+ * ensure correct usage.
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -31,62 +29,80 @@ import com.salesforce.omakase.writer.Writable;
 public interface Syntax extends Writable {
     /**
      * The line number within the source where this {@link Syntax} unit was parsed.
-     * 
+     *
      * @return The line number.
      */
     int line();
 
     /**
      * The column number within the source where this {@link Syntax} unit was parsed.
-     * 
+     *
      * @return The column number.
      */
     int column();
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets whether this unit has a source location specified.
+     * <p/>
+     * This will be true for units within the original parsed source and false for dynamically created units.
+     *
+     * @return True if this unit has a source location specified.
      */
     boolean hasSourcePosition();
 
     /**
-     * TODO Description
-     * 
+     * Sets the current broadcast status. For internal use only, do not call directly.
+     *
      * @param status
-     *            TODO
-     * @return TODO
+     *     The new status.
+     *
+     * @return this, for chaining.
      */
     Syntax status(Status status);
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets the current broadcast status of this unit.
+     * <p/>
+     * This primarily determines whether this unit should be broadcasted again, given that each unit should be broadcasted at most
+     * once per phase.
+     *
+     * @return The current broadcast status.
      */
     Status status();
 
     /**
-     * TODO Description
-     * 
+     * Specifies the {@link Broadcaster} to use for broadcasting inner or child {@link Syntax} units.
+     *
      * @param broadcaster
-     *            TODO
-     * @return TODO
+     *     Used to broadcast new {@link Syntax} units.
+     *
+     * @return this, for chaining.
      */
     Syntax broadcaster(Broadcaster broadcaster);
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets the {@link Broadcaster} to use for broadcasting inner or child {@link Syntax} units.
+     *
+     * @return The {@link Broadcaster} to use for broadcasting inner or child {@link Syntax} units.
      */
     Broadcaster broadcaster();
 
     /**
-     * TODO Description
-     * 
+     * Broadcasts all child units using the given {@link Broadcaster}.
+     * <p/>
+     * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
+     * itself is broadcasted, this method should be called on the parent unit in order to propagate the broadcast event to the
+     * children, ensuring that each child unit is properly broadcasted.
+     * <p/>
+     * This differs from {@link #broadcaster(Broadcaster)}. Parent units already in the tree will utilize the {@link Broadcaster}
+     * from {@link #broadcaster(Broadcaster)} to broadcast child units as created. In contrast, parent units <b>not currently</b>
+     * in the tree should have this method called when initially broadcasted to ensure that any child units previously added
+     * before the broadcast get broadcasted as well.
+     *
      * @param broadcaster
-     *            TODO
+     *     Use this {@link Broadcaster} to broadcast all unbroadcasted child units.
+     *
+     * @see Broadcaster#broadcast(Syntax, boolean)
      */
     void propagateBroadcast(Broadcaster broadcaster);
 }

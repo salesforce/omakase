@@ -4,10 +4,7 @@
 .settings
 
 # idea
-*.iws
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/misc.xml
+.idea
 
 # platform
 .DS_Store
@@ -18,4 +15,3 @@ target
 *.out
 .clover
 .classpath
-

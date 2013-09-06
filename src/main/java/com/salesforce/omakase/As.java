@@ -9,18 +9,17 @@ import java.util.List;
 
 /**
  * Helper for constructing toString() methods...cuz guava's helper just doesn't get the job done.
- *
- * @example <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
+ * <p/>
+ * Example:<code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
  *
  * @author nmcwilliams
  */
 public final class As {
     private final List<Entry> entries = Lists.newArrayList();
     private final String name;
-
     private boolean indent;
 
-    /** use construction method instead */
+    /** use a constructor method instead */
     private As(Object object) {
         this(object.getClass().getSimpleName());
     }
@@ -28,6 +27,30 @@ public final class As {
     /** use a constructor method instead */
     private As(String name) {
         this.name = name;
+    }
+
+    /**
+     * Creates a new string representation helper for the given object. Usually used inside of toString methods.
+     *
+     * @param object
+     *     Create a string representation of this object.
+     *
+     * @return The helper instance.
+     */
+    public static As string(Object object) {
+        return new As(object);
+    }
+
+    /**
+     * Creates a new string representation helper described by the given name. Usually used inside of toString methods.
+     *
+     * @param name
+     *     Name of the object being represented.
+     *
+     * @return The helper instance.
+     */
+    public static As stringNamed(String name) {
+        return new As(name);
     }
 
     /**
@@ -44,9 +67,10 @@ public final class As {
      * Adds a member to this toString representation.
      *
      * @param name
-     *            Name of the member.
+     *     Name of the member.
      * @param value
-     *            the member.
+     *     The member.
+     *
      * @return this, for chaining.
      */
     public As add(String name, Object value) {
@@ -54,13 +78,14 @@ public final class As {
     }
 
     /**
-     * Adds a member to this toString representation. This is for iterables, which will automatically have their
-     * indentation level increased (if indent is turned on).
+     * Adds a member to this toString representation. This is for iterables, which will automatically have their indentation level
+     * increased (if indent is turned on).
      *
      * @param name
-     *            Name of the member.
+     *     Name of the member.
      * @param collection
-     *            The member.
+     *     The member.
+     *
      * @return this, for chaining.
      */
     public As add(String name, Iterable<?> collection) {
@@ -76,7 +101,6 @@ public final class As {
         entries.add(entry);
         return this;
     }
-
 
     @Override
     public String toString() {
@@ -124,27 +148,5 @@ public final class As {
         String name;
         Object value;
         boolean isIterable;
-    }
-
-    /**
-     * Creates a new string representation helper for the given object. Usually used inside of toString methods.
-     *
-     * @param object
-     *            Create a string representation of this object.
-     * @return The helper instance.
-     */
-    public static As string(Object object) {
-        return new As(object);
-    }
-
-    /**
-     * Creates a new string representation helper described by the given name. Usually used inside of toString methods.
-     *
-     * @param name
-     *            Name of the object being represented.
-     * @return The helper instance.
-     */
-    public static As stringNamed(String name) {
-        return new As(name);
     }
 }

@@ -3,19 +3,16 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
-
-import java.io.IOException;
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.Commentable;
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.ast.declaration.value.Term;
@@ -24,25 +21,33 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.parser.*;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.ParserStrategy;
+import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+
 /**
  * TESTME Represents a CSS declaration.
- * 
- * <p>
+ *
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
  * basic grammar validation. See the notes on {@link Refinable}.
- * 
+ *
  * @see RawDeclarationParser
  * @see TermListParser
- * 
+ *
  * @author nmcwilliams
  */
 /**
  * TODO Description
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -61,12 +66,11 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     /**
      * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property
      * value). The property name and value can be further refined or validated by calling {@link #refine()}.
-     * 
-     * <p>
+     *
      * Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS. Hence
      * really anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has
      * been called.
-     * 
+     *
      * @param rawPropertyName
      *            The raw property name.
      * @param rawPropertyValue
@@ -82,7 +86,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO
-     * 
+     *
      * @param propertyName
      *            TODO
      * @param propertyValue
@@ -94,7 +98,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO
-     * 
+     *
      * @param propertyName
      *            TODO
      * @param singleValue
@@ -106,7 +110,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO
-     * 
+     *
      * @param propertyName
      *            TODO
      * @param propertyValue
@@ -121,7 +125,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * Gets the original, raw, non-validated property name.
-     * 
+     *
      * @return The raw property name.
      */
     public RawSyntax rawPropertyName() {
@@ -130,7 +134,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * Gets the original, raw, non-validated property value.
-     * 
+     *
      * @return The raw property value.
      */
     public RawSyntax rawPropertyValue() {
@@ -139,7 +143,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO Description
-     * 
+     *
      * @param propertyName
      *            TODO
      * @return TODO
@@ -151,7 +155,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * Gets the property name.
-     * 
+     *
      * @return The property name.
      */
     public PropertyName propertyName() {
@@ -160,7 +164,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO Description TODO
-     * 
+     *
      * @param propertyName
      *            TODO
      * @return TODO
@@ -171,7 +175,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO Description
-     * 
+     *
      * @param property
      *            TODO
      * @return TODO
@@ -182,7 +186,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO Description
-     * 
+     *
      * @param property
      *            TODO
      * @return TODO
@@ -193,7 +197,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * TODO Description
-     * 
+     *
      * @param propertyValue
      *            TODO
      * @return TODO
@@ -211,7 +215,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     /**
      * Gets the property value.
-     * 
+     *
      * @return The property value.
      */
     public PropertyValue propertyValue() {

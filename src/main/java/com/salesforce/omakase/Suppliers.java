@@ -3,8 +3,6 @@
  */
 package com.salesforce.omakase;
 
-import java.util.Map;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
@@ -12,9 +10,11 @@ import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
+import java.util.Map;
+
 /**
  * Helper for creating instances of library-provided {@link Plugin}s.
- * 
+ *
  * @author nmcwilliams
  */
 final class Suppliers {
@@ -39,11 +39,12 @@ final class Suppliers {
 
     /**
      * Gets the supplier for the given class.
-     * 
+     *
      * @param <T>
-     *            Type of class/supplier.
+     *     Type of class/supplier.
      * @param klass
-     *            Get a supplier for this class.
+     *     Get a supplier for this class.
+     *
      * @return The supplier for the class, or {@link Optional#absent()} if not present.
      */
     @SuppressWarnings("unchecked")
@@ -51,7 +52,7 @@ final class Suppliers {
         Supplier<?> found = map.get(klass);
         if (found != null) {
             /** cast is safe as long as the internal map is correctly formed */
-            return Optional.of((Supplier<T>)found);
+            return Optional.of((Supplier<T>) found);
         }
         return Optional.absent();
     }

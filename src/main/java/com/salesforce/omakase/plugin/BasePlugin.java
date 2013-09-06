@@ -12,16 +12,14 @@ import com.salesforce.omakase.emitter.Rework;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
- * 
- * <p>
+ *
  * It is <em>not</em> recommended that you override each one of these methods. Note that some methods are more generic
  * subscriptions that will also be covered by their more specific counterparts. For example, a {@link ClassSelector}
  * will be sent to {@link #classSelector(ClassSelector)}, {@link #selectorPart(SelectorPart)} and
  * {@link #syntax(Syntax)}.
- * 
- * <p>
+ *
  * See the notes on {@link Plugin} about invocation order for subscription methods.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("unused")
@@ -29,7 +27,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Syntax}.
-     * 
+     *
      * @param syntax
      *            The {@link Syntax} instance.
      */
@@ -38,7 +36,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Refinable}.
-     * 
+     *
      * @param refinable
      *            The {@link Refinable} instance.
      */
@@ -47,7 +45,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Stylesheet}.
-     * 
+     *
      * @param stylesheet
      *            The {@link Stylesheet} instance.
      */
@@ -56,7 +54,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Statement}.
-     * 
+     *
      * @param statement
      *            The {@link Statement} instance.
      */
@@ -65,7 +63,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Rule}.
-     * 
+     *
      * @param rule
      *            The {@link Rule} instance.
      */
@@ -74,7 +72,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link AtRule}.
-     * 
+     *
      * @param rule
      *            The {@link AtRule} instance.
      */
@@ -83,7 +81,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Selector}.
-     * 
+     *
      * @param selector
      *            The {@link Selector} instance.
      */
@@ -92,7 +90,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link SelectorPart} ({@link SimpleSelector}s or {@link Combinator}s).
-     * 
+     *
      * @param selectorPart
      *            The {@link SelectorPart} instance.
      */
@@ -101,7 +99,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link SimpleSelector}.
-     * 
+     *
      * @param simpleSelector
      *            The {@link SimpleSelector} instance.
      */
@@ -110,7 +108,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Combinator}.
-     * 
+     *
      * @param combinator
      *            The {@link Combinator} instance.
      */
@@ -119,7 +117,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link TypeSelector}.
-     * 
+     *
      * @param typeSelector
      *            The {@link TypeSelector} instance.
      */
@@ -128,7 +126,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link UniversalSelector}.
-     * 
+     *
      * @param universalSelector
      *            The {@link UniversalSelector} instance.
      */
@@ -137,7 +135,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link IdSelector}.
-     * 
+     *
      * @param idSelector
      *            The {@link IdSelector} instance.
      */
@@ -146,7 +144,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link ClassSelector}.
-     * 
+     *
      * @param classSelector
      *            The {@link ClassSelector} instance.
      */
@@ -155,7 +153,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link AttributeSelector}.
-     * 
+     *
      * @param attributeSelector
      *            The {@link AttributeSelector} instance.
      */
@@ -164,7 +162,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link PseudoClassSelector}.
-     * 
+     *
      * @param pseudoClassSelector
      *            The {@link PseudoClassSelector} instance.
      */
@@ -173,7 +171,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link PseudoElementSelector}.
-     * 
+     *
      * @param pseudoElementSelector
      *            The {@link PseudoElementSelector} instance.
      */
@@ -182,7 +180,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Declaration}.
-     * 
+     *
      * @param declaration
      *            The {@link Declaration} instance.
      */
@@ -191,7 +189,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link PropertyValue}.
-     * 
+     *
      * @param propertyValue
      *            The {@link PropertyValue} instance.
      */
@@ -200,7 +198,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link Term}.
-     * 
+     *
      * @param term
      *            The {@link Term} instance.
      */
@@ -209,7 +207,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link TermList}.
-     * 
+     *
      * @param termList
      *            The {@link TermList} instance.
      */
@@ -218,7 +216,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link FunctionValue}.
-     * 
+     *
      * @param functionValue
      *            The {@link FunctionValue} instance.
      */
@@ -227,7 +225,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link HexColorValue}.
-     * 
+     *
      * @param hexColorValue
      *            The {@link HexColorValue} instance.
      */
@@ -236,7 +234,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link KeywordValue}.
-     * 
+     *
      * @param keywordValue
      *            The {@link KeywordValue} instance.
      */
@@ -245,7 +243,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link NumericalValue}.
-     * 
+     *
      * @param numericalValue
      *            The {@link NumericalValue} instance.
      */
@@ -254,7 +252,7 @@ public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of
      * type {@link StringValue}.
-     * 
+     *
      * @param stringValue
      *            The {@link StringValue} instance.
      */

@@ -12,10 +12,9 @@ import com.salesforce.omakase.emitter.Subscribable;
 
 /**
  * A {@link TermListMember} within a {@link TermList} representing a single segment of the {@link Declaration} value.
- * 
- * <p>
+ *
  * For example, in <code>margin: 3px 5px</code>, there are two terms, <code>3px</code> and <code>5px</code>.
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable

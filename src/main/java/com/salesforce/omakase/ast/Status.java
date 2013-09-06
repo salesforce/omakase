@@ -6,12 +6,12 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
 
 /**
- * TODO Description
- * 
+ * Represents the broadcast status of {@link Syntax} unit.
+ *
  * @author nmcwilliams
  */
 public enum Status {
-    /** TODO */
+    /** For units that should never be broadcasted */
     DO_NOT_BROADCAST {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -19,7 +19,7 @@ public enum Status {
         }
     },
 
-    /** TODO */
+    /** The unit has never been broadcasted. */
     UNBROADCASTED {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -27,7 +27,7 @@ public enum Status {
         }
     },
 
-    /** TODO */
+    /** The unit is currently being broadcasted */
     BROADCASTING {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -35,7 +35,7 @@ public enum Status {
         }
     },
 
-    /** TODO */
+    /** The unit has been broadcasted in the {@link SubscriptionPhase#PREPROCESS} phase */
     BROADCASTED_PREPROCESS {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -43,7 +43,7 @@ public enum Status {
         }
     },
 
-    /** TODO */
+    /** The unit has been broadcasted in the {@link SubscriptionPhase#PROCESS} phase */
     BROADCASTED_PROCESS {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -51,7 +51,7 @@ public enum Status {
         }
     },
 
-    /** TODO */
+    /** The unit has been broadcasted in the {@link SubscriptionPhase#VALIDATE} phase */
     BROADCASTED_VALIDATION {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -60,29 +60,31 @@ public enum Status {
     };
 
     /**
-     * TODO Description TODO
-     * 
+     * Gets whether a {@link Syntax} unit with this status should be broadcasted.
+     *
      * @param phase
-     *            TODO
-     * @return TODO
+     *     The {@link SubscriptionPhase} to check.
+     *
+     * @return True if the unit should be broadcasted based on the given phase.
      */
     public abstract boolean shouldBroadcastForPhase(SubscriptionPhase phase);
 
     /**
-     * TODO Description
-     * 
+     * Gets the next status for a {@link Syntax} unit based on the given phase.
+     *
      * @param phase
-     *            TODO
-     * @return TODO
+     *     The current phase that the unit was broadcasted under.
+     *
+     * @return The next status level.
      */
     public Status nextStatus(SubscriptionPhase phase) {
         switch (phase) {
-        case PREPROCESS:
-            return Status.BROADCASTED_PREPROCESS;
-        case PROCESS:
-            return Status.BROADCASTED_PROCESS;
-        case VALIDATE:
-            return Status.BROADCASTED_VALIDATION;
+            case PREPROCESS:
+                return Status.BROADCASTED_PREPROCESS;
+            case PROCESS:
+                return Status.BROADCASTED_PROCESS;
+            case VALIDATE:
+                return Status.BROADCASTED_VALIDATION;
         }
         return null;
     }

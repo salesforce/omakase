@@ -13,11 +13,10 @@ import com.salesforce.omakase.parser.selector.*;
 
 /**
  * A cache of {@link Parser} instances.
- * 
- * <p>
+ *
  * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to
  * the fact that {@link Parser}s are not allowed to maintain state.
- * 
+ *
  * @author nmcwilliams
  */
 public final class ParserFactory {
@@ -61,7 +60,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link StylesheetParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser stylesheetParser() {
@@ -70,7 +69,7 @@ public final class ParserFactory {
 
     /**
      * Gets the statement parser.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser statementParser() {
@@ -79,7 +78,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link RawAtRuleParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser atRuleParser() {
@@ -88,7 +87,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link RuleParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser ruleParser() {
@@ -97,7 +96,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link SelectorGroupParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser selectorGroupParser() {
@@ -106,7 +105,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link RawSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser rawSelectorParser() {
@@ -115,7 +114,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link ComplexSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser complexSelectorParser() {
@@ -125,7 +124,7 @@ public final class ParserFactory {
     /**
      * Gets the parser to parse {@link SimpleSelector} (excluding type and universal selectors) or a
      * {@link PseudoElementSelector}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser repeatableSelector() {
@@ -134,7 +133,7 @@ public final class ParserFactory {
 
     /**
      * Gets the parser to parse a {@link TypeSelector} or a {@link UniversalSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser typeOrUniversaleSelectorParser() {
@@ -143,7 +142,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link CombinatorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser combinatorParser() {
@@ -152,7 +151,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link ClassSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser classSelectorParser() {
@@ -161,7 +160,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link IdSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser idSelectorParser() {
@@ -170,7 +169,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link AttributeSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser attributeSelectorParser() {
@@ -179,7 +178,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link TypeSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser typeSelectorParser() {
@@ -188,7 +187,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link UniversalSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser universalSelectorParser() {
@@ -197,7 +196,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link PseudoSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser pseudoSelectorParser() {
@@ -206,7 +205,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link NegationSelectorParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser negationSelectorParser() {
@@ -215,7 +214,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link RawDeclarationParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser rawDeclarationParser() {
@@ -224,7 +223,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link TermListParser}.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser termListParser() {
@@ -233,7 +232,7 @@ public final class ParserFactory {
 
     /**
      * Gets the parser to parse a {@link Term} value.
-     * 
+     *
      * @return The parser instance.
      */
     public static Parser termParser() {

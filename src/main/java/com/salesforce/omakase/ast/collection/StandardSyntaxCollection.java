@@ -3,12 +3,6 @@
  */
 package com.salesforce.omakase.ast.collection;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -17,12 +11,18 @@ import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * TESTME Standard (default) implementation of the {@link SyntaxCollection}.
- * 
+ *
  * @param <T>
  *            Type of items in the {@link SyntaxCollection}.
- * 
+ *
  * @author nmcwilliams
  */
 public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implements SyntaxCollection<T> {
@@ -38,7 +38,7 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
 
     /**
      * TODO
-     * 
+     *
      * @param broadcaster
      *            TODO
      */
@@ -204,7 +204,7 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
 
     /**
      * Internal method to broadcast new units.
-     * 
+     *
      * @param unit
      *            The unit to broadcast.
      */
@@ -226,10 +226,10 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
 
     /**
      * Creates a new {@link SyntaxCollection} instance.
-     * 
+     *
      * @param <E>
      *            Type of items the collection contains.
-     * 
+     *
      * @return The new {@link SyntaxCollection} instance.
      */
     public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
@@ -238,12 +238,12 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
 
     /**
      * Creates a new {@link SyntaxCollection} instance with the given {@link Broadcaster} to broadcast new units.
-     * 
+     *
      * @param <E>
      *            Type of items the collection contains.
      * @param broadcaster
      *            Used to broadcast new units.
-     * 
+     *
      * @return The new {@link SyntaxCollection} instance.
      */
     public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create(Broadcaster broadcaster) {

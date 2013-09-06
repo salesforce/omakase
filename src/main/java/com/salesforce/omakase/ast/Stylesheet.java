@@ -3,11 +3,6 @@
  */
 package com.salesforce.omakase.ast;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
-
-import java.io.IOException;
-import java.util.Iterator;
-
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -20,15 +15,19 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
+
 /**
- * TESTME The root-level {@link Syntax} object.
- * 
- * <p>
+ * TESTME
+ * The root-level {@link Syntax} object.
+ * <p/>
  * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
- * 
- * @see StylesheetParser
- * 
+ *
  * @author nmcwilliams
+ * @see StylesheetParser
  */
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
@@ -37,9 +36,9 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
 
     /**
      * Constructs a new {@link Stylesheet} instance.
-     * 
+     *
      * @param broadcaster
-     *            Used to broadcast new units.
+     *     Used to broadcast new units.
      */
     public Stylesheet(Broadcaster broadcaster) {
         super(1, 1, broadcaster);
@@ -48,7 +47,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
 
     /**
      * Gets all {@link Statement}s in this stylesheet.
-     * 
+     *
      * @return All statements.
      */
     public SyntaxCollection<Statement> statements() {
@@ -57,9 +56,10 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
 
     /**
      * Appends a new {@link Statement} to the end of this stylesheet.
-     * 
+     *
      * @param statement
-     *            The {@link Statement} to append.
+     *     The {@link Statement} to append.
+     *
      * @return this, for chaining.
      */
     public Stylesheet append(Statement statement) {

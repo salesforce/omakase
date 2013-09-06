@@ -3,10 +3,6 @@
  */
 package com.salesforce.omakase.ast;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -20,12 +16,16 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
+
 /**
- * TESTME Represents a CSS Rule.
- * 
- * <p>
+ * TESTME
+ * Represents a CSS Rule.
+ * <p/>
  * Note that {@link Rule}s will not be created unless the {@link SyntaxTree} plugin is enabled.
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -34,22 +34,20 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     private final SyntaxCollection<Selector> selectors;
     private final SyntaxCollection<Declaration> declarations;
 
-    /**
-     * TODO
-     */
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units. */
     public Rule() {
         this(-1, -1, null);
     }
 
     /**
-     * Creates a new {@link Rule} instance.
-     * 
+     * Creates a new {@link Rule} instance with the given line and column numbers.
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param broadcaster
-     *            Used to broadcast new units.
+     *     Used to broadcast new units.
      */
     public Rule(int line, int column, Broadcaster broadcaster) {
         super(line, column, broadcaster);
@@ -58,8 +56,9 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     }
 
     /**
-     * Gets the collection of selectors for this {@link Rule}.
-     * 
+     * Gets the collection of selectors for this {@link Rule}. You can append, prepend, etc... additional {@link Selector}s to
+     * this collection.
+     *
      * @return The selectors.
      */
     public SyntaxCollection<Selector> selectors() {
@@ -67,8 +66,9 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     }
 
     /**
-     * Gets the collection of declarations for this {@link Rule}.
-     * 
+     * Gets the collection of declarations for this {@link Rule}. You can append, prepend,
+     * etc... additional {@link Declaration}s to this collection.
+     *
      * @return The declarations.
      */
     public SyntaxCollection<Declaration> declarations() {
@@ -84,7 +84,6 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        broadcaster(broadcaster);
         selectors.propagateBroadcast(broadcaster);
         declarations.propagateBroadcast(broadcaster);
     }

@@ -3,34 +3,34 @@
  */
 package com.salesforce.omakase.ast;
 
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
 /**
- * TESTME Represents raw, non-validated content. Usually used by {@link Refinable}s.
- * 
+ * TESTME
+ * Represents raw, non-validated content. Usually used by {@link Refinable}s.
+ *
+ * @author nmcwilliams
  * @see RawDeclarationParser
  * @see RawSelectorParser
- * 
- * @author nmcwilliams
  */
 public final class RawSyntax extends AbstractSyntax {
     private final String content;
 
     /**
      * Creates an instance with the given line and column number and content.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param content
-     *            The raw content.
+     *     The raw content.
      */
     public RawSyntax(int line, int column, String content) {
         super(line, column);
@@ -39,7 +39,7 @@ public final class RawSyntax extends AbstractSyntax {
 
     /**
      * Gets the raw content.
-     * 
+     *
      * @return The raw content.
      */
     public String content() {

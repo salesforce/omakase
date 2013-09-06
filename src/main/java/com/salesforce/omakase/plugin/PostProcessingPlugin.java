@@ -9,21 +9,19 @@ import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * A {@link Plugin} that wishes to be notified when all processing is completed.
- * 
+ *
  * @author nmcwilliams
  */
 public interface PostProcessingPlugin extends Plugin {
     /**
      * This method will be called after all processing has completed (preprocessing, rework, and validation).
-     * 
-     * <p>
+     *
      * This could be used when the {@link Plugin} must defer it's processing until it is certain that all
      * {@link Selector}s and {@link Declaration}s within the source are processed.
-     * 
-     * <p>
+     *
      * The order in which this will be invoked (between plugins) is the same order that the {@link Plugin} was
      * registered.
-     * 
+     *
      * @param registry
      *            The {@link PluginRegistry} instance.
      */

@@ -8,16 +8,15 @@ import com.salesforce.omakase.emitter.Emitter;
 
 /**
  * Responsible for broadcasting when {@link Syntax} units have been created, ultimately to an {@link Emitter}.
- * 
- * <p>
+ *
  * Implementations should follow the decorator pattern, allowing for nesting of different broadcasters (like Reader).
- * 
+ *
  * @author nmcwilliams
  */
 public interface Broadcaster {
     /**
      * Broadcasts an event indicating that the given syntax unit has been created.
-     * 
+     *
      * @param <T>
      *            The type of {@link Syntax} unit that was created.
      * @param syntax
@@ -27,7 +26,7 @@ public interface Broadcaster {
 
     /**
      * TODO Description
-     * 
+     *
      * @param <T>
      *            TODO
      * @param syntax
@@ -39,7 +38,7 @@ public interface Broadcaster {
 
     /**
      * TODO Description
-     * 
+     *
      * @param relay
      *            TODO
      * @return TODO

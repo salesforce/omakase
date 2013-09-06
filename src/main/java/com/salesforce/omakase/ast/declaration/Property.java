@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 /**
  * TESTME Enum of all recognized CSS properties. Generated using {@link com.salesforce.omakase.util.tool.PropertyToEnum}
  * .
- * 
+ *
  * @author nmcwilliams
  */
 public enum Property {
@@ -900,7 +900,7 @@ public enum Property {
     /** reverse lookup map */
     protected static final Map<String, Property> map;
     static {
-        Builder<String, Property> builder = ImmutableMap.<String, Property>builder();
+        Builder<String, Property> builder = ImmutableMap.builder();
         for (Property pn : Property.values()) {
             builder.put(pn.getName(), pn);
         }
@@ -915,7 +915,7 @@ public enum Property {
 
     /**
      * TODO Description
-     * 
+     *
      * @return TODO
      */
     public String getName() {

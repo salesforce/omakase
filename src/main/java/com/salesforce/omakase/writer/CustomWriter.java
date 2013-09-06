@@ -12,18 +12,16 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
  * Customizes the writing of a particular {@link Syntax} unit.
- * 
- * <p>
+ *
  * This allows you to override (or augment) the writing of any {@link Syntax} unit. For example, to check the comments
  * for a directive that dictates how the unit should be written.
- * 
- * <p>
+ *
  * <b>Important</b>: Some syntax units will not have their overrides kick in unless the parent unit is refined. For
  * example, a {@link ClassSelector} override will not be utilized unless {@link Selector#refine()} is called on the
  * parent {@link Selector}. An easy way to handle this is with an {@link AutoRefiner}.
- * 
+ *
  * @see CustomWriterTest
- * 
+ *
  * @param <T>
  *            The Type of object being overridden.
  * @author nmcwilliams
@@ -31,26 +29,21 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 public interface CustomWriter<T extends Writable> {
     /**
      * Writes the given unit to the given {@link StyleAppendable}.
-     * 
-     * <p>
+     *
      * <b>Notes for implementation:</b>
-     * 
-     * <p>
+     *
      * You can completely bypass the default writing behavior of the unit by simply writing out content to the
      * {@link StyleAppendable}.
-     * 
-     * <p>
+     *
      * If you are augmenting the write process instead, you can output the default representation of the unit by calling
      * {@link StyleWriter#write(Writable, StyleAppendable)} before or after your augmentations, as appropriate.
-     * 
-     * <p>
+     *
      * Do not use the {@link StyleWriter} in an attempt to write direct content (Strings, chars, etc...). Use the
      * {@link StyleAppendable}.
-     * 
-     * <p>
+     *
      * The {@link StyleWriter} should be used to make decisions based on writer settings (e.g., compressed vs. verbose
      * output mode), as well as for writing inner or child {@link Writable}s.
-     * 
+     *
      * @param unit
      *            The unit to write.
      * @param writer

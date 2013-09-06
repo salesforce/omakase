@@ -18,11 +18,10 @@ import com.salesforce.omakase.plugin.BasePlugin;
 
 /**
  * Simply logs the creation or change of {@link Syntax} units. Used for debugging.
- * 
- * <p>
+ *
  * Most events are logged at {@link Level#INFO}, however some events are {@link Level#TRACE} or {@link Level#DEBUG}.
  * Update the logging config file as appropriate to filter which levels are shown in the console.
- * 
+ *
  * @author nmcwilliams
  */
 public final class EchoLogger extends BasePlugin {

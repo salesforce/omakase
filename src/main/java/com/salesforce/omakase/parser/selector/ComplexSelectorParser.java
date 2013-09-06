@@ -11,14 +11,13 @@ import com.salesforce.omakase.parser.raw.RawSelectorParser;
 
 /**
  * Parses refined {@link Selector}s, as opposed to {@link RawSelectorParser}.
- * 
- * <p>
+ *
  * This attempts to conform to Selectors level 3 (http://www.w3.org/TR/css3-selectors). Yes, attempts, because the spec
  * is inconsistent, contradictory, and malformed.
- * 
+ *
  * @see Selector
  * @see ComplexSelectorParserTest
- * 
+ *
  * @author nmcwilliams
  */
 public class ComplexSelectorParser extends AbstractParser {

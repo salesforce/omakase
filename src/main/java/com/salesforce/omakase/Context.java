@@ -3,13 +3,13 @@
  */
 package com.salesforce.omakase;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.Set;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.collect.*;
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.MutableClassToInstanceMap;
+import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.EmittingBroadcaster;
@@ -17,24 +17,29 @@ import com.salesforce.omakase.broadcaster.VisitingBroadcaster;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.plugin.*;
+import com.salesforce.omakase.plugin.BroadcastingPlugin;
+import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.PostProcessingPlugin;
+import com.salesforce.omakase.plugin.PreProcessingPlugin;
+
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * TESTME Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see
- * {@link Broadcaster}). Note: this class is not exposed as an API itself.
- * 
+ * TESTME Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
+ * Broadcaster}). Note: this class is not exposed as an API itself.
+ *
  * @author nmcwilliams
  */
 final class Context implements Broadcaster, PluginRegistry {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
-
     /** uses an {@link Emitter} to broadcast events */
     private final EmittingBroadcaster emittingBroadcaster = new EmittingBroadcaster();
-
     /** used to visit each broadcasted unit per phase */
     private final VisitingBroadcaster visitor = new VisitingBroadcaster(emittingBroadcaster);
-
     /** main broadcaster - consumer changeable via {@link #broadcaster(Broadcaster)} */
     private Broadcaster broadcaster = visitor;
 
@@ -103,6 +108,14 @@ final class Context implements Broadcaster, PluginRegistry {
         return this;
     }
 
+    /**
+     * Wraps the existing broadcaster inside of the given one.
+     *
+     * @param broadcaster
+     *     Wrap the existing broadcaster inside of this one.
+     *
+     * @return this, for chaining.
+     */
     public Context broadcaster(Broadcaster broadcaster) {
         this.broadcaster = broadcaster.wrap(this.broadcaster);
         return this;
@@ -114,11 +127,11 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     /**
-     * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that
-     * are interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s.
-     * 
+     * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that are
+     * interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s.
+     *
      * @param em
-     *            The {@link ErrorManager} instance.
+     *     The {@link ErrorManager} instance.
      */
     protected void before(ErrorManager em) {
         // set the error manager
@@ -142,8 +155,8 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     /**
-     * Internal method to signify when (high-level) parsing is completed. This will notify all {@link Plugin}s that are
-     * interested in such information. This also replays the stored broadcasts for each phase.
+     * Internal method to signify when (high-level) parsing is completed. This will notify all {@link Plugin}s that are interested
+     * in such information. This also replays the stored broadcasts for each phase.
      */
     protected void after() {
         // notify preprocessing plugins
@@ -173,5 +186,4 @@ final class Context implements Broadcaster, PluginRegistry {
             plugin.postProcess(this);
         }
     }
-
 }

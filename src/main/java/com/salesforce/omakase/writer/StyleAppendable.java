@@ -9,10 +9,9 @@ import java.io.IOException;
 
 /**
  * A wrapper around an {@link Appendable} that provides a few convenience functions.
- * 
- * <p>
+ *
  * When not specifying a particular {@link Appendable} then use {@link #toString()} to get the final output.
- * 
+ *
  * @author nmcwilliams
  */
 public final class StyleAppendable {
@@ -28,7 +27,7 @@ public final class StyleAppendable {
 
     /**
      * Creates a new {@link StyleAppendable} using the given {@link Appendable}.
-     * 
+     *
      * @param appendable
      *            Write to this {@link Appendable}.
      */
@@ -38,7 +37,7 @@ public final class StyleAppendable {
 
     /**
      * Appends the specified character. Prefer this over {@link #append(CharSequence)}.
-     * 
+     *
      * @param c
      *            The character to write.
      * @return this, for chaining.
@@ -52,7 +51,7 @@ public final class StyleAppendable {
 
     /**
      * Appends the specified {@link CharSequence} or String.
-     * 
+     *
      * @param sequence
      *            The character sequence to append.
      * @return this, for chaining.
@@ -66,7 +65,7 @@ public final class StyleAppendable {
 
     /**
      * Appends a newline character.
-     * 
+     *
      * @return this, for chaining.
      * @throws IOException
      *             If an I/O error occurs.
@@ -77,7 +76,7 @@ public final class StyleAppendable {
 
     /**
      * Appends a newline character only if the given condition is true.
-     * 
+     *
      * @param condition
      *            Only append a newline if this condition is true.
      * @return this, for chaining.
@@ -91,7 +90,7 @@ public final class StyleAppendable {
 
     /**
      * Appends a single space character.
-     * 
+     *
      * @return this, for chaining.
      * @throws IOException
      *             If an I/O error occurs.
@@ -102,7 +101,7 @@ public final class StyleAppendable {
 
     /**
      * Appends a single space character only if the given condition is true.
-     * 
+     *
      * @param condition
      *            Only append a newline if this condition is true.
      * @return this, for chaining.
@@ -116,7 +115,7 @@ public final class StyleAppendable {
 
     /**
      * Appends spaces for indentation.
-     * 
+     *
      * @return this, for chaining.
      * @throws IOException
      *             If an I/O error occurs.
@@ -127,7 +126,7 @@ public final class StyleAppendable {
 
     /**
      * Appends spaces for indentation only if the given condition is true.
-     * 
+     *
      * @param condition
      *            Only append a newline if this condition is true.
      * @return this, for chaining.

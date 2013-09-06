@@ -16,31 +16,29 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * TESTME The main class for writing processed CSS content.
- * 
- * <p>
+ *
  * To use, add an instance of this class to the Omakase request. Examples:
- * 
+ *
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
  * Omakase.source(input).request(verbose).process();
  * String css = verbose.write();
  * </code></pre>
- * 
+ *
  * <pre><code>
  * StyleWriter compressed = StyleWriter.compressed();
  * Omakase.source(input).request(compressed).process();
  * String css = compressed.write();
  * </code></pre>
- * 
+ *
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
  * Omakase.source(input).request(verbose).process();
  * verbose.write(System.out);
  * </code></pre>
- * 
- * <p>
+ *
  * Unless specified, {@link WriterMode#INLINE} will be used.
- * 
+ *
  * @author nmcwilliams
  */
 public class StyleWriter implements DependentPlugin {
@@ -57,7 +55,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Creates a new {@link StyleWriter} instance using the given {@link WriterMode}.
-     * 
+     *
      * @param mode
      *            The {@link WriterMode} to use.
      */
@@ -72,7 +70,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Sets the {@link WriterMode}.
-     * 
+     *
      * @param mode
      *            The new {@link WriterMode}.
      * @return this, for chaining.
@@ -84,7 +82,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Gets whether the current {@link WriterMode} is {@link WriterMode#VERBOSE}.
-     * 
+     *
      * @return True if the current {@link WriterMode} is verbose.
      */
     public boolean isVerbose() {
@@ -93,7 +91,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Gets whether the current {@link WriterMode} is {@link WriterMode#INLINE}.
-     * 
+     *
      * @return True if the current {@link WriterMode} is inline.
      */
     public boolean isInline() {
@@ -102,7 +100,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Gets whether the current {@link WriterMode} is {@link WriterMode#COMPRESSED}.
-     * 
+     *
      * @return True if the current {@link WriterMode} is compressed.
      */
     public boolean isCompressed() {
@@ -112,7 +110,7 @@ public class StyleWriter implements DependentPlugin {
     /**
      * Overrides the writing of a unit with the given {@link CustomWriter} instance. See {@link CustomWriter} for more
      * details on overriding.
-     * 
+     *
      * @param <T>
      *            The Type of unit being overridden.
      * @param writable
@@ -128,7 +126,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Writes the processed CSS source to a string.
-     * 
+     *
      * @return The CSS output.
      */
     public String write() {
@@ -145,7 +143,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Writes the processed CSS source code to the given {@link Appendable}.
-     * 
+     *
      * @param appendable
      *            Write the processed CSS source code to this appendable.
      * @throws IOException
@@ -157,7 +155,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Writes the processed CSS source code to the given {@link StyleAppendable}.
-     * 
+     *
      * @param appendable
      *            Write the processed CSS source code to this appendable.
      * @throws IOException
@@ -172,7 +170,7 @@ public class StyleWriter implements DependentPlugin {
     /**
      * Writes the given syntax unit to the given {@link StyleAppendable}, taking into account any {@link CustomWriter}
      * overrides specified on this {@link StyleWriter}.
-     * 
+     *
      * @param <T>
      *            Type of the unit to write.
      * @param writable
@@ -196,7 +194,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Creates a new {@link StyleWriter} with {@link WriterMode#VERBOSE} mode.
-     * 
+     *
      * @return The new {@link StyleWriter} instance.
      */
     public static StyleWriter verbose() {
@@ -205,7 +203,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Creates a new {@link StyleWriter} with {@link WriterMode#INLINE} mode.
-     * 
+     *
      * @return The new {@link StyleWriter} instance.
      */
     public static StyleWriter inline() {
@@ -214,7 +212,7 @@ public class StyleWriter implements DependentPlugin {
 
     /**
      * Creates a new {@link StyleWriter} with {@link WriterMode#COMPRESSED} mode.
-     * 
+     *
      * @return The new {@link StyleWriter} instance.
      */
     public static StyleWriter compressed() {

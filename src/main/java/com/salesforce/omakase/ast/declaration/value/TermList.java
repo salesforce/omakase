@@ -23,24 +23,22 @@ import com.salesforce.omakase.writer.StyleWriter;
 /**
  * TESTME The generic and default {@link Declaration}'s {@link PropertyValue}. This contains a list of {@link Term}s,
  * for example numbers, keywords, functions, hex colors, etc...
- * 
- * <p>
+ *
  * If you need to change the contents of the {@link TermList}, change the contents of the actual {@link Term} itself. If
  * you need to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this one
  * with instead. (ACTUALLY I'm not sure why this comment is here. maybe it can be ignored).
- * 
- * <p>
+ *
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is
  * name now given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
- * 
+ *
  * XXX This setup is perhaps inconsistent with the rest of the project, with respect to the term members being directly
  * added instead of broadcasted. Also, as noted above, this doesn't allow for additions/removals from the list, which
  * would be nice to support.
- * 
+ *
  * @see Term
  * @see TermListParser
  * @see TermListMember
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -50,7 +48,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
 
     /**
      * Constructs a new {@link TermList} instance.
-     * 
+     *
      * @param line
      *            The line number.
      * @param column
@@ -67,7 +65,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
 
     /**
      * Adds a {@link TermListMember}.
-     * 
+     *
      * @param member
      *            The member to add.
      * @return this, for chaining.
@@ -79,7 +77,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
 
     /**
      * Gets a list of all {@link TermListMember}s in this list.
-     * 
+     *
      * @return All {@link TermListMember}s.
      */
     public ImmutableList<TermListMember> members() {
@@ -115,7 +113,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
 
     /**
      * TODO Description
-     * 
+     *
      * @param term
      *            TODO
      * @return TODO
@@ -126,7 +124,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
 
     /**
      * TODO Description
-     * 
+     *
      * @param separator
      *            TODO
      * @param values

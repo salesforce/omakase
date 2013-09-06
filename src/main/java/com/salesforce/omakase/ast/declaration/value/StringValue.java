@@ -40,7 +40,6 @@ public class StringValue extends AbstractSyntax implements Term {
     /**
      * Constructs a new {@link StringValue} instance.
      *
-     * <p>
      * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source.
      * Performance-wise, there is no reason to change it, and also it keeps us from having to mess around with escaping.
      *
