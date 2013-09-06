@@ -62,6 +62,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void returnsTrueOnSuccess() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
+            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
             assertThat(result.success).describedAs(result.stream.toString()).isTrue();
         }
     }

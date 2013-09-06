@@ -5,6 +5,8 @@
 
 # idea
 .idea
+.iml
+.ipr
 
 # platform
 .DS_Store

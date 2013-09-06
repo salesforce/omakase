@@ -3,7 +3,6 @@
  */
 package com.salesforce.omakase;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.error.ErrorLevel;
@@ -18,11 +17,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TESTME Main entry point for the Omakase CSS Parser.
- * <p/>
- * jk asdjas dfk asdkfhaskjfd lakshdflkjadfhkljahsdfkjl askdfjhasjkdfhkladfslkhads fj ahsld flakshfl ksafjashdfl sahfd lksa
- * fkasdflkadhslfk asdasdfhasjdfhghasdgfdhjg asdfjh asjhdkfggkags dfjkhgas dfj sadfjhgasd sjkdhfkjsdhf kjhsd fkjhsd fsdffas dfgka
- * sdfgaksjdfgasdfg askjfdg aksdfg kasdf gkasdffl
- * <p/>
  * <p/>
  * For usage information, see the readme.md file, or check out (link).
  * <p/>
@@ -180,7 +174,6 @@ public final class Omakase {
 
             context.after();
             return context;
-            Iterables.getLa
         }
     }
 }
