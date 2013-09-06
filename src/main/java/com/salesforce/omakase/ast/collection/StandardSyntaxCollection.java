@@ -13,7 +13,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 
 /**
  * TESTME Standard (default) implementation of the {@link SyntaxCollection}.
@@ -25,6 +27,24 @@ import com.salesforce.omakase.ast.Syntax;
  */
 public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implements SyntaxCollection<T> {
     private final LinkedList<T> list = Lists.newLinkedList();
+    private Optional<Broadcaster> broadcaster;
+
+    /**
+     * TODO
+     */
+    public StandardSyntaxCollection() {
+        this(null);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param broadcaster
+     *            TODO
+     */
+    public StandardSyntaxCollection(Broadcaster broadcaster) {
+        this.broadcaster = Optional.fromNullable(broadcaster);
+    }
 
     @Override
     public Iterator<T> iterator() {
@@ -39,6 +59,15 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     @Override
     public boolean isEmpty() {
         return list.isEmpty();
+    }
+
+    @Override
+    public boolean isEmptyOrAllDetached() {
+        for (T unit : list) {
+            if (!unit.isDetached()) return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -59,13 +88,28 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     @Override
     public SyntaxCollection<T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
+
+        if (broadcaster.isPresent() && unit.broadcaster() == null) {
+            unit.broadcaster(broadcaster.get());
+        }
+
         list.push(unit);
+        unit.parent(this);
+
+        if (broadcaster.isPresent()) {
+            unit.propagateBroadcast(broadcaster.get());
+        }
+
+        broadcast(unit);
+
         return this;
     }
 
     @Override
     public SyntaxCollection<T> prependAll(Iterable<T> units) {
-        list.addAll(0, Lists.newArrayList(units));
+        for (T unit : units) {
+            prepend(unit);
+        }
         return this;
     }
 
@@ -75,10 +119,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         checkNotNull(unit, "unit cannot be null");
 
         int index = list.indexOf(existing);
-
         if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
+        if (broadcaster.isPresent() && unit.broadcaster() == null) {
+            unit.broadcaster(broadcaster.get());
+        }
+
         list.add(index, unit);
+        unit.parent(this);
+
+        broadcast(unit);
 
         return this;
     }
@@ -86,8 +136,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     @Override
     public SyntaxCollection<T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
+
+        if (broadcaster.isPresent() && unit.broadcaster() == null) {
+            unit.broadcaster(broadcaster.get());
+        }
+
         list.add(unit);
         unit.parent(this);
+
+        broadcast(unit);
+
         return this;
     }
 
@@ -113,6 +171,8 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         } else {
             list.add(index + 1, unit);
         }
+
+        broadcast(unit);
 
         return this;
     }
@@ -142,6 +202,20 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         return detached;
     }
 
+    /**
+     * Internal method to broadcast new units.
+     * 
+     * @param unit
+     *            The unit to broadcast.
+     */
+    private void broadcast(T unit) {
+        // propagation only happens for unbroadcasted units. Once a unit has been broadcasted it should take care of
+        // ensuring any new broadcastable members are properly broadcasted when added.
+        if (broadcaster.isPresent() && unit.status() == Status.UNBROADCASTED) {
+            broadcaster.get().broadcast(unit, true);
+        }
+    }
+
     @Override
     public String toString() {
         return As.string(this)
@@ -160,5 +234,35 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
      */
     public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
         return new StandardSyntaxCollection<>();
+    }
+
+    /**
+     * Creates a new {@link SyntaxCollection} instance with the given {@link Broadcaster} to broadcast new units.
+     * 
+     * @param <E>
+     *            Type of items the collection contains.
+     * @param broadcaster
+     *            Used to broadcast new units.
+     * 
+     * @return The new {@link SyntaxCollection} instance.
+     */
+    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create(Broadcaster broadcaster) {
+        return new StandardSyntaxCollection<>(broadcaster);
+    }
+
+    @Override
+    public SyntaxCollection<T> broadcaster(Broadcaster broadcaster) {
+        this.broadcaster = Optional.fromNullable(broadcaster);
+        return this;
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        // make a defensive copy as this collection may be modified as a result of broadcasting
+        ImmutableList<T> units = ImmutableList.copyOf(list);
+
+        for (T unit : units) {
+            unit.propagateBroadcast(broadcaster);
+        }
     }
 }

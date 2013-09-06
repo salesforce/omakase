@@ -44,6 +44,16 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
     }
 
     /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     */
+    public ClassSelector(String name) {
+        name(name);
+    }
+
+    /**
      * Sets the class name.
      * 
      * @param name
@@ -61,11 +71,6 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
      * @return The class name.
      */
     public String name() {
-        return name;
-    }
-
-    @Override
-    public String filterName() {
         return name;
     }
 

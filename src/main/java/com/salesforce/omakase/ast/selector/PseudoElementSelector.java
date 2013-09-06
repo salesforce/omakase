@@ -49,6 +49,16 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
     }
 
     /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     */
+    public PseudoElementSelector(String name) {
+        name(name);
+    }
+
+    /**
      * Sets the name of the selector.
      * 
      * @param name
@@ -62,16 +72,11 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
     }
 
     /**
-     * Gets the selector name (e.g., "hover").
+     * Gets the selector name (e.g., "before").
      * 
      * @return The selector name.
      */
     public String name() {
-        return name;
-    }
-
-    @Override
-    public String filterName() {
         return name;
     }
 

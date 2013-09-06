@@ -4,6 +4,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 import java.io.IOException;
@@ -37,10 +38,7 @@ import com.salesforce.omakase.writer.StyleWriter;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class AtRule extends AbstractGroupable<Statement> implements Refinable<RefinedAtRule>, RefinedAtRule, Commentable {
-    @SuppressWarnings("unused")
-    private final Broadcaster broadcaster;
-
+public class AtRule extends AbstractGroupable<Statement> implements Statement, Refinable<AtRule>, Commentable {
     private String name;
     private List<String> comments;
 
@@ -69,14 +67,34 @@ public class AtRule extends AbstractGroupable<Statement> implements Refinable<Re
      *            The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, Broadcaster broadcaster) {
-        super(line, column);
-
-        checkArgument(rawExpression != null || rawBlock != null, "either the expression or the block must be present");
+        super(line, column, broadcaster);
 
         this.name = name;
         this.rawExpression = Optional.fromNullable(rawExpression);
         this.rawBlock = Optional.fromNullable(rawBlock);
-        this.broadcaster = broadcaster;
+    }
+
+    /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     * @param expression
+     *            TODO
+     * @param block
+     *            TODO
+     */
+    public AtRule(String name, AtRuleExpression expression, AtRuleBlock block) {
+        super(-1, -1);
+
+        checkNotNull(name, "name cannot be  null");
+        checkArgument(expression != null || block != null, "either the expression or the block must be present");
+
+        this.name = name;
+        this.rawExpression = Optional.absent();
+        this.rawBlock = Optional.absent();
+        this.expression = Optional.fromNullable(expression);
+        this.block = Optional.fromNullable(block);
     }
 
     /**
@@ -85,11 +103,6 @@ public class AtRule extends AbstractGroupable<Statement> implements Refinable<Re
      * @return The name.
      */
     public String name() {
-        return name;
-    }
-
-    @Override
-    public String filterName() {
         return name;
     }
 
@@ -111,12 +124,20 @@ public class AtRule extends AbstractGroupable<Statement> implements Refinable<Re
         return rawBlock;
     }
 
-    @Override
+    /**
+     * Gets the at-rule expression, if present.
+     * 
+     * @return The expression, or {@link Optional#absent()} if not present.
+     */
     public Optional<AtRuleExpression> expression() {
         return expression;
     }
 
-    @Override
+    /**
+     * Gets the at-rule block, if present.
+     * 
+     * @return The block, or {@link Optional#absent()} if not present.
+     */
     public Optional<AtRuleBlock> block() {
         return block;
     }
@@ -127,7 +148,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Refinable<Re
     }
 
     @Override
-    public RefinedAtRule refine() {
+    public AtRule refine() {
         if (!isRefined()) {
             // TODO refinement
         }

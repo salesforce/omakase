@@ -13,9 +13,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.Commentable;
-import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -47,9 +45,8 @@ import com.salesforce.omakase.writer.StyleWriter;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Selector extends AbstractGroupable<Selector> implements Refinable<RefinedSelector>, RefinedSelector, Commentable {
-    private final SyntaxCollection<SelectorPart> parts = StandardSyntaxCollection.create();
-    private final Broadcaster broadcaster;
+public class Selector extends AbstractGroupable<Selector> implements Refinable<Selector>, Commentable {
+    private final SyntaxCollection<SelectorPart> parts;
     private final RawSyntax rawContent;
 
     private List<String> comments;
@@ -64,9 +61,31 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
      *            The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public Selector(RawSyntax rawContent, Broadcaster broadcaster) {
-        super(rawContent.line(), rawContent.column());
+        super(rawContent.line(), rawContent.column(), broadcaster);
         this.rawContent = rawContent;
-        this.broadcaster = broadcaster;
+        this.parts = StandardSyntaxCollection.create(broadcaster);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param parts
+     *            TODO
+     */
+    public Selector(SelectorPart... parts) {
+        this(Lists.newArrayList(parts));
+    }
+
+    /**
+     * TODO
+     * 
+     * @param parts
+     *            TODO
+     */
+    public Selector(Iterable<SelectorPart> parts) {
+        this.rawContent = null;
+        this.parts = StandardSyntaxCollection.create();
+        this.parts.appendAll(parts);
     }
 
     /**
@@ -78,7 +97,11 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
         return rawContent;
     }
 
-    @Override
+    /**
+     * Gets the individual parts of the selector.
+     * 
+     * @return The list of {@link SelectorPart} members.
+     */
     public SyntaxCollection<SelectorPart> parts() {
         return parts;
     }
@@ -89,9 +112,9 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     }
 
     @Override
-    public RefinedSelector refine() {
+    public Selector refine() {
         if (!isRefined()) {
-            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster());
             Stream stream = new Stream(rawContent.content(), line(), column()).skipInStringCheck();
 
             // parse the contents
@@ -119,6 +142,18 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<R
     @Override
     public List<String> comments() {
         return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
+    }
+
+    @Override
+    public Syntax broadcaster(Broadcaster broadcaster) {
+        parts.broadcaster(broadcaster);
+        return super.broadcaster(broadcaster);
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        super.propagateBroadcast(broadcaster);
+        parts.propagateBroadcast(broadcaster);
     }
 
     @Override

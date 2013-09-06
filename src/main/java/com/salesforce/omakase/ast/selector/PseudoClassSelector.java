@@ -3,6 +3,8 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import java.io.IOException;
@@ -47,16 +49,36 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
     }
 
     /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     */
+    public PseudoClassSelector(String name) {
+        name(name);
+    }
+
+    /**
+     * Sets the name of the selector.
+     * 
+     * @param name
+     *            The new name.
+     * @return this, for chaining.
+     */
+    public PseudoClassSelector name(String name) {
+        checkArgument(!PseudoElementSelector.POSERS.contains(name),
+            String.format("%s must be created as a PsuedoElementSelector", name));
+
+        this.name = checkNotNull(name, "name cannot be null");
+        return this;
+    }
+
+    /**
      * Gets the selector name (e.g., "hover").
      * 
      * @return The selector name.
      */
     public String name() {
-        return name;
-    }
-
-    @Override
-    public String filterName() {
         return name;
     }
 

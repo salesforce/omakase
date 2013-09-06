@@ -6,6 +6,7 @@ package com.salesforce.omakase;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.ThrowingErrorManager;
@@ -147,6 +148,18 @@ public final class Omakase {
          */
         public Request errorManager(ErrorManager em) {
             this.em = checkNotNull(em, "the error manager cannot be null");
+            return this;
+        }
+
+        /**
+         * TODO Description
+         * 
+         * @param broadcaster
+         *            TODO
+         * @return TODO
+         */
+        public Request broadcaster(Broadcaster broadcaster) {
+            context.broadcaster(broadcaster);
             return this;
         }
 

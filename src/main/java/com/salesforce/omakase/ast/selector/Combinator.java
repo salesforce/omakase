@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import java.io.IOException;
@@ -40,6 +41,16 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
     public Combinator(int line, int column, CombinatorType type) {
         super(line, column);
         this.type = type;
+    }
+
+    /**
+     * TODO
+     * 
+     * @param type
+     *            TODO
+     */
+    public Combinator(CombinatorType type) {
+        this.type = checkNotNull(type, "type cannot be null");
     }
 
     @Override

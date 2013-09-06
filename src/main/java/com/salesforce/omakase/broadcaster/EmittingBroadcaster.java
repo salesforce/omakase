@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.broadcaster;
 
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Emitter;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
@@ -12,13 +13,15 @@ import com.salesforce.omakase.plugin.Plugin;
 /**
  * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
  * 
+ * <p>
+ * TODO note about broadcast status and phases
+ * 
  * @see Emitter
  * 
  * @author nmcwilliams
  */
-public final class EmittingBroadcaster implements Broadcaster {
+public final class EmittingBroadcaster extends AbstractBroadcaster {
     private final Emitter emitter = new Emitter();
-    private final Broadcaster relay;
     private ErrorManager em;
 
     /**
@@ -37,7 +40,7 @@ public final class EmittingBroadcaster implements Broadcaster {
      *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public EmittingBroadcaster(Broadcaster relay) {
-        this.relay = relay;
+        wrap(relay);
     }
 
     /**
@@ -73,10 +76,23 @@ public final class EmittingBroadcaster implements Broadcaster {
 
     @Override
     public <T extends Syntax> void broadcast(T syntax) {
-        emitter.emit(syntax, em);
+        SubscriptionPhase phase = emitter.phase();
+        Status status = syntax.status();
 
-        if (relay != null) {
-            relay.broadcast(syntax);
+        if (status.shouldBroadcastForPhase(phase)) {
+            syntax.status(Status.BROADCASTING);
+
+            // send to listeners
+            emitter.emit(syntax, em);
+
+            // update the status
+            syntax.status(status.nextStatus(phase));
+
+            // pass to relays
+            if (hasRelay()) {
+                relay.broadcast(syntax);
+            }
         }
     }
+
 }

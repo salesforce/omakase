@@ -13,6 +13,7 @@ import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
@@ -30,8 +31,15 @@ import com.salesforce.omakase.writer.StyleWriter;
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Rule extends AbstractGroupable<Statement> implements Statement {
-    private final SyntaxCollection<Selector> selectors = StandardSyntaxCollection.create();
-    private final SyntaxCollection<Declaration> declarations = StandardSyntaxCollection.create();
+    private final SyntaxCollection<Selector> selectors;
+    private final SyntaxCollection<Declaration> declarations;
+
+    /**
+     * TODO
+     */
+    public Rule() {
+        this(-1, -1, null);
+    }
 
     /**
      * Creates a new {@link Rule} instance.
@@ -40,9 +48,13 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
      *            The line number.
      * @param column
      *            The column number.
+     * @param broadcaster
+     *            Used to broadcast new units.
      */
-    public Rule(int line, int column) {
-        super(line, column);
+    public Rule(int line, int column, Broadcaster broadcaster) {
+        super(line, column, broadcaster);
+        selectors = StandardSyntaxCollection.create(broadcaster);
+        declarations = StandardSyntaxCollection.create(broadcaster);
     }
 
     /**
@@ -64,12 +76,29 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     }
 
     @Override
+    public Syntax broadcaster(Broadcaster broadcaster) {
+        selectors.broadcaster(broadcaster);
+        declarations.broadcaster(broadcaster);
+        return super.broadcaster(broadcaster);
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        broadcaster(broadcaster);
+        selectors.propagateBroadcast(broadcaster);
+        declarations.propagateBroadcast(broadcaster);
+    }
+
+    @Override
     protected Statement self() {
         return this;
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        // don't write out rules with no selectors or all detached selectors
+        if (isDetached() || selectors.isEmptyOrAllDetached()) return;
+
         // selectors
         for (Selector selector : selectors) {
             writer.write(selector, appendable);

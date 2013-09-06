@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
@@ -32,13 +33,17 @@ import com.salesforce.omakase.writer.StyleWriter;
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
-    private final SyntaxCollection<Statement> statements = StandardSyntaxCollection.create();
+    private final SyntaxCollection<Statement> statements;
 
     /**
      * Constructs a new {@link Stylesheet} instance.
+     * 
+     * @param broadcaster
+     *            Used to broadcast new units.
      */
-    public Stylesheet() {
-        super(1, 1);
+    public Stylesheet(Broadcaster broadcaster) {
+        super(1, 1, broadcaster);
+        statements = StandardSyntaxCollection.create(broadcaster);
     }
 
     /**

@@ -26,7 +26,7 @@ public interface Parser {
      *            The {@link Broadcaster} to receive any events from the parser.
      * 
      * @return true if we parsed <em>something</em> (excluding whitespace), false otherwise. Note that a return value of
-     *         true does not indicate that the parsed content was actually valid grammar.
+     *         true does not indicate that the parsed content was actually valid syntax.
      */
     boolean parse(Stream stream, Broadcaster broadcaster);
 
@@ -34,7 +34,7 @@ public interface Parser {
      * Utility for creating a {@link CombinationParser}.
      * 
      * @param other
-     *            The other {@link Parser} in addition to this one to use to create the {@link CombinationParser}.
+     *            The other {@link Parser} in addition to this one to use for creating the {@link CombinationParser}.
      * @return The {@link CombinationParser}.
      */
     Parser or(Parser other);

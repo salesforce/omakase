@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import com.salesforce.omakase.ast.Writable;
+import com.salesforce.omakase.writer.Writable;
 
 /**
  * A member of a {@link TermList}.

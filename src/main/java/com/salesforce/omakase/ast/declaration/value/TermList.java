@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.TermListParser;
@@ -60,6 +61,11 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     }
 
     /**
+     * TODO
+     */
+    public TermList() {}
+
+    /**
      * Adds a {@link TermListMember}.
      * 
      * @param member
@@ -81,6 +87,17 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     }
 
     @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        super.propagateBroadcast(broadcaster);
+        for (TermListMember member : members) {
+            // FIXME
+            if (member instanceof Term) {
+                ((Term)member).propagateBroadcast(broadcaster);
+            }
+        }
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (TermListMember member : members) {
             writer.write(member, appendable);
@@ -94,5 +111,34 @@ public class TermList extends AbstractSyntax implements PropertyValue {
             .add("position", super.toString())
             .add("members", members)
             .toString();
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param term
+     *            TODO
+     * @return TODO
+     */
+    public static PropertyValue singleValue(Term term) {
+        return new TermList(-1, -1).add(term);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param separator
+     *            TODO
+     * @param values
+     *            TODO
+     * @return TODO
+     */
+    public static PropertyValue ofValues(TermOperator separator, Term... values) {
+        TermList termList = new TermList();
+        for (int i = 0; i < values.length; i++) {
+            if (i != 0) termList.add(separator);
+            termList.add(values[i]);
+        }
+        return termList;
     }
 }

@@ -32,7 +32,7 @@ public class PropertyToEnum {
             } else {
                 builder.append(";");
             }
-            builder.append("\n");
+            builder.append("\n\n");
         }
 
         System.out.println(builder.toString());

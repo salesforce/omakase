@@ -44,6 +44,16 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
     }
 
     /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     */
+    public TypeSelector(String name) {
+        name(name);
+    }
+
+    /**
      * Sets the name.
      * 
      * @param name
@@ -62,11 +72,6 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
      * @return The name.
      */
     public String name() {
-        return name;
-    }
-
-    @Override
-    public String filterName() {
         return name;
     }
 

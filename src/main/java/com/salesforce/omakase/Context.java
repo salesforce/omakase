@@ -32,8 +32,11 @@ final class Context implements Broadcaster, PluginRegistry {
     /** uses an {@link Emitter} to broadcast events */
     private final EmittingBroadcaster emittingBroadcaster = new EmittingBroadcaster();
 
+    /** used to visit each broadcasted unit per phase */
+    private final VisitingBroadcaster visitor = new VisitingBroadcaster(emittingBroadcaster);
+
     /** main broadcaster */
-    private final VisitingBroadcaster broadcaster = new VisitingBroadcaster(emittingBroadcaster);
+    private Broadcaster broadcaster = visitor;
 
     /** internal construction only */
     Context() {}
@@ -89,6 +92,22 @@ final class Context implements Broadcaster, PluginRegistry {
         broadcaster.broadcast(syntax);
     }
 
+    @Override
+    public <T extends Syntax> void broadcast(T syntax, boolean propagate) {
+        broadcaster.broadcast(syntax, propagate);
+    }
+
+    @Override
+    public Broadcaster wrap(Broadcaster relay) {
+        broadcaster.wrap(relay);
+        return this;
+    }
+
+    public Context broadcaster(Broadcaster broadcaster) {
+        this.broadcaster = broadcaster.wrap(this.broadcaster);
+        return this;
+    }
+
     /** helper method to get only plugins of a certain type */
     private <T extends Plugin> Iterable<T> filter(Class<T> klass) {
         return Iterables.filter(registry.values(), klass);
@@ -134,7 +153,7 @@ final class Context implements Broadcaster, PluginRegistry {
 
         // run preprocessors
         emittingBroadcaster.phase(SubscriptionPhase.PREPROCESS);
-        broadcaster.visit();
+        visitor.visit();
 
         // notify preprocessing plugins
         for (PreProcessingPlugin plugin : filter(PreProcessingPlugin.class)) {
@@ -143,15 +162,16 @@ final class Context implements Broadcaster, PluginRegistry {
 
         // run observers and reworkers
         emittingBroadcaster.phase(SubscriptionPhase.PROCESS);
-        broadcaster.visit();
+        visitor.visit();
 
         // run validators
         emittingBroadcaster.phase(SubscriptionPhase.VALIDATE);
-        broadcaster.visit();
+        visitor.visit();
 
         // notify post processors
         for (PostProcessingPlugin plugin : filter(PostProcessingPlugin.class)) {
             plugin.postProcess(this);
         }
     }
+
 }

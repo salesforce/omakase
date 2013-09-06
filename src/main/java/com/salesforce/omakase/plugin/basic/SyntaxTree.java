@@ -63,7 +63,7 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
     }
 
     private void startStylesheet() {
-        currentStylesheet = new Stylesheet();
+        currentStylesheet = new Stylesheet(broadcaster);
         state = State.ROOT_LEVEL;
     }
 
@@ -98,7 +98,7 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
             endStatement(false);
             break;
         case INSIDE_SELECTOR_GROUP:
-            throw new IllegalStateException("at-rules currently not allowed here");
+            throw new IllegalStateException("at-rules not allowed inside selector groups");
         case FROZEN:
             throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
         }
@@ -107,7 +107,7 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
     private void startRule(int line, int column) {
         checkState(currentRule == null, "previous rule not ended");
 
-        currentRule = new Rule(line, column);
+        currentRule = new Rule(line, column, broadcaster);
         startStatement(currentRule);
         state = State.INSIDE_SELECTOR_GROUP;
     }
@@ -148,18 +148,18 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
         switch (state) {
         case ROOT_LEVEL:
             startRule(selector.line(), selector.column());
-            currentRule.selectors().append(selector);
             break;
         case INSIDE_DECLARATION_BLOCK:
             endRule();
             startRule(selector.line(), selector.column());
-            currentRule.selectors().append(selector);
             break;
         case INSIDE_SELECTOR_GROUP:
-            throw new IllegalStateException("at-rules currently not allowed here");
+            break;
         case FROZEN:
             throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
         }
+
+        currentRule.selectors().append(selector);
     }
 
     /**

@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.selector;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 import java.io.IOException;
@@ -43,16 +44,33 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
     }
 
     /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     */
+    public IdSelector(String name) {
+        name(name);
+    }
+
+    /**
+     * Sets the id name.
+     * 
+     * @param name
+     *            The id name.
+     * @return this, for chaining.
+     */
+    public IdSelector name(String name) {
+        this.name = checkNotNull(name, "name cannot be null");
+        return this;
+    }
+
+    /**
      * Gets the id name.
      * 
      * @return The id name.
      */
     public String name() {
-        return name;
-    }
-
-    @Override
-    public String filterName() {
         return name;
     }
 

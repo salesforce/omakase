@@ -131,5 +131,15 @@ public class QueryableBroadcasterTest {
         public <T extends Syntax> void broadcast(T syntax) {
             called = true;
         }
+
+        @Override
+        public <T extends Syntax> void broadcast(T syntax, boolean propagate) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Broadcaster wrap(Broadcaster relay) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

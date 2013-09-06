@@ -24,4 +24,25 @@ public interface Broadcaster {
      *            The {@link Syntax} unit instance that was created.
      */
     <T extends Syntax> void broadcast(T syntax);
+
+    /**
+     * TODO Description
+     * 
+     * @param <T>
+     *            TODO
+     * @param syntax
+     *            TODO
+     * @param propagate
+     *            TODO
+     */
+    <T extends Syntax> void broadcast(T syntax, boolean propagate);
+
+    /**
+     * TODO Description
+     * 
+     * @param relay
+     *            TODO
+     * @return TODO
+     */
+    Broadcaster wrap(Broadcaster relay);
 }

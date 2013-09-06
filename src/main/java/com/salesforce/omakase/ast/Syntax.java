@@ -3,10 +3,10 @@
  */
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.writer.Writable;
 
 /**
  * A distinct unit of syntax within CSS.
@@ -44,16 +44,49 @@ public interface Syntax extends Writable {
     int column();
 
     /**
-     * Gets the name of this syntax unit for filtering purposes.
+     * TODO Description
      * 
-     * <p>
-     * The primary purpose of this is to allow checking the name of something before actually refining it. For example,
-     * for {@link Declaration}s this returns the property-name, which you may want to check first before performing
-     * rework (which may require refinement of the declaration). Many syntax units return a useful value here (e.g., for
-     * {@link ClassSelector} it returns the class name), however for units without an associated logical "name" an empty
-     * string is returned.
-     * 
-     * @return The name, or an empty string if there isn't one.
+     * @return TODO
      */
-    String filterName();
+    boolean hasSourcePosition();
+
+    /**
+     * TODO Description
+     * 
+     * @param status
+     *            TODO
+     * @return TODO
+     */
+    Syntax status(Status status);
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    Status status();
+
+    /**
+     * TODO Description
+     * 
+     * @param broadcaster
+     *            TODO
+     * @return TODO
+     */
+    Syntax broadcaster(Broadcaster broadcaster);
+
+    /**
+     * TODO Description
+     * 
+     * @return TODO
+     */
+    Broadcaster broadcaster();
+
+    /**
+     * TODO Description
+     * 
+     * @param broadcaster
+     *            TODO
+     */
+    void propagateBroadcast(Broadcaster broadcaster);
 }

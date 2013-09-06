@@ -44,6 +44,37 @@ public class KeywordValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * TODO
+     * 
+     * @param keyword
+     *            TODO
+     */
+    public KeywordValue(String keyword) {
+        keyword(keyword);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param keyword
+     *            TODO
+     */
+    public KeywordValue(Keyword keyword) {
+        keyword(keyword);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param keyword
+     *            TODO
+     * @return TODO
+     */
+    public KeywordValue keyword(Keyword keyword) {
+        return keyword(keyword.toString());
+    }
+
+    /**
      * Sets the keyword value.
      * 
      * @param keyword
@@ -74,5 +105,27 @@ public class KeywordValue extends AbstractSyntax implements Term {
         return As.string(this)
             .add("keyword", keyword)
             .toString();
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param keyword
+     *            TODO
+     * @return TODO
+     */
+    public static KeywordValue of(Keyword keyword) {
+        return new KeywordValue(keyword);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param keyword
+     *            TODO
+     * @return TODO
+     */
+    public static KeywordValue of(String keyword) {
+        return new KeywordValue(keyword);
     }
 }

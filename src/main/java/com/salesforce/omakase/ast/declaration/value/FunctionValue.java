@@ -49,6 +49,19 @@ public class FunctionValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * TODO
+     * 
+     * @param name
+     *            TODO
+     * @param args
+     *            TODO
+     */
+    public FunctionValue(String name, String args) {
+        this.name = checkNotNull(name, "name cannot be null");
+        this.args = checkNotNull(args, "args cannot be null");
+    }
+
+    /**
      * Sets the function name.
      * 
      * @param functionName

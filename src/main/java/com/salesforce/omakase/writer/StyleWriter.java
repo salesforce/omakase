@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.Writable;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
@@ -202,6 +201,15 @@ public class StyleWriter implements DependentPlugin {
      */
     public static StyleWriter verbose() {
         return new StyleWriter(WriterMode.VERBOSE);
+    }
+
+    /**
+     * Creates a new {@link StyleWriter} with {@link WriterMode#INLINE} mode.
+     * 
+     * @return The new {@link StyleWriter} instance.
+     */
+    public static StyleWriter inline() {
+        return new StyleWriter(WriterMode.INLINE);
     }
 
     /**

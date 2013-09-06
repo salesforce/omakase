@@ -19,9 +19,9 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * @author nmcwilliams
  */
-public final class QueryableBroadcaster implements Broadcaster {
+public final class QueryableBroadcaster extends AbstractBroadcaster {
+    /** TODO why not a list? */
     private final List<Syntax> collected = Lists.newArrayList();
-    private final Broadcaster relay;
 
     /**
      * Constructs a new {@link QueryableBroadcaster} instance that will <em>not</em> relay any events to another
@@ -39,7 +39,7 @@ public final class QueryableBroadcaster implements Broadcaster {
      *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public QueryableBroadcaster(Broadcaster relay) {
-        this.relay = relay;
+        wrap(relay);
     }
 
     @Override

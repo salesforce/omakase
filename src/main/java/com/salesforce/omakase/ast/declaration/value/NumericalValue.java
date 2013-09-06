@@ -76,6 +76,16 @@ public class NumericalValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * TODO
+     * 
+     * @param integerValue
+     *            The integer value.
+     */
+    public NumericalValue(long integerValue) {
+        this.integerValue = integerValue;
+    }
+
+    /**
      * Sets the integer value.
      * 
      * @param integerValue
@@ -187,5 +197,29 @@ public class NumericalValue extends AbstractSyntax implements Term {
             .add("unit", unit)
             .add("explicitSign", explicitSign)
             .toString();
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param integerValue
+     *            TODO
+     * @return TODO
+     */
+    public static NumericalValue of(int integerValue) {
+        return new NumericalValue(integerValue);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param integerValue
+     *            TODO
+     * @param unit
+     *            TODO
+     * @return TODO
+     */
+    public static NumericalValue of(int integerValue, String unit) {
+        return new NumericalValue(integerValue).unit(unit);
     }
 }

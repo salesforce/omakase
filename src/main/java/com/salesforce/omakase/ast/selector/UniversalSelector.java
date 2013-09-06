@@ -34,6 +34,13 @@ public class UniversalSelector extends AbstractGroupable<SelectorPart> implement
         super(line, column);
     }
 
+    /**
+     * TODO
+     */
+    public UniversalSelector() {
+        super();
+    }
+
     @Override
     public boolean isSelector() {
         return true;

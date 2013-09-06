@@ -36,6 +36,13 @@ public class AttributeSelector extends AbstractGroupable<SelectorPart> implement
         super(line, column);
     }
 
+    /**
+     * TODO
+     */
+    public AttributeSelector() {
+
+    }
+
     @Override
     public boolean isSelector() {
         return true;

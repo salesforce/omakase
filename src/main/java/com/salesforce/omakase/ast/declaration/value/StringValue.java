@@ -26,7 +26,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 @Subscribable
 @Description(value = "individual string value", broadcasted = REFINED_DECLARATION)
 public class StringValue extends AbstractSyntax implements Term {
-    private final QuotationMode mode;
+    private QuotationMode mode;
     private String content;
 
     /** Type of quotation mark */
@@ -60,13 +60,28 @@ public class StringValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * TODO
+     * 
+     * @param mode
+     *            TODO
+     * @param content
+     *            TODO
+     */
+    public StringValue(QuotationMode mode, String content) {
+        content(mode, content);
+    }
+
+    /**
      * Sets the content of the string.
      * 
+     * @param mode
+     *            The {@link QuotationMode} to use when printing out the value.
      * @param content
      *            The content.
      * @return this, for chaining.
      */
-    public StringValue content(String content) {
+    public StringValue content(QuotationMode mode, String content) {
+        this.mode = checkNotNull(mode, "mode cannot be null");
         this.content = checkNotNull(content, "content cannot be null");
         return this;
     }

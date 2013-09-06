@@ -61,6 +61,15 @@ public final class Emitter {
     }
 
     /**
+     * Gets the current {@link SubscriptionPhase}.
+     * 
+     * @return The current {@link SubscriptionPhase}.
+     */
+    public SubscriptionPhase phase() {
+        return phase;
+    }
+
+    /**
      * Registers an instance of an object to receive broadcasted events (usually a {@link Plugin} instance).
      * 
      * <p>

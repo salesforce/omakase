@@ -5,6 +5,7 @@ package com.salesforce.omakase.emitter;
 
 import java.lang.annotation.*;
 
+import com.salesforce.omakase.SimpleReworkTest;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
@@ -20,6 +21,9 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * <p>
  * If the method does not intend to change the content or object, use {@link Observe} instead.
+ * 
+ * <p>
+ * See {@link SimpleReworkTest} for same rework method implementations.
  * 
  * @author nmcwilliams
  */

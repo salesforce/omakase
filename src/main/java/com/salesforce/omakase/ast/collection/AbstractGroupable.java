@@ -8,6 +8,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcaster.Broadcaster;
 
 /**
  * TESTME Base class for {@link Groupable}s.
@@ -31,6 +32,13 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
     }
 
     /**
+     * TODO
+     */
+    public AbstractGroupable() {
+        super();
+    }
+
+    /**
      * Creates a new instance with the given line and column numbers.
      * 
      * @param line
@@ -40,6 +48,20 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
      */
     public AbstractGroupable(int line, int column) {
         super(line, column);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param line
+     *            TODO
+     * @param column
+     *            TODO
+     * @param broadcaster
+     *            TODO
+     */
+    public AbstractGroupable(int line, int column, Broadcaster broadcaster) {
+        super(line, column, broadcaster);
     }
 
     /**

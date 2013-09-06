@@ -17,9 +17,8 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * @author nmcwilliams
  */
-public final class VisitingBroadcaster implements Broadcaster {
+public final class VisitingBroadcaster extends AbstractBroadcaster {
     private final List<Syntax> list = Lists.newArrayList();
-    private final Broadcaster relay;
     private boolean visiting;
 
     /**
@@ -30,7 +29,7 @@ public final class VisitingBroadcaster implements Broadcaster {
      *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public VisitingBroadcaster(Broadcaster relay) {
-        this.relay = checkNotNull(relay, "relay cannot be null");
+        wrap(checkNotNull(relay, "relay cannot be null"));
     }
 
     @Override

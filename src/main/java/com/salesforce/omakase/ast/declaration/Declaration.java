@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 import java.io.IOException;
@@ -14,18 +15,16 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.Commentable;
-import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.*;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
+import com.salesforce.omakase.ast.declaration.value.Term;
+import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.*;
-import com.salesforce.omakase.parser.declaration.TermListParser;
-import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -41,12 +40,14 @@ import com.salesforce.omakase.writer.StyleWriter;
  * 
  * @author nmcwilliams
  */
+/**
+ * TODO Description
+ * 
+ * @author nmcwilliams
+ */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Declaration extends AbstractGroupable<Declaration> implements Refinable<RefinedDeclaration>, RefinedDeclaration,
-        Commentable {
-
-    private final Broadcaster broadcaster;
+public class Declaration extends AbstractGroupable<Declaration> implements Refinable<Declaration>, Commentable {
     private List<String> comments;
 
     /* unrefined */
@@ -74,15 +75,48 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
      *            The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, Broadcaster broadcaster) {
-        super(rawPropertyName.line(), rawPropertyName.column());
+        super(rawPropertyName.line(), rawPropertyName.column(), broadcaster);
         this.rawPropertyName = rawPropertyName;
         this.rawPropertyValue = rawPropertyValue;
-        this.broadcaster = broadcaster;
     }
 
-    @Override
-    public String filterName() {
-        return (propertyName() != null) ? propertyName().getName() : rawPropertyName.filterName();
+    /**
+     * TODO
+     * 
+     * @param propertyName
+     *            TODO
+     * @param propertyValue
+     *            TODO
+     */
+    public Declaration(Property propertyName, PropertyValue propertyValue) {
+        this(PropertyName.using(propertyName), propertyValue);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param propertyName
+     *            TODO
+     * @param singleValue
+     *            TODO
+     */
+    public Declaration(Property propertyName, Term singleValue) {
+        this(PropertyName.using(propertyName), TermList.singleValue(singleValue));
+    }
+
+    /**
+     * TODO
+     * 
+     * @param propertyName
+     *            TODO
+     * @param propertyValue
+     *            TODO
+     */
+    public Declaration(PropertyName propertyName, PropertyValue propertyValue) {
+        this.rawPropertyName = null;
+        this.rawPropertyValue = null;
+        this.propertyName = checkNotNull(propertyName);
+        this.propertyValue = checkNotNull(propertyValue);
     }
 
     /**
@@ -103,27 +137,98 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
         return rawPropertyValue;
     }
 
-    @Override
-    public PropertyName propertyName() {
-        return propertyName;
+    /**
+     * TODO Description
+     * 
+     * @param propertyName
+     *            TODO
+     * @return TODO
+     */
+    public Declaration propertyName(PropertyName propertyName) {
+        this.propertyName = checkNotNull(propertyName, "propertyName cannot be null");
+        return this;
     }
 
-    @Override
+    /**
+     * Gets the property name.
+     * 
+     * @return The property name.
+     */
+    public PropertyName propertyName() {
+        return refinePropertyName().propertyName;
+    }
+
+    /**
+     * TODO Description TODO
+     * 
+     * @param propertyName
+     *            TODO
+     * @return TODO
+     */
+    public boolean isProperty(PropertyName propertyName) {
+        return this.propertyName.equals(propertyName);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param property
+     *            TODO
+     * @return TODO
+     */
+    public boolean isProperty(Property property) {
+        return propertyName().equals(property);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param property
+     *            TODO
+     * @return TODO
+     */
+    public boolean isProperty(String property) {
+        return propertyName().equals(property);
+    }
+
+    /**
+     * TODO Description
+     * 
+     * @param propertyValue
+     *            TODO
+     * @return TODO
+     */
+    public Declaration propertyValue(PropertyValue propertyValue) {
+        this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
+
+        // if the property value is new then make sure it gets broadcasted
+        if (propertyValue.status() == Status.UNBROADCASTED) {
+            broadcaster().broadcast(propertyValue);
+        }
+
+        return this;
+    }
+
+    /**
+     * Gets the property value.
+     * 
+     * @return The property value.
+     */
     public PropertyValue propertyValue() {
-        return propertyValue;
+        return refine().propertyValue;
     }
 
     @Override
     public boolean isRefined() {
-        return propertyName != null;
+        return propertyValue != null;
     }
 
     @Override
-    public RefinedDeclaration refine() {
+    public Declaration refine() {
         if (!isRefined()) {
-            propertyName = Property.named(rawPropertyName.content());
+            refinePropertyName();
 
-            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster());
             Stream stream = new Stream(rawPropertyValue.content(), line(), column());
 
             // parse the contents
@@ -142,6 +247,13 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
         return this;
     }
 
+    private Declaration refinePropertyName() {
+        if (!isRefined()) {
+            propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
+        }
+        return this;
+    }
+
     @Override
     public Declaration comments(Iterable<String> commentsToAdd) {
         if (comments == null) {
@@ -154,6 +266,14 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     @Override
     public List<String> comments() {
         return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        super.propagateBroadcast(broadcaster);
+        if (propertyValue != null) {
+            propertyValue.propagateBroadcast(broadcaster);
+        }
     }
 
     @Override

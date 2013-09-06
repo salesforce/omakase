@@ -6,7 +6,6 @@ package com.salesforce.omakase.writer;
 import java.io.IOException;
 
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.Writable;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;

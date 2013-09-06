@@ -43,6 +43,18 @@ public class HexColorValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * TODO
+     * 
+     * @param color
+     *            TODO
+     */
+    public HexColorValue(String color) {
+        checkNotNull(color, "color cannot be null");
+        this.color = color;
+        // TODO validation?
+    }
+
+    /**
      * Sets the value of the color (converted to lower-case).
      * 
      * @param color

@@ -4,7 +4,6 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.Property;
 import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 
@@ -26,15 +25,7 @@ public final class ParserStrategy {
      * @return The parser instance.
      */
     public static Parser getValueParser(PropertyName propertyName) {
-        if (propertyName instanceof Property) {
-            Property property = (Property)propertyName;
-
-            switch (property) {
-            default:
-                return ParserFactory.termListParser();
-            }
-        }
-
+        // TODO
         return ParserFactory.termListParser();
     }
 }

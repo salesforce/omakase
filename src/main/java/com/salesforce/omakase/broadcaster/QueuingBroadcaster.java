@@ -15,9 +15,8 @@ import com.salesforce.omakase.ast.Syntax;
  * 
  * @author nmcwilliams
  */
-public final class QueuingBroadcaster implements Broadcaster {
+public final class QueuingBroadcaster extends AbstractBroadcaster {
     private final Deque<Syntax> queue = new ArrayDeque<>();
-    private final Broadcaster relay;
 
     private State state = State.READY;
 
@@ -34,7 +33,7 @@ public final class QueuingBroadcaster implements Broadcaster {
      *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public QueuingBroadcaster(Broadcaster relay) {
-        this.relay = checkNotNull(relay, "relay cannot be null");
+        wrap(checkNotNull(relay, "relay cannot be null"));
     }
 
     /**

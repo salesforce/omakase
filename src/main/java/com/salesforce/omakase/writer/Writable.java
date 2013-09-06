@@ -1,12 +1,10 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.ast;
+package com.salesforce.omakase.writer;
 
 import java.io.IOException;
 
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Indicates that something can be written to a {@link StyleAppendable}.
