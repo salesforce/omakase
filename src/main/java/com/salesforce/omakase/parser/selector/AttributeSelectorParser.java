@@ -9,8 +9,10 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TESTME Parses an {@link AttributeSelector}.
- * 
+ * TESTME
+ * <p/>
+ * Parses an {@link AttributeSelector}.
+ *
  * @author nmcwilliams
  */
 public class AttributeSelectorParser extends AbstractParser {
@@ -22,5 +24,4 @@ public class AttributeSelectorParser extends AbstractParser {
         // TODO Auto-generated method stub
         return false;
     }
-
 }

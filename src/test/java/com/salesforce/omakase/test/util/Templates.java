@@ -1,22 +1,26 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.test.util;
 
 /**
  * Common CSS source template strings for unit testing.
- * 
+ *
  * @author nmcwilliams
  */
 public final class Templates {
     private static final String TEMPLATE_SELECTOR = "%s { color: red; }";
     private static final String TEMPLATE_PROPERTY_VALUE = ".test { %s: %s; }";
 
+    /** do not construct */
+    private Templates() {}
+
     /**
      * Gets a basic rule with the given selector.
-     * 
+     *
      * @param selector
-     *            The full selector string.
+     *     The full selector string.
+     *
      * @return The CSS source code.
      */
     public static String fillSelector(String selector) {
@@ -25,11 +29,12 @@ public final class Templates {
 
     /**
      * Gets a basic rule with the given property name and value.
-     * 
+     *
      * @param name
-     *            The property name.
+     *     The property name.
      * @param value
-     *            The property value.
+     *     The property value.
+     *
      * @return The CSS source code.
      */
     public static String fillDeclaration(String name, String value) {
@@ -38,13 +43,14 @@ public final class Templates {
 
     /**
      * Combines a CSS source with an expected result (e.g., parsing result) to be used in unit test verification.
-     * 
+     *
      * @param <T>
-     *            Type of the expected result.
+     *     Type of the expected result.
      * @param source
-     *            The complete CSS source.
+     *     The complete CSS source.
      * @param expected
-     *            The expected result.
+     *     The expected result.
+     *
      * @return A new {@link SourceWithExpectedResult} instance.
      */
     public static <T> SourceWithExpectedResult<T> withExpectedResult(String source, T expected) {
@@ -56,9 +62,9 @@ public final class Templates {
 
     /**
      * A CSS source combined with a generic result.
-     * 
+     *
      * @param <T>
-     *            The type of the result.
+     *     The type of the result.
      */
     public static final class SourceWithExpectedResult<T> {
         /** The CSS source */

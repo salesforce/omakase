@@ -10,16 +10,18 @@ import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.parser.*;
+import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link TermList}.
- * 
- * @see TermList
- * @see TermListParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see TermList
  */
 public class TermListParser extends AbstractParser {
     @Override
@@ -35,15 +37,14 @@ public class TermListParser extends AbstractParser {
         TermList termList = null;
         Optional<TermOperator> operator = Optional.absent();
         Parser termParser = ParserFactory.termParser();
+        QueryableBroadcaster collector;
+        Optional<Term> term;
 
-        QueryableBroadcaster collector = null;
-        Optional<Term> term = null;
-
-        // TODO complicated logic needs to be broken up. Make it similar to how complex selector is done
+        // FIXME complicated logic needs to be broken up. Make it similar to how complex selector is done
 
         // try parsing another term until there are no more term operators
         do {
-            // whitespace should only be skipped at the beginning of a term, otherwise we could accidently skip over a
+            // whitespace should only be skipped at the beginning of a term, otherwise we could accidentally skip over a
             // term operator.
             stream.skipWhitepace();
 
@@ -54,14 +55,14 @@ public class TermListParser extends AbstractParser {
 
             // if we have a term, add it to the list
             if (term.isPresent()) {
-                // add the previous operator as a member to term list
-                if (operator.isPresent()) {
-                    termList.add(operator.get());
-                }
-
                 // delayed creation of the term list
                 if (termList == null) {
                     termList = new TermList(line, column);
+                }
+
+                // add the previous operator as a member to term list
+                if (operator.isPresent()) {
+                    termList.add(operator.get());
                 }
 
                 // add the term to the list

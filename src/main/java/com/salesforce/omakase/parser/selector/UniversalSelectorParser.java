@@ -11,7 +11,7 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link UniversalSelector}.
- * 
+ *
  * @author nmcwilliams
  */
 public class UniversalSelectorParser extends AbstractParser {
@@ -33,5 +33,4 @@ public class UniversalSelectorParser extends AbstractParser {
         broadcaster.broadcast(selector);
         return true;
     }
-
 }

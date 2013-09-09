@@ -1,20 +1,22 @@
 /**
-j,  * ADD LICENSE
+ j,  * ADD LICENSE
  */
 package com.salesforce.omakase.broadcaster;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * TESTME A {@link Broadcaster} that will store all broadcasted events. Replay the broadcasts using {@link #visit()}.
- * The broadcasts can be replayed multiple times.
- * 
+ * TESTME
+ * <p/>
+ * A {@link Broadcaster} that will store all received broadcasted events. Replay the broadcasts using {@link #visit()}. The
+ * broadcasts can be replayed multiple times.
+ *
  * @author nmcwilliams
  */
 public final class VisitingBroadcaster extends AbstractBroadcaster {
@@ -22,11 +24,11 @@ public final class VisitingBroadcaster extends AbstractBroadcaster {
     private boolean visiting;
 
     /**
-     * Constructs a new {@link VisitingBroadcaster} instance that will relay all broadcasted events to the given
-     * {@link Broadcaster}.
-     * 
+     * Constructs a new {@link VisitingBroadcaster} instance that will relay all broadcasted events to the given {@link
+     * Broadcaster}.
+     *
      * @param relay
-     *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public VisitingBroadcaster(Broadcaster relay) {
         wrap(checkNotNull(relay, "relay cannot be null"));
@@ -43,9 +45,7 @@ public final class VisitingBroadcaster extends AbstractBroadcaster {
         }
     }
 
-    /**
-     * Replays all broadcasted events.
-     */
+    /** Replays all broadcasted events. */
     public void visit() {
         visiting = true;
 
@@ -58,5 +58,4 @@ public final class VisitingBroadcaster extends AbstractBroadcaster {
 
         visiting = false;
     }
-
 }

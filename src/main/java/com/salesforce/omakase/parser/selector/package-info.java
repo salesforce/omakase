@@ -2,8 +2,6 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
- *
- * @author nmcwilliams
+ * Selector parsers.
  */
 package com.salesforce.omakase.parser.selector;

@@ -11,11 +11,9 @@ import com.salesforce.omakase.parser.Stream;
 
 /**
  * Parses a {@link Declaration}.
- * 
- * @see Declaration
- * @see RawDeclarationParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see Declaration
  */
 public class RawDeclarationParser extends AbstractParser {
 
@@ -50,5 +48,4 @@ public class RawDeclarationParser extends AbstractParser {
         broadcaster.broadcast(declaration);
         return true;
     }
-
 }

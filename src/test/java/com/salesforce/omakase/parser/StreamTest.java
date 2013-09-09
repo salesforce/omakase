@@ -19,9 +19,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class StreamTest {
-    final static String INLINE = ".class, #id { color: red }";
+    static final String INLINE = ".class, #id { color: red }";
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();

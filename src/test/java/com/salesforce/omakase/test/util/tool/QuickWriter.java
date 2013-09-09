@@ -1,35 +1,37 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util.tool;
-
-import java.io.IOException;
+package com.salesforce.omakase.test.util.tool;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
+import java.io.IOException;
+
 /**
- * Utility for visually checking the results of writing processed CSS, in every available mode, both when refined and
- * unrefined.
- * 
+ * Utility for visually checking the results of writing processed CSS, in every available mode, both when refined and unrefined.
+ *
  * @author nmcwilliams
  */
-public class QuickWriter {
+public final class QuickWriter {
+    private QuickWriter() {}
+
     /**
      * Parses and writes out the given input in every available mode, both refined and unrefined.
-     * 
+     *
      * @param input
-     *            The CSS source code.
+     *     The CSS source code.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public static void writeAllModes(CharSequence input) throws IOException {
         StyleWriter writer = new StyleWriter();
         Omakase.source(input)
-            .request(writer)
-            .process();
+               .request(writer)
+               .process();
 
         writer.mode(WriterMode.VERBOSE);
         System.out.println("VERBOSE (unrefined)");
@@ -53,9 +55,9 @@ public class QuickWriter {
 
         writer = new StyleWriter();
         Omakase.source(input)
-            .request(new AutoRefiner().all())
-            .request(writer)
-            .process();
+               .request(new AutoRefiner().all())
+               .request(writer)
+               .process();
 
         writer.mode(WriterMode.VERBOSE);
         System.out.println("VERBOSE (refined)");

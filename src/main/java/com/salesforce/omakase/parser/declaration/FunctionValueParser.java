@@ -13,14 +13,12 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link FunctionValue}.
- *
- * This does not validate the arguments inside of the parenthesis, but only that the the opening and closing parenthesis
- * are matched.
- *
- * @see FunctionValue
- * @see FunctionValueParserTest
+ * <p/>
+ * This does not validate the arguments inside of the parenthesis, but only that the the opening and closing parenthesis are
+ * matched.
  *
  * @author nmcwilliams
+ * @see FunctionValue
  */
 public class FunctionValueParser extends AbstractParser {
 
@@ -45,5 +43,4 @@ public class FunctionValueParser extends AbstractParser {
 
         return true;
     }
-
 }

@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,49 +22,37 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"javadoc", "serial", "unchecked"})
+@SuppressWarnings({"JavaDoc", "serial", "unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
-    private final Class<T> klass = (Class<T>) (new TypeToken<T>(getClass()) {
-    }).getRawType();
     private final Parser parser;
 
     public AbstractParserTest() {
         try {
+            Class<T> klass = (Class<T>)(new TypeToken<T>(getClass()) {}).getRawType();
             this.parser = klass.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("error creating new instance of parser", e);
         }
     }
 
-    /**
-     * TODO
-     *
-     * @return TODO
-     */
+    /** A list of invalid sources. */
     public abstract List<String> invalidSources();
 
     /**
      * A list of valid sources. It is expected for each source to be parsed completely, i.e., a successful parse should result in
      * {@link Stream#eof()} being true.
-     *
-     * @return List of valid sources.
      */
     public abstract List<String> validSources();
 
-    /**
-     * TODO
-     *
-     * @return TODO
-     */
+    /** A list of sources with the expected index after a successful parse. */
     public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
 
     /**
-     * TODO
-     *
-     * @return TODO
+     * Whether the parser is allowed to trim whitespace even if it doesn't successfully parse. (not allowed in some cases where
+     * whitespace can be significant, e.g., descendant combinator). ==
      */
     public abstract boolean allowedToTrimLeadingWhitespace();
 

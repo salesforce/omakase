@@ -8,8 +8,10 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 
 /**
- * TESTME TODO Description
- * 
+ * TESTME
+ * <p/>
+ * TODO Description
+ *
  * @author nmcwilliams
  */
 public class NegationSelectorParser extends AbstractParser {
@@ -21,5 +23,4 @@ public class NegationSelectorParser extends AbstractParser {
         // TODO Auto-generated method stub
         return false;
     }
-
 }

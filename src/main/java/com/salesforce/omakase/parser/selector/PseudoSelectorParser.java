@@ -3,9 +3,6 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_CLASS_SELECTOR;
-import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_ELEMENT_SELECTOR;
-
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
@@ -18,9 +15,13 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
+import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
+
 /**
- * TESTME Parses both {@link PseudoClassSelector}s and {@link PseudoElementSelector}.
- * 
+ * TESTME
+ * <p/>
+ * Parses both {@link PseudoClassSelector}s and {@link PseudoElementSelector}.
+ *
  * @author nmcwilliams
  */
 public class PseudoSelectorParser extends AbstractParser {
@@ -53,8 +54,8 @@ public class PseudoSelectorParser extends AbstractParser {
 
         // create the selector and broadcast it
         Syntax selector = (type == PSEUDO_CLASS_SELECTOR) ?
-                new PseudoClassSelector(line, column, name.get()) :
-                new PseudoElementSelector(line, column, name.get());
+            new PseudoClassSelector(line, column, name.get()) :
+            new PseudoElementSelector(line, column, name.get());
 
         broadcaster.broadcast(selector);
         return true;

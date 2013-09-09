@@ -214,6 +214,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
      *
      * @return True of this {@link Declaration} has the given property name.
      */
+    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     public boolean isProperty(Property property) {
         return propertyName().equals(property);
     }
@@ -232,6 +233,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
      *
      * @return True if this {@link Declaration} has the given property name.
      */
+    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     public boolean isProperty(String property) {
         return propertyName().equals(property);
     }

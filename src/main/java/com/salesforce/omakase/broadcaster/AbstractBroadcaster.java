@@ -6,12 +6,12 @@ package com.salesforce.omakase.broadcaster;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TODO Description
- * 
+ * Base {@link Broadcaster} class.
+ *
  * @author nmcwilliams
  */
 public abstract class AbstractBroadcaster implements Broadcaster {
-    /** TODO */
+    /** inner {@link Broadcaster} */
     protected Broadcaster relay;
 
     @Override
@@ -27,9 +27,9 @@ public abstract class AbstractBroadcaster implements Broadcaster {
     }
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets whether this {@link Broadcaster} is wrapped around a child {@link Broadcaster}.
+     *
+     * @return True if there is an inner {@link Broadcaster} specified.
      */
     protected boolean hasRelay() {
         return relay != null;

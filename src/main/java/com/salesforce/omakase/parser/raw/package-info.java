@@ -2,8 +2,6 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
- *
- * @author nmcwilliams
+ * High-level, raw content parsers.
  */
 package com.salesforce.omakase.parser.raw;

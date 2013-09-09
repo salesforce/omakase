@@ -14,11 +14,9 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link ClassSelector}.
- * 
- * @see ClassSelector
- * @see ClassSelectorParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see ClassSelector
  */
 public class ClassSelectorParser extends AbstractParser {
 
@@ -43,5 +41,4 @@ public class ClassSelectorParser extends AbstractParser {
         broadcaster.broadcast(selector);
         return true;
     }
-
 }

@@ -5,7 +5,7 @@ package com.salesforce.omakase.error;
 
 /**
  * Generic parent for all Omakase CSS Parser related exceptions.
- * 
+ *
  * @author nmcwilliams
  */
 public class OmakaseException extends RuntimeException {
@@ -13,9 +13,9 @@ public class OmakaseException extends RuntimeException {
 
     /**
      * Creates a new exception with the given message.
-     * 
+     *
      * @param message
-     *            The description of the exception.
+     *     The description of the exception.
      */
     protected OmakaseException(String message) {
         super(message);
@@ -23,11 +23,11 @@ public class OmakaseException extends RuntimeException {
 
     /**
      * Creates a new exception with the given message and cause.
-     * 
+     *
      * @param message
-     *            The description of the exception.
+     *     The description of the exception.
      * @param cause
-     *            The cause of the exception.
+     *     The cause of the exception.
      */
     protected OmakaseException(String message, Throwable cause) {
         super(message, cause);

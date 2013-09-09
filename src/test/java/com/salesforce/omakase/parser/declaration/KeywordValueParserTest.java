@@ -3,7 +3,7 @@
  */
 package com.salesforce.omakase.parser.declaration;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
+import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.List;
@@ -13,11 +13,11 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
-import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link KeywordValueParser}.
- * 
+ *
  * @author nmcwilliams
  */
 public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParser> {

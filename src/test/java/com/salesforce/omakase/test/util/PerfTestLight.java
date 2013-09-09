@@ -1,11 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
+package com.salesforce.omakase.test.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -14,12 +10,16 @@ import com.salesforce.omakase.Omakase.Request;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
+
 /**
  * Performance testing of this parser (more extensive tests + csv writer is in perf-test branch).
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({"JavaDoc", "UtilityClassWithoutPrivateConstructor", "NonFinalUtilityClass"})
 public class PerfTestLight {
     // OPTIONS
 
@@ -46,7 +46,7 @@ public class PerfTestLight {
         OMAKASE_FULL
     }
 
-    private static final Pattern commentPattern = Pattern.compile("/\\*[^*]*\\*+([^/*][^*]*\\*+)*/");
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("/\\*[^*]*\\*+([^/*][^*]*\\*+)*/");
 
     /** main method with setup */
     public static void main(String[] args) throws IOException {
@@ -61,7 +61,7 @@ public class PerfTestLight {
 
         print("##### Heap utilization statistics [MB] #####");
         if (full) print("Max Memory:" + runtime.maxMemory() / mb);
-        if (full) print("Availiable Memory:" + runtime.totalMemory() / mb);
+        if (full) print("Available Memory:" + runtime.totalMemory() / mb);
         print("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);
         print("Free Memory:" + runtime.freeMemory() / mb);
     }
@@ -71,6 +71,7 @@ public class PerfTestLight {
      *
      * @throws IOException
      */
+    @SuppressWarnings("ConstantConditions")
     public static void run() throws IOException {
         final List<Integer> factors = USE_FACTORS ? MULTI_FACTORS : SINGLE_FACTOR;
         final String original = CSS;
@@ -93,7 +94,7 @@ public class PerfTestLight {
             }
 
             // calculate LOC
-            int loc = commentPattern.matcher(actual).replaceAll("").trim().split("\n").length;
+            int loc = COMMENT_PATTERN.matcher(actual).replaceAll("").trim().split("\n").length;
             print("\nLOC: " + loc);
 
             PerfRun perfRun = new PerfRun();
@@ -133,7 +134,6 @@ public class PerfTestLight {
             long omakaseParseAvg2 = omakaseTotal2 / omakaseParseTimes2.size();
             print("omakase full: " + omakaseParseAvg2 + "ms");
             perfRun.omakaseFull = omakaseParseAvg2;
-
         }
 
         print("\ndone");
@@ -160,89 +160,67 @@ public class PerfTestLight {
 
     public static final class PerfRun {
         long linesOfCode;
-        long phloc;
-        long gss;
         long omakaseFull;
         long omakaseThin;
-
-        public long getLinesOfCode() {
-            return linesOfCode;
-        }
-
-        public long getPhloc() {
-            return phloc;
-        }
-
-        public long getGSS() {
-            return gss;
-        }
-
-        public long getOmakaseFull() {
-            return omakaseFull;
-        }
-
-        public long getOmakaseThin() {
-            return omakaseThin;
-        }
     }
 
     private static final String CSS = ".uiButton{\n" +
-            "    display:inline-block;\n" +
-            "    cursor:pointer;\n" +
-            "}\n" +
-            "\n" +
-            ".uiButton .label{\n" +
-            "    display:block;\n" +
-            "}\n" +
-            "\n" +
-            ".uiButton.default{\n" +
-            "    font-weight: bold;\n" +
-            "    font-size: .9em;\n" +
-            "    margin: 2px 3px;\n" +
-            "    padding: 4px 6px;\n" +
-            "    text-decoration:none;\n" +
-            "    text-align:center;\n" +
-            "    border-radius:4px;\n" +
-            "    border:0;\n" +
-            "    border-top:1px solid rgba(255,255,255,.45);\n" +
-            "    background:#DDDFE1;\n" +
-            "    background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#F8F8F9), to(#DDDFE1));\n" +
-            "    background:-webkit-linear-gradient(#F8F8F9,#DDDFE1);\n" +
-            "    background:-moz-linear-gradient(#F8F8F9,#DDDFE1);\n" +
-            "    background:linear-gradient(#F8F8F9,#DDDFE1);\n" +
-            "    -webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3);\n" +
-            "    box-shadow:0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3) ;\n" +
-            "    text-shadow:0 1px 1px #FFF; \n" +
-            "}\n" +
-            "\n" +
-            ".uiButton.default:hover,\n" +
-            ".uiButton.default:focus{\n" +
-            "    background:#757D8A;\n" +
-            "    background:#757D8A -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7F8792), to(#535B68));\n" +
-            "    background:#757D8A -webkit-linear-gradient(#7F8792,#535B68);\n" +
-            "    background:#757D8A -moz-linear-gradient(#7F8792,#535B68);\n" +
-            "    background:#757D8A linear-gradient(#7F8792,#535B68);\n" +
-            "    text-shadow:0 -1px 1px rgba(0, 0, 0, 0.5);\n" +
-            "}\n" +
-            ".uiButton.default .label{\n" +
-            "    white-space:nowrap;\n" +
-            "    color: #3A3D42;\n" +
-            "}\n" +
-            ".uiButton.default:hover .label,\n" +
-            ".uiButton.default:focus .label{\n" +
-            "    color: #FFF;\n" +
-            "}\n" +
-            ".uiButton.default:disabled{\n" +
-            "    cursor:default;\n" +
-            "    background:#B9B9B9;\n" +
-            "    -webkit-box-shadow:none;\n" +
-            "    box-shadow:none;\n" +
-            "    text-shadow:none;\n" +
-            "}\n" +
-            ".uiButton.default:disabled .label{\n" +
-            "    color:#888;\n" +
-            "}\n" +
-            ".uiButton.default:disabled .label:hover{\n" +
-            "    color:#888;\n" +
-            "}";
+        "    display:inline-block;\n" +
+        "    cursor:pointer;\n" +
+        "}\n" +
+        "\n" +
+        ".uiButton .label{\n" +
+        "    display:block;\n" +
+        "}\n" +
+        "\n" +
+        ".uiButton.default{\n" +
+        "    font-weight: bold;\n" +
+        "    font-size: .9em;\n" +
+        "    margin: 2px 3px;\n" +
+        "    padding: 4px 6px;\n" +
+        "    text-decoration:none;\n" +
+        "    text-align:center;\n" +
+        "    border-radius:4px;\n" +
+        "    border:0;\n" +
+        "    border-top:1px solid rgba(255,255,255,.45);\n" +
+        "    background:#DDDFE1;\n" +
+        "    background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#F8F8F9), to(#DDDFE1));\n" +
+        "    background:-webkit-linear-gradient(#F8F8F9,#DDDFE1);\n" +
+        "    background:-moz-linear-gradient(#F8F8F9,#DDDFE1);\n" +
+        "    background:linear-gradient(#F8F8F9,#DDDFE1);\n" +
+        "    -webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3);\n" +
+        "    box-shadow:0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3) ;\n" +
+        "    text-shadow:0 1px 1px #FFF; \n" +
+        "}\n" +
+        "\n" +
+        ".uiButton.default:hover,\n" +
+        ".uiButton.default:focus{\n" +
+        "    background:#757D8A;\n" +
+        "    background:#757D8A -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7F8792), to(#535B68));\n" +
+        "    background:#757D8A -webkit-linear-gradient(#7F8792,#535B68);\n" +
+        "    background:#757D8A -moz-linear-gradient(#7F8792,#535B68);\n" +
+        "    background:#757D8A linear-gradient(#7F8792,#535B68);\n" +
+        "    text-shadow:0 -1px 1px rgba(0, 0, 0, 0.5);\n" +
+        "}\n" +
+        ".uiButton.default .label{\n" +
+        "    white-space:nowrap;\n" +
+        "    color: #3A3D42;\n" +
+        "}\n" +
+        ".uiButton.default:hover .label,\n" +
+        ".uiButton.default:focus .label{\n" +
+        "    color: #FFF;\n" +
+        "}\n" +
+        ".uiButton.default:disabled{\n" +
+        "    cursor:default;\n" +
+        "    background:#B9B9B9;\n" +
+        "    -webkit-box-shadow:none;\n" +
+        "    box-shadow:none;\n" +
+        "    text-shadow:none;\n" +
+        "}\n" +
+        ".uiButton.default:disabled .label{\n" +
+        "    color:#888;\n" +
+        "}\n" +
+        ".uiButton.default:disabled .label:hover{\n" +
+        "    color:#888;\n" +
+        "}";
 }

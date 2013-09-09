@@ -3,13 +3,13 @@
  */
 package com.salesforce.omakase.parser.token;
 
-import static com.salesforce.omakase.parser.token.Tokens.*;
-
 import com.salesforce.omakase.parser.Parser;
+
+import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
  * A {@link TokenFactory} for retrieving standard {@link Token} objects. Mainly using by {@link Parser}s.
- * 
+ *
  * @author nmcwilliams
  */
 public class StandardTokenFactory implements TokenFactory {
@@ -30,7 +30,7 @@ public class StandardTokenFactory implements TokenFactory {
 
     /**
      * Gets the cached factory instance.
-     * 
+     *
      * @return The cached instance.
      */
     public static TokenFactory instance() {

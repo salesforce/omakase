@@ -42,10 +42,10 @@ public enum Tokens implements Token {
     CLOSE_BRACKET(is('}'), "closing bracket '}'"),
 
     /** opening parenthesis */
-    OPEN_PAREN(is('('), "("),
+    OPEN_PAREN(is('('), "opening parenthesis '('"),
 
     /** closing parenthesis */
-    CLOSE_PAREN(is(')'), ")"),
+    CLOSE_PAREN(is(')'), "closing parenthesis ')'"),
 
     /** asterisk */
     STAR(is('*'), "universal selector"),
@@ -104,6 +104,7 @@ public enum Tokens implements Token {
 
     /** a token that never matches */
     NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches");
+
     private final CharMatcher matcher;
     private final String description;
 

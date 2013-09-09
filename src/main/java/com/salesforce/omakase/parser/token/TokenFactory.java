@@ -8,11 +8,10 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.Parser;
 
 /**
- * A factory for retrieving various {@link Token}s. Mainly using by {@link Parser}s.
- *
- * The motivation for using a factory interface for tokens is that it provides the ability for highly-customized input
- * source code grammar. This could be used, for example, to enable grammar similar to the popular Stylus open source
- * library.
+ * A factory for retrieving various {@link Token}s. Mainly used by {@link Parser}s.
+ * <p/>
+ * The motivation for using a factory interface for tokens is that it provides the ability for highly-customized input source code
+ * grammar. This could be used, for example, to enable grammar similar to the popular Stylus open source library.
  *
  * @author nmcwilliams
  */

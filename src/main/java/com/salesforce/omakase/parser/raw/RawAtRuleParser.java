@@ -16,11 +16,9 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses an {@link AtRule}.
- * 
- * @see AtRule
- * @see RawAtRuleParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see AtRule
  */
 public class RawAtRuleParser extends AbstractParser {
 

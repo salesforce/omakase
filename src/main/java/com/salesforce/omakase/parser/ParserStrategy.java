@@ -9,7 +9,7 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
 
 /**
  * Helper for getting an appropriate {@link Parser} for a given {@link PropertyName}.
- * 
+ *
  * @author nmcwilliams
  */
 public final class ParserStrategy {
@@ -17,15 +17,16 @@ public final class ParserStrategy {
     private ParserStrategy() {}
 
     /**
-     * Gets the appropriate parser for the given property value. By default this will fallback to the
-     * {@link TermListParser}.
-     * 
+     * Gets the appropriate parser for the given property value. By default this will fallback to the {@link
+     * TermListParser}.
+     *
      * @param propertyName
-     *            The {@link Declaration}'s property name.
+     *     The {@link Declaration}'s property name.
+     *
      * @return The parser instance.
      */
     public static Parser getValueParser(PropertyName propertyName) {
-        // TODO
+        // more specific property value parsers to be added here based on the property name
         return ParserFactory.termListParser();
     }
 }

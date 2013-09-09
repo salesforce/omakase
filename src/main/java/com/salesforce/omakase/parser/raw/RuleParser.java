@@ -11,11 +11,9 @@ import com.salesforce.omakase.parser.Stream;
 
 /**
  * Parses a {@link Rule}.
- * 
- * @see Rule
- * @see RuleParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see Rule
  */
 public class RuleParser extends AbstractParser {
 
@@ -23,7 +21,7 @@ public class RuleParser extends AbstractParser {
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
 
-        // if there wasn't a selector then we aren't at a rule
+        // if there wasn't a selector then we aren't a rule
         if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster)) return false;
 
         stream.skipWhitepace();
@@ -46,5 +44,4 @@ public class RuleParser extends AbstractParser {
 
         return true;
     }
-
 }

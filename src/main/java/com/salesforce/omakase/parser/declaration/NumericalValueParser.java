@@ -19,7 +19,6 @@ import com.salesforce.omakase.parser.token.Tokens;
  *
  * @author nmcwilliams
  * @see NumericalValue
- * @see NumericalValueParserTest
  */
 public class NumericalValueParser extends AbstractParser {
     @Override
@@ -63,7 +62,6 @@ public class NumericalValueParser extends AbstractParser {
 
         // check for a % or unit
         Optional<String> unit = stream.optionallyPresent(Tokens.PERCENTAGE) ? Optional.of("%") : stream.readIdent();
-
         if (unit.isPresent()) {
             value.unit(unit.get());
         }

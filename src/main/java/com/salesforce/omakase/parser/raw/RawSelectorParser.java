@@ -11,11 +11,9 @@ import com.salesforce.omakase.parser.Stream;
 
 /**
  * Parses a {@link Selector}.
- * 
- * @see Selector
- * @see RawSelectorParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see Selector
  */
 public class RawSelectorParser extends AbstractParser {
 
@@ -44,5 +42,4 @@ public class RawSelectorParser extends AbstractParser {
         broadcaster.broadcast(selector);
         return true;
     }
-
 }

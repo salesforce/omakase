@@ -3,25 +3,24 @@
  */
 package com.salesforce.omakase.parser.declaration;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.declaration.value.HexColorValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link HexColorValueParser}.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class HexColorValueParserTest extends AbstractParserTest<HexColorValueParser> {
 
     @Override
@@ -63,9 +62,9 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
             withExpectedResult("#ffeeff fff", 7),
             withExpectedResult("#abcfef red", 7),
             withExpectedResult("#defdef", 7),
-            withExpectedResult("#123", 4),
-            withExpectedResult("#AFE", 4),
-            withExpectedResult("#000", 4));
+            withExpectedResult("#123 _0", 4),
+            withExpectedResult("#AFE !1", 4),
+            withExpectedResult("#000 -00", 4));
     }
 
     @Override

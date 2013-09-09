@@ -3,52 +3,50 @@
  */
 package com.salesforce.omakase.writer;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import static com.google.common.base.Preconditions.*;
 
 /**
- * TESTME The main class for writing processed CSS content.
- *
- * To use, add an instance of this class to the Omakase request. Examples:
- *
+ * TESTME
+ * <p/>
+ * The main class for writing processed CSS content.
+ * <p/>
+ * To use, add an instance of this class to the Omakase request.
+ * <p/>
+ * Examples:
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
  * Omakase.source(input).request(verbose).process();
  * String css = verbose.write();
  * </code></pre>
- *
  * <pre><code>
  * StyleWriter compressed = StyleWriter.compressed();
  * Omakase.source(input).request(compressed).process();
  * String css = compressed.write();
  * </code></pre>
- *
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
  * Omakase.source(input).request(verbose).process();
  * verbose.write(System.out);
  * </code></pre>
- *
- * Unless specified, {@link WriterMode#INLINE} will be used.
+ * <p/>
+ * Unless otherwise specified, {@link WriterMode#INLINE} will be used.
  *
  * @author nmcwilliams
  */
 public class StyleWriter implements DependentPlugin {
-    private Map<Class<? extends Writable>, CustomWriter<?>> overrides = new HashMap<>();
+    private final Map<Class<? extends Writable>, CustomWriter<?>> overrides = new HashMap<>();
     private SyntaxTree tree;
     private WriterMode mode;
 
-    /**
-     * Creates a new {@link StyleWriter} instance using {@link WriterMode#INLINE}.
-     */
+    /** Creates a new {@link StyleWriter} instance using {@link WriterMode#INLINE}. */
     public StyleWriter() {
         this(WriterMode.INLINE);
     }
@@ -57,7 +55,7 @@ public class StyleWriter implements DependentPlugin {
      * Creates a new {@link StyleWriter} instance using the given {@link WriterMode}.
      *
      * @param mode
-     *            The {@link WriterMode} to use.
+     *     The {@link WriterMode} to use.
      */
     public StyleWriter(WriterMode mode) {
         this.mode = mode;
@@ -72,7 +70,8 @@ public class StyleWriter implements DependentPlugin {
      * Sets the {@link WriterMode}.
      *
      * @param mode
-     *            The new {@link WriterMode}.
+     *     The new {@link WriterMode}.
+     *
      * @return this, for chaining.
      */
     public StyleWriter mode(WriterMode mode) {
@@ -108,15 +107,16 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * Overrides the writing of a unit with the given {@link CustomWriter} instance. See {@link CustomWriter} for more
-     * details on overriding.
+     * Overrides the writing of a unit with the given {@link CustomWriter} instance. See {@link CustomWriter} for more details on
+     * overriding.
      *
      * @param <T>
-     *            The Type of unit being overridden.
+     *     The Type of unit being overridden.
      * @param writable
-     *            The class of the unit to override.
+     *     The class of the unit to override.
      * @param writer
-     *            The {@link CustomWriter} override.
+     *     The {@link CustomWriter} override.
+     *
      * @return this, for chaining.
      */
     public <T extends Writable> StyleWriter override(Class<T> writable, CustomWriter<T> writer) {
@@ -145,9 +145,10 @@ public class StyleWriter implements DependentPlugin {
      * Writes the processed CSS source code to the given {@link Appendable}.
      *
      * @param appendable
-     *            Write the processed CSS source code to this appendable.
+     *     Write the processed CSS source code to this appendable.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public void write(Appendable appendable) throws IOException {
         write(new StyleAppendable(appendable));
@@ -157,9 +158,10 @@ public class StyleWriter implements DependentPlugin {
      * Writes the processed CSS source code to the given {@link StyleAppendable}.
      *
      * @param appendable
-     *            Write the processed CSS source code to this appendable.
+     *     Write the processed CSS source code to this appendable.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public void write(StyleAppendable appendable) throws IOException {
         checkNotNull(appendable, "appendable cannot be null");
@@ -168,17 +170,18 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * Writes the given syntax unit to the given {@link StyleAppendable}, taking into account any {@link CustomWriter}
-     * overrides specified on this {@link StyleWriter}.
+     * Writes the given syntax unit to the given {@link StyleAppendable}, taking into account any {@link CustomWriter} overrides
+     * specified on this {@link StyleWriter}.
      *
      * @param <T>
-     *            Type of the unit to write.
+     *     Type of the unit to write.
      * @param writable
-     *            The unit to write.
+     *     The unit to write.
      * @param appendable
-     *            Write the unit's output to this {@link StyleAppendable}.
+     *     Write the unit's output to this {@link StyleAppendable}.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     @SuppressWarnings("unchecked")
     public <T extends Writable> void write(T writable, StyleAppendable appendable) throws IOException {

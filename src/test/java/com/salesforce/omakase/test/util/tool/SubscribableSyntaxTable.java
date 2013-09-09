@@ -1,27 +1,28 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util.tool;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.reflections.Reflections;
+package com.salesforce.omakase.test.util.tool;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import org.reflections.Reflections;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Lists all {@link Subscribable} {@link Syntax} units.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public final class SubscribableSyntaxTable {
+    private SubscribableSyntaxTable() {}
+
     public static void main(String[] args) {
         Reflections reflections = new Reflections("com.salesforce.omakase.ast");
         List<Class<?>> list = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class));

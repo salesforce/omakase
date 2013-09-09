@@ -135,7 +135,7 @@ public class KeywordValue extends AbstractSyntax implements Term {
      * <p/>
      * Example:
      * <pre>
-     * <code>KeywordValue.of(Keyword.LEFTF);</code>
+     * <code>KeywordValue.of(Keyword.LEFT);</code>
      * </pre>
      *
      * @param keyword

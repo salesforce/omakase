@@ -3,17 +3,16 @@
  */
 package com.salesforce.omakase.error;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.parser.ParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * An {@link ErrorManager} that will throw an exception on the first reported {@link ErrorLevel#FATAL} error. Errors of
- * level {@link ErrorLevel#WARNING} will be logged.
- * 
+ * An {@link ErrorManager} that will throw an exception on the first reported {@link ErrorLevel#FATAL} error. Errors of level
+ * {@link ErrorLevel#WARNING} will be logged.
+ *
  * @author nmcwilliams
  */
 public final class ThrowingErrorManager implements ErrorManager {
@@ -32,7 +31,6 @@ public final class ThrowingErrorManager implements ErrorManager {
     @Override
     public void report(ErrorLevel level, Syntax cause, Message message) {
         report(level, cause, message.message());
-
     }
 
     @Override

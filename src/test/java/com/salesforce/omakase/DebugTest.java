@@ -5,8 +5,8 @@ package com.salesforce.omakase;
 
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.util.EchoLogger;
-import com.salesforce.omakase.util.tool.QuickWriter;
+import com.salesforce.omakase.test.util.EchoLogger;
+import com.salesforce.omakase.test.util.tool.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 

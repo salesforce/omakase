@@ -11,11 +11,9 @@ import com.salesforce.omakase.parser.Stream;
 
 /**
  * Parses a {@link KeywordValue}.
- * 
- * @see KeywordValue
- * @see KeywordValueParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see KeywordValue
  */
 public class KeywordValueParser extends AbstractParser {
 
@@ -32,5 +30,4 @@ public class KeywordValueParser extends AbstractParser {
         broadcaster.broadcast(value);
         return true;
     }
-
 }

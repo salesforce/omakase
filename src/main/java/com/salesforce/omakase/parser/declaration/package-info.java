@@ -2,8 +2,6 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
- *
- * @author nmcwilliams
+ * Declaration parsers.
  */
 package com.salesforce.omakase.parser.declaration;

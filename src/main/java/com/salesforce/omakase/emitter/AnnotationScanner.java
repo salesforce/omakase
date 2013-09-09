@@ -3,9 +3,6 @@
  */
 package com.salesforce.omakase.emitter;
 
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -16,9 +13,14 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
+import java.lang.reflect.Method;
+import java.util.Set;
+
 /**
- * TESTME Scans for annotated methods on classes.
- * 
+ * TESTME
+ * <p/>
+ * Scans for annotated methods on classes.
+ *
  * @author nmcwilliams
  */
 final class AnnotationScanner {
@@ -34,9 +36,10 @@ final class AnnotationScanner {
 
     /**
      * Creates subscription objects for each subscribed event on the class of the given instance.
-     * 
+     *
      * @param subscriber
-     *            The class with the subscription methods.
+     *     The class with the subscription methods.
+     *
      * @return A multimap of syntax object (event) to subscription object.
      */
     public Multimap<Class<?>, Subscription> scan(Object subscriber) {
@@ -70,7 +73,7 @@ final class AnnotationScanner {
 
             // the observe annotation
             if (method.isAnnotationPresent(Observe.class)) {
-                if (annotated == true) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
                 annotated = true;
 
                 // must have exactly one parameter
@@ -83,7 +86,7 @@ final class AnnotationScanner {
 
             // the rework annotation
             if (method.isAnnotationPresent(Rework.class)) {
-                if (annotated == true) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
                 annotated = true;
 
                 // must have exactly one parameter
@@ -96,8 +99,7 @@ final class AnnotationScanner {
 
             // the validate annotation
             if (method.isAnnotationPresent(Validate.class)) {
-                if (annotated == true) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
-                annotated = true;
+                if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
 
                 // must have exactly two parameters
                 Class<?>[] params = method.getParameterTypes();

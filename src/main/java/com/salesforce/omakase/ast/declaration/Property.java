@@ -17,6 +17,7 @@ import java.util.Map;
  *
  * @author nmcwilliams
  */
+@SuppressWarnings("SpellCheckingInspection")
 public enum Property {
     /** CSS property named 'alignment-adjust' */
     ALIGNMENT_ADJUST("alignment-adjust"),

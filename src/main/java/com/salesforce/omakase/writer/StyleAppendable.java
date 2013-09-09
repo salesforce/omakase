@@ -3,13 +3,13 @@
  */
 package com.salesforce.omakase.writer;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A wrapper around an {@link Appendable} that provides a few convenience functions.
- *
+ * <p/>
  * When not specifying a particular {@link Appendable} then use {@link #toString()} to get the final output.
  *
  * @author nmcwilliams
@@ -17,10 +17,7 @@ import java.io.IOException;
 public final class StyleAppendable {
     private final Appendable appendable;
 
-    /**
-     * Creates a new {@link StyleAppendable} using a {@link StringBuilder}. Use {@link #toString()} to get the final
-     * output.
-     */
+    /** Creates a new {@link StyleAppendable} using a {@link StringBuilder}. Use {@link #toString()} to get the final output. */
     public StyleAppendable() {
         this(new StringBuilder(256));
     }
@@ -29,20 +26,22 @@ public final class StyleAppendable {
      * Creates a new {@link StyleAppendable} using the given {@link Appendable}.
      *
      * @param appendable
-     *            Write to this {@link Appendable}.
+     *     Write to this {@link Appendable}.
      */
     public StyleAppendable(Appendable appendable) {
-        this.appendable = checkNotNull(appendable, "appendable canot be null");
+        this.appendable = checkNotNull(appendable, "appendable cannot be null");
     }
 
     /**
      * Appends the specified character. Prefer this over {@link #append(CharSequence)}.
      *
      * @param c
-     *            The character to write.
+     *     The character to write.
+     *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable append(char c) throws IOException {
         appendable.append(c);
@@ -53,10 +52,12 @@ public final class StyleAppendable {
      * Appends the specified {@link CharSequence} or String.
      *
      * @param sequence
-     *            The character sequence to append.
+     *     The character sequence to append.
+     *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable append(CharSequence sequence) throws IOException {
         appendable.append(sequence);
@@ -67,8 +68,9 @@ public final class StyleAppendable {
      * Appends a newline character.
      *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable newline() throws IOException {
         return append('\n');
@@ -78,10 +80,12 @@ public final class StyleAppendable {
      * Appends a newline character only if the given condition is true.
      *
      * @param condition
-     *            Only append a newline if this condition is true.
+     *     Only append a newline if this condition is true.
+     *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable newlineIf(boolean condition) throws IOException {
         if (condition) newline();
@@ -92,8 +96,9 @@ public final class StyleAppendable {
      * Appends a single space character.
      *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable space() throws IOException {
         return append(' ');
@@ -103,10 +108,12 @@ public final class StyleAppendable {
      * Appends a single space character only if the given condition is true.
      *
      * @param condition
-     *            Only append a newline if this condition is true.
+     *     Only append a newline if this condition is true.
+     *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable spaceIf(boolean condition) throws IOException {
         if (condition) space();
@@ -117,8 +124,9 @@ public final class StyleAppendable {
      * Appends spaces for indentation.
      *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable indent() throws IOException {
         return append(' ').append(' ');
@@ -128,10 +136,12 @@ public final class StyleAppendable {
      * Appends spaces for indentation only if the given condition is true.
      *
      * @param condition
-     *            Only append a newline if this condition is true.
+     *     Only append a newline if this condition is true.
+     *
      * @return this, for chaining.
+     *
      * @throws IOException
-     *             If an I/O error occurs.
+     *     If an I/O error occurs.
      */
     public StyleAppendable indentIf(boolean condition) throws IOException {
         if (condition) indent();

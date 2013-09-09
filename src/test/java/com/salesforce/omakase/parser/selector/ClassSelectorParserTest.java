@@ -3,25 +3,24 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link ClassSelectorParser}.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorParser> {
     @Override
     public List<String> invalidSources() {
@@ -88,7 +87,6 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
         parse("..class");
-
     }
 
     @Test
@@ -96,7 +94,6 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
         parse(".9class");
-
     }
 
     @Test
@@ -104,7 +101,6 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
         parse(".-9class");
-
     }
 
     @Test
@@ -112,7 +108,6 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         exception.expect(ParserException.class);
         exception.expectMessage("expected to find a valid class name");
         parse(".--class");
-
     }
 
     @Test
@@ -121,5 +116,4 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         exception.expectMessage("expected to find a valid class name");
         parse(". class");
     }
-
 }

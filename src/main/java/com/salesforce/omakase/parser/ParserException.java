@@ -8,7 +8,7 @@ import com.salesforce.omakase.error.OmakaseException;
 
 /**
  * An error encountered while parsing.
- * 
+ *
  * @author nmcwilliams
  */
 public class ParserException extends OmakaseException {
@@ -16,11 +16,11 @@ public class ParserException extends OmakaseException {
 
     /**
      * Construct a new instance of a {@link ParserException} with the given {@link Message}.
-     * 
+     *
      * @param stream
-     *            The stream containing the source of the error.
+     *     The stream containing the source of the error.
      * @param msg
-     *            The error message.
+     *     The error message.
      */
     public ParserException(Stream stream, Message msg) {
         this(stream, msg.message());
@@ -28,13 +28,13 @@ public class ParserException extends OmakaseException {
 
     /**
      * Construct a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
-     * 
+     *
      * @param stream
-     *            The stream containing the source of the error.
+     *     The stream containing the source of the error.
      * @param msg
-     *            The error message.
+     *     The error message.
      * @param args
-     *            The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
+     *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
     public ParserException(Stream stream, Message msg, Object... args) {
         this(stream, msg.message(args));
@@ -42,11 +42,11 @@ public class ParserException extends OmakaseException {
 
     /**
      * Construct a new instance of a {@link ParserException}.
-     * 
+     *
      * @param stream
-     *            The stream containing the source of the error.
+     *     The stream containing the source of the error.
      * @param msg
-     *            The error message.
+     *     The error message.
      */
     public ParserException(Stream stream, String msg) {
         super(msg + indicator(stream));

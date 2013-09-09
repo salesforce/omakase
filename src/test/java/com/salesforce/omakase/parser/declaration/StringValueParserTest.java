@@ -3,27 +3,26 @@
  */
 package com.salesforce.omakase.parser.declaration;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StringValueParser}.
- * 
+ * <p/>
  * XXX the spec allows for escaped newlines in strings as well, see http://www.w3.org/TR/css3-values/#strings
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class StringValueParserTest extends AbstractParserTest<StringValueParser> {
 
     @Override
@@ -34,7 +33,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
             "afafa\"",
             "123af\"afaf\"faf",
             "afafafaf'ssgs'sgsgsg"
-            );
+        );
     }
 
     @Override
@@ -49,7 +48,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
             "\"this is a \\\"string\\\".\"",
             "'this is a \"string\".'",
             "'this is a \\'string\\'.'"
-            );
+        );
     }
 
     @Override
@@ -88,7 +87,6 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find closing");
         parse("\"afafafafa");
-
     }
 
     @Test
@@ -131,7 +129,6 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find closing");
         parse("'afafafafa\"");
-
     }
 
     @Test

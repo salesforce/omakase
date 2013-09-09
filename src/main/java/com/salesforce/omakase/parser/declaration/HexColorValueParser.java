@@ -13,11 +13,9 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link HexColorValue}.
- * 
- * @see HexColorValue
- * @see HexColorValueParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see HexColorValue
  */
 public class HexColorValueParser extends AbstractParser {
 
@@ -45,5 +43,4 @@ public class HexColorValueParser extends AbstractParser {
 
         return false;
     }
-
 }

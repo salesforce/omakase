@@ -1,7 +1,7 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.test.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

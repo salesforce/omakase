@@ -3,8 +3,6 @@
  */
 package com.salesforce.omakase.plugin.basic;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Rule;
@@ -18,9 +16,13 @@ import com.salesforce.omakase.emitter.PreProcess;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.PreProcessingPlugin;
 
+import static com.google.common.base.Preconditions.checkState;
+
 /**
- * TESTME TODO Description
- * 
+ * TESTME
+ * <p/>
+ * TODO Description
+ *
  * @author nmcwilliams
  */
 public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin {
@@ -55,7 +57,7 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
 
     /**
      * Gets the {@link Stylesheet} instance.
-     * 
+     *
      * @return The {@link Stylesheet}.
      */
     public Stylesheet stylesheet() {
@@ -81,9 +83,9 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
 
     /**
      * Subscription method. Do not call directly.
-     * 
+     *
      * @param atRule
-     *            The new {@link AtRule}.
+     *     The new {@link AtRule}.
      */
     @PreProcess
     public void startAtRule(AtRule atRule) {
@@ -139,9 +141,9 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
 
     /**
      * Subscription method. Do not call directly.
-     * 
+     *
      * @param selector
-     *            The new {@link Selector}.
+     *     The new {@link Selector}.
      */
     @PreProcess
     public void startSelector(Selector selector) {
@@ -164,9 +166,9 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
 
     /**
      * Subscription method. Do not call directly.
-     * 
+     *
      * @param declaration
-     *            The new {@link Declaration}.
+     *     The new {@link Declaration}.
      */
     @PreProcess
     public void startDeclaration(Declaration declaration) {

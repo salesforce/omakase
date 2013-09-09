@@ -15,17 +15,18 @@ import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
- * TESTME Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last
- * {@link SelectorPart} within a {@link Selector}).
- *
- * <q>A selector is a chain of one or more sequences of simple selectors separated by combinators. <b>One pseudo-element
- * may be appended to the last sequence of simple selectors in a selector.</b></q>
- * (http://www.w3.org/TR/css3-selectors/#selector-syntax).
+ * TESTME
+ * <p/>
+ * Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last {@link SelectorPart} within a
+ * {@link Selector}).
+ * <p/>
+ * "A selector is a chain of one or more sequences of simple selectors separated by combinators. <b>One pseudo-element may be
+ * appended to the last sequence of simple selectors in a selector.</b>" (http://www.w3
+ * .org/TR/css3-selectors/#selector-syntax).
  *
  * @author nmcwilliams
  */
 public class PseudoElementValidator implements DependentPlugin {
-
     @Override
     public void dependencies(PluginRegistry registry) {
         registry.require(AutoRefiner.class).selectors();
@@ -35,9 +36,9 @@ public class PseudoElementValidator implements DependentPlugin {
      * Validates that the pseudo element is always last, as according to the CSS spec.
      *
      * @param selector
-     *            The pseudo element.
+     *     The pseudo element.
      * @param em
-     *            The error manager.
+     *     The error manager.
      */
     @Validate
     public void validate(PseudoElementSelector selector, ErrorManager em) {
@@ -45,5 +46,4 @@ public class PseudoElementValidator implements DependentPlugin {
             em.report(ErrorLevel.FATAL, selector, Message.PSEUDO_ELEMENT_LAST);
         }
     }
-
 }

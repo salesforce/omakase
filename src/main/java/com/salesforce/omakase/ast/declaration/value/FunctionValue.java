@@ -58,7 +58,6 @@ public class FunctionValue extends AbstractSyntax implements Term {
      * @param args
      *     The function arguments.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public FunctionValue(String name, String args) {
         name(name);
         args(args);

@@ -3,21 +3,20 @@
  */
 package com.salesforce.omakase.writer;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.ast.selector.Selector;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.ast.selector.Selector;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link CustomWriter}.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class CustomWriterTest {
     @Test
     public void testCustomWriter() {

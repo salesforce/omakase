@@ -1,4 +1,8 @@
+/**
+ * ADD LICENSE
+ */
 package com.salesforce.omakase.plugin;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.emitter.Subscribable;
 import org.junit.Test;
@@ -7,17 +11,12 @@ import org.reflections.Reflections;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * ADD LICENSE
- */
-
-/**
  * Unit tests for {@link BasePlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"javadoc", "JavaDoc"})
+@SuppressWarnings("JavaDoc")
 public class BasePluginTest {
-
     @Test
     public void hasMethodForEverySubscribable() {
         int numMethods = BasePlugin.class.getDeclaredMethods().length;

@@ -12,11 +12,9 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link StringValue}.
- * 
- * @see StringValue
- * @see StringValueParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see StringValue
  */
 public class StringValueParser extends AbstractParser {
 
@@ -42,5 +40,4 @@ public class StringValueParser extends AbstractParser {
         broadcaster.broadcast(string);
         return true;
     }
-
 }

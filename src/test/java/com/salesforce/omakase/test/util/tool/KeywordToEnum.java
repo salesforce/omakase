@@ -1,22 +1,24 @@
 /**
  * ADD LICENSE
  */
-package com.salesforce.omakase.util.tool;
-
-import java.util.Collections;
-import java.util.List;
+package com.salesforce.omakase.test.util.tool;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.value.Keyword;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Utility to take list of css names and convert them to the {@link Keyword} enum.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
-public class KeywordToEnum {
+@SuppressWarnings("JavaDoc")
+public final class KeywordToEnum {
+    private KeywordToEnum() {}
+
     public static void main(String[] args) {
         Collections.sort(list);
 

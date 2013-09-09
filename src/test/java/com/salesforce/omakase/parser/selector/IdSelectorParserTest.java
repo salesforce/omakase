@@ -3,25 +3,24 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link IdSelectorParser}.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
     @Override
     public List<String> invalidSources() {

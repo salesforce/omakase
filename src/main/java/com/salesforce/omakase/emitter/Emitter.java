@@ -76,8 +76,8 @@ public final class Emitter {
     /**
      * Registers an instance of an object to receive broadcasted events (usually a {@link Plugin} instance).
      * <p/>
-     * The methods on the class of the object will be scanned for applicable annotations (e.g., {@link Rework}, {@link Validate}).
-     * The methods will be invoked when the matching event is broadcasted in the applicable phase.
+     * The methods on the class of the object will be scanned for applicable annotations (e.g., {@link Rework}, {@link
+     * Validate}). The methods will be invoked when the matching event is broadcasted in the applicable phase.
      *
      * @param subscriber
      *     Register this object to receive events.
@@ -105,8 +105,8 @@ public final class Emitter {
      * Sends an event to registered subscribers of the given event type (or any type within the given event type's parent
      * hierarchy).
      * <p/>
-     * "event" here usually refers to an instance of a {@link Syntax} unit (but this class is built generically to emit anything
-     * really).
+     * "event" here usually refers to an instance of a {@link Syntax} unit (but this class is built generically to emit
+     * anything really).
      *
      * @param event
      *     The event instance. "event" here usually is an instance of an object (e.g., one of the {@link Syntax} objects).
@@ -129,7 +129,7 @@ public final class Emitter {
 
     /** handles emits for a particular phase */
     private void emit(Multimap<Class<?>, Subscription> multimap, Object event, ErrorManager em) {
-        Class<? extends Object> eventType = event.getClass();
+        Class<?> eventType = event.getClass();
 
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Class<?> klass : hierarchy(eventType)) {

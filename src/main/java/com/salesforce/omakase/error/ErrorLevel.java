@@ -5,7 +5,7 @@ package com.salesforce.omakase.error;
 
 /**
  * Describes the level of severity of a problem reported to an {@link ErrorManager}.
- * 
+ *
  * @author nmcwilliams
  */
 public enum ErrorLevel {

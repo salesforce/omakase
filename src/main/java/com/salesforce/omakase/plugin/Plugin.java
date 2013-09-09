@@ -5,13 +5,13 @@ package com.salesforce.omakase.plugin;
 
 /**
  * TODO Description
- *
- * not all subscriptions will be received automatically. sometimes autorefiner is needed.
- *
+ * <p/>
+ * not all subscriptions will be received automatically. sometimes auto refiner is needed.
+ * <p/>
  * when you care about the relationships between syntax units, syntax tree required.
- *
- * a note about subscription order. PreProcess -> Rework/Observe -> Validate. In a hierarchy, the more specific type is
- * received before the more abstract type.
+ * <p/>
+ * a note about subscription order. PreProcess -> Rework/Observe -> Validate. In a hierarchy, the more specific type is received
+ * before the more abstract type.
  *
  * @author nmcwilliams
  */

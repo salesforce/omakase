@@ -2,8 +2,6 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
- *
- * @author nmcwilliams
+ * Reads annotations on plugins and invokes annotated subscription methods.
  */
 package com.salesforce.omakase.emitter;

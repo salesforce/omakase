@@ -6,7 +6,7 @@ package com.salesforce.omakase.error;
 /**
  * An exception indicating that an unrecoverable, fatal error has occurred, upon which processing should immediately be
  * halted.
- * 
+ *
  * @author nmcwilliams
  */
 public final class FatalException extends OmakaseException {
@@ -14,9 +14,9 @@ public final class FatalException extends OmakaseException {
 
     /**
      * Creates a new exception with the given message.
-     * 
+     *
      * @param message
-     *            The description of the exception.
+     *     The description of the exception.
      */
     protected FatalException(String message) {
         super(message);
@@ -24,11 +24,11 @@ public final class FatalException extends OmakaseException {
 
     /**
      * Creates a new exception with the given message and cause.
-     * 
+     *
      * @param message
-     *            The description of the exception.
+     *     The description of the exception.
      * @param cause
-     *            The cause of the exception.
+     *     The cause of the exception.
      */
     public FatalException(String message, Throwable cause) {
         super(message, cause);

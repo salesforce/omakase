@@ -3,16 +3,15 @@
  */
 package com.salesforce.omakase.error;
 
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Stream;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
-
 /**
  * Unit tests for {@link ThrowingErrorManager}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")

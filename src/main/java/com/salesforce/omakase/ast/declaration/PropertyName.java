@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.*;
  */
 public class PropertyName extends AbstractSyntax {
     /** pattern for the vendor prefix */
-    private static final Pattern pattern = Pattern.compile("^-[a-zA-Z]+-");
+    private static final Pattern PATTERN = Pattern.compile("^-[a-zA-Z]+-");
 
     private final String name;
     private Optional<String> prefix;
@@ -37,7 +37,7 @@ public class PropertyName extends AbstractSyntax {
         super(line, column);
 
         // split into prefix and name
-        String[] split = pattern.split(name);
+        String[] split = PATTERN.split(name);
         if (split.length == 1) {
             // no prefix
             prefix = Optional.absent();

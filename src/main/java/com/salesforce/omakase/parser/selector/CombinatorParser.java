@@ -13,11 +13,9 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses {@link Combinator}s.
- * 
- * @see Combinator
- * @see CombinatorParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see Combinator
  */
 public class CombinatorParser extends AbstractParser {
 
@@ -55,5 +53,4 @@ public class CombinatorParser extends AbstractParser {
         }
         return false;
     }
-
 }

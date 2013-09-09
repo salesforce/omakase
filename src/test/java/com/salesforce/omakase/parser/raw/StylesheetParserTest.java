@@ -3,23 +3,22 @@
  */
 package com.salesforce.omakase.parser.raw;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StylesheetParser}.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class StylesheetParserTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();

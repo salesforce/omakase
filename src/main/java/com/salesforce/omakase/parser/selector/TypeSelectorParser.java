@@ -11,11 +11,9 @@ import com.salesforce.omakase.parser.Stream;
 
 /**
  * Parses {@link TypeSelector}s.
- * 
- * @see TypeSelector
- * @see TypeSelectorParserTest
- * 
+ *
  * @author nmcwilliams
+ * @see TypeSelector
  */
 public class TypeSelectorParser extends AbstractParser {
 
@@ -29,7 +27,6 @@ public class TypeSelectorParser extends AbstractParser {
 
         // find the name
         Optional<String> name = stream.readIdent();
-
         if (!name.isPresent()) return false;
 
         // create and broadcast the new selector
@@ -37,5 +34,4 @@ public class TypeSelectorParser extends AbstractParser {
         broadcaster.broadcast(selector);
         return true;
     }
-
 }

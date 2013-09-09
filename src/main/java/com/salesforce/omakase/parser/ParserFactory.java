@@ -7,19 +7,32 @@ import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
-import com.salesforce.omakase.parser.declaration.*;
-import com.salesforce.omakase.parser.raw.*;
+import com.salesforce.omakase.parser.declaration.FunctionValueParser;
+import com.salesforce.omakase.parser.declaration.HexColorValueParser;
+import com.salesforce.omakase.parser.declaration.KeywordValueParser;
+import com.salesforce.omakase.parser.declaration.NumericalValueParser;
+import com.salesforce.omakase.parser.declaration.StringValueParser;
+import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.raw.RawAtRuleParser;
+import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.parser.raw.RawSelectorParser;
+import com.salesforce.omakase.parser.raw.RuleParser;
+import com.salesforce.omakase.parser.raw.SelectorGroupParser;
+import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.parser.selector.*;
 
 /**
  * A cache of {@link Parser} instances.
- *
- * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to
- * the fact that {@link Parser}s are not allowed to maintain state.
+ * <p/>
+ * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to the
+ * fact that {@link Parser}s are not allowed to maintain state.
  *
  * @author nmcwilliams
  */
 public final class ParserFactory {
+    /** do not construct */
+    private ParserFactory() {}
+
     /* general parsers */
     private static final Parser stylesheet = new StylesheetParser();
     private static final Parser atRule = new RawAtRuleParser();
@@ -122,8 +135,8 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the parser to parse {@link SimpleSelector} (excluding type and universal selectors) or a
-     * {@link PseudoElementSelector}.
+     * Gets the parser to parse {@link SimpleSelector} (excluding type and universal selectors) or a {@link
+     * PseudoElementSelector}.
      *
      * @return The parser instance.
      */

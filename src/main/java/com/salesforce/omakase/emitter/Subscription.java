@@ -3,17 +3,19 @@
  */
 package com.salesforce.omakase.emitter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.google.common.base.Objects;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.OmakaseException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
- * TESTME Metadata class to wrap the details around a subscription method. For internal use only.
- * 
+ * TESTME
+ * <p/>
+ * Metadata class to wrap the details around a subscription method. For internal use only.
+ *
  * @author nmcwilliams
  */
 final class Subscription {
@@ -29,7 +31,7 @@ final class Subscription {
 
     /**
      * Gets the {@link SubscriptionPhase} this subscription takes part in.
-     * 
+     *
      * @return The {@link SubscriptionPhase}.
      */
     public SubscriptionPhase phase() {
@@ -38,11 +40,11 @@ final class Subscription {
 
     /**
      * Invokes the subscription method.
-     * 
+     *
      * @param event
-     *            The event object (e.g., syntax instance).
+     *     The event object (e.g., syntax instance).
      * @param em
-     *            The {@link ErrorManager} instance to use for validation methods.
+     *     The {@link ErrorManager} instance to use for validation methods.
      */
     public void deliver(Object event, ErrorManager em) {
         try {

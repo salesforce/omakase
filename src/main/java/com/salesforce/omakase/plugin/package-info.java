@@ -2,8 +2,6 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
- *
- * @author nmcwilliams
+ * Interfaces for plugging new features into the parsing process (rework, validation, etc...).
  */
 package com.salesforce.omakase.plugin;

@@ -6,19 +6,21 @@ package com.salesforce.omakase.parser.selector;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.parser.*;
+import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
 
 /**
  * Parses refined {@link Selector}s, as opposed to {@link RawSelectorParser}.
- *
- * This attempts to conform to Selectors level 3 (http://www.w3.org/TR/css3-selectors). Yes, attempts, because the spec
- * is inconsistent, contradictory, and malformed.
- *
- * @see Selector
- * @see ComplexSelectorParserTest
+ * <p/>
+ * This attempts to conform to Selectors level 3 (http://www.w3.org/TR/css3-selectors). Yes, attempts, because the spec is
+ * inconsistent, contradictory, and malformed.
  *
  * @author nmcwilliams
+ * @see Selector
  */
 public class ComplexSelectorParser extends AbstractParser {
     @Override

@@ -7,7 +7,7 @@ import com.salesforce.omakase.ast.Rule;
 
 /**
  * The various levels of compression and minification for output.
- * 
+ *
  * @author nmcwilliams
  */
 public enum WriterMode {
@@ -18,5 +18,5 @@ public enum WriterMode {
     INLINE,
 
     /** Outputs fully minified and compressed code. Usually for production environments. */
-    COMPRESSED;
+    COMPRESSED
 }
