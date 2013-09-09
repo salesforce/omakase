@@ -52,7 +52,7 @@ final class Suppliers {
         Supplier<?> found = map.get(klass);
         if (found != null) {
             /** cast is safe as long as the internal map is correctly formed */
-            return Optional.of((Supplier<T>) found);
+            return Optional.of((Supplier<T>)found);
         }
         return Optional.absent();
     }

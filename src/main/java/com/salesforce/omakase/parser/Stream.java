@@ -79,8 +79,8 @@ public final class Stream {
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This
-     * will use the line and column from the given {@link RawSyntax} as the anchor/starting point.
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the line and column from the given {@link RawSyntax} as the anchor/starting point.
      *
      * @param raw
      *     The {@link RawSyntax} containing the source.
@@ -90,22 +90,22 @@ public final class Stream {
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This
-     * will use the line and column from the given {@link RawSyntax} as the anchor/starting point.
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the line and column from the given {@link RawSyntax} as the anchor/starting point.
      *
      * @param raw
      *     The {@link RawSyntax} containing the source.
      * @param checkInString
-     *     Whether the stream should keep track of whether we are in a string or not. The main reason to specify false here
-     *     is for performance reasons, to avoid extra processing that we know wouldn't be relevant.
+     *     Whether the stream should keep track of whether we are in a string or not. The main reason to specify false here is for
+     *     performance reasons, to avoid extra processing that we know wouldn't be relevant.
      */
     public Stream(RawSyntax raw, boolean checkInString) {
         this(raw.content(), raw.line(), raw.column(), checkInString);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This
-     * will use the given starting line and column.
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the given starting line and column.
      *
      * @param source
      *     The source to read.
@@ -119,8 +119,8 @@ public final class Stream {
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This
-     * will use the given starting line and column.
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the given starting line and column.
      *
      * @param source
      *     The source to read.
@@ -129,8 +129,8 @@ public final class Stream {
      * @param anchorColumn
      *     The starting column.
      * @param checkInString
-     *     Whether the stream should keep track of whether we are in a string or not. The main reason to specify false here
-     *     is for performance reasons, to avoid extra processing that we know wouldn't be relevant.
+     *     Whether the stream should keep track of whether we are in a string or not. The main reason to specify false here is for
+     *     performance reasons, to avoid extra processing that we know wouldn't be relevant.
      */
     public Stream(CharSequence source, int anchorLine, int anchorColumn, boolean checkInString) {
         checkNotNull(source, "source cannot be null");
@@ -168,8 +168,8 @@ public final class Stream {
     }
 
     /**
-     * Gets the current index position within the original source. Not to be confused with the current column position, which
-     * is found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
+     * Gets the current index position within the original source. Not to be confused with the current column position, which is
+     * found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
      *
      * @return The current index position.
      */
@@ -287,14 +287,13 @@ public final class Stream {
     /**
      * Advance to the next character. This will automatically update the current line and column number as well.
      * <p/>
-     * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this
-     * preprocessing as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF then
-     * the line/column number reported by this stream (e.g., in error messages) will be incorrect. This seems acceptable as
-     * that information is mostly just useful for development purposes anyway. (http://dev.w3
-     * .org/csswg/css-syntax/#preprocessing-the-input-stream)
+     * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this preprocessing
+     * as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF then the line/column
+     * number reported by this stream (e.g., in error messages) will be incorrect. This seems acceptable as that information is
+     * mostly just useful for development purposes anyway. (http://dev.w3 .org/csswg/css-syntax/#preprocessing-the-input-stream)
      *
-     * @return The next character (i.e., the character at the current position after the result of this call), or null if at
-     *         the end of the stream.
+     * @return The next character (i.e., the character at the current position after the result of this call), or null if at the
+     *         end of the stream.
      */
     public Character next() {
         // if we are at the end then return null
@@ -326,8 +325,8 @@ public final class Stream {
     }
 
     /**
-     * Advance the current position to the given index. The index must not be longer than the total length of the source. If
-     * the given index is less than the current index then the index will remain unchanged.
+     * Advance the current position to the given index. The index must not be longer than the total length of the source. If the
+     * given index is less than the current index then the index will remain unchanged.
      *
      * @param newIndex
      *     Advance to this position.
@@ -380,9 +379,9 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #next()}, this will advance to the next character, <b>but only</b> if the current character matches
-     * the given {@link Token}. If the current character does not match then the current index will remain unchanged. If you
-     * don't need the actual value, consider {@link #optionallyPresent(Token)} instead.
+     * Similar to {@link #next()}, this will advance to the next character, <b>but only</b> if the current character matches the
+     * given {@link Token}. If the current character does not match then the current index will remain unchanged. If you don't
+     * need the actual value, consider {@link #optionallyPresent(Token)} instead.
      *
      * @param token
      *     The token to match.
@@ -402,9 +401,8 @@ public final class Stream {
     }
 
     /**
-     * Same as {@link #optional(Token)}, except it returns the result of {@link Optional#isPresent()}. Basically use this
-     * when you don't care about keeping the actual parsed value (e.g., because it's discarded, you already know what it is,
-     * etc...)
+     * Same as {@link #optional(Token)}, except it returns the result of {@link Optional#isPresent()}. Basically use this when you
+     * don't care about keeping the actual parsed value (e.g., because it's discarded, you already know what it is, etc...)
      *
      * @param token
      *     The token to match.
@@ -416,8 +414,8 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given enum
-     * (in the declared order) for a matching token.
+     * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given enum (in
+     * the declared order) for a matching token.
      * <p/>
      * As with {@link #optional(Token)}, if the current character matches the index will be advanced by one.
      *
@@ -436,8 +434,8 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #next()}, except it will enforce that the <b>current</b> character matches the given {@link Token}
-     * before advancing, otherwise an error will be thrown.
+     * Similar to {@link #next()}, except it will enforce that the <b>current</b> character matches the given {@link Token} before
+     * advancing, otherwise an error will be thrown.
      *
      * @param token
      *     Ensure that the current token matches this {@link Token} before we advance.
@@ -448,8 +446,8 @@ public final class Stream {
     }
 
     /**
-     * Advances the current character position until the current character matches the given {@link Token}. If the given
-     * {@link Token} is never matched then this will advance to the end of the stream.
+     * Advances the current character position until the current character matches the given {@link Token}. If the given {@link
+     * Token} is never matched then this will advance to the end of the stream.
      *
      * @param token
      *     The token to match.
@@ -483,8 +481,8 @@ public final class Stream {
     }
 
     /**
-     * Opposite of {@link #until(Token)}, this will advance past the current character and all subsequent characters for as
-     * long as they match the given {@link Token}.
+     * Opposite of {@link #until(Token)}, this will advance past the current character and all subsequent characters for as long
+     * as they match the given {@link Token}.
      *
      * @param token
      *     The token to match.
@@ -505,15 +503,14 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing delimiter
-     * {@link Token}.
+     * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing delimiter {@link
+     * Token}.
      * <p/>
-     * The opening token must be present at the current position of this stream or an error will be thrown. In other words,
-     * don't call this until you've checked that the opening token is there, and only if you expect it to be properly
-     * closed.
+     * The opening token must be present at the current position of this stream or an error will be thrown. In other words, don't
+     * call this until you've checked that the opening token is there, and only if you expect it to be properly closed.
      * <p/>
-     * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about
-     * handling escaping).
+     * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about handling
+     * escaping).
      *
      * @param openingToken
      *     The opening token.
@@ -626,12 +623,12 @@ public final class Stream {
     }
 
     /**
-     * Causes an exception to be thrown if any comments are encountered in the source, until {@link #enableComments()} is
-     * called. This also flushes any comments currently in the queue.
+     * Causes an exception to be thrown if any comments are encountered in the source, until {@link #enableComments()} is called.
+     * This also flushes any comments currently in the queue.
      * <p/>
-     * This behavior is not part of the official CSS spec, as the spec allows comments just about anywhere, however in
-     * practice there are places where comments should never be placed. This method should be used in situations where the
-     * removal of a comment would change the CSS source. For example, in
+     * This behavior is not part of the official CSS spec, as the spec allows comments just about anywhere, however in practice
+     * there are places where comments should never be placed. This method should be used in situations where the removal of a
+     * comment would change the CSS source. For example, in
      * <p/>
      * <pre>margin: 1px/*abc*&#47;1px;</pre>
      * <p/>
@@ -664,8 +661,8 @@ public final class Stream {
     /**
      * Updates the status about whether we are in a string.
      * <p/>
-     * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We
-     * remain in this status until the matching quote symbol is encountered again, unescaped.
+     * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We remain in
+     * this status until the matching quote symbol is encountered again, unescaped.
      */
     private void updateInString() {
         final Character current = current();
@@ -696,12 +693,12 @@ public final class Stream {
     /**
      * Creates a snapshot of the current index, line, column, and other essential state information.
      * <p/>
-     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the
-     * content does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. To revert to a
-     * specific snapshot, use {@link #rollback(Snapshot)}.
+     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the content
+     * does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. To revert to a specific snapshot,
+     * use {@link #rollback(Snapshot)}.
      * <p/>
-     * This should be used sparingly, as in most cases you can ascertain the necessary information through {@link #peek()},
-     * {@link #current()} and other methods on this class.
+     * This should be used sparingly, as in most cases you can ascertain the necessary information through {@link #peek()}, {@link
+     * #current()} and other methods on this class.
      *
      * @return The created snapshot.
      */
@@ -761,7 +758,7 @@ public final class Stream {
 
     @Override
     public String toString() {
-        return String.format("%s»%s", source.substring(0, index), source.substring(index));
+        return String.format("%s\u00BB%s", source.substring(0, index), source.substring(index));
     }
 
     /** data object */

@@ -3,22 +3,21 @@
  */
 package com.salesforce.omakase.broadcaster;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link QueryableBroadcaster}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")

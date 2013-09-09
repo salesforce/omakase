@@ -36,11 +36,11 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  * <p/>
  * Represents a CSS selector.
  * <p/>
- * {@link Selector}s are lists of {@link SelectorPart}s. Individual {@link Selector}s are separated by commas. For example,
- * in <code>.class, .class #id</code> there are two selectors, <code>.class</code> and <code>.class #id</code>.
+ * {@link Selector}s are lists of {@link SelectorPart}s. Individual {@link Selector}s are separated by commas. For example, in
+ * <code>.class, .class #id</code> there are two selectors, <code>.class</code> and <code>.class #id</code>.
  * <p/>
- * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
- * basic grammar validation. See the notes on {@link Refinable}.
+ * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
+ * grammar validation. See the notes on {@link Refinable}.
  *
  * @author nmcwilliams
  * @see ComplexSelectorParser
@@ -154,6 +154,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
+        super.propagateBroadcast(broadcaster);
         parts.propagateBroadcast(broadcaster);
     }
 

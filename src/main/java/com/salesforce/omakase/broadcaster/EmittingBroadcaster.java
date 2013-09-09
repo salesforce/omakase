@@ -12,31 +12,30 @@ import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
- *
+ * <p/>
  * TODO note about broadcast status and phases
  *
- * @see Emitter
- *
  * @author nmcwilliams
+ * @see Emitter
  */
 public final class EmittingBroadcaster extends AbstractBroadcaster {
     private final Emitter emitter = new Emitter();
     private ErrorManager em;
 
     /**
-     * Constructs a new {@link EmittingBroadcaster} instance that will <em>not</em> relay any events to another
-     * {@link Broadcaster}.
+     * Constructs a new {@link EmittingBroadcaster} instance that will <em>not</em> relay any events to another {@link
+     * Broadcaster}.
      */
     public EmittingBroadcaster() {
         this(null);
     }
 
     /**
-     * Constructs a new {@link EmittingBroadcaster} instance that will relay all broadcasted events to the given
-     * {@link Broadcaster}.
+     * Constructs a new {@link EmittingBroadcaster} instance that will relay all broadcasted events to the given {@link
+     * Broadcaster}.
      *
      * @param relay
-     *            Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
     public EmittingBroadcaster(Broadcaster relay) {
         wrap(relay);
@@ -46,7 +45,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
      * Specifies the {@link ErrorManager} to use.
      *
      * @param em
-     *            The {@link ErrorManager} instance.
+     *     The {@link ErrorManager} instance.
      */
     public void errorManager(ErrorManager em) {
         this.em = em;
@@ -56,8 +55,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
      * See {@link Emitter#register(Object)}.
      *
      * @param subscriber
-     *            The {@link Plugin} class.
-     *
+     *     The {@link Plugin} class.
      */
     public void register(Object subscriber) {
         emitter.register(subscriber);
@@ -67,7 +65,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
      * See {@link Emitter#phase(SubscriptionPhase)}.
      *
      * @param phase
-     *            The new {@link SubscriptionPhase}.
+     *     The new {@link SubscriptionPhase}.
      */
     public void phase(SubscriptionPhase phase) {
         emitter.phase(phase);
@@ -93,5 +91,4 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
             }
         }
     }
-
 }

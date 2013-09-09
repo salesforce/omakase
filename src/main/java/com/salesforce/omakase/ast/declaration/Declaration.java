@@ -42,8 +42,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  * <p/>
  * Represents a CSS declaration.
  * <p/>
- * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
- * basic grammar validation. See the notes on {@link Refinable}.
+ * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
+ * grammar validation. See the notes on {@link Refinable}.
  *
  * @author nmcwilliams
  * @see RawDeclarationParser
@@ -63,12 +63,11 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     private PropertyValue propertyValue;
 
     /**
-     * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property
-     * value). The property name and value can be further refined or validated by calling {@link #refine()}.
+     * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property value).
+     * The property name and value can be further refined or validated by calling {@link #refine()}.
      * <p/>
-     * Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS. Hence
-     * really anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has been
-     * called.
+     * Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS. Hence really
+     * anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has been called.
      *
      * @param rawPropertyName
      *     The raw property name.
@@ -220,8 +219,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     /**
-     * Gets whether this {@link Declaration} has the given property name. Prefer to use {@link #isProperty(Property)}
-     * instead.
+     * Gets whether this {@link Declaration} has the given property name. Prefer to use {@link #isProperty(Property)} instead.
      * <p/>
      * Example:
      * <pre>
@@ -327,6 +325,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
+        super.propagateBroadcast(broadcaster);
         if (propertyValue != null) {
             propertyValue.propagateBroadcast(broadcaster);
         }

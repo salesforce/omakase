@@ -489,7 +489,7 @@ public class StreamTest {
         stream.next();
         stream.next();
         stream.next();
-        assertThat(stream.toString()).isEqualTo("a\nb»cd");
+        assertThat(stream.toString()).isEqualTo("a\nb\u00BBcd");
     }
 
     public enum StreamEnum implements TokenEnum<StreamEnum> {

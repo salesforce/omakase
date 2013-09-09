@@ -3,20 +3,23 @@
  */
 package com.salesforce.omakase.parser.declaration;
 
-import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.declaration.value.FunctionValue;
+import com.salesforce.omakase.ast.declaration.value.NumericalValue;
+import com.salesforce.omakase.ast.declaration.value.TermList;
+import com.salesforce.omakase.ast.declaration.value.TermListMember;
+import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link TermListParser}.
@@ -67,10 +70,12 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
                 "\" (\" attr(href) \")\"",
                 "'\\2014 \\00A0'",
                 "66.66666666666666%",
-                "linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)",
+                "linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, " +
+                    "0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)",
                 // "red !important", TODO
                 "63px 63px 63px 63px / 108px 108px 72px 72px",
-                "0 0 0 1em red,\n     0 1em 0 1em red,\n     -2.5em 1.5em 0 .5em red,\n     2.5em 1.5em 0 .5em red,\n     -3em -3em 0 0 red\n"
+                "0 0 0 1em red,\n     0 1em 0 1em red,\n     -2.5em 1.5em 0 .5em red,\n     2.5em 1.5em 0 .5em red," +
+                    "\n     -3em -3em 0 0 red\n"
             );
     }
 
@@ -146,7 +151,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
             "1px 1px",
             "\"Arial\"",
             "  top right"
-            ));
+        ));
 
         for (GenericParseResult result : parse) {
             assertThat(result.stream.eof()).isTrue();
@@ -173,5 +178,4 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         exception.expectMessage("Expected to find another term");
         parse("1px 1px 1px 1px / ");
     }
-
 }

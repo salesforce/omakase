@@ -24,8 +24,8 @@ import com.salesforce.omakase.parser.selector.*;
 /**
  * A cache of {@link Parser} instances.
  * <p/>
- * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to the
- * fact that {@link Parser}s are not allowed to maintain state.
+ * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to the fact
+ * that {@link Parser}s are not allowed to maintain state.
  *
  * @author nmcwilliams
  */

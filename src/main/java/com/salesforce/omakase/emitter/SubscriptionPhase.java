@@ -5,7 +5,7 @@ package com.salesforce.omakase.emitter;
 
 /**
  * The difference phases in the processing lifecycle.
- * 
+ *
  * @author nmcwilliams
  */
 public enum SubscriptionPhase {

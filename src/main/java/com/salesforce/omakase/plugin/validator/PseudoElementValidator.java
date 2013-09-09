@@ -21,8 +21,7 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
  * {@link Selector}).
  * <p/>
  * "A selector is a chain of one or more sequences of simple selectors separated by combinators. <b>One pseudo-element may be
- * appended to the last sequence of simple selectors in a selector.</b>" (http://www.w3
- * .org/TR/css3-selectors/#selector-syntax).
+ * appended to the last sequence of simple selectors in a selector.</b>" (http://www.w3 .org/TR/css3-selectors/#selector-syntax).
  *
  * @author nmcwilliams
  */

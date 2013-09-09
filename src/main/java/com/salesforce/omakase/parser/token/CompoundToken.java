@@ -16,13 +16,12 @@ public class CompoundToken implements Token {
     private final CharMatcher matcher;
 
     /**
-     * Constructs a new {@link CompoundToken} for doing OR character comparisons. The descriptions of each will be
-     * combined.
+     * Constructs a new {@link CompoundToken} for doing OR character comparisons. The descriptions of each will be combined.
      *
      * @param first
-     *            The first {@link Token}.
+     *     The first {@link Token}.
      * @param second
-     *            The second {@link Token}.
+     *     The second {@link Token}.
      */
     public CompoundToken(Token first, Token second) {
         this.matcher = first.matcher().or(second.matcher());

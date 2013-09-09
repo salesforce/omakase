@@ -32,5 +32,4 @@ public class AsTest {
         String s = As.string(this).indent().add("1", "a").add("2", "b").toString();
         assertThat(s).isEqualTo("AsTest {\n  1: a\n  2: b\n}");
     }
-
 }

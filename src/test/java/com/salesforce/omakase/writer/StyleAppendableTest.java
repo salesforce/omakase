@@ -3,15 +3,15 @@
  */
 package com.salesforce.omakase.writer;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StyleAppendable}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")

@@ -81,8 +81,8 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      * @param klass
      *     Get the first {@link Syntax} unit that is an instance of this class.
      *
-     * @return The first matching {@link Syntax} unit that is an instance of the given class, or {@link Optional#absent()} if
-     *         not present.
+     * @return The first matching {@link Syntax} unit that is an instance of the given class, or {@link Optional#absent()} if not
+     *         present.
      */
     @SuppressWarnings("unchecked")
     public <T extends Syntax> Optional<T> find(Class<T> klass) {
@@ -98,8 +98,8 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      * @param klass
      *     Get the one and only {@link Syntax} unit that is an instance of this class.
      *
-     * @return The single matching {@link Syntax} unit that is an instance of the given class, or {@link Optional#absent()}
-     *         if not present.
+     * @return The single matching {@link Syntax} unit that is an instance of the given class, or {@link Optional#absent()} if not
+     *         present.
      */
     public <T extends Syntax> Optional<T> findOnly(Class<T> klass) {
         Optional<T> found = find(klass);

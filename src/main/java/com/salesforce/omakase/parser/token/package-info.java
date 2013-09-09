@@ -2,6 +2,6 @@
  * ADD LICENSE
  */
 /**
- * Single-character {@link Token}s used by {@link Parser}s.
+ * Single-character Tokens used by Parsers.
  */
 package com.salesforce.omakase.parser.token;

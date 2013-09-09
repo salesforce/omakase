@@ -3,24 +3,26 @@
  */
 package com.salesforce.omakase.test.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.qos.logback.classic.Level;
-
-import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.emitter.Observe;
 import com.salesforce.omakase.plugin.BasePlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simply logs the creation or change of {@link Syntax} units. Used for debugging.
- *
- * Most events are logged at {@link Level#INFO}, however some events are {@link Level#TRACE} or {@link Level#DEBUG}.
- * Update the logging config file as appropriate to filter which levels are shown in the console.
+ * <p/>
+ * Most events are logged at {@link Level#INFO}, however some events are {@link Level#TRACE} or {@link Level#DEBUG}. Update the
+ * logging config file as appropriate to filter which levels are shown in the console.
  *
  * @author nmcwilliams
  */

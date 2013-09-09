@@ -88,6 +88,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
+        super.propagateBroadcast(broadcaster);
         selectors.propagateBroadcast(broadcaster);
         declarations.propagateBroadcast(broadcaster);
     }

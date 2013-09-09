@@ -4,8 +4,7 @@
 package com.salesforce.omakase.error;
 
 /**
- * An exception indicating that an unrecoverable, fatal error has occurred, upon which processing should immediately be
- * halted.
+ * An exception indicating that an unrecoverable, fatal error has occurred, upon which processing should immediately be halted.
  *
  * @author nmcwilliams
  */

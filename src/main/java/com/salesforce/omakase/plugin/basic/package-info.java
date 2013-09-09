@@ -2,6 +2,6 @@
  * ADD LICENSE
  */
 /**
- * Basic library-provided {@link Plugin}s.
+ * Basic library-provided Plugins.
  */
 package com.salesforce.omakase.plugin.basic;

@@ -22,8 +22,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  * <p/>
  * Represents a CSS pseudo class selector.
  * <p/>
- * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b> considered
- * pseudo classes in this library, but as {@link PseudoElementSelector}s.
+ * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b> considered pseudo
+ * classes in this library, but as {@link PseudoElementSelector}s.
  *
  * @author nmcwilliams
  * @see PseudoSelectorParser

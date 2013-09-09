@@ -17,8 +17,7 @@ public final class ParserStrategy {
     private ParserStrategy() {}
 
     /**
-     * Gets the appropriate parser for the given property value. By default this will fallback to the {@link
-     * TermListParser}.
+     * Gets the appropriate parser for the given property value. By default this will fallback to the {@link TermListParser}.
      *
      * @param propertyName
      *     The {@link Declaration}'s property name.

@@ -41,14 +41,14 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class SimpleReworkTest {
     static final String INPUT = ".left-alone {margin: 0;}\n" +
-            ".THIS .inner, .xyz .THIS {display: inline-block; padding: 10px;}\n" +
-            ".curvy {border: 3px solid red; border-radius: 40px 10px;}";
+        ".THIS .inner, .xyz .THIS {display: inline-block; padding: 10px;}\n" +
+        ".curvy {border: 3px solid red; border-radius: 40px 10px;}";
 
     static final String EXPECTED = ".left-alone {margin:0}\n" +
-            ".replaced .inner, .xyz .THIS {display:inline-block; zoom:1; padding:10px}\n" +
-            ".curvy {border:3px solid red; -webkit-border-radius:40px 10px; border-radius:40px 10px}\n" +
-            ".rounded {-webkit-border-radius:10px 5em; border-radius:10px 5em}\n" +
-            ".replaced {display:none}";
+        ".replaced .inner, .xyz .THIS {display:inline-block; zoom:1; padding:10px}\n" +
+        ".curvy {border:3px solid red; -webkit-border-radius:40px 10px; border-radius:40px 10px}\n" +
+        ".rounded {-webkit-border-radius:10px 5em; border-radius:10px 5em}\n" +
+        ".replaced {display:none}";
 
     @Test
     public void testRework() throws IOException {
@@ -101,15 +101,15 @@ public class SimpleReworkTest {
 
         /**
          * Sample rework task.
-         *
+         * <p/>
          * In this task we want to prepend a prefixed version of border radius before the unprefixed version, e.g.,
-         * -webkit-border-radius before declarations with border-radius. Note that we use the same property value so
-         * that if one changes the other will be in sync.
-         *
-         * We could take this further by 1) only adding the prefixed version if the prefixed version doesn't already
-         * exist in the rule (by iterating over declaration.group and checking isProperty(prop)) or 2) adding validation
-         * that checks for prefixed declarations and throws an error, stating that the framework will handle it and all
-         * vendor prefixes should be deleted).
+         * -webkit-border-radius before declarations with border-radius. Note that we use the same property value so that if one
+         * changes the other will be in sync.
+         * <p/>
+         * We could take this further by 1) only adding the prefixed version if the prefixed version doesn't already exist in the
+         * rule (by iterating over declaration.group and checking isProperty(prop)) or 2) adding validation that checks for
+         * prefixed declarations and throws an error, stating that the framework will handle it and all vendor prefixes should be
+         * deleted).
          */
         @Rework
         public void addVendorPrefix(Declaration declaration) {
@@ -150,7 +150,7 @@ public class SimpleReworkTest {
 
         /**
          * Sample rework task.
-         *
+         * <p/>
          * This will update classes at the beginning of the selector list named "THIS" with a replacement value.
          */
         @Rework
@@ -173,13 +173,13 @@ public class SimpleReworkTest {
 
         /**
          * Sample rework task.
-         *
+         * <p/>
          * This adds "zoom: 1" after declarations with "display: inline-block", if the browser is IE7.
-         *
-         * We could take this further by 1) allow prevention of the addition by adding a css comment annotation before
-         * the inline-block declaration such as "{@literal @}nozoom", and 2) only adding if a declaration with "zoom: 1"
-         * doesn't exist in the declaration block (by checking declaration.group()), or better yet throwing a validation
-         * error if it does exist so that we can ensure it's only added to IE7.
+         * <p/>
+         * We could take this further by 1) allow prevention of the addition by adding a css comment annotation before the
+         * inline-block declaration such as "{@literal @}nozoom", and 2) only adding if a declaration with "zoom: 1" doesn't exist
+         * in the declaration block (by checking declaration.group()), or better yet throwing a validation error if it does exist
+         * so that we can ensure it's only added to IE7.
          */
         @Rework
         public void addZoomToDisplayInlineBlock(Declaration declaration) {
@@ -205,10 +205,9 @@ public class SimpleReworkTest {
 
         /**
          * Sample rework.
-         *
-         * When you need to perform multiple reworks on the same syntax unit type and the order is important then you
-         * should use inner child methods. If order is not important then multiple methods annotated with {@link Rework}
-         * is fine as well.
+         * <p/>
+         * When you need to perform multiple reworks on the same syntax unit type and the order is important then you should use
+         * inner child methods. If order is not important then multiple methods annotated with {@link Rework} is fine as well.
          *
          * @param stylesheet
          */
@@ -220,12 +219,11 @@ public class SimpleReworkTest {
         }
 
         /**
-         *
          * Sample rework delegate method.
-         *
-         * This will add a new rule to the end of the stylesheet. The rule contains a declaration with the border-radius
-         * property. This showcases how dynamically created units will be broadcasted to other rework subscription
-         * methods (like the one in this class that should prepend a declaration with the webkit prefix).
+         * <p/>
+         * This will add a new rule to the end of the stylesheet. The rule contains a declaration with the border-radius property.
+         * This showcases how dynamically created units will be broadcasted to other rework subscription methods (like the one in
+         * this class that should prepend a declaration with the webkit prefix).
          */
         private void addRuleBorderRadius(Stylesheet stylesheet) {
             // new rule
@@ -247,11 +245,10 @@ public class SimpleReworkTest {
         }
 
         /**
-         *
          * Sample rework delegate method.
-         *
-         * This will add a new rule to the end of the stylesheet. The main purpose is to test that .THIS replacement
-         * from above works on dynamically added class selectors.
+         * <p/>
+         * This will add a new rule to the end of the stylesheet. The main purpose is to test that .THIS replacement from above
+         * works on dynamically added class selectors.
          */
         private void addRuleDisplay(Stylesheet stylesheet) {
             // new rule

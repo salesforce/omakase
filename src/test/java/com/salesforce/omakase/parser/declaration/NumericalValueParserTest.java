@@ -102,7 +102,6 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
             NumericalValue n = result.broadcaster.findOnly(NumericalValue.class).get();
             assertThat(n.integerValue()).isEqualTo(result.expected);
         }
-
     }
 
     @Test
@@ -167,5 +166,4 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
         exception.expectMessage(Message.EXPECTED_DECIMAL.message());
         parse("1.");
     }
-
 }

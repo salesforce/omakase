@@ -52,25 +52,45 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                 "@page :right {\nmargin-left: 4cm;\nmargin-right: 3cm;\n}",
                 "@page { margin: 2cm }",
                 "@page :blank {\n  @top-center { content: none }\n}",
-                "@page :right {\n  @top-center { content: \"Preliminary edition\" }\n  @bottom-center { content: counter(page) }\n}",
-                "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right {\n    content: \"bar\";\n  }\n}",
-                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: 100px;\n  }\n\n}",
-                "@keyframes wobble {\n  0% {\n    left: 100px;\n  }\n\n  40% {\n    left: 150px;\n  }\n\n  60% {\n    left: 75px;\n  }\n\n  100% {\n    left: 100px;\n  }\n}",
-                "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n    top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n}",
+                "@page :right {\n  @top-center { content: \"Preliminary edition\" }\n  @bottom-center { content: counter(page) " +
+                    "}\n}",
+                "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right " +
+                    "{\n    content: \"bar\";\n  }\n}",
+                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: " +
+                    "100px;\n  }\n\n}",
+                "@keyframes wobble {\n  0% {\n    left: 100px;\n  }\n\n  40% {\n    left: 150px;\n  }\n\n  60% {\n    left: " +
+                    "75px;\n  }\n\n  100% {\n    left: 100px;\n  }\n}",
+                "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n  " +
+                    "  top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    " +
+                    "animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: " +
+                    "ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n}",
                 "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}",
                 " /* Safari and Chrome */ @-webkit-keyframes myfirst\n{\nfrom {background: red;}\nto {background: yellow;}\n}",
                 "@supports (display: flex) {\n div { display: flex; }\n}",
-                "@supports ( display: flexbox ) {\n  body, #navigation, #content { display: flexbox; }\n  #navigation { background: blue; color: white; }\n  #article { background: white; color: black; }\n}",
-                "@supports not ( display: flexbox ) {\n  body { width: 100%; height: 100%; background: white; color: black; }\n  #navigation { width: 25%; }\n  #article { width: 75%; }\n}",
-                "@supports ( box-shadow: 2px 2px 2px black ) or\n          ( -moz-box-shadow: 2px 2px 2px black ) or\n          ( -webkit-box-shadow: 2px 2px 2px black ) or\n          ( -o-box-shadow: 2px 2px 2px black ) {\n  .outline {\n    color: white;\n    -moz-box-shadow: 2px 2px 2px black;\n    -webkit-box-shadow: 2px 2px 2px black;\n    -o-box-shadow: 2px 2px 2px black;\n    box-shadow: 2px 2px 2px black; /* unprefixed last */\n  }\n}",
-                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate(10deg))) {\n  body { color: red}\n}",
+                "@supports ( display: flexbox ) {\n  body, #navigation, #content { display: flexbox; }\n  #navigation { " +
+                    "background: blue; color: white; }\n  #article { background: white; color: black; }\n}",
+                "@supports not ( display: flexbox ) {\n  body { width: 100%; height: 100%; background: white; color: black; }\n" +
+                    "  #navigation { width: 25%; }\n  #article { width: 75%; }\n}",
+                "@supports ( box-shadow: 2px 2px 2px black ) or\n          ( -moz-box-shadow: 2px 2px 2px black ) or\n         " +
+                    " ( -webkit-box-shadow: 2px 2px 2px black ) or\n          ( -o-box-shadow: 2px 2px 2px black ) {\n  " +
+                    ".outline {\n    color: white;\n    -moz-box-shadow: 2px 2px 2px black;\n    -webkit-box-shadow: 2px 2px " +
+                    "2px black;\n    -o-box-shadow: 2px 2px 2px black;\n    box-shadow: 2px 2px 2px black; /* unprefixed last " +
+                    "*/\n  }\n}",
+                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate" +
+                    "(10deg))) {\n  body { color: red}\n}",
                 "@namespace \"http://www.w3.org/1999/xhtml\";",
                 "@namespace svg \"http://www.w3.org/2000/svg\";",
-                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}",
+                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) " +
+                    "format(\"svg\");\n}",
                 "@font-face {\n  font-family: jpgothic;\n  src: local(HiraKakuPro-W3), local(Meiryo), local(IPAPGothic);\n}",
-                "@font-face {\n  font-family: BBCBengali;\n  src: url(fonts/BBCBengali.ttf) format(\"opentype\");\n  unicode-range: U+00-FF, U+980-9FF;\n}",
-                "@font-face {\n  font-family: 'MyFontFamily';\n  src: url('myfont-webfont.eot?#iefix') format('embedded-opentype'), \n        url('myfont-webfont.woff') format('woff'), \n       url('myfont-webfont.ttf')  format('truetype'),\n        url('myfont-webfont.svg#svgFontName') format('svg');\n }",
-                "@font-face {\n  font-family: 'Graublau Web';\n  src: url('GraublauWeb.eot?') format('eot'), url('GraublauWeb.woff') format('woff'), url('GraublauWeb.ttf') format('truetype');\n}",
+                "@font-face {\n  font-family: BBCBengali;\n  src: url(fonts/BBCBengali.ttf) format(\"opentype\");\n  " +
+                    "unicode-range: U+00-FF, U+980-9FF;\n}",
+                "@font-face {\n  font-family: 'MyFontFamily';\n  src: url('myfont-webfont.eot?#iefix') format" +
+                    "('embedded-opentype'), \n        url('myfont-webfont.woff') format('woff'), " +
+                    "\n       url('myfont-webfont.ttf')  format('truetype'),\n        url('myfont-webfont.svg#svgFontName') " +
+                    "format('svg');\n }",
+                "@font-face {\n  font-family: 'Graublau Web';\n  src: url('GraublauWeb.eot?') format('eot'), " +
+                    "url('GraublauWeb.woff') format('woff'), url('GraublauWeb.ttf') format('truetype');\n}",
                 "@media (min-width: 700px) { ... }",
                 "@media (min-width: 700px) and (orientation: landscape) { ... }",
                 "@media tv and (min-width: 700px) and (orientation: landscape) { ... }",
@@ -90,25 +110,33 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                 withExpectedResult("@import url('landscape.css') screen and (orientation:landscape); \n .class", 64),
                 withExpectedResult("@page :first {\n  margin: 2in 3in;\n} \n .class", 35),
                 withExpectedResult(
-                    "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right {\n    content: \"bar\";\n  }\n} \n .class",
+                    "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  " +
+                        "@top-right {\n    content: \"bar\";\n  }\n} \n .class",
                     127),
                 withExpectedResult(
-                    "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: 100px;\n  }\n\n} \n .class",
+                    "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    " +
+                        "top: 100px;\n  }\n\n} \n .class",
                     114),
                 withExpectedResult(
-                    "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n    top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n} \n .class",
+                    "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% " +
+                        "{\n    top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    " +
+                        "animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: " +
+                        "ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n} \n .class",
                     327),
                 withExpectedResult(
-                    "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}.class",
+                    "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;" +
+                        "}\n}.class",
                     103),
                 withExpectedResult(
-                    "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate(10deg))) {\n  body { color: red}\n}#id",
+                    "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: " +
+                        "rotate(10deg))) {\n  body { color: red}\n}#id",
                     142),
                 withExpectedResult(
                     "@namespace svg \"http://www.w3.org/2000/svg\";@import",
                     44),
                 withExpectedResult(
-                    "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}@font-face",
+                    "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium)," +
+                        "\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}@font-face",
                     123),
                 withExpectedResult("@media tv and (min-width: 700px) and (orientation: landscape) { ... }\n@media", 69)
             );
@@ -134,28 +162,37 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                 "@page :first {\n  margin: 2in 3in;\n} \n .class",
                 ":first"),
             withExpectedResult(
-                "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right {\n    content: \"bar\";\n  }\n} \n .class",
+                "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right " +
+                    "{\n    content: \"bar\";\n  }\n} \n .class",
                 ":first"),
             withExpectedResult(
-                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: 100px;\n  }\n\n} \n .class",
+                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: " +
+                    "100px;\n  }\n\n} \n .class",
                 "diagonal-slide"),
             withExpectedResult(
-                "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n    top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n} \n .class",
+                "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n  " +
+                    "  top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    " +
+                    "animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: " +
+                    "ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n} \n .class",
                 "bounce"),
             withExpectedResult(
-                "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}.class",
+                "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}" +
+                    ".class",
                 "myfirst /* Safari and Chrome */"),
             withExpectedResult(
-                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate(10deg))) {\n  body { color: red}\n}#id",
+                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate" +
+                    "(10deg))) {\n  body { color: red}\n}#id",
                 "(transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate(10deg)))"),
             withExpectedResult(
                 "@namespace svg \"http://www.w3.org/2000/svg\";@import",
                 "svg \"http://www.w3.org/2000/svg\""),
             withExpectedResult(
-                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}@font-face",
+                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) " +
+                    "format(\"svg\");\n}@font-face",
                 ""),
             withExpectedResult(
-                "@font-face {\n    font-family: \"My Font\";\n    src: url(\"data:font/opentype;base64,[base-encoded font here];{}\\\"\");\n}",
+                "@font-face {\n    font-family: \"My Font\";\n    src: url(\"data:font/opentype;base64," +
+                    "[base-encoded font here];{}\\\"\");\n}",
                 ""),
             withExpectedResult(
                 "@media tv and (min-width: 700px) and (orientation: landscape) { ... }\n@media",
@@ -184,19 +221,23 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                 "@page :first {\n  margin: 2in 3in;\n} \n .class",
                 "page"),
             withExpectedResult(
-                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: 100px;\n  }\n\n} \n .class",
+                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: " +
+                    "100px;\n  }\n\n} \n .class",
                 "keyframes"),
             withExpectedResult(
-                "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}.class",
+                "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}" +
+                    ".class",
                 "-webkit-keyframes"),
             withExpectedResult(
-                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate(10deg))) {\n  body { color: red}\n}#id",
+                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate" +
+                    "(10deg))) {\n  body { color: red}\n}#id",
                 "supports"),
             withExpectedResult(
                 "@namespace svg \"http://www.w3.org/2000/svg\";@import",
                 "namespace"),
             withExpectedResult(
-                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}@font-face",
+                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) " +
+                    "format(\"svg\");\n}@font-face",
                 "font-face"),
             withExpectedResult(
                 "@media tv and (min-width: 700px) and (orientation: landscape) { ... }\n@media",
@@ -224,28 +265,41 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                 "@page :first {\n  margin: 2in 3in;\n} \n .class",
                 "margin: 2in 3in;"),
             withExpectedResult(
-                "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right {\n    content: \"bar\";\n  }\n} \n .class",
-                "color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right {\n    content: \"bar\";\n  }"),
+                "@page :first {\n  color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right " +
+                    "{\n    content: \"bar\";\n  }\n} \n .class",
+                "color: green;\n\n  @top-left {\n    content: \"foo\";\n    color: blue;\n  }\n  @top-right {\n    content: " +
+                    "\"bar\";\n  }"),
             withExpectedResult(
-                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: 100px;\n  }\n\n} \n .class",
+                "@keyframes diagonal-slide {\n\n  from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: " +
+                    "100px;\n  }\n\n} \n .class",
                 "from {\n    left: 0;\n    top: 0;\n  }\n\n  to {\n    left: 100px;\n    top: 100px;\n  }"),
             withExpectedResult(
-                "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n    top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n} \n .class",
-                "from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n    top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: ease-in;\n  }\n\n  to {\n    top: 100px;\n  }"),
+                "@keyframes bounce {\n\n  from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n  " +
+                    "  top: 50px;\n    animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    " +
+                    "animation-timing-function: ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: " +
+                    "ease-in;\n  }\n\n  to {\n    top: 100px;\n  }\n\n} \n .class",
+                "from {\n    top: 100px;\n    animation-timing-function: ease-out;\n  }\n\n  25% {\n    top: 50px;\n    " +
+                    "animation-timing-function: ease-in;\n  }\n\n  50% {\n    top: 100px;\n    animation-timing-function: " +
+                    "ease-out;\n  }\n\n  75% {\n    top: 75px;\n    animation-timing-function: ease-in;\n  }\n\n  to {\n    " +
+                    "top: 100px;\n  }"),
             withExpectedResult(
-                "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}.class",
+                "@-webkit-keyframes myfirst /* Safari and Chrome */\n{\nfrom {background: red;}\nto {background: yellow;}\n}" +
+                    ".class",
                 "from {background: red;}\nto {background: yellow;}"),
             withExpectedResult(
-                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate(10deg))) {\n  body { color: red}\n}#id",
+                "@supports (transition-property: color) or\n          ((animation-name: foo) and\n           (transform: rotate" +
+                    "(10deg))) {\n  body { color: red}\n}#id",
                 "body { color: red}"),
             withExpectedResult(
                 "@namespace svg \"http://www.w3.org/2000/svg\";@import",
                 ""),
             withExpectedResult(
-                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}@font-face",
+                "@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) " +
+                    "format(\"svg\");\n}@font-face",
                 "font-family: Headline;\n  src: local(Futura-Medium),\n       url(fonts.svg#MyGeometricModern) format(\"svg\");"),
             withExpectedResult(
-                "@font-face {\n    font-family: \"My Font\";\n    src: url(\"data:font/opentype;base64,[base-encoded font here];{}\\\"\");}",
+                "@font-face {\n    font-family: \"My Font\";\n    src: url(\"data:font/opentype;base64," +
+                    "[base-encoded font here];{}\\\"\");}",
                 "font-family: \"My Font\";\n    src: url(\"data:font/opentype;base64,[base-encoded font here];{}\\\"\");"),
             withExpectedResult(
                 "@media tv and (min-width: 700px) and (orientation: landscape) { ... }\n@media",

@@ -10,7 +10,7 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * Indicates the conditions for an {@link Subscribable} type to be broadcasted.
- * 
+ *
  * @author nmcwilliams
  */
 public enum SubscribableRequirement {

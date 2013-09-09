@@ -3,19 +3,18 @@
  */
 package com.salesforce.omakase.broadcaster;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import org.junit.Test;
-
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.emitter.Rework;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
 import com.salesforce.omakase.plugin.Plugin;
+import org.junit.Test;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link EmittingBroadcaster}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
@@ -65,6 +64,5 @@ public class EmittingBroadcasterTest {
         public Broadcaster wrap(Broadcaster relay) {
             throw new UnsupportedOperationException();
         }
-
     }
 }

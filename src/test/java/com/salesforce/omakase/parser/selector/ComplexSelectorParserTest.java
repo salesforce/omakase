@@ -82,7 +82,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
             // ".btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle)",
             // ".btn-group > .btn-group:not(:first-child):not(:last-child) > .btn",
             ".input-group-btn:first-child > .dropdown-toggle"
-            );
+        );
     }
 
     @Override
@@ -190,7 +190,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
             // ".btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle)",
             // ".btn-group > .btn-group:not(:first-child):not(:last-child) > .btn",
             ".input-group-btn:first-child > .dropdown-toggle"
-            ));
+        ));
 
         for (GenericParseResult result : parse) {
             assertThat(result.stream.eof()).isTrue();
