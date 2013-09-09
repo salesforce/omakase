@@ -5,6 +5,7 @@ package com.salesforce.omakase.ast.declaration.value;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
@@ -17,11 +18,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME A string value, e.g., "Times New Roman".
- *
- * @see StringValueParser
+ * TESTME
+ * <p/>
+ * A string value, e.g., "Times New Roman".
  *
  * @author nmcwilliams
+ * @see StringValueParser
  */
 @Subscribable
 @Description(value = "individual string value", broadcasted = REFINED_DECLARATION)
@@ -39,18 +41,18 @@ public class StringValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new {@link StringValue} instance.
-     *
-     * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source.
-     * Performance-wise, there is no reason to change it, and also it keeps us from having to mess around with escaping.
+     * <p/>
+     * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source. Performance-wise,
+     * there is no reason to change it from the original, and also it keeps us from having to mess around with escaping.
      *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param mode
-     *            The {@link QuotationMode} to use when printing out the value.
+     *     The {@link QuotationMode} to use when printing out the value.
      * @param content
-     *            The content of the string.
+     *     The content of the string.
      */
     public StringValue(int line, int column, QuotationMode mode, String content) {
         super(line, column);
@@ -59,13 +61,14 @@ public class StringValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * TODO
+     * Constructs a new {@link StringValue} instance (used for dynamically created {@link Syntax} units).
      *
      * @param mode
-     *            TODO
+     *     The {@link QuotationMode} to use when printing out the value.
      * @param content
-     *            TODO
+     *     The content of the string.
      */
+    @SuppressWarnings("UnusedDeclaration")
     public StringValue(QuotationMode mode, String content) {
         content(mode, content);
     }
@@ -74,9 +77,10 @@ public class StringValue extends AbstractSyntax implements Term {
      * Sets the content of the string.
      *
      * @param mode
-     *            The {@link QuotationMode} to use when printing out the value.
+     *     The {@link QuotationMode} to use when printing out the value.
      * @param content
-     *            The content.
+     *     The content.
+     *
      * @return this, for chaining.
      */
     public StringValue content(QuotationMode mode, String content) {
@@ -108,5 +112,24 @@ public class StringValue extends AbstractSyntax implements Term {
         return As.string(this)
             .add("content", content)
             .toString();
+    }
+
+    /**
+     * Creates a new {@link StringValue} instance using the given {@link StringValue.QuotationMode} and content.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>StringValue.of("Times new Roman")</code>
+     * </pre>
+     *
+     * @param mode
+     *     The {@link QuotationMode} to use when printing out the value.
+     * @param content
+     *     The content of the string.
+     *
+     * @return The new {@link StringValue} instance.
+     */
+    public static StringValue of(QuotationMode mode, String content) {
+        return new StringValue(mode, content);
     }
 }

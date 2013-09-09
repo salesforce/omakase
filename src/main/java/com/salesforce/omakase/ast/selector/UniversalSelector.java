@@ -3,20 +3,23 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
- * TESTME Represents the CSS universal selector, i.e., "*".
- * 
+ * TESTME
+ * <p/>
+ * Represents the CSS universal selector, i.e., "*".
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -24,22 +27,18 @@ import com.salesforce.omakase.writer.StyleWriter;
 public class UniversalSelector extends AbstractGroupable<SelectorPart> implements SelectorPart {
     /**
      * Constructs a new {@link UniversalSelector} instance.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      */
     public UniversalSelector(int line, int column) {
         super(line, column);
     }
 
-    /**
-     * TODO
-     */
-    public UniversalSelector() {
-        super();
-    }
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
+    public UniversalSelector() {}
 
     @Override
     public boolean isSelector() {

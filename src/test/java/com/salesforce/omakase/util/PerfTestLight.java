@@ -16,7 +16,7 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * Performance testing of this parser (more extensive tests + csv writer is in perf-test branch).
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
@@ -46,7 +46,7 @@ public class PerfTestLight {
         OMAKASE_FULL
     }
 
-    private static final Pattern commentPattern = Pattern.compile("\\/\\*[^*]*\\*+([^/*][^*]*\\*+)*\\/");
+    private static final Pattern commentPattern = Pattern.compile("/\\*[^*]*\\*+([^/*][^*]*\\*+)*/");
 
     /** main method with setup */
     public static void main(String[] args) throws IOException {
@@ -68,7 +68,7 @@ public class PerfTestLight {
 
     /**
      * test execution
-     * 
+     *
      * @throws IOException
      */
     public static void run() throws IOException {

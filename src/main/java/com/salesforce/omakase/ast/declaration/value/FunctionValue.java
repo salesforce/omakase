@@ -3,11 +3,6 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.emitter.Description;
@@ -16,13 +11,19 @@ import com.salesforce.omakase.parser.declaration.FunctionValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+
 /**
- * TESTME A generic function value with non-validated arguments. By not validating arguments here, we allow for new CSS
- * specifications as well as custom functions with any arbitrary content.
- * 
- * @see FunctionValueParser
- * 
+ * TESTME
+ * <p/>
+ * A generic function value with non-validated arguments. By not validating arguments here, we allow for new CSS specifications as
+ * well as custom functions with any arbitrary content.
+ *
  * @author nmcwilliams
+ * @see FunctionValueParser
  */
 @Subscribable
 @Description(value = "individual function value", broadcasted = REFINED_DECLARATION)
@@ -32,15 +33,15 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new {@link FunctionValue} instance with the given function name and arguments.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param name
-     *            The name of the function.
+     *     The name of the function.
      * @param args
-     *            The raw, non-validated function arguments.
+     *     The raw, non-validated function arguments.
      */
     public FunctionValue(int line, int column, String name, String args) {
         super(line, column);
@@ -49,33 +50,36 @@ public class FunctionValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * TODO
-     * 
+     * Constructs a new {@link FunctionValue} instance with the given function name and arguments (used for dynamically created
+     * {@link com.salesforce.omakase.ast.Syntax} units).
+     *
      * @param name
-     *            TODO
+     *     The name of the function.
      * @param args
-     *            TODO
+     *     The function arguments.
      */
+    @SuppressWarnings("UnusedDeclaration")
     public FunctionValue(String name, String args) {
-        this.name = checkNotNull(name, "name cannot be null");
-        this.args = checkNotNull(args, "args cannot be null");
+        name(name);
+        args(args);
     }
 
     /**
      * Sets the function name.
-     * 
-     * @param functionName
-     *            The function name.
+     *
+     * @param name
+     *     The function name.
+     *
      * @return this, for chaining.
      */
-    public FunctionValue name(String functionName) {
-        this.name = checkNotNull(functionName, "name cannot be null");
+    public FunctionValue name(String name) {
+        this.name = checkNotNull(name, "name cannot be null");
         return this;
     }
 
     /**
      * Gets the function name.
-     * 
+     *
      * @return The function name.
      */
     public String name() {
@@ -84,9 +88,10 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     /**
      * Sets the raw arguments.
-     * 
+     *
      * @param args
-     *            The arguments.
+     *     The arguments.
+     *
      * @return this, for chaining.
      */
     public FunctionValue args(String args) {
@@ -96,7 +101,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     /**
      * Gets the raw arguments.
-     * 
+     *
      * @return The raw arguments.
      */
     public String args() {
@@ -115,5 +120,19 @@ public class FunctionValue extends AbstractSyntax implements Term {
             .add("name", name)
             .add("args", args)
             .toString();
+    }
+
+    /**
+     * Creates a new {@link FunctionValue} instance with the given function name and args.
+     *
+     * @param name
+     *     The name of the function.
+     * @param args
+     *     The function arguments.
+     *
+     * @return The new {@link FunctionValue} instance.
+     */
+    public static FunctionValue of(String name, String args) {
+        return new FunctionValue(name, args);
     }
 }

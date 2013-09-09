@@ -3,23 +3,22 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link CombinatorParser}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
@@ -31,26 +30,26 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
             ".class",
             "#id",
             "p div"
-            );
+        );
     }
 
     @Override
     public List<String> validSources() {
         return ImmutableList.of(
-            " .class",
-            "   .class",
-            "> .class",
-            " > .class",
-            ">.class",
-            "+ div",
-            " + .class",
-            "+.class",
-            "~ .class",
-            " ~ #id",
-            "~.class",
-            "\n.class",
-            "\t.class"
-            );
+            " ",
+            "   ",
+            ">",
+            " >",
+            "+",
+            " +",
+            "~",
+            " ~",
+            "\n",
+            "\n  ",
+            "  \n  ",
+            "\t",
+            "\t  "
+        );
     }
 
     @Override

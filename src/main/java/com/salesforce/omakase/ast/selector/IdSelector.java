@@ -3,12 +3,8 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -16,12 +12,18 @@ import com.salesforce.omakase.parser.selector.IdSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
- * TESTME Represents a CSS id selector.
- * 
- * @see IdSelectorParser
- * 
+ * TESTME
+ * <p/>
+ * Represents a CSS id selector.
+ *
  * @author nmcwilliams
+ * @see IdSelectorParser
  */
 @Subscribable
 @Description(value = "id selector segment", broadcasted = REFINED_SELECTOR)
@@ -30,13 +32,13 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
 
     /**
      * Creates a new instance with the given line and column numbers and id name.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param name
-     *            Content of the selector.
+     *     The id name.
      */
     public IdSelector(int line, int column, String name) {
         super(line, column);
@@ -44,10 +46,10 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
     }
 
     /**
-     * TODO
-     * 
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     *
      * @param name
-     *            TODO
+     *     The id name.
      */
     public IdSelector(String name) {
         name(name);
@@ -55,9 +57,10 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
 
     /**
      * Sets the id name.
-     * 
+     *
      * @param name
-     *            The id name.
+     *     The id name.
+     *
      * @return this, for chaining.
      */
     public IdSelector name(String name) {
@@ -67,7 +70,7 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
 
     /**
      * Gets the id name.
-     * 
+     *
      * @return The id name.
      */
     public String name() {

@@ -9,13 +9,13 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Enum of the types of CSS combinators.
- * 
+ *
  * @author nmcwilliams
  */
 public enum CombinatorType implements TokenEnum<CombinatorType> {
     // ordered by likelihood of occurrence
 
-    /** descendant combinator (never match because this is specially parsed) */
+    /** descendant combinator */
     DESCENDANT(Tokens.NEVER_MATCH),
 
     /** child combinator */

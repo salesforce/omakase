@@ -13,6 +13,7 @@ import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.ast.declaration.value.Term;
@@ -25,6 +26,8 @@ import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserStrategy;
 import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -35,20 +38,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 /**
- * TESTME Represents a CSS declaration.
- *
+ * TESTME
+ * <p/>
+ * Represents a CSS declaration.
+ * <p/>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
  * basic grammar validation. See the notes on {@link Refinable}.
  *
+ * @author nmcwilliams
  * @see RawDeclarationParser
  * @see TermListParser
- *
- * @author nmcwilliams
- */
-/**
- * TODO Description
- *
- * @author nmcwilliams
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
@@ -66,17 +65,17 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     /**
      * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property
      * value). The property name and value can be further refined or validated by calling {@link #refine()}.
-     *
+     * <p/>
      * Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS. Hence
-     * really anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has
-     * been called.
+     * really anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has been
+     * called.
      *
      * @param rawPropertyName
-     *            The raw property name.
+     *     The raw property name.
      * @param rawPropertyValue
-     *            The raw property value.
+     *     The raw property value.
      * @param broadcaster
-     *            The {@link Broadcaster} to use when {@link #refine()} is called.
+     *     The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, Broadcaster broadcaster) {
         super(rawPropertyName.line(), rawPropertyName.column(), broadcaster);
@@ -85,36 +84,63 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     /**
-     * TODO
+     * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and {@link PropertyValue}.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code NumericalValue px10 = NumericalValue.of(10, "px");
+     *   NumericalValue em5 = NumericalValue.of(5, "em");
+     *   PropertyValue value = TermList.ofValues(TermOperator.SPACE, px10, em5);
+     *   new Declaration(Property.BORDER_RADIUS, value)}
+     * </pre>
+     * <p/>
+     * If there is only a single value then use {@link #Declaration(Property, Term)} instead.
      *
      * @param propertyName
-     *            TODO
+     *     The {@link Property}.
      * @param propertyValue
-     *            TODO
+     *     The {@link PropertyValue}.
      */
     public Declaration(Property propertyName, PropertyValue propertyValue) {
         this(PropertyName.using(propertyName), propertyValue);
     }
 
     /**
-     * TODO
+     * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and single {@link Term} value.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code new Declaration(Property.ZOOM, NumericalValue.of(1))}
+     * </pre>
      *
      * @param propertyName
-     *            TODO
+     *     The {@link Property}.
      * @param singleValue
-     *            TODO
+     *     The single {@link Term}.
      */
     public Declaration(Property propertyName, Term singleValue) {
         this(PropertyName.using(propertyName), TermList.singleValue(singleValue));
     }
 
     /**
-     * TODO
+     * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and {@link PropertyValue}.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code PropertyName prop = PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
+     *   Declaration newDeclaration = new Declaration(prop, declaration.propertyValue());}
+     * </pre>
      *
      * @param propertyName
-     *            TODO
+     *     The {@link PropertyName}.
      * @param propertyValue
-     *            TODO
+     *     The {@link PropertyValue}.
      */
     public Declaration(PropertyName propertyName, PropertyValue propertyValue) {
         this.rawPropertyName = null;
@@ -142,11 +168,12 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     /**
-     * TODO Description
+     * Sets a new property name. Generally, doing this should be avoided.
      *
      * @param propertyName
-     *            TODO
-     * @return TODO
+     *     The new property name.
+     *
+     * @return this, for chaining.
      */
     public Declaration propertyName(PropertyName propertyName) {
         this.propertyName = checkNotNull(propertyName, "propertyName cannot be null");
@@ -159,54 +186,69 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
      * @return The property name.
      */
     public PropertyName propertyName() {
-        return refinePropertyName().propertyName;
+        return propertyName == null ? refinePropertyName() : propertyName;
     }
 
     /**
-     * TODO Description TODO
+     * Gets whether this {@link Declaration} has the given {@link PropertyName}.
      *
      * @param propertyName
-     *            TODO
-     * @return TODO
+     *     The property name.
+     *
+     * @return True if this {@link Declaration} has the given property name.
      */
     public boolean isProperty(PropertyName propertyName) {
-        return this.propertyName.equals(propertyName);
+        return propertyName().equals(propertyName);
     }
 
     /**
-     * TODO Description
+     * Gets whether this {@link Declaration} has the given {@link Property} name.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>if (declaration.isProperty(Property.BORDER_RADIUS)) {...}</code>
+     * </pre>
      *
      * @param property
-     *            TODO
-     * @return TODO
+     *     The property name.
+     *
+     * @return True of this {@link Declaration} has the given property name.
      */
     public boolean isProperty(Property property) {
         return propertyName().equals(property);
     }
 
     /**
-     * TODO Description
+     * Gets whether this {@link Declaration} has the given property name. Prefer to use {@link #isProperty(Property)}
+     * instead.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>if (declaration.isProperty("border-radius") {...}</code>
+     * </pre>
      *
      * @param property
-     *            TODO
-     * @return TODO
+     *     Name of the property.
+     *
+     * @return True if this {@link Declaration} has the given property name.
      */
     public boolean isProperty(String property) {
         return propertyName().equals(property);
     }
 
     /**
-     * TODO Description
+     * Sets a new property value.
      *
      * @param propertyValue
-     *            TODO
-     * @return TODO
+     *     The new property value.
+     *
+     * @return this, for chaining.
      */
     public Declaration propertyValue(PropertyValue propertyValue) {
         this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
 
         // if the property value is new then make sure it gets broadcasted
-        if (propertyValue.status() == Status.UNBROADCASTED) {
+        if (propertyValue.status() == Status.UNBROADCASTED && broadcaster() != null) {
             broadcaster().broadcast(propertyValue);
         }
 
@@ -224,7 +266,7 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     @Override
     public boolean isRefined() {
-        return propertyValue != null;
+        return propertyName != null && propertyValue != null;
     }
 
     @Override
@@ -251,11 +293,12 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
         return this;
     }
 
-    private Declaration refinePropertyName() {
+    /** Refines just the property name */
+    private PropertyName refinePropertyName() {
         if (!isRefined()) {
             propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
         }
-        return this;
+        return propertyName;
     }
 
     @Override
@@ -273,8 +316,15 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     @Override
+    public Syntax broadcaster(Broadcaster broadcaster) {
+        if (propertyValue != null) {
+            propertyValue.broadcaster(broadcaster);
+        }
+        return super.broadcaster(broadcaster);
+    }
+
+    @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         if (propertyValue != null) {
             propertyValue.propagateBroadcast(broadcaster);
         }

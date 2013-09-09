@@ -3,19 +3,16 @@
  */
 package com.salesforce.omakase.ast.atrule;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
-
-import java.io.IOException;
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.ast.*;
+import com.salesforce.omakase.ast.Commentable;
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
@@ -24,21 +21,27 @@ import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.*;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+
 /**
- * TESTME Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes,
- * etc...
- *
- * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform
- * basic grammar validation. See the notes on {@link Refinable}.
- *
- * @see RawAtRuleParser
+ * TESTME
+ * <p/>
+ * Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes, etc...
+ * <p/>
+ * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
+ * grammar validation. See the notes on {@link Refinable}.
  *
  * @author nmcwilliams
+ * @see RawAtRuleParser
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class AtRule extends AbstractGroupable<Statement> implements Statement, Refinable<AtRule>, Commentable {
-    private String name;
+    private final String name;
     private List<String> comments;
 
     // unrefined
@@ -53,36 +56,36 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
      * Constructs a new {@link AtRule} instance.
      *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param name
-     *            Name of the at-rule.
+     *     Name of the at-rule.
      * @param rawExpression
-     *            The raw at-rule expression. If no expression is present pass in null.
+     *     The raw at-rule expression. If no expression is present pass in null.
      * @param rawBlock
-     *            The raw at-rule block. If no block is present pass in null.
+     *     The raw at-rule block. If no block is present pass in null.
      * @param broadcaster
-     *            The {@link Broadcaster} to use when {@link #refine()} is called.
+     *     The {@link Broadcaster} to use when {@link #refine()} is called.
      */
     public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, Broadcaster broadcaster) {
         super(line, column, broadcaster);
-
         this.name = name;
         this.rawExpression = Optional.fromNullable(rawExpression);
         this.rawBlock = Optional.fromNullable(rawBlock);
     }
 
     /**
-     * TODO
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
      *
      * @param name
-     *            TODO
+     *     Name of the at-rule.
      * @param expression
-     *            TODO
+     *     The at-rule's expression, or null if not present.
      * @param block
-     *            TODO
+     *     The at-rule's block, or null if not present.
      */
+    @SuppressWarnings("UnusedDeclaration")
     public AtRule(String name, AtRuleExpression expression, AtRuleBlock block) {
         super(-1, -1);
 
@@ -179,7 +182,6 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
         if (isRefined()) {
             appendable.append('@');
             appendable.append(name);
-
         } else {
             // symbol and name
             appendable.append('@');

@@ -6,10 +6,9 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * TESTME
+ * <p/>
  * Base class for {@link Syntax} units.
  *
  * @author nmcwilliams
@@ -21,7 +20,7 @@ public abstract class AbstractSyntax implements Syntax {
     private Broadcaster broadcaster;
     private Status status = Status.UNBROADCASTED;
 
-    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units. */
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractSyntax() {
         this(-1, -1);
     }
@@ -72,7 +71,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public Syntax status(Status status) {
-        this.status = checkNotNull(status, "status cannot be null");
+        this.status = status;
         return this;
     }
 
@@ -83,7 +82,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public Syntax broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = checkNotNull(broadcaster, "broadcaster cannot be null");
+        this.broadcaster = broadcaster;
         return this;
     }
 
@@ -95,7 +94,7 @@ public abstract class AbstractSyntax implements Syntax {
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         // only broadcast ourselves once
-        if (this.status() == Status.UNBROADCASTED) {
+        if (this.status == Status.UNBROADCASTED) {
             broadcaster.broadcast(this);
         }
     }

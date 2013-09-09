@@ -3,36 +3,35 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
-
-import java.io.IOException;
-
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.*;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+
 /**
  * TESTME A numerical value (e.g., 1 or 1px or 3.5em).
- *
- * The decimal point and unit are both optional. THe unit is any keyword directly following the number value, such as
- * px, em, or ms.
- *
- * The sign is optional, and is only defined if explicitly included in the source. In other words, in "5px" the sign
- * will <b>not</b> be {@link Sign#POSITIVE} but {@link Optional#absent()}.
- *
- * We use two integers instead of a double because we want to preserve the information regarding the presence of the
- * decimal point as authored.
- *
- * @see NumericalValueParser
+ * <p/>
+ * The decimal point and unit are both optional. THe unit is any keyword directly following the number value, such as px, em, or
+ * ms.
+ * <p/>
+ * The sign is optional, and is only defined if explicitly included in the source. In other words, in "5px" the sign will
+ * <b>not</b> be {@link Sign#POSITIVE} but {@link Optional#absent()}.
+ * <p/>
+ * We use two integers instead of a double because we want to preserve the information regarding the presence of the decimal point
+ * as authored.
  *
  * @author nmcwilliams
+ * @see NumericalValueParser
  */
 @Subscribable
 @Description(value = "individual numerical value", broadcasted = REFINED_DECLARATION)
@@ -57,15 +56,15 @@ public class NumericalValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a
-     * value of 0 should be passed in here.
+     * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a value of 0
+     * should be passed in here.
      *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param integerValue
-     *            The integer value.
+     *     The integer value.
      */
     public NumericalValue(int line, int column, Long integerValue) {
         super(line, column);
@@ -73,10 +72,10 @@ public class NumericalValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * TODO
+     * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
      *
      * @param integerValue
-     *            The integer value.
+     *     The integer value.
      */
     public NumericalValue(long integerValue) {
         this.integerValue = integerValue;
@@ -86,7 +85,8 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * Sets the integer value.
      *
      * @param integerValue
-     *            The integer value.
+     *     The integer value.
+     *
      * @return this, for chaining.
      */
     public NumericalValue integerValue(Long integerValue) {
@@ -109,7 +109,8 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * Sets the decimal value.
      *
      * @param decimalValue
-     *            The decimal value.
+     *     The decimal value.
+     *
      * @return this, for chaining.
      */
     public NumericalValue decimalValue(Long decimalValue) {
@@ -131,7 +132,8 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * Sets the unit, e.g., px or em.
      *
      * @param unit
-     *            The unit.
+     *     The unit.
+     *
      * @return this, for chaining.
      */
     public NumericalValue unit(String unit) {
@@ -152,7 +154,8 @@ public class NumericalValue extends AbstractSyntax implements Term {
      * Sets the explicit sign of the number.
      *
      * @param sign
-     *            The sign.
+     *     The sign.
+     *
      * @return this, for chaining.
      */
     public NumericalValue explicitSign(Sign sign) {
@@ -197,24 +200,36 @@ public class NumericalValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * TODO Description
+     * Creates a new {@link NumericalValue} instance with the given integer value.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue.of(10)</code>
+     * </pre>
      *
      * @param integerValue
-     *            TODO
-     * @return TODO
+     *     The integer value. If only a decimal point exists, a value of 0 should be passed in here.
+     *
+     * @return The new {@link NumericalValue} instance.
      */
     public static NumericalValue of(int integerValue) {
         return new NumericalValue(integerValue);
     }
 
     /**
-     * TODO Description
+     * Creates a new {@link NumericalValue} instance with the given integer value and unit.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue.of(10, "px")</code>
+     * </pre>
      *
      * @param integerValue
-     *            TODO
+     *     he integer value. If only a decimal point exists, a value of 0 should be passed in here.
      * @param unit
-     *            TODO
-     * @return TODO
+     *     The unit, e.g., px or em.
+     *
+     * @return The new {@link NumericalValue} instance.
      */
     public static NumericalValue of(int integerValue, String unit) {
         return new NumericalValue(integerValue).unit(unit);

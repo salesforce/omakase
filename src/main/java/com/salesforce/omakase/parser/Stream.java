@@ -3,11 +3,6 @@
  */
 package com.salesforce.omakase.parser;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
-
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -17,13 +12,16 @@ import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
 
+import java.util.List;
+
+import static com.google.common.base.Preconditions.*;
+import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
+
 /**
  * A tool for reading a String source one character at a time.
- *
- * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of
- * the current line and column positions.
- *
- * @see StreamTest
+ * <p/>
+ * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of the
+ * current line and column positions.
  *
  * @author nmcwilliams
  */
@@ -68,49 +66,82 @@ public final class Stream {
     private Token stringToken = null;
 
     /** whether we should monitor if we are in a string or not (optional for perf) */
-    private boolean checkInString = true;
+    private final boolean checkInString;
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
      *
      * @param source
-     *            The source to read.
+     *     The source to read.
      */
     public Stream(CharSequence source) {
-        this(source, 1, 1);
+        this(source, 1, 1, true);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
-     * This will use the line and column from the given {@link RawSyntax} as the anchor/starting point.
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the line and column from the given {@link RawSyntax} as the anchor/starting point.
      *
      * @param raw
-     *            The {@link RawSyntax} containing the source.
+     *     The {@link RawSyntax} containing the source.
      */
     public Stream(RawSyntax raw) {
-        this(raw.content(), raw.line(), raw.column());
+        this(raw.content(), raw.line(), raw.column(), true);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
-     * This will use the given starting line and column.
+     * TODO
+     *
+     * @param raw
+     *     TODO
+     * @param checkInString
+     *     TODO
+     */
+    public Stream(RawSyntax raw, boolean checkInString) {
+        this(raw.content(), raw.line(), raw.column(), checkInString);
+    }
+
+    /**
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the given starting line and column.
      *
      * @param source
-     *            The source to read.
+     *     The source to read.
      * @param anchorLine
-     *            The starting line.
+     *     The starting line.
      * @param anchorColumn
-     *            The starting column.
+     *     The starting column.
      */
     public Stream(CharSequence source, int anchorLine, int anchorColumn) {
+        this(source, anchorLine, anchorColumn, true);
+    }
+
+    /**
+     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * use the given starting line and column.
+     *
+     * @param source
+     *     The source to read.
+     * @param anchorLine
+     *     The starting line.
+     * @param anchorColumn
+     *     The starting column.
+     */
+    public Stream(CharSequence source, int anchorLine, int anchorColumn, boolean checkInString) {
         checkNotNull(source, "source cannot be null");
         this.source = source.toString();
         this.length = source.length();
         this.anchorLine = anchorLine;
         this.anchorColumn = anchorColumn;
+        this.checkInString = checkInString;
 
         // collect any comments at the beginning
         collectComments();
+
+        // check if we are in a string
+        if (checkInString) {
+            updateInString();
+        }
     }
 
     /**
@@ -132,8 +163,8 @@ public final class Stream {
     }
 
     /**
-     * Gets the current index position within the original source. Not to be confused with the current column position,
-     * which is found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
+     * Gets the current index position within the original source. Not to be confused with the current column position, which is
+     * found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
      *
      * @return The current index position.
      */
@@ -152,8 +183,8 @@ public final class Stream {
     }
 
     /**
-     * Gets the original column of this {@link Stream} within the original source. This is mainly useful for
-     * sub-sequences (sequences created from a substring of the original source).
+     * Gets the original column of this {@link Stream} within the original source. This is mainly useful for sub-sequences
+     * (sequences created from a substring of the original source).
      *
      * @return The column number of the start of this stream in the original source.
      */
@@ -193,8 +224,7 @@ public final class Stream {
     }
 
     /**
-     * Gets the remaining text in the source, including the current character. This does not advance the current
-     * position.
+     * Gets the remaining text in the source, including the current character. This does not advance the current position.
      *
      * @return A substring of the source from the current position to the end of the source.
      */
@@ -223,9 +253,9 @@ public final class Stream {
     /**
      * Gets whether the current character is preceded by the escape character
      *
-     * @see Tokens#ESCAPE
-     *
      * @return If the current character is escaped.
+     *
+     * @see Tokens#ESCAPE
      */
     public boolean isEscaped() {
         return Tokens.ESCAPE.matches(peekPrevious());
@@ -251,15 +281,14 @@ public final class Stream {
 
     /**
      * Advance to the next character. This will automatically update the current line and column number as well.
+     * <p/>
+     * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this preprocessing
+     * as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF then the line/column
+     * number reported by this stream (e.g., in error messages) will be incorrect. This seems acceptable as that information is
+     * mostly just useful for development purposes anyway. (http://dev.w3.org/csswg/css-syntax/#preprocessing-the-input-stream)
      *
-     * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this
-     * preprocessing as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF
-     * then the line/column number reported by this stream (e.g., in error messages) will be incorrect. This seems
-     * acceptable as that information is mostly just useful for development purposes anyway.
-     * (http://dev.w3.org/csswg/css-syntax/#preprocessing-the-input-stream)
-     *
-     * @return The next character (i.e., the character at the current position after the result of this call), or null
-     *         if at the end of the stream.
+     * @return The next character (i.e., the character at the current position after the result of this call), or null if at the
+     *         end of the stream.
      */
     public Character next() {
         // if we are at the end then return null
@@ -291,11 +320,11 @@ public final class Stream {
     }
 
     /**
-     * Advance the current position to the given index. The index must not be longer than the total length of the
-     * source. If the given index is less than the current index then the index will remain unchanged.
+     * Advance the current position to the given index. The index must not be longer than the total length of the source. If the
+     * given index is less than the current index then the index will remain unchanged.
      *
      * @param newIndex
-     *            Advance to this position.
+     *     Advance to this position.
      */
     public void forward(int newIndex) {
         checkArgument(newIndex <= length, "index out of range");
@@ -317,7 +346,8 @@ public final class Stream {
      * Gets the character at the given number of characters forward without advancing the current position.
      *
      * @param numCharacters
-     *            The number of characters ahead to peak.
+     *     The number of characters ahead to peak.
+     *
      * @return The character, or null if the end of the stream occurs first.
      */
     public Character peek(int numCharacters) {
@@ -333,9 +363,7 @@ public final class Stream {
         return (index > 0) ? source.charAt(index - 1) : null;
     }
 
-    /**
-     * If the current character is whitespace then skip it along with all subsequent whitespace characters.
-     */
+    /** If the current character is whitespace then skip it along with all subsequent whitespace characters. */
     public void skipWhitepace() {
         if (eof()) return;
 
@@ -346,12 +374,13 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #next()}, this will advance to the next character, <b>but only</b> if the current character
-     * matches the given {@link Token}. If the current character does not match then the current index will remain
-     * unchanged. If you don't need the actual value, consider {@link #optionallyPresent(Token)} instead.
+     * Similar to {@link #next()}, this will advance to the next character, <b>but only</b> if the current character matches the
+     * given {@link Token}. If the current character does not match then the current index will remain unchanged. If you don't
+     * need the actual value, consider {@link #optionallyPresent(Token)} instead.
      *
      * @param token
-     *            The token to match.
+     *     The token to match.
+     *
      * @return The parsed character, or {@link Optional#absent()} if not matched.
      */
     public Optional<Character> optional(Token token) {
@@ -367,12 +396,12 @@ public final class Stream {
     }
 
     /**
-     * Same as {@link #optional(Token)}, except it returns the result of {@link Optional#isPresent()}. Basically use
-     * this when you don't care about keeping the actual parsed value (e.g., because it's discarded, you already know
-     * what it is, etc...)
+     * Same as {@link #optional(Token)}, except it returns the result of {@link Optional#isPresent()}. Basically use this when you
+     * don't care about keeping the actual parsed value (e.g., because it's discarded, you already know what it is, etc...)
      *
      * @param token
-     *            The token to match.
+     *     The token to match.
+     *
      * @return True if there was a match, false otherwise.
      */
     public boolean optionallyPresent(Token token) {
@@ -380,15 +409,16 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given
-     * enum (in the declared order) for a matching token.
-     *
+     * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given enum (in
+     * the declared order) for a matching token.
+     * <p/>
      * As with {@link #optional(Token)}, if the current character matches the index will be advanced by one.
      *
      * @param <T>
-     *            Type of the enum.
+     *     Type of the enum.
      * @param klass
-     *            Enum class.
+     *     Enum class.
+     *
      * @return The matching enum instance, or {@link Optional#absent()} if none match.
      */
     public <T extends Enum<T> & TokenEnum<?>> Optional<T> optionalFromEnum(Class<T> klass) {
@@ -399,11 +429,11 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #next()}, except it will enforce that <b>current</b> character matches the given {@link Token}
-     * before advancing, otherwise an error will be thrown.
+     * Similar to {@link #next()}, except it will enforce that <b>current</b> character matches the given {@link Token} before
+     * advancing, otherwise an error will be thrown.
      *
      * @param token
-     *            Ensure that the current token matches this {@link Token} before we advance.
+     *     Ensure that the current token matches this {@link Token} before we advance.
      */
     public void expect(Token token) {
         if (!token.matches(current())) throw new ParserException(this, Message.EXPECTED_TO_FIND, token.description());
@@ -411,16 +441,17 @@ public final class Stream {
     }
 
     /**
-     * Advances the current character position until the current character matches the given {@link Token}. If the given
-     * {@link Token} is never matched then this will advance to the end of the stream.
+     * Advances the current character position until the current character matches the given {@link Token}. If the given {@link
+     * Token} is never matched then this will advance to the end of the stream.
      *
      * @param token
-     *            The token to match.
-     * @return A string containing all characters that were matched, excluding the character that matched the given
-     *         {@link Token}.
+     *     The token to match.
+     *
+     * @return A string containing all characters that were matched, excluding the character that matched the given {@link
+     *         Token}.
      */
     public String until(Token token) {
-        assert checkInString == true : "checkInString should not be turned off";
+        assert checkInString : "checkInString should not be turned off";
 
         // save the current index so we can return the matched substring
         int start = index;
@@ -446,13 +477,13 @@ public final class Stream {
     }
 
     /**
-     * Opposite of {@link #until(Token)}, this will advance past the current character and all subsequent characters for
-     * as long as they match the given {@link Token}.
+     * Opposite of {@link #until(Token)}, this will advance past the current character and all subsequent characters for as long
+     * as they match the given {@link Token}.
      *
      * @param token
-     *            The token to match.
-     * @return A string containing all characters that were matched. If nothing matched then an empty string is
-     *         returned.
+     *     The token to match.
+     *
+     * @return A string containing all characters that were matched. If nothing matched then an empty string is returned.
      */
     public String chomp(Token token) {
         if (eof()) return "";
@@ -468,20 +499,20 @@ public final class Stream {
     }
 
     /**
-     * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing
-     * delimiter {@link Token}.
-     *
-     * The opening token must be present at the current position of this stream or an error will be thrown. In other
-     * words, don't call this until you've checked that the opening token is there, and only if you expect it to be
-     * properly closed.
-     *
-     * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about
-     * handling escaping).
+     * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing delimiter {@link
+     * Token}.
+     * <p/>
+     * The opening token must be present at the current position of this stream or an error will be thrown. In other words, don't
+     * call this until you've checked that the opening token is there, and only if you expect it to be properly closed.
+     * <p/>
+     * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about handling
+     * escaping).
      *
      * @param openingToken
-     *            The opening token.
+     *     The opening token.
      * @param closingToken
-     *            The closing token.
+     *     The closing token.
+     *
      * @return All content in between the opening and closing tokens (excluding the tokens themselves).
      */
     public String chompEnclosedValue(Token openingToken, Token closingToken) {
@@ -529,9 +560,7 @@ public final class Stream {
         throw new ParserException(this, Message.EXPECTED_CLOSING, closingToken.description());
     }
 
-    /**
-     * Collects all CSS comments into the queue.
-     */
+    /** Collects all CSS comments into the queue. */
     private void collectComments() {
         if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peek())) {
             // check if comments are allowed at this location
@@ -573,9 +602,8 @@ public final class Stream {
 
     /**
      * Returns the current queue of CSS comments.
-     *
-     * CSS comments are automatically read and queued from the source. After calling this method, the queue will be
-     * emptied.
+     * <p/>
+     * CSS comments are automatically read and queued from the source. After calling this method, the queue will be emptied.
      *
      * @return The current queue of CSS comments.
      */
@@ -591,22 +619,22 @@ public final class Stream {
     }
 
     /**
-     * Causes an exception to be thrown if any comments are encountered in the source, until {@link #enableComments()}
-     * is called. This also flushes any comments currently in the queue.
-     *
-     * This behavior is not part of the official CSS spec, as the spec allows comments just about anywhere, however in
-     * practice there are places where comments should never be placed. This method should be used in situations where
-     * the removal of a comment would change the CSS source. For example, in
-     *
+     * Causes an exception to be thrown if any comments are encountered in the source, until {@link #enableComments()} is called.
+     * This also flushes any comments currently in the queue.
+     * <p/>
+     * This behavior is not part of the official CSS spec, as the spec allows comments just about anywhere, however in practice
+     * there are places where comments should never be placed. This method should be used in situations where the removal of a
+     * comment would change the CSS source. For example, in
+     * <p/>
      * <pre>margin: 1px/*abc*&#47;1px;</pre>
-     *
+     * <p/>
      * after removing the comment it would be
-     *
+     * <p/>
      * <pre>margin:1px1px;</pre>
-     *
-     * In order to prevent this situation, the parser should call {@link #rejectComments()} before parsing and
-     * {@link #enableComments()} after it is done. A less restrictive enforcement would be to check that a term operator
-     * or selector combinator is directly before or after the comment.
+     * <p/>
+     * In order to prevent this situation, the parser should call {@link #rejectComments()} before parsing and {@link
+     * #enableComments()} after it is done. A less restrictive enforcement would be to check that a term operator or selector
+     * combinator is directly before or after the comment.
      *
      * @return this, for chaining.
      */
@@ -627,21 +655,10 @@ public final class Stream {
     }
 
     /**
-     * Specifies that we should not check and maintain whether we are currently in a string or not. Do not use this if
-     * {@link #until(Token)} will be utilized on the stream.
-     *
-     * @return this, for chaining.
-     */
-    public Stream skipInStringCheck() {
-        this.checkInString = false;
-        return this;
-    }
-
-    /**
      * Updates the status about whether we are in a string.
-     *
-     * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We
-     * remain in this status until the matching quote symbol is encountered again, unescaped.
+     * <p/>
+     * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We remain in
+     * this status until the matching quote symbol is encountered again, unescaped.
      */
     private void updateInString() {
         final Character current = current();
@@ -671,13 +688,13 @@ public final class Stream {
 
     /**
      * Creates a snapshot of the current index, line, column, and other essential state information.
-     *
-     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that
-     * the content does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. To revert to
-     * a specific snapshot, use {@link #rollback(Snapshot)}.
-     *
-     * This should be used sparingly, as in most cases you can ascertain the necessary information through
-     * {@link #peek()}, {@link #current()} and other methods on this class.
+     * <p/>
+     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the content
+     * does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. To revert to a specific snapshot,
+     * use {@link #rollback(Snapshot)}.
+     * <p/>
+     * This should be used sparingly, as in most cases you can ascertain the necessary information through {@link #peek()}, {@link
+     * #current()} and other methods on this class.
      *
      * @return The created snapshot.
      */
@@ -690,8 +707,9 @@ public final class Stream {
      * Reverts to the last snapshot.
      *
      * @return always returns <b>false</b> (convenience for inlining return statements in methods)
+     *
      * @throws IllegalStateException
-     *             If no snapshots exist.
+     *     If no snapshots exist.
      */
     public boolean rollback() {
         checkState(snapshot != null, "no snapshots currently exist");
@@ -702,7 +720,8 @@ public final class Stream {
      * Reverts to the state captured within the given snapshot.
      *
      * @param snapshot
-     *            Revert to this snapshot.
+     *     Revert to this snapshot.
+     *
      * @return always returns <b>false</b> (convenience for inlining return statements in methods)
      */
     public boolean rollback(Snapshot snapshot) {
@@ -715,7 +734,7 @@ public final class Stream {
 
     /**
      * Reads an ident token.
-     *
+     * <p/>
      * XXX the spec allows for non ascii and escaped characters here as well.
      *
      * @return The matched token, or {@link Optional#absent()} if not matched.
@@ -742,10 +761,13 @@ public final class Stream {
     public static final class Snapshot {
         /** the captured index */
         public final int index;
+
         /** the line at the captured index */
         public final int line;
+
         /** the column at the captured index */
         public final int column;
+
         /** whether we are in a string at the captured index */
         public final boolean inString;
 

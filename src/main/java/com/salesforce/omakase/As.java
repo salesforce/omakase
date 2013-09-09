@@ -10,13 +10,14 @@ import java.util.List;
 /**
  * Helper for constructing toString() methods...cuz guava's helper just doesn't get the job done.
  * <p/>
- * Example:<code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
+ * Example: <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
  *
  * @author nmcwilliams
  */
 public final class As {
     private final List<Entry> entries = Lists.newArrayList();
     private final String name;
+
     private boolean indent;
 
     /** use a constructor method instead */
@@ -133,7 +134,6 @@ public final class As {
                 value = value.replaceAll("\n", "\n  ");
             }
             builder.append(value);
-
         }
 
         // closing bracket

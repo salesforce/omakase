@@ -3,15 +3,11 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
-
-import java.io.IOException;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
@@ -20,54 +16,59 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+import java.util.List;
+
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+
 /**
- * TESTME The generic and default {@link Declaration}'s {@link PropertyValue}. This contains a list of {@link Term}s,
- * for example numbers, keywords, functions, hex colors, etc...
+ * TESTME
+ * <p/>
+ * The generic and default {@link Declaration}'s {@link PropertyValue}. This contains a list of {@link Term}s, for example
+ * numbers, keywords, functions, hex colors, etc...
+ * <p/>
+ * If you need to change the contents of the {@link TermList}, change the contents of the actual {@link Term} itself. If you need
+ * to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this one with instead.
+ * (ACTUALLY I'm not sure why this comment is here. maybe it can be ignored).
+ * <p/>
+ * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is name now
+ * given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
+ * <p/>
+ * XXX This setup is perhaps inconsistent with the rest of the project, with respect to the term members being directly added
+ * instead of broadcasted. Also, as noted above, this doesn't allow for additions/removals from the list, which would be nice to
+ * support.
  *
- * If you need to change the contents of the {@link TermList}, change the contents of the actual {@link Term} itself. If
- * you need to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this one
- * with instead. (ACTUALLY I'm not sure why this comment is here. maybe it can be ignored).
- *
- * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is
- * name now given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
- *
- * XXX This setup is perhaps inconsistent with the rest of the project, with respect to the term members being directly
- * added instead of broadcasted. Also, as noted above, this doesn't allow for additions/removals from the list, which
- * would be nice to support.
- *
+ * @author nmcwilliams
  * @see Term
  * @see TermListParser
  * @see TermListMember
- *
- * @author nmcwilliams
  */
 @Subscribable
 @Description(value = "default, generic property value", broadcasted = REFINED_DECLARATION)
 public class TermList extends AbstractSyntax implements PropertyValue {
     private final List<TermListMember> members = Lists.newArrayListWithCapacity(4);
 
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
+    public TermList() {}
+
     /**
      * Constructs a new {@link TermList} instance.
      *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      */
     public TermList(int line, int column) {
         super(line, column);
     }
 
     /**
-     * TODO
-     */
-    public TermList() {}
-
-    /**
      * Adds a {@link TermListMember}.
      *
      * @param member
-     *            The member to add.
+     *     The member to add.
+     *
      * @return this, for chaining.
      */
     public TermList add(TermListMember member) {
@@ -112,24 +113,39 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     }
 
     /**
-     * TODO Description
+     * Creates a new {@link TermList} with the given {@link Term} as the only member.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>TermList.singleValue(NumericalValue.of(10, "px"));</code>
+     * </pre>
      *
      * @param term
-     *            TODO
-     * @return TODO
+     *     The value.
+     *
+     * @return The new {@link TermList} instance.
      */
-    public static PropertyValue singleValue(Term term) {
+    public static TermList singleValue(Term term) {
         return new TermList(-1, -1).add(term);
     }
 
     /**
-     * TODO Description
+     * Creates a new {@link TermList} with multiple values separated by the given {@link TermOperator}.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue px10 = NumericalValue.of(10, "px");
+     * NumericalValue em5 = NumericalValue.of(5, "em");
+     * PropertyValue value = TermList.ofValues(TermOperator.SPACE, px10, em5);
+     * </code>
+     * </pre>
      *
      * @param separator
-     *            TODO
+     *     The {@link TermOperator} to place in between each {@link Term}.
      * @param values
-     *            TODO
-     * @return TODO
+     *     List of member {@link Term}s.
+     *
+     * @return The new {@link TermList} instance.
      */
     public static PropertyValue ofValues(TermOperator separator, Term... values) {
         TermList termList = new TermList();

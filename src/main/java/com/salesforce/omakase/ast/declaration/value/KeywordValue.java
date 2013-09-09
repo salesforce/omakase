@@ -3,25 +3,27 @@
  */
 package com.salesforce.omakase.ast.declaration.value;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+
 /**
- * TESTME A keyword value (e.g., inline-block).
- * 
- * @see KeywordValueParser
- * 
+ * TESTME
+ * <p/>
+ * A keyword value (e.g., inline-block).
+ *
  * @author nmcwilliams
+ * @see KeywordValueParser
  */
 @Subscribable
 @Description(value = "individual keyword value", broadcasted = REFINED_DECLARATION)
@@ -30,13 +32,13 @@ public class KeywordValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new {@link KeywordValue} instance.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param keyword
-     *            The keyword.
+     *     The keyword.
      */
     public KeywordValue(int line, int column, String keyword) {
         super(line, column);
@@ -44,41 +46,33 @@ public class KeywordValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * TODO
-     * 
+     * Constructs a new {@link KeywordValue} instance (used for dynamically created {@link Syntax} units). Prefer {@link
+     * #KeywordValue(Keyword)} over this.
+     *
      * @param keyword
-     *            TODO
+     *     The keyword.
      */
     public KeywordValue(String keyword) {
         keyword(keyword);
     }
 
     /**
-     * TODO
-     * 
+     * Constructs a new {@link KeywordValue} instance with the given {@link Keyword} (used for dynamically created {@link Syntax}
+     * units).
+     *
      * @param keyword
-     *            TODO
+     *     The keyword.
      */
     public KeywordValue(Keyword keyword) {
         keyword(keyword);
     }
 
     /**
-     * TODO Description
-     * 
+     * Sets the keyword value. Prefer {@link #keyword(Keyword)} over this one.
+     *
      * @param keyword
-     *            TODO
-     * @return TODO
-     */
-    public KeywordValue keyword(Keyword keyword) {
-        return keyword(keyword.toString());
-    }
-
-    /**
-     * Sets the keyword value.
-     * 
-     * @param keyword
-     *            The keyword.
+     *     The keyword.
+     *
      * @return this, for chaining.
      */
     public KeywordValue keyword(String keyword) {
@@ -87,8 +81,20 @@ public class KeywordValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * Sets the keyword value.
+     *
+     * @param keyword
+     *     The keyword.
+     *
+     * @return this, for chaining.
+     */
+    public KeywordValue keyword(Keyword keyword) {
+        return keyword(keyword.toString());
+    }
+
+    /**
      * Gets the keyword value.
-     * 
+     *
      * @return The keyword.
      */
     public String keyword() {
@@ -108,24 +114,36 @@ public class KeywordValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * TODO Description
-     * 
+     * Creates a new {@link KeywordValue} instance from the given keyword string. Prefer to use {@link #of(Keyword)} over this.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>KeywordValue.of("left");</code>
+     * </pre>
+     *
      * @param keyword
-     *            TODO
-     * @return TODO
+     *     The keyword.
+     *
+     * @return The new {@link KeywordValue} instance.
      */
-    public static KeywordValue of(Keyword keyword) {
+    public static KeywordValue of(String keyword) {
         return new KeywordValue(keyword);
     }
 
     /**
-     * TODO Description
-     * 
+     * Creates a new {@link KeywordValue} instance from the given {@link Keyword}.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>KeywordValue.of(Keyword.LEFTF);</code>
+     * </pre>
+     *
      * @param keyword
-     *            TODO
-     * @return TODO
+     *     The keyword.
+     *
+     * @return The new {@link KeywordValue} instance.
      */
-    public static KeywordValue of(String keyword) {
+    public static KeywordValue of(Keyword keyword) {
         return new KeywordValue(keyword);
     }
 }

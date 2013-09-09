@@ -15,7 +15,11 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.broadcaster.EmittingBroadcaster;
 import com.salesforce.omakase.broadcaster.VisitingBroadcaster;
 import com.salesforce.omakase.emitter.Emitter;
+import com.salesforce.omakase.emitter.Observe;
+import com.salesforce.omakase.emitter.PreProcess;
+import com.salesforce.omakase.emitter.Rework;
 import com.salesforce.omakase.emitter.SubscriptionPhase;
+import com.salesforce.omakase.emitter.Validate;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
@@ -28,18 +32,27 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * TESTME Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
+ * TESTME
+ * <p/>
+ * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
  * Broadcaster}). Note: this class is not exposed as an API itself.
+ * <p/>
+ * All broadcasting events are collected and stored during parsing. After the source is completely parsed, each event is replayed
+ * once in each of the three phases: preprocess ({@link PreProcess} annotated methods), process ({@link Observe} and {@link
+ * Rework} annotated methods), then finally validation ({@link Validate} annotated methods).
  *
  * @author nmcwilliams
  */
 final class Context implements Broadcaster, PluginRegistry {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
+
     /** uses an {@link Emitter} to broadcast events */
     private final EmittingBroadcaster emittingBroadcaster = new EmittingBroadcaster();
-    /** used to visit each broadcasted unit per phase */
+
+    /** used to replay each broadcasted unit once per phase */
     private final VisitingBroadcaster visitor = new VisitingBroadcaster(emittingBroadcaster);
+
     /** main broadcaster - consumer changeable via {@link #broadcaster(Broadcaster)} */
     private Broadcaster broadcaster = visitor;
 
@@ -121,11 +134,6 @@ final class Context implements Broadcaster, PluginRegistry {
         return this;
     }
 
-    /** helper method to get only plugins of a certain type */
-    private <T extends Plugin> Iterable<T> filter(Class<T> klass) {
-        return Iterables.filter(registry.values(), klass);
-    }
-
     /**
      * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that are
      * interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s.
@@ -185,5 +193,10 @@ final class Context implements Broadcaster, PluginRegistry {
         for (PostProcessingPlugin plugin : filter(PostProcessingPlugin.class)) {
             plugin.postProcess(this);
         }
+    }
+
+    /** helper method to get only plugins of a certain type */
+    private <T extends Plugin> Iterable<T> filter(Class<T> klass) {
+        return Iterables.filter(registry.values(), klass);
     }
 }

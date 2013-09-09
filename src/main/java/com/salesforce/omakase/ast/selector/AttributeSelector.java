@@ -3,22 +3,25 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
- * TESTME Represents a CSS attribute selector.
- * 
+ * TESTME
+ * <p/>
+ * Represents a CSS attribute selector.
+ * <p/>
  * TODO unimplemented!
- * 
+ *
  * @author nmcwilliams
  */
 @Subscribable
@@ -26,21 +29,18 @@ import com.salesforce.omakase.writer.StyleWriter;
 public class AttributeSelector extends AbstractGroupable<SelectorPart> implements SimpleSelector {
     /**
      * Creates a new instance with the given line and column numbers.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      */
     public AttributeSelector(int line, int column) {
         super(line, column);
     }
 
-    /**
-     * TODO
-     */
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AttributeSelector() {
-
     }
 
     @Override

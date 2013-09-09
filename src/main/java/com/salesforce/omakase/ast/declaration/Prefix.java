@@ -4,16 +4,19 @@
 package com.salesforce.omakase.ast.declaration;
 
 /**
- * TODO Description
- * 
+ * Vendor prefixes.
+ * <p/>
+ * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}
+ *
  * @author nmcwilliams
  */
+@SuppressWarnings("UnusedDeclaration")
 public enum Prefix {
-    /** TODO */
+    /** Mozilla Firefox */
     MOZ("-moz-"),
-    /** TODO */
+    /** Webkit */
     WEBKIT("-webkit-"),
-    /** TODO */
+    /** Microsoft */
     MS("-ms-");
 
     private final String prefix;

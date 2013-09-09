@@ -3,22 +3,21 @@
  */
 package com.salesforce.omakase.parser.raw;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.util.Templates.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link RawDeclarationParser}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
@@ -41,12 +40,12 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
             .of(
                 "color:red",
                 "/*comment*//*comment*/ color: red",
-                "/*comment*/\ncolor:red;",
+                "/*comment*/\ncolor:red",
                 "-moz-border-radius: 5px",
                 "-webkit-border-radius: 10px",
                 "border-radius: 10px",
                 "background: url(one.png)",
-                "background:url(/one/one.png) !important;",
+                "background:url(/one/one.png) !important",
                 "background: url('one/one.png')",
                 "background: url(\"one.png\")",
                 "background: url(\"one two three\")",

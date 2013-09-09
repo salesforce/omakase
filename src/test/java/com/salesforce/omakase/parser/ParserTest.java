@@ -7,7 +7,7 @@ import org.junit.Test;
 
 /**
  * Base class for testing parsers.
- * 
+ *
  * @author nmcwilliams
  */
 public interface ParserTest {
@@ -22,6 +22,12 @@ public interface ParserTest {
      */
     @Test
     public void returnsTrueOnSuccess();
+
+    /**
+     * TODO
+     */
+    @Test
+    public void eofOnValidSources();
 
     /**
      * Tests the number of broadcasted syntax units is exactly as expected.

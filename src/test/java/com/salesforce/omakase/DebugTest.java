@@ -8,12 +8,37 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.util.EchoLogger;
 import com.salesforce.omakase.util.tool.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
+import org.junit.Test;
 
 import java.io.IOException;
 
 /** Temp test for debugging. */
 @SuppressWarnings({"JavaDoc", "unused"})
 public class DebugTest {
+
+    @Test
+    public void develop() throws IOException {
+        AutoRefiner refinement = new AutoRefiner().all();
+        EchoLogger logging = new EchoLogger();
+        SyntaxTree tree = new SyntaxTree();
+        StyleWriter writer = StyleWriter.compressed();
+
+        // Omakase.source(SRC0)
+        // .request(tree)
+        // // .request(refinement)
+        // .request(logging)
+        // .request(Validation.normal())
+        // .request(writer)
+        // .process();
+        //
+        // System.out.println();
+        // System.out.println(tree.toString());
+
+        QuickWriter
+            .writeAllModes(".class {\n" +
+                "    content: \" (\" attr(href) \")\"\n" +
+                "}");
+    }
 
     public static final String SRC0 = ".class {" +
         "  color: red\n" +
@@ -88,27 +113,4 @@ public class DebugTest {
         ".uiButton.default:disabled .label:hover{\n" +
         "    color:#888;\n" +
         "}";
-
-    public void develop() throws IOException {
-        AutoRefiner refinement = new AutoRefiner().all();
-        EchoLogger logging = new EchoLogger();
-        SyntaxTree tree = new SyntaxTree();
-        StyleWriter writer = StyleWriter.compressed();
-
-        // Omakase.source(SRC0)
-        // .request(tree)
-        // // .request(refinement)
-        // .request(logging)
-        // .request(Validation.normal())
-        // .request(writer)
-        // .process();
-        //
-        // System.out.println();
-        // System.out.println(tree.toString());
-
-        QuickWriter
-            .writeAllModes("@font-face {\n  font-family: Headline;\n  src: local(Futura-Medium)," +
-                "\n       url(fonts.svg#MyGeometricModern) format(\"svg\");\n}");
-    }
-
 }

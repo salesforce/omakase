@@ -2,8 +2,6 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
- *
- * @author nmcwilliams
+ * Contains declaration AST members.
  */
 package com.salesforce.omakase.ast.declaration;

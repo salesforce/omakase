@@ -8,7 +8,7 @@ import com.salesforce.omakase.As;
 
 /**
  * A combination matcher that does an OR comparison of two {@link Token}s.
- * 
+ *
  * @author nmcwilliams
  */
 public class CompoundToken implements Token {
@@ -18,7 +18,7 @@ public class CompoundToken implements Token {
     /**
      * Constructs a new {@link CompoundToken} for doing OR character comparisons. The descriptions of each will be
      * combined.
-     * 
+     *
      * @param first
      *            The first {@link Token}.
      * @param second
@@ -46,7 +46,7 @@ public class CompoundToken implements Token {
 
     @Override
     public boolean matches(Character c) {
-        return c == null ? false : matcher.matches(c);
+        return c != null && matcher.matches(c);
     }
 
     @Override

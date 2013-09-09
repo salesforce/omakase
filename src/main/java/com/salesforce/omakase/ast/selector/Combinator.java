@@ -3,12 +3,8 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -16,12 +12,18 @@ import com.salesforce.omakase.parser.selector.CombinatorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
- * TESTME Represents a CSS selector part combinator.
- * 
- * @see CombinatorParser
- * 
+ * TESTME
+ * <p/>
+ * Represents a CSS combinator.
+ *
  * @author nmcwilliams
+ * @see CombinatorParser
  */
 @Subscribable
 @Description(value = "combinator segment", broadcasted = REFINED_SELECTOR)
@@ -30,13 +32,13 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
 
     /**
      * Creates a new instance with the given line and column numbers, and the {@link CombinatorType}.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param type
-     *            The {@link CombinatorType}.
+     *     The {@link CombinatorType}.
      */
     public Combinator(int line, int column, CombinatorType type) {
         super(line, column);
@@ -44,10 +46,10 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
     }
 
     /**
-     * TODO
-     * 
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     *
      * @param type
-     *            TODO
+     *     The {@link CombinatorType}.
      */
     public Combinator(CombinatorType type) {
         this.type = checkNotNull(type, "type cannot be null");

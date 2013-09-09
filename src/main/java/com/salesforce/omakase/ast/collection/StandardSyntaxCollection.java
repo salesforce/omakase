@@ -18,29 +18,29 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME Standard (default) implementation of the {@link SyntaxCollection}.
+ * TESTME
+ * <p/>
+ * Standard (default) implementation of the {@link SyntaxCollection}.
  *
  * @param <T>
- *            Type of items in the {@link SyntaxCollection}.
+ *     Type of items in the {@link SyntaxCollection}.
  *
  * @author nmcwilliams
  */
-public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implements SyntaxCollection<T> {
+public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implements SyntaxCollection<T> {
     private final LinkedList<T> list = Lists.newLinkedList();
     private Optional<Broadcaster> broadcaster;
 
-    /**
-     * TODO
-     */
+    /** Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}. */
     public StandardSyntaxCollection() {
         this(null);
     }
 
     /**
-     * TODO
+     * Creates a new {@link StandardSyntaxCollection} using the given {@link Broadcaster} to broadcast new units.
      *
      * @param broadcaster
-     *            TODO
+     *     Used to broadcast new units.
      */
     public StandardSyntaxCollection(Broadcaster broadcaster) {
         this.broadcaster = Optional.fromNullable(broadcaster);
@@ -89,17 +89,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     public SyntaxCollection<T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
-        if (broadcaster.isPresent() && unit.broadcaster() == null) {
+        // if the unit doesn't have a broadcaster and we have one then give it.
+        if (unit.broadcaster() == null && broadcaster.isPresent()) {
             unit.broadcaster(broadcaster.get());
         }
 
+        // add the unit to the list
         list.push(unit);
         unit.parent(this);
 
-        if (broadcaster.isPresent()) {
-            unit.propagateBroadcast(broadcaster.get());
-        }
-
+        // ensure the unit has been broadcasted
         broadcast(unit);
 
         return this;
@@ -121,13 +120,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         int index = list.indexOf(existing);
         if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
+        // if the unit doesn't have a broadcaster and we have one then give it.
         if (broadcaster.isPresent() && unit.broadcaster() == null) {
             unit.broadcaster(broadcaster.get());
         }
 
+        // add the unit to the list
         list.add(index, unit);
         unit.parent(this);
 
+        // ensure the unit is broadcasted
         broadcast(unit);
 
         return this;
@@ -137,13 +139,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     public SyntaxCollection<T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
+        // if the unit doesn't have a broadcaster and we have one then give it.
         if (broadcaster.isPresent() && unit.broadcaster() == null) {
             unit.broadcaster(broadcaster.get());
         }
 
+        // add the unit to the list
         list.add(unit);
         unit.parent(this);
 
+        // ensure the unit is broadcasted
         broadcast(unit);
 
         return this;
@@ -163,15 +168,16 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         checkNotNull(unit, "unit cannot be null");
 
         int index = list.indexOf(existing);
-
         if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
+        // add the unit to the list
         if (index == (list.size() - 1)) {
             list.add(unit);
         } else {
             list.add(index + 1, unit);
         }
 
+        // ensure the unit is broadcasted
         broadcast(unit);
 
         return this;
@@ -203,51 +209,20 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
     }
 
     /**
-     * Internal method to broadcast new units.
+     * Internal method to broadcast newly added units.
      *
      * @param unit
-     *            The unit to broadcast.
+     *     The unit to broadcast.
      */
     private void broadcast(T unit) {
-        // propagation only happens for unbroadcasted units. Once a unit has been broadcasted it should take care of
-        // ensuring any new broadcastable members are properly broadcasted when added.
+        // only broadcast the unit if it hasn't been broadcasted yet. This also means propagation only happens for unbroadcasted
+        // units. Once a unit has been broadcasted it should take care of ensuring any new broadcastable members are properly
+        // broadcasted when added. Of course, we can't do anything if we don't have a broadcaster yet,
+        // which will be true for dynamically created units with collections, such as rules. In that case,
+        // it's vital that propagateBroadcast is called on this collection by the Rule as soon as it gets broadcasted itself.
         if (broadcaster.isPresent() && unit.status() == Status.UNBROADCASTED) {
             broadcaster.get().broadcast(unit, true);
         }
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("items", list)
-            .toString();
-    }
-
-    /**
-     * Creates a new {@link SyntaxCollection} instance.
-     *
-     * @param <E>
-     *            Type of items the collection contains.
-     *
-     * @return The new {@link SyntaxCollection} instance.
-     */
-    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
-        return new StandardSyntaxCollection<>();
-    }
-
-    /**
-     * Creates a new {@link SyntaxCollection} instance with the given {@link Broadcaster} to broadcast new units.
-     *
-     * @param <E>
-     *            Type of items the collection contains.
-     * @param broadcaster
-     *            Used to broadcast new units.
-     *
-     * @return The new {@link SyntaxCollection} instance.
-     */
-    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create(Broadcaster broadcaster) {
-        return new StandardSyntaxCollection<>(broadcaster);
     }
 
     @Override
@@ -264,5 +239,36 @@ public class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implement
         for (T unit : units) {
             unit.propagateBroadcast(broadcaster);
         }
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).indent().add("items", list).toString();
+    }
+
+    /**
+     * Creates a new {@link SyntaxCollection} instance.
+     *
+     * @param <E>
+     *     Type of items the collection contains.
+     *
+     * @return The new {@link SyntaxCollection} instance.
+     */
+    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
+        return new StandardSyntaxCollection<>();
+    }
+
+    /**
+     * Creates a new {@link SyntaxCollection} instance with the given {@link Broadcaster} to broadcast new units.
+     *
+     * @param <E>
+     *     Type of items the collection contains.
+     * @param broadcaster
+     *     Used to broadcast new units.
+     *
+     * @return The new {@link SyntaxCollection} instance.
+     */
+    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create(Broadcaster broadcaster) {
+        return new StandardSyntaxCollection<>(broadcaster);
     }
 }

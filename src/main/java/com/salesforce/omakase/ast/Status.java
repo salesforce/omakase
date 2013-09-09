@@ -12,6 +12,7 @@ import com.salesforce.omakase.emitter.SubscriptionPhase;
  */
 public enum Status {
     /** For units that should never be broadcasted */
+    @SuppressWarnings("UnusedDeclaration")
     DO_NOT_BROADCAST {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -19,7 +20,7 @@ public enum Status {
         }
     },
 
-    /** The unit has never been broadcasted. */
+    /** The unit has never been broadcasted */
     UNBROADCASTED {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
@@ -79,12 +80,12 @@ public enum Status {
      */
     public Status nextStatus(SubscriptionPhase phase) {
         switch (phase) {
-            case PREPROCESS:
-                return Status.BROADCASTED_PREPROCESS;
-            case PROCESS:
-                return Status.BROADCASTED_PROCESS;
-            case VALIDATE:
-                return Status.BROADCASTED_VALIDATION;
+        case PREPROCESS:
+            return Status.BROADCASTED_PREPROCESS;
+        case PROCESS:
+            return Status.BROADCASTED_PROCESS;
+        case VALIDATE:
+            return Status.BROADCASTED_VALIDATION;
         }
         return null;
     }

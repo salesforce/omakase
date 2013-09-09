@@ -3,23 +3,27 @@
  */
 package com.salesforce.omakase.emitter;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * TESTME TODO Description
+ * TESTME
+ * <p/>
+ * TODO Description
  *
  * @author nmcwilliams
  */
@@ -33,7 +37,7 @@ public final class Emitter {
         .build(new CacheLoader<Class<?>, Set<Class<?>>>() {
             @Override
             public Set<Class<?>> load(Class<?> klass) {
-                final Builder<Class<?>> builder = ImmutableSet.<Class<?>>builder();
+                final Builder<Class<?>> builder = ImmutableSet.builder();
                 for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
                     if (type.isAnnotationPresent(Subscribable.class)) {
                         builder.add(type);
@@ -54,7 +58,7 @@ public final class Emitter {
      * Sets the current {@link SubscriptionPhase}. This determines which registered subscribers receive broadcasts.
      *
      * @param phase
-     *            The current phase.
+     *     The current phase.
      */
     public void phase(SubscriptionPhase phase) {
         this.phase = checkNotNull(phase, "phase cannot be null");
@@ -71,12 +75,12 @@ public final class Emitter {
 
     /**
      * Registers an instance of an object to receive broadcasted events (usually a {@link Plugin} instance).
-     *
-     * The methods on the class of the object will be scanned for applicable annotations (e.g., {@link Rework},
-     * {@link Validate}). The methods will be invoked when the matching event is broadcasted in the applicable phase.
+     * <p/>
+     * The methods on the class of the object will be scanned for applicable annotations (e.g., {@link Rework}, {@link Validate}).
+     * The methods will be invoked when the matching event is broadcasted in the applicable phase.
      *
      * @param subscriber
-     *            Register this object to receive events.
+     *     Register this object to receive events.
      */
     public void register(Object subscriber) {
         for (Entry<Class<?>, Subscription> entry : scanner.scan(subscriber).entries()) {
@@ -98,17 +102,16 @@ public final class Emitter {
     }
 
     /**
-     * Sends an event to registered subscribers of the given event type (or any type within the given event type's
-     * parent hierarchy).
-     *
-     * "event" here usually refers to an instance of a {@link Syntax} unit (but this class is built generically to emit
-     * anything really).
+     * Sends an event to registered subscribers of the given event type (or any type within the given event type's parent
+     * hierarchy).
+     * <p/>
+     * "event" here usually refers to an instance of a {@link Syntax} unit (but this class is built generically to emit anything
+     * really).
      *
      * @param event
-     *            The event instance. "event" here usually is an instance of an object (e.g., one of the {@link Syntax}
-     *            objects).
+     *     The event instance. "event" here usually is an instance of an object (e.g., one of the {@link Syntax} objects).
      * @param em
-     *            The {@link ErrorManager} instance.
+     *     The {@link ErrorManager} instance.
      */
     public void emit(Object event, ErrorManager em) {
         switch (phase) {

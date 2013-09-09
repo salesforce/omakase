@@ -2,7 +2,7 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
+ * Contains declaration property value AST members.
  *
  * @author nmcwilliams
  */

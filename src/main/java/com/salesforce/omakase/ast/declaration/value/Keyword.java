@@ -7,10 +7,11 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.Declaration;
 
 /**
- * Enum of all recognized CSS keywords. Generated using {@link com.salesforce.omakase.util.tool.KeywordToEnum}.
- * 
+ * Enum of all recognized CSS keywords. Generated using KeywordToEnum.java.
+ *
  * @author nmcwilliams
  */
+@SuppressWarnings("UnusedDeclaration")
 public enum Keyword {
     /** CSS keyword named 'above' */
     ABOVE("above"),
@@ -397,22 +398,35 @@ public enum Keyword {
     }
 
     /**
-     * TODO Description
-     * 
+     * Gets whether this keyword is the only value of the given {@link Declaration}.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code Keyword.NONE.isOnlyValueIn(theDeclaration);}
+     * </pre>
+     *
      * @param declaration
-     *            TODO
-     * @return TODO
+     *     Check if this {@link Declaration}'s value only consists of this keyword.
+     *
+     * @return True if this keyword is the only value in the {@link Declaration}.
      */
     public boolean isOnlyValueIn(Declaration declaration) {
         return isOnlyValueIn(declaration.propertyValue());
     }
 
     /**
-     * TODO Description
-     * 
+     * Gets whether the given {@link PropertyValue} only consists of one {@link Term} which is a {@link KeywordValue} with this
+     * {@link Keyword}.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code Keyword.NONE.isOnlyValueIn(thePropertyValue);}
+     * </pre>
+     *
      * @param value
-     *            TODO
-     * @return TODO
+     *     The {@link PropertyValue} to check.
+     *
+     * @return True if this keyword is the only value in the {@link PropertyValue}.
      */
     public boolean isOnlyValueIn(PropertyValue value) {
         Optional<KeywordValue> keywordValue = Value.asKeyword(value);

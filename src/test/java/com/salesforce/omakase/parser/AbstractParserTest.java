@@ -3,33 +3,32 @@
  */
 package com.salesforce.omakase.parser;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.List;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.List;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Base class for testing parsers.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings({ "javadoc", "serial", "unchecked" })
+@SuppressWarnings({"javadoc", "serial", "unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
-
-    private final Class<T> klass = (Class<T>)(new TypeToken<T>(getClass()) {}).getRawType();
+    private final Class<T> klass = (Class<T>) (new TypeToken<T>(getClass()) {
+    }).getRawType();
     private final Parser parser;
 
     public AbstractParserTest() {
@@ -40,12 +39,33 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
     public abstract List<String> invalidSources();
 
+    /**
+     * A list of valid sources. It is expected for each source to be parsed completely, i.e., a successful parse should result in
+     * {@link Stream#eof()} being true.
+     *
+     * @return List of valid sources.
+     */
     public abstract List<String> validSources();
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
     public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
     public abstract boolean allowedToTrimLeadingWhitespace();
 
     @Test
@@ -62,14 +82,20 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void returnsTrueOnSuccess() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
-            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
             assertThat(result.success).describedAs(result.stream.toString()).isTrue();
         }
     }
 
-    /**
-     * Override in subclass if expected count isn't 1.
-     */
+    @Test
+    @Override
+    public void eofOnValidSources() {
+        List<GenericParseResult> results = parse(validSources());
+        for (GenericParseResult result : results) {
+            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
+        }
+    }
+
+    /** Override in subclass if expected count isn't 1. */
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {

@@ -3,21 +3,20 @@
  */
 package com.salesforce.omakase.parser.selector;
 
-import static com.salesforce.omakase.util.Templates.withExpectedResult;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.util.Templates.SourceWithExpectedResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.salesforce.omakase.util.Templates.withExpectedResult;
 
 /**
  * Unit tests for {@link UniversalSelectorParser}.
- * 
+ *
  * @author nmcwilliams
  */
 public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSelectorParser> {
@@ -32,10 +31,7 @@ public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSel
 
     @Override
     public List<String> validSources() {
-        return Lists.newArrayList(
-            "*",
-            "*#id",
-            "*.cname");
+        return Lists.newArrayList("*");
     }
 
     @Override

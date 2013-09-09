@@ -3,21 +3,20 @@
  */
 package com.salesforce.omakase.parser;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import org.junit.Test;
-
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
+import org.junit.Test;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link CombinationParser}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
-public class CombinatorParserTest {
+public class CombinationParserTest {
     @Test
     public void parsesEither() {
         CombinationParser c = new CombinationParser(new KeywordValueParser(), new NumericalValueParser());

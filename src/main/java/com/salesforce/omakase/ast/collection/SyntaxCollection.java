@@ -11,12 +11,12 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * A collection of related {@link Syntax} units.
- *
- * If you are using any of these methods in a plugin you will need to register the {@link SyntaxTree} as a dependency.
- * See {@link DependentPlugin} for more details.
+ * <p/>
+ * If you are using any of these methods in a plugin you will need to register the {@link SyntaxTree} as a dependency. See {@link
+ * DependentPlugin} for more details.
  *
  * @param <T>
- *            The type of {@link Syntax} contained within the collection.
+ *     The type of {@link Syntax} contained within the collection.
  *
  * @author nmcwilliams
  */
@@ -36,9 +36,11 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
     boolean isEmpty();
 
     /**
-     * TODO Description
+     * Gets whether this collection is empty, or all contained elements are detached.
      *
-     * @return TODO
+     * @return True if there are no units in this collection or all units are detached.
+     *
+     * @see Groupable#isDetached()
      */
     boolean isEmptyOrAllDetached();
 
@@ -46,7 +48,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Gets whether the given unit is contained within this collection.
      *
      * @param unit
-     *            Check if this unit is contained within this collection.
+     *     Check if this unit is contained within this collection.
+     *
      * @return True if the unit is contained within this collection.
      */
     boolean contains(T unit);
@@ -69,7 +72,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Prepends the given unit the beginning of this collection.
      *
      * @param unit
-     *            The unit to prepend.
+     *     The unit to prepend.
+     *
      * @return this, for chaining.
      */
     SyntaxCollection<T> prepend(T unit);
@@ -78,7 +82,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Prepends all of the given units to the beginning of this collection.
      *
      * @param units
-     *            The units to add.
+     *     The units to add.
+     *
      * @return this, for chaining.
      */
     SyntaxCollection<T> prependAll(Iterable<T> units);
@@ -87,12 +92,14 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Prepends the given unit before the given existing unit.
      *
      * @param existing
-     *            The unit to prepend.
+     *     The unit to prepend.
      * @param unit
-     *            Prepend this unit before the existing unit.
+     *     Prepend this unit before the existing unit.
+     *
      * @return this, for chaining.
+     *
      * @throws IllegalArgumentException
-     *             If existing is not contained within this collection.
+     *     If existing is not contained within this collection.
      */
     SyntaxCollection<T> prependBefore(T existing, T unit) throws IllegalArgumentException;
 
@@ -100,7 +107,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Appends the given unit to the end of this collection.
      *
      * @param unit
-     *            The unit to append.
+     *     The unit to append.
+     *
      * @return this, for chaining.
      */
     SyntaxCollection<T> append(T unit);
@@ -109,7 +117,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Appends all of the given units to the end of this collection.
      *
      * @param units
-     *            The units to append.
+     *     The units to append.
+     *
      * @return this, for chaining.
      */
     SyntaxCollection<T> appendAll(Iterable<T> units);
@@ -118,12 +127,14 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Appends the given unit after the given existing unit.
      *
      * @param existing
-     *            The unit that already exists in this collection.
+     *     The unit that already exists in this collection.
      * @param unit
-     *            The unit to append.
+     *     The unit to append.
+     *
      * @return this, for chaining.
+     *
      * @throws IllegalArgumentException
-     *             If existing is not contained within this collection.
+     *     If existing is not contained within this collection.
      */
     SyntaxCollection<T> appendAfter(T existing, T unit) throws IllegalArgumentException;
 
@@ -131,7 +142,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Replaces <b>all</b> existing units with the given units.
      *
      * @param units
-     *            Replace all existing (if any) units with these.
+     *     Replace all existing (if any) units with these.
+     *
      * @return this, for chaining.
      */
     SyntaxCollection<T> replaceExistingWith(Iterable<T> units);
@@ -140,7 +152,8 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * Removes a unit from this collection. If this collection does not contain the given unit nothing will happen.
      *
      * @param unit
-     *            The unit to remove.
+     *     The unit to remove.
+     *
      * @return this, for chaining.
      */
     SyntaxCollection<T> detach(T unit);
@@ -153,19 +166,21 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
     Iterable<T> clear();
 
     /**
-     * TODO Description
+     * Specifies the {@link Broadcaster} to use when new units are added to the collection.
      *
      * @param broadcaster
-     *            TODO
-     * @return TODO
+     *     Used to broadcast newly added units.
+     *
+     * @return this, for chaining.
      */
     SyntaxCollection<T> broadcaster(Broadcaster broadcaster);
 
     /**
-     * TODO Description
+     * Calls {@link Syntax#propagateBroadcast(Broadcaster)} on all units within this collection using the given {@link
+     * Broadcaster}.
      *
      * @param broadcaster
-     *            TODO
+     *     Propagate using this {@link Broadcaster}.
      */
     void propagateBroadcast(Broadcaster broadcaster);
 }

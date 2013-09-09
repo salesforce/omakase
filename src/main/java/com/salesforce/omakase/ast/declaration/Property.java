@@ -3,14 +3,17 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
+import java.util.Map;
+
 /**
- * TESTME Enum of all recognized CSS properties. Generated using {@link com.salesforce.omakase.util.tool.PropertyToEnum}
- * .
+ * TESTME
+ * <p/>
+ * Enum of all recognized CSS properties. Generated using PropertyToEnum.java.
+ * <p/>
+ * Use {@link #toString()} to get the CSS-output version.
  *
  * @author nmcwilliams
  */
@@ -899,10 +902,11 @@ public enum Property {
 
     /** reverse lookup map */
     protected static final Map<String, Property> map;
+
     static {
         Builder<String, Property> builder = ImmutableMap.builder();
         for (Property pn : Property.values()) {
-            builder.put(pn.getName(), pn);
+            builder.put(pn.toString(), pn);
         }
         map = builder.build();
     }
@@ -913,12 +917,8 @@ public enum Property {
         this.name = name;
     }
 
-    /**
-     * TODO Description
-     *
-     * @return TODO
-     */
-    public String getName() {
+    @Override
+    public String toString() {
         return name;
     }
 }

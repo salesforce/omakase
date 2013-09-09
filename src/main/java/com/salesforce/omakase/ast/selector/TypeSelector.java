@@ -3,21 +3,24 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
- * TESTME Represents a CSS type selector (also known as an element type selector).
- *
+ * TESTME
+ * <p/>
+ * Represents a CSS type selector (also known as an element type selector).
+ * <p/>
  * Do not use this for universal "*" selectors, but use {@link UniversalSelector} instead.
  *
  * @author nmcwilliams
@@ -31,11 +34,11 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
      * Constructs a new {@link TypeSelector} instance with the given name.
      *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param name
-     *            Name of the element / type.
+     *     Name of the element / type.
      */
     public TypeSelector(int line, int column, String name) {
         super(line, column);
@@ -43,10 +46,10 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
     }
 
     /**
-     * TODO
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
      *
      * @param name
-     *            TODO
+     *     Name of the element / type.
      */
     public TypeSelector(String name) {
         name(name);
@@ -56,7 +59,8 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
      * Sets the name.
      *
      * @param name
-     *            The element name.
+     *     The element name.
+     *
      * @return this, for chaining.
      */
     public TypeSelector name(String name) {

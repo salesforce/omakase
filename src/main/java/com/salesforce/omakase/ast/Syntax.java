@@ -92,12 +92,13 @@ public interface Syntax extends Writable {
      * <p/>
      * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
      * itself is broadcasted, this method should be called on the parent unit in order to propagate the broadcast event to the
-     * children, ensuring that each child unit is properly broadcasted.
+     * children, ensuring that each child unit is properly broadcasted as well.
      * <p/>
-     * This differs from {@link #broadcaster(Broadcaster)}. Parent units already in the tree will utilize the {@link Broadcaster}
-     * from {@link #broadcaster(Broadcaster)} to broadcast child units as created. In contrast, parent units <b>not currently</b>
-     * in the tree should have this method called when initially broadcasted to ensure that any child units previously added
-     * before the broadcast get broadcasted as well.
+     * This differs from the usage of {@link #broadcaster(Broadcaster)}. Parent units already in the tree will utilize the {@link
+     * Broadcaster} from {@link #broadcaster(Broadcaster)} to broadcast child units as they are added. Broadcast propagation is
+     * <em>not</em> needed for those child units. In contrast, parent units <b>not currently</b> in the tree are the ones that
+     * need this method. It should be called when the parent unit is eventually broadcasted to ensure that any previously added
+     * children are broadcasted as well.
      *
      * @param broadcaster
      *     Use this {@link Broadcaster} to broadcast all unbroadcasted child units.

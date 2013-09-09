@@ -8,7 +8,7 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 /**
  * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second
  * parse will be tried.
- * 
+ *
  * @author nmcwilliams
  */
 public class CombinationParser extends AbstractParser {
@@ -17,7 +17,7 @@ public class CombinationParser extends AbstractParser {
 
     /**
      * Construct a new {@link CombinationParser} instance with the given two {@link Parser}s.
-     * 
+     *
      * @param first
      *            The first {@link Parser} to try.
      * @param second
@@ -30,6 +30,6 @@ public class CombinationParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        return first.parse(stream, broadcaster) ? true : second.parse(stream, broadcaster);
+        return first.parse(stream, broadcaster) || second.parse(stream, broadcaster);
     }
 }

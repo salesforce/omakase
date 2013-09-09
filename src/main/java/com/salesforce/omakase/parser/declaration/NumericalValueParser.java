@@ -8,17 +8,18 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.parser.*;
+import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.Stream.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link NumericalValue}.
- * 
+ *
+ * @author nmcwilliams
  * @see NumericalValue
  * @see NumericalValueParserTest
- * 
- * @author nmcwilliams
  */
 public class NumericalValueParser extends AbstractParser {
     @Override
@@ -60,8 +61,9 @@ public class NumericalValueParser extends AbstractParser {
             value.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
         }
 
-        // check for a unit
-        Optional<String> unit = stream.readIdent();
+        // check for a % or unit
+        Optional<String> unit = stream.optionallyPresent(Tokens.PERCENTAGE) ? Optional.of("%") : stream.readIdent();
+
         if (unit.isPresent()) {
             value.unit(unit.get());
         }

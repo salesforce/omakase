@@ -22,9 +22,13 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
 
 /**
  * TESTME
+ * <p/>
  * Represents a CSS Rule.
  * <p/>
  * Note that {@link Rule}s will not be created unless the {@link SyntaxTree} plugin is enabled.
+ * <p/>
+ * You might be looking for a "DeclarationBlock" class. Currently such a class serves no purpose, and all ordered declarations are
+ * contained inside of a {@link SyntaxCollection} within this class instead.
  *
  * @author nmcwilliams
  */
@@ -34,7 +38,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     private final SyntaxCollection<Selector> selectors;
     private final SyntaxCollection<Declaration> declarations;
 
-    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units. */
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public Rule() {
         this(-1, -1, null);
     }
@@ -57,7 +61,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
 
     /**
      * Gets the collection of selectors for this {@link Rule}. You can append, prepend, etc... additional {@link Selector}s to
-     * this collection.
+     * this collection. New {@link Selector}s will automatically be broadcasted.
      *
      * @return The selectors.
      */
@@ -66,8 +70,8 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     }
 
     /**
-     * Gets the collection of declarations for this {@link Rule}. You can append, prepend,
-     * etc... additional {@link Declaration}s to this collection.
+     * Gets the collection of declarations for this {@link Rule}. You can append, prepend, etc... additional {@link Declaration}s
+     * to this collection. New {@link Declaration}s will be automatically broadcasted.
      *
      * @return The declarations.
      */

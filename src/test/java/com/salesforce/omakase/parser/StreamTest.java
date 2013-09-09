@@ -3,26 +3,25 @@
  */
 package com.salesforce.omakase.parser;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Stream}.
- * 
+ *
  * @author nmcwilliams
  */
 @SuppressWarnings("javadoc")
 public class StreamTest {
-    final String INLINE = ".class, #id { color: red }";
+    final static String INLINE = ".class, #id { color: red }";
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();

@@ -3,14 +3,14 @@
  */
 package com.salesforce.omakase.parser.token;
 
-import static com.google.common.base.CharMatcher.*;
-
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicates;
 
+import static com.google.common.base.CharMatcher.*;
+
 /**
  * List of {@link Token}s.
- * 
+ *
  * @author nmcwilliams
  */
 public enum Tokens implements Token {
@@ -68,6 +68,9 @@ public enum Tokens implements Token {
     /** forward slash */
     FORWARD_SLASH(is('/'), "/"),
 
+    /** percentage symbol */
+    PERCENTAGE(is('%'), "%"),
+
     /** double quote */
     DOUBLE_QUOTE(is('"'), "\" (double quote)"),
 
@@ -94,16 +97,13 @@ public enum Tokens implements Token {
 
     /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
     NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')),
-            "valid identifier character"),
+        "valid identifier character"),
 
     /** hyphen or digit */
     HYPHEN_OR_DIGIT(is('-').or(inRange('0', '9')), "hyphen or digit"),
 
     /** a token that never matches */
-    NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches")
-
-    ;
-
+    NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches");
     private final CharMatcher matcher;
     private final String description;
 
@@ -119,7 +119,7 @@ public enum Tokens implements Token {
 
     @Override
     public boolean matches(Character c) {
-        return c == null ? false : matcher.matches(c);
+        return c != null && matcher.matches(c);
     }
 
     @Override

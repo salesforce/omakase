@@ -5,8 +5,8 @@ package com.salesforce.omakase.ast.selector;
 
 /**
  * The type of selector or combinator for a {@link SelectorPart}. Checking against {@link SelectorPart#type()} can be
- * useful in place of using instanceof.
- * 
+ * useful in place of using <pre>instanceof</pre>.
+ *
  * @author nmcwilliams
  */
 public enum SelectorPartType {

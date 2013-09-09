@@ -3,12 +3,6 @@
  */
 package com.salesforce.omakase.ast.declaration;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.IOException;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
@@ -16,85 +10,100 @@ import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+import java.util.regex.Pattern;
+
+import static com.google.common.base.Preconditions.*;
+
 /**
- * TODO Description
- * 
+ * The property name within a {@link Declaration}.
+ * <p/>
+ * This class is vendor prefix aware, which means that you can check if it {@link #isPrefixed()}, get the {@link
+ * #unprefixedName()}, or add/replace the prefix with {@link #prefix(Prefix)} method.
+ * <p/>
+ * Use {@link #name()} to get the full property name, including the prefix if it is present.
+ *
  * @author nmcwilliams
  */
 public class PropertyName extends AbstractSyntax {
+    /** pattern for the vendor prefix */
     private static final Pattern pattern = Pattern.compile("^-[a-zA-Z]+-");
 
     private final String name;
     private Optional<String> prefix;
 
+    /** private -- use a constructor method for new instances */
     private PropertyName(int line, int column, String name) {
         super(line, column);
 
         // split into prefix and name
         String[] split = pattern.split(name);
         if (split.length == 1) {
+            // no prefix
             prefix = Optional.absent();
             this.name = split[0];
         } else {
+            // has a prefix
             prefix = Optional.of(split[0]);
             this.name = split[1];
         }
-
     }
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets the full property name, including the prefix if present.
+     *
+     * @return The full property name.
      */
     public String name() {
         return prefix.isPresent() ? prefix.get() + name : name;
     }
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets the unprefixed property name.
+     *
+     * @return The unprefixed property name.
      */
     public String unprefixedName() {
         return name;
     }
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets whether this property name is prefixed.
+     *
+     * @return True if this property name is prefixed.
      */
     public boolean isPrefixed() {
         return prefix.isPresent();
     }
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Gets the prefix, if present.
+     *
+     * @return The prefix, or {@link Optional#absent()} if no prefix exists.
      */
     public Optional<String> prefix() {
         return prefix;
     }
 
     /**
-     * TODO Description
-     * 
+     * Sets the prefix for this property name. This will overwrite any currently specified prefix.
+     *
      * @param prefix
-     *            TODO
-     * @return TODO
+     *     The {@link Prefix}.
+     *
+     * @return this, for chaining.
      */
     public PropertyName prefix(Prefix prefix) {
         return prefix(prefix.toString());
     }
 
     /**
-     * TODO Description
-     * 
+     * Sets the prefix for this property name. Prefer to use {@link #prefix(Prefix)} instead.
+     *
      * @param prefix
-     *            TODO
-     * @return TODO
+     *     The prefix, including both dashes, e.g., "-webkit-".
+     *
+     * @return this, for chaining.
      */
     public PropertyName prefix(String prefix) {
         checkNotNull(prefix, "prefix cannot be null (use #removePrefix instead)");
@@ -105,9 +114,9 @@ public class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * TODO Description
-     * 
-     * @return TODO
+     * Removes the current prefix from this property name.
+     *
+     * @return this, for chaining.
      */
     public PropertyName removePrefix() {
         prefix = Optional.absent();
@@ -125,58 +134,67 @@ public class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * TODO Description
-     * 
+     * Creates a new {@link PropertyName} instance using the given string. Prefer to use {@link #using(Property)} instead.
+     * <p/>
+     * Please note that the property name will be automatically lower-cased.
+     *
      * @param name
-     *            TODO
-     * @return TODO
+     *     The property name.
+     *
+     * @return The new {@link PropertyName} instance.
      */
     public static PropertyName using(String name) {
+        checkNotNull(name, "name cannot be null");
         return using(-1, -1, name);
     }
 
     /**
-     * Gets the {@link PropertyName} associated with the given String name.
-     * 
+     * Creates a new {@link PropertyName} from with the given String name. Prefer to use {@link #using(Property)} instead.
+     * <p/>
+     * Please note that the property name will be automatically lower-cased.
+     *
      * @param name
-     *            The name of the property.
+     *     The name of the property.
      * @param line
-     *            The line number of the start of the property name.
+     *     The line number of the start of the property name.
      * @param column
-     *            The column number of the start of the property.
-     * @return TODO
+     *     The column number of the start of the property.
+     *
+     * @return The new {@link PropertyName} instance.
      */
     public static PropertyName using(int line, int column, String name) {
         Property recognized = Property.map.get(name.toLowerCase());
-        String nameToUse = recognized != null ? recognized.getName() : name.toLowerCase();
+        String nameToUse = recognized != null ? recognized.toString() : name.toLowerCase();
         return new PropertyName(line, column, nameToUse);
     }
 
     /**
-     * TODO Description
-     * 
+     * Creates a new {@link PropertyName} instance from the given {@link Property}.
+     *
      * @param property
-     *            TODO
-     * @return TODO
+     *     The {@link Property} name.
+     *
+     * @return The new {@link PropertyName} instance.
      */
     public static PropertyName using(Property property) {
         return using(-1, -1, property);
     }
 
     /**
-     * TODO Description
-     * 
+     * Creates a new {@link PropertyName} instance from the given {@link Property}, line, and column numbers.
+     *
      * @param line
-     *            TODO
+     *     The line number.
      * @param column
-     *            TODO
+     *     The column number.
      * @param property
-     *            TODO
-     * @return TODO
+     *     The {@link Property}.
+     *
+     * @return The new {@link PropertyName} instance.
      */
     public static PropertyName using(int line, int column, Property property) {
         checkNotNull(property, "property cannot be null");
-        return new PropertyName(line, column, property.getName());
+        return new PropertyName(line, column, property.toString());
     }
 
     @Override
@@ -186,12 +204,9 @@ public class PropertyName extends AbstractSyntax {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof String) {
-            // match string content
-            return name().equals(other);
-        } else if (other instanceof Property) {
-            // match Property value
-            return name().equals(((Property)other).getName());
+        // if the object is a string or an instance of property then compare the string values.
+        if (other instanceof String || other instanceof Property) {
+            return name().equals(other.toString());
         }
         return super.equals(other);
     }

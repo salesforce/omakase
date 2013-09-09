@@ -3,14 +3,9 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
-
-import java.io.IOException;
-import java.util.Set;
-
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -18,12 +13,19 @@ import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+
 /**
- * TESTME Represents a CSS pseudo element selector.
- * 
- * @see PseudoSelectorParser
- * 
+ * TESTME
+ * <p/>
+ * Represents a CSS pseudo element selector.
+ *
  * @author nmcwilliams
+ * @see PseudoSelectorParser
  */
 @Subscribable
 @Description(value = "pseudo element selector segment", broadcasted = REFINED_SELECTOR)
@@ -35,13 +37,13 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
 
     /**
      * Constructs a new {@link PseudoElementSelector} selector with the given name.
-     * 
+     *
      * @param line
-     *            The line number.
+     *     The line number.
      * @param column
-     *            The column number.
+     *     The column number.
      * @param name
-     *            Name of the pseudo element.
+     *     Name of the pseudo element.
      */
     public PseudoElementSelector(int line, int column, String name) {
         super(line, column);
@@ -49,10 +51,10 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
     }
 
     /**
-     * TODO
-     * 
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     *
      * @param name
-     *            TODO
+     *     Name of the pseudo element.
      */
     public PseudoElementSelector(String name) {
         name(name);
@@ -60,9 +62,10 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
 
     /**
      * Sets the name of the selector.
-     * 
+     *
      * @param name
-     *            The new name.
+     *     The new name.
+     *
      * @return this, for chaining.
      */
     public PseudoElementSelector name(String name) {
@@ -73,7 +76,7 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
 
     /**
      * Gets the selector name (e.g., "before").
-     * 
+     *
      * @return The selector name.
      */
     public String name() {

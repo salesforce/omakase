@@ -2,7 +2,7 @@
  * ADD LICENSE
  */
 /**
- * TODO Description
+ * Contains selector AST members.
  *
  * @author nmcwilliams
  */

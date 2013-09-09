@@ -3,19 +3,18 @@
  */
 package com.salesforce.omakase;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import org.junit.Test;
-
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import org.junit.Test;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for Suppliers.
- * 
+ *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class SuppliersTest {
     @Test
     public void testSyntaxTree() {

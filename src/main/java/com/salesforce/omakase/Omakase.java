@@ -16,18 +16,17 @@ import com.salesforce.omakase.plugin.Plugin;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME Main entry point for the Omakase CSS Parser.
+ * TESTME
+ * <p/>
+ * Main entry point for the Omakase CSS Parser.
  * <p/>
  * For usage information, see the readme.md file, or check out (link).
  * <p/>
  * Please note that the parser does not currently support the following:
  * <p/>
- * <ul> <li>@namespace</li>
+ * {@code @namespace, @import, @charset, @page, @font-face, @media (media queries), cdo and cdc, escaping (in most cases)}
  * <p/>
- * <p/>
- * <li>@import <li>@charset <li>@page <li>@font-face <li>@media (media queries) <li>cdo and cdc <li>escaping (in most cases)
- * <li>!important </ul> This library is <em>not</em> thread-safe. Don't even try it without reviewing and fixing every class in
- * this library.
+ * This library is <em>not</em> thread-safe. Don't even try it without reviewing and fixing every class in this library.
  *
  * @author nmcwilliams
  */
@@ -43,7 +42,7 @@ public final class Omakase {
      * @param source
      *     The CSS source code.
      *
-     * @return The processed request (see {@link Request}), usually you don't need this reference unless you can't inline/chain
+     * @return The processed request (see {@link Request}). Usually you don't need this reference unless you can't inline/chain
      *         the whole call).
      */
     public static Omakase.Request source(CharSequence source) {
@@ -156,9 +155,10 @@ public final class Omakase {
         }
 
         /**
-         * Processes the CSS source code, invoking registered plugins as applicable. It's only expected that you call this method
-         * at most once. To process difference source code, or to reprocess the same source code under different conditions or
-         * plugins, start new with {@link Omakase#source(CharSequence)}.
+         * Processes the CSS source code, invoking registered plugins as applicable. It's  expected that you call this method at
+         * most once. To process difference source code, or to reprocess the same source code under different conditions or
+         * plugins, start new with {@link Omakase#source(CharSequence)}. It's perfectly acceptable to reprocess the result of a
+         * previous parsing operation.
          *
          * @return The {@link PluginRegistry} containing all registered plugins. This allows you to retrieve plugins if applicable
          *         for further processing or information retrieval.

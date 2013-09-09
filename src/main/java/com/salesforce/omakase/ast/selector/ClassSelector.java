@@ -4,6 +4,7 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -17,7 +18,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME Represents a CSS class selector.
+ * TESTME
+ * <p/>
+ * Represents a CSS class selector.
  *
  * @author nmcwilliams
  * @see ClassSelectorParser
@@ -43,20 +46,22 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
     }
 
     /**
-     * TODO
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
      *
      * @param name
-     *     TODO
+     *     The name of the class.
      */
     public ClassSelector(String name) {
         name(name);
     }
 
-
     /**
-     * @param name
+     * Sets the class name.
      *
-     * @return
+     * @param name
+     *     The new class name
+     *
+     * @return this, for chaining.
      */
     public ClassSelector name(String name) {
         this.name = checkNotNull(name, "name cannot be null");
