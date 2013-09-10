@@ -22,7 +22,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "serial", "unchecked"})
+@SuppressWarnings({"JavaDoc", "unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
 
     @Rule

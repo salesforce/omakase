@@ -17,7 +17,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class EmittingBroadcasterTest {
     @Test
     public void emits() {
@@ -42,7 +42,7 @@ public class EmittingBroadcasterTest {
         boolean called = false;
 
         @Rework
-        public void rework(@SuppressWarnings("unused") ClassSelector selector) {
+        public void rework(ClassSelector selector) {
             called = true;
         }
     }

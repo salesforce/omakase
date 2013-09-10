@@ -151,9 +151,9 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     @Override
     public AtRule refine() {
-        if (!isRefined()) {
-            // TODO refinement
-        }
+        // if (!isRefined()) {
+        // TODO refinement
+        // }
 
         return this;
     }

@@ -22,7 +22,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public class StringValueParserTest extends AbstractParserTest<StringValueParser> {
 
     @Override

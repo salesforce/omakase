@@ -25,7 +25,7 @@ import com.salesforce.omakase.emitter.Rework;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of type

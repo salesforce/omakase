@@ -72,7 +72,7 @@ public class PerfTestLight {
      * @throws IOException
      */
     @SuppressWarnings("ConstantConditions")
-    public static void run() throws IOException {
+    public static void run() {
         final List<Integer> factors = USE_FACTORS ? MULTI_FACTORS : SINGLE_FACTOR;
         final String original = CSS;
 

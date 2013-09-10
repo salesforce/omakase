@@ -14,7 +14,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class StyleAppendableTest {
     @Test
     public void appendChar() throws IOException {

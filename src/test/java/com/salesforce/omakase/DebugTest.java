@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 /** Temp test for debugging. */
-@SuppressWarnings({"JavaDoc", "unused"})
+@SuppressWarnings({"JavaDoc", "UnusedDeclaration", "UnusedAssignment"})
 public class DebugTest {
 
     @Test

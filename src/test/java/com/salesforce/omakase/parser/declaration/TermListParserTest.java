@@ -26,7 +26,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public class TermListParserTest extends AbstractParserTest<TermListParser> {
 
     @Override

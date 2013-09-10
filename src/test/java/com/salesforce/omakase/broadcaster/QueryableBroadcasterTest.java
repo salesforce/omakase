@@ -20,7 +20,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class QueryableBroadcasterTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();

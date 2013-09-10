@@ -14,7 +14,7 @@ import org.junit.rules.ExpectedException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class ThrowingErrorManagerTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();

@@ -12,7 +12,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("JavaDoc")
 public class TokensTest {
     @Test
     public void testMatches() {
