@@ -448,6 +448,9 @@ public final class Stream {
     /**
      * Advances the current character position until the current character matches the given {@link Token}. If the given {@link
      * Token} is never matched then this will advance to the end of the stream.
+     * <p/>
+     * This will skip over values inside parenthesis (mainly because ';' can be a valid part of a declaration value, e.g.,
+     * data-uris). This will also skip over values inside of strings, but {@link #checkInString} must be turned on.
      *
      * @param token
      *     The token to match.
@@ -456,24 +459,34 @@ public final class Stream {
      *         Token}.
      */
     public String until(Token token) {
-        assert checkInString : "checkInString should not be turned off";
+        checkArgument(token != Tokens.OPEN_PAREN, "cannot match this token. Use #chomp instead.");
+        checkArgument(token != Tokens.CLOSE_PAREN, "cannot match this token. Use #chomp instead.");
 
         // save the current index so we can return the matched substring
         int start = index;
 
+        // keep track whether we are inside parenthesis
+        boolean insideParens = false;
+
         // continually parse until we reach the token or eof
         while (!eof()) {
+            char current = source.charAt(index);
 
-            if (inString) {
-                // can't match when inside of a string
-                next();
-            } else if (token.matches(current()) && !isEscaped()) {
-                // if unescaped then this is the matching token
-                return source.substring(start, index);
-            } else {
-                // else continue to the next character
-                next();
+            if (!inString) {
+                // check for closing parenthesis
+                if (Tokens.OPEN_PAREN.matches(current) && !isEscaped()) {
+                    insideParens = true;
+                } else if (insideParens && Tokens.CLOSE_PAREN.matches(current) && !isEscaped()) {
+                    insideParens = false;
+                } else if (!insideParens && token.matches(current) && !isEscaped()) {
+                    // if unescaped then this is the matching token
+                    return source.substring(start, index);
+                }
             }
+
+            // continue to the next character
+            next();
+
         }
 
         // closing token wasn't found, so return the substring from the start to the end of the stream

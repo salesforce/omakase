@@ -59,7 +59,7 @@ public class PerfTestLight {
         int mb = 1024 * 1024;
         Runtime runtime = Runtime.getRuntime();
 
-        print("##### Heap utilization statistics [MB] #####");
+        print("\n##### Heap utilization statistics [MB] #####");
         if (full) print("Max Memory:" + runtime.maxMemory() / mb);
         if (full) print("Available Memory:" + runtime.totalMemory() / mb);
         print("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);

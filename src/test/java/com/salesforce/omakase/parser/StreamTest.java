@@ -19,7 +19,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public class StreamTest {
     static final String INLINE = ".class, #id { color: red }";
 
@@ -289,10 +289,18 @@ public class StreamTest {
 
     @Test
     public void untilSkipEscaped() {
-        Stream stream = new Stream("abc\\)123)");
-        String content = stream.until(Tokens.CLOSE_PAREN);
-        assertThat(content).isEqualTo("abc\\)123");
+        Stream stream = new Stream("abc\\}123}");
+        String content = stream.until(Tokens.CLOSE_BRACKET);
+        assertThat(content).isEqualTo("abc\\}123");
         assertThat(stream.index()).isEqualTo(8);
+    }
+
+    @Test
+    public void untilSkipParens() {
+        Stream stream = new Stream("abc(abcd12349;ad\"adada\") ; 123");
+        String content = stream.until(Tokens.SEMICOLON);
+        assertThat(content).isEqualTo("abc(abcd12349;ad\"adada\") ");
+        assertThat(stream.index()).isEqualTo(25);
     }
 
     @Test
