@@ -99,6 +99,7 @@ public class ClassSelector extends AbstractGroupable<SelectorPart> implements Si
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         appendable.append('.').append(name);
     }
 

@@ -165,6 +165,8 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
+
         if (isRefined()) {
             for (SelectorPart part : parts) {
                 writer.write(part, appendable);

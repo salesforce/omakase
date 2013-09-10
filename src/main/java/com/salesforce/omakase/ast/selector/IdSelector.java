@@ -99,6 +99,7 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         appendable.append('#').append(name);
     }
 

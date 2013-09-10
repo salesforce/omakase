@@ -176,6 +176,8 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
         } else {
             list.add(index + 1, unit);
         }
+        unit.parent(this);
+
 
         // ensure the unit is broadcasted
         broadcast(unit);

@@ -105,6 +105,7 @@ public class PseudoClassSelector extends AbstractGroupable<SelectorPart> impleme
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         // TODO function args
         appendable.append(':').append(name);
     }

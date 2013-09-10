@@ -338,6 +338,8 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
+
         if (isRefined()) {
             // property name
             writer.write(propertyName, appendable);

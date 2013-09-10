@@ -179,6 +179,8 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
+
         if (isRefined()) {
             appendable.append('@');
             appendable.append(name);

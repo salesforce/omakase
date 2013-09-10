@@ -65,6 +65,7 @@ public class AttributeSelector extends AbstractGroupable<SelectorPart> implement
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         // TODO Auto-generated method stub
 
     }

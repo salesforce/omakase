@@ -62,6 +62,7 @@ public class UniversalSelector extends AbstractGroupable<SelectorPart> implement
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         appendable.append('*');
     }
 

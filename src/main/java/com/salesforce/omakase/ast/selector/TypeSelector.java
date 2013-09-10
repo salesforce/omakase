@@ -100,6 +100,7 @@ public class TypeSelector extends AbstractGroupable<SelectorPart> implements Sim
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         appendable.append(name);
     }
 

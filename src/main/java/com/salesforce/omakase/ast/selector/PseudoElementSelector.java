@@ -105,6 +105,7 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (isDetached()) return;
         // TODO function args
         appendable.append(POSERS.contains(name) ? ":" : "::").append(name);
     }
