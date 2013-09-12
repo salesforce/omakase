@@ -23,22 +23,24 @@ public class ClassSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+        stream.collectComments(false);
 
-        // gather the line and column before advancing the stream
-        int line = stream.line();
-        int column = stream.column();
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // first character must be a dot
-        if (!Tokens.DOT.matches(stream.current())) return false;
-        stream.next();
+        if (!stream.optionallyPresent(Tokens.DOT)) return snapshot.rollback();
 
         // parse the class name
         Optional<String> name = stream.readIdent();
         if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_CLASS);
 
         // broadcast the new class selector
-        ClassSelector selector = new ClassSelector(line, column, name.get());
+        ClassSelector selector = new ClassSelector(snapshot.line, snapshot.column, name.get());
+        selector.comments(stream.flushComments());
         broadcaster.broadcast(selector);
+
         return true;
     }
+
 }

@@ -17,11 +17,13 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @see StringValue
  */
 public class StringValueParser extends AbstractParser {
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        int line = stream.line();
-        int column = stream.column();
+        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
+        stream.collectComments();
+
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         QuotationMode mode;
         String value;
@@ -36,8 +38,10 @@ public class StringValueParser extends AbstractParser {
             return false;
         }
 
-        StringValue string = new StringValue(line, column, mode, value);
+        StringValue string = new StringValue(snapshot.line, snapshot.column, mode, value);
+        string.comments(stream.flushComments());
         broadcaster.broadcast(string);
+
         return true;
     }
 }

@@ -22,6 +22,7 @@ public class SelectorGroupParser extends AbstractParser {
     @SuppressWarnings("UnusedAssignment")
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
+        stream.collectComments();
 
         // check if the next character is a valid first character for a selector
         if (!tokenFactory().selectorBegin().matches(stream.current())) return false;
@@ -44,9 +45,6 @@ public class SelectorGroupParser extends AbstractParser {
             // try to parse a delimiter (e.g., comma)
             foundDelimiter = stream.optionallyPresent(tokenFactory().selectorDelimiter());
         } while (foundDelimiter);
-
-        // ignore any comments between the last selector and opening of the declaration block
-        stream.flushComments();
 
         return true;
     }

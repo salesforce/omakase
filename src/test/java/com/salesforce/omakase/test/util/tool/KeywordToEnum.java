@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Utility to take list of css names and convert them to the {@link Keyword} enum.
+ * Utility to take list of css names and fromStrings them to the {@link Keyword} enum.
  *
  * @author nmcwilliams
  */

@@ -27,9 +27,10 @@ public class RawAtRuleParser extends AbstractParser {
         TokenFactory tf = tokenFactory();
 
         stream.skipWhitepace();
+        stream.collectComments();
 
-        int startingLine = stream.line();
-        int startingColumn = stream.column();
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // must begin with '@'
         if (!stream.optionallyPresent(Tokens.AT_RULE)) return false;
@@ -60,11 +61,9 @@ public class RawAtRuleParser extends AbstractParser {
         // expression content must be present
         if (expression == null && block == null) throw new ParserException(stream, Message.MISSING_AT_RULE_VALUE);
 
-        // create the new at-rule and associate comments
-        AtRule rule = new AtRule(startingLine, startingColumn, name.get(), expression, block, broadcaster);
+        // create and broadcast the new rule
+        AtRule rule = new AtRule(snapshot.line, snapshot.column, name.get(), expression, block, broadcaster);
         rule.comments(stream.flushComments());
-
-        // notifier listeners of the new at-rule
         broadcaster.broadcast(rule);
 
         return true;

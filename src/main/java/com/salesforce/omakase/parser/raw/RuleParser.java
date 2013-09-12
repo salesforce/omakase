@@ -20,10 +20,12 @@ public class RuleParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
+        stream.collectComments();
 
         // if there wasn't a selector then we aren't a rule
         if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster)) return false;
 
+        // skip whitespace after selectors
         stream.skipWhitepace();
 
         // parse the declaration block
@@ -39,8 +41,8 @@ public class RuleParser extends AbstractParser {
         // parse the end of the block
         stream.expect(tokenFactory().declarationBlockEnd());
 
-        // ignore any comments orphaned at the end of the block
-        stream.flushComments();
+
+        // FIXME orphaned comments
 
         return true;
     }

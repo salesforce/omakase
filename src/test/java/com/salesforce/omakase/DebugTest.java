@@ -5,8 +5,8 @@ package com.salesforce.omakase;
 
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.validator.Validation;
 import com.salesforce.omakase.test.util.EchoLogger;
-import com.salesforce.omakase.test.util.tool.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -23,34 +23,31 @@ public class DebugTest {
         SyntaxTree tree = new SyntaxTree();
         StyleWriter writer = StyleWriter.compressed();
 
-        // Omakase.source(SRC0)
-        // .request(tree)
-        // // .request(refinement)
-        // .request(logging)
-        // .request(Validation.normal())
-        // .request(writer)
-        // .process();
-        //
-        // System.out.println();
-        // System.out.println(tree.toString());
+        Omakase.source(SRC0)
+        .request(tree)
+        // .request(refinement)
+        .request(logging)
+        .request(Validation.normal())
+        .request(writer)
+        .process();
 
-        QuickWriter
-            .writeAllModes(".class {\n" +
-                "    content: \" (\" attr(href) \")\"\n" +
-                "}");
+        System.out.println();
+        System.out.println(tree.toString());
+
+//        QuickWriter
+//            .writeAllModes(".class {\n" +
+//                "    content: \" (\" attr(href) \")\"\n" +
+//                "}");
     }
 
-    public static final String SRC0 = ".class {" +
+    public static final String SRC0 = ".class /*comment*/ {" +
         "  color: red\n" +
         "}\n" +
         "@media(min-width: 800px) {\n" +
         "  .abc {\n" +
         "    color: red;\n" +
         "  }\n" +
-        "}\n" +
-        "#id {\n" +
-        "  color:red\n" +
-        "}";
+        "}\n";
     public static final String SRC1 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; }";
     public static final String SRC2 = ".testing #is > fun p { padding: 3px; color: red; margin: 10px 5px; background-color: " +
         "#fffeee; -moz-border-radius: 3px 4px 5px 6px; }";

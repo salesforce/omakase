@@ -3,7 +3,6 @@
  */
 package com.salesforce.omakase.parser;
 
-import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
@@ -11,6 +10,8 @@ import com.salesforce.omakase.parser.token.Tokens;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -395,76 +396,114 @@ public class StreamTest {
 
     @Test
     public void collectComments() {
-        Stream stream = new Stream("/*abc*/ ___ /* 123 */ ___");
-        stream.forward(25);
-        Iterable<String> comments = stream.flushComments();
-        assertThat(comments).hasSize(2);
-        assertThat(Iterables.get(comments, 0)).isEqualTo("abc");
-        assertThat(Iterables.get(comments, 1)).isEqualTo(" 123 ");
+        Stream stream = new Stream("/*abc*/ /____ abc");
+        List<String> comments = stream.collectComments().flushComments();
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0)).isEqualTo("abc");
         assertThat(stream.flushComments()).hasSize(0);
     }
 
     @Test
+    public void collectCommentsMultiple() {
+        Stream stream = new Stream("/*abc*//*123*/....");
+        List<String> comments = stream.collectComments().flushComments();
+        assertThat(comments).hasSize(2);
+        assertThat(comments.get(0)).isEqualTo("abc");
+        assertThat(comments.get(1)).isEqualTo("123");
+    }
+
+    @Test
+    public void collectCommentsPrecedingWhitespace() {
+        Stream stream = new Stream("   \n /*abc*/");
+        List<String> comments = stream.collectComments().flushComments();
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0)).isEqualTo("abc");
+        assertThat(stream.flushComments()).hasSize(0);
+    }
+
+    @Test
+    public void collectCommentsWhitespaceInBetween() {
+        Stream stream = new Stream("/*abc*/\n\n  /**123\n* 123*/....");
+        List<String> comments = stream.collectComments().flushComments();
+        assertThat(comments).hasSize(2);
+        assertThat(comments.get(0)).isEqualTo("abc");
+        assertThat(comments.get(1)).isEqualTo("*123\n* 123");
+    }
+
+    @Test
+    public void collectCommentsNoSkipWhitespace() {
+        Stream stream = new Stream("/*abc*/ \n\n  /**123\n* 123*/....");
+        List<String> comments = stream.collectComments(false).flushComments();
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0)).isEqualTo("abc");
+    }
+
+    @Test
     public void correctIndexPositionWhenCommentFound() {
-        Stream stream = new Stream("a/*abc*/a");
-        stream.next();
-        assertThat(stream.index()).isEqualTo(8);
+        Stream stream = new Stream("/*abc*/a");
+        stream.collectComments();
+        assertThat(stream.index()).isEqualTo(7);
     }
 
     @Test
     public void unclosedComment() {
         exception.expect(ParserException.class);
         exception.expectMessage(Message.MISSING_COMMENT_CLOSE.message());
-        Stream stream = new Stream("a/*abc/a");
-        stream.next();
+        Stream stream = new Stream("/*abc/a");
+        stream.collectComments();
     }
 
     @Test
     public void multilineComment() {
-        Stream stream = new Stream("1/*abc\nabc\nanc    */abc");
-        stream.next();
-        assertThat(stream.index()).isEqualTo(20);
-    }
-
-    @Test
-    public void commentsNotAllowed() {
-        Stream stream = new Stream("a/*abc*/a");
-        stream.rejectComments();
-
-        exception.expect(ParserException.class);
-        exception.expectMessage("Comments not allowed in this location");
-        stream.next();
+        Stream stream = new Stream("/*abc\nabc\nanc    */abc");
+        stream.collectComments();
+        assertThat(stream.index()).isEqualTo(19);
     }
 
     @Test
     public void commentsWithEscapes() {
-        Stream stream = new Stream("a/*ab*\\/c*/a");
-        stream.next();
-        assertThat(stream.index()).isEqualTo(11);
+        Stream stream = new Stream("/*ab*\\/c*/a");
+        stream.collectComments();
+        assertThat(stream.index()).isEqualTo(10);
+    }
+
+    @Test
+    public void snapshot() {
+        Stream stream = new Stream("abc\n123");
+        stream.forward(6);
+        Stream.Snapshot snapshot = stream.snapshot();
+
+        assertThat(snapshot.line).isEqualTo(2);
+        assertThat(snapshot.column).isEqualTo(3);
+        assertThat(snapshot.index).isEqualTo(6);
+        assertThat(snapshot.inString).isFalse();
     }
 
     @Test
     public void rollback() {
         Stream stream = new Stream("ab\nc123");
         stream.next();
-        stream.snapshot();
+        Stream.Snapshot snapshot = stream.snapshot();
         stream.next();
         stream.next();
 
         assertThat(stream.line()).isEqualTo(2);
         assertThat(stream.column()).isEqualTo(1);
 
-        stream.rollback();
+        snapshot.rollback();
         assertThat(stream.index()).isEqualTo(1);
         assertThat(stream.line()).isEqualTo(1);
         assertThat(stream.column()).isEqualTo(2);
     }
 
     @Test
-    public void rollbackNotAllowed() {
-        Stream stream = new Stream("ab\nc123");
-        exception.expect(IllegalStateException.class);
-        stream.rollback();
+    public void rollbackWithMessage() {
+        Stream stream = new Stream("abc");
+        Stream.Snapshot snapshot = stream.snapshot();
+        stream.next();
+
+        exception.expect(ParserException.class);
+        snapshot.rollback(Message.EXPECTED_DECIMAL);
     }
 
     @Test

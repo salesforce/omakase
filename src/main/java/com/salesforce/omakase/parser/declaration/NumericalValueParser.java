@@ -11,7 +11,6 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
-import com.salesforce.omakase.parser.Stream.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -23,7 +22,11 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class NumericalValueParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        Snapshot snapshot = stream.snapshot();
+        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
+        stream.collectComments();
+
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // parse the optional sign
         Optional<Character> sign = stream.optional(Tokens.SIGN);
@@ -44,7 +47,7 @@ public class NumericalValueParser extends AbstractParser {
         }
 
         // integer value or decimal must be present
-        if (integer == null && decimal == null) return stream.rollback();
+        if (integer == null && decimal == null) return snapshot.rollback();
 
         // create the numerical value instance
         Long realIntegerValue = integer == null ? 0 : integer;
@@ -67,6 +70,7 @@ public class NumericalValueParser extends AbstractParser {
         }
 
         broadcaster.broadcast(value);
+        value.comments(stream.flushComments());
         return true;
     }
 }

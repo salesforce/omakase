@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
  * @author nmcwilliams
  */
 public final class QueryableBroadcaster extends AbstractBroadcaster {
-    /** TODO why not a set? */
+    /** important to maintain broadcast order */
     private final List<Syntax> collected = Lists.newArrayList();
 
     /**

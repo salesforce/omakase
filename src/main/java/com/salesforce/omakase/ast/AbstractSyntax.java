@@ -3,8 +3,12 @@
  */
 package com.salesforce.omakase.ast;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.broadcaster.Broadcaster;
+
+import java.util.List;
 
 /**
  * TESTME
@@ -17,6 +21,7 @@ public abstract class AbstractSyntax implements Syntax {
     private final int line;
     private final int column;
 
+    private List<Comment> comments;
     private Broadcaster broadcaster;
     private Status status = Status.UNBROADCASTED;
 
@@ -67,6 +72,26 @@ public abstract class AbstractSyntax implements Syntax {
     @Override
     public boolean hasSourcePosition() {
         return line != -1 && column != -1;
+    }
+
+    @Override
+    public void comments(Iterable<String> commentsToAdd) {
+        if (commentsToAdd == null) return;
+
+        // delayed creation of comments list
+        if (comments == null) {
+            comments = Lists.newArrayList();
+        }
+
+        // add the comments
+        for (String comment : commentsToAdd) {
+            comments.add(new Comment(comment));
+        }
+    }
+
+    @Override
+    public List<Comment> comments() {
+        return comments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(comments);
     }
 
     @Override

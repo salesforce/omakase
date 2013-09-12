@@ -3,12 +3,10 @@
  */
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.Commentable;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
@@ -27,7 +25,6 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
@@ -47,11 +44,9 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Selector extends AbstractGroupable<Selector> implements Refinable<Selector>, Commentable {
+public class Selector extends AbstractGroupable<Selector> implements Refinable<Selector> {
     private final SyntaxCollection<SelectorPart> parts;
     private final RawSyntax rawContent;
-
-    private List<String> comments;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
@@ -127,23 +122,13 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
 
             // store the parsed selector parts
             parts.appendAll(qb.filter(SelectorPart.class));
+
+            // check for orphaned comments
+            Iterable<OrphanedComment> orphaned = qb.filter(OrphanedComment.class);
+            System.out.print(orphaned); // TODO
         }
 
         return this;
-    }
-
-    @Override
-    public Selector comments(Iterable<String> commentsToAdd) {
-        if (comments == null) {
-            comments = Lists.newArrayList();
-        }
-        Iterables.addAll(comments, commentsToAdd);
-        return this;
-    }
-
-    @Override
-    public List<String> comments() {
-        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
     }
 
     @Override
@@ -181,7 +166,6 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
         return As.string(this)
             .indent()
             .add("position", super.toString())
-            .add("comments", comments)
             .add("raw", rawContent)
             .add("parts", parts())
             .toString();

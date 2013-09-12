@@ -5,7 +5,6 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.TermList;
@@ -156,13 +155,6 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         for (GenericParseResult result : parse) {
             assertThat(result.stream.eof()).isTrue();
         }
-    }
-
-    @Test
-    public void errorsIfNestedComments() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.COMMENTS_NOT_ALLOWED.message());
-        parse("1px/*test*/1px");
     }
 
     @Test

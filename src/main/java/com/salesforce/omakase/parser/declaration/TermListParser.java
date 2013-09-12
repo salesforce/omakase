@@ -27,7 +27,6 @@ public class TermListParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
-        stream.rejectComments();
 
         // grab the line and column number before parsing anything
         int line = stream.line();
@@ -77,6 +76,7 @@ public class TermListParser extends AbstractParser {
                     stream.skipWhitepace();
                 }
 
+                stream.collectComments();
                 operator = stream.optionalFromEnum(TermOperator.class);
 
                 // if no operator is parsed and we parsed at least one space then we know it's a single space operator
@@ -86,7 +86,7 @@ public class TermListParser extends AbstractParser {
             } else {
                 if (operator.isPresent() && operator.get() != TermOperator.SPACE) {
                     // it's a trailing operator
-                    throw new ParserException(stream, Message.EXPECTED_TERM, operator.get());
+                    throw new ParserException(stream, Message.TRAILING_OPERATOR, operator.get());
                 }
                 operator = Optional.absent();
             }
@@ -94,9 +94,6 @@ public class TermListParser extends AbstractParser {
 
         // if no terms were parsed then return false
         if (termList == null) return false;
-
-        // allow comments again
-        stream.enableComments();
 
         // broadcast the new term list
         broadcaster.broadcast(termList);

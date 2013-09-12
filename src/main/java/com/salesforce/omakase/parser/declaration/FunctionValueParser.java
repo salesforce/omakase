@@ -24,7 +24,10 @@ public class FunctionValueParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        // save state
+        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
+        stream.collectComments();
+
+        // snapshot the current state before parsing
         Snapshot snapshot = stream.snapshot();
 
         // read the function name
@@ -32,15 +35,17 @@ public class FunctionValueParser extends AbstractParser {
         if (!name.isPresent()) return false;
 
         // must be an open parenthesis
-        if (!Tokens.OPEN_PAREN.matches(stream.current())) return stream.rollback();
+        if (!Tokens.OPEN_PAREN.matches(stream.current())) return snapshot.rollback();
 
         // read the arguments. This behavior itself differs from the spec a little. We aren't validating what's inside
         // the arguments. The more specifically typed function values will be responsible for validating their own args.
         String args = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
 
         FunctionValue value = new FunctionValue(snapshot.line, snapshot.column, name.get(), args);
+        value.comments(stream.flushComments());
         broadcaster.broadcast(value);
 
         return true;
     }
+
 }

@@ -4,12 +4,8 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Status;
@@ -32,7 +28,6 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
@@ -51,9 +46,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Declaration extends AbstractGroupable<Declaration> implements Refinable<Declaration>, Commentable {
-    private List<String> comments;
-
+public class Declaration extends AbstractGroupable<Declaration> implements Refinable<Declaration> {
     /* unrefined */
     private final RawSyntax rawPropertyName;
     private final RawSyntax rawPropertyValue;
@@ -302,20 +295,6 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
     }
 
     @Override
-    public Declaration comments(Iterable<String> commentsToAdd) {
-        if (comments == null) {
-            comments = Lists.newArrayList();
-        }
-        Iterables.addAll(comments, commentsToAdd);
-        return this;
-    }
-
-    @Override
-    public List<String> comments() {
-        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
-    }
-
-    @Override
     public Syntax broadcaster(Broadcaster broadcaster) {
         if (propertyValue != null) {
             propertyValue.broadcaster(broadcaster);
@@ -368,7 +347,6 @@ public class Declaration extends AbstractGroupable<Declaration> implements Refin
         return As.string(this)
             .indent()
             .add("position", super.toString())
-            .add("comments", comments)
             .add("rawProperty", rawPropertyName)
             .add("rawValue", rawPropertyValue)
             .add("refinedProperty", propertyName)

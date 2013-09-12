@@ -4,11 +4,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.ast.Commentable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Statement;
@@ -22,7 +18,6 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
@@ -40,9 +35,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class AtRule extends AbstractGroupable<Statement> implements Statement, Refinable<AtRule>, Commentable {
+public class AtRule extends AbstractGroupable<Statement> implements Statement, Refinable<AtRule> {
     private final String name;
-    private List<String> comments;
 
     // unrefined
     private final Optional<RawSyntax> rawExpression;
@@ -159,20 +153,6 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
     }
 
     @Override
-    public AtRule comments(Iterable<String> commentsToAdd) {
-        if (comments == null) {
-            comments = Lists.newArrayList();
-        }
-        Iterables.addAll(comments, commentsToAdd);
-        return this;
-    }
-
-    @Override
-    public List<String> comments() {
-        return comments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(comments);
-    }
-
-    @Override
     protected Statement self() {
         return this;
     }
@@ -221,7 +201,6 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
         return As.string(this)
             .indent()
             .add("position", super.toString())
-            .add("comments", comments)
             .add("rawExpression", rawExpression)
             .add("rawBlock", rawBlock)
             .add("expression", expression)

@@ -28,15 +28,15 @@ public class PseudoSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+        stream.collectComments(false);
 
-        // gather the line and column before advancing the stream
-        int line = stream.line();
-        int column = stream.column();
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // first character must be a colon
         if (!stream.optionallyPresent(Tokens.COLON)) return false;
 
-        // 1 colon (already parsed above) equals pseudo class selector, 2 colons equals pseudo element selector
+        // one colon (already parsed above) equals pseudo class selector, two colons equals pseudo element selector
         SelectorPartType type = stream.optionallyPresent(Tokens.COLON) ? PSEUDO_ELEMENT_SELECTOR : PSEUDO_CLASS_SELECTOR;
 
         // read the name
@@ -54,9 +54,10 @@ public class PseudoSelectorParser extends AbstractParser {
 
         // create the selector and broadcast it
         Syntax selector = (type == PSEUDO_CLASS_SELECTOR) ?
-            new PseudoClassSelector(line, column, name.get()) :
-            new PseudoElementSelector(line, column, name.get());
+            new PseudoClassSelector(snapshot.line, snapshot.column, name.get()) :
+            new PseudoElementSelector(snapshot.line, snapshot.column, name.get());
 
+        selector.comments(stream.flushComments());
         broadcaster.broadcast(selector);
         return true;
     }

@@ -39,18 +39,21 @@ public class SelectorGroupParserTest extends AbstractParserTest<SelectorGroupPar
             "*:hover, ::before",
             "p div, .classname",
             ".-anc",
-            "a, :before");
+            "a, :before",
+            "/*comment*/ .abc, .abc",
+            ".abc,/*comment*/.abc",
+            ".abc, .abc /*comment*/");
     }
 
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult(".class {", 7),
-            withExpectedResult(".class, #id {", 12),
-            withExpectedResult(".class,#id {", 11),
-            withExpectedResult(".class.class.class {", 19),
-            withExpectedResult("*{", 1),
-            withExpectedResult(".class,\n.class2, \n.class3 {", 26));
+            withExpectedResult(".class { color : red", 7),
+            withExpectedResult(".class, #id { color:red", 12),
+            withExpectedResult(".class,#id {color:red", 11),
+            withExpectedResult(".class.class.class {\n\n", 19),
+            withExpectedResult("*{color: \n red", 1),
+            withExpectedResult(".class,\n.class2, \n.class3 {   ", 26));
     }
 
     @Test

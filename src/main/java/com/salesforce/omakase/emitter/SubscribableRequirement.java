@@ -24,7 +24,10 @@ public enum SubscribableRequirement {
     REFINED_SELECTOR("Selector#refine"),
 
     /** Refine must be called on {@link Declaration}s, e.g., with {@link AutoRefiner#declarations()} */
-    REFINED_DECLARATION("Declaration#refine");
+    REFINED_DECLARATION("Declaration#refine"),
+
+    /** Requires special conditions to be broadcasted */
+    SPECIAL("Under certain conditions");
 
     private final String description;
 

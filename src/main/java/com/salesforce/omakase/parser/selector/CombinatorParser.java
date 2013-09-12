@@ -18,12 +18,12 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @see Combinator
  */
 public class CombinatorParser extends AbstractParser {
-
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        // save off the line and column before parsing anything
-        int line = stream.line();
-        int column = stream.column();
+        stream.collectComments(false);
+
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // the presence of a space *could* be a descendant selector. Or it could just be whitespace around other
         // combinators. We won't know until later.
@@ -47,10 +47,11 @@ public class CombinatorParser extends AbstractParser {
             stream.skipWhitepace();
 
             // create and broadcast the combinator
-            Combinator combinator = new Combinator(line, column, type.get());
+            Combinator combinator = new Combinator(snapshot.line, snapshot.column, type.get());
             broadcaster.broadcast(combinator);
             return true;
         }
-        return false;
+
+        return snapshot.rollback();
     }
 }

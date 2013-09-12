@@ -3,15 +3,19 @@
  */
 package com.salesforce.omakase.parser.selector;
 
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcaster.QueuingBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
+
+import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
 
 /**
  * Parses refined {@link Selector}s, as opposed to {@link RawSelectorParser}.
@@ -26,44 +30,66 @@ public class ComplexSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
-        stream.rejectComments();
+
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // setup inner parsers
         Parser combinator = ParserFactory.combinatorParser();
         Parser repeatableSelector = ParserFactory.repeatableSelector();
-        Parser typeOrUniversalSelector = ParserFactory.typeOrUniversaleSelectorParser();
+        Parser typeOrUniversal = ParserFactory.typeOrUniversaleSelectorParser();
 
-        boolean matchedTypeOrUniversal = false;
-        boolean matchedOther = false;
-        boolean couldHaveMore = true;
+        // we queue the broadcasts because we don't want the last unit to be a trailing descendant combinator.
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster);
+        queue.pause(); // don't actually broadcast anything until we can do some checking later
 
-        // it's important not to skip whitespace here (neither should any simple selector parser or pseudo element
-        // selector skip whitespace) because a space could be the descendant combinator.
-        while (couldHaveMore) {
-            // try parsing universal or type simple selector
-            matchedTypeOrUniversal = typeOrUniversalSelector.parse(stream, broadcaster);
+        boolean matchedAnything = false;
+        boolean matchedThisTime = false;
 
-            // parse remaining selectors in the sequence
-            while (repeatableSelector.parse(stream, broadcaster)) {
-                matchedOther = true;
+        do {
+            matchedThisTime = false;
+
+            // try parsing a universal or type selector
+            if (typeOrUniversal.parse(stream, queue)) {
+                matchedAnything = true;
+                matchedThisTime = true;
             }
 
-            // parse combinator
-            couldHaveMore = combinator.parse(stream, broadcaster);
-        }
+            // parse remaining selectors in the sequence
+            while (repeatableSelector.parse(stream, queue)) {
+                matchedAnything = true;
+                matchedThisTime = true;
+            }
+
+            // check for trailing combinators. If it is a descendant combinator then it was just an extra space so remove it.
+            if (matchedAnything && !matchedThisTime) {
+                // find the last combinator
+                Combinator lastCombinator = Iterables.getLast(Iterables.filter(queue.all(), Combinator.class));
+                if (lastCombinator.type() == DESCENDANT_COMBINATOR) {
+                    queue.reject(lastCombinator);
+                } else {
+                    snapshot.rollback(Message.TRAILING_COMBINATOR, lastCombinator.type());
+                }
+            } else {
+                // so that if there is a trailing combinator error the stream points to the right location
+                snapshot = stream.snapshot();
+            }
+        } while (combinator.parse(stream, queue));
 
         // check for known possible errors
         if (!stream.eof()) {
-            stream.snapshot();
-            if (typeOrUniversalSelector.parse(stream, broadcaster)) {
-                stream.rollback(); // for correct error reporting line and column
-                throw new ParserException(stream, Message.NAME_SELECTORS_NOT_ALLOWED);
+            snapshot = stream.snapshot();
+            if (typeOrUniversal.parse(stream, queue)) {
+                snapshot.rollback(Message.NAME_SELECTORS_NOT_ALLOWED);
             }
         }
 
-        // allow comments again
-        stream.enableComments();
+        // orphaned comments
+        ParserFactory.orphanedCommentParser().parse(stream, queue);
 
-        return matchedTypeOrUniversal || matchedOther;
+        // we're good, send out all queued broadcasts
+        queue.resume();
+
+        return matchedAnything;
     }
 }

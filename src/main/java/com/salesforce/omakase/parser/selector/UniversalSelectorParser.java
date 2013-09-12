@@ -19,18 +19,20 @@ public class UniversalSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+        stream.collectComments(false);
 
-        // gather the line and column before advancing the stream
-        int line = stream.line();
-        int column = stream.column();
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // first character must be a dot
         boolean matched = stream.optionallyPresent(Tokens.STAR);
         if (!matched) return false;
 
         // broadcast the new selector
-        UniversalSelector selector = new UniversalSelector(line, column);
+        UniversalSelector selector = new UniversalSelector(snapshot.line, snapshot.column);
+        selector.comments(stream.flushComments());
         broadcaster.broadcast(selector);
         return true;
     }
+
 }

@@ -67,7 +67,12 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
             ".aclajsclkajsclajsca>.ahcjashjkchas___>._afaafa_fafa#afa-afa-afaf-afa",
             "/*comment*/.class",
             "/*comment\n\n aaffa1*//*comment*/.class",
-            "/*comment\n\n aaffa1*/\n /*comment*/.class");
+            "/*comment\n\n aaffa1*/\n /*comment*/.class",
+            ".class/*comment*/ .class",
+            ".class /*comment*/.class",
+            ".class/*comment*/",
+            ".class /*comment*/"
+        );
     }
 
     @Override
@@ -104,7 +109,11 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
             withExpectedResult("E[foo=\"b,ar\"]", "E[foo=\"b,ar\"]"),
             withExpectedResult("E[foo=\"b{a r\"]#id", "E[foo=\"b{a r\"]#id"),
             withExpectedResult("/*comment*/.class.class2", ".class.class2"),
-            withExpectedResult("/*comment*//*comment*/#id-abc_ac", "#id-abc_ac"));
+            withExpectedResult("/*comment*//*comment*/#id-abc_ac", "#id-abc_ac"),
+            withExpectedResult(".class/*comment*/.class2", ".class/*comment*/.class2"),
+            withExpectedResult(".class.class2/*comment*/, .class2", ".class.class2/*comment*/"),
+            withExpectedResult(".class.class2,/*comment*/ .class2", ".class.class2")
+        );
 
         for (ParseResult<String> result : results) {
             Selector s = result.broadcaster.findOnly(Selector.class).get();
@@ -122,7 +131,7 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
     @Test
     public void storesComments() {
         Selector s = parse("/*comment1*/.class.class").get(0).broadcaster.findOnly(Selector.class).get();
-        assertThat(s.comments().get(0)).isEqualTo("comment1");
+        assertThat(s.comments().get(0).content()).isEqualTo("comment1");
 
         s = parse("/*comment1\n * new line *//*comment2*/.class.class").get(0).broadcaster.findOnly(Selector.class).get();
         assertThat(s.comments()).hasSize(2);

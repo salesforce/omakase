@@ -3,6 +3,7 @@
  */
 package com.salesforce.omakase.plugin;
 
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -260,4 +261,13 @@ public class BasePlugin implements Plugin {
      *     The {@link StringValue} instance.
      */
     public void stringValue(StringValue stringValue) {}
+
+    /**
+     * Override this method and add the {@link Rework} annotation in order to receive events for {@link Syntax} units of type
+     * {@link Comment}.
+     *
+     * @param orphaned
+     *     The {@link Comment} instance.
+     */
+    public void orphanedSelectorComment(Comment orphaned) {}
 }

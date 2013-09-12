@@ -20,26 +20,24 @@ public class RawSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
+        stream.collectComments();
 
         if (!tokenFactory().selectorBegin().matches(stream.current())) return false;
 
-        // line and columns must be calculated before content
-        int line = stream.line();
-        int column = stream.column();
-
-        // grab the comments now so we can ignore comments at the end of the selector group (see SelectorGroupParser)
-        Iterable<String> comments = stream.flushComments();
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // grab everything until the end of the selector
         String content = stream.until(tokenFactory().selectorEnd());
-        RawSyntax raw = new RawSyntax(line, column, content.trim());
+        RawSyntax raw = new RawSyntax(snapshot.line, snapshot.column, content.trim());
 
         // create selector and associate comments
         Selector selector = new Selector(raw, broadcaster);
-        selector.comments(comments);
+        selector.comments(stream.flushComments());
 
         // notify listeners of new selector
         broadcaster.broadcast(selector);
         return true;
     }
+
 }

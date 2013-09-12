@@ -8,6 +8,8 @@ import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.writer.Writable;
 
+import java.util.List;
+
 /**
  * A distinct unit of syntax within CSS.
  * <p/>
@@ -49,6 +51,21 @@ public interface Syntax extends Writable {
      * @return True if this unit has a source location specified.
      */
     boolean hasSourcePosition();
+
+    /**
+     * Adds the given comments to this unit.
+     *
+     * @param commentsToAdd
+     *     The comments to add.
+     */
+    void comments(Iterable<String> commentsToAdd);
+
+    /**
+     * Gets all comments <em>associated</em> with this {@link Syntax} unit.
+     *
+     * @return The list of comments. Never returns null.
+     */
+    List<Comment> comments();
 
     /**
      * Sets the current broadcast status. For internal use only, do not call directly.

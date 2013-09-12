@@ -41,5 +41,8 @@ public enum SelectorPartType {
     ADJACENT_SIBLING_COMBINATOR,
 
     /** a general sibling combinator */
-    GENERAL_SIBLING_COMBINATOR
+    GENERAL_SIBLING_COMBINATOR,
+
+    /** a comment that is not associated with another syntax unit */
+    ORPHANED_COMMENT
 }

@@ -5,13 +5,13 @@ package com.salesforce.omakase.parser;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.*;
@@ -47,26 +47,23 @@ public final class Stream {
     /** column from the original source from which this sub-stream was derived */
     private final int anchorColumn;
 
+    /** last index checked, so that #skipWhitespace can be short-circuited if the index hasn't changed */
+    private int lastCheckedWhitespaceIndex = -1;
+
+    /** last index checked, so that #collectComments can be short-circuited if the index hasn't changed */
+    private int lastCheckedCommentIndex = -1;
+
     /** if we are inside of a string */
     private boolean inString = false;
-
-    /** if we are inside of a comment */
-    private boolean inComment = false;
-
-    /** whether comments are allowed at the current position */
-    private boolean commentsAllowed = true;
-
-    /** snapshot of a previous index position and the associated line and column numbers */
-    private Snapshot snapshot;
-
-    /** queue of encountered CSS comments */
-    private List<String> comments;
 
     /** the character that opened the last string */
     private Token stringToken = null;
 
     /** whether we should monitor if we are in a string or not (optional for perf) */
     private final boolean checkInString;
+
+    /** collection of parsed CSS comments */
+    private List<String> comments;
 
     /**
      * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
@@ -139,9 +136,6 @@ public final class Stream {
         this.anchorLine = anchorLine;
         this.anchorColumn = anchorColumn;
         this.checkInString = checkInString;
-
-        // collect any comments at the beginning
-        collectComments();
 
         // check if we are in a string
         if (checkInString) {
@@ -310,11 +304,6 @@ public final class Stream {
         // increment index position
         index += 1;
 
-        // collect comments
-        if (!inComment) {
-            collectComments();
-        }
-
         // check if we are in a string
         if (checkInString) {
             updateInString();
@@ -370,6 +359,13 @@ public final class Stream {
 
     /** If the current character is whitespace then skip it along with all subsequent whitespace characters. */
     public void skipWhitepace() {
+        // don't check the same index twice
+        if (lastCheckedWhitespaceIndex == index) return;
+
+        // store the last checked index
+        lastCheckedWhitespaceIndex = index;
+
+        // nothing to skip if we are at the end
         if (eof()) return;
 
         // skip characters until the current character is not whitespace
@@ -577,14 +573,71 @@ public final class Stream {
         throw new ParserException(this, Message.EXPECTED_CLOSING, closingToken.description());
     }
 
-    /** Collects all CSS comments into the queue. */
-    private void collectComments() {
-        if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peek())) {
-            // check if comments are allowed at this location
-            if (!commentsAllowed) throw new ParserException(this, Message.COMMENTS_NOT_ALLOWED);
+    /**
+     * Same as {@link #collectComments(boolean)}, with a default skipWhitespace of true.
+     *
+     * @return this, for chaining.
+     */
+    public Stream collectComments() {
+        return collectComments(true);
+    }
 
-            // setting true prevents us from checking for more comments on every #next() call while
-            // inside of this method
+    /**
+     * Parses all comments at the current position in the source.
+     * <p/>
+     * Comments can be retrieved wth {@link #flushComments()}. That method will return and remove all comments currently in the
+     * buffer.
+     * <p/>
+     * This separation into the two methods allows for comments to be collected prematurely without needing to backtrack if the
+     * parser later determines it doesn't match. The next parser can still retrieve the comments from the buffer even if another
+     * parser triggered the collection of them.
+     *
+     * @param skipWhitespace
+     *     If we should skip past whitespace before, between and after comments.
+     *
+     * @return this, for chaining.
+     */
+    public Stream collectComments(boolean skipWhitespace) {
+        // if we already checked at this index then don't waste time checking again
+        if (lastCheckedCommentIndex == index) return this;
+
+        // store the last checked index
+        lastCheckedCommentIndex = index;
+
+        while (!eof()) {
+            // skip whitespace
+            if (skipWhitespace) {
+                skipWhitepace();
+            }
+
+            // try to read a comment
+            String comment = readComment();
+
+            // add the comment to the buffer if a comment was found
+            if (comment != null) {
+                // delayed (re)creation of the comment buffer
+                if (comments == null) {
+                    comments = new ArrayList<>(2);
+                }
+                comments.add(comment);
+            } else {
+                return this;
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Reads a single comment.
+     *
+     * @return The comment, or null.
+     */
+    private String readComment() {
+        String comment = null;
+        boolean inComment = false;
+
+        // check for the opening comment
+        if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peek())) {
             inComment = true;
 
             // save the current position so we can grab the comment contents later
@@ -599,13 +652,7 @@ public final class Stream {
                     inComment = false;
 
                     // grab the comment contents
-                    String comment = source.substring(start + 2, index - 1);
-
-                    // delayed (re)creation of the comment queue
-                    if (comments == null) {
-                        comments = Lists.newArrayListWithExpectedSize(2);
-                    }
-                    comments.add(comment);
+                    comment = source.substring(start + 2, index - 1);
                 } else {
                     if (eof()) throw new ParserException(this, Message.MISSING_COMMENT_CLOSE);
                     next();
@@ -615,60 +662,66 @@ public final class Stream {
             // skip the closing slash. Doing it here because there may be a comment immediately after.
             next();
         }
+
+        return comment;
     }
 
     /**
-     * Returns the current queue of CSS comments.
+     * Returns all CSS comments currently in the buffer.
      * <p/>
-     * CSS comments are automatically read and queued from the source. After calling this method, the queue will be emptied.
+     * CSS comments are placed into the buffer when {@link #collectComments()} is called. After calling this method the buffer
+     * will be emptied.
      *
-     * @return The current queue of CSS comments.
+     * @return The current list of CSS comments.
      */
-    public Iterable<String> flushComments() {
+
+    public List<String> flushComments() {
         // gather the comments from the queue
-        Iterable<String> flushed = (comments == null) ? ImmutableList.<String>of() : comments;
+        List<String> flushed = (comments == null) ? ImmutableList.<String>of() : comments;
 
         // reset the queue
         comments = null;
 
-        // return the previously queued comments
         return flushed;
     }
 
     /**
-     * Causes an exception to be thrown if any comments are encountered in the source, until {@link #enableComments()} is called.
-     * This also flushes any comments currently in the queue.
+     * Creates a snapshot of the current index, line, column, and other essential state information.
      * <p/>
-     * This behavior is not part of the official CSS spec, as the spec allows comments just about anywhere, however in practice
-     * there are places where comments should never be placed. This method should be used in situations where the removal of a
-     * comment would change the CSS source. For example, in
-     * <p/>
-     * <pre>margin: 1px/*abc*&#47;1px;</pre>
-     * <p/>
-     * after removing the comment it would be
-     * <p/>
-     * <pre>margin:1px1px;</pre>
-     * <p/>
-     * In order to prevent this situation, the parser should call {@link #rejectComments()} before parsing and {@link
-     * #enableComments()} after it is done. A less restrictive enforcement would be to check that a term operator or selector
-     * combinator is directly before or after the comment.
+     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the content
+     * does fully match as expected. To revert to the latest snapshot call {@link Snapshot#rollback()} on the snapshot returned
+     * from this method.
      *
-     * @return this, for chaining.
+     * @return The created snapshot.
      */
-    public Stream rejectComments() {
-        flushComments();
-        commentsAllowed = false;
-        return this;
+
+    public Snapshot snapshot() {
+        return new Snapshot(this, index, line, column, inString);
     }
 
     /**
-     * Allows comments to be encountered and queued.
+     * Reads an ident token.
+     * <p/>
+     * XXX the spec allows for non ascii and escaped characters here as well.
      *
-     * @return this, for chaining.
+     * @return The matched token, or {@link Optional#absent()} if not matched.
      */
-    public Stream enableComments() {
-        commentsAllowed = true;
-        return this;
+    public Optional<String> readIdent() {
+        final Character current = current();
+
+        if (Tokens.NMSTART.matches(current)) {
+            // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
+            if (Tokens.HYPHEN.matches(current) && Tokens.HYPHEN_OR_DIGIT.matches(peek())) return Optional.absent();
+
+            // return the full ident token
+            return Optional.of(chomp(Tokens.NMCHAR));
+        }
+        return Optional.absent();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s\u00BB%s", source.substring(0, index), source.substring(index));
     }
 
     /**
@@ -703,79 +756,10 @@ public final class Stream {
         }
     }
 
-    /**
-     * Creates a snapshot of the current index, line, column, and other essential state information.
-     * <p/>
-     * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the content
-     * does fully match as expected. To revert to the latest snapshot call {@link #rollback()}. To revert to a specific snapshot,
-     * use {@link #rollback(Snapshot)}.
-     * <p/>
-     * This should be used sparingly, as in most cases you can ascertain the necessary information through {@link #peek()}, {@link
-     * #current()} and other methods on this class.
-     *
-     * @return The created snapshot.
-     */
-    public Snapshot snapshot() {
-        snapshot = new Snapshot(index, line, column, inString);
-        return snapshot;
-    }
-
-    /**
-     * Reverts to the last snapshot.
-     *
-     * @return always returns <b>false</b> (convenience for inlining return statements in methods)
-     *
-     * @throws IllegalStateException
-     *     If no snapshots exist.
-     */
-    public boolean rollback() {
-        checkState(snapshot != null, "no snapshots currently exist");
-        return rollback(snapshot);
-    }
-
-    /**
-     * Reverts to the state captured within the given snapshot.
-     *
-     * @param snapshot
-     *     Revert to this snapshot.
-     *
-     * @return always returns <b>false</b> (convenience for inlining return statements in methods)
-     */
-    public boolean rollback(Snapshot snapshot) {
-        this.index = snapshot.index;
-        this.line = snapshot.line;
-        this.column = snapshot.column;
-        this.inString = snapshot.inString;
-        return false;
-    }
-
-    /**
-     * Reads an ident token.
-     * <p/>
-     * XXX the spec allows for non ascii and escaped characters here as well.
-     *
-     * @return The matched token, or {@link Optional#absent()} if not matched.
-     */
-    public Optional<String> readIdent() {
-        final Character current = current();
-
-        if (Tokens.NMSTART.matches(current)) {
-            // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
-            if (Tokens.HYPHEN.matches(current) && Tokens.HYPHEN_OR_DIGIT.matches(peek())) return Optional.absent();
-
-            // return the full ident token
-            return Optional.of(chomp(Tokens.NMCHAR));
-        }
-        return Optional.absent();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s\u00BB%s", source.substring(0, index), source.substring(index));
-    }
-
     /** data object */
     public static final class Snapshot {
+        private final Stream stream;
+
         /** the captured index */
         public final int index;
 
@@ -788,11 +772,43 @@ public final class Stream {
         /** whether we are in a string at the captured index */
         public final boolean inString;
 
-        private Snapshot(int index, int line, int column, boolean inString) {
+        private Snapshot(Stream stream, int index, int line, int column, boolean inString) {
+            this.stream = stream;
             this.index = index;
             this.line = line;
             this.column = column;
             this.inString = inString;
+        }
+
+        /**
+         * Reverts to the state (index, line, column, etc...) captured within this given snapshot.
+         *
+         * @return always returns <b>false</b> (convenience for inlining return statements in parse methods).
+         */
+
+        public boolean rollback() {
+            stream.index = index;
+            stream.line = line;
+            stream.column = column;
+            stream.inString = inString;
+            return false;
+        }
+
+        /**
+         * Similar to {@link #rollback()}, but this will also throw a {@link ParserException} with the given message and optional
+         * message args.
+         * <p/>
+         * This is a convenience function to combine the common scenario of rolling back before throwing an error so that the
+         * error message indicates a more accurate location of where the error occurred.
+         *
+         * @param message
+         *     The error message.
+         * @param args
+         *     Optional args for the error message.
+         */
+        public void rollback(Message message, Object... args) {
+            rollback();
+            throw new ParserException(stream, message, args);
         }
     }
 }

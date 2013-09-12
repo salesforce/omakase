@@ -20,6 +20,7 @@ public class RawDeclarationParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
+        stream.collectComments();
 
         // the first non comment or space character must match the beginning of a declaration
         if (!tokenFactory().declarationBegin().matches(stream.current())) return false;

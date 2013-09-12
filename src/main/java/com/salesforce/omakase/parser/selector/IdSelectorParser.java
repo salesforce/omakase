@@ -27,22 +27,23 @@ public class IdSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+        stream.collectComments(false);
 
-        // gather the line and column before advancing the stream
-        int line = stream.line();
-        int column = stream.column();
+        // snapshot the current state before parsing
+        Stream.Snapshot snapshot = stream.snapshot();
 
         // first character must be a hash
-        if (!Tokens.HASH.matches(stream.current())) return false;
-        stream.next();
+        if (!stream.optionallyPresent(Tokens.HASH)) return false;
 
         // parse the id name
         Optional<String> name = stream.readIdent();
         if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_ID);
 
         // broadcast the new id selector
-        IdSelector selector = new IdSelector(line, column, name.get());
+        IdSelector selector = new IdSelector(snapshot.line, snapshot.column, name.get());
+        selector.comments(stream.flushComments());
         broadcaster.broadcast(selector);
         return true;
     }
+
 }
