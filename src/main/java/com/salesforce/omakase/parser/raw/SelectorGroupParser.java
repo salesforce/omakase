@@ -32,7 +32,6 @@ import com.salesforce.omakase.parser.Stream;
 public class SelectorGroupParser extends AbstractParser {
 
     @Override
-    @SuppressWarnings("UnusedAssignment")
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         stream.skipWhitepace();
         stream.collectComments();

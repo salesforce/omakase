@@ -33,7 +33,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
+@SuppressWarnings({"JavaDoc"})
 public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationParser> {
 
     @Override

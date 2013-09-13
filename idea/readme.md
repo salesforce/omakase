@@ -44,14 +44,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
- 5. Click 'Apply'
- 6. settings -> Copyright
+5. Under 'Allow replacing copyright...' add 'Copyright'
+6. Click 'Apply'
+7. settings -> Copyright
     1. under 'Default project copyright' choose 'Omakase'
- 7. settings -> Copyright -> Formatting
+8. settings -> Copyright -> Formatting
     1. 'Use block comment' *selected*
     2. 'Prefix each line' *selected*
     3. 'Before other comments' *selected*
     4. 'Add blank line after' *selected*
+9. ok 
 
 Dictionaries
 ------------
@@ -74,6 +76,10 @@ TODOs
 
 Optional
 --------
-1. Remove file header (preferences -> includes -> File Header -> clear content)
-2. Useful to make projects automatically (preferences -> compiler -> make project automatcally)
+1. Remove file header (settings -> includes -> File Header -> clear content)
+2. Useful to make projects automatically (settings -> compiler -> make project automatcally)
+
+Reload
+------
+Reload IDEA after making these changes.
 

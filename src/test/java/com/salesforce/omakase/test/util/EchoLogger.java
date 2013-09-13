@@ -17,6 +17,7 @@
 package com.salesforce.omakase.test.util;
 
 import ch.qos.logback.classic.Level;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -196,5 +197,10 @@ public final class EchoLogger extends BasePlugin {
     @Override
     public void stringValue(StringValue stringValue) {
         logger.trace("stringValue: {}", stringValue);
+    }
+
+    @Override
+    public void orphanedSelectorComment(Comment orphaned) {
+        logger.trace("orphanedComment: {}", orphaned);
     }
 }

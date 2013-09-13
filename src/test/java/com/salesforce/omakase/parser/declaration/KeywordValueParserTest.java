@@ -32,7 +32,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("SpellCheckingInspection")
 public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParser> {
     @Override
     public List<String> invalidSources() {

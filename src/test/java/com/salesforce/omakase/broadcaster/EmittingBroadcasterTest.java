@@ -51,6 +51,7 @@ public class EmittingBroadcasterTest {
         assertThat(ib.called).isTrue();
     }
 
+    @SuppressWarnings("UnusedParameters")
     public static final class InnerPlugin implements Plugin {
         boolean called = false;
 

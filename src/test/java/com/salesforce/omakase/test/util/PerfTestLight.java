@@ -62,7 +62,7 @@ public class PerfTestLight {
     private static final Pattern COMMENT_PATTERN = Pattern.compile("/\\*[^*]*\\*+([^/*][^*]*\\*+)*/");
 
     /** main method with setup */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         env(true);
         run();
         env(true);
