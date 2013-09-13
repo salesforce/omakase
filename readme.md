@@ -33,36 +33,37 @@ Subscribable Syntax Units
 01: Refinable                   raw syntax that can be further refined                    Automatic                   interface
 02: Statement                   rule or at-rule                                           SyntaxTree                  interface
 03: Syntax                      parent interface of all subscribable units                Automatic                   interface
-04: Rule                        (no description)                                          SyntaxTree                  class
-05: Stylesheet                  (no description)                                          SyntaxTree                  class
-06: Declaration                 (no description)                                          Automatic                   class
-07: PropertyValue               interface for all property values                         Declaration#refine          interface
-08: Term                        a single segment of a property value                      Declaration#refine          interface
-09: FunctionValue               individual function value                                 Declaration#refine          class
-10: HexColorValue               individual hex color value                                Declaration#refine          class
-11: KeywordValue                individual keyword value                                  Declaration#refine          class
-12: NumericalValue              individual numerical value                                Declaration#refine          class
-13: StringValue                 individual string value                                   Declaration#refine          class
-14: TermList                    default, generic property value                           Declaration#refine          class
-15: SelectorPart                parent interface for all selector segments                Selector#refine             interface
-16: SimpleSelector              parent interface for non-combinator selector parts        Selector#refine             interface
-17: AttributeSelector           attribute selector segment                                Selector#refine             class
-18: ClassSelector               class selector segment                                    Selector#refine             class
-19: Combinator                  combinator segment                                        Selector#refine             class
-20: IdSelector                  id selector segment                                       Selector#refine             class
-21: PseudoClassSelector         pseudo class selector segment                             Selector#refine             class
-22: PseudoElementSelector       pseudo element selector segment                           Selector#refine             class
-23: Selector                    (no description)                                          Automatic                   class
-24: SelectorGroup               group of comma-separated selectors                        Selector#refine             class
-25: TypeSelector                type/element selector segment                             Selector#refine             class
-26: UniversalSelector           universal selector segment                                Selector#refine             class
+04: OrphanedComment             A comment unassociated with any syntax unit               Under certain conditions    class
+05: Rule                        (no description)                                          SyntaxTree                  class
+06: Stylesheet                  (no description)                                          SyntaxTree                  class
+07: AtRule                      (no description)                                          Automatic                   class
+08: Declaration                 (no description)                                          Automatic                   class
+09: PropertyValue               interface for all property values                         Declaration#refine          interface
+10: Term                        a single segment of a property value                      Declaration#refine          interface
+11: FunctionValue               individual function value                                 Declaration#refine          class
+12: HexColorValue               individual hex color value                                Declaration#refine          class
+13: KeywordValue                individual keyword value                                  Declaration#refine          class
+14: NumericalValue              individual numerical value                                Declaration#refine          class
+15: StringValue                 individual string value                                   Declaration#refine          class
+16: TermList                    default, generic property value                           Declaration#refine          class
+17: SelectorPart                parent interface for all selector segments                Selector#refine             interface
+18: SimpleSelector              parent interface for simple selectors                     Selector#refine             interface
+19: AttributeSelector           attribute selector segment                                Selector#refine             class
+20: ClassSelector               class selector segment                                    Selector#refine             class
+21: Combinator                  combinator segment                                        Selector#refine             class
+22: IdSelector                  id selector segment                                       Selector#refine             class
+23: PseudoClassSelector         pseudo class selector segment                             Selector#refine             class
+24: PseudoElementSelector       pseudo element selector segment                           Selector#refine             class
+25: Selector                    (no description)                                          Automatic                   class
+26: TypeSelector                type/element selector segment                             Selector#refine             class
+27: UniversalSelector           universal selector segment                                Selector#refine             class
 
 Generated by SubscribableSyntaxTable.java
 </pre>
 
 ### Development
 
-Before checking *anything* in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of idea or eclipse. 
+Before checking *anything* in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of the `idea` or `eclipse` folders. 
 
 #### Scripts
 
