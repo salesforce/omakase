@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -163,6 +164,16 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
         // }
 
         return this;
+    }
+
+    @Override
+    public Optional<Rule> asRule() {
+        return Optional.absent();
+    }
+
+    @Override
+    public Optional<AtRule> asAtRule() {
+        return Optional.of(this);
     }
 
     @Override

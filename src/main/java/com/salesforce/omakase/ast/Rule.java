@@ -16,7 +16,11 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -30,7 +34,9 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.List;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
@@ -42,6 +48,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
  * <p/>
  * You might be looking for a "DeclarationBlock" class. Currently such a class serves no purpose, and all ordered declarations are
  * contained inside of a {@link SyntaxCollection} within this class instead.
+ * <p/>
+ * Adding or retrieving comments delegates to the first selector in the rule.
  *
  * @author nmcwilliams
  */
@@ -104,6 +112,28 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
         super.propagateBroadcast(broadcaster);
         selectors.propagateBroadcast(broadcaster);
         declarations.propagateBroadcast(broadcaster);
+    }
+
+    @Override
+    public void comments(Iterable<String> commentsToAdd) {
+        checkState(!selectors.isEmpty(), "cannot add a comment to a stylesheet without at least one selector");
+        Iterables.get(selectors, 0).comments(commentsToAdd);
+    }
+
+    @Override
+    public List<Comment> comments() {
+        if (selectors.isEmpty()) return ImmutableList.of();
+        return Iterables.get(selectors, 0).comments();
+    }
+
+    @Override
+    public Optional<Rule> asRule() {
+        return Optional.of(this);
+    }
+
+    @Override
+    public Optional<AtRule> asAtRule() {
+        return Optional.absent();
     }
 
     @Override

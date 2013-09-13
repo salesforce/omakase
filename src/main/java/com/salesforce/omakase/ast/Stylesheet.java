@@ -16,6 +16,8 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -30,7 +32,9 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
@@ -39,6 +43,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
  * The root-level {@link Syntax} object.
  * <p/>
  * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
+ * <p/>
+ * Adding or retrieving comments delegates to the first statement in the stylesheet.
  *
  * @author nmcwilliams
  * @see StylesheetParser
@@ -84,6 +90,18 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     @Override
     public Iterator<Statement> iterator() {
         return statements().iterator();
+    }
+
+    @Override
+    public void comments(Iterable<String> commentsToAdd) {
+        checkState(!statements.isEmpty(), "cannot add a comment to a stylesheet without at least one statement");
+        Iterables.get(statements, 0).comments(commentsToAdd);
+    }
+
+    @Override
+    public List<Comment> comments() {
+        if (statements.isEmpty()) return ImmutableList.of();
+        return Iterables.get(statements, 0).comments();
     }
 
     @Override

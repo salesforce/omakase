@@ -16,15 +16,17 @@
 
 package com.salesforce.omakase.parser;
 
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -32,17 +34,17 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * Unit test that ensures that regular comments are correctly associated with units and that orphaned comments are created as
  * appropriate.
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "ConstantConditions"})
 public class CommentPositionTest {
     private static final String SRC1 = "/*x*/\n" +
         "\n" +
-        "/*x*/.class /*x*/.class/*x*/.class /*x*/,/*x*/ p#id /*x*/ { /*x*/\n" +
-        "    /*x*/ border: /*x*/ 1px /*x*/ solid red /*x*/;/*x*/ /*x*/\n" +
-        "    /*x*/ margin: 1px; /*x*/\n" +
-        "    /*x*/\n" +
+        "/*1*/.class /*2*/ /* 3 */.class/**4*/.class /*5**/,/*-6-*/ p#id /*!7*/ { /*\n8*/\n" +
+        "    /*9*/ border: /*10*/ 1px /*11*/ solid red /*12*/;/*13*/ /*14*/\n" +
+        "    /*15*/ margin: 1px; /*16*/\n" +
+        "    /*17*/\n" +
         "}\n" +
         "\n" +
-        "/*x*/\n";
+        "/*18*//*19*/\n";
 
     private static final String SRC2 = "/*x*/\n" +
         "/*x*/.class /*x*/.class/*x*/.class /*x*/,/*x*/ p#id /*x*/ { /*x*/\n" +
@@ -65,43 +67,76 @@ public class CommentPositionTest {
     }
 
     @Test
-    public void testBroadcasts() {
-        List<Syntax> broadcasted = parseRefined(SRC1).all();
+    public void hasExpectedContentWhenRefined() {
+        SyntaxTree tree = parseRefined(SRC1);
 
-        assertThat(broadcasted).hasSize(10);
+        // stylesheet
+        Stylesheet stylesheet = tree.stylesheet();
+        assertThat(stylesheet.comments()).hasSize(1);
+        assertThat(Iterables.getLast(stylesheet.comments()).content()).isEqualTo("1");
 
-        assertThat(broadcasted.get(0)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(1)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(2)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(3)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(4)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(6)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(7)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(8)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(9)).isInstanceOf(ClassSelector.class);
+        // TODO add orphaned
+
+        // rule
+        SyntaxCollection<Statement> statements = stylesheet.statements();
+        assertThat(statements).hasSize(1);
+        Statement statement = Iterables.getLast(statements);
+        Rule rule = statement.asRule().get();
+
+        assertThat(rule.comments()).hasSize(1);
+        assertThat(Iterables.getLast(rule.comments()).content()).isEqualTo("1");
+
+        // TODO add orphaned
+
+        // selectors
+        assertThat(rule.selectors()).hasSize(2);
+        Selector selector1 = Iterables.get(rule.selectors(), 0, null);
+        Selector selector2 = Iterables.get(rule.selectors(), 1, null);
+
+        // selector 1
+        assertThat(selector1.comments()).hasSize(1);
+        assertThat(Iterables.getLast(selector1.comments()).content()).isEqualTo("1");
+        assertThat(selector1.orphanedComments()).hasSize(1);
+        assertThat(Iterables.getLast(selector1.orphanedComments()).content()).isEqualTo("5*");
+
+        SyntaxCollection<SelectorPart> parts1 = selector1.parts();
+        assertThat(parts1).hasSize(3);
+
+        SelectorPart parts1a = Iterables.get(parts1, 0);
+        SelectorPart parts1b = Iterables.get(parts1, 1);
+        SelectorPart parts1c = Iterables.get(parts1, 2);
+
+        assertThat(parts1a.comments()).hasSize(1);
+        assertThat(Iterables.get(parts1a.comments(), 0).content()).isEqualTo("1");
+
+        assertThat(parts1b.comments()).hasSize(2);
+        assertThat(Iterables.get(parts1b.comments(), 0).content()).isEqualTo("2");
+        assertThat(Iterables.get(parts1b.comments(), 1).content()).isEqualTo(" 3 ");
+
+        assertThat(parts1c.comments()).hasSize(1);
+        assertThat(Iterables.get(parts1b.comments(), 0).content()).isEqualTo("*4");
+
+        // selector 2
+
+        // declarations
+
+        // declaration 1
+
+        // declaration 2
+
     }
 
-    private QueryableBroadcaster parseRefined(String input) {
-        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-
-        Omakase.source(input)
-            .request(new AutoRefiner().all())
-            .request(new SyntaxTree())
-            .broadcaster(broadcaster)
-            .process();
-
-        return broadcaster;
+    private SyntaxTree parseRefined(String input) {
+        SyntaxTree syntaxTree = new SyntaxTree();
+        AutoRefiner refinement = new AutoRefiner().all();
+        Omakase.source(input).request(refinement).request(syntaxTree).process();
+        return syntaxTree;
     }
 
-    private QueryableBroadcaster parseNoRefine(String input) {
-        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-
-        Omakase.source(input)
-            .broadcaster(broadcaster)
-            .process();
-
-        return broadcaster;
+    private SyntaxTree parseNoRefine(String input) {
+        SyntaxTree syntaxTree = new SyntaxTree();
+        AutoRefiner refinement = new AutoRefiner().all();
+        Omakase.source(input).request(refinement).request(syntaxTree).process();
+        return syntaxTree;
     }
-
 }

@@ -38,6 +38,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
@@ -138,7 +139,6 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
 
             // check for orphaned comments
             Iterable<OrphanedComment> orphaned = qb.filter(OrphanedComment.class);
-            System.out.print(orphaned); // TODO
         }
 
         return this;
@@ -172,6 +172,10 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
         } else {
             writer.write(rawContent, appendable);
         }
+    }
+
+    public List<OrphanedComment> orphanedComments() {
+        return null;
     }
 
     @Override
