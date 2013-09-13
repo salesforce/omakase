@@ -1,0 +1,77 @@
+Steps
+=====
+
+Plugins
+-------
+For some of the following instructions to work, ensure you have the following plugins enabled:
+
+1. Copyright
+2. Inspection Gadgets
+
+Settings
+--------
+1. file -> import settings -> choose idea/settings.jar
+2. preferences -> code style -> choose scheme 'Omakase'
+3. ok
+
+Inspections
+-----------
+1. preferences -> inspections -> import -> choose idea/Omakase.xml
+2. ensure that 'Omakase' is chosen in the dropdown on left
+3. a bunch of inspections in the list should be highlighted as blue
+3. ok
+
+Note: when running 'Inspect Code', ensure that the 'Omakase' inspection profile is chosen.
+
+Copyright
+---------
+1. preferences -> Copyright -> Copyright Profiles
+2. click the '+' sign
+3. enter 'Omakase' as the name
+4. enter copyright text as follows:
+
+/*
+ * Copyright (C) $today.year salesforce.com, inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ 5. Click 'Apply'
+ 6. preferences -> Copyright
+ 7. under 'Default project copyright' choose 'Omakase'
+
+Dictionaries
+------------
+1. preferences -> spelling -> dictionaries (tab)
+2. click '+' -> choose idea/dictionaries
+3. ok
+
+File Encodings
+--------------
+1. File encodings should be UTF-8 (preferences -> file encodings)
+
+TODOs
+-----
+1. preferences -> TODO
+2. ensure you have all of the following (case insensitive):
+
+\btodo\b.*
+\bfixme\b.*
+\bxxx\b.*
+\btestme\b.*
+
+Optional
+--------
+1. Remove file header (preferences -> includes -> File Header -> clear content)
+2. Useful to make projects automatically (preferences -> compiler -> make project automatcally)
+

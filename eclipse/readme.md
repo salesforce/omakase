@@ -1,9 +1,14 @@
 Setup
 =====
 
-Resource filters
-----------------
+Import preferences
+------------------
+import prefs.epf
 
+Optional
+--------
+
+### Resource filters
 **Filter package-info.java*** (unless you need to mess with them)
 
 1. right-click on project -> properties -> resource -> resource filters -> add
