@@ -29,8 +29,23 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  * @author nmcwilliams
  */
 @Subscribable
-@Description(value = "parent interface for all selector segments", broadcasted = REFINED_SELECTOR)
-public interface SelectorPart extends Syntax, Groupable<SelectorPart> {
+@Description(value = "group interface for all selector segments", broadcasted = REFINED_SELECTOR)
+public interface SelectorPart extends Syntax, Groupable<Selector, SelectorPart> {
+    /**
+     * Gets the parent {@link Selector} instance. This is equivalent to {@link #parent()}.
+     * <p/>
+     * Take this CSS snippet for example:
+     * <p/>
+     * {@code .class > .class2 #id, p a}
+     * <p/>
+     * There are two {@link Selector}s, The first being {@code .class > .class2 #id}, the second being {@code p a}.
+     * <p/>
+     * For the {@link SelectorPart} {@code #id}, which is an {@link IdSelector}, calling this method will return the first {@link
+     * Selector} (with {@code .class > .class2 #id}).
+     *
+     * @return The parent.
+     */
+    Selector parentSelector();
 
     /**
      * Gets whether this {@link SelectorPart} is a selector ({@link SimpleSelector} or {@link PseudoElementSelector}).
@@ -47,7 +62,7 @@ public interface SelectorPart extends Syntax, Groupable<SelectorPart> {
     boolean isCombinator();
 
     /**
-     * Gets the {@link SelectorPartType} of this {@link SelectorPart}.
+     * Gets the {@link SelectorPartType} of this {@link SelectorPart}. This is a delegate to {@link Groupable#parent()}.
      *
      * @return The {@link SelectorPartType}.
      */

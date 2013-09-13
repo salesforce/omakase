@@ -18,6 +18,7 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -197,6 +198,23 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
         }
 
         state = State.INSIDE_DECLARATION_BLOCK;
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     * <p/>
+     * Handles {@link OrphanedComment}s for rules and stylesheets.
+     *
+     * @param comment
+     *     The orphaned comment.
+     */
+    @PreProcess
+    public void orphanedComment(OrphanedComment comment) {
+        if (currentRule != null && comment.location() == OrphanedComment.Location.RULE) {
+            currentRule.orphanedComment(comment);
+        } else if (currentStylesheet != null && comment.location() == OrphanedComment.Location.STYLESHEET) {
+            currentStylesheet.orphanedComment(comment);
+        }
     }
 
     @Override

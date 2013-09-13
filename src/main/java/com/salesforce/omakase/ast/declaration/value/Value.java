@@ -26,18 +26,45 @@ import java.util.List;
  * <p/>
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.
  * <p/>
+ * This allows you to extract specific {@link Term} instances from a given {@link PropertyValue} if that {@link Term} is the only
+ * member within the list. It also provides utilities for casting a generic {@link PropertyValue} to a more specific one, such as
+ * {@link #asTermList(PropertyValue)}.
+ * <p/>
  * Examples:
  * <pre>
- * {@code HexColorValue color = Value.asHexColor(declaration.getPropertyValue())}
- * {@code KeywordValue keyword = Value.asKeyword(declaration.getPropertyValue())}
- * {@code NumericalValue number = Value.asNumerical(declaration.getPropertyValue())}
+ * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.getPropertyValue())}
+ * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.getPropertyValue())}
+ * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.getPropertyValue())}
+ * {@code Optional<TermList> termList = Value.asTermList(declaration.getPropertyValue())}
  * </pre>
+ * <p/>
+ * The returned {@link Optional} instances are wrappers around the actual object instance. If the {@link PropertyValue} matches
+ * the conditions of the method being called then you will get an  {@link Optional} where {@link Optional#isPresent()} is true.
+ * You can get at the object instance via {@link Optional#get()}.
+ * <p/>
+ * However, if the {@link PropertyValue} does not match the conditions of the method then the returned {@link Optional} will be
+ * {@link Optional#absent()}. Thus, you should always check {@link Optional#isPresent()} before attempting to access the inner
+ * object instance.
  *
  * @author nmcwilliams
  */
 public final class Value {
     /** do not construct */
     private Value() {}
+
+    /**
+     * Gets the given value as {@link TermList}.
+     * <p/>
+     * This checks if the given {@link PropertyValue} is an instance of a {@link TermList}.
+     *
+     * @param value
+     *     The {@link TermList} if the value is an instance of {@link TermList}, otherwise {@link Optional#absent()}.
+     *
+     * @return The {@link TermList}, or {@link Optional#absent()} if the value is not a {@link TermList}.
+     */
+    public static Optional<TermList> asTermList(PropertyValue value) {
+        return value instanceof TermList ? Optional.of((TermList)value) : Optional.<TermList>absent();
+    }
 
     /**
      * Gets the single {@link HexColorValue} within the given {@link PropertyValue}. The returned {@link Optional} will only be

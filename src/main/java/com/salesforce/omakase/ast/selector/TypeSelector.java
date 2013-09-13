@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -40,7 +39,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  */
 @Subscribable
 @Description(value = "type/element selector segment", broadcasted = REFINED_SELECTOR)
-public class TypeSelector extends AbstractGroupable<SelectorPart> implements SimpleSelector {
+public class TypeSelector extends AbstractSelectorPart implements SimpleSelector {
     private String name;
 
     /**

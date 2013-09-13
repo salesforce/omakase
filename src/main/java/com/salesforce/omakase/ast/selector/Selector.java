@@ -16,12 +16,14 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -38,8 +40,11 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 /**
@@ -58,9 +63,10 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Selector extends AbstractGroupable<Selector> implements Refinable<Selector> {
-    private final SyntaxCollection<SelectorPart> parts;
+public class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
+    private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax rawContent;
+    private List<OrphanedComment> orphanedComments;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
@@ -74,7 +80,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
     public Selector(RawSyntax rawContent, Broadcaster broadcaster) {
         super(rawContent.line(), rawContent.column(), broadcaster);
         this.rawContent = rawContent;
-        this.parts = StandardSyntaxCollection.create(broadcaster);
+        this.parts = StandardSyntaxCollection.create(this, broadcaster);
     }
 
     /**
@@ -95,7 +101,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
      */
     public Selector(Iterable<SelectorPart> parts) {
         this.rawContent = null;
-        this.parts = StandardSyntaxCollection.create();
+        this.parts = StandardSyntaxCollection.create(this);
         this.parts.appendAll(parts);
     }
 
@@ -113,7 +119,7 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
      *
      * @return The list of {@link SelectorPart} members.
      */
-    public SyntaxCollection<SelectorPart> parts() {
+    public SyntaxCollection<Selector, SelectorPart> parts() {
         return parts;
     }
 
@@ -138,7 +144,9 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
             parts.appendAll(qb.filter(SelectorPart.class));
 
             // check for orphaned comments
-            Iterable<OrphanedComment> orphaned = qb.filter(OrphanedComment.class);
+            for (OrphanedComment comment : qb.filter(OrphanedComment.class)) {
+                orphanedComment(comment);
+            }
         }
 
         return this;
@@ -154,6 +162,31 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
     public void propagateBroadcast(Broadcaster broadcaster) {
         super.propagateBroadcast(broadcaster);
         parts.propagateBroadcast(broadcaster);
+    }
+
+    /**
+     * Adds an {@link OrphanedComment}.
+     *
+     * @param comment
+     *     The comment.
+     */
+    public void orphanedComment(OrphanedComment comment) {
+        checkNotNull(comment, "comment cannot be null");
+        checkArgument(comment.location() == OrphanedComment.Location.SELECTOR, "invalid orphaned value location");
+        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
+        orphanedComments.add(comment);
+    }
+
+    /**
+     * Gets all {@link OrphanedComment}s.
+     * <p/>
+     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
+     * at the end of a stylesheet or declaration block.
+     *
+     * @return The list of comments, or an empty list if none are specified.
+     */
+    public List<OrphanedComment> orphanedComments() {
+        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override
@@ -174,17 +207,14 @@ public class Selector extends AbstractGroupable<Selector> implements Refinable<S
         }
     }
 
-    public List<OrphanedComment> orphanedComments() {
-        return null;
-    }
-
     @Override
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("raw", rawContent)
             .add("parts", parts())
+            .add("orphaned", orphanedComments())
             .toString();
     }
 }

@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
@@ -27,6 +28,8 @@ import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
+
+import java.util.List;
 
 import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
 
@@ -98,7 +101,10 @@ public class ComplexSelectorParser extends AbstractParser {
         }
 
         // orphaned comments
-        ParserFactory.orphanedCommentParser().parse(stream, queue);
+        List<String> orphaned = stream.collectComments().flushComments();
+        for (String comment : orphaned) {
+            queue.broadcast(new OrphanedComment(comment, OrphanedComment.Location.SELECTOR));
+        }
 
         // we're good, send out all queued broadcasts
         queue.resume();

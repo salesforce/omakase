@@ -36,7 +36,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
  */
 @Subscribable
 @Description(value = "rule or at-rule", broadcasted = SYNTAX_TREE)
-public interface Statement extends Syntax, Groupable<Statement> {
+public interface Statement extends Syntax, Groupable<Stylesheet, Statement> {
     /**
      * Gets this statement as an {@link Rule}, if possible. This is an alternative to using an <pre>instanceof</pre> check.
      *

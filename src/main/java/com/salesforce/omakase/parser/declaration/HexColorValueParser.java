@@ -35,7 +35,7 @@ public class HexColorValueParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        stream.collectComments();
+        stream.collectComments(false);
 
         // snapshot the current state before parsing
         Stream.Snapshot snapshot = stream.snapshot();

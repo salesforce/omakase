@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -39,7 +38,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  */
 @Subscribable
 @Description(value = "attribute selector segment", broadcasted = REFINED_SELECTOR)
-public class AttributeSelector extends AbstractGroupable<SelectorPart> implements SimpleSelector {
+public class AttributeSelector extends AbstractSelectorPart implements SimpleSelector {
     /**
      * Creates a new instance with the given line and column numbers.
      *
@@ -86,7 +85,7 @@ public class AttributeSelector extends AbstractGroupable<SelectorPart> implement
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .toString();
     }
 }

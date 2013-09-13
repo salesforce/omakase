@@ -21,13 +21,11 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.Validation;
 import com.salesforce.omakase.test.util.EchoLogger;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
 
 /** Temp test for debugging. */
 @SuppressWarnings({"JavaDoc", "UnusedDeclaration", "UnusedAssignment"})
 public class DebugTest {
 
-    @Test
     public void develop() {
         AutoRefiner refinement = new AutoRefiner().all();
         EchoLogger logging = new EchoLogger();

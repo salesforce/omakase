@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
@@ -98,6 +99,16 @@ public class TermList extends AbstractSyntax implements PropertyValue {
         return ImmutableList.copyOf(members);
     }
 
+    /**
+     * Gets only the list of {@link Term}s in this list (as opposed to {@link #members()} which returns both terms and
+     * operators).
+     *
+     * @return All {@link Term}s.
+     */
+    public ImmutableList<Term> terms() {
+        return ImmutableList.copyOf(Iterables.filter(members, Term.class));
+    }
+
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         super.propagateBroadcast(broadcaster);
@@ -119,8 +130,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     @Override
     public String toString() {
         return As.string(this)
-            .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("members", members)
             .toString();
     }

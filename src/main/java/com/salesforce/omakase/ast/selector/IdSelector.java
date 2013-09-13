@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.selector.IdSelectorParser;
@@ -40,7 +39,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  */
 @Subscribable
 @Description(value = "id selector segment", broadcasted = REFINED_SELECTOR)
-public class IdSelector extends AbstractGroupable<SelectorPart> implements SimpleSelector {
+public class IdSelector extends AbstractSelectorPart implements SimpleSelector {
     private String name;
 
     /**
@@ -120,7 +119,7 @@ public class IdSelector extends AbstractGroupable<SelectorPart> implements Simpl
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("name", name)
             .toString();
     }

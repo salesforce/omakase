@@ -18,6 +18,8 @@ package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
@@ -30,10 +32,12 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  *
  * @param <T>
  *     The type of {@link Syntax} contained within the collection.
+ * @param <P>
+ *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
  *
  * @author nmcwilliams
  */
-public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Iterable<T> {
+public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends Iterable<T> {
     /**
      * Gets the number of units in the collection.
      *
@@ -89,7 +93,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> prepend(T unit);
+    SyntaxCollection<P, T> prepend(T unit);
 
     /**
      * Prepends all of the given units to the beginning of this collection.
@@ -99,7 +103,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> prependAll(Iterable<T> units);
+    SyntaxCollection<P, T> prependAll(Iterable<T> units);
 
     /**
      * Prepends the given unit before the given existing unit.
@@ -114,7 +118,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * @throws IllegalArgumentException
      *     If existing is not contained within this collection.
      */
-    SyntaxCollection<T> prependBefore(T existing, T unit) throws IllegalArgumentException;
+    SyntaxCollection<P, T> prependBefore(T existing, T unit) throws IllegalArgumentException;
 
     /**
      * Appends the given unit to the end of this collection.
@@ -124,7 +128,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> append(T unit);
+    SyntaxCollection<P, T> append(T unit);
 
     /**
      * Appends all of the given units to the end of this collection.
@@ -134,7 +138,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> appendAll(Iterable<T> units);
+    SyntaxCollection<P, T> appendAll(Iterable<T> units);
 
     /**
      * Appends the given unit after the given existing unit.
@@ -149,7 +153,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      * @throws IllegalArgumentException
      *     If existing is not contained within this collection.
      */
-    SyntaxCollection<T> appendAfter(T existing, T unit) throws IllegalArgumentException;
+    SyntaxCollection<P, T> appendAfter(T existing, T unit) throws IllegalArgumentException;
 
     /**
      * Replaces <b>all</b> existing units with the given units.
@@ -159,7 +163,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> replaceExistingWith(Iterable<T> units);
+    SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units);
 
     /**
      * Removes a unit from this collection. If this collection does not contain the given unit nothing will happen.
@@ -169,7 +173,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> detach(T unit);
+    SyntaxCollection<P, T> detach(T unit);
 
     /**
      * Detaches <b>all</b> units from this collection.
@@ -179,6 +183,13 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
     Iterable<T> clear();
 
     /**
+     * Gets the parent {@link Syntax} unit that owns this collection.
+     *
+     * @return The parent.
+     */
+    P parent();
+
+    /**
      * Specifies the {@link Broadcaster} to use when new units are added to the collection.
      *
      * @param broadcaster
@@ -186,7 +197,7 @@ public interface SyntaxCollection<T extends Syntax & Groupable<T>> extends Itera
      *
      * @return this, for chaining.
      */
-    SyntaxCollection<T> broadcaster(Broadcaster broadcaster);
+    SyntaxCollection<P, T> broadcaster(Broadcaster broadcaster);
 
     /**
      * Calls {@link Syntax#propagateBroadcast(Broadcaster)} on all units within this collection using the given {@link

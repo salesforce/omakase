@@ -29,11 +29,13 @@ import static com.google.common.base.Preconditions.*;
  *
  * @param <T>
  *     Same type as the {@link Groupable}.
+ * @param <P>
+ *     Same type as for the {@link Groupable}.
  *
  * @author nmcwilliams
  */
-public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends AbstractSyntax implements Groupable<T> {
-    private SyntaxCollection<T> group;
+public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> extends AbstractSyntax implements Groupable<P, T> {
+    private SyntaxCollection<P, T> group;
 
     @Override
     public boolean isFirst() {
@@ -46,9 +48,7 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
     }
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
-    public AbstractGroupable() {
-        super();
-    }
+    public AbstractGroupable() {}
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -84,19 +84,7 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
     protected abstract T self();
 
     @Override
-    public Groupable<T> parent(SyntaxCollection<T> group) {
-        this.group = group;
-        return this;
-    }
-
-    @Override
-    public SyntaxCollection<T> group() {
-        checkState(!isDetached(), "currently not part of any group!");
-        return group;
-    }
-
-    @Override
-    public Groupable<T> prepend(T unit) {
+    public Groupable<P, T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
         checkState(!isDetached(), "currently not part of any group!");
         group.prependBefore(self(), unit);
@@ -104,7 +92,7 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
     }
 
     @Override
-    public Groupable<T> append(T unit) {
+    public Groupable<P, T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
         checkState(!isDetached(), "currently not part of any group!");
         group.appendAfter(self(), unit);
@@ -120,5 +108,22 @@ public abstract class AbstractGroupable<T extends Syntax & Groupable<T>> extends
     @Override
     public boolean isDetached() {
         return group == null;
+    }
+
+    @Override
+    public Groupable<P, T> group(SyntaxCollection<P, T> group) {
+        this.group = group;
+        return this;
+    }
+
+    @Override
+    public SyntaxCollection<P, T> group() {
+        checkState(!isDetached(), "currently not part of any group!");
+        return group;
+    }
+
+    @Override
+    public P parent() {
+        return isDetached() ? null : group().parent();
     }
 }

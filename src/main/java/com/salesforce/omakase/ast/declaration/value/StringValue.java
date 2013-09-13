@@ -124,6 +124,7 @@ public class StringValue extends AbstractSyntax implements Term {
     public String toString() {
         return As.string(this)
             .add("content", content)
+            .addUnlessEmpty("comments", comments())
             .toString();
     }
 

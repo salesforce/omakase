@@ -19,7 +19,6 @@ package com.salesforce.omakase.ast.selector;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
@@ -42,7 +41,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  */
 @Subscribable
 @Description(value = "pseudo element selector segment", broadcasted = REFINED_SELECTOR)
-public class PseudoElementSelector extends AbstractGroupable<SelectorPart> implements SelectorPart {
+public class PseudoElementSelector extends AbstractSelectorPart implements SimpleSelector {
     /** these can use pseudo class syntax but are actually pseudo elements */
     public static final Set<String> POSERS = Sets.newHashSet("first-line", "first-letter", "before", "after");
 
@@ -127,7 +126,7 @@ public class PseudoElementSelector extends AbstractGroupable<SelectorPart> imple
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("name", name)
             .toString();
     }

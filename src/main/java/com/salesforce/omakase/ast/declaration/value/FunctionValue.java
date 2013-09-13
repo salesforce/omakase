@@ -131,6 +131,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
         return As.string(this)
             .add("name", name)
             .add("args", args)
+            .addUnlessEmpty("comments", comments())
             .toString();
     }
 

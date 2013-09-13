@@ -31,10 +31,11 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
@@ -52,7 +53,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
-    private final SyntaxCollection<Statement> statements;
+    private final SyntaxCollection<Stylesheet, Statement> statements;
+    private List<OrphanedComment> orphanedComments;
 
     /**
      * Constructs a new {@link Stylesheet} instance.
@@ -62,7 +64,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
      */
     public Stylesheet(Broadcaster broadcaster) {
         super(1, 1, broadcaster);
-        statements = StandardSyntaxCollection.create(broadcaster);
+        statements = StandardSyntaxCollection.create(this, broadcaster);
     }
 
     /**
@@ -70,7 +72,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
      *
      * @return All statements.
      */
-    public SyntaxCollection<Statement> statements() {
+    public SyntaxCollection<Stylesheet, Statement> statements() {
         return statements;
     }
 
@@ -104,6 +106,31 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
         return Iterables.get(statements, 0).comments();
     }
 
+    /**
+     * Adds an {@link OrphanedComment}.
+     *
+     * @param comment
+     *     The comment.
+     */
+    public void orphanedComment(OrphanedComment comment) {
+        checkNotNull(comment, "comment cannot be null");
+        checkArgument(comment.location() == OrphanedComment.Location.STYLESHEET, "invalid orphaned value location");
+        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
+        orphanedComments.add(comment);
+    }
+
+    /**
+     * Gets all {@link OrphanedComment}s.
+     * <p/>
+     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
+     * at the end of a stylesheet or declaration block.
+     *
+     * @return The list of comments, or an empty list if none are specified.
+     */
+    public List<OrphanedComment> orphanedComments() {
+        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (Statement statement : statements) {
@@ -116,6 +143,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
         return As.string(this)
             .indent()
             .add("statements", Lists.newArrayList(statements()))
+            .add("orphaned", orphanedComments())
             .toString();
     }
 }

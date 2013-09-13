@@ -137,10 +137,10 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
             withExpectedResult("div:hover", 2),
             withExpectedResult(".input-group-btn:first-child > .dropdown-toggle", 4),
             withExpectedResult("      ul.gallery li:last-child", 5),
-            withExpectedResult(".class /*comment*/ .class", 4),
-            withExpectedResult(".class/*comment*/.class", 3),
-            withExpectedResult(".class\n/*comment*/\n.class", 4),
-            withExpectedResult(".class /*comment*//*comment*/ .class", 4),
+            withExpectedResult(".class /*comment*/ .class",3),
+            withExpectedResult(".class/*comment*/.class", 2),
+            withExpectedResult(".class\n/*comment*/\n.class", 3),
+            withExpectedResult(".class /*comment*//*comment*/ .class", 3),
             withExpectedResult(".class .class /*comment*/", 4),
             withExpectedResult("*::before", 2))
         );
@@ -219,6 +219,6 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         assertThat(result.broadcasted.get(1)).isInstanceOf(OrphanedComment.class);
         assertThat(result.broadcasted.get(2)).isInstanceOf(OrphanedComment.class);
         OrphanedComment orphaned = (OrphanedComment)result.broadcasted.get(1);
-        assertThat(orphaned.content()).isEqualTo("comment");
+        assertThat(orphaned.content()).isEqualTo(" comment ");
     }
 }

@@ -355,11 +355,4 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
         AtRule r = result.broadcaster.findOnly(AtRule.class).get();
         assertThat(r.comments()).hasSize(1);
     }
-
-    @Test
-    public void attachesCommentsBeforeAtRuleBlock() {
-        GenericParseResult result = parse("@if /*comment*/{...}").get(0);
-        AtRule r = result.broadcaster.findOnly(AtRule.class).get();
-        assertThat(r.comments()).hasSize(1);
-    }
 }

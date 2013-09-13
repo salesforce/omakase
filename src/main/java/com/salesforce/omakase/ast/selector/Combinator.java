@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
 import com.salesforce.omakase.parser.selector.CombinatorParser;
@@ -40,7 +39,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
  */
 @Subscribable
 @Description(value = "combinator segment", broadcasted = REFINED_SELECTOR)
-public class Combinator extends AbstractGroupable<SelectorPart> implements SelectorPart {
+public class Combinator extends AbstractSelectorPart implements SimpleSelector {
     private final CombinatorType type;
 
     /**
@@ -126,7 +125,7 @@ public class Combinator extends AbstractGroupable<SelectorPart> implements Selec
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("type", type)
             .toString();
     }

@@ -16,11 +16,14 @@
 
 package com.salesforce.omakase.parser.raw;
 
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
+
+import java.util.List;
 
 /**
  * Parses a {@link Rule}.
@@ -51,9 +54,14 @@ public class RuleParser extends AbstractParser {
             stream.skipWhitepace();
         } while (stream.optionallyPresent(tokenFactory().declarationDelimiter()));
 
+        // orphaned comments
+        List<String> orphaned = stream.collectComments().flushComments();
+        for (String comment : orphaned) {
+            broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.RULE));
+        }
+
         // parse the end of the block
         stream.expect(tokenFactory().declarationBlockEnd());
-
 
         // FIXME orphaned comments
 

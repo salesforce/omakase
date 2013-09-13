@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcaster.Broadcaster;
@@ -49,7 +50,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class AtRule extends AbstractGroupable<Statement> implements Statement, Refinable<AtRule> {
+public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements Statement, Refinable<AtRule> {
     private final String name;
 
     // unrefined
@@ -224,7 +225,7 @@ public class AtRule extends AbstractGroupable<Statement> implements Statement, R
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("rawExpression", rawExpression)
             .add("rawBlock", rawBlock)
             .add("expression", expression)

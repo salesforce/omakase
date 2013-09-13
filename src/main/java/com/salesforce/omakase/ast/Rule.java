@@ -34,9 +34,10 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
@@ -55,9 +56,10 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
  */
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
-public class Rule extends AbstractGroupable<Statement> implements Statement {
-    private final SyntaxCollection<Selector> selectors;
-    private final SyntaxCollection<Declaration> declarations;
+public class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
+    private final SyntaxCollection<Rule, Selector> selectors;
+    private final SyntaxCollection<Rule, Declaration> declarations;
+    private List<OrphanedComment> orphanedComments;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public Rule() {
@@ -76,8 +78,8 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
      */
     public Rule(int line, int column, Broadcaster broadcaster) {
         super(line, column, broadcaster);
-        selectors = StandardSyntaxCollection.create(broadcaster);
-        declarations = StandardSyntaxCollection.create(broadcaster);
+        selectors = StandardSyntaxCollection.create(this, broadcaster);
+        declarations = StandardSyntaxCollection.create(this, broadcaster);
     }
 
     /**
@@ -86,7 +88,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
      *
      * @return The selectors.
      */
-    public SyntaxCollection<Selector> selectors() {
+    public SyntaxCollection<Rule, Selector> selectors() {
         return selectors;
     }
 
@@ -96,7 +98,7 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
      *
      * @return The declarations.
      */
-    public SyntaxCollection<Declaration> declarations() {
+    public SyntaxCollection<Rule, Declaration> declarations() {
         return declarations;
     }
 
@@ -124,6 +126,31 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     public List<Comment> comments() {
         if (selectors.isEmpty()) return ImmutableList.of();
         return Iterables.get(selectors, 0).comments();
+    }
+
+    /**
+     * Adds an {@link OrphanedComment}.
+     *
+     * @param comment
+     *     The comment.
+     */
+    public void orphanedComment(OrphanedComment comment) {
+        checkNotNull(comment, "comment cannot be null");
+        checkArgument(comment.location() == OrphanedComment.Location.RULE, "invalid orphaned value location");
+        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
+        orphanedComments.add(comment);
+    }
+
+    /**
+     * Gets all {@link OrphanedComment}s.
+     * <p/>
+     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
+     * at the end of a stylesheet or declaration block.
+     *
+     * @return The list of comments, or an empty list if none are specified.
+     */
+    public List<OrphanedComment> orphanedComments() {
+        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override
@@ -187,9 +214,10 @@ public class Rule extends AbstractGroupable<Statement> implements Statement {
     public String toString() {
         return As.string(this)
             .indent()
-            .add("position", super.toString())
+            .add("abstract", super.toString())
             .add("selectors", selectors)
             .add("declarations", declarations)
+            .add("orphaned", orphanedComments())
             .toString();
     }
 }

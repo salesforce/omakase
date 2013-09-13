@@ -22,6 +22,8 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 
 import java.util.Iterator;
@@ -37,25 +39,36 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @param <T>
  *     Type of items in the {@link SyntaxCollection}.
+ * @param <P>
+ *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
  *
  * @author nmcwilliams
  */
-public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> implements SyntaxCollection<T> {
+public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T>> implements SyntaxCollection<P, T> {
     private final LinkedList<T> list = Lists.newLinkedList();
     private Optional<Broadcaster> broadcaster;
+    private final P parent;
 
-    /** Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}. */
-    public StandardSyntaxCollection() {
-        this(null);
+    /**
+     * Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}.
+     *
+     * @param parent
+     *     The parent that owns this collection.
+     */
+    public StandardSyntaxCollection(P parent) {
+        this(parent, null);
     }
 
     /**
      * Creates a new {@link StandardSyntaxCollection} using the given {@link Broadcaster} to broadcast new units.
      *
+     * @param parent
+     *     The parent that owns this collection.
      * @param broadcaster
      *     Used to broadcast new units.
      */
-    public StandardSyntaxCollection(Broadcaster broadcaster) {
+    public StandardSyntaxCollection(P parent, Broadcaster broadcaster) {
+        this.parent = parent;
         this.broadcaster = Optional.fromNullable(broadcaster);
     }
 
@@ -99,7 +112,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> prepend(T unit) {
+    public StandardSyntaxCollection prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
         // if the unit doesn't have a broadcaster and we have one then give it.
@@ -109,7 +122,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
 
         // add the unit to the list
         list.push(unit);
-        unit.parent(this);
+        unit.group(this);
 
         // ensure the unit has been broadcasted
         broadcast(unit);
@@ -118,7 +131,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> prependAll(Iterable<T> units) {
+    public StandardSyntaxCollection prependAll(Iterable<T> units) {
         for (T unit : units) {
             prepend(unit);
         }
@@ -126,7 +139,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> prependBefore(T existing, T unit) throws IllegalArgumentException {
+    public StandardSyntaxCollection prependBefore(T existing, T unit) throws IllegalArgumentException {
         checkNotNull(existing, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
 
@@ -140,7 +153,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
 
         // add the unit to the list
         list.add(index, unit);
-        unit.parent(this);
+        unit.group(this);
 
         // ensure the unit is broadcasted
         broadcast(unit);
@@ -149,7 +162,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> append(T unit) {
+    public StandardSyntaxCollection append(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
         // if the unit doesn't have a broadcaster and we have one then give it.
@@ -159,7 +172,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
 
         // add the unit to the list
         list.add(unit);
-        unit.parent(this);
+        unit.group(this);
 
         // ensure the unit is broadcasted
         broadcast(unit);
@@ -168,7 +181,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> appendAll(Iterable<T> units) {
+    public StandardSyntaxCollection appendAll(Iterable<T> units) {
         for (T unit : units) {
             append(unit);
         }
@@ -176,7 +189,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> appendAfter(T existing, T unit) throws IllegalArgumentException {
+    public StandardSyntaxCollection appendAfter(T existing, T unit) throws IllegalArgumentException {
         checkNotNull(existing, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
 
@@ -189,8 +202,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
         } else {
             list.add(index + 1, unit);
         }
-        unit.parent(this);
-
+        unit.group(this);
 
         // ensure the unit is broadcasted
         broadcast(unit);
@@ -199,16 +211,16 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> replaceExistingWith(Iterable<T> units) {
+    public StandardSyntaxCollection replaceExistingWith(Iterable<T> units) {
         clear();
         appendAll(units);
         return this;
     }
 
     @Override
-    public SyntaxCollection<T> detach(T unit) {
+    public StandardSyntaxCollection detach(T unit) {
         list.remove(unit);
-        unit.parent(null);
+        unit.group(null);
         return this;
     }
 
@@ -221,6 +233,11 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
         }
 
         return detached;
+    }
+
+    @Override
+    public P parent() {
+        return parent;
     }
 
     /**
@@ -241,7 +258,7 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
     }
 
     @Override
-    public SyntaxCollection<T> broadcaster(Broadcaster broadcaster) {
+    public SyntaxCollection<P, T> broadcaster(Broadcaster broadcaster) {
         this.broadcaster = Optional.fromNullable(broadcaster);
         return this;
     }
@@ -263,27 +280,40 @@ public final class StandardSyntaxCollection<T extends Syntax & Groupable<T>> imp
 
     /**
      * Creates a new {@link SyntaxCollection} instance.
+     * <p/>
+     * Example:
+     * <p/>
+     * {@code StandardSyntaxCollection.create(theParentInstance)}
      *
      * @param <E>
      *     Type of items the collection contains.
+     * @param parent
+     *     The parent that owns this collection.
      *
      * @return The new {@link SyntaxCollection} instance.
      */
-    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create() {
-        return new StandardSyntaxCollection<>();
+    public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent) {
+        return new StandardSyntaxCollection<>(parent);
     }
 
     /**
      * Creates a new {@link SyntaxCollection} instance with the given {@link Broadcaster} to broadcast new units.
+     * <p/>
+     * Example:
+     * <p/>
+     * {@code StandardSyntaxCollection.create(theParentInstance, theBroadcasterInstance)}
      *
      * @param <E>
      *     Type of items the collection contains.
+     * @param parent
+     *     The parent that owns this collection.
      * @param broadcaster
      *     Used to broadcast new units.
      *
      * @return The new {@link SyntaxCollection} instance.
      */
-    public static <E extends Syntax & Groupable<E>> SyntaxCollection<E> create(Broadcaster broadcaster) {
-        return new StandardSyntaxCollection<>(broadcaster);
+    public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent, Broadcaster
+        broadcaster) {
+        return new StandardSyntaxCollection<>(parent, broadcaster);
     }
 }

@@ -123,6 +123,7 @@ public class KeywordValue extends AbstractSyntax implements Term {
     public String toString() {
         return As.string(this)
             .add("keyword", keyword)
+            .addUnlessEmpty("comments", comments())
             .toString();
     }
 

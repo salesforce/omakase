@@ -20,6 +20,7 @@ import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.emitter.PreProcess;
 import com.salesforce.omakase.emitter.Rework;
 import com.salesforce.omakase.emitter.Validate;
@@ -37,11 +38,13 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  *
  * @param <T>
  *     The type of units to be grouped with.
+ * @param <P>
+ *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
  *
  * @author nmcwilliams
  * @see SyntaxCollection
  */
-public interface Groupable<T extends Syntax & Groupable<T>> {
+public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax {
 
     /**
      * Gets whether this unit is the first within its group.
@@ -78,16 +81,6 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
     boolean isLast();
 
     /**
-     * Gets the parent {@link SyntaxCollection} of this unit.
-     *
-     * @return The parent {@link SyntaxCollection}.
-     *
-     * @throws IllegalStateException
-     *     If this unit is currently detached (doesn't belong to any group).
-     */
-    SyntaxCollection<T> group();
-
-    /**
      * Prepends the given unit before this one.
      *
      * @param unit
@@ -98,7 +91,7 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
      * @throws IllegalStateException
      *     If this unit is currently detached (doesn't belong to any group).
      */
-    Groupable<T> prepend(T unit);
+    Groupable<P, T> prepend(T unit);
 
     /**
      * Appends the given unit after this one.
@@ -111,9 +104,9 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
      * @throws IllegalStateException
      *     If this unit is currently detached (doesn't belong to any group).
      */
-    Groupable<T> append(T unit);
+    Groupable<P, T> append(T unit);
 
-    /** Detaches (removes) this unit from the parent {@link SyntaxCollection}. */
+    /** Detaches (removes) this unit from the group {@link SyntaxCollection}. */
     void detach();
 
     /**
@@ -125,12 +118,30 @@ public interface Groupable<T extends Syntax & Groupable<T>> {
     boolean isDetached();
 
     /**
-     * Sets the parent group. This should only be called internally... calling it yourself may result in expected behavior.
+     * Sets the group group. This should only be called internally... calling it yourself may result in expected behavior.
      *
      * @param group
-     *     The parent group.
+     *     The group group.
      *
      * @return this, for chaining.
      */
-    Groupable<T> parent(SyntaxCollection<T> group);
+    Groupable<P, T> group(SyntaxCollection<P, T> group);
+
+    /**
+     * Gets the group {@link SyntaxCollection} of this unit.
+     *
+     * @return The group {@link SyntaxCollection}.
+     *
+     * @throws IllegalStateException
+     *     If this unit is currently detached (doesn't belong to any group).
+     */
+    SyntaxCollection<P, T> group();
+
+    /**
+     * Gets the parent {@link Syntax} unit that owns the {@link SyntaxCollection} that contains this unit. See {@link
+     * SyntaxCollection#parent()}.
+     *
+     * @return The parent, or null if currently detached.
+     */
+    P parent();
 }

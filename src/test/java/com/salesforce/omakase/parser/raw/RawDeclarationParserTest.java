@@ -157,7 +157,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
             withExpectedResult("font-family: \":;test}\", Arial", "\":;test}\", Arial"),
             withExpectedResult("color:red;margin:10px", "red"),
             withExpectedResult("display:none;\n\n  position:absolute", "none"),
-            withExpectedResult("color: /*comment\ncomment*/ blue; ", "blue"),
+            withExpectedResult("color: /*comment\ncomment*/ blue; ", "/*comment\ncomment*/ blue"),
             withExpectedResult("color:blue /*comment*/; ", "blue /*comment*/"),
             withExpectedResult("color:blue !important; ", "blue !important"),
             withExpectedResult("color:blue !important", "blue !important"));
@@ -199,26 +199,5 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
         GenericParseResult result = parse("/*comment*/color: red").get(0);
         Declaration d = result.broadcaster.findOnly(Declaration.class).get();
         assertThat(d.comments()).hasSize(1);
-    }
-
-    @Test
-    public void attachesCommentsBeforeValue() {
-        GenericParseResult result = parse("color:/*comment*/red;").get(0);
-        Declaration d = result.broadcaster.findOnly(Declaration.class).get();
-        assertThat(d.comments()).hasSize(1);
-    }
-
-    @Test
-    public void attachesCommentsAfterValueIfBeforeSemicolon() {
-        GenericParseResult result = parse("color:red/*comment*/;").get(0);
-        Declaration d = result.broadcaster.findOnly(Declaration.class).get();
-        assertThat(d.comments()).hasSize(1);
-    }
-
-    @Test
-    public void ignoresCommentsAfterSemicolon() {
-        GenericParseResult result = parse("color:red;/*comment*/").get(0);
-        Declaration d = result.broadcaster.findOnly(Declaration.class).get();
-        assertThat(d.comments()).isEmpty();
     }
 }

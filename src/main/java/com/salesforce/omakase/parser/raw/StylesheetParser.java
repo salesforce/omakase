@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
@@ -24,6 +25,8 @@ import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
+
+import java.util.List;
 
 /**
  * Parses a top-level {@link Stylesheet}.
@@ -47,6 +50,12 @@ public class StylesheetParser extends AbstractParser {
 
             // after all rules and content is parsed, there should be nothing left in the stream
             if (!matched && !stream.eof()) throw new ParserException(stream, Message.EXTRANEOUS, stream.remaining());
+        }
+
+        // orphaned comments
+        List<String> orphaned = stream.collectComments().flushComments();
+        for (String comment : orphaned) {
+            broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.STYLESHEET));
         }
 
         return true;

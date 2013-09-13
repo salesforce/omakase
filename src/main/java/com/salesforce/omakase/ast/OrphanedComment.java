@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -38,15 +39,40 @@ import java.util.List;
 @Description(value = "A comment unassociated with any syntax unit", broadcasted = SubscribableRequirement.SPECIAL)
 public class OrphanedComment extends Comment implements Syntax {
     private Status status = Status.UNBROADCASTED;
+    private final Location location;
+
+    /** The type of location where the comment was found. */
+    public enum Location {
+        /** found at the end of a selector */
+        SELECTOR,
+        /** found at the end of a declaration */
+        DECLARATION,
+        /** found at the end of a rule */
+        RULE,
+        /** found at the end of the stylesheet */
+        STYLESHEET
+    }
 
     /**
      * Creates a new {@link OrphanedComment} with the given content.
      *
      * @param content
      *     The comment content.
+     * @param location
+     *     The type of location where the comment was found.
      */
-    public OrphanedComment(String content) {
+    public OrphanedComment(String content, OrphanedComment.Location location) {
         super(content);
+        this.location = location;
+    }
+
+    /**
+     * Gets the type of location where this comment was found.
+     *
+     * @return The type of location where this comment was found, or {@link Optional#absent()} if not specified.
+     */
+    public OrphanedComment.Location location() {
+        return location;
     }
 
     @Override

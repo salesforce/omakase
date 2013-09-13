@@ -26,7 +26,6 @@ import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
 import com.salesforce.omakase.parser.declaration.TermListParser;
-import com.salesforce.omakase.parser.raw.OrphanedCommentParser;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
@@ -55,7 +54,6 @@ public final class ParserFactory {
     private static final Parser rawDeclaration = new RawDeclarationParser();
     private static final Parser selectorGroup = new SelectorGroupParser();
     private static final Parser rawSelector = new RawSelectorParser();
-    private static final Parser orphanedComment = new OrphanedCommentParser();
 
     /** refined selectors */
     private static final Parser complexSelector = new ComplexSelectorParser();
@@ -138,15 +136,6 @@ public final class ParserFactory {
      */
     public static Parser rawSelectorParser() {
         return rawSelector;
-    }
-
-    /**
-     * Gets the {@link OrphanedCommentParser}.
-     *
-     * @return The parser instance.
-     */
-    public static Parser orphanedCommentParser() {
-        return orphanedComment;
     }
 
     /**

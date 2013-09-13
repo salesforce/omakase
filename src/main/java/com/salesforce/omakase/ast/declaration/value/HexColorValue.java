@@ -114,6 +114,7 @@ public class HexColorValue extends AbstractSyntax implements Term {
     public String toString() {
         return As.string(this)
             .add("color", color)
+            .addUnlessEmpty("comments", comments())
             .toString();
     }
 

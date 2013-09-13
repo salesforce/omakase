@@ -140,8 +140,9 @@ public abstract class AbstractSyntax implements Syntax {
     @Override
     public String toString() {
         return As.stringNamed("")
-            .add("line", line)
-            .add("column", column)
+            .addIf(line > -1, "line", line)
+            .addIf(column > -1, "column", column)
+            .addUnlessEmpty("comments", comments())
             .toString();
     }
 }

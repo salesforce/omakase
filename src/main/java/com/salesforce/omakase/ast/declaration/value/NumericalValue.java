@@ -209,6 +209,7 @@ public class NumericalValue extends AbstractSyntax implements Term {
             .add("decimal", decimalValue)
             .add("unit", unit)
             .add("explicitSign", explicitSign)
+            .addUnlessEmpty("comments", comments())
             .toString();
     }
 

@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
@@ -29,6 +30,8 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.List;
 
 /**
  * Parses a {@link TermList}.
@@ -58,7 +61,7 @@ public class TermListParser extends AbstractParser {
         do {
             // whitespace should only be skipped at the beginning of a term, otherwise we could accidentally skip over a
             // term operator.
-            stream.skipWhitepace();
+            stream.collectComments();
 
             // try to parse a term
             collector = new QueryableBroadcaster(broadcaster);
@@ -82,6 +85,7 @@ public class TermListParser extends AbstractParser {
 
                 // try to parse another term operator. The presence of a space *could* be the "single space" term
                 // operator. Or it could just be whitespace around another term operator
+                stream.collectComments(false);
                 boolean mightBeSpaceOperator = stream.optionallyPresent(Tokens.WHITESPACE);
 
                 if (mightBeSpaceOperator) {
@@ -107,6 +111,12 @@ public class TermListParser extends AbstractParser {
 
         // if no terms were parsed then return false
         if (termList == null) return false;
+
+        // orphaned comments
+        List<String> orphaned = stream.collectComments().flushComments();
+        for (String comment : orphaned) {
+            broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.DECLARATION));
+        }
 
         // broadcast the new term list
         broadcaster.broadcast(termList);

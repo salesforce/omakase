@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -92,18 +93,52 @@ public final class As {
     }
 
     /**
+     * Same as {@link #add(String, Object)}, except it will only add the member if the given condition is true.
+     *
+     * @param condition
+     *     Only add if this condition is true.
+     * @param name
+     *     Name of the member.
+     * @param value
+     *     The member.
+     *
+     * @return this, for chaining.
+     */
+    public As addIf(boolean condition, String name, Object value) {
+        if (condition) add(name, value);
+        return this;
+    }
+
+    /**
      * Adds a member to this toString representation. This is for iterables, which will automatically have their indentation level
      * increased (if indent is turned on).
      *
      * @param name
      *     Name of the member.
-     * @param collection
+     * @param iterable
      *     The member.
      *
      * @return this, for chaining.
      */
-    public As add(String name, Iterable<?> collection) {
-        return entry(name, collection, true);
+    public As add(String name, Iterable<?> iterable) {
+        return entry(name, iterable, true);
+    }
+
+    /**
+     * Same as {@link #add(String, Iterable)}, except it will only add the member if the iterable is not empty.
+     *
+     * @param name
+     *     Name of the member.
+     * @param iterable
+     *     The member.
+     *
+     * @return this, for chaining.
+     */
+    public As addUnlessEmpty(String name, Iterable<?> iterable) {
+        if (!Iterables.isEmpty(iterable)) {
+            add(name, iterable);
+        }
+        return this;
     }
 
     /** utility method to create an {@link Entry} */
