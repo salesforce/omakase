@@ -54,7 +54,7 @@ public class RuleParser extends AbstractParser {
             stream.skipWhitepace();
         } while (stream.optionallyPresent(tokenFactory().declarationDelimiter()));
 
-        // orphaned comments
+        // TESTME orphaned comments
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.RULE));

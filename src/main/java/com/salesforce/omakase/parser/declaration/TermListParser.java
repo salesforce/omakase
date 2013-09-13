@@ -112,7 +112,7 @@ public class TermListParser extends AbstractParser {
         // if no terms were parsed then return false
         if (termList == null) return false;
 
-        // orphaned comments
+        // TESTME orphaned comments
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.DECLARATION));

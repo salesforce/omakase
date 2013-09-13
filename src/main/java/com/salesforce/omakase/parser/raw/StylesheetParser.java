@@ -52,7 +52,7 @@ public class StylesheetParser extends AbstractParser {
             if (!matched && !stream.eof()) throw new ParserException(stream, Message.EXTRANEOUS, stream.remaining());
         }
 
-        // orphaned comments
+        // TESTME orphaned comments
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.STYLESHEET));
