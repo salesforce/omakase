@@ -176,7 +176,6 @@ public class SimpleReworkTest {
     }
 
     /** this class serves as an example for creating custom rework */
-    @SuppressWarnings("SpellCheckingInspection")
     public static final class ReworkInlineBlock implements Plugin {
         private final String browser;
         int count;
