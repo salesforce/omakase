@@ -559,6 +559,9 @@ public final class Stream {
 
         // keep parsing until we find the closing token
         while (!eof()) {
+            // continue past comments (mainly so that an occurrence of the end token in the comment doesn't get recognized
+            collectComments();
+
             // if we are in a string continue until we are out of it
             if (skipString && inString) {
                 next();
