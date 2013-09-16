@@ -83,7 +83,9 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
                 "theme(one.theme.color)",
                 "theme(one.\\(theme.co\\)lor)",
                 "_theme(1 )",
-                "-theme-theme(1)");
+                "-theme-theme(1)",
+                "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)"
+            );
     }
 
     @Override

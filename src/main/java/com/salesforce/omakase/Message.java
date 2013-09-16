@@ -57,7 +57,11 @@ public enum Message {
     ANNOTATION_EXCLUSIVE("The @PreProcess, @Observe, @Rework and @Validate annotations are mutually exclusive: '%s"),
     MISSING_ERROR_MANAGER("The second parameter for methods annotated with @Validate must be of type ErrorManager: on method %s"),
     MISSING_AT_RULE_VALUE("Expected to find an at-rule expression, block, or both"),
-    CANT_MODIFY_SYNTAX_TREE("Cannot modify syntax tree after it has been frozen"),;
+    CANT_MODIFY_SYNTAX_TREE("Cannot modify syntax tree after it has been frozen"),
+    MISSING_OPERATOR_NEAR_COMMENT("In order to place a comment here, please ensure that it is properly surrounded by the " +
+        "appropriate operator (.e.g., a space character). Otherwise, this will result in an invalid valid during minification " +
+        "when comments are removed.");
+
     private final String message;
 
     Message(String message) {

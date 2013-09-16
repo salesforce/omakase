@@ -560,7 +560,7 @@ public final class Stream {
         // keep parsing until we find the closing token
         while (!eof()) {
             // if we are in a string continue until we are out of it
-            if (skipString && inString()) {
+            if (skipString && inString) {
                 next();
             } else {
                 // if nesting is allowed then another occurrence of the openingToken increases the nesting level,
@@ -587,7 +587,7 @@ public final class Stream {
     }
 
     /**
-     * Same as {@link #collectComments(boolean)}, with a default skipWhitespace of true.
+     * Same as {@link #collectComments(boolean)}, with a default skipWhitespace value of true.
      *
      * @return this, for chaining.
      */

@@ -16,12 +16,15 @@
 
 package com.salesforce.omakase.parser.raw;
 
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StylesheetParser}.
@@ -38,5 +41,12 @@ public class StylesheetParserTest {
         exception.expect(ParserException.class);
         exception.expectMessage("Extraneous text found at the end of the source");
         new StylesheetParser().parse(new Stream(".abc{color:red}   `"), new QueryableBroadcaster());
+    }
+
+    @Test
+    public void testOrphanedComment() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        new StylesheetParser().parse(new Stream(".abc{color:red} /*comment*/"), qb);
+        assertThat(qb.filter(OrphanedComment.class)).hasSize(1);
     }
 }

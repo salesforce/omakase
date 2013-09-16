@@ -54,7 +54,7 @@ public class RuleParser extends AbstractParser {
             stream.skipWhitepace();
         } while (stream.optionallyPresent(tokenFactory().declarationDelimiter()));
 
-        // TESTME orphaned comments
+        // orphaned comments e.g., ".class{color:red; /*orphaned*/}"
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.RULE));
@@ -62,8 +62,6 @@ public class RuleParser extends AbstractParser {
 
         // parse the end of the block
         stream.expect(tokenFactory().declarationBlockEnd());
-
-        // FIXME orphaned comments
 
         return true;
     }

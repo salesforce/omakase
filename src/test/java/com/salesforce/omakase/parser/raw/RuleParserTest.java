@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
@@ -53,9 +54,16 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
             ".class, \n .class2, #id1.class2 + p {color:red;}",
             ".class \n{color:red;}",
             ".class{color:red;}",
+            ".class{color :red}",
+            ".class{color : red}",
+            ".class{color: red}",
+            ".class{\tcolor: red}",
+            ".class{\n\n\tcolor:\tred}",
             "/*com{}ment*/.class{/*comme{}nt*/color:red;}",
             ".class \n { color: red; /*comment*/ }",
-            ".class \n /* comment */ { color: red; }");
+            ".class \n { color: red /*comment*/ }",
+            ".class \n /* comment */ { color: red; }"
+        );
     }
 
     @Override
@@ -78,15 +86,6 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
 
     @Test
     @Override
-    public void matchesExpectedBroadcastContent() {
-        GenericParseResult result = parse("   .class{color:red}").get(0);
-        assertThat(result.broadcasted).hasSize(2);
-        assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(Declaration.class);
-    }
-
-    @Test
-    @Override
     public void matchesExpectedBroadcastCount() {
         List<ParseResult<Integer>> results = parseWithExpected(
             withExpectedResult(".class{ color: red }", 2),
@@ -100,8 +99,22 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
         }
     }
 
-    public void correctLineAndColumnNumber() {
-        // n/a
+    @Test
+    @Override
+    public void matchesExpectedBroadcastContent() {
+        GenericParseResult result = parse("   .class{color:red}").get(0);
+        assertThat(result.broadcasted).hasSize(2);
+        assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
+        assertThat(result.broadcasted.get(1)).isInstanceOf(Declaration.class);
+    }
+
+    @Test
+    public void matchesExpectedBroadcastContentWithOrphaned() {
+        GenericParseResult result = parse(".class{color:red; /*orphaned*/}").get(0);
+        assertThat(result.broadcasted).hasSize(3);
+        assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
+        assertThat(result.broadcasted.get(1)).isInstanceOf(Declaration.class);
+        assertThat(result.broadcasted.get(2)).isInstanceOf(OrphanedComment.class);
     }
 
     @Test

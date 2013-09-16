@@ -158,7 +158,9 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         GenericParseResult result = Iterables.getOnlyElement(
             parse("*.page .home > .child #id:hover .button .inner + span:before"));
 
+
         List<Syntax> broadcasted = result.broadcasted;
+        assertThat(broadcasted).hasSize(16);
         assertThat(broadcasted.get(0)).isInstanceOf(UniversalSelector.class);
         assertThat(broadcasted.get(1)).isInstanceOf(ClassSelector.class);
         assertThat(broadcasted.get(2)).isInstanceOf(Combinator.class);
