@@ -20,12 +20,12 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
-import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

@@ -59,14 +59,12 @@ public class CommentPositionTest {
         Omakase.source(SRC).request(refinement).request(syntaxTree).process();
         this.stylesheet = syntaxTree.stylesheet();
         this.rule = Iterables.get(stylesheet.statements(), 0).asRule().get();
-        // System.out.println(syntaxTree.stylesheet());
+        System.out.println(syntaxTree.stylesheet());
     }
 
     @Test
     public void stylesheetHasExpectedComments() {
-        assertThat(stylesheet.comments()).hasSize(2);
-        assertThat(Iterables.get(stylesheet.comments(), 0).content()).isEqualTo("0");
-        assertThat(Iterables.get(stylesheet.comments(), 1).content()).isEqualTo("1");
+        assertThat(stylesheet.comments()).isEmpty();
     }
 
     @Test
@@ -78,9 +76,7 @@ public class CommentPositionTest {
 
     @Test
     public void ruleHasExpectedComments() {
-        assertThat(rule.comments()).hasSize(2);
-        assertThat(Iterables.get(rule.comments(), 0).content()).isEqualTo("0");
-        assertThat(Iterables.get(rule.comments(), 1).content()).isEqualTo("1");
+        assertThat(rule.comments()).isEmpty();
     }
 
     @Test
@@ -97,9 +93,10 @@ public class CommentPositionTest {
 
     @Test
     public void selector1HasExpectedComments() {
-        assertThat(stylesheet.comments()).hasSize(2);
-        assertThat(Iterables.get(stylesheet.comments(), 0).content()).isEqualTo("0");
-        assertThat(Iterables.get(stylesheet.comments(), 1).content()).isEqualTo("1");
+        Selector selector = Iterables.get(rule.selectors(), 0, null);
+        assertThat(selector.comments()).hasSize(2);
+        assertThat(Iterables.get(selector.comments(), 0).content()).isEqualTo("0");
+        assertThat(Iterables.get(selector.comments(), 1).content()).isEqualTo("1");
     }
 
     @Test

@@ -25,8 +25,6 @@ import com.salesforce.omakase.writer.WriterMode;
 import java.io.IOException;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS comment.
  * <p/>
  * By default, comments are not written out except for in {@link WriterMode#VERBOSE}.
@@ -52,6 +50,11 @@ public class Comment implements Writable {
      */
     public String content() {
         return content;
+    }
+
+    @Override
+    public boolean isWritable() {
+        return true;
     }
 
     @Override

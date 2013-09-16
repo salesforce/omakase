@@ -16,6 +16,9 @@
 
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
@@ -35,7 +38,7 @@ import java.util.List;
  * <p/>
  * It's important to remember that <em>unrefined</em> Syntax objects, unless validation is performed, may actually contain invalid
  * CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled with custom validation to
- * ensure correct usage.
+ * ensure correct usage. See {@link Refinable} for more information.
  *
  * @author nmcwilliams
  */
@@ -67,6 +70,10 @@ public interface Syntax extends Writable {
 
     /**
      * Adds the given comments to this unit.
+     * <p/>
+     * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
+     * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
+     * Declaration} itself instead of the property name or value inside of it.
      *
      * @param commentsToAdd
      *     The comments to add.
@@ -75,13 +82,16 @@ public interface Syntax extends Writable {
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.
+     * <p/>
+     * A unit is associated with all comments that directly precede it. In the case of selectors, both the {@link Selector} object
+     * and the first {@link SimpleSelector} within the {@link Selector} object will return the same comments.
      *
      * @return The list of comments. Never returns null.
      */
     List<Comment> comments();
 
     /**
-     * Sets the current broadcast status. For internal use only, do not call directly.
+     * Sets the current broadcast status. For internal use only, <strong>do not call directly</strong>.
      *
      * @param status
      *     The new status.

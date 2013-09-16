@@ -26,8 +26,6 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
- * TESTME
- * <p/>
  * A top-level {@link Syntax} unit, for example a {@link Rule} or {@link AtRule}.
  * <p/>
  * Note that {@link Statement}s are not be created unless the {@link SyntaxTree} plugin is enabled.

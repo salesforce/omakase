@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -39,13 +38,13 @@ import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
- * TESTME
- * <p/>
  * The root-level {@link Syntax} object.
  * <p/>
- * Note that this will not be created unless the {@link SyntaxTree} plugin is enabled.
+ * Note that this will not be automatically created or broadcasted unless the {@link SyntaxTree} plugin is enabled.
  * <p/>
- * Adding or retrieving comments delegates to the first statement in the stylesheet.
+ * Comments that appear in the original CSS source at the beginning of the stylesheet are actually going to be associated with the
+ * first {@link Statement} in the sheet instead. Comments after the last {@link Statement} (or if the sheet is empty) will be
+ * placed in the {@link #orphanedComments()} list.
  *
  * @author nmcwilliams
  * @see StylesheetParser
@@ -55,6 +54,11 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
 public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     private final SyntaxCollection<Stylesheet, Statement> statements;
     private List<OrphanedComment> orphanedComments;
+
+    /** Creates a new instance with no {@link Broadcaster} specified. Usually only used for dynamically created stylesheets. */
+    public Stylesheet() {
+        this(null);
+    }
 
     /**
      * Constructs a new {@link Stylesheet} instance.
@@ -94,20 +98,8 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
         return statements().iterator();
     }
 
-    @Override
-    public void comments(Iterable<String> commentsToAdd) {
-        checkState(!statements.isEmpty(), "cannot add a comment to a stylesheet without at least one statement");
-        Iterables.get(statements, 0).comments(commentsToAdd);
-    }
-
-    @Override
-    public List<Comment> comments() {
-        if (statements.isEmpty()) return ImmutableList.of();
-        return Iterables.get(statements, 0).comments();
-    }
-
     /**
-     * Adds an {@link OrphanedComment}.
+     * Adds an {@link OrphanedComment}. Orphaned comments appear after the last statement in the stylesheet.
      *
      * @param comment
      *     The comment.
@@ -122,10 +114,9 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     /**
      * Gets all {@link OrphanedComment}s.
      * <p/>
-     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
-     * at the end of a stylesheet or declaration block.
+     * A comment is considered <em>orphaned</em> if there are no statements that follow the comment within the stylesheet.
      *
-     * @return The list of comments, or an empty list if none are specified.
+     * @return The list of comments, or an empty list if none exist.
      */
     public List<OrphanedComment> orphanedComments() {
         return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
@@ -143,7 +134,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
         return As.string(this)
             .indent()
             .add("statements", Lists.newArrayList(statements()))
-            .add("orphaned", orphanedComments())
+            .addIf(orphanedComments != null, "orphaned", orphanedComments())
             .toString();
     }
 }

@@ -21,12 +21,12 @@ package com.salesforce.omakase.test.util;
  *
  * @author nmcwilliams
  */
-public final class Templates {
+public final class TemplatesHelper {
     private static final String TEMPLATE_SELECTOR = "%s { color: red; }";
     private static final String TEMPLATE_PROPERTY_VALUE = ".test { %s: %s; }";
 
     /** do not construct */
-    private Templates() {}
+    private TemplatesHelper() {}
 
     /**
      * Gets a basic rule with the given selector.

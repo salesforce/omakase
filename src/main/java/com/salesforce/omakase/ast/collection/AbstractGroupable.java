@@ -39,12 +39,12 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
 
     @Override
     public boolean isFirst() {
-        return !isDetached() && group.first().get().equals(this);
+        return isDetached() || group.first().get().equals(this);
     }
 
     @Override
     public boolean isLast() {
-        return !isDetached() && group.last().get().equals(this);
+        return isDetached() || group.last().get().equals(this);
     }
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
@@ -101,6 +101,7 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
 
     @Override
     public void detach() {
+        if (isDetached()) return;
         group.detach(self());
         this.group = null;
     }

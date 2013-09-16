@@ -91,6 +91,25 @@ public class OrphanedComment extends Comment implements Syntax {
     }
 
     @Override
+    public Status status() {
+        return status;
+    }
+
+    @Override
+    public Syntax status(Status status) {
+        this.status = status;
+        return this;
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        // only broadcast ourselves once
+        if (this.status == Status.UNBROADCASTED) {
+            broadcaster.broadcast(this);
+        }
+    }
+
+    @Override
     public void comments(Iterable<String> commentsToAdd) {
         throw new UnsupportedOperationException();
     }
@@ -101,31 +120,12 @@ public class OrphanedComment extends Comment implements Syntax {
     }
 
     @Override
-    public Syntax status(Status status) {
-        this.status = status;
-        return this;
-    }
-
-    @Override
-    public Status status() {
-        return status;
-    }
-
-    @Override
     public Syntax broadcaster(Broadcaster broadcaster) {
-        return this;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Broadcaster broadcaster() {
-        return null;
-    }
-
-    @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        // only broadcast ourselves once
-        if (this.status == Status.UNBROADCASTED) {
-            broadcaster.broadcast(this);
-        }
+        throw new UnsupportedOperationException();
     }
 }

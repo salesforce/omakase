@@ -100,7 +100,7 @@ public class ComplexSelectorParser extends AbstractParser {
             }
         }
 
-        // orphaned comments
+        // orphaned comments, e.g., ".class, #id /*orphaned*/ {}"
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {
             queue.broadcast(new OrphanedComment(comment, OrphanedComment.Location.SELECTOR));

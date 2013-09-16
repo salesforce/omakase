@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

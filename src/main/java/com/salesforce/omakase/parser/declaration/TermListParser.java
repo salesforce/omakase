@@ -50,23 +50,19 @@ public class TermListParser extends AbstractParser {
 
         // setup
         TermList termList = null;
+        Optional<Term> term;
         Optional<TermOperator> operator = Optional.absent();
         Parser termParser = ParserFactory.termParser();
-        QueryableBroadcaster collector;
-        Optional<Term> term;
-
-        // FIXME complicated logic needs to be broken up. Make it similar to how complex selector is done
+        QueryableBroadcaster qb;
 
         // try parsing another term until there are no more term operators
         do {
-            // whitespace should only be skipped at the beginning of a term, otherwise we could accidentally skip over a
-            // term operator.
             stream.collectComments();
 
             // try to parse a term
-            collector = new QueryableBroadcaster(broadcaster);
-            termParser.parse(stream, collector);
-            term = collector.findOnly(Term.class);
+            qb = new QueryableBroadcaster(broadcaster);
+            termParser.parse(stream, qb);
+            term = qb.findOnly(Term.class);
 
             // if we have a term, add it to the list
             if (term.isPresent()) {
@@ -75,7 +71,7 @@ public class TermListParser extends AbstractParser {
                     termList = new TermList(line, column);
                 }
 
-                // add the previous operator as a member to term list
+                // add the previous operator as a member to term list before adding the term
                 if (operator.isPresent()) {
                     termList.add(operator.get());
                 }
@@ -84,16 +80,20 @@ public class TermListParser extends AbstractParser {
                 termList.add(term.get());
 
                 // try to parse another term operator. The presence of a space *could* be the "single space" term
-                // operator. Or it could just be whitespace around another term operator
+                // operator. Or it could just be whitespace around another term operator.
                 stream.collectComments(false);
                 boolean mightBeSpaceOperator = stream.optionallyPresent(Tokens.WHITESPACE);
 
+                // if we already know that a space is present, we must skip past all other whitespace
                 if (mightBeSpaceOperator) {
-                    // if we already know that a space is present, we must skip past all other whitespace
                     stream.skipWhitepace();
                 }
 
+                // after we've already checked for the single space operator, it's ok to consume comments and surrounding
+                // whitespace.
                 stream.collectComments();
+
+                // see if there is an actual non-space operator
                 operator = stream.optionalFromEnum(TermOperator.class);
 
                 // if no operator is parsed and we parsed at least one space then we know it's a single space operator
@@ -101,8 +101,8 @@ public class TermListParser extends AbstractParser {
                     operator = Optional.of(TermOperator.SPACE);
                 }
             } else {
+                // if we didn't find a term but we did find a non-space operator then it's an erroneous trailing operator
                 if (operator.isPresent() && operator.get() != TermOperator.SPACE) {
-                    // it's a trailing operator
                     throw new ParserException(stream, Message.TRAILING_OPERATOR, operator.get());
                 }
                 operator = Optional.absent();
@@ -112,13 +112,13 @@ public class TermListParser extends AbstractParser {
         // if no terms were parsed then return false
         if (termList == null) return false;
 
-        // orphaned comments, e.g., ".class, #id /*orphaned*/ {}"
+        // orphaned comments, e.g., ".class { margin: 1px /*orphaned*/;}"
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.DECLARATION));
         }
 
-        // if we haven't been able to parse everything... check  for terms separated only by a comment, e.g., 1px/*x*/1px"
+        // if we haven't been able to parse everything... check for terms separated only by a comment, e.g., 1px/*x*/1px"
         if (!stream.eof() && !orphaned.isEmpty()) {
             throw new ParserException(stream, Message.MISSING_OPERATOR_NEAR_COMMENT);
         }

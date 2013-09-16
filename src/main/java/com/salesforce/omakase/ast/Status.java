@@ -20,6 +20,10 @@ import com.salesforce.omakase.emitter.SubscriptionPhase;
 
 /**
  * Represents the broadcast status of {@link Syntax} unit.
+ * <p/>
+ * See Context for more information on the idea of phases. Basically, there are three phases in which a particular {@link Syntax}
+ * unit may be broadcasted. First the preprocess phase, then the process phase, then finally the validate phase. Each unit must
+ * only be broadcasted at most once per phase. This phase of a unit is checked via the {@link Syntax#status()} method.
  *
  * @author nmcwilliams
  */

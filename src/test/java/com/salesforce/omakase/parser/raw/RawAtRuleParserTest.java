@@ -21,12 +21,12 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.test.util.Templates.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.salesforce.omakase.test.util.Templates.withExpectedResult;
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

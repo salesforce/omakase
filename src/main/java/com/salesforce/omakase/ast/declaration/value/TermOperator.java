@@ -57,6 +57,11 @@ public enum TermOperator implements TermListMember, TokenEnum<TermOperator> {
     }
 
     @Override
+    public boolean isWritable() {
+        return true;
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(symbol);
     }

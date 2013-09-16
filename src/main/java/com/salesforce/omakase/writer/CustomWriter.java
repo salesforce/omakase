@@ -31,6 +31,10 @@ import java.io.IOException;
  * <b>Important</b>: Some syntax units will not have their overrides kick in unless the parent unit is refined. For example, a
  * {@link ClassSelector} override will not be utilized unless {@link Selector#refine()} is called on the parent {@link Selector}.
  * An easy way to handle this is with an {@link AutoRefiner}. See the notes on that class for more information.
+ * <p/>
+ * <b>Also Important:</b> The default {@link StyleWriter} (in {@link StyleWriter#write(Writable, StyleAppendable)}) usually checks
+ * that the unit should actually be written out via {@link Writable#isWritable()}. Generally custom writers should check this as
+ * well before writing.
  *
  * @param <T>
  *     The Type of object being overridden.

@@ -129,4 +129,60 @@ public class Combinator extends AbstractSelectorPart implements SimpleSelector {
             .add("type", type)
             .toString();
     }
+
+    /**
+     * Creates a new descendant {@link Combinator} (" "). Usually used when dynamically creating {@link Selector}s.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code new Selector(new IdSelector("name"), Combinator.descendant(), new ClassSelector("myClass"));}
+     * </pre>
+     *
+     * @return The new {@link Combinator} instance.
+     */
+    public static Combinator descendant() {
+        return new Combinator(CombinatorType.DESCENDANT);
+    }
+
+    /**
+     * Creates a new child {@link Combinator} (">"). Usually used when dynamically creating {@link Selector}s.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code new Selector(new IdSelector("name"), Combinator.child(), new ClassSelector("myClass"));}
+     * </pre>
+     *
+     * @return The new {@link Combinator} instance.
+     */
+    public static Combinator child() {
+        return new Combinator(CombinatorType.CHILD);
+    }
+
+    /**
+     * Creates a new adjacent sibling {@link Combinator} ("+"). Usually used when dynamically creating {@link Selector}s.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code new Selector(new IdSelector("name"), Combinator.adjacent(), new ClassSelector("myClass"));}
+     * </pre>
+     *
+     * @return The new {@link Combinator} instance.
+     */
+    public static Combinator adjacent() {
+        return new Combinator(CombinatorType.ADJACENT_SIBLING);
+    }
+
+    /**
+     * Creates a new general sibling {@link Combinator} ("~"). Usually used when dynamically creating {@link Selector}s.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code new Selector(new IdSelector("name"), Combinator.general(), new ClassSelector("myClass"));}
+     * </pre>
+     *
+     * @return The new {@link Combinator} instance.
+     */
+    public static Combinator general() {
+        return new Combinator(CombinatorType.GENERAL_SIBLING);
+    }
 }

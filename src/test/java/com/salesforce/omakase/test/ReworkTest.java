@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase;
+package com.salesforce.omakase.test;
 
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -52,7 +54,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class SimpleReworkTest {
+public class ReworkTest {
     static final String INPUT = ".left-alone {margin: 0;}\n" +
         ".THIS .inner, .xyz .THIS {display: inline-block; padding: 10px;}\n" +
         ".curvy {border: 3px solid red; border-radius: 40px 10px;}";

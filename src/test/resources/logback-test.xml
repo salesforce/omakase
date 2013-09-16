@@ -15,17 +15,16 @@
   -->
 
 <configuration>
-
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     <encoder>
       <pattern>%n%-4level %msg%n</pattern>
     </encoder>
   </appender>
 
-  <root level="debug">
-    <appender-ref ref="STDOUT" />
+  <root level="error">
+    <appender-ref ref="stdout" />
   </root>
 
-  <logger name="org.reflections" level="WARN"/>
+  <logger name="org.reflections" level="warn"/>
 </configuration>

@@ -25,6 +25,16 @@ import java.io.IOException;
  */
 public interface Writable {
     /**
+     * Returns whether this unit should actually be written.
+     * <p/>
+     * Usually this should just return true, however some units that are detachable or otherwise invalidatable should first check
+     * their state and respond appropriately.
+     *
+     * @return True if the unit should be written.
+     */
+    boolean isWritable();
+
+    /**
      * Outputs this {@link Writable}'s string representation.
      * <p/>
      * <b>Important notes for implementation:</b>

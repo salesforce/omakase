@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -41,19 +40,35 @@ import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS Rule.
  * <p/>
- * Note that {@link Rule}s will not be created unless the {@link SyntaxTree} plugin is enabled.
+ * Note that this will not be automatically created or broadcasted unless the {@link SyntaxTree} plugin is enabled.
  * <p/>
  * You might be looking for a "DeclarationBlock" class. Currently such a class serves no purpose, and all ordered declarations are
  * contained inside of a {@link SyntaxCollection} within this class instead.
  * <p/>
- * Adding or retrieving comments delegates to the first selector in the rule.
+ * Note that if a {@link Rule} does not have any selectors or declarations (or all of it's selectors and declarations are
+ * <em>detached</em>) then the rule will not be printed out.
+ * <p/>
+ * Comments that appear in the original CSS source "before" the rule are actually going to be added to the first {@link Selector}
+ * instead of the rule.
+ * <p/>
+ * Any comments that appear after the semi-colon of the last rule are considered orphaned comments and can be retrieved via {@link
+ * #orphanedComments()}. Note that any comments before the semi-colon (or if the last declaration does not end with a semi-colon)
+ * are attributed as orphaned comments on the {@link Declaration} instead.
+ * <p/>
+ * Example of a dynamically created rule:
+ * <pre>
+ * Rule rule = new Rule();
+ * rule.selectors().append(new Selector(new ClassSelector("class")));
+ * rule.selectors().append(new Selector(new IdSelector("id")));
+ * rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
+ * rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
+ * </pre>
  *
  * @author nmcwilliams
  */
+
 @Subscribable
 @Description(broadcasted = SYNTAX_TREE)
 public class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
@@ -116,18 +131,6 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
         declarations.propagateBroadcast(broadcaster);
     }
 
-    @Override
-    public void comments(Iterable<String> commentsToAdd) {
-        checkState(!selectors.isEmpty(), "cannot add a comment to a stylesheet without at least one selector");
-        Iterables.get(selectors, 0).comments(commentsToAdd);
-    }
-
-    @Override
-    public List<Comment> comments() {
-        if (selectors.isEmpty()) return ImmutableList.of();
-        return Iterables.get(selectors, 0).comments();
-    }
-
     /**
      * Adds an {@link OrphanedComment}.
      *
@@ -169,10 +172,13 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
     }
 
     @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+    public boolean isWritable() {
         // don't write out rules with no selectors or all detached selectors
-        if (isDetached() || selectors.isEmptyOrAllDetached()) return;
+        return !isDetached() && !selectors.isEmptyOrAllDetached() && !declarations().isEmptyOrAllDetached();
+    }
 
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // selectors
         for (Selector selector : selectors) {
             if (!selector.isDetached()) {

@@ -45,7 +45,6 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  * @see SyntaxCollection
  */
 public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax {
-
     /**
      * Gets whether this unit is the first within its group.
      * <p/>
@@ -59,7 +58,7 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * Rework} method, and prefer if possible to use in a {@link Validate} method, when all preprocessing and rework should be
      * completed.
      *
-     * @return True if the unit is first within its group. Always returns false if this unit is detached.
+     * @return True if the unit is first within its group. Always returns true if this unit is detached.
      */
     boolean isFirst();
 
@@ -76,7 +75,7 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * Rework} method, and prefer if possible to use in a {@link Validate} method, when all preprocessing and rework should be
      * completed.
      *
-     * @return True if the unit is last within its group. Always returns false if this unit is detached.
+     * @return True if the unit is last within its group. Always returns true if this unit is detached.
      */
     boolean isLast();
 

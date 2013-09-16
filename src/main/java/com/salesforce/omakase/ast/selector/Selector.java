@@ -58,6 +58,10 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
  * grammar validation. See the notes on {@link Refinable}.
  *
+ * When dynamically created selectors, you usually pass in the various {@link SelectorPart}s to the constructor. Example:
+ *
+ *{@code Selector selector = new Selector(new ClassSelector("myClass"), Combinator.descendant(), new IdSelector("myId"));}
+ *
  * @author nmcwilliams
  * @see ComplexSelectorParser
  */
@@ -195,9 +199,12 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
     }
 
     @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
+    public boolean isWritable() {
+        return !isDetached();
+    }
 
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             for (SelectorPart part : parts) {
                 writer.write(part, appendable);

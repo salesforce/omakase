@@ -24,8 +24,6 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 import java.util.List;
 
 /**
- * TESTME
- * <p/>
  * Base class for {@link Syntax} units.
  *
  * @author nmcwilliams
@@ -85,6 +83,11 @@ public abstract class AbstractSyntax implements Syntax {
     @Override
     public boolean hasSourcePosition() {
         return line != -1 && column != -1;
+    }
+
+    @Override
+    public boolean isWritable() {
+        return true;
     }
 
     @Override

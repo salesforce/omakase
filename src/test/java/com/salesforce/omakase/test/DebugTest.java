@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase;
+package com.salesforce.omakase.test;
 
+import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.Validation;
@@ -33,12 +34,12 @@ public class DebugTest {
         StyleWriter writer = StyleWriter.compressed();
 
         Omakase.source(SRC0)
-        .request(tree)
-        // .request(refinement)
-        .request(logging)
-        .request(Validation.normal())
-        .request(writer)
-        .process();
+            .request(tree)
+                // .request(refinement)
+            .request(logging)
+            .request(Validation.normal())
+            .request(writer)
+            .process();
 
         System.out.println();
         System.out.println(tree.toString());

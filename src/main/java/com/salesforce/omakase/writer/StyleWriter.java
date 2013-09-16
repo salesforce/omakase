@@ -185,6 +185,9 @@ public class StyleWriter implements DependentPlugin {
     /**
      * Writes the given syntax unit to the given {@link StyleAppendable}, taking into account any {@link CustomWriter} overrides
      * specified on this {@link StyleWriter}.
+     * <p/>
+     * Note that the unit will only be written if {@link Writable#isWritable()} returns true. This may be false if the unit is
+     * detached, for example.
      *
      * @param <T>
      *     Type of the unit to write.
@@ -203,9 +206,43 @@ public class StyleWriter implements DependentPlugin {
         if (overrides.containsKey(klass)) {
             // cast is safe as long as the map is guarded by #override
             ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
+        } else if (writable.isWritable()) {
+            writable.write(this, appendable);
+        }
+    }
+
+    /**
+     * Writes the given syntax unit, taking into account any {@link CustomWriter} overrides specified on this {@link
+     * StyleWriter}.
+     * <p/>
+     * <b>Important:</b> This method is for writing disjoint units only. Examples would be for usage in test classes or in cases
+     * where you are operating on a single CSS snippet as opposed to a whole CSS source. Most of the time the method you want is
+     * {@link #write(Writable, StyleAppendable)}, passing in the same {@link StyleAppendable} that you were given.
+     * <p/>
+     * As this is for writing snippets, it bypasses the {@link Writable#isWritable()} check.
+     *
+     * @param writable
+     *     The unit to write.
+     * @param <T>
+     *     Type of the unit to write.
+     *
+     * @return The output CSS code for the given unit.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     */
+    public <T extends Writable> String writeSnippet(T writable) throws IOException {
+        Class<? extends Writable> klass = writable.getClass();
+        StyleAppendable appendable = new StyleAppendable();
+
+        if (overrides.containsKey(klass)) {
+            // cast is safe as long as the map is guarded by #override
+            ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
         } else {
             writable.write(this, appendable);
         }
+
+        return appendable.toString();
     }
 
     /**
