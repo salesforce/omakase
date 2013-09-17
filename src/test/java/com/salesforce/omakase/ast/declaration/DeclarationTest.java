@@ -118,7 +118,7 @@ public class DeclarationTest {
     }
 
     @Test
-    public void setProepertyValueDoesntBroadcastAlreadyBroadcasted() {
+    public void setPropertyValueDoesntBroadcastAlreadyBroadcasted() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
         d.broadcaster(broadcaster);
@@ -127,6 +127,16 @@ public class DeclarationTest {
 
         d.propertyValue(newValue);
         assertThat(broadcaster.all).isEmpty();
+    }
+
+    @Test
+    public void propagatebroadcastBroadcastsPropertyValue() {
+        PropertyValue pv = TermList.singleValue(KeywordValue.of(Keyword.NONE));
+        Declaration d = new Declaration(Property.DISPLAY, pv);
+
+        assertThat(pv.status()).isSameAs(Status.UNBROADCASTED);
+        d.propagateBroadcast(new StatusChangingBroadcaster());
+        assertThat(pv.status()).isNotSameAs(Status.UNBROADCASTED);
     }
 
     @Test
