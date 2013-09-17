@@ -24,6 +24,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.*;
@@ -50,15 +51,13 @@ public class PropertyName extends AbstractSyntax {
         super(line, column);
 
         // split into prefix and name
-        String[] split = PATTERN.split(name);
-        if (split.length == 1) {
-            // no prefix
-            prefix = Optional.absent();
-            this.name = split[0];
+        Matcher matcher = PATTERN.matcher(name);
+        if (matcher.find()) {
+            prefix = Optional.of(matcher.group());
+            this.name = name.substring(matcher.end());
         } else {
-            // has a prefix
-            prefix = Optional.of(split[0]);
-            this.name = split[1];
+            prefix = Optional.absent();
+            this.name = name;
         }
     }
 
@@ -210,6 +209,32 @@ public class PropertyName extends AbstractSyntax {
         return new PropertyName(line, column, property.toString());
     }
 
+    /**
+     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given string.
+     *
+     * @param string
+     *     Match against this property name.
+     *
+     * @return True if this {@link PropertyName} has a name that equals the given string.
+     */
+    public boolean matches(String string) {
+        if (string == null) return false;
+        return name().equals(string);
+    }
+
+    /**
+     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given {@link Property}.
+     *
+     * @param property
+     *     Match against this property.
+     *
+     * @return True if this {@link PropertyName} has a name that equals the given {@link Property}.
+     */
+    public boolean matches(Property property) {
+        if (property == null) return false;
+        return name().equals(property.toString());
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(name());
@@ -217,10 +242,11 @@ public class PropertyName extends AbstractSyntax {
 
     @Override
     public boolean equals(Object other) {
-        // if the object is a string or an instance of property then compare the string values.
-        if (other instanceof String || other instanceof Property) {
-            return name().equals(other.toString());
+        if (other instanceof PropertyName) {
+            final PropertyName that = (PropertyName)other;
+            return name().equals(that.name());
         }
-        return super.equals(other);
+
+        return false;
     }
 }

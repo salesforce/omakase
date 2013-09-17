@@ -37,9 +37,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings({"JavaDoc", "unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+    @Rule public final ExpectedException exception = ExpectedException.none();
     private final Parser parser;
 
     public AbstractParserTest() {

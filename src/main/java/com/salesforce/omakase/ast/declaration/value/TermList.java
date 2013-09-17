@@ -170,7 +170,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      *
      * @return The new {@link TermList} instance.
      */
-    public static PropertyValue ofValues(TermOperator separator, Term... values) {
+    public static TermList ofValues(TermOperator separator, Term... values) {
         TermList termList = new TermList();
         for (int i = 0; i < values.length; i++) {
             if (i != 0) termList.add(separator);

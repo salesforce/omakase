@@ -52,8 +52,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS declaration.
  * <p/>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
@@ -194,6 +192,19 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     /**
+     * Sets a new property name. Generally, doing this should be avoided.
+     *
+     * @param property
+     *     The new property.
+     *
+     * @return this, for chaining.
+     */
+    public Declaration propertyName(Property property) {
+        this.propertyName = PropertyName.using(checkNotNull(property, "property cannot be null"));
+        return this;
+    }
+
+    /**
      * Gets the property name.
      *
      * @return The property name.
@@ -227,9 +238,8 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      *
      * @return True of this {@link Declaration} has the given property name.
      */
-    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     public boolean isProperty(Property property) {
-        return propertyName().equals(property);
+        return propertyName().matches(property);
     }
 
     /**
@@ -245,9 +255,8 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      *
      * @return True if this {@link Declaration} has the given property name.
      */
-    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     public boolean isProperty(String property) {
-        return propertyName().equals(property);
+        return propertyName().matches(property);
     }
 
     /**
@@ -267,6 +276,18 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
         }
 
         return this;
+    }
+
+    /**
+     * Sets a new property value.
+     *
+     * @param singleTerm
+     *     The single {@link Term}.
+     *
+     * @return this, for chaining.
+     */
+    public Declaration propertyValue(Term singleTerm) {
+        return propertyValue(TermList.singleValue(singleTerm));
     }
 
     /**
@@ -368,9 +389,12 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
+    public boolean isWritable() {
+        return !isDetached();
+    }
 
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             // property name
             writer.write(propertyName, appendable);

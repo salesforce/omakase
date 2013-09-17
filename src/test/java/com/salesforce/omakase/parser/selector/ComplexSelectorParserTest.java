@@ -126,6 +126,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
 
     @Test
     @Override
+    @SuppressWarnings("unchecked")
     public void matchesExpectedBroadcastCount() {
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("#id", 1),
@@ -137,7 +138,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
             withExpectedResult("div:hover", 2),
             withExpectedResult(".input-group-btn:first-child > .dropdown-toggle", 4),
             withExpectedResult("      ul.gallery li:last-child", 5),
-            withExpectedResult(".class /*comment*/ .class",3),
+            withExpectedResult(".class /*comment*/ .class", 3),
             withExpectedResult(".class/*comment*/.class", 2),
             withExpectedResult(".class\n/*comment*/\n.class", 3),
             withExpectedResult(".class /*comment*//*comment*/ .class", 3),
@@ -157,7 +158,6 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = Iterables.getOnlyElement(
             parse("*.page .home > .child #id:hover .button .inner + span:before"));
-
 
         List<Syntax> broadcasted = result.broadcasted;
         assertThat(broadcasted).hasSize(16);

@@ -31,8 +31,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /** Unit tests for {@link AbstractGroupable}. */
 @SuppressWarnings("JavaDoc")
 public class AbstractGroupableTest {
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private Parent parent;
     private Child child1;
@@ -198,7 +197,7 @@ public class AbstractGroupableTest {
     }
 
     private static final class Parent {
-        private SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
+        private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> implements Syntax {

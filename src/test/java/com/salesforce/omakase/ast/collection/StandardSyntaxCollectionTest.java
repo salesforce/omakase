@@ -36,8 +36,7 @@ import static org.fest.assertions.api.Assertions.*;
 /** Unit tests for {@link StandardSyntaxCollection}. */
 @SuppressWarnings("JavaDoc")
 public class StandardSyntaxCollectionTest {
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private SyntaxCollection<Parent, Child> collection;
     private Child child1;
@@ -303,7 +302,7 @@ public class StandardSyntaxCollectionTest {
     }
 
     private static final class Parent {
-        private SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
+        private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> implements Syntax {
@@ -319,7 +318,7 @@ public class StandardSyntaxCollectionTest {
     }
 
     private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private Set<Syntax> all = Sets.newHashSet();
+        private final Set<Syntax> all = Sets.newHashSet();
 
         @Override
         public <T extends Syntax> void broadcast(T syntax) {

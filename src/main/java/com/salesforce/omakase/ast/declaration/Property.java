@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Map;
 
 /**
- * TESTME
- * <p/>
  * Enum of all recognized CSS properties. Generated using PropertyToEnum.java.
  * <p/>
  * Use {@link #toString()} to get the CSS-output version.

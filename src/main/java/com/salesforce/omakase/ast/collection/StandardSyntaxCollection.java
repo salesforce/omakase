@@ -112,7 +112,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection prepend(T unit) {
+    public SyntaxCollection<P, T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
         // if the unit doesn't have a broadcaster and we have one then give it.
@@ -131,7 +131,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection prependAll(Iterable<T> units) {
+    public SyntaxCollection<P, T> prependAll(Iterable<T> units) {
         for (T unit : ImmutableList.copyOf(units).reverse()) {
             prepend(unit);
         }
@@ -139,7 +139,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection prependBefore(T existing, T unit) throws IllegalArgumentException {
+    public SyntaxCollection<P, T> prependBefore(T existing, T unit) throws IllegalArgumentException {
         checkNotNull(existing, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
 
@@ -162,7 +162,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection append(T unit) {
+    public SyntaxCollection<P, T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
         // if the unit doesn't have a broadcaster and we have one then give it.
@@ -181,7 +181,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection appendAll(Iterable<T> units) {
+    public SyntaxCollection<P, T> appendAll(Iterable<T> units) {
         for (T unit : units) {
             append(unit);
         }
@@ -189,7 +189,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection appendAfter(T existing, T unit) throws IllegalArgumentException {
+    public SyntaxCollection<P, T> appendAfter(T existing, T unit) throws IllegalArgumentException {
         checkNotNull(existing, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
 
@@ -211,14 +211,14 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public StandardSyntaxCollection replaceExistingWith(Iterable<T> units) {
+    public SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units) {
         clear();
         appendAll(units);
         return this;
     }
 
     @Override
-    public StandardSyntaxCollection detach(T unit) {
+    public SyntaxCollection<P, T> detach(T unit) {
         boolean removed = list.remove(unit);
 
         // the unit must have existed in this collection
