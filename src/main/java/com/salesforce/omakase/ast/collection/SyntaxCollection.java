@@ -166,12 +166,16 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
     SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units);
 
     /**
-     * Removes a unit from this collection. If this collection does not contain the given unit nothing will happen.
+     * Removes a unit from this collection. If this collection does not contain the given unit an exception will be thrown. It's
+     * preferable to call {@link Groupable#detach()} over this.
      *
      * @param unit
      *     The unit to remove.
      *
      * @return this, for chaining.
+     *
+     * @throws IllegalArgumentException
+     *     if the unit is not contained within this collection.
      */
     SyntaxCollection<P, T> detach(T unit);
 

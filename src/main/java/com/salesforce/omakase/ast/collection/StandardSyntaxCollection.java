@@ -53,7 +53,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      * Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}.
      *
      * @param parent
-     *     The parent that owns this collection.
+     *     The parent that owns this collection. Do not pass null.
      */
     public StandardSyntaxCollection(P parent) {
         this(parent, null);
@@ -63,7 +63,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      * Creates a new {@link StandardSyntaxCollection} using the given {@link Broadcaster} to broadcast new units.
      *
      * @param parent
-     *     The parent that owns this collection.
+     *     The parent that owns this collection. Do not pass null.
      * @param broadcaster
      *     Used to broadcast new units.
      */
@@ -132,7 +132,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public StandardSyntaxCollection prependAll(Iterable<T> units) {
-        for (T unit : units) {
+        for (T unit : ImmutableList.copyOf(units).reverse()) {
             prepend(unit);
         }
         return this;
@@ -219,8 +219,14 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public StandardSyntaxCollection detach(T unit) {
-        list.remove(unit);
+        boolean removed = list.remove(unit);
+
+        // the unit must have existed in this collection
+        if (!removed) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
+
+        // unset the group (and transitively the parent)
         unit.group(null);
+
         return this;
     }
 
@@ -228,7 +234,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     public Iterable<T> clear() {
         List<T> detached = ImmutableList.copyOf(list);
 
-        for (T unit : list) {
+        for (T unit : detached) {
             detach(unit);
         }
 
@@ -312,8 +318,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      *
      * @return The new {@link SyntaxCollection} instance.
      */
-    public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent, Broadcaster
-        broadcaster) {
+    public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent, Broadcaster broadcaster) {
         return new StandardSyntaxCollection<>(parent, broadcaster);
     }
 }

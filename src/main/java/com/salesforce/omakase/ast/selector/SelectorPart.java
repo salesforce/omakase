@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.emitter.Description;
@@ -43,9 +44,9 @@ public interface SelectorPart extends Syntax, Groupable<Selector, SelectorPart> 
      * For the {@link SelectorPart} {@code #id}, which is an {@link IdSelector}, calling this method will return the first {@link
      * Selector} (with {@code .class > .class2 #id}).
      *
-     * @return The parent.
+     * @return The parent, or {@link Optional#absent()} if the parent is not specified.
      */
-    Selector parentSelector();
+    Optional<Selector> parentSelector();
 
     /**
      * Gets whether this {@link SelectorPart} is a selector ({@link SimpleSelector} or {@link PseudoElementSelector}).

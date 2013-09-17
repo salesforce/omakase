@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.collection;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
@@ -35,6 +36,17 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  * <p/>
  * In many cases you may need to check if this item is <em>detached</em> first (true if explicitly detached or if it's a new
  * instance not yet added to the tree). Detached items usually should be ignored, except to reattach.
+ * <p/>
+ * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
+ * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want then
+ * first call {@link #detach()} on the unit. Multiple calls to detach and append/prepend in mass should be minimized for
+ * performance reasons. In some cases it may be better to alternatively consider detaching the parent unit itself and attaching
+ * the applicable children straight to a new replacement parent node.
+ * <p/>
+ * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
+ * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
+ * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
+ * #detach()} before appending or prepending the unit to the new parent.
  *
  * @param <T>
  *     The type of units to be grouped with.
@@ -49,7 +61,7 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * Gets whether this unit is the first within its group.
      * <p/>
      * Some units will not be linked if the {@link SyntaxTree} plugin is not enabled. For example, {@link Rule}, {@link Selector},
-     * {@link Declaration} (and if unlinked this will always return false).
+     * {@link Declaration}.
      * <p/>
      * Please note, if you are making decisions based on this value there are a few things to keep in mind. First, if you are
      * doing something in a {@link PreProcess} method, there is a good chance there are still more units to be added, so while
@@ -66,7 +78,7 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * Gets whether this unit is the last within its group.
      * <p/>
      * Some units will not be linked if the {@link SyntaxTree} plugin is not enabled. For example, {@link Rule}, {@link Selector},
-     * {@link Declaration} (and if unlinked this will always return false).
+     * {@link Declaration}.
      * <p/>
      * Please note, if you are making decisions based on this value there are a few things to keep in mind. First, if you are
      * doing something in a {@link PreProcess} method, there is a good chance there are still more units to be added, so while
@@ -81,6 +93,17 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
 
     /**
      * Prepends the given unit before this one.
+     * <p/>
+     * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
+     * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want
+     * then first call {@link #detach()} on the unit. Multiple calls to detach and append/prepend in mass should be minimized for
+     * performance reasons. In some cases it may be better to alternatively consider detaching the parent unit itself and
+     * attaching the applicable children straight to a new replacement parent node.
+     * <p/>
+     * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
+     * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
+     * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
+     * #detach()} before appending or prepending the unit to the new parent.
      *
      * @param unit
      *     The unit to prepend.
@@ -94,6 +117,17 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
 
     /**
      * Appends the given unit after this one.
+     * <p/>
+     * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
+     * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want
+     * then first call {@link #detach()} on the unit. Multiple calls to detach and append/prepend in mass should be minimized for
+     * performance reasons. In some cases it may be better to alternatively consider detaching the parent unit itself and
+     * attaching the applicable children straight to a new replacement parent node.
+     * <p/>
+     * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
+     * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
+     * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
+     * #detach()} before appending or prepending the unit to the new parent.
      *
      * @param unit
      *     The unit to append.
@@ -129,18 +163,15 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     /**
      * Gets the group {@link SyntaxCollection} of this unit.
      *
-     * @return The group {@link SyntaxCollection}.
-     *
-     * @throws IllegalStateException
-     *     If this unit is currently detached (doesn't belong to any group).
+     * @return The group {@link SyntaxCollection}, or {@link Optional#absent()} if the group is not specified.
      */
-    SyntaxCollection<P, T> group();
+    Optional<SyntaxCollection<P, T>> group();
 
     /**
      * Gets the parent {@link Syntax} unit that owns the {@link SyntaxCollection} that contains this unit. See {@link
      * SyntaxCollection#parent()}.
      *
-     * @return The parent, or null if currently detached.
+     * @return The parent, or {@link Optional#absent()} if the parent is not specified.
      */
-    P parent();
+    Optional<P> parent();
 }

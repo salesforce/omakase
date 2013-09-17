@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.collection;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcaster.Broadcaster;
@@ -118,13 +119,12 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
     }
 
     @Override
-    public SyntaxCollection<P, T> group() {
-        checkState(!isDetached(), "currently not part of any group!");
-        return group;
+    public Optional<SyntaxCollection<P, T>> group() {
+        return Optional.fromNullable(group);
     }
 
     @Override
-    public P parent() {
-        return isDetached() ? null : group().parent();
+    public Optional<P> parent() {
+        return isDetached() ? Optional.<P>absent() : Optional.of(group().get().parent());
     }
 }
