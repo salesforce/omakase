@@ -443,8 +443,7 @@ public enum Keyword {
      */
     public boolean isOnlyValueIn(PropertyValue value) {
         Optional<KeywordValue> keywordValue = Value.asKeyword(value);
-        if (!keywordValue.isPresent()) return false;
-        return keywordValue.get().keyword().equals(keyword);
+        return keywordValue.isPresent() && keywordValue.get().keyword().equals(keyword);
     }
 
     @Override

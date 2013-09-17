@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME
- * <p/>
  * A generic function value with non-validated arguments. By not validating arguments here, we allow for new CSS specifications as
  * well as custom functions with any arbitrary content.
  *
@@ -46,6 +44,8 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new {@link FunctionValue} instance with the given function name and arguments.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #FunctionValue(String, String)} instead.
      *
      * @param line
      *     The line number.

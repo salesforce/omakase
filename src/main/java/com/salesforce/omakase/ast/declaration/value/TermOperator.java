@@ -29,8 +29,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * TESTME
- * <p/>
  * An operator, or separator, between {@link Term}s in a {@link TermList}.
  *
  * @author nmcwilliams

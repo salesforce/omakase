@@ -31,8 +31,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME
- * <p/>
  * A keyword value (e.g., inline-block).
  *
  * @author nmcwilliams
@@ -45,6 +43,8 @@ public class KeywordValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new {@link KeywordValue} instance.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #KeywordValue(Keyword)} or {@link #KeywordValue(String)} instead.
      *
      * @param line
      *     The line number.

@@ -22,8 +22,6 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import java.util.List;
 
 /**
- * TESTME
- * <p/>
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.
  * <p/>
  * This allows you to extract specific {@link Term} instances from a given {@link PropertyValue} if that {@link Term} is the only

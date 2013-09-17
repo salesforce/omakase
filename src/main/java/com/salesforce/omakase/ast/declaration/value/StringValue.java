@@ -31,8 +31,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME
- * <p/>
  * A string value, e.g., "Times New Roman".
  *
  * @author nmcwilliams
@@ -57,6 +55,8 @@ public class StringValue extends AbstractSyntax implements Term {
      * <p/>
      * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source. Performance-wise,
      * there is no reason to change it from the original, and also it keeps us from having to mess around with escaping.
+     * <p/>
+     * * If dynamically creating a new instance then use {@link #StringValue(QuotationMode, String)} instead.
      *
      * @param line
      *     The line number.
@@ -81,7 +81,6 @@ public class StringValue extends AbstractSyntax implements Term {
      * @param content
      *     The content of the string.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public StringValue(QuotationMode mode, String content) {
         content(mode, content);
     }

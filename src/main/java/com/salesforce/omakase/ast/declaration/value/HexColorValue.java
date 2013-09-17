@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME
- * <p/>
  * A hex color value (e.g., "fffeee"). The value is always converted to lower-case.
  *
  * @author nmcwilliams
@@ -44,6 +42,8 @@ public class HexColorValue extends AbstractSyntax implements Term {
 
     /**
      * Constructs a new instance of a {@link HexColorValue}.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #HexColorValue(String)} instead.
      *
      * @param line
      *     The line number.
@@ -65,7 +65,6 @@ public class HexColorValue extends AbstractSyntax implements Term {
      */
     public HexColorValue(String color) {
         color(color);
-        // TODO validation?
     }
 
     /**
@@ -76,9 +75,18 @@ public class HexColorValue extends AbstractSyntax implements Term {
      *
      * @return this, for chaining.
      */
+    @SuppressWarnings("AssignmentToMethodParameter")
     public HexColorValue color(String color) {
         checkNotNull(color, "color cannot be null");
+
+        // remove leading '#' if present
+        if (color.startsWith("#")) {
+            color = color.substring(1);
+        }
+
+        // color is automatically lower-cased
         this.color = color.toLowerCase();
+
         return this;
     }
 

@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME A numerical value (e.g., 1 or 1px or 3.5em).
+ * A numerical value (e.g., 1 or 1px or 3.5em).
  * <p/>
  * The decimal point and unit are both optional. THe unit is any keyword directly following the number value, such as px, em, or
  * ms.
@@ -42,6 +42,11 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DEC
  * <p/>
  * We use two integers instead of a double because we want to preserve the information regarding the presence of the decimal point
  * as authored.
+ * <p/>
+ * To dynamically create a {@link NumericalValue} use on of the constructor methods, for example:
+ * <pre>
+ * <code>NumericalValue number = NumericalValue.of(10, "px");</code>
+ * </pre>
  *
  * @author nmcwilliams
  * @see NumericalValueParser
@@ -71,6 +76,8 @@ public class NumericalValue extends AbstractSyntax implements Term {
     /**
      * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a value of 0
      * should be passed in here.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #NumericalValue(int)} or {@link #NumericalValue(long)} instead.
      *
      * @param line
      *     The line number.
@@ -85,6 +92,22 @@ public class NumericalValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a value of 0
+     * should be passed in here.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param integerValue
+     *     The integer value.
+     */
+    public NumericalValue(int line, int column, Integer integerValue) {
+        super(line, column);
+        this.integerValue = (long)integerValue;
+    }
+
+    /**
      * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
      *
      * @param integerValue
@@ -95,6 +118,16 @@ public class NumericalValue extends AbstractSyntax implements Term {
     }
 
     /**
+     * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
+     *
+     * @param integerValue
+     *     The integer value.
+     */
+    public NumericalValue(int integerValue) {
+        this.integerValue = (long)integerValue;
+    }
+
+    /**
      * Sets the integer value.
      *
      * @param integerValue
@@ -102,8 +135,19 @@ public class NumericalValue extends AbstractSyntax implements Term {
      *
      * @return this, for chaining.
      */
-    public NumericalValue integerValue(Long integerValue) {
-        checkNotNull(integerValue, "integerValue cannot be null");
+    public NumericalValue integerValue(int integerValue) {
+        return integerValue((long)integerValue);
+    }
+
+    /**
+     * Sets the integer value.
+     *
+     * @param integerValue
+     *     The integer value.
+     *
+     * @return this, for chaining.
+     */
+    public NumericalValue integerValue(long integerValue) {
         checkArgument(integerValue >= 0, "integerValue must be greater than 0 (use #explicitSign for negative values)");
         this.integerValue = integerValue;
         return this;
@@ -126,9 +170,9 @@ public class NumericalValue extends AbstractSyntax implements Term {
      *
      * @return this, for chaining.
      */
-    public NumericalValue decimalValue(Long decimalValue) {
-        if (decimalValue != null) checkArgument(integerValue >= 0, "decimalValue must be greater than 0");
-        this.decimalValue = Optional.fromNullable(decimalValue);
+    public NumericalValue decimalValue(long decimalValue) {
+        checkArgument(integerValue >= 0, "decimalValue must be greater than 0");
+        this.decimalValue = Optional.of(decimalValue);
         return this;
     }
 
