@@ -28,8 +28,6 @@ import java.io.IOException;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME
- * <p/>
  * Represents the CSS universal selector, i.e., "*".
  *
  * @author nmcwilliams
@@ -39,6 +37,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
 public class UniversalSelector extends AbstractSelectorPart implements SimpleSelector {
     /**
      * Constructs a new {@link UniversalSelector} instance.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #UniversalSelector()} instead.
      *
      * @param line
      *     The line number.
@@ -74,7 +74,6 @@ public class UniversalSelector extends AbstractSelectorPart implements SimpleSel
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
         appendable.append('*');
     }
 

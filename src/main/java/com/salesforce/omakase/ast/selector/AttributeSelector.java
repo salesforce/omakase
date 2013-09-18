@@ -41,6 +41,8 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
 public class AttributeSelector extends AbstractSelectorPart implements SimpleSelector {
     /**
      * Creates a new instance with the given line and column numbers.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #AttributeSelector()} instead.
      *
      * @param line
      *     The line number.

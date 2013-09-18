@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS pseudo class selector.
  * <p/>
  * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b> considered pseudo
@@ -47,6 +45,8 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
 
     /**
      * Constructs a new {@link PseudoClassSelector} instance with the given name.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #PseudoClassSelector(String)} instead.
      *
      * @param line
      *     The line number.
@@ -117,7 +117,6 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
         // TODO function args
         appendable.append(':').append(name);
     }

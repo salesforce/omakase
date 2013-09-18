@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS combinator.
  *
  * @author nmcwilliams
@@ -44,6 +42,8 @@ public class Combinator extends AbstractSelectorPart implements SimpleSelector {
 
     /**
      * Creates a new instance with the given line and column numbers, and the {@link CombinatorType}.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #Combinator(CombinatorType)} instead.
      *
      * @param line
      *     The line number.

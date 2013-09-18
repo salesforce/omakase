@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS id selector.
  *
  * @author nmcwilliams
@@ -44,6 +42,8 @@ public class IdSelector extends AbstractSelectorPart implements SimpleSelector {
 
     /**
      * Creates a new instance with the given line and column numbers and id name.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #IdSelector(String)} instead.
      *
      * @param line
      *     The line number.
@@ -111,7 +111,6 @@ public class IdSelector extends AbstractSelectorPart implements SimpleSelector {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
         appendable.append('#').append(name);
     }
 

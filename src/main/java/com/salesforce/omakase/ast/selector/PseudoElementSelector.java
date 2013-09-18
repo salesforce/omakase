@@ -32,8 +32,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS pseudo element selector.
  *
  * @author nmcwilliams
@@ -49,6 +47,8 @@ public class PseudoElementSelector extends AbstractSelectorPart implements Simpl
 
     /**
      * Constructs a new {@link PseudoElementSelector} selector with the given name.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #PseudoElementSelector(String)} instead.
      *
      * @param line
      *     The line number.
@@ -117,7 +117,6 @@ public class PseudoElementSelector extends AbstractSelectorPart implements Simpl
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
         // TODO function args
         appendable.append(POSERS.contains(name) ? ":" : "::").append(name);
     }

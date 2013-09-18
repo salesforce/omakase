@@ -29,8 +29,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS type selector (also known as an element type selector).
  * <p/>
  * Do not use this for universal "*" selectors, but use {@link UniversalSelector} instead.
@@ -44,6 +42,8 @@ public class TypeSelector extends AbstractSelectorPart implements SimpleSelector
 
     /**
      * Constructs a new {@link TypeSelector} instance with the given name.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #TypeSelector(String)} instead.
      *
      * @param line
      *     The line number.
@@ -112,7 +112,6 @@ public class TypeSelector extends AbstractSelectorPart implements SimpleSelector
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
         appendable.append(name);
     }
 

@@ -43,24 +43,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 /**
- * TESTME
- * <p/>
  * Represents a CSS selector.
  * <p/>
  * {@link Selector}s are lists of {@link SelectorPart}s. Individual {@link Selector}s are separated by commas. For example, in
- * <code>.class, .class #id</code> there are two selectors, <code>.class</code> and <code>.class #id</code>.
- * <p/>
+ * <pre>
+ * {@code .class, .class #id}
+ * </pre>
+ * There are two selectors:
+ * <pre>
+ * 1: {@code .class}
+ * 2: {@code .class #id}
+ * </pre>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
  * grammar validation. See the notes on {@link Refinable}.
- *
- * When dynamically created selectors, you usually pass in the various {@link SelectorPart}s to the constructor. Example:
- *
- *{@code Selector selector = new Selector(new ClassSelector("myClass"), Combinator.descendant(), new IdSelector("myId"));}
+ * <p/>
+ * When dynamically creating selectors, you usually pass in the various {@link SelectorPart}s to the constructor. Example:
+ * <pre>
+ * {@code Selector selector = new Selector(new ClassSelector("myClass"), Combinator.descendant(), new IdSelector("myId"));}
+ * </pre>
+ * You can also append or prepend parts directly on the {@link SyntaxCollection} returned from the {@link #parts()} method.
  *
  * @author nmcwilliams
  * @see ComplexSelectorParser
@@ -75,6 +80,8 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
      * individual {@link SelectorPart}s by using {@link #refine()}.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
      *
      * @param rawContent
      *     The selector content.

@@ -294,6 +294,24 @@ public class DeclarationTest {
         assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
     }
 
+    public void writeCompressedUnrefinedDoesMinification() {
+        // TODO add test when functionality is added
+    }
+
+    @Test
+    public void isWritableWhenAttached() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        rule.declarations().append(d);
+        assertThat(d.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isNotWritableWhenDetached() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        assertThat(d.isWritable()).isFalse();
+    }
+
     private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
         private final Set<Syntax> all = Sets.newHashSet();
 

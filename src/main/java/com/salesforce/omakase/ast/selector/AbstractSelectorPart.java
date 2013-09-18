@@ -25,11 +25,7 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
 import java.util.List;
 
-/**
- * TESTME
- * <p/>
- * Base class for {@link SelectorPart}s.
- */
+/** Base class for {@link SelectorPart}s. */
 public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, SelectorPart> implements SelectorPart {
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractSelectorPart() {
@@ -58,5 +54,10 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
 
         // the first selector part should also include the comments included on the selector
         return ImmutableList.copyOf(Iterables.concat(parentSelector().get().comments(), super.comments()));
+    }
+
+    @Override
+    public boolean isWritable() {
+        return !isDetached();
     }
 }
