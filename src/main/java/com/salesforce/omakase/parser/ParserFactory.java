@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.parser.declaration.FunctionValueParser;
 import com.salesforce.omakase.parser.declaration.HexColorValueParser;
+import com.salesforce.omakase.parser.declaration.ImportantParser;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
@@ -55,7 +56,7 @@ public final class ParserFactory {
     private static final Parser selectorGroup = new SelectorGroupParser();
     private static final Parser rawSelector = new RawSelectorParser();
 
-    /** refined selectors */
+    /* refined selectors */
     private static final Parser complexSelector = new ComplexSelectorParser();
     private static final Parser combinator = new CombinatorParser();
     private static final Parser classSelector = new ClassSelectorParser();
@@ -74,7 +75,9 @@ public final class ParserFactory {
 
     private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
+    /* declaration values */
     private static final Parser termList = new TermListParser();
+    private static final Parser important = new ImportantParser();
 
     private static final Parser numericalValue = new NumericalValueParser();
     private static final Parser functionValue = new FunctionValueParser();
@@ -263,5 +266,14 @@ public final class ParserFactory {
      */
     public static Parser termParser() {
         return term;
+    }
+
+    /**
+     * Gets the parser to parse a "important!" value.
+     *
+     * @return The parser instance.
+     */
+    public static Parser importantParser() {
+        return important;
     }
 }

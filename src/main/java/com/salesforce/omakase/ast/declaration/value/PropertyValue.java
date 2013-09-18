@@ -31,4 +31,20 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DEC
 @Subscribable
 @Description(value = "interface for all property values", broadcasted = REFINED_DECLARATION)
 public interface PropertyValue extends Syntax {
+    /**
+     * Gets whether this {@link PropertyValue} is marked as "!important".
+     *
+     * @return True if this property value is marked as important.
+     */
+    boolean isImportant();
+
+    /**
+     * Sets whether this {@link PropertyValue} is marked as "!important".
+     *
+     * @param important
+     *     Whether the value is "!important".
+     *
+     * @return this, for chaining.
+     */
+    PropertyValue important(boolean important);
 }

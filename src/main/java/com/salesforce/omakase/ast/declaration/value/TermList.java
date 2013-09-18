@@ -61,6 +61,7 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DEC
 @Description(value = "default, generic property value", broadcasted = REFINED_DECLARATION)
 public class TermList extends AbstractSyntax implements PropertyValue {
     private final List<TermListMember> members = Lists.newArrayListWithCapacity(4);
+    private boolean important;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public TermList() {}
@@ -110,6 +111,17 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     }
 
     @Override
+    public boolean isImportant() {
+        return important;
+    }
+
+    @Override
+    public PropertyValue important(boolean important) {
+        this.important = important;
+        return this;
+    }
+
+    @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         super.propagateBroadcast(broadcaster);
         for (TermListMember member : members) {
@@ -125,6 +137,11 @@ public class TermList extends AbstractSyntax implements PropertyValue {
         for (TermListMember member : members) {
             writer.write(member, appendable);
         }
+
+        if (important) {
+            appendable.spaceIf(writer.isVerbose());
+            appendable.append("!important");
+        }
     }
 
     @Override
@@ -132,6 +149,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
         return As.string(this)
             .add("abstract", super.toString())
             .add("members", members)
+            .addIf(important, "important", important)
             .toString();
     }
 

@@ -60,7 +60,8 @@ public enum Message {
     CANT_MODIFY_SYNTAX_TREE("Cannot modify syntax tree after it has been frozen"),
     MISSING_OPERATOR_NEAR_COMMENT("In order to place a comment here, please ensure that it is properly surrounded by the " +
         "appropriate operator (.e.g., a space character). Otherwise, this will result in an invalid valid during minification " +
-        "when comments are removed.");
+        "when comments are removed."),
+    EXPECTED_IMPORTANT("Expected to find 'important'");
 
     private final String message;
 

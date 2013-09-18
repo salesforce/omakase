@@ -270,7 +270,7 @@ public class StreamTest {
     @Test
     public void until() {
         Stream stream = new Stream("123___*\n\n123  abc} \n 123");
-        String content = stream.until(Tokens.CLOSE_BRACKET);
+        String content = stream.until(Tokens.CLOSE_BRACE);
         assertThat(content).isEqualTo("123___*\n\n123  abc");
         assertThat(stream.index()).isEqualTo(17);
     }
@@ -280,7 +280,7 @@ public class StreamTest {
         Stream stream = new Stream("a}");
         stream.next();
         stream.next();
-        String content = stream.until(Tokens.CLOSE_BRACKET);
+        String content = stream.until(Tokens.CLOSE_BRACE);
         assertThat(stream.eof()).isTrue();
         assertThat(content).isEmpty();
     }
@@ -304,7 +304,7 @@ public class StreamTest {
     @Test
     public void untilSkipEscaped() {
         Stream stream = new Stream("abc\\}123}");
-        String content = stream.until(Tokens.CLOSE_BRACKET);
+        String content = stream.until(Tokens.CLOSE_BRACE);
         assertThat(content).isEqualTo("abc\\}123");
         assertThat(stream.index()).isEqualTo(8);
     }

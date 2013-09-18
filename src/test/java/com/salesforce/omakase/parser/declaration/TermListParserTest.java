@@ -32,6 +32,7 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
@@ -88,7 +89,6 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
                 "66.66666666666666%",
                 "linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, " +
                     "0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)",
-                // "red !important", TODO
                 "63px 63px 63px 63px / 108px 108px 72px 72px",
                 "0 0 0 1em red,\n     0 1em 0 1em red,\n     -2.5em 1.5em 0 .5em red,\n     2.5em 1.5em 0 .5em red," +
                     "\n     -3em -3em 0 0 red\n",
@@ -213,5 +213,26 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         exception.expect(ParserException.class);
         exception.expectMessage(Message.MISSING_OPERATOR_NEAR_COMMENT.message());
         parse("1px /*x*/ 1px 1px/*x*/1px");
+    }
+
+    @Test
+    public void parsesImportant() {
+        List<String> sourcesWithSpace = new ArrayList<>();
+        List<String> sourcesWithoutSpace = new ArrayList<>();
+
+        for (String source : validSources()) {
+            sourcesWithSpace.add(source + " !important");
+            sourcesWithoutSpace.add(source + "!IMPORTANT");
+        }
+
+        for (GenericParseResult result : parse(sourcesWithSpace)) {
+            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
+            assertThat(result.success).describedAs(result.stream.toString()).isTrue();
+        }
+
+        for (GenericParseResult result : parse(sourcesWithoutSpace)) {
+            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
+            assertThat(result.success).describedAs(result.stream.toString()).isTrue();
+        }
     }
 }

@@ -49,16 +49,22 @@ public enum Tokens implements Token {
     COMMA(is(','), ","),
 
     /** open bracket */
-    OPEN_BRACKET(is('{'), "opening bracket '{'"),
+    OPEN_BRACE(is('{'), "opening brace '{'"),
 
     /** closing bracket */
-    CLOSE_BRACKET(is('}'), "closing bracket '}'"),
+    CLOSE_BRACE(is('}'), "closing brace '}'"),
 
     /** opening parenthesis */
     OPEN_PAREN(is('('), "opening parenthesis '('"),
 
     /** closing parenthesis */
     CLOSE_PAREN(is(')'), "closing parenthesis ')'"),
+
+    /** opening bracket */
+    OPEN_BRACKET(is('['), "opening bracket '['"),
+
+    /** closing bracket */
+    CLOSE_BRACKET(is(']'), "closing bracket ']'"),
 
     /** asterisk */
     STAR(is('*'), "universal selector"),
@@ -83,6 +89,9 @@ public enum Tokens implements Token {
 
     /** percentage symbol */
     PERCENTAGE(is('%'), "%"),
+
+    /** exclamation */
+    EXCLAMATION(is('!'), "!"),
 
     /** double quote */
     DOUBLE_QUOTE(is('"'), "\" (double quote)"),

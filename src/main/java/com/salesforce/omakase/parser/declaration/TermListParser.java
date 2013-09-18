@@ -112,6 +112,9 @@ public class TermListParser extends AbstractParser {
         // if no terms were parsed then return false
         if (termList == null) return false;
 
+        // check for !important
+        termList.important(ParserFactory.importantParser().parse(stream, broadcaster));
+
         // orphaned comments, e.g., ".class { margin: 1px /*orphaned*/;}"
         List<String> orphaned = stream.collectComments().flushComments();
         for (String comment : orphaned) {

@@ -118,5 +118,15 @@ public class ValueTest {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         }
+
+        @Override
+        public boolean isImportant() {
+            return false;
+        }
+
+        @Override
+        public PropertyValue important(boolean important) {
+            return this;
+        }
     }
 }
