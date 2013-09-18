@@ -14,7 +14,7 @@ The two main goals of Omakase are speed and flexibility.
 
 Omakase is written with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional sensitivities of runtime-level performance.
 
-Part of the speed gains come from a 2-level parsing strategy. 2-level parsing accounts for various scenarios and use-cases. The first level separates the source code into selectors and declarations only. The (optional or targeted) second level can be conditionally applied to specific selectors and declarations or all of them depending on applicability. 
+Part of the speed gains come from a 2-level parsing strategy. 2-level parsing accounts for various scenarios and use-cases. The first level separates the source code into selectors, declarations and at-rules only. The (optional or targeted) second level can be conditionally applied to specific selectors, declarations and at-rules or all of them depending on applicability. 
 
 ### Focus on flexibility
 
@@ -26,9 +26,9 @@ Because Omakase doesn't use a generic parser generator, the error messages are a
 
 ### Awesome standard plugins
 
-Omakase comes with some nifty plugins out of the box that mirror often-touted _CSS Preprocessor_ functionality.
+Omakase comes with some nifty plugins out of the box that mirror highly-touted _CSS Preprocessor_ functionality.
 
-TODO finish 
+TODO add descriptions 
 
 - mixins
 - right-to-left swapping
@@ -43,21 +43,144 @@ Usage
 
 Omakase can be used as a parser, a preprocessor, a linter, or all three. When using Omakase it's useful to keep in mind the pluggable nature of its architecture.
 
-### Parsing basic CSS
+### Basic usage
 
-TODO
+Parsing is simple. All parsing starts with the `Omakase` class. The CSS source is specified using the `#source(String)` method, then optional plugins are registered, and finally parsing begins with a call to `#process()`. An example of the most basic form of parsing is as follows
+
+```java
+Omakase.source(input).process();
+```
+However this is not very useful in of itself. Usually you will register various plugins according to your needs.
+
+The most basic principle to understand when using Omakase is that nearly everything is organized into a set of _plugins_. Need a syntax tree? Add the `SyntaxTree` plugin. Need to output the processed code in compressed or dev mode format? Register a `StyleWriter` plugin. Want some validation or linting? Add the applicable plugins.
+
+This loosely coupled architecture allows us to achieve better performance and caters to the pattern of parsing a CSS source over and over with different configurations as opposed to parsing just once (which other libraries might necessitate for performance cost reasons).
+
+Note that only one instance of a plugin can be registered and that plugins will be executed in the order that they are registered. Thus **order can be extremely important** for rework operations.
 
 ### Output
 
-TODO 
+Use the `StyleWriter` plugin to write the processed CSS.
+
+```java
+StyleWriter verbose = StyleWriter.verbose();
+
+Omakase.source(input)
+    .request(verbose)
+    .process();
+
+String out = verbose.write();
+```
+
+You can also write to an `Appendable`
+
+```java
+StyleWriter verbose = StyleWriter.verbose();
+
+Omakase.source(input)
+    .request(verbose)
+    .process();
+
+StringBuilder builder = new StringBuilder();
+String out = verbose.write(builder);
+```
+
+By default, CSS is written out in _inline_ mode. Other availables modes include _verbose_ and _compressed_. _Verbose_ mode will output newlines, spaces, comments, etc... _Inline_ mode will write each rule on a single line. _Compressed_ mode will eliminate as many characters as possible, including newlines, spaces, etc...
+
+```java
+StyleWriter verbose = StyleWriter.verbose();
+StyleWriter inline = StyleWriter.inline();
+StyleWriter compressed = StyleWriter.compressed();
+```
+
+In some cases you may want to write out an individual unit.
+
+```java
+Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+StyleWriter.compressed().writeSnippet(declaration);
+```
+
+You can override how any individual syntax unit is written. You could use this to prepend or append certain content, for example. For examples on how to do this see the "Custom writers" section below.
 
 ### Validation
 
-TODO
+In Omakase, _validation_ refers to both actual syntax validation (e.g., that the arguments to an `rgba` function are well-formed) as well as what is commonly known as _linting_ (e.g., that fonts are specified using relative units instead of pixels).
 
-### Specifying common plugins
+All validation is written and registered as plugins. When syntax validation is desired you usually want to enable every standard validation plugin as well as auto-refinement on everything
 
-TODO
+```java
+Omakase.source(input)
+    .request(new AutoRefiner().all())
+    .request(Validation.normal())
+    .process();
+```
+
+This auto-refines every selector and declaration (see the "Specifying common plugins" section below for more information) and registers the basic list of built-in validators.
+
+In addition to syntax validation you can optionally register built-in linters as well:
+
+- TODO add list of linters 
+
+Validation methods will always occur after rework methods, but otherwise they will be executed in the order that the class was registered.
+
+You can also add your own custom validators. For examples see the "Custom validation" section below.
+
+### Registering plugins
+
+When specifying plugins there are important details to keep in mind:
+
+- Only one instance of a plugin can be registered to a single parse operation.
+- Plugins methods of the same subscription type (preprocess, rework, or validate) will be executed in the order that the class is registered.
+- `@PreProcess` annotated methods are executed first, then `@Rework` methods, and finally `@Validate` methods. Essentially this means that all rework will happen before validation, regardless of the order in which the plugins are registered. However if "Plugin A" is registered before "Plugin B" then "Plugin A"'s rework will execute before "Plugin B"'s, and likewise for validation.
+
+There are **two** standard plugins that you need to be aware of, even if you don't create any custom plugins yourself.
+
+#### SyntaxTree
+
+The `SyntaxTree` plugin is responsible for, well creating the syntax tree. The phrase "syntax tree" refers to the data structure of the hierarchically and relationally organized list of objects representing the CSS source code. In basic form the syntax tree can be thought of like this:
+
+- Stylesheet
+    - Rule 1
+        - Selector 1
+        - Selector 2
+        - Declaration Block
+            - Declaration 1
+            - Declaration 2
+    - Rule 2
+        - ...
+
+Without the `SyntaxTree` plugin registered then processing will essentially just create a stream of `Selector`, `Declaration` and `AtRule` objects only. `Stylesheet` and `Rule` objects will not be created. `Selector` and `Declaration` objects will not be aware of their relationship or order with respect to other `Selector` and `Declaration` objects. In order to utilize this information a `SyntaxTree` plugin instance must be registered.
+
+Plugins that depend on this information will register the dependency themselves and you will not have to worry about it. However in some cases you may want to get direct access to the tree itself
+
+```java
+SyntaxTree tree = new SyntaxTree();
+List<Plugin> validation = Validation.normal();
+
+Omakase.source(input)
+    .request(validation)
+    .request(tree)
+    .process();
+
+Stylesheet stylesheet = tree.stylesheet();
+System.out.println("#statements = " + stylesheet.statements().size());
+```
+
+#### AutoRefiner
+
+The `AutoRefiner` plugin is responsible automatically refining `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`). 
+
+It is important to realize that unless refinement occurs, the unrefined syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until `#refine()` is called on that selector instance. The `AutoRefiner` plugin can handle automatically calling the `#refine()` method on any and everything is refinable, thus enabling this additional level of syntax validation across the board. 
+
+```java
+AutoRefiner all = new AutoRefiner().all(); // refine everything
+AutoRefiner selectors = new AutoRefiner().selectors(); // refine all selectors
+AutoRefiner declarations = new AutoRefiner().declarations(); // refine all declarations
+```
+
+Many plugins will automatically register an `AutoRefiner` anyway, but it's important to register it yourself if you need to ensure that the unrefined objects are validated. 
+
+Note that there are some cases when you don't need auto-refinement. For example, if you have already validate the CSS content during a build step, but now you are parsing the source code again in production to change a few dynamic values.
 
 ### Creating custom plugins
 
@@ -86,6 +209,10 @@ TODO
 TODO
 
 In some cases you may want to parse some CSS code, store it off, and conditionally parse it again (and again).
+
+### Annotations and comments
+
+TODO
 
 ### Using built-in preprocessor plugins
 
@@ -164,9 +291,11 @@ Currently tests are built with junit 4 and [fest assertions](https://code.google
 
 Fest may be new to you, but it's quite simple and easy to get the hang of. If you have used hamcrest before then it's something like that. Basically it's a library of matchers and assertions. The actual assertions are fluent and look something like this:
 
-    assertThat(someValue).isTrue();
-    assertThat(someCollection).hasSize(3);
-    assertThat(someCollection).containsExactly(value1, value2, value3);
+```java
+assertThat(someValue).isTrue();
+assertThat(someCollection).hasSize(3);
+assertThat(someCollection).containsExactly(value1, value2, value3);
+```
 
 This makes the tests more readable and also provides much more useful error messages out the box.
 
@@ -178,7 +307,7 @@ There are several enums such as `Keyword.java` that contain values that will ine
 
 ### Scripts
 
-You can run some utilty classes or perf tests by using the scripts under `bin`. For example
+You can run some utility classes or perf tests by using the scripts under `bin`. For example
 
     bin/run.sh
 
@@ -208,7 +337,7 @@ The project requires _Java 7_, _git_ and _maven_. The general architecture of th
 
 ### AST Objects
 
-POJOs with getters and setters. In most cases no validation (validation should be done with plugins intead for greater flexibility).
+POJOs with getters and setters. In most cases no validation (validation should be done with plugins instead for greater flexibility).
 
 ### Plugins
 

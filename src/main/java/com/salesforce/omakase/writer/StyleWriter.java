@@ -216,8 +216,9 @@ public class StyleWriter implements DependentPlugin {
      * StyleWriter}.
      * <p/>
      * <b>Important:</b> This method is for writing disjoint units only. Examples would be for usage in test classes or in cases
-     * where you are operating on a single CSS snippet as opposed to a whole CSS source. Most of the time the method you want is
-     * {@link #write(Writable, StyleAppendable)}, passing in the same {@link StyleAppendable} that you were given.
+     * where you are operating on a single CSS snippet as opposed to a whole CSS source. If you are implementing a syntax unit's
+     * write method then most of the time the method you want to use is {@link #write(Writable, StyleAppendable)}, passing in the
+     * same {@link StyleAppendable} that you were given.
      * <p/>
      * As this is for writing snippets, it bypasses the {@link Writable#isWritable()} check.
      *

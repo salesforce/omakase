@@ -29,6 +29,8 @@ public interface DependentPlugin extends Plugin {
     /**
      * This method will be called just before source code processing begins.
      * <p/>
+     * Not intended for consumer use. Do not call directly.
+     * <p/>
      * The main purpose of this method is to allow you to specify a dependency on and/or configure another {@link Plugin}. In many
      * cases a dependency on {@link SyntaxTree} or {@link AutoRefiner} is required. See the comments on {@link Plugin} for more
      * details.
