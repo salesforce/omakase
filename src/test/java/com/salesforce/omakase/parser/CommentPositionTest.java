@@ -59,7 +59,6 @@ public class CommentPositionTest {
         Omakase.source(SRC).request(refinement).request(syntaxTree).process();
         this.stylesheet = syntaxTree.stylesheet();
         this.rule = Iterables.get(stylesheet.statements(), 0).asRule().get();
-        System.out.println(syntaxTree.stylesheet());
     }
 
     @Test
