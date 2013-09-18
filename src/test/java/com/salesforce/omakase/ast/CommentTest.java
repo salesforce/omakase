@@ -33,6 +33,11 @@ public class CommentTest {
     }
 
     @Test
+    public void isWritable() {
+        assertThat(new Comment("test").isWritable()).isTrue();
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.verbose();
