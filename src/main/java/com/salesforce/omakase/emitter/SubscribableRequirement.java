@@ -33,14 +33,14 @@ public enum SubscribableRequirement {
     /** requires the {@link SyntaxTree} plugin */
     SYNTAX_TREE("SyntaxTree"),
 
-    /** Refine must be called on {@link Selector}s, e.g., with {@link AutoRefiner#selectors()} */
+    /** refine must be called on {@link Selector}s, e.g., with {@link AutoRefiner#selectors()} */
     REFINED_SELECTOR("Selector#refine"),
 
-    /** Refine must be called on {@link Declaration}s, e.g., with {@link AutoRefiner#declarations()} */
+    /** refine must be called on {@link Declaration}s, e.g., with {@link AutoRefiner#declarations()} */
     REFINED_DECLARATION("Declaration#refine"),
 
     /** Requires special conditions to be broadcasted */
-    SPECIAL("Under certain conditions");
+    SPECIAL("Under certain conditions*");
 
     private final String description;
 

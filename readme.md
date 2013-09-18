@@ -12,9 +12,9 @@ The two main goals of Omakase are speed and flexibility.
 
 ### Focus on speed
 
-Omakase is written with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional needs of runtime-level usage.
+Omakase is written with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional sensitivities of runtime-level performance.
 
-2-level parsing accounts for various scenarios and use-cases. The first level separates the source code into selectors and declarations only. The (optional or targeted) second level can be conditionally applied to specific selectors and declarations or all of them depending on applicability. 
+Part of the speed gains come from a 2-level parsing strategy. 2-level parsing accounts for various scenarios and use-cases. The first level separates the source code into selectors and declarations only. The (optional or targeted) second level can be conditionally applied to specific selectors and declarations or all of them depending on applicability. 
 
 ### Focus on flexibility
 
@@ -22,18 +22,20 @@ Omakase is a network of *plugins*. Plugins can subscribe to specific CSS syntax 
 
 ### Better error messaging
 
-Because Omakase doesn't use a generic parser generator, the error messages are all CSS specific and sometimes easier to understand.
+Because Omakase doesn't use a generic parser generator, the error messages are all CSS specific and often easier to understand.
 
 ### Awesome standard plugins
 
-Omakase comes with some nifty plugins out of the box that mirror the often-touted "CSS Preprocessor" functionality.
+Omakase comes with some nifty plugins out of the box that mirror often-touted _CSS Preprocessor_ functionality.
 
-- Theme variables
-- Automatic vendor prefixing
-- right-to-left swapping
-- CSS annotations
+TODO finish 
+
 - mixins
+- right-to-left swapping
+- automatic vendor prefixing
+- CSS annotations
 - custom functions
+- theme variables(?)
 - url cache busting for images
 
 Usage
@@ -92,13 +94,15 @@ TODO
 Subscribable Syntax Units
 -------------------------
 
+Following is the list of all supported syntax types that you can subscribe to in `@Rework`, `@Validate` and `@PreProcess` annotated methods. Keep in mind that many syntax units require _refinement_ or the `SyntaxTree` plugin before they will be delivered. More information on this is available in the Usage section above.
+
 <pre>
     Name                        Description                                               Enablement / Dependency     Type
     -------------------------   -------------------------------------------------------   -------------------------   ---------------
 01: Refinable                   raw syntax that can be further refined                    Automatic                   interface
 02: Statement                   rule or at-rule                                           SyntaxTree                  interface
-03: Syntax                      parent interface of all subscribable units                Automatic                   interface
-04: OrphanedComment             A comment unassociated with any syntax unit               Under certain conditions    class
+03: Syntax                      parent interface of all subscribable units                Under certain conditions*   interface
+04: OrphanedComment             A comment unassociated with any syntax unit               Under certain conditions*   class
 05: Rule                        (no description)                                          SyntaxTree                  class
 06: Stylesheet                  (no description)                                          SyntaxTree                  class
 07: AtRule                      (no description)                                          Automatic                   class
@@ -111,7 +115,7 @@ Subscribable Syntax Units
 14: NumericalValue              individual numerical value                                Declaration#refine          class
 15: StringValue                 individual string value                                   Declaration#refine          class
 16: TermList                    default, generic property value                           Declaration#refine          class
-17: SelectorPart                parent interface for all selector segments                Selector#refine             interface
+17: SelectorPart                group interface for all selector segments                 Selector#refine             interface
 18: SimpleSelector              parent interface for simple selectors                     Selector#refine             interface
 19: AttributeSelector           attribute selector segment                                Selector#refine             class
 20: ClassSelector               class selector segment                                    Selector#refine             class
@@ -126,6 +130,11 @@ Subscribable Syntax Units
 Generated by SubscribableSyntaxTable.java
 </pre>
 
+**Notes:**
+
+* A subscription to `Syntax` will depend on which concrete syntax classes are enabled. To get _every_ syntax unit then utilize `AutoRefiner#all`.
+* Some orphaned comments will only be delivered if selectors and declarations are refined.
+
 Development and Contribution
 ----------------------------
 
@@ -133,7 +142,7 @@ Before checking *anything* in, setup your IDE to conform to project standards. S
 
 As of right now the (strongly) preferred IDE for contribution is intellij IDEA. This is mainly because the existing source code and style closely conforms to the idea settings included in the project. If you use eclipse or something else then be sure to following the existing coding conventions manually if need be.
 
-Once you get everything set up, the Project Architecture section (found below) so you can start to get an idea of how things work and are organized.
+Once you get everything set up, read the Project Architecture section (found below) so you can start to get an idea of how things work and are organized.
 
 ### Building
 
@@ -143,11 +152,11 @@ The project relies on the following technologies:
 2. java 7 (make sure both the IDE and maven are setup to use it) 
 3. maven 3+
 
-run `mvn clean install` to get things going from the command line. It should build and run tests successfully. Afterwards you can import the maven projects into your IDE and go from there.
+run `mvn clean install` to get things going from the command line. It should build and run tests successfully. Afterwards you can import the maven project into your IDE and go from there.
 
 ### Dependencies
 
-Non-test dependencies include Google's Guava library and Logback (used for logging). Dependencies shouldn't really increase beyond that as one of the goals is simplicity and self-containment.
+Non-test dependencies include Google's **Guava** library and **Logback** (used for logging). Dependencies shouldn't really increase beyond that as one of the goals is simplicity and self-containment.
 
 ### Tests
 
@@ -191,7 +200,7 @@ The project requires _Java 7_, _git_ and _maven_. The general architecture of th
 3. **Plugins** - Observers that can subscribe to any AST object for rework or validation.
 4. **Broadcasters and Emitter** - The bridge between parsers and plugins.
 5. **Writers** - Outputs parsed CSS code.
-6. **ErrorHandlers** - Managers errors encountered when parsing CSS source code.
+6. **ErrorHandlers** - Manages errors encountered when parsing CSS source code.
 
 ### Parsers
 

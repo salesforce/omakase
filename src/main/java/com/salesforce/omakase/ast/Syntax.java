@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.Description;
 import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.emitter.SubscribableRequirement;
 import com.salesforce.omakase.writer.Writable;
 
 import java.util.List;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author nmcwilliams
  */
 @Subscribable
-@Description("parent interface of all subscribable units")
+@Description(value = "parent interface of all subscribable units", broadcasted = SubscribableRequirement.SPECIAL)
 public interface Syntax extends Writable {
     /**
      * The line number within the source where this {@link Syntax} unit was parsed.
