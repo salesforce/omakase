@@ -47,8 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 /**
@@ -119,13 +118,13 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     /**
-     * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and single {@link Term} value.
+     * Creates a new instance of a {@link Declaration} with the given {@link Property} and single {@link Term} value.
      * <p/>
      * This should be used for dynamically created declarations.
      * <p/>
      * Example:
      * <pre>
-     * {@code new Declaration(Property.ZOOM, NumericalValue.of(1))}
+     * {@code new Declaration(Property.ZOOM, NumericalValue.of(1));}
      * </pre>
      *
      * @param propertyName
@@ -135,6 +134,26 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      */
     public Declaration(Property propertyName, Term singleValue) {
         this(PropertyName.using(propertyName), TermList.singleValue(singleValue));
+    }
+
+    /**
+     * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and single {@link Term} value.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code PropertyName name = PropertyName.using("new-prop");}
+     * {@code new Declaration(name, NumericalValue.of(1));}
+     * </pre>
+     *
+     * @param propertyName
+     *     The property name.
+     * @param singleValue
+     *     The single {@link Term}.
+     */
+    public Declaration(PropertyName propertyName, Term singleValue) {
+        this(propertyName, TermList.singleValue(singleValue));
     }
 
     /**

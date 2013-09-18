@@ -50,6 +50,7 @@ Parsing is simple. All parsing starts with the `Omakase` class. The CSS source i
 ```java
 Omakase.source(input).process();
 ```
+
 However this is not very useful in of itself. Usually you will register various plugins according to your needs.
 
 The most basic principle to understand when using Omakase is that nearly everything is organized into a set of _plugins_. Need a syntax tree? Add the `SyntaxTree` plugin. Need to output the processed code in compressed or dev mode format? Register a `StyleWriter` plugin. Want some validation or linting? Add the applicable plugins.
@@ -84,7 +85,7 @@ Omakase.source(input)
 StringBuilder builder = new StringBuilder();
 String out = verbose.write(builder);
 ```
-
+joo
 By default, CSS is written out in _inline_ mode. Other availables modes include _verbose_ and _compressed_. _Verbose_ mode will output newlines, spaces, comments, etc... _Inline_ mode will write each rule on a single line. _Compressed_ mode will eliminate as many characters as possible, including newlines, spaces, etc...
 
 ```java
@@ -133,7 +134,7 @@ When specifying plugins there are important details to keep in mind:
 - Plugins methods of the same subscription type (preprocess, rework, or validate) will be executed in the order that the class is registered.
 - `@PreProcess` annotated methods are executed first, then `@Rework` methods, and finally `@Validate` methods. Essentially this means that all rework will happen before validation, regardless of the order in which the plugins are registered. However if "Plugin A" is registered before "Plugin B" then "Plugin A"'s rework will execute before "Plugin B"'s, and likewise for validation.
 
-There are **two** standard plugins that you need to be aware of, even if you don't create any custom plugins yourself.
+There are **two** particular standard plugins that you need to be aware of, even if you don't create any custom plugins yourself.
 
 #### SyntaxTree
 
@@ -168,7 +169,7 @@ System.out.println("#statements = " + stylesheet.statements().size());
 
 #### AutoRefiner
 
-The `AutoRefiner` plugin is responsible automatically refining `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`). 
+The `AutoRefiner` plugin is responsible for automatically refining `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`). 
 
 It is important to realize that unless refinement occurs, the unrefined syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until `#refine()` is called on that selector instance. The `AutoRefiner` plugin can handle automatically calling the `#refine()` method on any and everything is refinable, thus enabling this additional level of syntax validation across the board. 
 
@@ -184,17 +185,258 @@ Note that there are some cases when you don't need auto-refinement. For example,
 
 ### Creating custom plugins
 
-TODO
+In addition to the standard library plugins, you can create and register your own custom plugins as well. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules. 
+
+Plugins are essentially plain java objects that implement one of the _plugin interfaces_ and define one or more _subscription methods_ to a particular AST object (e.g., `Selector` or `Declaration`). The subscription method does the actual rework or validation as appropriate.
+
+Plugins are registered exactly the same as as any of the standard built-in plugins such as `StyleWriter` or `SyntaxTree`.
 
 See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
 
+#### Plugin interfaces
+
+To get started, a plugin must first implement one of the _plugin interfaces_, listed as follows:
+
+- **Plugin** - the most basic plugin; essentially just a marker interface
+- **DependentPlugin** - for plugins that have dependencies on other plugins
+- **BroadcastingPlugin** - for plugins that need access to a broadcaster
+- **PreProcessingPlugin** - for plugins that need notification before and after _preprocessing_
+- **PostProcessingPlugin** for plugins that need notification after all processing has completed
+
+Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
+
 #### Custom rework
 
-TODO
+The term _rework_ refers to the process of changing the processed CSS source code, e.g., changing a class name, adding a declaration, removing a rule, etc... Omakase's rework capabilities allow you to easily change nearly any aspect of the CSS. You can add, change or remove selectors, add, change or remove declarations, add, change or remove rules, and... you get the picture. 
+
+Each AST object contains setters and getters for working with its values. In addition there are several utility classes to make everything as convenient as possible. For Omakase, reworking the CSS tree is a first-class operation and is fully supported.
+
+Here is an example of a simple rework operation to prefix every class with a class name called "myPrefix"
+
+```java
+public class PrefixAllSelectors implements Plugin {
+    @Rework
+    public void prefixClass(Selector selector) {
+        // ensure the selector is segmented into the individual simple selector parts
+        selector.refine();
+
+        // create a new class simple selector
+        ClassSelector prefix = new ClassSelector("myPrefix");
+
+        // add the class simple selector to the beginning
+        selector.parts().prepend(prefix);
+    }
+}
+```
+
+Notice the following details:
+
+- It implements `Plugin`
+- It has one subscription method with the `@Rework` annotation
+- The subscription method has one argument, which is the AST object to be reworked
+
+This is the general pattern of performing rework. The class adds as many methods as desired, each with the `@Rework` annotation and a single argument which is the type of syntax unit to rework. The method will be automatically invoked by the framework, allowing you to perform any operations on the given unit.
+
+Actually this example is not quite complete. This plugin should actually be a `DependentPlugin` because it cares about the order of the selectors (it uses the `prepend` method). The class should look like this
+
+```java
+public class PrefixAllSelectors implements DependentPlugin {
+    @Override
+    public void dependencies(PluginRegistry registry) {
+        registry.require(SyntaxTree.class);
+        registry.require(AutoRefiner.class).selectors();
+    }
+
+    @Rework
+    public void prefixClass(Selector selector) {
+        // create and add a new class selector to the beginning
+        selector.parts().prepend(new ClassSelector("myPrefix"));
+    }
+}
+```
+
+By implementing `DependentPlugin` instead, the `#dependencies` method will be called automatically, giving us a chance to declare any plugins that our code requires.
+
+First we require a `SyntaxTree`, because without it our call to `#prepend` won't work. Second, since we require an `AutoRefiner` and have it automatically refine all `Selector` objects. We want to do this because we can't modify a `Selector` until it is refined anyway. 
+
+See the "Dependent plugins" section below for more details on dependencies. For more examples on performing rework see the `ReworkTest.java` class. 
+
+##### Dynamic AST creation and modification
+
+Here are some code examples illustrating some common operations during rework
+
+```java
+// create a new selector
+Selector selector = new Selector(new ClassSelector(".test"));
+
+// another example
+IdSelector theId = new IdSelector("main");
+ClassSelector theClass = new ClassSelector("inner");
+Selector selector = new Selector(theId, Combinator.descendant(), theClass);
+
+// append a simple selector part to a selector
+selector.parts().append(new ClassSelector("another-class"));
+
+// append a selector to a rule
+rule.selectors().append(myNewSelector);
+
+// alternative to above
+someSelector.append(myNewSelector);
+
+// change a value on a class selector
+myClassSelector.name("the-new-name");
+
+// create a new declaration
+Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+
+// another example
+PropertyName name = PropertyName.using("new-prop");
+Declaration declaration = new Declaration(name, KeywordValue.of(Keyword.NONE));
+
+// another example
+NumericalValue val1 = NumericalValue.of(1, "px");
+NumericalValue val2 = NumericalValue.of(5, "px");
+PropertyValue value = TermList.ofValues(TermOperator.SPACE, val1, val2);
+Declaration declaration = new Declaration(Property.DISPLAY, value);
+
+PropertyName prop = PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
+Declaration declaration = new Declaration(prop, KeywordValue.of(Keyword.NONE));
+
+// append a declaration to a rule
+rule.declarations().append(myNewDeclaration);
+
+// create a new rule
+Rule rule = new Rule();
+rule.selectors().append(new Selector(new ClassSelector("new")));
+rule.declarations().append(new Declaration(Property.COLOR, HexColorValue.of("#fff")));
+rule.declarations().append(new Declaration(Property.FONT_SIZE, NumericalValue.of(1).decimalValue(5).unit("em")));
+
+// check if a declaration is for a specific property name
+if (declaration.isProperty(Property.DISPLAY)) {...}
+if (declaration.isProperty("new-prop")) {...}
+
+// check if a declaration has a value
+PropertyValue value = declaration.propertyValue();
+
+Optional<KeywordValue> keyword = Value.asKeyword(value);
+if (keyword.isPresent()) {...}
+
+// use the method appropriate to what value you think it is (say, based on the property name)
+Optional<HexColorValue> color = Value.asHexColor(value);
+Optional<NumericalValue> number = Value.asNumerical(value);
+Optional<StringValue> string = Value.asString(value);
+Optional<TermList> termList = Value.asTermList(value);
+
+// change a property value
+Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue());
+if (keyword.isPresent()) {
+    keyword.get().keyword(Keyword.NONE);
+
+}
+
+// remove (detach) a selector, declaration, rule, etc...
+someSelector.detach();
+someDeclaration.detach();
+someRule.detach();
+
+// for more examples see the many unit tests
+```
+Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. 
 
 #### Custom validation
 
-TODO
+Besides rework, you can also register _subscription methods_ to perform validation and linting. Just like rework, you declare a method with the first parameter being the type of syntax unit you would like to validate. In addition there is a second parameter which is the `ErrorManager`.
+
+Here is an example of a class with two validation subscription methods
+
+```java
+public class Validations implements Plugin {
+    @Validate
+    public void validateRelativeFonts(Declaration declaration, ErrorManager em) {
+        if (declaration.isDetached()) return;
+        if (!declaration.isProperty(Property.FONT_SIZE)) return;
+
+        Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue());
+        if (!number.isPresent()) return;
+
+        if (number.get().unit().equals("px")) {
+            em.report(ErrorLevel.FATAL, declaration, "Font sizes must use relative units");
+        }
+    }
+
+    @Validate
+    public void validateIncludesUnprefixed(Declaration declaration, ErrorManager em) {
+        if (declaration.isDetached()) return;
+
+        PropertyName propertyName = declaration.propertyName();
+
+        if (propertyName.isPrefixed()) {
+            boolean found = false;
+            String expected = propertyName.unprefixedName();
+
+            for (Declaration d : declaration.group().get()) {
+                if (d.isProperty(expected)) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                em.report(ErrorLevel.WARNING, declaration, "Prefixed declaration without unprefixed version");
+            }
+        }
+    }
+}
+```
+
+Keep in mind that all validators runs after the rework phase has been completed. Validation methods should **not** change any aspect or content of the objects they are validating. They should only check values and reports errors as applicable.
+
+#### Dependent plugins
+
+As mentioned above, many plugins, especially ones with `@Rework` will need to register dependencies on other plugins. 
+
+You must have a dependency on `SyntaxTree` if you are subscribing to `Rule` or `Stylesheet` objects. You also have this dependency if you do any kind of checking or operation that the relationship of units between one another, for example `prepend`, `append`, `isFirst`, `isLast`, and so on. In other words, all operations that utilize `SyntaxCollection` objects. 
+
+You also will have a dependeny on `AutoRefiner` in many cases where you have subscriptions to syntax unit types more specific than `Selector` and `Declaration`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below. 
+
+If your plugin only needs refined selector units then `AutoRefiner#selectors()` will suffice, or `AutoRefiner#declarations()` for declarations. To nab everything then you can use `AutoRefiner#all()`.
+
+Here is an example of a plugin with dependencies
+
+```java
+public class Dependent implements DependentPlugin {
+    @Override
+    public void dependencies(PluginRegistry registry) {
+        registry.require(SyntaxTree.class);
+        registry.require(AutoRefiner.class).selectors();
+    }
+}
+```
+
+The `#require` method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case. 
+
+You can also require your own custom plugins by using the `#require(Class, Suppier)` method.
+
+There is another, more performant alternative to using `AutoRefiner`. You can instead subscribe to the high-level type, such as `Declaration`. You can check some information on the declaration first, such as `Declaration#isProperty` or check for an annotation on the declaration. If present then you can proceed to call `Declaration#refine`, which will automatically trigger any subscriptions to the more specific syntax unit types parsed within that declaration instance. This way you can avoid uncessarily refining declarations that you have no interest in.
+
+#### Performing both rework and validation
+
+Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation does not need to be separated out in to multiple classes.
+
+You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same type for the exact same operation (e.g., rework or validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order. 
+
+#### Subscribable types
+
+Not only can you subscribe to concrete types such as `ClassSelector` and `IdSelector`, you can also subscribe to higher-level interfaces such as `Statement`, `Refinable`, `SimpleSelector` or even the top-level `Syntax` interface.
+
+Subscribing to an interface type will allow you to receive all instances of that type, which can be useful in certain scenarios. For example, `AutoRefiner` only has one subscription to `Refinable` instead of having to add a method for `Declaration`, `Selector`, etc...
+
+Within a particular class, the more specifically-typed subscription will be delivered before the more generally-typed subscriptions. For example, in a class with subscriptions to `ClassSelector`, `SimpleSelector` and `Syntax`, the methods will always be invoked in that exact order. 
+
+See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
+
+#### Base plugin
+
+You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin.
 
 ### Custom error handling
 
