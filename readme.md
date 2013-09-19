@@ -432,6 +432,21 @@ See the "Subscribable Syntax Units" section below for the definitive list of all
 
 You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin.
 
+
+#### Observe and PreProcess
+
+Besides `@Rework` and `@Validate`, there are two more annotations that can be used to make a subscription method.
+
+**Observe**
+
+`@Observe` can be used in place of `@Rework` when your intention is to simply utilize information from the AST object and you do not intend to make any changes. In terms of execution order, `@Observe` and `@Rework` are equivalent. Currently the only difference `@Observe` makes is providing a better description of what the method intends to do.
+
+**PreProcess**
+
+Methods can be annotated with `@PreProcess` as well. Methods with this annotation will be invoked before all subscription methods of *any other type* (rework, validate, etc...).
+
+Generally speaking, this is not the annotation to use in most cases. It's more so utilized internally by the framework. In particular, it will only be called on units within the original CSS source code, not for dynamically created syntax units.
+
 ### Custom error handling
 
 The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily guess will throw an exception on the first fatal error that is reported. For warnings it will only log a message. 
@@ -653,20 +668,56 @@ The project requires _Java 7_, _git_ and _maven_. The general architecture of th
 6. **ErrorHandlers** - Manages errors encountered when parsing CSS source code.
 
 ### Parsers
+**Key Classes** `Token` `Tokens` `Stream` `Parser` `ParserFactory`
 
-2-level parsing.
+Parsers are simple java objects that know how to parse specific aspects of CSS syntax. Parsers do not maintain any state, and only one instance of each parser is instantiated and stored in `ParserFactory`. 
+
+Parsers employ a 2-level parsing strategy. The first level will comb through the CSS source and extract the at-rules, selectors and declarations (and no more). Any errors at this grammatical level will be caught immediately (for example, a missing curly bracket to close a rule). However any errors at a more specific level (e.g., within a selector or within a declaration) will not be caught until that particular object is refined. 
+
+The second level occurs individually per instance, e.g., each particular `Selector` or `Declaration` instance. When `Refinable#refine` is called on the instance, it will utilize parsers to parse its raw syntax snippet, potentially catching syntax errors along the way.
+
+It's important to understand that the second level may or may not be executed or may only be executed on certain instances. Also the second level for one selector instance may occur at a different time than another selector instance.
+
+This process allows us to be more specific about what actually gets parsed. For example, on a first parsing pass we may want to parse and validate everything, but on a second pass we may not care about fully parsing selectors anymore. This pinpointed level of detail allows for better performance, especially important in production scenarios. 
+
+(However, even when doing away with this separation and always parsing and refining everything every time, Omakase still executes faster than other leading open-source CSS parsers.)
+
+When a `Parser` has succesfully parsed some content, it will construct the appropriate AST object and give it to the `Broadcaster`. Ultimately, the `Broadcaster` will pass the AST object to the registered subscription methods for that particular AST object type.
 
 ### AST Objects
+**Key Classes** `Syntax` `Refinable` `Groubable` `SyntaxCollection` `Selector` `Declaration`
 
-POJOs with getters and setters. In most cases no validation (validation should be done with plugins instead for greater flexibility).
+AST (Abstract Syntax Tree) objects are simple data objects representing various aspects o CSS syntax, e.g., selectors, declarations, etc... AST objects generally have getters and setters for various values. AST objects are also responsible for writing their own content out when a `StyleWriter` asks for it.
+
+AST objects generally contain little to no validation logic. Most validation is written in the form of a `Plugin` that subscribes to the unit it is going to validate. 
 
 ### Plugins
+**Key Classes** `Plugin` `DependentPlugin`
+
+A `Plugin` subscribes to one or more AST objects (one per method) to perform rework or validation. Methods on the plugin are annotated with `@Rework` or `@Validate` annotations as appropriate. These methods are known as subscription methods. Each subscription method is subscribed to one particular AST object type via its parameter. This parameter is how we know which methods to invoke when various AST objects are sent to be broadcasted.
+
+Plugins are registered during parser setup via `Omakase#request` or `Omakase#add`. Plugins can and often do have dependencies on each other, which can be registered by implementing the `DependentPlugin` interface. 
+
+The general Omakase philosophy is that much of the internal logic as well as all of the consumer logic is organized into a set of plugins. For example, the `SyntaxTree` object is a plugin which simply listens for `Selector`, `Declaration` and `AtRule` objects and constructs the full syntax tree from there.
 
 ### Broadcasters
+**Key Classes** `Broadcaster` `Emitter` `AnnotationScanner` `Subscription`
+
+A `Broadcaster` is something that handles broadcasts of various AST objects. You can think of this as the _observer_ pattern, or the _event listener_ pattern, where the AST object itself is the event, the plugins are the listeners, and the broadcasters are responsible for receiving the AST objects from the parsers and delivering it to all registered subscriptions. 
+
+However, broadcasters do no necessarily deliver the AST objects right away. The `Broadcaster` interface utilizes the _decorator_ pattern (think `Reader`, `BufferedReader`, etc...). That is, broadcasters can be wrapped inside of each other, relaying broadcasters to their inner broadcasters. For example, a `QueingBroadcaster` may be wrapped around an `EmittingBroadcaster`. The `QueingBroadcaster` may hold on to all of its broadcasts until a certain condition has been verified. At the bottom of the chain is almost always the `EmittingBroadcaster`, which is the one responsible for using an `Emitter` to actually invoke the subscription methods.
 
 ### Writers
+**Key Classes** `Writable` `StyleWriter` `StyleAppendable`
 
-### ErrorHandlers
+Writers are fairly simple... they are responsible for taking the parsed `SyntaxTree` and writing it out as a CSS source code string.
+
+### ErrorManagers
+**Key Classes** `ErrorManager`
+
+Error managers are responsible for dealing with errors during processing, including parser errors or errors generated from a validator plugin.
+
+### Notes
 
 Omakase is not a thread-safe parser. That is, things will most definitely blow up if you try to reuse the same AST objects or SyntaxTree in multiple threads.
 
