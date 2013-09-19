@@ -120,14 +120,14 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
     @Test
     public void errorsOnMissingOpeningBracket() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find opening bracket");
+        exception.expectMessage("Expected to find opening brace");
         parse(".class \n ");
     }
 
     @Test
     public void errorsOnMissingClosingBracket() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing bracket");
+        exception.expectMessage("Expected to find closing brace");
         parse(".class \n { color: red");
     }
 }

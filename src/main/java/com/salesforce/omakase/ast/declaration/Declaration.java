@@ -354,7 +354,7 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
 
     /** Refines just the property name */
     private PropertyName refinePropertyName() {
-        if (!isRefined()) {
+        if (!isRefined() && propertyName == null) {
             propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
         }
         return propertyName;

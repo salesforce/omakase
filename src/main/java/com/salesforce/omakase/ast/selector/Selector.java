@@ -126,12 +126,12 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
     }
 
     /**
-     * Gets the individual parts of the selector.
+     * Gets the individual parts of the selector. The selector will be automatically refined if not done so already.
      *
      * @return The list of {@link SelectorPart} members.
      */
     public SyntaxCollection<Selector, SelectorPart> parts() {
-        return parts;
+        return refine().parts;
     }
 
     @Override

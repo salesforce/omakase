@@ -212,7 +212,7 @@ public class DeclarationTest {
     @Test
     public void refineThrowsErrorIfUnparsableContent() {
         RawSyntax name = new RawSyntax(2, 3, "display");
-        RawSyntax value = new RawSyntax(2, 5, "none !!!!!");
+        RawSyntax value = new RawSyntax(2, 5, "none ^^^^^^");
 
         exception.expect(ParserException.class);
         exception.expectMessage(Message.UNPARSABLE_VALUE.message());
