@@ -428,16 +428,38 @@ public final class Stream {
      * <p/>
      * As with {@link #optional(Token)}, if the current character matches the index will be advanced by one.
      *
-     * @param <T>
-     *     Type of the enum.
      * @param klass
      *     Enum class.
+     * @param <T>
+     *     Type of the enum.
      *
      * @return The matching enum instance, or {@link Optional#absent()} if none match.
      */
-    public <T extends Enum<T> & TokenEnum<?>> Optional<T> optionalFromEnum(Class<T> klass) {
-        for (T constant : klass.getEnumConstants()) {
-            if (optionallyPresent(constant.token())) return Optional.of(constant);
+    public <T extends Enum<T> & TokenEnum> Optional<T> optionalFromEnum(Class<T> klass) {
+        for (T member : klass.getEnumConstants()) {
+            if (optionallyPresent(member.token())) return Optional.of(member);
+        }
+        return Optional.absent();
+    }
+
+    /**
+     * Similar to {@link #optional(Token)} and {@link #optionalFromEnum(Class)}, except this works with {@link ConstantEnum}s,
+     * checking each member of the given enum (in the declared order) for a matching constant.
+     * <p/>
+     * The main difference between this and {@link #optionalFromEnum(Class)} is that this is for enums that have more than one
+     * character to match at a time. Matching a constant as opposed to a single character is less performant, thus if possible
+     * enums should implement {@link TokenEnum} over {@link ConstantEnum}.
+     *
+     * @param klass
+     *     Enum class.
+     * @param <T>
+     *     Type of the enum.
+     *
+     * @return The matching enum instance, or {@link Optional#absent()} if none match.
+     */
+    public <T extends Enum<T> & ConstantEnum> Optional<T> optionalFromConstantEnum(Class<T> klass) {
+        for (T member : klass.getEnumConstants()) {
+            if (readConstant(member.constant())) return Optional.of(member);
         }
         return Optional.absent();
     }
@@ -716,9 +738,38 @@ public final class Stream {
     }
 
     /**
-     * Reads an ident token.
+     * Reads a constant string at the current position.
      * <p/>
-     * XXX the spec allows for non ascii and escaped characters here as well.
+     * If a match is found the stream is advanced to the end of the constant value. Otherwise the current position will remain
+     * unchanged. The constant must be matched exactly -- case does matter.
+     * <p/>
+     * If possible this method should be avoided as it's less performant than using a {@link Token} based method.
+     *
+     * @param constant
+     *     The exact content to match.
+     *
+     * @return true if the constant was matched.
+     */
+    public boolean readConstant(String constant) {
+        int constantLength = constant.length();
+
+        // if the length is longer than what we have then we know it's not there
+        if (constantLength > (length - index)) return false;
+
+        // check if the next exact number of characters match the constant
+        String snippet = source.substring(index, index + constantLength);
+        if (!snippet.equals(constant)) return false;
+
+        // we have a match so move the index forward
+        forward(index + constantLength);
+
+        return true;
+    }
+
+    /**
+     * Reads an ident token. If a match is found the current position is advanced to the end of the token.
+     * <p/>
+     * future: the spec allows for non ascii and escaped characters here as well.
      *
      * @return The matched token, or {@link Optional#absent()} if not matched.
      */
@@ -732,6 +783,29 @@ public final class Stream {
             // return the full ident token
             return Optional.of(chomp(Tokens.NMCHAR));
         }
+        return Optional.absent();
+    }
+
+    /**
+     * Reads a value encased in either single or double quotes. If a match is found the current position is advanced to the end of
+     * the string.
+     *
+     * @return The value, excluding the quotation marks.
+     *
+     * @throws ParserException
+     *     if the string is not closed properly.
+     */
+    public Optional<String> readString() {
+        // single quote string
+        if (Tokens.SINGLE_QUOTE.matches(current()) && !isEscaped()) {
+            return Optional.of(chompEnclosedValue(Tokens.SINGLE_QUOTE, Tokens.SINGLE_QUOTE));
+        }
+
+        // double quote string
+        if (Tokens.DOUBLE_QUOTE.matches(current()) && !isEscaped()) {
+            return Optional.of(chompEnclosedValue(Tokens.DOUBLE_QUOTE, Tokens.DOUBLE_QUOTE));
+        }
+
         return Optional.absent();
     }
 

@@ -35,7 +35,14 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * TESTME
  * <p/>
- * TODO Description
+ * Responsible for organizing parsed {@link Selector}s, {@link Declaration}s and {@link AtRule}s into an AST tree.
+ * <p/>
+ * If you want direct access to the {@link Stylesheet} then this plugin must be registered.
+ * <p/>
+ * You also must register this plugin if you are subscribing to {@link Stylesheet} or {@link Rule} AST objects, as they will not
+ * be created outside of this plugin.
+ * <p/>
+ * For more information see the readme file.
  *
  * @author nmcwilliams
  */

@@ -41,10 +41,10 @@ public class StringValueParser extends AbstractParser {
         QuotationMode mode;
         String value;
 
-        if (Tokens.SINGLE_QUOTE.matches(stream.current())) {
+        if (Tokens.SINGLE_QUOTE.matches(stream.current()) && !stream.isEscaped()) {
             mode = QuotationMode.SINGLE;
             value = stream.chompEnclosedValue(Tokens.SINGLE_QUOTE, Tokens.SINGLE_QUOTE);
-        } else if (Tokens.DOUBLE_QUOTE.matches(stream.current())) {
+        } else if (Tokens.DOUBLE_QUOTE.matches(stream.current()) && !stream.isEscaped()) {
             mode = QuotationMode.DOUBLE;
             value = stream.chompEnclosedValue(Tokens.DOUBLE_QUOTE, Tokens.DOUBLE_QUOTE);
         } else {

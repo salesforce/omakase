@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.parser;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
@@ -249,6 +250,22 @@ public class StreamTest {
     public void optionalFromEnumDoesntMatch() {
         Stream stream = new Stream("___abc");
         assertThat(stream.optionalFromEnum(StreamEnum.class).isPresent()).isFalse();
+        assertThat(stream.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void optionalFromConstantEnumMatches() {
+        Stream stream = new Stream("123 abc");
+        Optional<EnumWithConstants> matched = stream.optionalFromConstantEnum(EnumWithConstants.class);
+        assertThat(matched.get()).isSameAs(EnumWithConstants.TWO);
+        assertThat(stream.index()).isEqualTo(3);
+    }
+
+    @Test
+    public void optionalFromConstantEnumDoesntMatch() {
+        Stream stream = new Stream("foobar 123 abc");
+        Optional<EnumWithConstants> matched = stream.optionalFromConstantEnum(EnumWithConstants.class);
+        assertThat(matched.isPresent()).isFalse();
         assertThat(stream.index()).isEqualTo(0);
     }
 
@@ -520,6 +537,62 @@ public class StreamTest {
     }
 
     @Test
+    public void readConstantMatches() {
+        Stream stream = new Stream("abc def ghi");
+        boolean result = stream.readConstant("abc");
+
+        assertThat(result).isTrue();
+        assertThat(stream.index()).isEqualTo(3);
+    }
+
+    @Test
+    public void readConstantMatchesMiddle() {
+        Stream stream = new Stream("abc def ghi");
+        stream.forward(4);
+        boolean result = stream.readConstant("def");
+
+        assertThat(result).isTrue();
+        assertThat(stream.index()).isEqualTo(7);
+    }
+
+    @Test
+    public void readConstantMatchesEnd() {
+        Stream stream = new Stream("abc def ghi");
+        stream.forward(8);
+        boolean result = stream.readConstant("ghi");
+
+        assertThat(result).isTrue();
+        assertThat(stream.eof()).isTrue();
+    }
+
+    @Test
+    public void readConstantDoesntMatchOutOfBounds() {
+        Stream stream = new Stream("abc");
+        boolean result = stream.readConstant("abcd");
+
+        assertThat(result).isFalse();
+        assertThat(stream.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readConstantDoesntMatchInBounds() {
+        Stream stream = new Stream("abc def abc");
+        boolean result = stream.readConstant("abcd");
+
+        assertThat(result).isFalse();
+        assertThat(stream.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readConstantEof() {
+        Stream stream = new Stream("abc");
+        stream.forward(3);
+        boolean result = stream.readConstant("a");
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
     public void readIdentMatches() {
         Stream stream = new Stream("keyword-one");
         assertThat(stream.readIdent().get()).isEqualTo("keyword-one");
@@ -544,6 +617,93 @@ public class StreamTest {
     }
 
     @Test
+    public void readStringAbsent() {
+        Stream stream = new Stream("abc");
+        assertThat(stream.readString().isPresent()).isFalse();
+
+        stream = new Stream("123");
+        assertThat(stream.readString().isPresent()).isFalse();
+
+        stream = new Stream("abc\"123\"");
+        assertThat(stream.readString().isPresent()).isFalse();
+
+        stream = new Stream("abc'123'");
+        assertThat(stream.readString().isPresent()).isFalse();
+
+        stream = new Stream(" \"abc");
+        assertThat(stream.readString().isPresent()).isFalse();
+
+        stream = new Stream(" '123");
+        assertThat(stream.readString().isPresent()).isFalse();
+    }
+
+    @Test
+    public void readStringSingleQuote() {
+        Stream stream = new Stream("'abc'123");
+        Optional<String> matched = stream.readString();
+
+        assertThat(matched.get()).isEqualTo("abc");
+        assertThat(stream.index()).isEqualTo(5);
+    }
+
+    @Test
+    public void readStringDoubleQuote() {
+        Stream stream = new Stream("\"abc\"123");
+        Optional<String> matched = stream.readString();
+
+        assertThat(matched.get()).isEqualTo("abc");
+        assertThat(stream.index()).isEqualTo(5);
+    }
+
+    @Test
+    public void readStringSingleQuoteWithInnerEscapes() {
+        Stream stream = new Stream("'ab\\'c'123");
+        Optional<String> matched = stream.readString();
+
+        assertThat(matched.get()).isEqualTo("ab\\'c");
+        assertThat(stream.index()).isEqualTo(7);
+    }
+
+    @Test
+    public void readStringDoubleQuoteWithInnerEscapes() {
+        Stream stream = new Stream("'ab\\\"c'123");
+        Optional<String> matched = stream.readString();
+
+        assertThat(matched.get()).isEqualTo("ab\\\"c");
+        assertThat(stream.index()).isEqualTo(7);
+    }
+
+    @Test
+    public void readStringMissingClosingSingleQuote() {
+        Stream stream = new Stream("'abc");
+
+        exception.expect(ParserException.class);
+        stream.readString();
+    }
+
+    @Test
+    public void readStringMissingClosingDoubleQuote() {
+        Stream stream = new Stream("'\"abc");
+
+        exception.expect(ParserException.class);
+        stream.readString();
+    }
+
+    @Test
+    public void readStringStartingSingleQuoteIsEcaped() {
+        Stream stream = new Stream("\\'abc");
+        stream.next();
+        assertThat(stream.readString().isPresent()).isFalse();
+    }
+
+    @Test
+    public void readStringStartingDoubleQuoteIsEscaped() {
+        Stream stream = new Stream("\\\"abc");
+        stream.next();
+        assertThat(stream.readString().isPresent()).isFalse();
+    }
+
+    @Test
     public void toStringPositioning() {
         Stream stream = new Stream("a\nbcd");
         stream.next();
@@ -552,7 +712,7 @@ public class StreamTest {
         assertThat(stream.toString()).isEqualTo("a\nb\u00BBcd");
     }
 
-    public enum StreamEnum implements TokenEnum<StreamEnum> {
+    public enum StreamEnum implements TokenEnum {
         ONE(Tokens.ALPHA),
         TWO(Tokens.DIGIT);
 
@@ -565,6 +725,22 @@ public class StreamTest {
         @Override
         public Token token() {
             return token;
+        }
+    }
+
+    public enum EnumWithConstants implements ConstantEnum {
+        ONE("abc"),
+        TWO("123");
+
+        private final String constant;
+
+        EnumWithConstants(String constant) {
+            this.constant = constant;
+        }
+
+        @Override
+        public String constant() {
+            return constant;
         }
     }
 }

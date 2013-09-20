@@ -14,44 +14,43 @@
  * limitations under the License.
  */
 
-/**
+package com.salesforce.omakase.ast.selector;
 
- * ADD LICENSE
- */
-package com.salesforce.omakase.ast.declaration.value;
-
-import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.TokenEnum;
-import com.salesforce.omakase.parser.token.Tokens;
+import com.salesforce.omakase.parser.ConstantEnum;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
+import com.salesforce.omakase.writer.Writable;
 
 import java.io.IOException;
 
 /**
- * An operator, or separator, between {@link Term}s in a {@link TermList}.
+ * Represents the match type in an {@link AttributeSelector}.
  *
  * @author nmcwilliams
  */
-public enum TermOperator implements TermListMember, TokenEnum {
-    /** comma separator */
-    COMMA(Tokens.COMMA, ','),
-    /** slash separator */
-    SLASH(Tokens.FORWARD_SLASH, '/'),
-    /** white space separator */
-    SPACE(Tokens.WHITESPACE, ' ');
+public enum AttributeMatchType implements Writable, ConstantEnum {
+    /** exact attribute match */
+    EQUALS("="),
+    /** attributes with whitespace-separated words, one of which is a specific value */
+    INCLUDES("~="),
+    /** attribute has exact value, or value immediately followed by '-' */
+    DASHMATCH("|="),
+    /** attribute value starts with */
+    PREFIXMATCH("^="),
+    /** attribute value ends with */
+    SUFFIXMATCH("$="),
+    /** attribute value contains */
+    SUBSTRINGMATCH("*=");
 
-    private final Token token;
-    private final char symbol;
+    private final String matcher;
 
-    TermOperator(Token token, char symbol) {
-        this.token = token;
-        this.symbol = symbol;
+    private AttributeMatchType(String matcher) {
+        this.matcher = matcher;
     }
 
     @Override
-    public Token token() {
-        return token;
+    public String constant() {
+        return matcher;
     }
 
     @Override
@@ -61,6 +60,6 @@ public enum TermOperator implements TermListMember, TokenEnum {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        appendable.append(symbol);
+        appendable.append(matcher);
     }
 }

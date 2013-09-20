@@ -34,6 +34,7 @@ public enum Message {
     EXPECTED_VALID_ID("expected to find a valid id name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXPECTED_VALID_CLASS("expected to find a valid class name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     MISSING_AT_RULE_NAME("Expected to find a valid at-rule name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
+    EXPECTED_ATTRIBUTE_NAME("Expected to find the attribute name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXTRANEOUS("Extraneous text found at the end of the source '%s'"),
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_VALUE("Unable to parse remaining declaration value"),
@@ -61,7 +62,8 @@ public enum Message {
     MISSING_OPERATOR_NEAR_COMMENT("In order to place a comment here, please ensure that it is properly surrounded by the " +
         "appropriate operator (.e.g., a space character). Otherwise, this will result in an invalid valid during minification " +
         "when comments are removed."),
-    EXPECTED_IMPORTANT("Expected to find 'important'");
+    EXPECTED_IMPORTANT("Expected to find 'important'"),
+    EXPECTED_ATTRIBUTE_MATCH_VALUE("Expected to find the attribute selector's match value (a string or an identifer)");
 
     private final String message;
 

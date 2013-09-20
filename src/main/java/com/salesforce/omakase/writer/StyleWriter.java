@@ -232,6 +232,7 @@ public class StyleWriter implements DependentPlugin {
      * @throws IOException
      *     If an I/O error occurs.
      */
+    @SuppressWarnings("unchecked")
     public <T extends Writable> String writeSnippet(T writable) throws IOException {
         Class<? extends Writable> klass = writable.getClass();
         StyleAppendable appendable = new StyleAppendable();
@@ -240,6 +241,7 @@ public class StyleWriter implements DependentPlugin {
             // cast is safe as long as the map is guarded by #override
             ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
         } else {
+            // skip isWritable check
             writable.write(this, appendable);
         }
 

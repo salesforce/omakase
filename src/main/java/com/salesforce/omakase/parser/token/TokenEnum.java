@@ -22,15 +22,12 @@ import com.salesforce.omakase.parser.Stream;
 /**
  * For Enums that are members of {@link Syntax} units and are associated with a specific {@link Token}.
  * <p/>
- * In other words, by adding this interface to an Enum it allows it to be easily parsed to the correct Enum constant using {@link
- * Stream#optionalFromEnum(Class)}.
- *
- * @param <E>
- *     The Enum.
+ * In other words, by adding this interface to an Enum it allows a value to be easily parsed to the correct Enum member using
+ * {@link Stream#optionalFromEnum(Class)}.
  *
  * @author nmcwilliams
  */
-public interface TokenEnum<E extends Enum<E>> {
+public interface TokenEnum {
     /**
      * Gets the token represented by the enum constant.
      *

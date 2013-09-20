@@ -19,6 +19,7 @@ package com.salesforce.omakase.plugin.basic;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -58,8 +59,6 @@ import java.util.Set;
  * <p/>
  *   ...(subscription methods)...
  * }<code></pre>
- * <p/>
- * FIXME add at-rules.
  *
  * @author nmcwilliams
  */
@@ -83,6 +82,15 @@ public class AutoRefiner implements Plugin {
      */
     public AutoRefiner declarations() {
         return include(Declaration.class);
+    }
+
+    /**
+     * Specifies that all {@link AtRule}s should be automatically refined.
+     *
+     * @return this, for chaining.
+     */
+    public AutoRefiner atRules() {
+        return include(AtRule.class);
     }
 
     /**

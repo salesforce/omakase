@@ -25,7 +25,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  *
  * @author nmcwilliams
  */
-public enum CombinatorType implements TokenEnum<CombinatorType> {
+public enum CombinatorType implements TokenEnum {
     // ordered by likelihood of occurrence
 
     /** descendant combinator */
