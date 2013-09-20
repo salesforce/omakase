@@ -65,13 +65,11 @@ public final class ParserFactory {
     private static final Parser typeSelector = new TypeSelectorParser();
     private static final Parser universalSelector = new UniversalSelectorParser();
     private static final Parser pseudoSelector = new PseudoSelectorParser();
-    private static final Parser negationSelector = new NegationSelectorParser();
 
     private static final Parser repeatableSelector = classSelector
         .or(idSelector)
         .or(attributeSelector)
-        .or(pseudoSelector)
-        .or(negationSelector);
+        .or(pseudoSelector);
 
     private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
@@ -230,15 +228,6 @@ public final class ParserFactory {
      */
     public static Parser pseudoSelectorParser() {
         return pseudoSelector;
-    }
-
-    /**
-     * Gets the {@link NegationSelectorParser}.
-     *
-     * @return The parser instance.
-     */
-    public static Parser negationSelectorParser() {
-        return negationSelector;
     }
 
     /**

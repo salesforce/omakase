@@ -31,6 +31,19 @@ public class PseudoClassSelectorTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
+    public void argsAbsentByDefault() {
+        PseudoClassSelector s = new PseudoClassSelector("hover");
+        assertThat(s.args().isPresent()).isFalse();
+    }
+
+    @Test
+    public void constructorWithBothNameAndArgs() {
+        PseudoClassSelector s = new PseudoClassSelector("nth-child", "2n+1");
+        assertThat(s.name()).isEqualTo("nth-child");
+        assertThat(s.args().get()).isEqualTo("2n+1");
+    }
+
+    @Test
     public void getName() {
         PseudoClassSelector s = new PseudoClassSelector("hover");
         assertThat(s.name()).isEqualTo("hover");
@@ -48,6 +61,26 @@ public class PseudoClassSelectorTest {
         PseudoClassSelector s = new PseudoClassSelector("hover");
         exception.expect(IllegalArgumentException.class);
         s.name("before");
+    }
+
+    @Test
+    public void getArgs() {
+        PseudoClassSelector s = new PseudoClassSelector(5, 5, "nth-child", "-2n+1");
+        assertThat(s.args().get()).isEqualTo("-2n+1");
+    }
+
+    @Test
+    public void setArgs() {
+        PseudoClassSelector s = new PseudoClassSelector("nth-child", "-2n+1");
+        s.args("even");
+        assertThat(s.args().get()).isEqualTo("even");
+    }
+
+    @Test
+    public void removeArgs() {
+        PseudoClassSelector s = new PseudoClassSelector("nth-child", "-2n+1");
+        s.args(null);
+        assertThat(s.args().isPresent()).isFalse();
     }
 
     @Test
@@ -69,5 +102,11 @@ public class PseudoClassSelectorTest {
     public void write() throws IOException {
         PseudoClassSelector s = new PseudoClassSelector("hover");
         assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":hover");
+    }
+
+    @Test
+    public void writeWithArgs() throws IOException {
+        PseudoClassSelector s = new PseudoClassSelector("nth-child", "2n+1");
+        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":nth-child(2n+1)");
     }
 }

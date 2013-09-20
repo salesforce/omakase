@@ -63,12 +63,19 @@ public class PseudoSelectorParser extends AbstractParser {
             type = PSEUDO_ELEMENT_SELECTOR;
         }
 
-        // TODO pseudos with functions
+        Syntax selector;
 
-        // create the selector and broadcast it
-        Syntax selector = (type == PSEUDO_CLASS_SELECTOR) ?
-            new PseudoClassSelector(snapshot.line, snapshot.column, name.get()) :
-            new PseudoElementSelector(snapshot.line, snapshot.column, name.get());
+        if (type == PSEUDO_ELEMENT_SELECTOR) {
+            selector = new PseudoElementSelector(snapshot.line, snapshot.column, name.get());
+        } else {
+            // check for arguments (currently only applies to pseudo classes)
+            String args = null;
+            if (Tokens.OPEN_PAREN.matches(stream.current())) {
+                args = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim();
+            }
+
+            selector = new PseudoClassSelector(snapshot.line, snapshot.column, name.get(), args);
+        }
 
         selector.comments(stream.flushComments());
         broadcaster.broadcast(selector);

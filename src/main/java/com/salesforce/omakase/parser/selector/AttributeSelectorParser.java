@@ -82,7 +82,7 @@ public class AttributeSelectorParser extends AbstractParser {
         // create the selector and broadcast it
         AttributeSelector selector = new AttributeSelector(snapshot.line, snapshot.column, attribute.get());
         if (type.isPresent()) {
-            selector.match(type.get(), value.get());
+            selector.match(type.get(), value.get().trim());
         }
         selector.comments(stream.flushComments());
 

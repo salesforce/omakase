@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.emitter.Description;
@@ -42,11 +43,13 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SEL
 @Description(value = "pseudo class selector segment", broadcasted = REFINED_SELECTOR)
 public class PseudoClassSelector extends AbstractSelectorPart implements SimpleSelector {
     private String name;
+    private Optional<String> args = Optional.absent();
 
     /**
-     * Constructs a new {@link PseudoClassSelector} instance with the given name.
+     * Constructs a new {@link PseudoClassSelector} instance with the given name and optional args.
      * <p/>
-     * If dynamically creating a new instance then use {@link #PseudoClassSelector(String)} instead.
+     * If dynamically creating a new instance then use {@link #PseudoClassSelector(String)} or {@link #PseudoClassSelector(String,
+     * String)} instead.
      *
      * @param line
      *     The line number.
@@ -54,10 +57,13 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
      *     The column number.
      * @param name
      *     Name of the pseudo class.
+     * @param args
+     *     Optional arguments for the pseudo class selector (null is ok for no args).
      */
-    public PseudoClassSelector(int line, int column, String name) {
+    public PseudoClassSelector(int line, int column, String name, String args) {
         super(line, column);
         this.name = name;
+        this.args = Optional.fromNullable(args);
     }
 
     /**
@@ -71,7 +77,20 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
     }
 
     /**
-     * Sets the name of the selector.
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     *
+     * @param name
+     *     Name of the pseudo class.
+     * @param args
+     *     The arguments (not including the parenthesis).
+     */
+    public PseudoClassSelector(String name, String args) {
+        name(name);
+        args(args);
+    }
+
+    /**
+     * Sets the name of the selector (e.g., "hover").
      *
      * @param name
      *     The new name.
@@ -93,6 +112,30 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
      */
     public String name() {
         return name;
+    }
+
+    /**
+     * Specifies the arguments of the pseudo selector (e.g., "2n+1").
+     * <p/>
+     * If null is specified then the arguments will be removed.
+     *
+     * @param args
+     *     The arguments (not including the parenthesis).
+     *
+     * @return this, for chaining.
+     */
+    public PseudoClassSelector args(String args) {
+        this.args = Optional.fromNullable(args);
+        return this;
+    }
+
+    /**
+     * Gets the arguments of the pseudo selector (e.g., "2n+1").
+     *
+     * @return The arguments, or {@link Optional#absent()} if not specified.
+     */
+    public Optional<String> args() {
+        return args;
     }
 
     @Override
@@ -117,8 +160,11 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // TODO function args
         appendable.append(':').append(name);
+
+        if (args.isPresent()) {
+            appendable.append('(').append(args.get()).append(')');
+        }
     }
 
     @Override
@@ -127,6 +173,7 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
             .indent()
             .add("abstract", super.toString())
             .add("name", name)
+            .addIf(args.isPresent(), "args", args)
             .toString();
     }
 }
