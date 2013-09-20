@@ -22,13 +22,11 @@ Omakase is a network of *plugins*. Plugins can subscribe to specific CSS syntax 
 
 ### Better error messaging
 
-Omakase is built 100% solely for parsing CSS, which means that the error messages are often more specific and easier to understand than other parsers based off of generic parser generators.
+Omakase is built 100% solely for parsing CSS, which means that the error messages are often more specific and easier to understand than other parsers created from generic parser generators.
 
 ### Awesome standard plugins
 
-Omakase comes with some nifty plugins out of the box that mirror highly-touted _CSS Preprocessor_ functionality.
-
-TODO add descriptions 
+Omakase comes with some nifty plugins out of the box that mirror highly-touted _CSS Preprocessor_ functionality:
 
 - mixins
 - right-to-left swapping
@@ -37,6 +35,8 @@ TODO add descriptions
 - custom functions
 - theme variables(?)
 - url cache busting for images
+
+TODO add descriptions 
 
 Usage
 -----
@@ -110,7 +110,7 @@ Omakase.source(input)
 
 This auto-refines every selector, declaration and at-rule (see the "Specifying common plugins" section below for more information) and registers the basic list of built-in validators.
 
-Validation methods will always be invoked after rework methods, but otherwise they will be executed in the order that the class was registered.
+Validation methods will always be invoked after rework methods, but otherwise they will be executed in the order that the plugin class was registered.
 
 You can also add your own custom validators. For examples see the "Custom validation" section below.
 
@@ -125,8 +125,8 @@ In addition to syntax validation you can optionally register the following built
 When specifying plugins there are important details to keep in mind:
 
 - Only one instance of a plugin can be registered to a single parse operation.
-- Plugins methods of the same subscription type (preprocess, rework, or validate) will be executed in the order that its class was registered.
-- `@PreProcess` annotated methods are executed first, then `@Rework` methods, and finally `@Validate` methods. Essentially this means that all rework will happen before validation, regardless of the order in which the plugins are registered. However if "Plugin A" is registered before "Plugin B" then "Plugin A"'s rework will execute before "Plugin B"'s, and likewise for validation.
+- Subscription methods will be executed in the order that its plugin class was registered.
+- All `@Rework` annotated methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
 
 There are two particular standard plugins that you need to be aware of when using Omakase.
 
@@ -149,9 +149,9 @@ The `SyntaxTree` plugin is responsible for, well creating the syntax tree. The p
     - Rule 2
         - ...
 
-Without the `SyntaxTree` plugin registered then processing will essentially just create a stream of `Selector`, `Declaration` and `AtRule` objects only.
+Without the `SyntaxTree` plugin registered then processing will essentially just create a stream of `Selector`, `Declaration` and `AtRule` objects only. In other words, `Stylesheet` and `Rule` objects will not be created.
 
-In other words, `Stylesheet` and `Rule` objects will not be created, and `Selector` and `Declaration` objects will not be aware of their relationship or order with respect to other `Selector` and `Declaration` objects. In order to utilize this information a `SyntaxTree` plugin instance must be registered.
+In addition, `Selector` and `Declaration` objects will not be aware of their relationship or order with respect to other `Selector` and `Declaration` objects. In order to utilize this information a `SyntaxTree` plugin instance must be registered.
 
 Plugins that depend on this information will register the dependency themselves and you will not have to worry about it (unless of course you are authoring the plugin itself). However in some cases you may want to get direct access to the tree anyway:
 
@@ -176,9 +176,20 @@ AutoRefiner selectors = new AutoRefiner().selectors(); // refine all selectors
 AutoRefiner declarations = new AutoRefiner().declarations(); // refine all declarations
 ```
 
-Many plugins will automatically register an `AutoRefiner` anyway, but it's important to register it yourself if you need to ensure that the unrefined objects are validated. 
+Many plugins will automatically register an `AutoRefiner` anyway, but it's important to register it yourself if you need to ensure that the unrefined objects are validated:
 
-Note that there are some cases when you don't need auto-refinement. For example, if you have already validate the CSS content during a build step, but now you are parsing the source code again in production to change a few dynamic values.
+```java
+AutoRefiner refinement = new AutoRefiner().all();
+Omakase.source(input).request(refinement).process();
+```
+
+Note that there are some cases when you don't need auto-refinement. For example, if you have already validated the CSS content during a build step, but now you are parsing the source code again in production to change a few dynamic values.
+
+### Using built-in preprocessor plugins
+
+The following preprocessing plugins are available for registration:
+
+- TODO
 
 ### Creating custom plugins
 
@@ -214,11 +225,11 @@ Here is an example of a simple rework operation to prefix every selector with a 
 public class PrefixAllSelectors implements Plugin {
     @Rework
     public void prefixClass(Selector selector) {
-        // create a new class simple selector
+        // create a new simple selector
         ClassSelector prefix = new ClassSelector("myPrefix");
 
-        // add the class simple selector to the beginning
-        selector.parts().prepend(prefix);
+        // prepend the simple selector to the beginning of the selector
+        selector.parts().prepend(prefix); 
     }
 }
 ```
@@ -284,13 +295,13 @@ Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyw
 
 // another example
 PropertyName name = PropertyName.using("new-prop");
-Declaration declaration = new Declaration(name, KeywordValue.of(Keyword.NONE));
+Declaration declaration = new Declaration(name, KeywordValue.of("blah"));
 
 // another example
 NumericalValue val1 = NumericalValue.of(1, "px");
 NumericalValue val2 = NumericalValue.of(5, "px");
 PropertyValue value = TermList.ofValues(TermOperator.SPACE, val1, val2);
-Declaration declaration = new Declaration(Property.DISPLAY, value);
+Declaration declaration = new Declaration(Property.MARGIN, value);
 
 // another example
 PropertyName prop = PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
@@ -337,7 +348,7 @@ Keep in mind that dynamically created units will be automatically delivered to a
 
 #### Custom validation
 
-Besides rework, you can also register _subscription methods_ to perform validation and linting. Just like rework, you declare a method with the first parameter being the type of syntax unit you would like to validate. In addition there is a second parameter which is the `ErrorManager` used to report any problems.
+Besides rework, you can also register subscription methods to perform validation and linting. Just like rework, you declare a method with the first parameter being the type of syntax unit you would like to validate. In addition there is a second parameter which is the `ErrorManager` used to report any problems.
 
 Here is an example of a class with two validation subscription methods:
 
@@ -359,6 +370,7 @@ public class Validations implements Plugin {
     @Validate
     public void validateIncludesUnprefixed(Declaration declaration, ErrorManager em) {
         // check that all prefixed declarations include an unprefixed declaration as well.
+        
         if (declaration.isDetached()) return; // ignore removed declarations
 
         PropertyName propertyName = declaration.propertyName();
@@ -390,11 +402,11 @@ As mentioned above, many plugins, especially ones with `@Rework`, will need to r
 
 You must have a dependency on `SyntaxTree` if you are subscribing to `Rule` or `Stylesheet` objects. You also have this dependency if you do any kind operation or checking of the relationship of units between one another, for example `prepend`, `append`, `isFirst`, `isLast`, and so on. In other words, all operations that utilize `SyntaxCollection` objects. 
 
-You also will have a dependeny on `AutoRefiner` in many cases where you have subscriptions to syntax unit types more specific than `Selector` and `Declaration`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below. 
+You also will have a dependency on `AutoRefiner` in many cases where you have subscriptions to syntax unit types more specific than `Selector` and `Declaration`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below. 
 
 If your plugin only needs refined selector units then `AutoRefiner#selectors()` will suffice, or `AutoRefiner#declarations()` for declarations. To nab everything then you can use `AutoRefiner#all()`.
 
-Here is an example of a plugin with dependencies
+Here is an example of a plugin with dependencies:
 
 ```java
 public class Dependent implements DependentPlugin {
@@ -408,15 +420,15 @@ public class Dependent implements DependentPlugin {
 
 The `#require` method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case. 
 
-You can also require your own custom plugins by using the `#require(Class, Suppier)` method.
+You can also require your own custom plugins by using the `#require(Class, Supplier)` method.
 
-There is another, more performant alternative to using `AutoRefiner`. You can instead subscribe to the high-level type, such as `Declaration`. You can check some information on the declaration first, such as `Declaration#isProperty` or check for an annotation on the declaration. If present then you can proceed to call `Declaration#refine`, which will automatically trigger any subscriptions to the more specific syntax unit types parsed within that declaration instance. This way you can avoid uncessarily refining declarations that you have no interest in.
+There is another, more performant alternative to using `AutoRefiner`. You can instead subscribe to the high-level type, such as `Declaration`. You can check some information on the declaration first, such as `Declaration#isProperty` or check for an annotation on the declaration. If present then you can proceed to call `Declaration#refine`, which will automatically trigger any subscriptions to the more specific syntax unit types parsed within that declaration instance. This way you can avoid unnecessarily refining declarations that you have no interest in.
 
 #### Performing both rework and validation
 
 Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation does not need to be separated out in to multiple classes.
 
-You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same type for the exact same operation (e.g., rework or validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order. 
+You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework, validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order. 
 
 #### Subscribing to interfaces
 
@@ -428,24 +440,23 @@ Within a particular class, the more specifically-typed subscription will be deli
 
 See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
 
-#### Base plugin
-
-You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin.
-
-
 #### Observe and PreProcess
 
 Besides `@Rework` and `@Validate`, there are two more annotations that can be used to make a subscription method.
 
-**Observe**
+##### @Observe
 
 `@Observe` can be used in place of `@Rework` when your intention is to simply utilize information from the AST object and you do not intend to make any changes. In terms of execution order, `@Observe` and `@Rework` are equivalent. Currently the only difference `@Observe` makes is providing a better description of what the method intends to do.
 
-**PreProcess**
+##### @PreProcess
 
 Methods can be annotated with `@PreProcess` as well. Methods with this annotation will be invoked before all subscription methods of *any other type* (rework, validate, etc...).
 
 Generally speaking, this is not the annotation to use in most cases. It's more so utilized internally by the framework. In particular, it will only be called on units within the original CSS source code, not for dynamically created syntax units.
+
+#### Base plugin
+
+You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin.
 
 ### Custom error handling
 
@@ -493,7 +504,7 @@ You can only register one override per AST object type.
 
 ### Comments and annotations
 
-AST objects automatically have all comments that logically precede them associated. You can access them by calling the `Syntax#comments` method on the syntax unit. In other words, comments are linked to the AST object that directly follows them (with the exception of orphaned comments, as explained below). Take this example:
+AST objects are automatically associated with all comments that logically precede them. You can access the list of comments by calling the `Syntax#comments` method on the syntax unit. In other words, comments are linked to the AST object that directly follows them (with the exception of orphaned comments, as explained below). Take this example:
 
 ```css
 /*0*/ 
@@ -548,12 +559,6 @@ Use the `#orphanedComments` method on a `Selector`, `Declaration`, `Rule` or `St
 - Place an annotation directive in a comment dictating certain processing behavior.
 - Conditionally perform some action on the selector, rule, or stylesheet based on the content of the comment.
 
-### Using built-in preprocessor plugins
-
-The following preprocessing plugins are available for registration:
-
-- TODO
-
 Subscribable Syntax Units
 -------------------------
 
@@ -605,7 +610,7 @@ Before checking *anything* in, setup your IDE to conform to project standards. S
 
 As of right now the (strongly) preferred IDE for contribution is intellij IDEA. This is mainly because the existing source code and style closely conforms to the idea settings included in the project. If you use eclipse or something else then be sure to following the existing coding conventions manually if need be.
 
-Once you get everything set up, read the Project Architecture section (found below) so you can start to get an idea of how things work and are organized.
+Once you get everything set up, read the "Architecture" section (found below) so you can start to get an idea of how things work and are organized.
 
 ### Building
 
@@ -682,7 +687,7 @@ This process allows us to be more specific about what actually gets parsed. For 
 
 (However, even when doing away with this separation and always parsing and refining everything every time, Omakase still executes faster than other leading open-source CSS parsers.)
 
-When a `Parser` has succesfully parsed some content, it will construct the appropriate AST object and give it to the `Broadcaster`. Ultimately, the `Broadcaster` will pass the AST object to the registered subscription methods for that particular AST object type.
+When a `Parser` has successfully parsed some content, it will construct the appropriate AST object and give it to the `Broadcaster`. Ultimately, the `Broadcaster` will pass the AST object to the registered subscription methods for that particular AST object type.
 
 ### AST Objects
 **Key Classes** `Syntax` `Refinable` `Groubable` `SyntaxCollection` `Selector` `Declaration`
