@@ -18,6 +18,8 @@ package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockEnd;
+import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockStart;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
@@ -31,7 +33,7 @@ import java.util.List;
  * @author nmcwilliams
  * @see Rule
  */
-public class RuleParser extends AbstractParser {
+public class RawRuleParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
@@ -46,6 +48,9 @@ public class RuleParser extends AbstractParser {
 
         // parse the declaration block
         stream.expect(tokenFactory().declarationBlockBegin());
+
+        // broadcast the beginning of the declaration block event
+        NotifyDeclarationBlockStart.broadcast(broadcaster);
 
         // parse all declarations
         do {
@@ -63,6 +68,10 @@ public class RuleParser extends AbstractParser {
         // parse the end of the block
         stream.expect(tokenFactory().declarationBlockEnd());
 
+        // broadcast the end of the declaration block event
+        NotifyDeclarationBlockEnd.broadcast(broadcaster);
+
         return true;
     }
+
 }

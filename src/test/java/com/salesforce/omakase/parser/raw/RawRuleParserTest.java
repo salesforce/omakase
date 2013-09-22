@@ -19,6 +19,8 @@ package com.salesforce.omakase.parser.raw;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockEnd;
+import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockStart;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -31,12 +33,12 @@ import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResul
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link RuleParser}.
+ * Unit tests for {@link RawRuleParser}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings({"JavaDoc"})
-public class RuleParserTest extends AbstractParserTest<RuleParser> {
+public class RawRuleParserTest extends AbstractParserTest<RawRuleParser> {
 
     @Override
     public List<String> invalidSources() {
@@ -87,12 +89,14 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
+
         List<ParseResult<Integer>> results = parseWithExpected(
-            withExpectedResult(".class{ color: red }", 2),
-            withExpectedResult(".class{ color: red } .class{ color: red }", 2),
-            withExpectedResult("     .class{ color: red }", 2),
-            withExpectedResult("\n\n\n   .class{ color: red }", 2),
-            withExpectedResult("/*com{}ment*/.class{/*comme{}nt*/color:red;}", 2));
+            // +1 for selector, +1 for declaration, +2 for notify declaration block start/end
+            withExpectedResult(".class{ color: red }", 4),
+            withExpectedResult(".class{ color: red } .class{ color: red }", 4),
+            withExpectedResult("     .class{ color: red }", 4),
+            withExpectedResult("\n\n\n   .class{ color: red }", 4),
+            withExpectedResult("/*com{}ment*/.class{/*comme{}nt*/color:red;}", 4));
 
         for (ParseResult<Integer> result : results) {
             assertThat(result.broadcasted).describedAs(result.stream.toString()).hasSize(result.expected);
@@ -103,18 +107,22 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
     @Override
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = parse("   .class{color:red}").get(0);
-        assertThat(result.broadcasted).hasSize(2);
+        assertThat(result.broadcasted).hasSize(4);
         assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(Declaration.class);
+        assertThat(result.broadcasted.get(1)).isInstanceOf(NotifyDeclarationBlockStart.class);
+        assertThat(result.broadcasted.get(2)).isInstanceOf(Declaration.class);
+        assertThat(result.broadcasted.get(3)).isInstanceOf(NotifyDeclarationBlockEnd.class);
     }
 
     @Test
     public void matchesExpectedBroadcastContentWithOrphaned() {
         GenericParseResult result = parse(".class{color:red; /*orphaned*/}").get(0);
-        assertThat(result.broadcasted).hasSize(3);
+        assertThat(result.broadcasted).hasSize(5);
         assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(Declaration.class);
-        assertThat(result.broadcasted.get(2)).isInstanceOf(OrphanedComment.class);
+        assertThat(result.broadcasted.get(1)).isInstanceOf(NotifyDeclarationBlockStart.class);
+        assertThat(result.broadcasted.get(2)).isInstanceOf(Declaration.class);
+        assertThat(result.broadcasted.get(3)).isInstanceOf(OrphanedComment.class);
+        assertThat(result.broadcasted.get(4)).isInstanceOf(NotifyDeclarationBlockEnd.class);
     }
 
     @Test
@@ -129,5 +137,17 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find closing brace");
         parse(".class \n { color: red");
+    }
+
+    @Test
+    public void sendsDeclarationBlockStart() {
+        GenericParseResult result = parse(".class{color:red}").get(0);
+        assertThat(result.broadcaster.filter(NotifyDeclarationBlockStart.class)).hasSize(1);
+    }
+
+    @Test
+    public void sendsDeclarationBlockEnd() {
+        GenericParseResult result = parse(".class{color:red}").get(0);
+        assertThat(result.broadcaster.filter(NotifyDeclarationBlockEnd.class)).hasSize(1);
     }
 }

@@ -53,7 +53,7 @@ public final class SubscribableSyntaxTable {
 
         System.out.println();
 
-        String header = "%s%-25s   %-55s   %-25s   %s";
+        String header = "%s%-28s   %-55s   %-25s   %s";
         String line1 = String.format(header,
             space(4),
             "Name",
@@ -63,7 +63,7 @@ public final class SubscribableSyntaxTable {
 
         String line2 = String.format(header,
             space(4),
-            dash(25),
+            dash(28),
             dash(55),
             dash(25),
             dash(15));
@@ -76,7 +76,7 @@ public final class SubscribableSyntaxTable {
             Description d = klass.getAnnotation(Description.class);
             if (d == null) throw new RuntimeException("missing @Description for " + klass);
 
-            String s = "%02d: %-25s   %-55s   %-25s   %s";
+            String s = "%02d: %-28s   %-55s   %-25s   %s";
             System.out.println(String.format(s,
                 i++,
                 klass.getSimpleName(),

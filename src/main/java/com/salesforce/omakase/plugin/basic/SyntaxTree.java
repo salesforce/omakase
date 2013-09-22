@@ -24,17 +24,18 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockEnd;
+import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockStart;
+import com.salesforce.omakase.ast.notification.NotifyStylesheetEnd;
+import com.salesforce.omakase.ast.notification.NotifyStylesheetStart;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.emitter.PreProcess;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
-import com.salesforce.omakase.plugin.PreProcessingPlugin;
 
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * TESTME
- * <p/>
  * Responsible for organizing parsed {@link Selector}s, {@link Declaration}s and {@link AtRule}s into an AST tree.
  * <p/>
  * If you want direct access to the {@link Stylesheet} then this plugin must be registered.
@@ -46,7 +47,7 @@ import static com.google.common.base.Preconditions.checkState;
  *
  * @author nmcwilliams
  */
-public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin {
+public final class SyntaxTree implements BroadcastingPlugin {
     private Broadcaster broadcaster;
     private State state;
 
@@ -61,21 +62,6 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
         FROZEN
     }
 
-    @Override
-    public void broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = broadcaster;
-    }
-
-    @Override
-    public void beforePreProcess() {
-        startStylesheet();
-    }
-
-    @Override
-    public void afterPreProcess() {
-        endStylesheet();
-    }
-
     /**
      * Gets the {@link Stylesheet} instance.
      *
@@ -85,12 +71,33 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
         return currentStylesheet;
     }
 
-    private void startStylesheet() {
+    @Override
+    public void broadcaster(Broadcaster broadcaster) {
+        this.broadcaster = broadcaster;
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     *
+     * @param event
+     *     event.
+     */
+    @PreProcess
+    @SuppressWarnings("UnusedParameters")
+    public void onStylesheetStart(NotifyStylesheetStart event) {
         currentStylesheet = new Stylesheet(broadcaster);
         state = State.ROOT_LEVEL;
     }
 
-    private void endStylesheet() {
+    /**
+     * Subscription method. Do not call directly.
+     *
+     * @param event
+     *     event.
+     */
+    @PreProcess
+    @SuppressWarnings("UnusedParameters")
+    public void onStylesheetEnd(NotifyStylesheetEnd event) {
         checkState(currentStylesheet != null, "currentStylesheet not set");
 
         // end the last statement
@@ -110,34 +117,95 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
      */
     @PreProcess
     public void startAtRule(AtRule atRule) {
-        switch (state) {
-        case ROOT_LEVEL:
-            startStatement(atRule);
-            endStatement(false);
-            break;
-        case INSIDE_DECLARATION_BLOCK:
-            endRule();
-            startStatement(atRule);
-            endStatement(false);
-            break;
-        case INSIDE_SELECTOR_GROUP:
-            throw new IllegalStateException("at-rules not allowed inside selector groups");
-        case FROZEN:
-            throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
+        checkNotFrozen();
+        checkState(state == State.ROOT_LEVEL, "cannot add an at-rule outside of the root level");
+        startStatement(atRule);
+        endStatement(false);
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     *
+     * @param selector
+     *     The new {@link Selector}.
+     */
+    @PreProcess
+    public void selector(Selector selector) {
+        checkNotFrozen();
+
+        if (state == State.ROOT_LEVEL) {
+            startRule(selector.line(), selector.column());
+            state = State.INSIDE_SELECTOR_GROUP;
+        } else if (state != State.INSIDE_SELECTOR_GROUP) {
+            throw new IllegalStateException("expected state to be ROOT_LEVEL or INSIDE_SELECTOR_GROUP");
+        }
+
+        currentRule.selectors().append(selector);
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     *
+     * @param event
+     *     event.
+     */
+    @PreProcess
+    @SuppressWarnings("UnusedParameters")
+    public void onDeclarationBlockStart(NotifyDeclarationBlockStart event) {
+        state = State.INSIDE_DECLARATION_BLOCK;
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     *
+     * @param event
+     *     event.
+     */
+    @PreProcess
+    @SuppressWarnings("UnusedParameters")
+    public void onDeclarationBlockEnd(NotifyDeclarationBlockEnd event) {
+        endRule();
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     *
+     * @param declaration
+     *     The new {@link Declaration}.
+     */
+    @PreProcess
+    public void declaration(Declaration declaration) {
+        checkNotFrozen();
+        checkState(state == State.INSIDE_DECLARATION_BLOCK, "cannot add a declaration outside of a declaration block");
+        currentRule.declarations().append(declaration);
+    }
+
+    /**
+     * Subscription method. Do not call directly.
+     * <p/>
+     * Handles {@link OrphanedComment}s for rules and stylesheets.
+     *
+     * @param comment
+     *     The orphaned comment.
+     */
+    @PreProcess
+    public void orphanedComment(OrphanedComment comment) {
+        checkNotFrozen();
+        if (currentRule != null && comment.location() == OrphanedComment.Location.RULE) {
+            currentRule.orphanedComment(comment);
+        } else if (currentStylesheet != null && comment.location() == OrphanedComment.Location.STYLESHEET) {
+            currentStylesheet.orphanedComment(comment);
         }
     }
 
     private void startRule(int line, int column) {
         checkState(currentRule == null, "previous rule not ended");
-
         currentRule = new Rule(line, column, broadcaster);
         startStatement(currentRule);
-        state = State.INSIDE_SELECTOR_GROUP;
     }
 
     private void endRule() {
         checkState(currentRule != null, "currentRule not set");
-
         endStatement(true);
         currentRule = null;
         state = State.ROOT_LEVEL;
@@ -160,68 +228,8 @@ public final class SyntaxTree implements BroadcastingPlugin, PreProcessingPlugin
         currentStatement = null;
     }
 
-    /**
-     * Subscription method. Do not call directly.
-     *
-     * @param selector
-     *     The new {@link Selector}.
-     */
-    @PreProcess
-    public void startSelector(Selector selector) {
-        switch (state) {
-        case ROOT_LEVEL:
-            startRule(selector.line(), selector.column());
-            break;
-        case INSIDE_DECLARATION_BLOCK:
-            endRule();
-            startRule(selector.line(), selector.column());
-            break;
-        case INSIDE_SELECTOR_GROUP:
-            break;
-        case FROZEN:
-            throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
-        }
-
-        currentRule.selectors().append(selector);
-    }
-
-    /**
-     * Subscription method. Do not call directly.
-     *
-     * @param declaration
-     *     The new {@link Declaration}.
-     */
-    @PreProcess
-    public void startDeclaration(Declaration declaration) {
-        switch (state) {
-        case ROOT_LEVEL:
-            throw new IllegalStateException("declarations are not allowed at the root level");
-        case INSIDE_DECLARATION_BLOCK:
-        case INSIDE_SELECTOR_GROUP:
-            currentRule.declarations().append(declaration);
-            break;
-        case FROZEN:
-            throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
-        }
-
-        state = State.INSIDE_DECLARATION_BLOCK;
-    }
-
-    /**
-     * Subscription method. Do not call directly.
-     * <p/>
-     * Handles {@link OrphanedComment}s for rules and stylesheets.
-     *
-     * @param comment
-     *     The orphaned comment.
-     */
-    @PreProcess
-    public void orphanedComment(OrphanedComment comment) {
-        if (currentRule != null && comment.location() == OrphanedComment.Location.RULE) {
-            currentRule.orphanedComment(comment);
-        } else if (currentStylesheet != null && comment.location() == OrphanedComment.Location.STYLESHEET) {
-            currentStylesheet.orphanedComment(comment);
-        }
+    private void checkNotFrozen() {
+        if (state == State.FROZEN) throw new IllegalStateException(Message.CANT_MODIFY_SYNTAX_TREE.message());
     }
 
     @Override

@@ -19,6 +19,8 @@ package com.salesforce.omakase.parser.raw;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.notification.NotifyStylesheetEnd;
+import com.salesforce.omakase.ast.notification.NotifyStylesheetStart;
 import com.salesforce.omakase.broadcaster.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Parser;
@@ -38,6 +40,9 @@ public class StylesheetParser extends AbstractParser {
 
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
+        // broadcast the start of the stylesheet event
+        NotifyStylesheetStart.broadcast(broadcaster);
+
         Parser parser = ParserFactory.statementParser();
 
         // continually parse until we get to the end of the stream
@@ -57,6 +62,9 @@ public class StylesheetParser extends AbstractParser {
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.STYLESHEET));
         }
+
+        // broadcast the end of the stylesheet event
+        NotifyStylesheetEnd.broadcast(broadcaster);
 
         return true;
     }

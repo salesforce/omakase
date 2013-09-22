@@ -38,7 +38,6 @@ import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
-import com.salesforce.omakase.plugin.PreProcessingPlugin;
 
 import java.util.Set;
 
@@ -180,19 +179,9 @@ final class Context implements Broadcaster, PluginRegistry {
      * in such information. This also replays the stored broadcasts for each phase.
      */
     protected void after() {
-        // notify preprocessing plugins
-        for (PreProcessingPlugin plugin : filter(PreProcessingPlugin.class)) {
-            plugin.beforePreProcess();
-        }
-
         // run preprocessors
         emittingBroadcaster.phase(SubscriptionPhase.PREPROCESS);
         visitor.visit();
-
-        // notify preprocessing plugins
-        for (PreProcessingPlugin plugin : filter(PreProcessingPlugin.class)) {
-            plugin.afterPreProcess();
-        }
 
         // run observers and reworkers
         emittingBroadcaster.phase(SubscriptionPhase.PROCESS);

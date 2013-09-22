@@ -33,7 +33,6 @@ import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
-import com.salesforce.omakase.plugin.PreProcessingPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import org.junit.Before;
 import org.junit.Rule;
@@ -146,16 +145,6 @@ public class ContextTest {
     }
 
     @Test
-    public void afterMethodNotifyPreprocessors() {
-        TestPreProcessingPlugin tpp = new TestPreProcessingPlugin();
-        c.register(tpp);
-        c.before(new TestErrorManager());
-        c.after();
-        assertThat(tpp.beforeCalled).isTrue();
-        assertThat(tpp.afterCalled).isTrue();
-    }
-
-    @Test
     @SuppressWarnings("ConstantConditions")
     public void afterMethodPhaseOrder() {
         PluginWithPreProcess preprocess = new PluginWithPreProcess();
@@ -220,21 +209,6 @@ public class ContextTest {
                     return new TestDependentPlugin();
                 }
             });
-        }
-    }
-
-    public static final class TestPreProcessingPlugin implements PreProcessingPlugin {
-        boolean beforeCalled;
-        boolean afterCalled;
-
-        @Override
-        public void beforePreProcess() {
-            beforeCalled = true;
-        }
-
-        @Override
-        public void afterPreProcess() {
-            afterCalled = true;
         }
     }
 

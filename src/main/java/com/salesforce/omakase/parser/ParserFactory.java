@@ -29,8 +29,8 @@ import com.salesforce.omakase.parser.declaration.StringValueParser;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.parser.raw.RawRuleParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
-import com.salesforce.omakase.parser.raw.RuleParser;
 import com.salesforce.omakase.parser.raw.SelectorGroupParser;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.parser.selector.*;
@@ -50,7 +50,7 @@ public final class ParserFactory {
     /* general parsers */
     private static final Parser stylesheet = new StylesheetParser();
     private static final Parser atRule = new RawAtRuleParser();
-    private static final Parser rule = new RuleParser();
+    private static final Parser rule = new RawRuleParser();
     private static final Parser statement = rule.or(atRule);
     private static final Parser rawDeclaration = new RawDeclarationParser();
     private static final Parser selectorGroup = new SelectorGroupParser();
@@ -113,7 +113,7 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link RuleParser}.
+     * Gets the {@link RawRuleParser}.
      *
      * @return The parser instance.
      */

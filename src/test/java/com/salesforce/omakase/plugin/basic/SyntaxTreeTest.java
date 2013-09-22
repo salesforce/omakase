@@ -16,8 +16,13 @@
 
 package com.salesforce.omakase.plugin.basic;
 
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +37,7 @@ public class SyntaxTreeTest {
         "a:hover{color: green}\n" +
         "@media all and (max-width:800px) { a:hover{color:red}}\n" +
         ".class1 > .class2 {}" +
-        "#div1, #div2 /*orphaned*/ { position:absolute; /*orphaned-r*/}\n" +
+        "#div1, #div2 { position:absolute; /*orphaned-r*/}\n" +
         "/*orphaned-s*/";
 
     private Stylesheet stylesheet;
@@ -46,36 +51,43 @@ public class SyntaxTreeTest {
 
     @Test
     public void statements() {
-        assertThat(stylesheet.statements()).hasSize(7);
-    }
+        SyntaxCollection<Stylesheet, Statement> statements = stylesheet.statements();
 
-    @Test
-    public void atRules() {
-        fail("unimplemented");
-    }
-
-    @Test
-    public void rules() {
-        fail("unimplemented");
+        assertThat(statements).hasSize(7);
+        assertThat(Iterables.get(statements, 0)).isInstanceOf(AtRule.class);
+        assertThat(Iterables.get(statements, 1)).isInstanceOf(AtRule.class);
+        assertThat(Iterables.get(statements, 2)).isInstanceOf(Rule.class);
+        assertThat(Iterables.get(statements, 3)).isInstanceOf(Rule.class);
+        assertThat(Iterables.get(statements, 4)).isInstanceOf(AtRule.class);
+        assertThat(Iterables.get(statements, 5)).isInstanceOf(Rule.class);
+        assertThat(Iterables.get(statements, 6)).isInstanceOf(Rule.class);
     }
 
     @Test
     public void selectorsOrder() {
-        fail("unimplemented");
+        Rule rule = Iterables.get(stylesheet.statements(), 6).asRule().get();
+        assertThat(rule.selectors()).hasSize(2);
+        assertThat(rule.selectors().first().get().rawContent().content()).isEqualTo("#div1");
+        assertThat(rule.selectors().last().get().rawContent().content()).isEqualTo("#div2");
     }
 
     @Test
     public void declarationsOrder() {
-        fail("unimplemented");
+        Rule rule = Iterables.get(stylesheet.statements(), 2).asRule().get();
+        assertThat(rule.declarations()).hasSize(3);
+        assertThat(Iterables.get(rule.declarations(), 0).rawPropertyName().content()).isEqualTo("color");
+        assertThat(Iterables.get(rule.declarations(), 1).rawPropertyName().content()).isEqualTo("font-size");
+        assertThat(Iterables.get(rule.declarations(), 2).rawPropertyName().content()).isEqualTo("margin");
     }
 
     @Test
     public void ruleOrphanedComments() {
-        fail("unimplemented");
+        Rule rule = Iterables.get(stylesheet.statements(), 6).asRule().get();
+        assertThat(rule.orphanedComments()).isNotEmpty();
     }
 
     @Test
     public void sheetOrphanedComments() {
-        fail("unimplemented");
+        assertThat(stylesheet.orphanedComments()).isNotEmpty();
     }
 }

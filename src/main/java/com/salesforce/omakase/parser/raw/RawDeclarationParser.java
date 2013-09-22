@@ -62,4 +62,5 @@ public class RawDeclarationParser extends AbstractParser {
         broadcaster.broadcast(declaration);
         return true;
     }
+
 }

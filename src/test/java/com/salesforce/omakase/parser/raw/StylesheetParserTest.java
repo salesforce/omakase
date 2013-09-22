@@ -17,6 +17,8 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.ast.OrphanedComment;
+import com.salesforce.omakase.ast.notification.NotifyStylesheetEnd;
+import com.salesforce.omakase.ast.notification.NotifyStylesheetStart;
 import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
@@ -48,5 +50,19 @@ public class StylesheetParserTest {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         new StylesheetParser().parse(new Stream(".abc{color:red} /*comment*/"), qb);
         assertThat(qb.filter(OrphanedComment.class)).hasSize(1);
+    }
+
+    @Test
+    public void sendsNotificationStart() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        new StylesheetParser().parse(new Stream(".abc{color:red}"), qb);
+        assertThat(qb.filter(NotifyStylesheetStart.class)).hasSize(1);
+    }
+
+    @Test
+    public void sendsNotificationEnd() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        new StylesheetParser().parse(new Stream(".abc{color:red}"), qb);
+        assertThat(qb.filter(NotifyStylesheetEnd.class)).hasSize(1);
     }
 }
