@@ -26,7 +26,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /** Unit tests for {@link AbstractGroupable}. */
 @SuppressWarnings("JavaDoc")
@@ -189,6 +189,17 @@ public class AbstractGroupableTest {
     public void parentWhenAttached() {
         parent.collection.append(child1).append(child2);
         assertThat(child1.parent().get()).isSameAs(parent);
+    }
+
+    @Test
+    public void writableWhenAttached() {
+        parent.collection.append(child1);
+        assertThat(child1.isWritable()).isTrue();
+    }
+
+    @Test
+    public void notWritableWhenDetached() {
+        assertThat(child1.isWritable()).isFalse();
     }
 
     @Test

@@ -43,7 +43,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 @SuppressWarnings("JavaDoc")
 public class ContextTest {
-    @Rule public ExpectedException exception = ExpectedException.none();
+    @Rule public final ExpectedException exception = ExpectedException.none();
 
     Context c;
 

@@ -37,6 +37,7 @@ public final class ParserStrategy {
      *
      * @return The parser instance.
      */
+    @SuppressWarnings("UnusedParameters")
     public static Parser getValueParser(PropertyName propertyName) {
         // more specific property value parsers to be added here based on the property name
         return ParserFactory.termListParser();

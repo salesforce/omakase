@@ -44,7 +44,7 @@ import com.salesforce.omakase.emitter.Validate;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings("UnusedParameters")
 public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive

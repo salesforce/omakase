@@ -206,11 +206,6 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
     }
 
     @Override
-    public boolean isWritable() {
-        return !isDetached();
-    }
-
-    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             for (SelectorPart part : parts) {

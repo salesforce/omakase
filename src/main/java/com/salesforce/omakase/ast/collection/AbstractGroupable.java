@@ -125,4 +125,9 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
     public Optional<P> parent() {
         return isDetached() ? Optional.<P>absent() : Optional.of(group().get().parent());
     }
+
+    @Override
+    public boolean isWritable() {
+        return !isDetached();
+    }
 }

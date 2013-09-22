@@ -408,11 +408,6 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     @Override
-    public boolean isWritable() {
-        return !isDetached();
-    }
-
-    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             // property name

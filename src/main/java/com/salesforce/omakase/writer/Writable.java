@@ -27,8 +27,8 @@ public interface Writable {
     /**
      * Returns whether this unit should actually be written.
      * <p/>
-     * Usually this should just return true, however some units that are detachable or otherwise invalidatable should first check
-     * their state and respond appropriately.
+     * Usually this should just return true, however some units that are detachable or otherwise potentially invalid should first
+     * check their state and respond appropriately.
      *
      * @return True if the unit should be written.
      */

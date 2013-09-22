@@ -38,8 +38,6 @@ import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 
 /**
- * TESTME
- * <p/>
  * Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes, etc...
  * <p/>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
@@ -82,6 +80,8 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
         this.name = name;
         this.rawExpression = Optional.fromNullable(rawExpression);
         this.rawBlock = Optional.fromNullable(rawBlock);
+        this.expression = Optional.absent();
+        this.block = Optional.absent();
     }
 
     /**
@@ -94,7 +94,6 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
      * @param block
      *     The at-rule's block, or null if not present.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public AtRule(String name, AtRuleExpression expression, AtRuleBlock block) {
         super(-1, -1);
 
@@ -136,12 +135,40 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     }
 
     /**
+     * Sets the {@link AtRuleExpression}.
+     *
+     * @param expression
+     *     The expression.
+     *
+     * @return this, for chaining.
+     */
+    public AtRule expression(AtRuleExpression expression) {
+        checkState(expression != null || block != null, "either the expression or the block must be present");
+        this.expression = Optional.fromNullable(expression);
+        return this;
+    }
+
+    /**
      * Gets the at-rule expression, if present.
      *
      * @return The expression, or {@link Optional#absent()} if not present.
      */
     public Optional<AtRuleExpression> expression() {
         return expression;
+    }
+
+    /**
+     * Sets the {@link AtRuleBlock}.
+     *
+     * @param block
+     *     The block.
+     *
+     * @return this, for chaining.
+     */
+    public AtRule block(AtRuleBlock block) {
+        checkState(expression != null || block != null, "either the expression or the block must be present");
+        this.block = Optional.fromNullable(block);
+        return this;
     }
 
     /**
@@ -155,15 +182,12 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
 
     @Override
     public boolean isRefined() {
-        return expression != null || block != null;
+        return expression.isPresent() || block.isPresent();
     }
 
     @Override
     public AtRule refine() {
-        // if (!isRefined()) {
-        // TODO refinement
-        // }
-
+        // subclasses handle this more specifically
         return this;
     }
 
@@ -184,11 +208,24 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (isDetached()) return;
-
         if (isRefined()) {
             appendable.append('@');
             appendable.append(name);
+
+            if (expression.isPresent()) {
+                writer.write(expression.get(), appendable);
+            }
+
+            if (block.isPresent()) {
+                appendable.spaceIf(!writer.isCompressed());
+                appendable.append('{');
+                appendable.newlineIf(writer.isVerbose());
+                appendable.indentIf(writer.isVerbose());
+                writer.write(block.get(), appendable);
+                appendable.newlineIf(writer.isVerbose());
+                appendable.append('}');
+            }
+
         } else {
             // symbol and name
             appendable.append('@');
@@ -212,12 +249,12 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');
             }
+        }
 
-            // newlines (unless last statement)
-            if (!writer.isCompressed() && !isLast()) {
-                appendable.newline();
-                appendable.newlineIf(writer.isVerbose());
-            }
+        // newlines (unless last statement)
+        if (!writer.isCompressed() && !isLast()) {
+            appendable.newline();
+            appendable.newlineIf(writer.isVerbose());
         }
     }
 

@@ -55,9 +55,4 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
         // the first selector part should also include the comments included on the selector
         return ImmutableList.copyOf(Iterables.concat(parentSelector().get().comments(), super.comments()));
     }
-
-    @Override
-    public boolean isWritable() {
-        return !isDetached();
-    }
 }
