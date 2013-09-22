@@ -34,9 +34,9 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME
- * <p/>
- * TODO Description
+ * Responsible for sending an event (object) to registered listeners.
+ *
+ *
  *
  * @author nmcwilliams
  */

@@ -30,8 +30,6 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 /**
- * TESTME
- * <p/>
  * Scans for annotated methods on classes.
  *
  * @author nmcwilliams

@@ -25,8 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * TESTME
- * <p/>
  * Metadata class to wrap the details around a subscription method. For internal use only.
  *
  * @author nmcwilliams
@@ -49,6 +47,15 @@ final class Subscription {
      */
     public SubscriptionPhase phase() {
         return phase;
+    }
+
+    /**
+     * Gets the method for the subscription.
+     *
+     * @return The method.
+     */
+    public Method method() {
+        return method;
     }
 
     /**
@@ -86,6 +93,7 @@ final class Subscription {
         if (object instanceof Subscription) {
             Subscription other = (Subscription)object;
             // must be same instance of the same class (identity)
+            // this keeps plugins that are registered twice only stored once in the Emitter
             return subscriber == other.subscriber && Objects.equal(this.method, other.method);
         }
         return false;
