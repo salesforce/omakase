@@ -41,12 +41,12 @@ public class TypeSelectorTest {
 
     @Test
     public void isSelector() {
-        assertThat(new TypeSelector(1, 1, "p").isSelector()).isTrue();
+        assertThat(new TypeSelector("p").isSelector()).isTrue();
     }
 
     @Test
     public void isCombinator() {
-        assertThat(new TypeSelector(1, 1, "p").isCombinator()).isFalse();
+        assertThat(new TypeSelector("p").isCombinator()).isFalse();
     }
 
     @Test

@@ -29,17 +29,13 @@ import com.salesforce.omakase.plugin.Plugin;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME
- * <p/>
  * Main entry point for the Omakase CSS Parser.
  * <p/>
  * For usage information, see the readme.md file, or check out (link).
  * <p/>
  * Please note that the parser does not currently support the following:
  * <p/>
- * {@code @namespace, @import, @charset, @page, @font-face, @media (media queries), cdo and cdc, escaping (in most cases)}
- * <p/>
- * This library is <em>not</em> thread-safe. Don't even try it without reviewing and fixing every class in this library.
+ * {@code cdo and cdc, escaping (in most cases)}
  *
  * @author nmcwilliams
  */

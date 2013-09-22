@@ -55,7 +55,7 @@ public class PseudoElementValidator implements DependentPlugin {
     @Validate
     public void validate(PseudoElementSelector selector, ErrorManager em) {
         if (!selector.isLast()) {
-            em.report(ErrorLevel.FATAL, selector, Message.PSEUDO_ELEMENT_LAST);
+            em.report(ErrorLevel.FATAL, selector, Message.PSEUDO_ELEMENT_LAST.message());
         }
     }
 }

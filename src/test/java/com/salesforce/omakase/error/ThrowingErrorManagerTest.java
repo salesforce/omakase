@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.error;
 
+import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
 import org.junit.Rule;
@@ -37,6 +38,14 @@ public class ThrowingErrorManagerTest {
         exception.expect(FatalException.class);
         exception.expectMessage("e");
         new ThrowingErrorManager().report(ErrorLevel.FATAL, new ParserException(new Stream(""), "e"));
+    }
+
+    @Test
+    public void fatalWithStringMessageThrowsException() {
+        ClassSelector s = new ClassSelector("cs");
+        exception.expect(FatalException.class);
+        exception.expectMessage("message");
+        new ThrowingErrorManager().report(ErrorLevel.FATAL, s, "message");
     }
 
     @Test

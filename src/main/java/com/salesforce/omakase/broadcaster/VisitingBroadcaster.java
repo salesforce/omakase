@@ -28,8 +28,6 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME
- * <p/>
  * A {@link Broadcaster} that will store all received broadcasted events. Replay the broadcasts using {@link #visit()}. The
  * broadcasts can be replayed multiple times.
  *

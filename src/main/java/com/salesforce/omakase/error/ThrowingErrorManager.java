@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.error;
 
-import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.parser.ParserException;
 import org.slf4j.Logger;
@@ -39,11 +38,6 @@ public final class ThrowingErrorManager implements ErrorManager {
         case WARNING:
             logger.warn(format(exception.getMessage()), exception);
         }
-    }
-
-    @Override
-    public void report(ErrorLevel level, Syntax cause, Message message) {
-        report(level, cause, message.message());
     }
 
     @Override

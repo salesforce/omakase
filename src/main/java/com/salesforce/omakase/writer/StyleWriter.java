@@ -27,8 +27,6 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.*;
 
 /**
- * TESTME
- * <p/>
  * The main class for writing processed CSS content.
  * <p/>
  * To use, add an instance of this class to the Omakase request.

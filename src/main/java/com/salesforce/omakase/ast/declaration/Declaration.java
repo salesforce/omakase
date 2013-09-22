@@ -446,7 +446,7 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
             .add("rawValue", rawPropertyValue)
             .add("refinedProperty", propertyName)
             .add("refinedValue", propertyValue)
-            .add("orphaned", orphanedComments())
+            .addUnlessEmpty("orphaned", orphanedComments())
             .toString();
     }
 }

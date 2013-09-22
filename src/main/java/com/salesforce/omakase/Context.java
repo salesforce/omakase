@@ -42,11 +42,7 @@ import com.salesforce.omakase.plugin.PreProcessingPlugin;
 
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 /**
- * TESTME
- * <p/>
  * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
  * Broadcaster}). Note: this class is not exposed as an API itself.
  * <p/>
@@ -97,7 +93,7 @@ final class Context implements Broadcaster, PluginRegistry {
     @Override
     public <T extends Plugin> T require(Class<T> klass) {
         Optional<Supplier<T>> supplier = Suppliers.get(klass);
-        checkArgument(supplier.isPresent(), Message.NO_SUPPLIER.message(klass));
+        if (!supplier.isPresent()) throw new IllegalArgumentException(Message.NO_SUPPLIER.message(klass));
         return require(klass, supplier.get());
     }
 
@@ -115,7 +111,7 @@ final class Context implements Broadcaster, PluginRegistry {
 
     @Override
     public <T extends Plugin> Optional<T> retrieve(Class<T> klass) {
-        return Optional.of(registry.getInstance(klass));
+        return Optional.fromNullable(registry.getInstance(klass));
     }
 
     @Override
@@ -160,13 +156,17 @@ final class Context implements Broadcaster, PluginRegistry {
 
         // let plugins register their dependencies. dependencies can result in their own new dependencies, so this gets
         // a little hairy... guava to the rescue.
+        final Set<DependentPlugin> processed = Sets.newHashSet();
         Set<DependentPlugin> unprocessed = ImmutableSet.copyOf(filter(DependentPlugin.class));
+        Set<DependentPlugin> updated;
+
         while (!unprocessed.isEmpty()) {
             for (DependentPlugin plugin : unprocessed) {
                 plugin.dependencies(this);
             }
-            Set<DependentPlugin> updated = ImmutableSet.copyOf(filter(DependentPlugin.class));
-            unprocessed = Sets.difference(updated, unprocessed);
+            processed.addAll(unprocessed);
+            updated = ImmutableSet.copyOf(filter(DependentPlugin.class));
+            unprocessed = Sets.difference(updated, processed);
         }
 
         // distribute the broadcaster to plugins that need it

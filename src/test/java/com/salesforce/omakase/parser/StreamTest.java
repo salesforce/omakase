@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -59,6 +60,16 @@ public class StreamTest {
         assertThat(stream.index()).isEqualTo(0);
         stream.next();
         assertThat(stream.index()).isEqualTo(1);
+    }
+
+    @Test
+    public void streamFromRaw() {
+        RawSyntax raw = new RawSyntax(5, 6, "test");
+        Stream stream = new Stream(raw);
+
+        assertThat(stream.anchorLine()).isEqualTo(5);
+        assertThat(stream.anchorColumn()).isEqualTo(6);
+        assertThat(stream.source()).isEqualTo("test");
     }
 
     @Test

@@ -27,6 +27,8 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * TESTME
+ * <p/>
  * A broadcaster that queues broadcasts.
  * <p/>
  * Broadcasts can be paused with {@link #pause()} and resumed with {@link #resume()}. The queue operates on a FIFO basis.

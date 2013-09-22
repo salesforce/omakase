@@ -164,6 +164,12 @@ public class PropertyNameTest {
     }
 
     @Test
+    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
+    public void doesntEqualAnotherType() {
+        assertThat(unprefixed.equals("aa")).isFalse();
+    }
+
+    @Test
     public void matchesPropertyWithSameName() {
         PropertyName name = PropertyName.using("display");
         assertThat(name.matches(Property.DISPLAY)).isTrue();

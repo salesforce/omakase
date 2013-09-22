@@ -24,8 +24,6 @@ import com.salesforce.omakase.broadcaster.Broadcaster;
 import static com.google.common.base.Preconditions.*;
 
 /**
- * TESTME
- * <p/>
  * Base class for {@link Groupable}s.
  *
  * @param <T>

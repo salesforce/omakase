@@ -49,6 +49,16 @@ public class OrphanedCommentTest {
     }
 
     @Test
+    public void line() {
+        assertThat(o.line()).isEqualTo(-1);
+    }
+
+    @Test
+    public void column() {
+        assertThat(o.column()).isEqualTo(-1);
+    }
+
+    @Test
     public void errorsOnAddComments() {
         exception.expect(UnsupportedOperationException.class);
         o.comments(Lists.newArrayList("t"));

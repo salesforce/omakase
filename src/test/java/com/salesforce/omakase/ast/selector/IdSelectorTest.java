@@ -50,6 +50,11 @@ public class IdSelectorTest {
     }
 
     @Test
+    public void type() {
+        assertThat(new IdSelector("test").type()).isSameAs(SelectorPartType.ID_SELECTOR);
+    }
+
+    @Test
     public void write() throws IOException {
         IdSelector id = new IdSelector(1, 1, "test");
         assertThat(StyleWriter.compressed().writeSnippet(id)).isEqualTo("#test");

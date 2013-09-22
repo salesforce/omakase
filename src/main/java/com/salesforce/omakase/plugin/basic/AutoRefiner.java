@@ -31,8 +31,6 @@ import com.salesforce.omakase.plugin.Plugin;
 import java.util.Set;
 
 /**
- * TESTME
- * <p/>
  * Automatically refines all explicitly requested {@link Refinable} types.
  * <p/>
  * Generally this is used when your {@link Plugin} has a subscription to a lower-level {@link Syntax} unit not exposed during the

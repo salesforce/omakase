@@ -33,8 +33,6 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME
- * <p/>
  * Standard (default) implementation of the {@link SyntaxCollection}.
  *
  * @param <T>

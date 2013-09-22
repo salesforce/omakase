@@ -27,7 +27,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class AsTest {
-
     @Test
     public void testClass() {
         String s = As.string(this).add("1", "a").add("2", "b").toString();

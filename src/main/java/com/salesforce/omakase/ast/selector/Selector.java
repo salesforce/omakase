@@ -227,8 +227,8 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
             .indent()
             .add("abstract", super.toString())
             .add("raw", rawContent)
-            .add("parts", parts())
-            .add("orphaned", orphanedComments())
+            .add("parts", parts)
+            .addUnlessEmpty("orphaned", orphanedComments())
             .toString();
     }
 }

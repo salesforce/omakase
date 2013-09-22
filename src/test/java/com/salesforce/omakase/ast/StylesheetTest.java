@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.collect.Iterators;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.Property;
 import com.salesforce.omakase.ast.declaration.value.Keyword;
@@ -37,6 +38,13 @@ public class StylesheetTest {
         Stylesheet sheet = new Stylesheet();
         sheet.append(new Rule());
         assertThat(sheet.statements()).hasSize(1);
+    }
+
+    @Test
+    public void iteratorTest() {
+        Stylesheet sheet = new Stylesheet();
+        sheet.append(new Rule());
+        assertThat(Iterators.size(sheet.iterator())).isEqualTo(1);
     }
 
     @Test
