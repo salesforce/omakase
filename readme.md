@@ -164,6 +164,19 @@ Stylesheet stylesheet = tree.stylesheet();
 System.out.println("#statements = " + stylesheet.statements().size());
 ```
 
+To help working with the `Statement` objects within the `Stylesheet`, there are a few helper methods available:
+
+```java
+Stylesheet stylesheet = tree.stylesheet();
+for (Statement statement : stylesheet.statements()) {
+    if (statement.asRule().isPresent()) {
+        Rule rule = statement.asRule().get();
+    } else if (statement.asAtRule().isPresent()) {
+        AtRule atRule = statement.asAtRule().get();
+    }
+}
+```
+
 #### AutoRefiner
 
 The `AutoRefiner` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`). 
@@ -208,7 +221,6 @@ To get started, a plugin must first implement one of the _plugin interfaces_, li
 - **Plugin** - the most basic plugin; essentially just a marker interface.
 - **DependentPlugin** - for plugins that have dependencies on other plugins.
 - **BroadcastingPlugin** - for plugins that need access to a broadcaster.
-- **PreProcessingPlugin** - for plugins that need notification before and after preprocessing.
 - **PostProcessingPlugin** for plugins that need notification after all processing has completed.
 
 Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
@@ -565,35 +577,39 @@ Subscribable Syntax Units
 Following is the list of all supported syntax types that you can subscribe to in `@Rework`, `@Validate` and `@PreProcess` annotated methods. Keep in mind that many syntax units require _refinement_ or the `SyntaxTree` plugin before they will be delivered. More information on this is available in the Usage section above.
 
 <pre>
-    Name                        Description                                               Enablement / Dependency     Type
-    -------------------------   -------------------------------------------------------   -------------------------   ---------------
-01: Refinable                   raw syntax that can be further refined                    Automatic                   interface
-02: Statement                   rule or at-rule                                           SyntaxTree                  interface
-03: Syntax                      parent interface of all subscribable units                Under certain conditions*   interface
-04: OrphanedComment             A comment unassociated with any syntax unit               Under certain conditions*   class
-05: Rule                        (no description)                                          SyntaxTree                  class
-06: Stylesheet                  (no description)                                          SyntaxTree                  class
-07: AtRule                      (no description)                                          Automatic                   class
-08: Declaration                 (no description)                                          Automatic                   class
-09: PropertyValue               interface for all property values                         Declaration#refine          interface
-10: Term                        a single segment of a property value                      Declaration#refine          interface
-11: FunctionValue               individual function value                                 Declaration#refine          class
-12: HexColorValue               individual hex color value                                Declaration#refine          class
-13: KeywordValue                individual keyword value                                  Declaration#refine          class
-14: NumericalValue              individual numerical value                                Declaration#refine          class
-15: StringValue                 individual string value                                   Declaration#refine          class
-16: TermList                    default, generic property value                           Declaration#refine          class
-17: SelectorPart                group interface for all selector segments                 Selector#refine             interface
-18: SimpleSelector              parent interface for simple selectors                     Selector#refine             interface
-19: AttributeSelector           attribute selector segment                                Selector#refine             class
-20: ClassSelector               class selector segment                                    Selector#refine             class
-21: Combinator                  combinator segment                                        Selector#refine             class
-22: IdSelector                  id selector segment                                       Selector#refine             class
-23: PseudoClassSelector         pseudo class selector segment                             Selector#refine             class
-24: PseudoElementSelector       pseudo element selector segment                           Selector#refine             class
-25: Selector                    (no description)                                          Automatic                   class
-26: TypeSelector                type/element selector segment                             Selector#refine             class
-27: UniversalSelector           universal selector segment                                Selector#refine             class
+    Name                           Description                                               Enablement / Dependency     Type
+    ----------------------------   -------------------------------------------------------   -------------------------   ---------------
+01: Refinable                      raw syntax that can be further refined                    Automatic                   interface
+02: Statement                      rule or at-rule                                           SyntaxTree                  interface
+03: Syntax                         parent interface of all subscribable units                Under certain conditions*   interface
+04: OrphanedComment                A comment unassociated with any syntax unit               Under certain conditions*   class
+05: Rule                           (no description)                                          SyntaxTree                  class
+06: Stylesheet                     (no description)                                          SyntaxTree                  class
+07: AtRule                         (no description)                                          Automatic                   class
+08: Declaration                    (no description)                                          Automatic                   class
+09: PropertyValue                  interface for all property values                         Declaration#refine          interface
+10: Term                           a single segment of a property value                      Declaration#refine          interface
+11: FunctionValue                  individual function value                                 Declaration#refine          class
+12: HexColorValue                  individual hex color value                                Declaration#refine          class
+13: KeywordValue                   individual keyword value                                  Declaration#refine          class
+14: NumericalValue                 individual numerical value                                Declaration#refine          class
+15: StringValue                    individual string value                                   Declaration#refine          class
+16: TermList                       default, generic property value                           Declaration#refine          class
+17: NotifyDeclarationBlockEnd      the end of a declaration block                            Automatic                   class
+18: NotifyDeclarationBlockStart    the beginning of a declaration block                      Automatic                   class
+19: NotifyStylesheetEnd            the end of a stylesheet                                   Automatic                   class
+20: NotifyStylesheetStart          the beginning of a stylesheet                             Automatic                   class
+21: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+22: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+23: AttributeSelector              attribute selector segment                                Selector#refine             class
+24: ClassSelector                  class selector segment                                    Selector#refine             class
+25: Combinator                     combinator segment                                        Selector#refine             class
+26: IdSelector                     id selector segment                                       Selector#refine             class
+27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
+28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
+29: Selector                       (no description)                                          Automatic                   class
+30: TypeSelector                   type/element selector segment                             Selector#refine             class
+31: UniversalSelector              universal selector segment                                Selector#refine             class
 
 Generated by SubscribableSyntaxTable.java
 </pre>
