@@ -144,7 +144,10 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
             ParserFactory.complexSelectorParser().parse(stream, qb);
 
             // there should be nothing left
-            if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
+            if (!stream.eof()){
+                throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
+            }
+
 
             // store the parsed selector parts
             parts.appendAll(qb.filter(SelectorPart.class));

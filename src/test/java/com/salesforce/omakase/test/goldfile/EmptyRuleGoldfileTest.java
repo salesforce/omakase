@@ -17,13 +17,13 @@
 package com.salesforce.omakase.test.goldfile;
 
 /**
- * Goldfile some simple css.
+ * Tests a sheet with just an empty rule.
  *
  * @author nmcwilliams
  */
-public class GoldfileSimpleTest extends AbstractGoldfileTest {
+public class EmptyRuleGoldfileTest extends AbstractGoldfileTest {
     @Override
     public String name() {
-        return "simple";
+        return "empty";
     }
 }

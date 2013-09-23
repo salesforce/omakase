@@ -69,6 +69,9 @@ public final class Stream {
     /** if we are inside of a string */
     private boolean inString = false;
 
+    /** if we are inside of a comment */
+    private boolean inComment = false;
+
     /** the character that opened the last string */
     private Token stringToken = null;
 
@@ -318,7 +321,7 @@ public final class Stream {
         index += 1;
 
         // check if we are in a string
-        if (checkInString) {
+        if (checkInString && !inComment) {
             updateInString();
         }
 
@@ -672,7 +675,6 @@ public final class Stream {
      */
     private String readComment() {
         String comment = null;
-        boolean inComment = false;
 
         // check for the opening comment
         if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peek())) {

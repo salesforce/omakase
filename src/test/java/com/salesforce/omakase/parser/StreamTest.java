@@ -730,6 +730,22 @@ public class StreamTest {
         assertThat(stream.inString()).isTrue();
     }
 
+    @Test
+    public void singleQuoteDoesntOpenStringInsideComments() {
+        Stream stream = new Stream("/*abc'*/abc");
+        stream.collectComments();
+        assertThat(stream.index()).isEqualTo(8);
+        assertThat(stream.inString()).isFalse();
+    }
+
+    @Test
+    public void doubleQuoteDoesntOpenStringInsideComments() {
+        Stream stream = new Stream("/*abc\"\"\n\"*/abc");
+        stream.collectComments();
+        assertThat(stream.index()).isEqualTo(11);
+        assertThat(stream.inString()).isFalse();
+    }
+
     public enum StreamEnum implements TokenEnum {
         ONE(Tokens.ALPHA),
         TWO(Tokens.DIGIT);

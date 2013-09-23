@@ -1,0 +1,148 @@
+/**
+ @component media
+ @brief Image to left, content to the right
+ @requires box
+
+ @cssObject zen-media
+ @javaElement common.html.zen.MediaBlock
+ @javaElement common.html.zen.InlineMediaBlock
+
+ The media block is a UI pattern of an image to the left and some text (or really anything) that
+ describes it to the right. The image can be any size. The media block has an optional right
+ region which should also be **fixed width**.
+
+ @extensibleExample
+ <div class="zen-media">
+    <a class="zen-img" href="javascript:void(0);"><img src="http://placehold.it/50x50" alt="sample image"></a>
+    <div class="zen-mediaBody">
+        This text will usually describe or be related in some way to the image on the left.
+        A common example of a media block is a chatter post, with the user's picture on the left
+        and their comment on the right.
+    </div>
+ </div>
+
+ @example
+ <div class="zen-media">
+    <a  class="zen-img" href="javascript:void(0);"><img src="http://placehold.it/128x128" alt="sample image"/></a>
+    <div class="zen-mediaBody">
+        <p class="zen-mtn">
+            You can nest media blocks inside of other media blocks as well.
+            Media blocks are extremely flexible; feel free to try and use them in different ways
+            to see how you can reduce your amount of code!
+        </p>
+        <div class="zen-media">
+            <a class="zen-img zen-mrs" href="javascript:void(0);">
+                <img src="http://placehold.it/16x16&text=+" alt="sample image">
+            </a>
+            <div class="zen-mediaBody">This is a nested media block.</div>
+        </div>
+    </div>
+ </div>
+
+ @example
+ <div class="zen-media">
+    <!-- left -->
+    <a href="javascript:void(0);" class="zen-img">
+        <img src="http://placehold.it/92x92&text=Left" alt="img" width="92" height="92">
+    </a>
+    <!-- right -->
+    <a href="javascript:void(0);" class="zen-imgExt">
+        <img src="http://placehold.it/92x92&text=Right" alt="img" width="92" height="92">
+    </a>
+    <div class="zen-mediaBody">
+        <p class="zen-mtn">Images can be right, left, or both.</p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea comm.
+        </p>
+    </div>
+ </div>
+*/
+
+.zen .zen-media:after,
+.zen .zen-mediaBody:after { /*clearfix */
+  clear: both;
+  display: block;
+  visibility: hidden;
+  overflow: hidden;
+  height: 0 !important;
+  line-height: 0;
+  content: ".";
+}
+
+.zen .zen-mediaBody {
+  display: table-cell; /* new formatting context */
+  width: 1000em;
+}
+
+.zen .zen-img {
+  float: left;
+  background-repeat: no-repeat;
+  margin-right: 10px;
+}
+.zen .zen-img img {
+  display: block;
+}
+
+.zen .zen-imgExt {
+  float: right;
+  margin-left: 10px;
+}
+
+
+/* tiny icon and text in an inline list */
+/**
+ @extension mediaExt
+ @extends media
+
+ Occasionally you will need a media block where the text centers vertically with respect to the image.
+ In this case you want to use the mediaExt class. The html for this class is a bit different,
+ it requires that you use spans instead of divs (for IE support) and the imgExt should come after the mediaBody.
+ It cannot contain block level elements.
+
+ As you can see it is pretty limited, and should only be used in cases
+ where a normal media block doesn't work, even with special spacing classes applied.
+
+ @example
+ <span class="zen-media zen-mediaExt">
+    <a class="zen-img" href="javascript:void(0);"><img alt="zen-img" src="http://placehold.it/64x64"></a>
+    <span class="zen-mediaBody">This text is vertically aligned in the center.</span>
+ </span>
+*/
+.zen .zen-mediaExt {
+  white-space: nowrap;
+}
+
+.zen .zen-mediaExt,
+.zen .zen-mediaExt .zen-img,
+.zen .zen-mediaExt img,
+.zen .zen-mediaExt .zen-imgExt,
+.zen .zen-mediaExt .zen-mediaBody {
+  display: inline;
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+}
+
+.zen .zen-mediaExt:after,
+.zen .zen-mediaExt .zen-mediaBody:after {
+  content: "";
+}
+.zen .zen-mediaExt .zen-img {
+  margin: 0;
+  margin-right: 5px;
+  float: none;
+}
+
+.zen .zen-mediaExt .zen-imgExt {
+  margin: 0;
+  margin-left: 5px;
+  float: none;
+}
+
+.zen .zen-mediaExt a,
+.zen .zen-mediaExt img {
+  vertical-align: middle;
+  display: inline;
+}

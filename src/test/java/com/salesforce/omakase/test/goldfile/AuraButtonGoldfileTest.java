@@ -17,13 +17,13 @@
 package com.salesforce.omakase.test.goldfile;
 
 /**
- * Goldfile some simple css.
+ * Goldfile some css from aura.
  *
  * @author nmcwilliams
  */
-public class GoldfileSimpleTest extends AbstractGoldfileTest {
+public class AuraButtonGoldfileTest extends AbstractGoldfileTest {
     @Override
     public String name() {
-        return "simple";
+        return "button";
     }
 }

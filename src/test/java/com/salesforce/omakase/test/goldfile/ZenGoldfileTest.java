@@ -17,13 +17,13 @@
 package com.salesforce.omakase.test.goldfile;
 
 /**
- * Goldfile some simple css.
+ * Goldfile some huge css file.
  *
  * @author nmcwilliams
  */
-public class GoldfileSimpleTest extends AbstractGoldfileTest {
+public class ZenGoldfileTest extends AbstractGoldfileTest {
     @Override
     public String name() {
-        return "simple";
+        return "zen";
     }
 }

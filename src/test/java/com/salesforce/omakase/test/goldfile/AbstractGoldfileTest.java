@@ -49,10 +49,10 @@ public abstract class AbstractGoldfileTest {
     @Parameter(0) public WriterMode mode;
     @Parameter(1) public boolean autoRefine;
 
-    public abstract String testFile();
+    public abstract String name();
 
     @Test
     public void goldfile() throws IOException {
-        Goldfile.test(testFile(), mode, autoRefine);
+        Goldfile.test(name(), mode, autoRefine);
     }
 }
