@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * TODO description
- *
- * @author nmcwilliams
- */
-
 package com.salesforce.omakase.plugin.validator;
 
 import com.google.common.collect.Lists;

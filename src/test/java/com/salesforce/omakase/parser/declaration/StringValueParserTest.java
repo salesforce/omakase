@@ -31,7 +31,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Unit tests for {@link StringValueParser}.
  * <p/>
- * XXX the spec allows for escaped newlines in strings as well, see http://www.w3.org/TR/css3-values/#strings
+ * future: the spec allows for escaped newlines in strings as well, see http://www.w3.org/TR/css3-values/#strings
  *
  * @author nmcwilliams
  */

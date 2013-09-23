@@ -294,10 +294,6 @@ public class DeclarationTest {
         assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
     }
 
-    public void writeCompressedUnrefinedDoesMinification() {
-        // TODO add test when functionality is added
-    }
-
     @Test
     public void isWritableWhenAttached() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));

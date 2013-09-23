@@ -42,8 +42,4 @@ public class RawSyntaxTest {
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(r)).isEqualTo(".class > #id");
     }
-
-    public void writeCompressed() {
-        fail("unimplemented"); // TODO write test once functionality is there
-    }
 }

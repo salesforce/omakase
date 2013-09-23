@@ -172,10 +172,6 @@ public class SelectorTest {
         assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
-    public void writeCompressedUnrefinedDoesMinification() {
-        // TODO add test when functionality is available
-    }
-
     @Test
     public void isWritableWhenAttached() {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));

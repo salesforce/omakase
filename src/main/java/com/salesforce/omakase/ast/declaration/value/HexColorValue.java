@@ -111,7 +111,6 @@ public class HexColorValue extends AbstractSyntax implements Term {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (writer.isCompressed()) {
-            // TODO optimizations
             appendable.append('#').append(color);
         } else {
             appendable.append('#').append(color);
