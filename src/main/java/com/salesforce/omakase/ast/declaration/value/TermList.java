@@ -36,21 +36,15 @@ import java.util.List;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
- * TESTME
- * <p/>
  * The generic and default {@link Declaration}'s {@link PropertyValue}. This contains a list of {@link Term}s, for example
  * numbers, keywords, functions, hex colors, etc...
  * <p/>
- * If you need to change the contents of the {@link TermList}, change the contents of the actual {@link Term} itself. If you need
- * to remove or add {@link Term}s from the {@link TermList}, create a new {@link TermList} to replace this one with instead.
- * (ACTUALLY I'm not sure why this comment is here. maybe it can be ignored).
+ * You can add new members to this term list via {@link #add(TermListMember)}, and you can change term list members by changing
+ * the child term instance itself. However for anything beyond that (e.g., removing a member), create a new {@link TermList}
+ * instance instead.
  * <p/>
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is name now
  * given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
- * <p/>
- * XXX This setup is perhaps inconsistent with the rest of the project, with respect to the term members being directly added
- * instead of broadcasted. Also, as noted above, this doesn't allow for additions/removals from the list, which would be nice to
- * support.
  *
  * @author nmcwilliams
  * @see Term
@@ -124,11 +118,8 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         super.propagateBroadcast(broadcaster);
-        for (TermListMember member : members) {
-            // FIXME
-            if (member instanceof Term) {
-                ((Term)member).propagateBroadcast(broadcaster);
-            }
+        for (Term term : terms()) {
+            term.propagateBroadcast(broadcaster);
         }
     }
 
