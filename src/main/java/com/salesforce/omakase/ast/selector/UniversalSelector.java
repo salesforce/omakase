@@ -18,14 +18,14 @@ package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
 
 /**
  * Represents the CSS universal selector, i.e., "*".

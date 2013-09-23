@@ -16,8 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,32 +35,6 @@ public class OrphanedCommentTest {
     @Before
     public void setup() {
         this.o = new OrphanedComment("test", OrphanedComment.Location.DECLARATION);
-    }
-
-    @Test
-    public void location() {
-        assertThat(o.location()).isSameAs(OrphanedComment.Location.DECLARATION);
-    }
-
-    @Test
-    public void neverHasSourcePosition() {
-        assertThat(o.hasSourcePosition()).isFalse();
-    }
-
-    @Test
-    public void line() {
-        assertThat(o.line()).isEqualTo(-1);
-    }
-
-    @Test
-    public void column() {
-        assertThat(o.column()).isEqualTo(-1);
-    }
-
-    @Test
-    public void errorsOnAddComments() {
-        exception.expect(UnsupportedOperationException.class);
-        o.comments(Lists.newArrayList("t"));
     }
 
     @Test

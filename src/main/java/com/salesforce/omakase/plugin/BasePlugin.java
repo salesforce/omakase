@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.ast.Comment;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -25,13 +25,13 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
-import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockStart;
-import com.salesforce.omakase.ast.notification.NotifyStylesheetEnd;
-import com.salesforce.omakase.ast.notification.NotifyStylesheetStart;
 import com.salesforce.omakase.ast.selector.*;
-import com.salesforce.omakase.emitter.Observe;
-import com.salesforce.omakase.emitter.Rework;
-import com.salesforce.omakase.emitter.Validate;
+import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.broadcast.annotation.Rework;
+import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
+import com.salesforce.omakase.notification.NotifyStylesheetEnd;
+import com.salesforce.omakase.notification.NotifyStylesheetStart;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
@@ -318,10 +318,10 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link Comment}.
+     * for {@link Syntax} units of type {@link OrphanedComment}.
      *
      * @param orphaned
-     *     The {@link Comment} instance.
+     *     The {@link OrphanedComment} instance.
      */
-    public void orphanedSelectorComment(Comment orphaned) {}
+    public void orphanedSelectorComment(OrphanedComment orphaned) {}
 }

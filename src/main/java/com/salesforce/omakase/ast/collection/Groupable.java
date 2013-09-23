@@ -17,16 +17,19 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.emitter.PreProcess;
-import com.salesforce.omakase.emitter.Rework;
-import com.salesforce.omakase.emitter.Validate;
+import com.salesforce.omakase.broadcast.annotation.PreProcess;
+import com.salesforce.omakase.broadcast.annotation.Rework;
+import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+
+import java.util.List;
 
 /**
  * Represents an item that appears in a group or chain of other related units, for usage with {@link SyntaxCollection}.
@@ -102,8 +105,9 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * <p/>
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
-     * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
-     * #detach()} before appending or prepending the unit to the new parent.
+     * collections. However all of the units group or parent methods will behave according to the new group. This may or may not
+     * be the desired behavior depending on the use-case. If this is not desired then call {@link #detach()} before appending or
+     * prepending the unit to the new parent.
      *
      * @param unit
      *     The unit to prepend.
@@ -126,8 +130,9 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * <p/>
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
-     * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
-     * #detach()} before appending or prepending the unit to the new parent.
+     * collections. However all of the units group or parent methods will behave according to the new group. This may or may not
+     * be the desired behavior depending on the use-case. If this is not desired then call {@link #detach()} before appending or
+     * prepending the unit to the new parent.
      *
      * @param unit
      *     The unit to append.
@@ -151,7 +156,7 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     boolean isDetached();
 
     /**
-     * Sets the group group. This should only be called internally... calling it yourself may result in expected behavior.
+     * Sets the group. This should only be called internally... calling it yourself may result in expected behavior.
      *
      * @param group
      *     The group group.
@@ -174,4 +179,22 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * @return The parent, or {@link Optional#absent()} if the parent is not specified.
      */
     Optional<P> parent();
+
+    /**
+     * Adds an {@link OrphanedComment}.
+     *
+     * @param comment
+     *     The comment.
+     */
+    void orphanedComment(OrphanedComment comment);
+
+    /**
+     * Gets all {@link OrphanedComment}s.
+     * <p/>
+     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
+     * at the end of a stylesheet or declaration block.
+     *
+     * @return The list of comments, or an empty list if none are specified.
+     */
+    List<OrphanedComment> orphanedComments();
 }

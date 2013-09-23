@@ -20,7 +20,8 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Rule;
 import org.junit.Test;
@@ -160,6 +161,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
             result.stream = new Stream(source);
             result.success = parser.parse(result.stream, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
+            result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
             results.add(result);
         }
 
@@ -182,6 +184,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
             result.stream = new Stream(ts.source);
             result.success = parser.parse(result.stream, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
+            result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
             result.expected = ts.expected;
             results.add(result);
         }
@@ -192,7 +195,8 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     /** helper object */
     public static class ParseResult<T> {
         public QueryableBroadcaster broadcaster;
-        public List<Syntax> broadcasted;
+        public List<Broadcastable> broadcasted;
+        public List<Syntax> broadcastedSyntax;
         public boolean success;
         public Stream stream;
         public T expected;

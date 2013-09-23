@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import org.junit.Test;

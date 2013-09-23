@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
 /**
  * Designates that an {@link Syntax} unit is <em>refinable</em> to a more specified or detailed representation.

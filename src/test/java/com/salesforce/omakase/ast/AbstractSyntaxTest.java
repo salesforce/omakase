@@ -18,7 +18,7 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;

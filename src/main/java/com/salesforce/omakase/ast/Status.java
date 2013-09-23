@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.emitter.SubscriptionPhase;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 
 /**
  * Represents the broadcast status of {@link Syntax} unit.
@@ -95,7 +95,7 @@ public enum Status {
      *
      * @return The next status level.
      */
-    public Status nextStatus(SubscriptionPhase phase) {
+    public static Status nextStatusAfterPhase(SubscriptionPhase phase) {
         switch (phase) {
         case PREPROCESS:
             return Status.BROADCASTED_PREPROCESS;

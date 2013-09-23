@@ -17,9 +17,9 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.ast.OrphanedComment;
-import com.salesforce.omakase.ast.notification.NotifyStylesheetEnd;
-import com.salesforce.omakase.ast.notification.NotifyStylesheetStart;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.notification.NotifyStylesheetEnd;
+import com.salesforce.omakase.notification.NotifyStylesheetStart;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;
 import org.junit.Rule;

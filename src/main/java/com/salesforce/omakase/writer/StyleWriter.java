@@ -45,14 +45,14 @@ import static com.google.common.base.Preconditions.*;
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
  * Omakase.source(input).request(verbose).process();
- * verbose.write(System.out);
+ * verbose.writeTo(System.out);
  * </code></pre>
  * <p/>
  * Unless otherwise specified, {@link WriterMode#INLINE} will be used.
  *
  * @author nmcwilliams
  */
-public class StyleWriter implements DependentPlugin {
+public final class StyleWriter implements DependentPlugin {
     private final Map<Class<? extends Writable>, CustomWriter<?>> overrides = new HashMap<>();
     private SyntaxTree tree;
     private WriterMode mode;
@@ -136,23 +136,6 @@ public class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * Writes the processed CSS source to a string.
-     *
-     * @return The CSS output.
-     */
-    public String write() {
-        checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
-
-        StyleAppendable appendable = new StyleAppendable();
-        try {
-            write(appendable);
-        } catch (IOException e) {
-            throw new RuntimeException("Using a StringBuilder shouldn't cause an IOException.", e);
-        }
-        return appendable.toString();
-    }
-
-    /**
      * Writes the processed CSS source code to the given {@link Appendable}.
      *
      * @param appendable
@@ -161,8 +144,8 @@ public class StyleWriter implements DependentPlugin {
      * @throws IOException
      *     If an I/O error occurs.
      */
-    public void write(Appendable appendable) throws IOException {
-        write(new StyleAppendable(appendable));
+    public void writeTo(Appendable appendable) throws IOException {
+        writeTo(new StyleAppendable(appendable));
     }
 
     /**
@@ -174,10 +157,27 @@ public class StyleWriter implements DependentPlugin {
      * @throws IOException
      *     If an I/O error occurs.
      */
-    public void write(StyleAppendable appendable) throws IOException {
+    public void writeTo(StyleAppendable appendable) throws IOException {
         checkNotNull(appendable, "appendable cannot be null");
         checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
         write(tree.stylesheet(), appendable);
+    }
+
+    /**
+     * Writes the processed CSS source to a string.
+     *
+     * @return The CSS output.
+     */
+    public String write() {
+        checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
+
+        StyleAppendable appendable = new StyleAppendable();
+        try {
+            writeTo(appendable);
+        } catch (IOException e) {
+            throw new RuntimeException("Using a StringBuilder shouldn't cause an IOException.", e);
+        }
+        return appendable.toString();
     }
 
     /**

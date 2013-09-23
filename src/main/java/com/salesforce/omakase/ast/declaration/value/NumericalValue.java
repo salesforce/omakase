@@ -20,8 +20,8 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -29,7 +29,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * A numerical value (e.g., 1 or 1px or 3.5em).

@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.IdSelector;
@@ -28,6 +27,7 @@ import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.ast.selector.UniversalSelector;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -174,7 +174,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         GenericParseResult result = Iterables.getOnlyElement(
             parse("*.page .home > .child #id:hover .button .inner + span:before"));
 
-        List<Syntax> broadcasted = result.broadcasted;
+        List<Broadcastable> broadcasted = result.broadcasted;
         assertThat(broadcasted).hasSize(16);
         assertThat(broadcasted.get(0)).isInstanceOf(UniversalSelector.class);
         assertThat(broadcasted.get(1)).isInstanceOf(ClassSelector.class);
@@ -199,7 +199,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         GenericParseResult result = Iterables.getOnlyElement(
             parse(".class/*comment*/ .class /*comment*/\n\n/*comment \n comment */ #id /*comment */"));
 
-        List<Syntax> broadcasted = result.broadcasted;
+        List<Broadcastable> broadcasted = result.broadcasted;
         assertThat(broadcasted.get(0)).isInstanceOf(ClassSelector.class);
         assertThat(broadcasted.get(1)).isInstanceOf(Combinator.class);
         assertThat(broadcasted.get(2)).isInstanceOf(ClassSelector.class);

@@ -18,10 +18,10 @@ package com.salesforce.omakase.ast.declaration.value;
 
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * A {@link TermListMember} within a {@link TermList} representing a single segment of the {@link Declaration} value.

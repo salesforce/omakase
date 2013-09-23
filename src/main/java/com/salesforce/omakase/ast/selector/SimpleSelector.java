@@ -16,10 +16,10 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_SELECTOR;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
 
 /**
  * A simple selector, as defined by the Selectors Level 3 spec: "A simple selector is either a type selector, universal selector,

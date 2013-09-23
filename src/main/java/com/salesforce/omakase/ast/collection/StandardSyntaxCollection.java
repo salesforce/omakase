@@ -24,7 +24,7 @@ import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 
 import java.util.Iterator;
 import java.util.LinkedList;

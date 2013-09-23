@@ -21,7 +21,7 @@ import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.emitter.Validate;
+import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;

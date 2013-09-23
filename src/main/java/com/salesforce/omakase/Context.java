@@ -23,16 +23,16 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.EmittingBroadcaster;
-import com.salesforce.omakase.broadcaster.VisitingBroadcaster;
-import com.salesforce.omakase.emitter.Emitter;
-import com.salesforce.omakase.emitter.Observe;
-import com.salesforce.omakase.emitter.PreProcess;
-import com.salesforce.omakase.emitter.Rework;
-import com.salesforce.omakase.emitter.SubscriptionPhase;
-import com.salesforce.omakase.emitter.Validate;
+import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.EmittingBroadcaster;
+import com.salesforce.omakase.broadcast.VisitingBroadcaster;
+import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.broadcast.annotation.PreProcess;
+import com.salesforce.omakase.broadcast.annotation.Rework;
+import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.broadcast.emitter.Emitter;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
@@ -114,19 +114,18 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     @Override
-    public <T extends Syntax> void broadcast(T syntax) {
-        broadcaster.broadcast(syntax);
+    public void broadcast(Broadcastable broadcastable) {
+        broadcaster.broadcast(broadcastable);
     }
 
     @Override
-    public <T extends Syntax> void broadcast(T syntax, boolean propagate) {
-        broadcaster.broadcast(syntax, propagate);
+    public void broadcast(Broadcastable broadcastable, boolean propagate) {
+        broadcaster.broadcast(broadcastable, propagate);
     }
 
     @Override
-    public Broadcaster wrap(Broadcaster relay) {
+    public void wrap(Broadcaster relay) {
         broadcaster.wrap(relay);
-        return this;
     }
 
     /**
@@ -134,12 +133,10 @@ final class Context implements Broadcaster, PluginRegistry {
      *
      * @param broadcaster
      *     Wrap the existing broadcaster inside of this one.
-     *
-     * @return this, for chaining.
      */
-    public Context broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = broadcaster.wrap(this.broadcaster);
-        return this;
+    public void broadcaster(Broadcaster broadcaster) {
+        broadcaster.wrap(this.broadcaster);
+        this.broadcaster = broadcaster;
     }
 
     /**

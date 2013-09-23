@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
@@ -28,10 +27,10 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;
@@ -40,11 +39,8 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS selector.
@@ -75,7 +71,6 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 public class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
     private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax rawContent;
-    private List<OrphanedComment> orphanedComments;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
@@ -164,40 +159,15 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
     }
 
     @Override
-    public Syntax broadcaster(Broadcaster broadcaster) {
+    public void broadcaster(Broadcaster broadcaster) {
+        super.broadcaster(broadcaster);
         parts.broadcaster(broadcaster);
-        return super.broadcaster(broadcaster);
     }
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         super.propagateBroadcast(broadcaster);
         parts.propagateBroadcast(broadcaster);
-    }
-
-    /**
-     * Adds an {@link OrphanedComment}.
-     *
-     * @param comment
-     *     The comment.
-     */
-    public void orphanedComment(OrphanedComment comment) {
-        checkNotNull(comment, "comment cannot be null");
-        checkArgument(comment.location() == OrphanedComment.Location.SELECTOR, "invalid orphaned value location");
-        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
-        orphanedComments.add(comment);
-    }
-
-    /**
-     * Gets all {@link OrphanedComment}s.
-     * <p/>
-     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
-     * at the end of a stylesheet or declaration block.
-     *
-     * @return The list of comments, or an empty list if none are specified.
-     */
-    public List<OrphanedComment> orphanedComments() {
-        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override

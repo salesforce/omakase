@@ -17,7 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;

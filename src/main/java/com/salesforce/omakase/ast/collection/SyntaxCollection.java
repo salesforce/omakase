@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 

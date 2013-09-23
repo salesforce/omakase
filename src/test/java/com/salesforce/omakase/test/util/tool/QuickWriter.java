@@ -48,21 +48,21 @@ public final class QuickWriter {
 
         writer.mode(WriterMode.VERBOSE);
         System.out.println("VERBOSE (unrefined)");
-        writer.write(System.out);
+        writer.writeTo(System.out);
 
         System.out.println();
         System.out.println();
 
         writer.mode(WriterMode.INLINE);
         System.out.println("INLINE (unrefined)");
-        writer.write(System.out);
+        writer.writeTo(System.out);
 
         System.out.println();
         System.out.println();
 
         writer.mode(WriterMode.COMPRESSED);
         System.out.println("COMPRESSED (unrefined)");
-        writer.write(System.out);
+        writer.writeTo(System.out);
 
         System.out.println("\n");
 
@@ -74,20 +74,20 @@ public final class QuickWriter {
 
         writer.mode(WriterMode.VERBOSE);
         System.out.println("VERBOSE (refined)");
-        writer.write(System.out);
+        writer.writeTo(System.out);
 
         System.out.println();
         System.out.println();
 
         writer.mode(WriterMode.INLINE);
         System.out.println("INLINE (refined)");
-        writer.write(System.out);
+        writer.writeTo(System.out);
 
         System.out.println();
         System.out.println();
 
         writer.mode(WriterMode.COMPRESSED);
         System.out.println("COMPRESSED (refined)");
-        writer.write(System.out);
+        writer.writeTo(System.out);
     }
 }

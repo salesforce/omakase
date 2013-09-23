@@ -20,13 +20,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermListMember;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -170,7 +170,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
     public void matchesExpectedBroadcastContentWithOrphanedComments() {
         GenericParseResult result = Iterables.getOnlyElement(parse("/*x*/ 1px /*x*/ solid red /*x*/\n/*x*/"));
 
-        List<Syntax> broadcasted = result.broadcasted;
+        List<Broadcastable> broadcasted = result.broadcasted;
 
         assertThat(broadcasted).hasSize(6);
         assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);

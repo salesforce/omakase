@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**

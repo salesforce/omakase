@@ -19,8 +19,8 @@ package com.salesforce.omakase.test.util.tool;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import org.reflections.Reflections;
 
 import java.util.Collections;

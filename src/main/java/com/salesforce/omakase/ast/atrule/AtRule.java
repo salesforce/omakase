@@ -25,9 +25,9 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -35,7 +35,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes, etc...

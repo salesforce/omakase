@@ -17,7 +17,7 @@
 package com.salesforce.omakase;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.ThrowingErrorManager;

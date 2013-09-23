@@ -21,9 +21,9 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -34,8 +34,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
 
 /**
  * The root-level {@link Syntax} object.
@@ -106,7 +106,6 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
      */
     public void orphanedComment(OrphanedComment comment) {
         checkNotNull(comment, "comment cannot be null");
-        checkArgument(comment.location() == OrphanedComment.Location.STYLESHEET, "invalid orphaned value location");
         orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
         orphanedComments.add(comment);
     }
@@ -134,7 +133,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
         return As.string(this)
             .indent()
             .add("statements", Lists.newArrayList(statements()))
-            .addIf(orphanedComments != null, "orphaned", orphanedComments())
+            .addUnlessEmpty("orphaned", orphanedComments())
             .toString();
     }
 }

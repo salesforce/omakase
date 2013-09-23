@@ -20,7 +20,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcaster.AbstractBroadcaster;
+import com.salesforce.omakase.broadcast.AbstractBroadcaster;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -318,15 +319,15 @@ public class StandardSyntaxCollectionTest {
     }
 
     private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private final Set<Syntax> all = Sets.newHashSet();
+        private final Set<Broadcastable> all = Sets.newHashSet();
 
         @Override
-        public <T extends Syntax> void broadcast(T syntax) {
-            if (all.contains(syntax)) {
+        public void broadcast(Broadcastable broadcastable) {
+            if (all.contains(broadcastable)) {
                 fail("unit shouldn't be broadcasted twice!");
             }
-            all.add(syntax);
-            syntax.status(Status.BROADCASTED_PREPROCESS);
+            all.add(broadcastable);
+            broadcastable.status(Status.BROADCASTED_PREPROCESS);
         }
     }
 }

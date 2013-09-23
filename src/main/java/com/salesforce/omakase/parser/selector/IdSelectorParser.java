@@ -19,7 +19,7 @@ package com.salesforce.omakase.parser.selector;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;

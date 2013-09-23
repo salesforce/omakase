@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
@@ -25,15 +24,14 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserStrategy;
@@ -44,11 +42,9 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS declaration.
@@ -63,8 +59,6 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.AUTOMATIC;
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
-    private List<OrphanedComment> orphanedComments;
-
     /* unrefined */
     private final RawSyntax rawPropertyName;
     private final RawSyntax rawPropertyValue;
@@ -361,11 +355,11 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     @Override
-    public Syntax broadcaster(Broadcaster broadcaster) {
+    public void broadcaster(Broadcaster broadcaster) {
         if (propertyValue != null) {
             propertyValue.broadcaster(broadcaster);
         }
-        return super.broadcaster(broadcaster);
+        super.broadcaster(broadcaster);
     }
 
     @Override
@@ -374,32 +368,6 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
         if (propertyValue != null) {
             propertyValue.propagateBroadcast(broadcaster);
         }
-    }
-
-    /**
-     * Adds an {@link OrphanedComment}.
-     *
-     * @param comment
-     *     The comment.
-     */
-    public void orphanedComment(OrphanedComment comment) {
-        checkNotNull(comment, "comment cannot be null");
-        checkArgument(comment.location() == OrphanedComment.Location.DECLARATION, "invalid orphaned value location");
-
-        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
-        orphanedComments.add(comment);
-    }
-
-    /**
-     * Gets all {@link OrphanedComment}s.
-     * <p/>
-     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
-     * at the end of a stylesheet or declaration block.
-     *
-     * @return The list of comments, or an empty list if none are specified.
-     */
-    public List<OrphanedComment> orphanedComments() {
-        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override

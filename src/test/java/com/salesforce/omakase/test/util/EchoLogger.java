@@ -17,7 +17,7 @@
 package com.salesforce.omakase.test.util;
 
 import ch.qos.logback.classic.Level;
-import com.salesforce.omakase.ast.Comment;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -27,7 +27,7 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.ast.selector.*;
-import com.salesforce.omakase.emitter.Observe;
+import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.BasePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,7 +200,7 @@ public final class EchoLogger extends BasePlugin {
     }
 
     @Override
-    public void orphanedSelectorComment(Comment orphaned) {
+    public void orphanedSelectorComment(OrphanedComment orphaned) {
         logger.trace("orphanedComment: {}", orphaned);
     }
 }

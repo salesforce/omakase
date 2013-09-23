@@ -24,7 +24,7 @@ import com.salesforce.omakase.As;
  *
  * @author nmcwilliams
  */
-public class CompoundToken implements Token {
+public final class CompoundToken implements Token {
     private final String description;
     private final CharMatcher matcher;
 

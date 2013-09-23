@@ -25,7 +25,7 @@ import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.emitter.PreProcess;
+import com.salesforce.omakase.broadcast.annotation.PreProcess;
 import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.Set;

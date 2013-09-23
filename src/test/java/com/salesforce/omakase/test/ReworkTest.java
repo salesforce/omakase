@@ -21,7 +21,6 @@ import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Stylesheet;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.Prefix;
 import com.salesforce.omakase.ast.declaration.Property;
@@ -34,8 +33,9 @@ import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
-import com.salesforce.omakase.emitter.Rework;
+import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
@@ -93,8 +93,8 @@ public class ReworkTest {
         // inline.write(System.out);
 
         // ensure everything is broadcasted
-        for (Syntax syntax : broadcaster.all()) {
-            assertThat(syntax.status() != Status.UNBROADCASTED);
+        for (Broadcastable broadcastable : broadcaster.all()) {
+            assertThat(broadcastable.status() != Status.UNBROADCASTED);
         }
 
         // declaration subscriptions called exactly 10 times (5 + 5 added)

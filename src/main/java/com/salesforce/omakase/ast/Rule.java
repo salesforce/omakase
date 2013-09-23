@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -25,19 +24,16 @@ import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
 
 /**
  * Represents a CSS Rule.
@@ -74,7 +70,6 @@ import static com.salesforce.omakase.emitter.SubscribableRequirement.SYNTAX_TREE
 public class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
     private final SyntaxCollection<Rule, Selector> selectors;
     private final SyntaxCollection<Rule, Declaration> declarations;
-    private List<OrphanedComment> orphanedComments;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public Rule() {
@@ -118,10 +113,10 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
     }
 
     @Override
-    public Syntax broadcaster(Broadcaster broadcaster) {
+    public void broadcaster(Broadcaster broadcaster) {
+        super.broadcaster(broadcaster);
         selectors.broadcaster(broadcaster);
         declarations.broadcaster(broadcaster);
-        return super.broadcaster(broadcaster);
     }
 
     @Override
@@ -129,31 +124,6 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
         super.propagateBroadcast(broadcaster);
         selectors.propagateBroadcast(broadcaster);
         declarations.propagateBroadcast(broadcaster);
-    }
-
-    /**
-     * Adds an {@link OrphanedComment}.
-     *
-     * @param comment
-     *     The comment.
-     */
-    public void orphanedComment(OrphanedComment comment) {
-        checkNotNull(comment, "comment cannot be null");
-        checkArgument(comment.location() == OrphanedComment.Location.RULE, "invalid orphaned value location");
-        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
-        orphanedComments.add(comment);
-    }
-
-    /**
-     * Gets all {@link OrphanedComment}s.
-     * <p/>
-     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
-     * at the end of a stylesheet or declaration block.
-     *
-     * @return The list of comments, or an empty list if none are specified.
-     */
-    public List<OrphanedComment> orphanedComments() {
-        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override
@@ -181,7 +151,7 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // selectors
         for (Selector selector : selectors) {
-            if (!selector.isDetached()) {
+            if (selector.isWritable()) {
                 writer.write(selector, appendable);
                 if (!selector.isLast()) {
                     appendable.append(',');
@@ -197,7 +167,7 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
 
         // declarations
         for (Declaration declaration : declarations) {
-            if (!declaration.isDetached()) {
+            if (declaration.isWritable()) {
                 appendable.indentIf(writer.isVerbose());
                 writer.write(declaration, appendable);
                 if (writer.isVerbose() || !declaration.isLast() && !declaration.isDetached()) appendable.append(';');
@@ -223,7 +193,7 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
             .add("abstract", super.toString())
             .add("selectors", selectors)
             .add("declarations", declarations)
-            .add("orphaned", orphanedComments())
+            .addUnlessEmpty("orphaned", orphanedComments())
             .toString();
     }
 }

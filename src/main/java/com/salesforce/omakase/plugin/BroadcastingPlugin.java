@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
  * A plugin that needs access to a {@link Broadcaster}.

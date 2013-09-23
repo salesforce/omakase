@@ -17,9 +17,14 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -35,6 +40,7 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> extends AbstractSyntax implements Groupable<P, T> {
     private SyntaxCollection<P, T> group;
+    private List<OrphanedComment> orphanedComments;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractGroupable() {}
@@ -129,5 +135,17 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
     @Override
     public boolean isWritable() {
         return !isDetached();
+    }
+
+    @Override
+    public void orphanedComment(OrphanedComment comment) {
+        checkNotNull(comment, "comment cannot be null");
+        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
+        orphanedComments.add(comment);
+    }
+
+    @Override
+    public List<OrphanedComment> orphanedComments() {
+        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
     }
 }

@@ -19,7 +19,7 @@ package com.salesforce.omakase.ast.atrule;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TODO Description
+ * The expression of an {@link AtRule}.
  *
  * @author nmcwilliams
  */

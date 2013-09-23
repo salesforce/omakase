@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;

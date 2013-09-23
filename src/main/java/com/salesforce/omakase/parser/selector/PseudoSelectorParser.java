@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Stream;

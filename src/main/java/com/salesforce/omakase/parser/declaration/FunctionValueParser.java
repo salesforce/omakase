@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.Stream.Snapshot;

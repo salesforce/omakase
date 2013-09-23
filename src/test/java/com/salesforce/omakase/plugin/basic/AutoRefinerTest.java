@@ -20,8 +20,8 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.broadcaster.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import org.junit.Before;
 import org.junit.Test;
 

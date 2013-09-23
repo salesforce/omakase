@@ -18,9 +18,9 @@ package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockEnd;
-import com.salesforce.omakase.ast.notification.NotifyDeclarationBlockStart;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.notification.NotifyDeclarationBlockEnd;
+import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Stream;

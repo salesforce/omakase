@@ -19,7 +19,7 @@ package com.salesforce.omakase.ast;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.broadcaster.Broadcaster;
+import com.salesforce.omakase.broadcast.Broadcaster;
 
 import java.util.List;
 
@@ -111,9 +111,8 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public Syntax status(Status status) {
+    public void status(Status status) {
         this.status = status;
-        return this;
     }
 
     @Override
@@ -122,9 +121,8 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public Syntax broadcaster(Broadcaster broadcaster) {
+    public void broadcaster(Broadcaster broadcaster) {
         this.broadcaster = broadcaster;
-        return this;
     }
 
     @Override

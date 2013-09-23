@@ -17,7 +17,7 @@
 package com.salesforce.omakase.plugin;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import org.junit.Test;
 import org.reflections.Reflections;
 
@@ -34,7 +34,7 @@ public class BasePluginTest {
     public void hasMethodForEverySubscribable() {
         int numMethods = BasePlugin.class.getDeclaredMethods().length;
 
-        Reflections reflections = new Reflections("com.salesforce.omakase.ast");
+        Reflections reflections = new Reflections("com.salesforce.omakase.ast", "com.salesforce.omakase.notification");
         int expected = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class)).size();
 
         assertThat(numMethods)

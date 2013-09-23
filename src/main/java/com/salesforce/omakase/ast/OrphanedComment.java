@@ -17,13 +17,12 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.emitter.SubscribableRequirement;
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
+import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.Plugin;
-
-import java.util.List;
 
 /**
  * A {@link Comment} which is not directly associated with a subsequent {@link Syntax} unit.
@@ -36,8 +35,8 @@ import java.util.List;
  * to use for dynamic processing in a custom {@link Plugin}.
  */
 @Subscribable
-@Description(value = "A comment unassociated with any syntax unit", broadcasted = SubscribableRequirement.SPECIAL)
-public class OrphanedComment extends Comment implements Syntax {
+@Description(value = "A comment unassociated with any syntax unit", broadcasted = BroadcastRequirement.SPECIAL)
+public class OrphanedComment extends Comment implements Broadcastable {
     private Status status = Status.UNBROADCASTED;
     private final Location location;
 
@@ -61,6 +60,7 @@ public class OrphanedComment extends Comment implements Syntax {
      * @param location
      *     The type of location where the comment was found.
      */
+
     public OrphanedComment(String content, OrphanedComment.Location location) {
         super(content);
         this.location = location;
@@ -76,18 +76,8 @@ public class OrphanedComment extends Comment implements Syntax {
     }
 
     @Override
-    public int line() {
-        return -1;
-    }
-
-    @Override
-    public int column() {
-        return -1;
-    }
-
-    @Override
-    public boolean hasSourcePosition() {
-        return false;
+    public void status(Status status) {
+        this.status = status;
     }
 
     @Override
@@ -96,9 +86,13 @@ public class OrphanedComment extends Comment implements Syntax {
     }
 
     @Override
-    public Syntax status(Status status) {
-        this.status = status;
-        return this;
+    public void broadcaster(Broadcaster broadcaster) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Broadcaster broadcaster() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -107,25 +101,5 @@ public class OrphanedComment extends Comment implements Syntax {
         if (this.status == Status.UNBROADCASTED) {
             broadcaster.broadcast(this);
         }
-    }
-
-    @Override
-    public void comments(Iterable<String> commentsToAdd) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<Comment> comments() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Syntax broadcaster(Broadcaster broadcaster) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Broadcaster broadcaster() {
-        throw new UnsupportedOperationException();
     }
 }

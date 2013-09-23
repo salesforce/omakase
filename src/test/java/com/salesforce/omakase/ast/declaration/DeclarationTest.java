@@ -21,7 +21,6 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.value.Keyword;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
@@ -29,7 +28,8 @@ import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.ast.declaration.value.Value;
-import com.salesforce.omakase.broadcaster.AbstractBroadcaster;
+import com.salesforce.omakase.broadcast.AbstractBroadcaster;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -313,15 +313,15 @@ public class DeclarationTest {
     }
 
     private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private final Set<Syntax> all = Sets.newHashSet();
+        private final Set<Broadcastable> all = Sets.newHashSet();
 
         @Override
-        public <T extends Syntax> void broadcast(T syntax) {
-            if (all.contains(syntax)) {
+        public void broadcast(Broadcastable broadcastable) {
+            if (all.contains(broadcastable)) {
                 fail("unit shouldn't be broadcasted twice!");
             }
-            all.add(syntax);
-            syntax.status(Status.BROADCASTED_PREPROCESS);
+            all.add(broadcastable);
+            broadcastable.status(Status.BROADCASTED_PREPROCESS);
         }
     }
 }

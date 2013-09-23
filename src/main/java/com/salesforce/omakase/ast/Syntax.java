@@ -19,10 +19,10 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
-import com.salesforce.omakase.emitter.SubscribableRequirement;
+import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.writer.Writable;
 
 import java.util.List;
@@ -44,8 +44,8 @@ import java.util.List;
  * @author nmcwilliams
  */
 @Subscribable
-@Description(value = "parent interface of all subscribable units", broadcasted = SubscribableRequirement.SPECIAL)
-public interface Syntax extends Writable {
+@Description(value = "parent interface of all subscribable units", broadcasted = BroadcastRequirement.SPECIAL)
+public interface Syntax extends Writable, Broadcastable {
     /**
      * The line number within the source where this {@link Syntax} unit was parsed.
      *
@@ -90,61 +90,4 @@ public interface Syntax extends Writable {
      * @return The list of comments. Never returns null.
      */
     List<Comment> comments();
-
-    /**
-     * Sets the current broadcast status. For internal use only, <strong>do not call directly</strong>.
-     *
-     * @param status
-     *     The new status.
-     *
-     * @return this, for chaining.
-     */
-    Syntax status(Status status);
-
-    /**
-     * Gets the current broadcast status of this unit.
-     * <p/>
-     * This primarily determines whether this unit should be broadcasted again, given that each unit should be broadcasted at most
-     * once per phase.
-     *
-     * @return The current broadcast status.
-     */
-    Status status();
-
-    /**
-     * Specifies the {@link Broadcaster} to use for broadcasting inner or child {@link Syntax} units.
-     *
-     * @param broadcaster
-     *     Used to broadcast new {@link Syntax} units.
-     *
-     * @return this, for chaining.
-     */
-    Syntax broadcaster(Broadcaster broadcaster);
-
-    /**
-     * Gets the {@link Broadcaster} to use for broadcasting inner or child {@link Syntax} units.
-     *
-     * @return The {@link Broadcaster} to use for broadcasting inner or child {@link Syntax} units.
-     */
-    Broadcaster broadcaster();
-
-    /**
-     * Broadcasts all child units using the given {@link Broadcaster}.
-     * <p/>
-     * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
-     * itself is broadcasted, this method should be called on the parent unit in order to propagate the broadcast event to the
-     * children, ensuring that each child unit is properly broadcasted as well.
-     * <p/>
-     * This differs from the usage of {@link #broadcaster(Broadcaster)}. Parent units already in the tree will utilize the {@link
-     * Broadcaster} from {@link #broadcaster(Broadcaster)} to broadcast child units as they are added. Broadcast propagation is
-     * <em>not</em> needed for those child units. In contrast, parent units <b>not currently</b> in the tree are the ones that
-     * need this method. It should be called when the parent unit is eventually broadcasted to ensure that any previously added
-     * children are broadcasted as well.
-     *
-     * @param broadcaster
-     *     Use this {@link Broadcaster} to broadcast all unbroadcasted child units.
-     *
-     * @see Broadcaster#broadcast(Syntax, boolean)
-     */
-    void propagateBroadcast(Broadcaster broadcaster);
 }

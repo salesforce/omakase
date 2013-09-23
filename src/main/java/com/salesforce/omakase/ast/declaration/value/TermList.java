@@ -23,9 +23,9 @@ import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.broadcaster.Broadcaster;
-import com.salesforce.omakase.emitter.Description;
-import com.salesforce.omakase.emitter.Subscribable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -33,7 +33,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 import java.util.List;
 
-import static com.salesforce.omakase.emitter.SubscribableRequirement.REFINED_DECLARATION;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * TESTME
