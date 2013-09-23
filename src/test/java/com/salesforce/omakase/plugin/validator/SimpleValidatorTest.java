@@ -21,7 +21,7 @@ import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Test;
 
 /** For testing validators that only validate one thing. */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "AbstractClassExtendsConcreteClass"})
 public abstract class SimpleValidatorTest<T extends Plugin> extends BaseValidatorTest<T> {
     public abstract Iterable<String> validSources();
 
