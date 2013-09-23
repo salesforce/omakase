@@ -39,7 +39,7 @@
 			<version>2.0M10</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- for SubscribableSyntaxTable.java -->
+		<!-- for tests only -->
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
