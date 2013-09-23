@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -56,5 +57,11 @@ public class CommentTest {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(c)).isEqualTo("");
+    }
+
+    @Test
+    public void toStringTest() {
+        Comment c = new Comment(" test ");
+        assertThat(c.toString()).isNotEqualTo(Util.originalToString(c));
     }
 }

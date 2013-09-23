@@ -25,6 +25,7 @@ import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -193,6 +194,12 @@ public class SelectorTest {
         Broadcaster b = new StatusChangingBroadcaster();
         selector.broadcaster(b);
         assertThat(selector.broadcaster()).isSameAs(b);
+    }
+
+    @Test
+    public void toStringTest() {
+        selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
+        assertThat(selector.toString()).isNotEqualTo(Util.originalToString(selector));
     }
 
     private static final class StatusChangingBroadcaster extends AbstractBroadcaster {

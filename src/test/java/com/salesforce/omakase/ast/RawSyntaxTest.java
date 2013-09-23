@@ -16,12 +16,13 @@
 
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link RawSyntax}. */
 @SuppressWarnings("JavaDoc")
@@ -41,5 +42,11 @@ public class RawSyntaxTest {
         RawSyntax r = new RawSyntax(5, 5, ".class > #id");
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(r)).isEqualTo(".class > #id");
+    }
+
+    @Test
+    public void toStringTest() {
+        RawSyntax r = new RawSyntax(5, 5, ".class > #id");
+        assertThat(r.toString()).isNotEqualTo(Util.originalToString(r));
     }
 }

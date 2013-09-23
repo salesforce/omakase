@@ -31,16 +31,14 @@ import com.salesforce.omakase.parser.token.Tokens;
 import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
 
 /**
- * TESTME
- * <p/>
- * Parses both {@link PseudoClassSelector}s and {@link PseudoElementSelector}.
+ * Parses both {@link PseudoClassSelector}s and {@link PseudoElementSelector}s.
  *
  * @author nmcwilliams
  */
 public class PseudoSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Stream stream, Broadcaster broadcaster) {
-        // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
+        // note: important not to skip whitespace, as it could skip over a descendant combinator
         stream.collectComments(false);
 
         // snapshot the current state before parsing

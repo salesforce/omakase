@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration.value;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -136,5 +137,11 @@ public class NumericalValueTest {
         value = NumericalValue.of(0).decimalValue(4).unit("rem");
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(value)).isEqualTo(".4rem");
+    }
+
+    @Test
+    public void toStringTest() {
+        value = NumericalValue.of(0).decimalValue(4).unit("rem");
+        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

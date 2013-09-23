@@ -16,12 +16,14 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link PseudoElementSelector}. */
 @SuppressWarnings("JavaDoc")
@@ -82,5 +84,11 @@ public class PseudoElementSelectorTest {
     public void writeFirstLetter() throws IOException {
         PseudoElementSelector s = new PseudoElementSelector("first-letter");
         assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":first-letter");
+    }
+
+    @Test
+    public void toStringTest() {
+        PseudoElementSelector s = new PseudoElementSelector("first-letter");
+        assertThat(s.toString()).isNotEqualTo(Util.originalToString(s));
     }
 }

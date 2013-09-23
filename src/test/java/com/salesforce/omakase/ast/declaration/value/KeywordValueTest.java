@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration.value;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -74,5 +75,10 @@ public class KeywordValueTest {
         value = KeywordValue.of(Keyword.INLINE_BLOCK);
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(value)).isEqualTo("inline-block");
+    }
+    @Test
+    public void toStringTest() {
+        value = KeywordValue.of(Keyword.INLINE_BLOCK);
+        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

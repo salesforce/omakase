@@ -21,16 +21,11 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.declaration.value.Keyword;
-import com.salesforce.omakase.ast.declaration.value.KeywordValue;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue;
-import com.salesforce.omakase.ast.declaration.value.PropertyValue;
-import com.salesforce.omakase.ast.declaration.value.TermList;
-import com.salesforce.omakase.ast.declaration.value.TermOperator;
-import com.salesforce.omakase.ast.declaration.value.Value;
+import com.salesforce.omakase.ast.declaration.value.*;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,6 +36,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Declaration}. */
 @SuppressWarnings("JavaDoc")
@@ -319,5 +315,11 @@ public class DeclarationTest {
             all.add(broadcastable);
             broadcastable.status(Status.BROADCASTED_PREPROCESS);
         }
+    }
+
+    @Test
+    public void toStringTest() {
+        Declaration value = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

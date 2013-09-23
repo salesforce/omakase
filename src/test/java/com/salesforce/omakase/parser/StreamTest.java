@@ -723,6 +723,13 @@ public class StreamTest {
         assertThat(stream.toString()).isEqualTo("a\nb\u00BBcd");
     }
 
+    @Test
+    public void testInString() {
+        Stream stream = new Stream("a\"a\"a");
+        stream.forward(2);
+        assertThat(stream.inString()).isTrue();
+    }
+
     public enum StreamEnum implements TokenEnum {
         ONE(Tokens.ALPHA),
         TWO(Tokens.DIGIT);

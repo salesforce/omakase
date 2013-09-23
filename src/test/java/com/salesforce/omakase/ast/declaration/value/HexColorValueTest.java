@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration.value;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -93,5 +94,11 @@ public class HexColorValueTest {
         value = HexColorValue.of("a1f3f2");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(value)).isEqualTo("#a1f3f2");
+    }
+
+    @Test
+    public void toStringTest() {
+        value = HexColorValue.of("a1f3f2");
+        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

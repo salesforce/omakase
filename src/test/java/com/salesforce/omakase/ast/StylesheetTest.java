@@ -23,6 +23,7 @@ import com.salesforce.omakase.ast.declaration.value.Keyword;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -70,5 +71,11 @@ public class StylesheetTest {
         assertThat(sheet.statements()).hasSize(1);
 
         assertThat(StyleWriter.compressed().writeSnippet(rule)).isEqualTo(".class{display:none}");
+    }
+
+    @Test
+    public void toStringTest() {
+        Stylesheet sheet = new Stylesheet();
+        assertThat(sheet.toString()).isNotEqualTo(Util.originalToString(sheet));
     }
 }

@@ -16,12 +16,13 @@
 
 package com.salesforce.omakase.ast.declaration.value;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link StringValue}. */
 @SuppressWarnings("JavaDoc")
@@ -68,5 +69,11 @@ public class StringValueTest {
         StringValue s = StringValue.of(StringValue.QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
+    }
+
+    @Test
+    public void toStringTest() {
+        StringValue value = StringValue.of(StringValue.QuotationMode.SINGLE, "xyz");
+        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

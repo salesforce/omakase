@@ -24,13 +24,14 @@ import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for Rule. */
 @SuppressWarnings("JavaDoc")
@@ -178,5 +179,14 @@ public class RuleTest {
 
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(stylesheet)).isEqualTo("");
+    }
+
+    @Test
+    public void toStringTest() {
+        Rule rule = new Rule();
+        rule.selectors().append(new Selector(new ClassSelector("class")));
+        Declaration declaration = new Declaration(Property.MARGIN, NumericalValue.of(5, "px"));
+        rule.declarations().append(declaration);
+        assertThat(rule.toString()).isNotEqualTo(Util.originalToString(rule));
     }
 }

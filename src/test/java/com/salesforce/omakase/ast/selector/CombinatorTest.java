@@ -16,12 +16,13 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Combinator}. */
 @SuppressWarnings("JavaDoc")
@@ -82,5 +83,11 @@ public class CombinatorTest {
     public void writeGeneral() throws IOException {
         Combinator c = Combinator.general();
         assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo("~");
+    }
+
+    @Test
+    public void toStringTest() {
+        Combinator c = Combinator.general();
+        assertThat(c.toString()).isNotEqualTo(Util.originalToString(c));
     }
 }
