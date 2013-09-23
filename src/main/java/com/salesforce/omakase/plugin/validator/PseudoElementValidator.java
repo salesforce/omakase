@@ -28,8 +28,6 @@ import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
- * TESTME
- * <p/>
  * Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last {@link SelectorPart} within a
  * {@link Selector}).
  * <p/>

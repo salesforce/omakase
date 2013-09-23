@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * TODO description
- *
- * @author nmcwilliams
- */
-
 package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.ast.RawSyntax;

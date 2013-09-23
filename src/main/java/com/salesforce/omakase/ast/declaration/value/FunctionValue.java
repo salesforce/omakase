@@ -122,7 +122,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // TODO Util.compress args (compression here is tricky, probably sufficient to reduce repeating whitespace)
+        // TODO compression for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
         appendable.append(name).append('(').append(args).append(')');
     }
 

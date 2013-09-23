@@ -232,7 +232,7 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
             appendable.append(name);
             appendable.space();
 
-            // TODO util.compression
+            // TODO compression
 
             // expression
             if (rawExpression.isPresent()) {

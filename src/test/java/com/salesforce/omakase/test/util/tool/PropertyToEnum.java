@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** Utility to take list of css names and fromStrings them to the {@link Property} enum. */
-@SuppressWarnings({"JavaDoc"})
+@SuppressWarnings("JavaDoc")
 public final class PropertyToEnum {
     private PropertyToEnum() {}
 

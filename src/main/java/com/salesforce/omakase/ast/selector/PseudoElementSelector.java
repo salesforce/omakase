@@ -117,7 +117,6 @@ public class PseudoElementSelector extends AbstractSelectorPart implements Simpl
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // TODO function args
         appendable.append(POSERS.contains(name) ? ":" : "::").append(name);
     }
 

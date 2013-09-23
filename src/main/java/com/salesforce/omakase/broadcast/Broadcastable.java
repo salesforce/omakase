@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * TODO description
- *
- * @author nmcwilliams
- */
-
 package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Status;

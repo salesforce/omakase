@@ -33,7 +33,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc"})
+@SuppressWarnings("JavaDoc")
 public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
     @Override
     public List<String> invalidSources() {
