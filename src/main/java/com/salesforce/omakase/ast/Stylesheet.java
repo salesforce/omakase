@@ -67,7 +67,7 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
      *     Used to broadcast new units.
      */
     public Stylesheet(Broadcaster broadcaster) {
-        super(1, 1, broadcaster);
+        super(1, 1);
         statements = StandardSyntaxCollection.create(this, broadcaster);
     }
 

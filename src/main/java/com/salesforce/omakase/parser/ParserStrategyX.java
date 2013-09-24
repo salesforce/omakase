@@ -25,9 +25,9 @@ import com.salesforce.omakase.parser.declaration.TermListParser;
  *
  * @author nmcwilliams
  */
-public final class ParserStrategy {
+public final class ParserStrategyX {
     /** do not construct */
-    private ParserStrategy() {}
+    private ParserStrategyX() {}
 
     /**
      * Gets the appropriate parser for the given property value. By default this will fallback to the {@link TermListParser}.

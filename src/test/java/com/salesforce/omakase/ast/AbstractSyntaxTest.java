@@ -80,14 +80,6 @@ public class AbstractSyntaxTest {
     }
 
     @Test
-    public void testBroadcaster() throws Exception {
-        TestClass t = new TestClass(10, 15);
-        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        t.broadcaster(broadcaster);
-        assertThat(t.broadcaster()).isSameAs(broadcaster);
-    }
-
-    @Test
     public void testPropagateBroadcastUnbroadcasted() throws Exception {
         TestClass t = new TestClass(10, 15);
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();

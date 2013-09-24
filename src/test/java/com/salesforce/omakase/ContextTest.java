@@ -110,11 +110,12 @@ public class ContextTest {
     }
 
     @Test
-    public void beforeMethodSetsErrorManager() {
+    public void errorManager() {
         TestErrorManager em = new TestErrorManager();
         c.register(new FailingPlugin());
         c.broadcast(new ClassSelector("class"));
-        c.before(em);
+        c.errorManager(em);
+        c.before();
         c.after();
         assertThat(em.reported).isTrue();
     }
@@ -123,14 +124,14 @@ public class ContextTest {
     public void beforeMethodInvokesDependencies() {
         TestDependentPlugin plugin = new TestDependentPlugin();
         c.register(plugin);
-        c.before(new TestErrorManager());
+        c.before();
         assertThat(plugin.dependenciesCalled).isTrue();
     }
 
     @Test
     public void dependenciesThatLeadToMoreDependencies() {
         c.register(new TestDependentPlugin2());
-        c.before(new TestErrorManager());
+        c.before();
         assertThat(c.retrieve(TestDependentPlugin2.class).isPresent()).isTrue();
         assertThat(c.retrieve(TestDependentPlugin.class).isPresent()).isTrue();
         assertThat(c.retrieve(TestDependentPlugin.class).get().dependenciesCalled).isTrue();
@@ -140,7 +141,7 @@ public class ContextTest {
     public void beforeMethodSendsBroadcaster() {
         TestBroadcastingPlugin tbp = new TestBroadcastingPlugin();
         c.register(tbp);
-        c.before(new TestErrorManager());
+        c.before();
         assertThat(tbp.broadcasterCalled).isTrue();
     }
 
@@ -154,7 +155,7 @@ public class ContextTest {
 
         c.register(Lists.newArrayList(rework, preprocess, validate, observe));
 
-        c.before(new TestErrorManager());
+        c.before();
         c.broadcast(new ClassSelector("test"));
         c.after();
 
@@ -177,7 +178,7 @@ public class ContextTest {
     public void afterMethodNotifyPostProcessor() {
         TestPostProcessingPlugin tpp = new TestPostProcessingPlugin();
         c.register(tpp);
-        c.before(new TestErrorManager());
+        c.before();
         c.after();
         assertThat(tpp.postProcessCalled).isTrue();
     }

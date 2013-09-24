@@ -20,8 +20,8 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.parser.Refiner;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,10 +37,10 @@ public class AutoRefinerTest {
 
     @Before
     public void setup() {
-        Broadcaster broadcaster = new QueryableBroadcaster();
-        atRule = new AtRule(5, 5, "media", new RawSyntax(1, 1, "all"), new RawSyntax(1, 1, "{p {color:red}}"), broadcaster);
-        selector = new Selector(new RawSyntax(1, 1, ".class"), broadcaster);
-        declaration = new Declaration(new RawSyntax(1, 1, "color"), new RawSyntax(1, 1, "red"), broadcaster);
+        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        atRule = new AtRule(5, 5, "media", new RawSyntax(1, 1, "all"), new RawSyntax(1, 1, "{p {color:red}}"), refiner);
+        selector = new Selector(new RawSyntax(1, 1, ".class"), refiner);
+        declaration = new Declaration(new RawSyntax(1, 1, "color"), new RawSyntax(1, 1, "red"), refiner);
         autoRefiner = new AutoRefiner();
     }
 

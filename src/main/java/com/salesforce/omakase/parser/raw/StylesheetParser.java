@@ -22,10 +22,11 @@ import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.notification.NotifyStylesheetEnd;
 import com.salesforce.omakase.notification.NotifyStylesheetStart;
-import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.RefinableParser;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 
 import java.util.List;
@@ -36,19 +37,21 @@ import java.util.List;
  * @author nmcwilliams
  * @see Stylesheet
  */
-public class StylesheetParser extends AbstractParser {
+public class StylesheetParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
         // broadcast the start of the stylesheet event
         NotifyStylesheetStart.broadcast(broadcaster);
 
-        Parser parser = ParserFactory.statementParser();
+        RefinableParser rule = ParserFactory.ruleParser();
+        RefinableParser atRule = ParserFactory.atRuleParser();
 
         // continually parse until we get to the end of the stream
         while (!stream.eof()) {
             // parse the next statement
-            boolean matched = parser.parse(stream, broadcaster);
+            boolean matched = rule.parse(stream, broadcaster, refiner);
+            if (!matched) matched = atRule.parse(stream, broadcaster, refiner);
 
             // skip whitespace
             stream.skipWhitepace();
@@ -68,4 +71,5 @@ public class StylesheetParser extends AbstractParser {
 
         return true;
     }
+
 }

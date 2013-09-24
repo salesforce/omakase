@@ -20,15 +20,22 @@ import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.declaration.value.Keyword;
+import com.salesforce.omakase.ast.declaration.value.KeywordValue;
+import com.salesforce.omakase.ast.declaration.value.NumericalValue;
+import com.salesforce.omakase.ast.declaration.value.PropertyValue;
+import com.salesforce.omakase.ast.declaration.value.TermList;
+import com.salesforce.omakase.ast.declaration.value.TermOperator;
+import com.salesforce.omakase.ast.declaration.value.Value;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
@@ -36,12 +43,11 @@ import java.io.IOException;
 import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.*;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Declaration}. */
 @SuppressWarnings("JavaDoc")
 public class DeclarationTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
+    @org.junit.Rule public final ExpectedException exception = ExpectedException.none();
 
     private RawSyntax rawName;
     private RawSyntax rawValue;
@@ -51,7 +57,7 @@ public class DeclarationTest {
     public void setup() {
         rawName = new RawSyntax(2, 3, "display");
         rawValue = new RawSyntax(2, 5, "none");
-        fromRaw = new Declaration(rawName, rawValue, new StatusChangingBroadcaster());
+        fromRaw = new Declaration(rawName, rawValue, new Refiner(new StatusChangingBroadcaster()));
     }
 
     @Test
@@ -103,25 +109,29 @@ public class DeclarationTest {
     }
 
     @Test
-    public void setPropertyValueBroadcastsUnbroadcasted() {
+    public void newPropertyValueIsBroadcasted() {
+        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        d.broadcaster(new StatusChangingBroadcaster());
         TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        d.propertyValue(newValue);
 
         assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
-        d.propertyValue(newValue);
+        rule.declarations().append(d);
         assertThat(newValue.status()).isNotSameAs(Status.UNBROADCASTED);
     }
 
     @Test
     public void setPropertyValueDoesntBroadcastAlreadyBroadcasted() {
-        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
-        d.broadcaster(broadcaster);
+        Rule rule = new Rule(1, 1, broadcaster);
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        d.status(Status.BROADCASTED_PREPROCESS);
+
         TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
         newValue.status(Status.BROADCASTED_PREPROCESS);
-
         d.propertyValue(newValue);
+
+        rule.declarations().append(d);
         assertThat(broadcaster.all).isEmpty();
     }
 
@@ -212,7 +222,7 @@ public class DeclarationTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage(Message.UNPARSABLE_VALUE.message());
-        new Declaration(name, value, new StatusChangingBroadcaster()).refine();
+        new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
     }
 
     @Test
@@ -220,7 +230,7 @@ public class DeclarationTest {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");
 
-        Declaration d = new Declaration(name, value, new StatusChangingBroadcaster()).refine();
+        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
         assertThat(d.orphanedComments()).isNotEmpty();
     }
 
@@ -264,7 +274,7 @@ public class DeclarationTest {
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new StatusChangingBroadcaster());
+        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster()));
 
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(d)).isEqualTo("border: 1px solid red");
@@ -274,7 +284,7 @@ public class DeclarationTest {
     public void writeInlineUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new StatusChangingBroadcaster());
+        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster()));
 
         StyleWriter writer = StyleWriter.inline();
         assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
@@ -284,7 +294,7 @@ public class DeclarationTest {
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new StatusChangingBroadcaster());
+        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster()));
 
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");

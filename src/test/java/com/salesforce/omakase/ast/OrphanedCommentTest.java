@@ -49,13 +49,6 @@ public class OrphanedCommentTest {
     }
 
     @Test
-    public void testBroadcaster() throws Exception {
-        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        exception.expect(UnsupportedOperationException.class);
-        o.broadcaster(broadcaster);
-    }
-
-    @Test
     public void testPropagateBroadcastUnbroadcasted() throws Exception {
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         o.propagateBroadcast(broadcaster);

@@ -86,16 +86,6 @@ public class OrphanedComment extends Comment implements Broadcastable {
     }
 
     @Override
-    public void broadcaster(Broadcaster broadcaster) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Broadcaster broadcaster() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         // only broadcast ourselves once
         if (this.status == Status.UNBROADCASTED) {

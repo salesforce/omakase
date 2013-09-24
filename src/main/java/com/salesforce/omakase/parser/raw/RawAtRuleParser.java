@@ -21,8 +21,9 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -33,10 +34,9 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see AtRule
  */
-public class RawAtRuleParser extends AbstractParser {
-
+public class RawAtRuleParser extends AbstractRefinableParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
         TokenFactory tf = tokenFactory();
 
         stream.skipWhitepace();
@@ -75,7 +75,7 @@ public class RawAtRuleParser extends AbstractParser {
         if (expression == null && block == null) throw new ParserException(stream, Message.MISSING_AT_RULE_VALUE);
 
         // create and broadcast the new rule
-        AtRule rule = new AtRule(snapshot.line, snapshot.column, name.get(), expression, block, broadcaster);
+        AtRule rule = new AtRule(snapshot.line, snapshot.column, name.get(), expression, block, refiner);
         rule.comments(stream.flushComments());
         broadcaster.broadcast(rule);
 

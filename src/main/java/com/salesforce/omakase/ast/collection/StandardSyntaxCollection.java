@@ -113,11 +113,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     public SyntaxCollection<P, T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
 
-        // if the unit doesn't have a broadcaster and we have one then give it.
-        if (unit.broadcaster() == null && broadcaster.isPresent()) {
-            unit.broadcaster(broadcaster.get());
-        }
-
         // add the unit to the list
         list.push(unit);
         unit.group(this);
@@ -144,11 +139,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
         int index = list.indexOf(existing);
         if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
-        // if the unit doesn't have a broadcaster and we have one then give it.
-        if (broadcaster.isPresent() && unit.broadcaster() == null) {
-            unit.broadcaster(broadcaster.get());
-        }
-
         // add the unit to the list
         list.add(index, unit);
         unit.group(this);
@@ -162,11 +152,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     @Override
     public SyntaxCollection<P, T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
-
-        // if the unit doesn't have a broadcaster and we have one then give it.
-        if (broadcaster.isPresent() && unit.broadcaster() == null) {
-            unit.broadcaster(broadcaster.get());
-        }
 
         // add the unit to the list
         list.add(unit);
@@ -269,6 +254,9 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
+        // TESTME save the broadcaster
+        broadcaster(broadcaster);
+
         // make a defensive copy as this collection may be modified as a result of broadcasting
         ImmutableList<T> units = ImmutableList.copyOf(list);
 

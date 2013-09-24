@@ -16,26 +16,18 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserStrategy;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -59,6 +51,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
+    private final Refiner refiner;
+
     /* unrefined */
     private final RawSyntax rawPropertyName;
     private final RawSyntax rawPropertyValue;
@@ -78,13 +72,12 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      *     The raw property name.
      * @param rawPropertyValue
      *     The raw property value.
-     * @param broadcaster
-     *     The {@link Broadcaster} to use when {@link #refine()} is called.
      */
-    public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, Broadcaster broadcaster) {
-        super(rawPropertyName.line(), rawPropertyName.column(), broadcaster);
+    public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, Refiner refiner) {
+        super(rawPropertyName.line(), rawPropertyName.column());
         this.rawPropertyName = rawPropertyName;
         this.rawPropertyValue = rawPropertyValue;
+        this.refiner = refiner;
     }
 
     /**
@@ -167,6 +160,7 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      *     The {@link PropertyValue}.
      */
     public Declaration(PropertyName propertyName, PropertyValue propertyValue) {
+        this.refiner = null;
         this.rawPropertyName = null;
         this.rawPropertyValue = null;
         this.propertyName = checkNotNull(propertyName);
@@ -282,12 +276,6 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      */
     public Declaration propertyValue(PropertyValue propertyValue) {
         this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
-
-        // if the property value is new then make sure it gets broadcasted
-        if (propertyValue.status() == Status.UNBROADCASTED && broadcaster() != null) {
-            broadcaster().broadcast(propertyValue);
-        }
-
         return this;
     }
 
@@ -319,28 +307,8 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
 
     @Override
     public Declaration refine() {
-        if (!isRefined()) {
-            refinePropertyName();
-
-            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster());
-            Stream stream = new Stream(rawPropertyValue.content(), line(), column());
-
-            // parse the contents
-            Parser parser = ParserStrategy.getValueParser(propertyName);
-            parser.parse(stream, qb);
-
-            // there should be nothing left
-            if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_VALUE);
-
-            // store the parsed value
-            Optional<PropertyValue> first = qb.find(PropertyValue.class);
-            if (!first.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALUE);
-            propertyValue = first.get();
-
-            // check for orphaned comments
-            for (OrphanedComment comment : qb.filter(OrphanedComment.class)) {
-                orphanedComment(comment);
-            }
+        if (!isRefined() && refiner != null) {
+            refiner.refine(this);
         }
 
         return this;
@@ -352,14 +320,6 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
             propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
         }
         return propertyName;
-    }
-
-    @Override
-    public void broadcaster(Broadcaster broadcaster) {
-        if (propertyValue != null) {
-            propertyValue.broadcaster(broadcaster);
-        }
-        super.broadcaster(broadcaster);
     }
 
     @Override

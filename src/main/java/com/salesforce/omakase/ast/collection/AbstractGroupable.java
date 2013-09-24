@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.Broadcaster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,20 +54,6 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
      */
     public AbstractGroupable(int line, int column) {
         super(line, column);
-    }
-
-    /**
-     * Creates a new instance with the given line and column numbers, and the given {@link Broadcaster}.
-     *
-     * @param line
-     *     The line number.
-     * @param column
-     *     The column number.
-     * @param broadcaster
-     *     Used to broadcast new units.
-     */
-    public AbstractGroupable(int line, int column, Broadcaster broadcaster) {
-        super(line, column, broadcaster);
     }
 
     /**

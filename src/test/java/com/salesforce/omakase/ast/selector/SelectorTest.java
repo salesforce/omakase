@@ -23,8 +23,8 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
@@ -46,7 +46,7 @@ public class SelectorTest {
     @Test
     public void rawContent() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(selector.rawContent()).isSameAs(raw);
     }
 
@@ -78,7 +78,7 @@ public class SelectorTest {
     @Test
     public void isRefinedTrue() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         selector.refine();
         assertThat(selector.isRefined()).isTrue();
     }
@@ -86,7 +86,7 @@ public class SelectorTest {
     @Test
     public void isRefinedFalse() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(selector.isRefined()).isFalse();
     }
 
@@ -99,14 +99,14 @@ public class SelectorTest {
     @Test
     public void refine() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(selector.refine().parts()).isNotEmpty();
     }
 
     @Test
     public void refineThrowsErrorIfHasUnparsableContent() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id !!!!");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
 
         exception.expect(ParserException.class);
         exception.expectMessage(Message.UNPARSABLE_SELECTOR.message());
@@ -116,7 +116,7 @@ public class SelectorTest {
     @Test
     public void refinedAddsOrphanedComments() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id /*orphaned*/");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(selector.refine().orphanedComments()).isNotEmpty();
     }
 
@@ -155,21 +155,21 @@ public class SelectorTest {
     @Test
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(StyleWriter.verbose().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(StyleWriter.inline().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new StatusChangingBroadcaster());
+        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
@@ -186,14 +186,6 @@ public class SelectorTest {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.detach();
         assertThat(selector.isWritable()).isFalse();
-    }
-
-    @Test
-    public void setsBroadcasted() {
-        selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        Broadcaster b = new StatusChangingBroadcaster();
-        selector.broadcaster(b);
-        assertThat(selector.broadcaster()).isSameAs(b);
     }
 
     @Test

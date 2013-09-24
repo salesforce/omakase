@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.notification;
+package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
- * Base class for notification-only objects.
+ * TODO description
  *
  * @author nmcwilliams
  */
-class AbstractNotification implements Broadcastable {
-    @Override
-    public void status(Status status) {}
+public interface RefinableStrategy {
+    boolean refineAtRule(AtRule atRule, Broadcaster broadcaster);
 
-    @Override
-    public Status status() {
-        return Status.UNBROADCASTED; // repeated broadcasts are fine
-    }
+    boolean refineSelector(Selector selector, Broadcaster broadcaster);
 
-    @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        throw new UnsupportedOperationException("unsupported operation on a notification-only object.");
-    }
+    boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster);
 }

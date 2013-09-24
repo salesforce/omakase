@@ -87,7 +87,7 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
      *     Used to broadcast new units.
      */
     public Rule(int line, int column, Broadcaster broadcaster) {
-        super(line, column, broadcaster);
+        super(line, column);
         selectors = StandardSyntaxCollection.create(this, broadcaster);
         declarations = StandardSyntaxCollection.create(this, broadcaster);
     }
@@ -110,13 +110,6 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
      */
     public SyntaxCollection<Rule, Declaration> declarations() {
         return declarations;
-    }
-
-    @Override
-    public void broadcaster(Broadcaster broadcaster) {
-        super.broadcaster(broadcaster);
-        selectors.broadcaster(broadcaster);
-        declarations.broadcaster(broadcaster);
     }
 
     @Override

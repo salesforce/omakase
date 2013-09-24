@@ -19,7 +19,8 @@ package com.salesforce.omakase.parser.raw;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.AbstractRefinableParser;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 
 /**
@@ -28,10 +29,10 @@ import com.salesforce.omakase.parser.Stream;
  * @author nmcwilliams
  * @see Selector
  */
-public class RawSelectorParser extends AbstractParser {
+public class RawSelectorParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
         stream.skipWhitepace();
         stream.collectComments();
 
@@ -45,7 +46,7 @@ public class RawSelectorParser extends AbstractParser {
         RawSyntax raw = new RawSyntax(snapshot.line, snapshot.column, content.trim());
 
         // create selector and associate comments
-        Selector selector = new Selector(raw, broadcaster);
+        Selector selector = new Selector(raw, refiner);
         selector.comments(stream.flushComments());
 
         // notify listeners of new selector

@@ -139,17 +139,20 @@ final class Context implements Broadcaster, PluginRegistry {
         this.broadcaster = broadcaster;
     }
 
+    public Broadcaster broadcaster() {
+        return broadcaster;
+    }
+
+    public Context errorManager(ErrorManager em) {
+        emittingBroadcaster.errorManager(em);
+        return this;
+    }
+
     /**
      * Internal method to signify when (high-level) parsing is about to begin. This will notify all {@link Plugin}s that are
      * interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s.
-     *
-     * @param em
-     *     The {@link ErrorManager} instance.
      */
-    protected void before(ErrorManager em) {
-        // set the error manager
-        emittingBroadcaster.errorManager(em);
-
+    protected void before() {
         // let plugins register their dependencies. dependencies can result in their own new dependencies, so this gets
         // a little hairy... guava to the rescue.
         final Set<DependentPlugin> processed = Sets.newHashSet();

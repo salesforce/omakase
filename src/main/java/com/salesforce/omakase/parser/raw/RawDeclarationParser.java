@@ -20,7 +20,8 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.AbstractRefinableParser;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.Tokens;
 
@@ -30,10 +31,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see Declaration
  */
-public class RawDeclarationParser extends AbstractParser {
+public class RawDeclarationParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
         stream.skipWhitepace();
         stream.collectComments();
 
@@ -66,7 +67,7 @@ public class RawDeclarationParser extends AbstractParser {
         RawSyntax value = new RawSyntax(line, column, content.trim());
 
         // create the new declaration and associate comments
-        Declaration declaration = new Declaration(property, value, broadcaster);
+        Declaration declaration = new Declaration(property, value, refiner);
         declaration.comments(stream.flushComments());
 
         // notifier listeners of the new declaration

@@ -33,7 +33,6 @@ public abstract class AbstractSyntax implements Syntax {
     private final int column;
 
     private List<Comment> comments;
-    private Broadcaster broadcaster;
     private Status status = Status.UNBROADCASTED;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
@@ -50,24 +49,8 @@ public abstract class AbstractSyntax implements Syntax {
      *     The column number.
      */
     public AbstractSyntax(int line, int column) {
-        this(line, column, null);
-    }
-
-    /**
-     * Creates a new instance with the given line and column numbers, and the given {@link Broadcaster} to be used for
-     * broadcasting new units.
-     *
-     * @param line
-     *     The line number.
-     * @param column
-     *     The column number.
-     * @param broadcaster
-     *     Used to broadcast new {@link Syntax} units.
-     */
-    public AbstractSyntax(int line, int column, Broadcaster broadcaster) {
         this.line = line;
         this.column = column;
-        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -118,16 +101,6 @@ public abstract class AbstractSyntax implements Syntax {
     @Override
     public Status status() {
         return status;
-    }
-
-    @Override
-    public void broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = broadcaster;
-    }
-
-    @Override
-    public Broadcaster broadcaster() {
-        return broadcaster;
     }
 
     @Override

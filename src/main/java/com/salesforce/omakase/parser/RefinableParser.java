@@ -14,28 +14,15 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.notification;
+package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
- * Base class for notification-only objects.
+ * TODO description
  *
  * @author nmcwilliams
  */
-class AbstractNotification implements Broadcastable {
-    @Override
-    public void status(Status status) {}
-
-    @Override
-    public Status status() {
-        return Status.UNBROADCASTED; // repeated broadcasts are fine
-    }
-
-    @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        throw new UnsupportedOperationException("unsupported operation on a notification-only object.");
-    }
+public interface RefinableParser extends Parser {
+    boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner);
 }

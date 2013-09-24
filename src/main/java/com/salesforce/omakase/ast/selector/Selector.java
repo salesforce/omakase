@@ -18,8 +18,6 @@ package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
@@ -28,12 +26,9 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -71,6 +66,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 public class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
     private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax rawContent;
+    private final Refiner refiner;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
@@ -80,13 +76,13 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
      *
      * @param rawContent
      *     The selector content.
-     * @param broadcaster
-     *     The {@link Broadcaster} to use when {@link #refine()} is called.
      */
-    public Selector(RawSyntax rawContent, Broadcaster broadcaster) {
-        super(rawContent.line(), rawContent.column(), broadcaster);
+    public Selector(RawSyntax rawContent, Refiner refiner) {
+        super(rawContent.line(), rawContent.column());
+
+        this.refiner = refiner;
         this.rawContent = rawContent;
-        this.parts = StandardSyntaxCollection.create(this, broadcaster);
+        this.parts = StandardSyntaxCollection.create(this, refiner.broadcaster());
     }
 
     /**
@@ -106,6 +102,7 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
      *     The parts within the selector.
      */
     public Selector(Iterable<SelectorPart> parts) {
+        this.refiner = null;
         this.rawContent = null;
         this.parts = StandardSyntaxCollection.create(this);
         this.parts.appendAll(parts);
@@ -129,6 +126,11 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
         return refine().parts;
     }
 
+    public Selector appendAll(Iterable<SelectorPart> newParts) {
+        parts.appendAll(newParts);
+        return this;
+    }
+
     @Override
     public boolean isRefined() {
         return !parts.isEmpty();
@@ -136,35 +138,11 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
 
     @Override
     public Selector refine() {
-        if (!isRefined()) {
-            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster());
-            Stream stream = new Stream(rawContent, false);
-
-            // parse the contents
-            ParserFactory.complexSelectorParser().parse(stream, qb);
-
-            // there should be nothing left
-            if (!stream.eof()){
-                throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
-            }
-
-
-            // store the parsed selector parts
-            parts.appendAll(qb.filter(SelectorPart.class));
-
-            // check for orphaned comments
-            for (OrphanedComment comment : qb.filter(OrphanedComment.class)) {
-                orphanedComment(comment);
-            }
+        if (!isRefined() && refiner != null) {
+            refiner.refine(this);
         }
 
         return this;
-    }
-
-    @Override
-    public void broadcaster(Broadcaster broadcaster) {
-        super.broadcaster(broadcaster);
-        parts.broadcaster(broadcaster);
     }
 
     @Override

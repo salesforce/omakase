@@ -18,11 +18,12 @@ package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.notification.NotifyDeclarationBlockEnd;
 import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 
 import java.util.List;
@@ -33,15 +34,15 @@ import java.util.List;
  * @author nmcwilliams
  * @see Rule
  */
-public class RawRuleParser extends AbstractParser {
+public class RawRuleParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
         stream.skipWhitepace();
         stream.collectComments();
 
         // if there wasn't a selector then we aren't a rule
-        if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster)) return false;
+        if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster, refiner)) return false;
 
         // skip whitespace after selectors
         stream.skipWhitepace();
@@ -55,7 +56,7 @@ public class RawRuleParser extends AbstractParser {
         // parse all declarations
         do {
             stream.skipWhitepace();
-            ParserFactory.rawDeclarationParser().parse(stream, broadcaster);
+            ParserFactory.rawDeclarationParser().parse(stream, broadcaster, refiner);
             stream.skipWhitepace();
         } while (stream.optionallyPresent(tokenFactory().declarationDelimiter()));
 

@@ -23,8 +23,13 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.RefinableStrategy;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.SyntaxPlugin;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,6 +74,7 @@ public final class Omakase {
      * by default.
      */
     public static final class Request {
+        private final List<RefinableStrategy> customRefiners = Lists.newArrayList();
         private final Context context;
         private final Stream stream;
         private ErrorManager em;
@@ -136,6 +142,18 @@ public final class Omakase {
             return this;
         }
 
+        public Request add(SyntaxPlugin... plugins) {
+            return request(plugins);
+        }
+
+        public Request request(SyntaxPlugin... plugins) {
+            for (SyntaxPlugin plugin : plugins) {
+                customRefiners.add(plugin.getRefinableStrategy());
+                context.register(plugin);
+            }
+            return this;
+        }
+
         /**
          * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
          *
@@ -173,7 +191,10 @@ public final class Omakase {
          *         for further processing or information retrieval.
          */
         public PluginRegistry process() {
-            context.before(em);
+            context.errorManager(em);
+            context.before();
+
+            Refiner refiner = new Refiner(context.broadcaster(), customRefiners);
 
             try {
                 ParserFactory.stylesheetParser().parse(stream, context);

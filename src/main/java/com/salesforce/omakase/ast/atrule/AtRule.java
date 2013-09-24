@@ -25,9 +25,9 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -49,6 +49,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements Statement, Refinable<AtRule> {
+    private final Refiner refiner;
     private final String name;
 
     // unrefined
@@ -72,16 +73,15 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
      *     The raw at-rule expression. If no expression is present pass in null.
      * @param rawBlock
      *     The raw at-rule block. If no block is present pass in null.
-     * @param broadcaster
-     *     The {@link Broadcaster} to use when {@link #refine()} is called.
      */
-    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, Broadcaster broadcaster) {
-        super(line, column, broadcaster);
+    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, Refiner refiner) {
+        super(line, column);
         this.name = name;
         this.rawExpression = Optional.fromNullable(rawExpression);
         this.rawBlock = Optional.fromNullable(rawBlock);
         this.expression = Optional.absent();
         this.block = Optional.absent();
+        this.refiner = refiner;
     }
 
     /**
@@ -105,6 +105,7 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
         this.rawBlock = Optional.absent();
         this.expression = Optional.fromNullable(expression);
         this.block = Optional.fromNullable(block);
+        this.refiner = null;
     }
 
     /**
@@ -187,7 +188,10 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
 
     @Override
     public AtRule refine() {
-        // subclasses handle this more specifically
+        if (!isRefined() && refiner != null) {
+            refiner.refine(this);
+        }
+
         return this;
     }
 

@@ -47,14 +47,13 @@ public final class ParserFactory {
     /** do not construct */
     private ParserFactory() {}
 
-    /* general parsers */
-    private static final Parser stylesheet = new StylesheetParser();
-    private static final Parser atRule = new RawAtRuleParser();
-    private static final Parser rule = new RawRuleParser();
-    private static final Parser statement = rule.or(atRule);
-    private static final Parser rawDeclaration = new RawDeclarationParser();
-    private static final Parser selectorGroup = new SelectorGroupParser();
-    private static final Parser rawSelector = new RawSelectorParser();
+    /* generic parsers */
+    private static final RefinableParser stylesheet = new StylesheetParser();
+    private static final RefinableParser atRule = new RawAtRuleParser();
+    private static final RefinableParser rule = new RawRuleParser();
+    private static final RefinableParser rawDeclaration = new RawDeclarationParser();
+    private static final RefinableParser selectorGroup = new SelectorGroupParser();
+    private static final RefinableParser rawSelector = new RawSelectorParser();
 
     /* refined selectors */
     private static final Parser complexSelector = new ComplexSelectorParser();
@@ -90,17 +89,8 @@ public final class ParserFactory {
      *
      * @return The parser instance.
      */
-    public static Parser stylesheetParser() {
+    public static RefinableParser stylesheetParser() {
         return stylesheet;
-    }
-
-    /**
-     * Gets the statement parser.
-     *
-     * @return The parser instance.
-     */
-    public static Parser statementParser() {
-        return statement;
     }
 
     /**
@@ -108,7 +98,7 @@ public final class ParserFactory {
      *
      * @return The parser instance.
      */
-    public static Parser atRuleParser() {
+    public static RefinableParser atRuleParser() {
         return atRule;
     }
 
@@ -117,7 +107,7 @@ public final class ParserFactory {
      *
      * @return The parser instance.
      */
-    public static Parser ruleParser() {
+    public static RefinableParser ruleParser() {
         return rule;
     }
 
@@ -126,7 +116,7 @@ public final class ParserFactory {
      *
      * @return The parser instance.
      */
-    public static Parser selectorGroupParser() {
+    public static RefinableParser selectorGroupParser() {
         return selectorGroup;
     }
 
@@ -135,8 +125,17 @@ public final class ParserFactory {
      *
      * @return The parser instance.
      */
-    public static Parser rawSelectorParser() {
+    public static RefinableParser rawSelectorParser() {
         return rawSelector;
+    }
+
+    /**
+     * Gets the {@link RawDeclarationParser}.
+     *
+     * @return The parser instance.
+     */
+    public static RefinableParser rawDeclarationParser() {
+        return rawDeclaration;
     }
 
     /**
@@ -228,15 +227,6 @@ public final class ParserFactory {
      */
     public static Parser pseudoSelectorParser() {
         return pseudoSelector;
-    }
-
-    /**
-     * Gets the {@link RawDeclarationParser}.
-     *
-     * @return The parser instance.
-     */
-    public static Parser rawDeclarationParser() {
-        return rawDeclaration;
     }
 
     /**

@@ -18,10 +18,11 @@ package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.RefinableParser;
+import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.parser.Stream;
 
 /**
@@ -29,10 +30,10 @@ import com.salesforce.omakase.parser.Stream;
  *
  * @author nmcwilliams
  */
-public class SelectorGroupParser extends AbstractParser {
+public class SelectorGroupParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
         stream.skipWhitepace();
         stream.collectComments();
 
@@ -41,12 +42,12 @@ public class SelectorGroupParser extends AbstractParser {
 
         boolean foundDelimiter = false;
         boolean foundSelector = false;
-        Parser parser = ParserFactory.rawSelectorParser();
+        RefinableParser parser = ParserFactory.rawSelectorParser();
 
         do {
             // try to parse a selector
             stream.skipWhitepace();
-            foundSelector = parser.parse(stream, broadcaster);
+            foundSelector = parser.parse(stream, broadcaster, refiner);
 
             if (foundDelimiter && !foundSelector) {
                 throw new ParserException(stream, Message.EXPECTED_SELECTOR, tokenFactory().selectorDelimiter().description());
