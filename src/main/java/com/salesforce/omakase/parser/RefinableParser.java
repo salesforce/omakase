@@ -16,13 +16,28 @@
 
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
- * TODO description
+ * A {@link Parser} that parses {@link Refinable} AST objects. These objects must be given a {@link Refiner} instance.
  *
  * @author nmcwilliams
  */
 public interface RefinableParser extends Parser {
+    /**
+     * Same as {@link #parse(Stream, Broadcaster)}, except a {@link Refiner} instance to pass along to any created {@link
+     * Refinable} AST objects is given.
+     *
+     * @param stream
+     *     The stream to parse.
+     * @param broadcaster
+     *     The {@link Broadcaster} to receive any events from the parser.
+     * @param refiner
+     *     The {@link Refiner} to give to created AST objects.
+     *
+     * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
+     *         of true does not indicate that the parsed content was actually valid syntax.
+     */
     boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner);
 }

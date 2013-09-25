@@ -19,10 +19,18 @@ package com.salesforce.omakase.plugin;
 import com.salesforce.omakase.parser.RefinableStrategy;
 
 /**
- * TODO description
+ * A {@link Plugin} that registers a custom {@link RefinableStrategy}.
+ * <p/>
+ * The {@link RefinableStrategy} can be used to customize and extends the standard CSS syntax. See the readme file for more
+ * details and examples.
  *
  * @author nmcwilliams
  */
 public interface SyntaxPlugin extends Plugin {
+    /**
+     * Gets the {@link RefinableStrategy} instance.
+     *
+     * @return The {@link RefinableStrategy} instance.
+     */
     RefinableStrategy getRefinableStrategy();
 }

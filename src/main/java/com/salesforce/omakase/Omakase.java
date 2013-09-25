@@ -29,6 +29,7 @@ import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -74,7 +75,7 @@ public final class Omakase {
      * by default.
      */
     public static final class Request {
-        private final List<RefinableStrategy> customRefiners = Lists.newArrayList();
+        private final List<RefinableStrategy> customRefiners;
         private final Context context;
         private final Stream stream;
         private ErrorManager em;
@@ -83,15 +84,18 @@ public final class Omakase {
             this.context = new Context();
             this.em = new ThrowingErrorManager();
             this.stream = new Stream(source.toString());
+            this.customRefiners = new ArrayList<>();
         }
 
         /**
-         * Registers a plugin to process or utilize the parsed source code. This is equivalent to {@link #request(Plugin...)}.
-         * Choose based on which reads better for your usage ("request" is preferred, however "add" is more fluent when you can't
-         * inline the whole request and must make individual calls instead).
+         * Registers a plugin to process or utilize the parsed source code.
+         * <p/>
+         * This is equivalent to {@link #request(Plugin...)}. Choose based on which reads better for your usage ("request" is
+         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
+         * instead).
          *
          * @param plugins
-         *     The plugins to add.
+         *     The plugin(s) to add.
          *
          * @return this, for chaining.
          */
@@ -100,12 +104,14 @@ public final class Omakase {
         }
 
         /**
-         * Registers a plugin to process or utilize the parsed source code. This is equivalent to {@link #add(Plugin...)}. Choose
-         * based on which reads better for your usage ("request" is preferred, however "add" is more fluent when you can't inline
-         * the whole request and must make individual calls instead).
+         * Registers a plugin to process or utilize the parsed source code.
+         * <p/>
+         * This is equivalent to {@link #add(Plugin...)}. Choose based on which reads better for your usage ("request" is
+         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
+         * instead).
          *
          * @param plugins
-         *     The plugins to add.
+         *     The plugin(s) to add.
          *
          * @return this, for chaining.
          */
@@ -114,9 +120,11 @@ public final class Omakase {
         }
 
         /**
-         * Registers a plugin to process or utilize the parsed source code. This is equivalent to {@link #request(Iterable)}.
-         * Choose based on which reads better for your usage ("request" is preferred, however "add" is more fluent when you can't
-         * inline the whole request and must make individual calls instead).
+         * Registers a plugin to process or utilize the parsed source code.
+         * <p/>
+         * This is equivalent to {@link #request(Iterable)}. Choose based on which reads better for your usage ("request" is
+         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
+         * instead).
          *
          * @param plugins
          *     The plugins to add.
@@ -128,9 +136,11 @@ public final class Omakase {
         }
 
         /**
-         * Registers a plugin to process or utilize the parsed source code. This method is equivalent to {@link #add(Iterable)}.
-         * Choose based on which reads better for your usage ("request" is preferred, however "add" is more fluent when you can't
-         * inline the whole request and must make individual calls instead).
+         * Registers a plugin to process or utilize the parsed source code.
+         * <p/>
+         * This method is equivalent to {@link #add(Iterable)}. Choose based on which reads better for your usage ("request" is
+         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
+         * instead).
          *
          * @param plugins
          *     The plugins to add.
@@ -142,10 +152,36 @@ public final class Omakase {
             return this;
         }
 
+        /**
+         * Registers a {@link SyntaxPlugin} which is used to customize and extend the standard CSS syntax. See the readme file for
+         * more information.
+         * <p/>
+         * This is equivalent to {@link #request(SyntaxPlugin...)}. Choose based on which reads better for your usage ("request"
+         * is preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
+         * instead).
+         *
+         * @param plugins
+         *     The plugin(s) to add.
+         *
+         * @return this, for chaining.
+         */
         public Request add(SyntaxPlugin... plugins) {
             return request(plugins);
         }
 
+        /**
+         * Registers a {@link SyntaxPlugin} which is used to customize and extend the standard CSS syntax. See the readme file for
+         * more information.
+         * <p/>
+         * This is equivalent to {@link #add(SyntaxPlugin...)}. Choose based on which reads better for your usage ("request" is
+         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
+         * instead).
+         *
+         * @param plugins
+         *     The plugins to add.
+         *
+         * @return this, for chaining.
+         */
         public Request request(SyntaxPlugin... plugins) {
             for (SyntaxPlugin plugin : plugins) {
                 customRefiners.add(plugin.getRefinableStrategy());
@@ -197,7 +233,7 @@ public final class Omakase {
             Refiner refiner = new Refiner(context.broadcaster(), customRefiners);
 
             try {
-                ParserFactory.stylesheetParser().parse(stream, context);
+                ParserFactory.stylesheetParser().parse(stream, context, refiner);
             } catch (ParserException e) {
                 em.report(ErrorLevel.FATAL, e);
             }

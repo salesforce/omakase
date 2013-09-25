@@ -37,8 +37,8 @@ public interface Parser {
      * @param broadcaster
      *     The {@link Broadcaster} to receive any events from the parser.
      *
-     * @return true if we parsed <em>something</em> (excluding whitespace), false otherwise. Note that a return value of true does
-     *         not indicate that the parsed content was actually valid syntax.
+     * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
+     *         of true does not indicate that the parsed content was actually valid syntax.
      */
     boolean parse(Stream stream, Broadcaster broadcaster);
 

@@ -72,6 +72,8 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      *     The raw property name.
      * @param rawPropertyValue
      *     The raw property value.
+     * @param refiner
+     *     The {@link Refiner} to be used later during refinement of this object.
      */
     public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, Refiner refiner) {
         super(rawPropertyName.line(), rawPropertyName.column());
@@ -308,6 +310,7 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     @Override
     public Declaration refine() {
         if (!isRefined() && refiner != null) {
+            refinePropertyName();
             refiner.refine(this);
         }
 

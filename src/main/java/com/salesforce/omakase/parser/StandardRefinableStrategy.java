@@ -28,7 +28,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 
 /**
- * TODO description
+ * Standard {@link RefinableStrategy} implementation.
  *
  * @author nmcwilliams
  */
@@ -69,8 +69,7 @@ public class StandardRefinableStrategy implements RefinableStrategy {
         Stream stream = new Stream(declaration.rawPropertyValue().content(), declaration.line(), declaration.column());
 
         // parse the contents
-        Parser parser = ParserStrategyX.getValueParser(declaration.propertyName());
-        parser.parse(stream, qb);
+        ParserFactory.termListParser().parse(stream, qb);
 
         // there should be nothing left
         if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_VALUE);

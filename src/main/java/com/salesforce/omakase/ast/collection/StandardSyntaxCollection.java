@@ -254,7 +254,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        // TESTME save the broadcaster
         broadcaster(broadcaster);
 
         // make a defensive copy as this collection may be modified as a result of broadcasting

@@ -139,10 +139,23 @@ final class Context implements Broadcaster, PluginRegistry {
         this.broadcaster = broadcaster;
     }
 
+    /**
+     * Gets the {@link Broadcaster}.
+     *
+     * @return the {@link Broadcaster}.
+     */
     public Broadcaster broadcaster() {
         return broadcaster;
     }
 
+    /**
+     * Registers the {@link ErrorManager}. This should be called ahead of {@link #before()} or bad stuff will happen.
+     *
+     * @param em
+     *     The {@link ErrorManager}.
+     *
+     * @return this, for chaining.
+     */
     public Context errorManager(ErrorManager em) {
         emittingBroadcaster.errorManager(em);
         return this;

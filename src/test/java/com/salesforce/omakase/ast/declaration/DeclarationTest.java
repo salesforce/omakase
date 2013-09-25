@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
@@ -31,7 +30,6 @@ import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.ast.declaration.value.Value;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -146,12 +144,14 @@ public class DeclarationTest {
     }
 
     @Test
-    public void getPropetyValueWhenUnrefined() {
+    public void getPropertyValueWhenUnrefined() {
+        // should automatically refine to the property value)
         assertThat(fromRaw.propertyValue()).isNotNull();
     }
 
     @Test
     public void getPropertyValueWhenRefined() {
+        // automatic refinement should not occur since we are already refined, hence should be the same object
         PropertyValue propertyValue = fromRaw.propertyValue();
         assertThat(fromRaw.propertyValue()).isSameAs(propertyValue);
     }
@@ -213,25 +213,6 @@ public class DeclarationTest {
     public void refine() {
         assertThat(fromRaw.refine().propertyName()).isNotNull();
         assertThat(fromRaw.refine().propertyValue()).isNotNull();
-    }
-
-    @Test
-    public void refineThrowsErrorIfUnparsableContent() {
-        RawSyntax name = new RawSyntax(2, 3, "display");
-        RawSyntax value = new RawSyntax(2, 5, "none ^^^^^^");
-
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNPARSABLE_VALUE.message());
-        new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
-    }
-
-    @Test
-    public void refineAddsOrphanedComments() {
-        RawSyntax name = new RawSyntax(2, 3, "display");
-        RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");
-
-        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
-        assertThat(d.orphanedComments()).isNotEmpty();
     }
 
     @Test

@@ -16,14 +16,13 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Refiner;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -67,6 +66,13 @@ public class SelectorTest {
     }
 
     @Test
+    public void appendAllParts() {
+        selector = new Selector(new ClassSelector("test"));
+        selector.appendAll(Lists.<SelectorPart>newArrayList(Combinator.descendant(), new IdSelector("test")));
+        assertThat(selector.parts()).hasSize(3);
+    }
+
+    @Test
     public void propagatesBroadcasts() {
         ClassSelector cs = new ClassSelector("test");
         selector = new Selector(cs);
@@ -101,23 +107,6 @@ public class SelectorTest {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
         assertThat(selector.refine().parts()).isNotEmpty();
-    }
-
-    @Test
-    public void refineThrowsErrorIfHasUnparsableContent() {
-        RawSyntax raw = new RawSyntax(5, 2, ".class > #id !!!!");
-        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
-
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNPARSABLE_SELECTOR.message());
-        selector.refine();
-    }
-
-    @Test
-    public void refinedAddsOrphanedComments() {
-        RawSyntax raw = new RawSyntax(5, 2, ".class > #id /*orphaned*/");
-        selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
-        assertThat(selector.refine().orphanedComments()).isNotEmpty();
     }
 
     @Test

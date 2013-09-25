@@ -54,6 +54,7 @@ public final class Goldfile {
      * @throws IOException
      *     If there is a problem with teh files.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void test(String name, WriterMode mode, boolean autoRefine) throws IOException {
         // grab the source to parse
         File sourceFile = sourceFile(name);

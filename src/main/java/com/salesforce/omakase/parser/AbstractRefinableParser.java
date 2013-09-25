@@ -19,7 +19,7 @@ package com.salesforce.omakase.parser;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
- * TODO description
+ * Base class for {@link RefinableParser}.
  *
  * @author nmcwilliams
  */

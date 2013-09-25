@@ -76,6 +76,8 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
      *
      * @param rawContent
      *     The selector content.
+     * @param refiner
+     *     The {@link Refiner} to be used later during refinement of this object.
      */
     public Selector(RawSyntax rawContent, Refiner refiner) {
         super(rawContent.line(), rawContent.column());
@@ -126,6 +128,14 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
         return refine().parts;
     }
 
+    /**
+     * Appends all of the given parts to this {@link Selector}.
+     *
+     * @param newParts
+     *     The parts to append.
+     *
+     * @return this, for chaining.
+     */
     public Selector appendAll(Iterable<SelectorPart> newParts) {
         parts.appendAll(newParts);
         return this;

@@ -302,6 +302,14 @@ public class StandardSyntaxCollectionTest {
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
     }
 
+    @Test
+    public void propagateBroadcastSavesTheBroadcaster() {
+        StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
+        collection.propagateBroadcast(broadcaster);
+        collection.append(child1);
+        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
+    }
+
     private static final class Parent {
         private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
     }

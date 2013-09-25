@@ -73,6 +73,8 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
      *     The raw at-rule expression. If no expression is present pass in null.
      * @param rawBlock
      *     The raw at-rule block. If no block is present pass in null.
+     * @param refiner
+     *     The {@link Refiner} to be used later during refinement of this object.
      */
     public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, Refiner refiner) {
         super(line, column);
