@@ -128,7 +128,9 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
                 withExpectedResult("color:red;margin:10px", 9),
                 withExpectedResult("display:none;\n\n  position:absolute", 12),
                 withExpectedResult("\n color: red} \n .class2 {color: red}", 12),
-                withExpectedResult("color: /*comment\ncomment*/ blue; ", 31)
+                withExpectedResult("color: /*comment\ncomment*/ blue; ", 31),
+                withExpectedResult("*color:red", 10),
+                withExpectedResult("/*comment*//*comment*/ *color: red", 34)
             );
     }
 
@@ -179,6 +181,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
             withExpectedResult("-ms-sucks: 100%", "-ms-sucks"),
             withExpectedResult("display:none", "display"),
             withExpectedResult("COLOR:red", "COLOR"),
+            withExpectedResult("*COLOR:red", "*COLOR"),
             withExpectedResult("ANIMATION-timing-function:red", "ANIMATION-timing-function"));
 
         for (ParseResult<String> result : results) {

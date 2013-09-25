@@ -31,6 +31,7 @@ import static org.fest.assertions.api.Assertions.*;
 public class PropertyNameTest {
     private static final String PREFIX = "-webkit-";
     private static final String NAME = "border-radius";
+    private static final String STARHACK_NAME = "*color";
 
     @Rule public final ExpectedException exception = ExpectedException.none();
 
@@ -197,4 +198,30 @@ public class PropertyNameTest {
         PropertyName name = PropertyName.using("display");
         assertThat(name.matches("color")).isFalse();
     }
+
+    @Test
+    public void starHackIsTrue() throws IOException {
+        PropertyName name = PropertyName.using(STARHACK_NAME);
+        assertThat(name.hasStarHack()).isTrue();
+    }
+
+    @Test
+    public void starHackIsStrippedFromProperty() throws IOException {
+        PropertyName name = PropertyName.using(STARHACK_NAME);
+        assertThat(name.matches("color")).isTrue();
+    }
+
+    @Test
+    public void starHackIsWrittenWithStar() throws IOException {
+        PropertyName name = PropertyName.using(STARHACK_NAME);
+        StyleWriter writer = StyleWriter.compressed();
+        assertThat(writer.writeSnippet(name)).isEqualTo(STARHACK_NAME);
+    }
+
+    @Test
+    public void starHackIsFalse() throws IOException {
+        PropertyName name = PropertyName.using("color");
+        assertThat(name.hasStarHack()).isFalse();
+    }
+
 }

@@ -16,11 +16,13 @@
 
 package com.salesforce.omakase.parser.raw;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link Declaration}.
@@ -35,13 +37,22 @@ public class RawDeclarationParser extends AbstractParser {
         stream.skipWhitepace();
         stream.collectComments();
 
+        // the IE7 star hack - http://en.wikipedia.org/wiki/CSS_filter#Star_hack -
+        // is not part of the CSS spec, but it still needs to be handled
+        Stream.Snapshot snapshot = stream.snapshot();
+        Optional<Character> starHack = stream.optional(Tokens.STAR);
+
         // the first non comment or space character must match the beginning of a declaration
-        if (!tokenFactory().declarationBegin().matches(stream.current())) return false;
+        if (!tokenFactory().declarationBegin().matches(stream.current())) return snapshot.rollback();
 
         // get the property, which is everything up to the delimiter
         int line = stream.line();
         int column = stream.column();
         String content = stream.until(tokenFactory().propertyNameEnd());
+        if (starHack.isPresent()) {
+            // if we found the star hack, we need to write it back out
+            content = starHack.get() + content;
+        }
         RawSyntax property = new RawSyntax(line, column, content.trim());
 
         stream.skipWhitepace();

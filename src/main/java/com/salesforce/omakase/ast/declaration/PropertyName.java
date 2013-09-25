@@ -40,15 +40,24 @@ import static com.google.common.base.Preconditions.*;
  * @author nmcwilliams
  */
 public class PropertyName extends AbstractSyntax {
+
     /** pattern for the vendor prefix */
     private static final Pattern PATTERN = Pattern.compile("^-[a-zA-Z]+-");
+    private static final Character STAR = '*';
 
     private final String name;
     private Optional<String> prefix;
+    private boolean starHack;
 
     /** private -- use a constructor method for new instances */
     private PropertyName(int line, int column, String name) {
         super(line, column);
+
+        // the IE7 "star hack" is not part of the CSS syntax, but it still needs to be handled
+        if (name.charAt(0)==STAR) {
+            setStarHack(true);
+            name = name.substring(1);
+        }
 
         // split into prefix and name
         Matcher matcher = PATTERN.matcher(name);
@@ -137,6 +146,9 @@ public class PropertyName extends AbstractSyntax {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (starHack) {
+            appendable.append(STAR);
+        }
         appendable.append(name());
     }
 
@@ -233,6 +245,30 @@ public class PropertyName extends AbstractSyntax {
     public boolean matches(Property property) {
         if (property == null) return false;
         return name().equals(property.toString());
+    }
+
+    /**
+     * Gets whether this {@link PropertyName} includes an IE7
+     * <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star hack.</a>
+     *
+     * @return True if this {@link PropertyName} includes the IE7 star hack.
+     */
+    public boolean hasStarHack() {
+        return starHack;
+    }
+
+    /**
+     * Sets if this {@link PropertyName} includes an IE7
+     * <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star hack.</a>
+     *
+     * @param starHack
+     *      True if this property name includes the star hack
+     *
+     * @return this, for chaining.
+     */
+    public PropertyName setStarHack(boolean starHack) {
+        this.starHack = starHack;
+        return this;
     }
 
     @Override
