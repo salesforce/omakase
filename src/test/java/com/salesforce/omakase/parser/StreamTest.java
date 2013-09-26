@@ -746,6 +746,74 @@ public class StreamTest {
         assertThat(stream.inString()).isFalse();
     }
 
+    @Test
+    public void nestedStringsDoubleQuotes() {
+        Stream stream = new Stream("a\"b'c'd\"e");
+
+        assertThat(stream.inString()).isFalse(); //a
+
+        stream.next(); //"
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//b
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//'
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//c
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//'
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//d
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//"
+        assertThat(stream.inString()).isFalse();
+
+        stream.next();//e
+        assertThat(stream.inString()).isFalse();
+
+        stream.next();//(eof)
+        assertThat(stream.inString()).isFalse();
+    }
+
+    @Test
+    public void nestedStringsSingleQuotes() {
+        Stream stream = new Stream("a'b\"c\"d'e");
+
+        assertThat(stream.inString()).isFalse(); //a
+
+        stream.next(); //"
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//b
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//'
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//c
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//'
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//d
+        assertThat(stream.inString()).isTrue();
+
+        stream.next();//"
+        assertThat(stream.inString()).isFalse();
+
+        stream.next();//e
+        assertThat(stream.inString()).isFalse();
+
+        stream.next();//(eof)
+        assertThat(stream.inString()).isFalse();
+    }
+
     public enum StreamEnum implements TokenEnum {
         ONE(Tokens.ALPHA),
         TWO(Tokens.DIGIT);

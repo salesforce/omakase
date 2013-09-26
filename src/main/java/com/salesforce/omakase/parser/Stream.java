@@ -825,26 +825,26 @@ public final class Stream {
     private void updateInString() {
         final Character current = current();
 
-        if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) {
-            if (inString && stringToken.equals(Tokens.DOUBLE_QUOTE)) {
+        if (inString && stringToken.equals(Tokens.DOUBLE_QUOTE)) { // the opening quote was a double quote
+            if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) {
                 // closing quote
                 stringToken = null;
                 inString = false;
-            } else {
-                // opening quote
-                stringToken = Tokens.DOUBLE_QUOTE;
-                inString = true;
             }
-        } else if (Tokens.SINGLE_QUOTE.matches(current) && !isEscaped()) {
-            if (inString && stringToken.equals(Tokens.SINGLE_QUOTE)) {
+        } else if (inString) { // the opening quote was a single quote
+            if (Tokens.SINGLE_QUOTE.matches(current) && !isEscaped()) {
                 // closing quote
                 stringToken = null;
                 inString = false;
-            } else {
-                // opening quote
-                stringToken = Tokens.SINGLE_QUOTE;
-                inString = true;
             }
+        } else if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) { // check for opening double quote
+            // opening quote
+            stringToken = Tokens.DOUBLE_QUOTE;
+            inString = true;
+        } else if (Tokens.SINGLE_QUOTE.matches(current) && !isEscaped()) { // check for opening single quote
+            // closing quote
+            stringToken = Tokens.SINGLE_QUOTE;
+            inString = true;
         }
     }
 
