@@ -21,6 +21,7 @@ import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
 import com.salesforce.omakase.plugin.validator.Validation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
@@ -74,6 +75,7 @@ public final class Goldfile {
         request.add(tree);
         request.add(writer);
         request.add(Validation.normal());
+        request.add(new UnquotedIEFilterPlugin());
         if (autoRefine) request.add(refiner);
 
         // do the parsing and get results

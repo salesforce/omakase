@@ -32,6 +32,7 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
 import com.salesforce.omakase.notification.NotifyStylesheetEnd;
 import com.salesforce.omakase.notification.NotifyStylesheetStart;
+import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
@@ -324,4 +325,13 @@ public class BasePlugin implements Plugin {
      *     The {@link OrphanedComment} instance.
      */
     public void orphanedSelectorComment(OrphanedComment orphaned) {}
+
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for {@link Syntax} units of type {@link UnquotedIEFilter} (only enabled with the {@link UnquotedIEFilterPlugin} plugin.
+     *
+     * @param filter
+     *     The {@link UnquotedIEFilter} instance.
+     */
+    public void unquotedIEFilter(UnquotedIEFilter filter) {}
 }
