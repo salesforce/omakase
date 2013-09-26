@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.Refiner;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import org.junit.Before;
 import org.junit.Test;
 

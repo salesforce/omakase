@@ -160,7 +160,7 @@ public final class Value {
      *
      * @return the properly-typed instance, or {@link Optional#absent()} if it doesn't match.
      */
-    private static <T extends TermListMember> Optional<T> as(Class<T> klass, PropertyValue value) {
+    public static <T extends TermListMember> Optional<T> as(Class<T> klass, PropertyValue value) {
         if (klass.isInstance(value)) {
             return Optional.of(klass.cast(value));
         } else if (value instanceof TermList) {

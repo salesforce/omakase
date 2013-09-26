@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser;
+package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Refinable;

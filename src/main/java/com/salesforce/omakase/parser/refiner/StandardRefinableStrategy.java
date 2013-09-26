@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser;
+package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
@@ -26,6 +26,9 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Stream;
 
 /**
  * Standard {@link RefinableStrategy} implementation.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser;
+package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
@@ -24,6 +24,7 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.parser.ParserException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,7 +32,6 @@ import org.junit.rules.ExpectedException;
 import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.*;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StandardRefinableStrategy}.
@@ -89,7 +89,6 @@ public class StandardRefinableStrategyTest {
     public void refineAddsOrphanedComments() {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");
-
         Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
         assertThat(d.orphanedComments()).isNotEmpty();
     }

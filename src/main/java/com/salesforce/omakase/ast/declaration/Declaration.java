@@ -27,7 +27,7 @@ import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.Refiner;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.writer.StyleAppendable;

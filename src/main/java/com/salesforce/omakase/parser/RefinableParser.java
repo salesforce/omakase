@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
  * A {@link Parser} that parses {@link Refinable} AST objects. These objects must be given a {@link Refiner} instance.

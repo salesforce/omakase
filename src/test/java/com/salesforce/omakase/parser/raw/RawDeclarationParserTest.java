@@ -106,11 +106,13 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
                 "margin: 10%",
                 "margin: 1.1%",
                 "margin: +1px",
-                "margin: +1.1em"
+                "margin: +1.1em",
+                "font-family:\"Times new Roman\""
             );
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList
             .of(

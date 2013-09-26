@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.parser.RefinableStrategy;
+import com.salesforce.omakase.parser.refiner.RefinableStrategy;
 
 /**
  * A {@link Plugin} that registers a custom {@link RefinableStrategy}.

@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Refiner;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;

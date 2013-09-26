@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
  * Base class for {@link RefinableParser}.

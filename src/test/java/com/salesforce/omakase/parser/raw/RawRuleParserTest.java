@@ -51,6 +51,7 @@ public class RawRuleParserTest extends AbstractParserTest<RawRuleParser> {
             ".class{ color: red }",
             ".class {color:red;}",
             ".class {color:red;margin: 1px}",
+            ".class {color:red;font-family:\"Times new roman\";}",
             ".class {\n  color:red;\n\n  margin:  1px }",
             ".class1, .class2 {color:red;}",
             ".class, \n .class2, #id1.class2 + p {color:red;}",
