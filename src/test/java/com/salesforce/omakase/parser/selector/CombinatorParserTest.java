@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
@@ -113,7 +114,7 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     public void correctLineAndColumnNumber() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
-            Syntax syntax = result.broadcastedSyntax.get(0);
+            Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
             assertThat(syntax.line())
                 .describedAs(result.stream.toString())
                 .isEqualTo(1);

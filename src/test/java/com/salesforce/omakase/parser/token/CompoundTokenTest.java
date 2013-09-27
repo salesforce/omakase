@@ -51,6 +51,6 @@ public class CompoundTokenTest {
     @Test
     public void doesntMatchNull() {
         CompoundToken compound = new CompoundToken(Tokens.ALPHA, Tokens.DIGIT);
-        assertThat(compound.matches(null)).isFalse();
+        assertThat(compound.matches('\u0000')).isFalse();
     }
 }

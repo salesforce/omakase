@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -174,24 +175,24 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         GenericParseResult result = Iterables.getOnlyElement(
             parse("*.page .home > .child #id:hover .button .inner + span:before"));
 
-        List<Broadcastable> broadcasted = result.broadcasted;
+        Iterable<Broadcastable> broadcasted = result.broadcasted;
         assertThat(broadcasted).hasSize(16);
-        assertThat(broadcasted.get(0)).isInstanceOf(UniversalSelector.class);
-        assertThat(broadcasted.get(1)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(2)).isInstanceOf(Combinator.class);
-        assertThat(broadcasted.get(3)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(4)).isInstanceOf(Combinator.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(6)).isInstanceOf(Combinator.class);
-        assertThat(broadcasted.get(7)).isInstanceOf(IdSelector.class);
-        assertThat(broadcasted.get(8)).isInstanceOf(PseudoClassSelector.class);
-        assertThat(broadcasted.get(9)).isInstanceOf(Combinator.class);
-        assertThat(broadcasted.get(10)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(11)).isInstanceOf(Combinator.class);
-        assertThat(broadcasted.get(12)).isInstanceOf(ClassSelector.class);
-        assertThat(broadcasted.get(13)).isInstanceOf(Combinator.class);
-        assertThat(broadcasted.get(14)).isInstanceOf(TypeSelector.class);
-        assertThat(broadcasted.get(15)).isInstanceOf(PseudoElementSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(UniversalSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(ClassSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(ClassSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 4)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 5)).isInstanceOf(ClassSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 6)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 7)).isInstanceOf(IdSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 8)).isInstanceOf(PseudoClassSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 9)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 10)).isInstanceOf(ClassSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 11)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 12)).isInstanceOf(ClassSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 13)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 14)).isInstanceOf(TypeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 15)).isInstanceOf(PseudoElementSelector.class);
     }
 
     @Test
@@ -199,7 +200,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         GenericParseResult result = Iterables.getOnlyElement(
             parse(".class/*comment*/ .class /*comment*/\n\n/*comment \n comment */ #id /*comment */"));
 
-        List<Broadcastable> broadcasted = result.broadcasted;
+        List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
         assertThat(broadcasted.get(0)).isInstanceOf(ClassSelector.class);
         assertThat(broadcasted.get(1)).isInstanceOf(Combinator.class);
         assertThat(broadcasted.get(2)).isInstanceOf(ClassSelector.class);
@@ -226,16 +227,16 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
     public void removesTrailingDescendantCombinatorWithoutError() {
         GenericParseResult result = parse(".class ").get(0);
         assertThat(result.broadcasted).hasSize(1);
-        assertThat(result.broadcasted.get(0)).isNotInstanceOf(Combinator.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isNotInstanceOf(Combinator.class);
     }
 
     @Test
     public void orphanedComments() {
         GenericParseResult result = parse(".class /* comment *//* comment */").get(0);
         assertThat(result.broadcasted).hasSize(3);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(OrphanedComment.class);
-        assertThat(result.broadcasted.get(2)).isInstanceOf(OrphanedComment.class);
-        OrphanedComment orphaned = (OrphanedComment)result.broadcasted.get(1);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(OrphanedComment.class);
+        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(OrphanedComment.class);
+        OrphanedComment orphaned = (OrphanedComment)Iterables.get(result.broadcasted, 1);
         assertThat(orphaned.content()).isEqualTo(" comment ");
     }
 }

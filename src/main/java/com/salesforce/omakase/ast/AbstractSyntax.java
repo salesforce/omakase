@@ -17,10 +17,10 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,7 +79,7 @@ public abstract class AbstractSyntax implements Syntax {
 
         // delayed creation of comments list
         if (comments == null) {
-            comments = Lists.newArrayList();
+            comments = new ArrayList<>(2);
         }
 
         // add the comments

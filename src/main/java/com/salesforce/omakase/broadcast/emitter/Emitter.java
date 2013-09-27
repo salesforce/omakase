@@ -21,8 +21,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -31,6 +29,8 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -61,10 +61,10 @@ public final class Emitter {
             }
         });
 
-    /** order is important so that subscribers are notified in the order they were registered, hence linked multimap */
-    private final Multimap<Class<?>, Subscription> preprocessors = LinkedHashMultimap.create(8, 2);
-    private final Multimap<Class<?>, Subscription> processors = LinkedHashMultimap.create(32, 4);
-    private final Multimap<Class<?>, Subscription> validators = LinkedHashMultimap.create(32, 4);
+    /* order is important so that subscribers are notified in the order they were registered, hence linked map */
+    private final LinkedHashMap<Class<?>, Set<Subscription>> preprocessors = new LinkedHashMap<>(8);
+    private final LinkedHashMap<Class<?>, Set<Subscription>> processors = new LinkedHashMap<>(32);
+    private final LinkedHashMap<Class<?>, Set<Subscription>> validators = new LinkedHashMap<>(32);
 
     private SubscriptionPhase phase = SubscriptionPhase.PREPROCESS;
 
@@ -101,15 +101,32 @@ public final class Emitter {
             Subscription subscription = entry.getValue();
 
             // perf -- segment the subscriber to the correct phase bucket
+            Set<Subscription> subscriptions;
+
             switch (subscription.phase()) {
             case PREPROCESS:
-                preprocessors.put(entry.getKey(), subscription);
+                subscriptions = preprocessors.get(entry.getKey());
+                if (subscriptions == null) {
+                    subscriptions = new HashSet<>(4);
+                    preprocessors.put(entry.getKey(), subscriptions);
+                }
+                subscriptions.add(subscription);
                 break;
             case PROCESS:
-                processors.put(entry.getKey(), subscription);
+                subscriptions = processors.get(entry.getKey());
+                if (subscriptions == null) {
+                    subscriptions = new HashSet<>();
+                    processors.put(entry.getKey(), subscriptions);
+                }
+                subscriptions.add(subscription);
                 break;
             case VALIDATE:
-                validators.put(entry.getKey(), subscription);
+                subscriptions = validators.get(entry.getKey());
+                if (subscriptions == null) {
+                    subscriptions = new HashSet<>();
+                    validators.put(entry.getKey(), subscriptions);
+                }
+                subscriptions.add(subscription);
                 break;
             }
         }
@@ -142,16 +159,16 @@ public final class Emitter {
     }
 
     /** handles emits for a particular phase */
-    private void emit(Multimap<Class<?>, Subscription> multimap, Object event, ErrorManager em) {
+    private void emit(LinkedHashMap<Class<?>, Set<Subscription>> map, Object event, ErrorManager em) {
         Class<?> eventType = event.getClass();
 
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Class<?> klass : hierarchy(eventType)) {
 
-            // perf -- skip the multimap check if it doesn't contain the key
-            if (!multimap.containsKey(klass)) continue;
+            Set<Subscription> subscriptions = map.get(klass);
+            if (subscriptions == null) continue;
 
-            for (Subscription subscription : multimap.get(klass)) {
+            for (Subscription subscription : subscriptions) {
                 subscription.deliver(event, em);
             }
         }

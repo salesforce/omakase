@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
@@ -170,7 +171,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
     public void matchesExpectedBroadcastContentWithOrphanedComments() {
         GenericParseResult result = Iterables.getOnlyElement(parse("/*x*/ 1px /*x*/ solid red /*x*/\n/*x*/"));
 
-        List<Broadcastable> broadcasted = result.broadcasted;
+        List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
 
         assertThat(broadcasted).hasSize(6);
         assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);

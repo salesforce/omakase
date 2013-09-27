@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
@@ -136,7 +137,8 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
 
     @Test
     public void correctLineAndColumnNumber() {
-        Syntax syntax = parse("\n  .class1").get(0).broadcastedSyntax.get(0);
+        GenericParseResult result = parse("\n  .class1").get(0);
+        Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
         assertThat(syntax.line()).isEqualTo(2);
         assertThat(syntax.column()).isEqualTo(3);
     }

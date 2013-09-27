@@ -23,11 +23,9 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.refiner.RefinableStrategy;
-import com.salesforce.omakase.parser.refiner.Refiner;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Refiner}.

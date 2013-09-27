@@ -24,8 +24,6 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -40,30 +38,28 @@ import static com.google.common.base.Preconditions.*;
  * @author nmcwilliams
  */
 public class PropertyName extends AbstractSyntax {
-
     /** pattern for the vendor prefix */
-    private static final Pattern PATTERN = Pattern.compile("^-[a-zA-Z]+-");
-    private static final Character STAR = '*';
+    private static final char STAR = '*';
 
     private final String name;
     private Optional<String> prefix;
     private boolean starHack;
 
     /** private -- use a constructor method for new instances */
+    @SuppressWarnings("AssignmentToMethodParameter")
     private PropertyName(int line, int column, String name) {
         super(line, column);
 
         // the IE7 "star hack" is not part of the CSS syntax, but it still needs to be handled
-        if (name.charAt(0)==STAR) {
+        if (name.charAt(0) == STAR) {
             setStarHack(true);
             name = name.substring(1);
         }
 
-        // split into prefix and name
-        Matcher matcher = PATTERN.matcher(name);
-        if (matcher.find()) {
-            prefix = Optional.of(matcher.group());
-            this.name = name.substring(matcher.end());
+        if (name.charAt(0) == '-') {
+            int end = name.indexOf("-", 1);
+            this.prefix = Optional.of(name.substring(0, end + 1));
+            this.name = name.substring(end + 1);
         } else {
             prefix = Optional.absent();
             this.name = name;
@@ -248,8 +244,8 @@ public class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * Gets whether this {@link PropertyName} includes an IE7
-     * <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star hack.</a>
+     * Gets whether this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
+     * hack.</a>
      *
      * @return True if this {@link PropertyName} includes the IE7 star hack.
      */
@@ -258,11 +254,11 @@ public class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * Sets if this {@link PropertyName} includes an IE7
-     * <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star hack.</a>
+     * Sets if this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
+     * hack.</a>
      *
      * @param starHack
-     *      True if this property name includes the star hack
+     *     True if this property name includes the star hack
      *
      * @return this, for chaining.
      */

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
@@ -27,7 +28,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link PseudoSelectorParser}.
@@ -182,7 +183,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
     @Test
     public void collectsComments() {
         GenericParseResult result = parse("/*comment*/:before").get(0);
-        assertThat(result.broadcastedSyntax.get(0).comments()).hasSize(1);
+        assertThat(Iterables.get(result.broadcastedSyntax, 0).comments()).hasSize(1);
     }
 
     @Test

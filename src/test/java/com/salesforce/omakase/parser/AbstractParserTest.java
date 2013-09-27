@@ -195,8 +195,8 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     /** helper object */
     public static class ParseResult<T> {
         public QueryableBroadcaster broadcaster;
-        public List<Broadcastable> broadcasted;
-        public List<Syntax> broadcastedSyntax;
+        public Iterable<Broadcastable> broadcasted;
+        public Iterable<Syntax> broadcastedSyntax;
         public boolean success;
         public Stream stream;
         public T expected;

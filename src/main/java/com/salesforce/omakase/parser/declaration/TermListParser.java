@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.SingleBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
@@ -53,16 +53,15 @@ public class TermListParser extends AbstractParser {
         Optional<Term> term;
         Optional<TermOperator> operator = Optional.absent();
         Parser termParser = ParserFactory.termParser();
-        QueryableBroadcaster qb;
+        SingleBroadcaster<Term> singleTermBroadcaster = new SingleBroadcaster<>(Term.class, broadcaster);
 
         // try parsing another term until there are no more term operators
         do {
             stream.collectComments();
 
             // try to parse a term
-            qb = new QueryableBroadcaster(broadcaster);
-            termParser.parse(stream, qb);
-            term = qb.findOnly(Term.class);
+            termParser.parse(stream, singleTermBroadcaster.reset());
+            term = singleTermBroadcaster.broadcasted();
 
             // if we have a term, add it to the list
             if (term.isPresent()) {

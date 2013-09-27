@@ -118,8 +118,10 @@ public class TermList extends AbstractSyntax implements PropertyValue {
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         super.propagateBroadcast(broadcaster);
-        for (Term term : terms()) {
-            term.propagateBroadcast(broadcaster);
+        for (TermListMember member : members) { // not using #terms for perf reasons
+            if (member instanceof Term) {
+                ((Term)member).propagateBroadcast(broadcaster);
+            }
         }
     }
 

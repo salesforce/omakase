@@ -63,7 +63,9 @@ public enum Message {
         "appropriate operator (.e.g., a space character). Otherwise, this will result in an invalid valid during minification " +
         "when comments are removed."),
     EXPECTED_IMPORTANT("Expected to find 'important'"),
-    EXPECTED_ATTRIBUTE_MATCH_VALUE("Expected to find the attribute selector's match value (a string or an identifier)");
+    EXPECTED_ATTRIBUTE_MATCH_VALUE("Expected to find the attribute selector's match value (a string or an identifier)"),
+    ONE_BROADCASTED_EVENT("Only one broadcasted event is allowed"),
+    WRONG_INSTANCE("Expected to find an instance of %s");
 
     private final String message;
 

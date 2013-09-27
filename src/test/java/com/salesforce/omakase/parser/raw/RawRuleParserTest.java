@@ -17,11 +17,12 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.notification.NotifyDeclarationBlockEnd;
 import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -109,21 +110,21 @@ public class RawRuleParserTest extends AbstractParserTest<RawRuleParser> {
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = parse("   .class{color:red}").get(0);
         assertThat(result.broadcasted).hasSize(4);
-        assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(NotifyDeclarationBlockStart.class);
-        assertThat(result.broadcasted.get(2)).isInstanceOf(Declaration.class);
-        assertThat(result.broadcasted.get(3)).isInstanceOf(NotifyDeclarationBlockEnd.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(NotifyDeclarationBlockStart.class);
+        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(Declaration.class);
+        assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(NotifyDeclarationBlockEnd.class);
     }
 
     @Test
     public void matchesExpectedBroadcastContentWithOrphaned() {
         GenericParseResult result = parse(".class{color:red; /*orphaned*/}").get(0);
         assertThat(result.broadcasted).hasSize(5);
-        assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(NotifyDeclarationBlockStart.class);
-        assertThat(result.broadcasted.get(2)).isInstanceOf(Declaration.class);
-        assertThat(result.broadcasted.get(3)).isInstanceOf(OrphanedComment.class);
-        assertThat(result.broadcasted.get(4)).isInstanceOf(NotifyDeclarationBlockEnd.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(NotifyDeclarationBlockStart.class);
+        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(Declaration.class);
+        assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(OrphanedComment.class);
+        assertThat(Iterables.get(result.broadcasted, 4)).isInstanceOf(NotifyDeclarationBlockEnd.class);
     }
 
     @Test

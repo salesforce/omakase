@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.google.common.base.CharMatcher;
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.parser.Stream;
 
 /**
  * A combination matcher that does an OR comparison of two {@link Token}s.
@@ -26,7 +26,8 @@ import com.salesforce.omakase.As;
  */
 public final class CompoundToken implements Token {
     private final String description;
-    private final CharMatcher matcher;
+    private final Token first;
+    private final Token second;
 
     /**
      * Constructs a new {@link CompoundToken} for doing OR character comparisons. The descriptions of each will be combined.
@@ -37,7 +38,8 @@ public final class CompoundToken implements Token {
      *     The second {@link Token}.
      */
     public CompoundToken(Token first, Token second) {
-        this.matcher = first.matcher().or(second.matcher());
+        this.first = first;
+        this.second = second;
 
         StringBuilder sb = new StringBuilder(first.description().length() + second.description().length() + 4);
         sb.append(first.description());
@@ -47,18 +49,14 @@ public final class CompoundToken implements Token {
     }
 
     @Override
-    public CharMatcher matcher() {
-        return matcher;
-    }
-
-    @Override
     public String description() {
         return description;
     }
 
     @Override
-    public boolean matches(Character c) {
-        return c != null && matcher.matches(c);
+    public boolean matches(char c) {
+        if (c == Stream.NULL_CHAR) return false;
+        return first.matches(c) || second.matches(c);
     }
 
     @Override

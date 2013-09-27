@@ -24,7 +24,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link PropertyName}. */
 @SuppressWarnings("JavaDoc")
@@ -200,13 +200,13 @@ public class PropertyNameTest {
     }
 
     @Test
-    public void starHackIsTrue() throws IOException {
+    public void starHackIsTrue() {
         PropertyName name = PropertyName.using(STARHACK_NAME);
         assertThat(name.hasStarHack()).isTrue();
     }
 
     @Test
-    public void starHackIsStrippedFromProperty() throws IOException {
+    public void starHackIsStrippedFromProperty() {
         PropertyName name = PropertyName.using(STARHACK_NAME);
         assertThat(name.matches("color")).isTrue();
     }
@@ -219,7 +219,7 @@ public class PropertyNameTest {
     }
 
     @Test
-    public void starHackIsFalse() throws IOException {
+    public void starHackIsFalse() {
         PropertyName name = PropertyName.using("color");
         assertThat(name.hasStarHack()).isFalse();
     }

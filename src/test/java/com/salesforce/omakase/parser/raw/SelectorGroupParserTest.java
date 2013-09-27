@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -95,8 +96,8 @@ public class SelectorGroupParserTest extends AbstractParserTest<SelectorGroupPar
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = parse("   .class.class.class, \n  .class.class.class  ").get(0);
         assertThat(result.broadcasted).hasSize(2);
-        assertThat(result.broadcasted.get(0)).isInstanceOf(Selector.class);
-        assertThat(result.broadcasted.get(1)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(Selector.class);
     }
 
     @Test

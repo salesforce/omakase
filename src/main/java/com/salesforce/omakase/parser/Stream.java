@@ -27,8 +27,8 @@ import com.salesforce.omakase.parser.token.Tokens;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
+import static com.google.common.base.Preconditions.checkPositionIndex;
+import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
  * A tool for reading a String source one character at a time. Basically a glorified wrapper around a String.
@@ -39,8 +39,11 @@ import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
  * @author nmcwilliams
  */
 public final class Stream {
+    /** the "null" character, this is used to represent the absence of a char value */
+    public static final char NULL_CHAR = '\u0000';
+
     /** the source to process */
-    private final String source;
+    private final char[] chars;
 
     /** cached length of the source */
     private final int length;
@@ -66,17 +69,17 @@ public final class Stream {
     /** last index checked, so that #collectComments can be short-circuited if the index hasn't changed */
     private int lastCheckedCommentIndex = -1;
 
-    /** if we are inside of a string */
-    private boolean inString = false;
-
     /** if we are inside of a comment */
     private boolean inComment = false;
 
-    /** the character that opened the last string */
-    private Token stringToken = null;
-
     /** whether we should monitor if we are in a string or not (optional for perf) */
     private final boolean checkInString;
+
+    /** if we are inside of a string */
+    private boolean inString = false;
+
+    /** the character that opened the last string */
+    private Token stringToken = null;
 
     /** collection of parsed CSS comments */
     private List<String> comments;
@@ -146,9 +149,8 @@ public final class Stream {
      *     performance reasons, to avoid extra processing that we know wouldn't be relevant.
      */
     public Stream(CharSequence source, int anchorLine, int anchorColumn, boolean checkInString) {
-        checkNotNull(source, "source cannot be null");
-        this.source = source.toString();
-        this.length = source.length();
+        this.chars = source.toString().toCharArray();
+        this.length = chars.length;
         this.anchorLine = anchorLine;
         this.anchorColumn = anchorColumn;
         this.checkInString = checkInString;
@@ -212,12 +214,8 @@ public final class Stream {
      *
      * @return The message.
      */
-    public StringBuilder anchorPositionMessage() {
-        return new StringBuilder(64).append("(starting from line ")
-            .append(anchorLine)
-            .append(", column ")
-            .append(anchorColumn)
-            .append(" in original source)");
+    public String anchorPositionMessage() {
+        return String.format("(starting from line %s, column %s in original source", anchorLine, anchorColumn);
     }
 
     /**
@@ -235,7 +233,7 @@ public final class Stream {
      * @return The full original source.
      */
     public String source() {
-        return source;
+        return new String(chars);
     }
 
     /**
@@ -244,7 +242,7 @@ public final class Stream {
      * @return A substring of the source from the current position to the end of the source.
      */
     public String remaining() {
-        return source.substring(index);
+        return new String(chars, index, length - index);
     }
 
     /**
@@ -273,7 +271,7 @@ public final class Stream {
      * @see Tokens#ESCAPE
      */
     public boolean isEscaped() {
-        return Tokens.ESCAPE.matches(peekPrevious());
+        return ESCAPE.matches(peekPrevious());
     }
 
     /**
@@ -288,10 +286,10 @@ public final class Stream {
     /**
      * Gets the character at the current position.
      *
-     * @return The character at the current position.
+     * @return The character at the current position, or {@link #NULL_CHAR} if at the end.
      */
-    public Character current() {
-        return eof() ? null : source.charAt(index);
+    public char current() {
+        return eof() ? NULL_CHAR : chars[index];
     }
 
     /**
@@ -302,12 +300,12 @@ public final class Stream {
      * number reported by this stream (e.g., in error messages) will be incorrect. This seems acceptable as that information is
      * mostly just useful for development purposes anyway. (http://dev.w3 .org/csswg/css-syntax/#preprocessing-the-input-stream)
      *
-     * @return The next character (i.e., the character at the current position after the result of this call), or null if at the
-     *         end of the stream.
+     * @return The next character (i.e., the character at the current position after the result of this call), or {@link
+     *         #NULL_CHAR} if at the end of the stream.
      */
-    public Character next() {
+    public char next() {
         // if we are at the end then return null
-        if (eof()) return null;
+        if (eof()) return NULL_CHAR;
 
         // update line and column info
         if (NEWLINE.matches(current())) {
@@ -337,7 +335,7 @@ public final class Stream {
      *     Advance to this position.
      */
     public void forward(int newIndex) {
-        checkArgument(newIndex <= length, "index out of range");
+        checkPositionIndex(newIndex, length);
         while (newIndex > index) {
             next();
         }
@@ -348,7 +346,7 @@ public final class Stream {
      *
      * @return The next character, or null if at the end of the stream.
      */
-    public Character peek() {
+    public char peek() {
         return peek(1);
     }
 
@@ -360,8 +358,8 @@ public final class Stream {
      *
      * @return The character, or null if the end of the stream occurs first.
      */
-    public Character peek(int numCharacters) {
-        return (index + numCharacters < length) ? source.charAt(index + numCharacters) : null;
+    public char peek(int numCharacters) {
+        return ((index + numCharacters) < length) ? chars[index + numCharacters] : NULL_CHAR;
     }
 
     /**
@@ -369,11 +367,15 @@ public final class Stream {
      *
      * @return The previous character, or null if we are at the beginning.
      */
-    public Character peekPrevious() {
-        return (index > 0) ? source.charAt(index - 1) : null;
+    public char peekPrevious() {
+        return (index > 0) ? chars[index - 1] : NULL_CHAR;
     }
 
-    /** If the current character is whitespace then skip it along with all subsequent whitespace characters. */
+    /**
+     * If the current character is whitespace then skip it along with all subsequent whitespace characters.
+     * <p/>
+     * This doesn't match form feed \f as per the spec because... stupid to use that.
+     */
     public void skipWhitepace() {
         // don't check the same index twice
         if (lastCheckedWhitespaceIndex == index) return;
@@ -385,8 +387,9 @@ public final class Stream {
         if (eof()) return;
 
         // skip characters until the current character is not whitespace
-        while (Tokens.WHITESPACE.matches(current())) {
-            next();
+        char current = current();
+        while ('\u0020' == current || '\n' == current || '\t' == current || '\r' == current) {
+            current = next();
         }
     }
 
@@ -485,6 +488,8 @@ public final class Stream {
      * <p/>
      * This will skip over values inside parenthesis (mainly because ';' can be a valid part of a declaration value, e.g.,
      * data-uris). This will also skip over values inside of strings, but {@link #checkInString} must be turned on.
+     * <p/>
+     * Important: do not pass in {@link Tokens#OPEN_PAREN} or {@link Tokens#CLOSE_PAREN}. Use {@link #chomp(Token)} instead.
      *
      * @param token
      *     The token to match.
@@ -493,28 +498,26 @@ public final class Stream {
      *         Token}.
      */
     public String until(Token token) {
-        checkArgument(token != Tokens.OPEN_PAREN, "cannot match this token. Use #chomp instead.");
-        checkArgument(token != Tokens.CLOSE_PAREN, "cannot match this token. Use #chomp instead.");
-
         // save the current index so we can return the matched substring
-        int start = index;
+        final int start = index;
 
         // keep track whether we are inside parenthesis
         boolean insideParens = false;
 
         // continually parse until we reach the token or eof
         while (!eof()) {
-            char current = source.charAt(index);
+            char current = chars[index];
 
             if (!inString) {
+                boolean escaped = isEscaped();
                 // check for closing parenthesis
-                if (Tokens.OPEN_PAREN.matches(current) && !isEscaped()) {
+                if (OPEN_PAREN.matches(current) && !escaped) {
                     insideParens = true;
-                } else if (insideParens && Tokens.CLOSE_PAREN.matches(current) && !isEscaped()) {
+                } else if (insideParens && CLOSE_PAREN.matches(current) && !escaped) {
                     insideParens = false;
-                } else if (!insideParens && token.matches(current) && !isEscaped()) {
+                } else if (!insideParens && token.matches(current) && !escaped) {
                     // if unescaped then this is the matching token
-                    return source.substring(start, index);
+                    return new String(chars, start, index - start);
                 }
             }
 
@@ -524,7 +527,7 @@ public final class Stream {
         }
 
         // closing token wasn't found, so return the substring from the start to the end of the stream
-        return source.substring(start);
+        return new String(chars, start, length - start);
     }
 
     /**
@@ -539,14 +542,14 @@ public final class Stream {
     public String chomp(Token token) {
         if (eof()) return "";
 
-        int start = index;
+        final int start = index;
 
         // advance past all characters that match the token
         while (token.matches(current())) {
             next();
         }
 
-        return source.substring(start, index);
+        return new String(chars, start, index - start);
     }
 
     /**
@@ -571,16 +574,16 @@ public final class Stream {
         expect(openingToken);
 
         // save the current position
-        int start = index;
+        final int start = index;
 
         // set initial nesting level
         int level = 1;
 
         // track depth (nesting), unless the opening and closing tokens are the same
-        boolean allowNesting = !openingToken.equals(closingToken);
+        final boolean allowNesting = !openingToken.equals(closingToken);
 
         // unless the closing token is a string, skip over all string content
-        boolean skipString = !closingToken.equals(Tokens.DOUBLE_QUOTE) && !closingToken.equals(Tokens.SINGLE_QUOTE);
+        final boolean skipString = !closingToken.equals(DOUBLE_QUOTE) && !closingToken.equals(SINGLE_QUOTE);
 
         // keep parsing until we find the closing token
         while (!eof()) {
@@ -602,7 +605,7 @@ public final class Stream {
                     // once the nesting level reaches 0 then we have found the correct closing token
                     if (level == 0) {
                         next(); // move past the closing token
-                        return source.substring(start, index - 1);
+                        return new String(chars, start, index - start - 1); // - 1 so that we don't include the closing token
                     }
                 }
 
@@ -677,22 +680,22 @@ public final class Stream {
         String comment = null;
 
         // check for the opening comment
-        if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peek())) {
+        if (FORWARD_SLASH.matches(current()) && STAR.matches(peek())) {
             inComment = true;
 
             // save the current position so we can grab the comment contents later
-            int start = index;
+            final int start = index;
 
             // skip the opening "/*" part
-            forward(2);
+            index += 2;
 
             // continue until we reach the end of the comment
             while (inComment) {
-                if (Tokens.FORWARD_SLASH.matches(current()) && Tokens.STAR.matches(peekPrevious())) {
+                if (FORWARD_SLASH.matches(current()) && STAR.matches(peekPrevious())) {
                     inComment = false;
 
-                    // grab the comment contents
-                    comment = source.substring(start + 2, index - 1);
+                    // grab the comment contents (+2 to skip the opening /*, -1 to skip the previous *
+                    comment = new String(chars, start + 2, index - (start + 2) - 1);
                 } else {
                     if (eof()) throw new ParserException(this, Message.MISSING_COMMENT_CLOSE);
                     next();
@@ -759,8 +762,11 @@ public final class Stream {
         if (constantLength > (length - index)) return false;
 
         // check if the next exact number of characters match the constant
-        String snippet = source.substring(index, index + constantLength);
-        if (!snippet.equals(constant)) return false;
+        int offset = index;
+        for (int i = 0; i < constantLength; i++) {
+            if (constant.charAt(i) != chars[offset]) return false;
+            offset++;
+        }
 
         // we have a match so move the index forward
         forward(index + constantLength);
@@ -776,14 +782,14 @@ public final class Stream {
      * @return The matched token, or {@link Optional#absent()} if not matched.
      */
     public Optional<String> readIdent() {
-        final Character current = current();
+        final char current = current();
 
-        if (Tokens.NMSTART.matches(current)) {
+        if (NMSTART.matches(current)) {
             // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
-            if (Tokens.HYPHEN.matches(current) && Tokens.HYPHEN_OR_DIGIT.matches(peek())) return Optional.absent();
+            if (HYPHEN.matches(current) && HYPHEN_OR_DIGIT.matches(peek())) return Optional.absent();
 
             // return the full ident token
-            return Optional.of(chomp(Tokens.NMCHAR));
+            return Optional.of(chomp(NMCHAR));
         }
         return Optional.absent();
     }
@@ -799,13 +805,13 @@ public final class Stream {
      */
     public Optional<String> readString() {
         // single quote string
-        if (Tokens.SINGLE_QUOTE.matches(current()) && !isEscaped()) {
-            return Optional.of(chompEnclosedValue(Tokens.SINGLE_QUOTE, Tokens.SINGLE_QUOTE));
+        if (SINGLE_QUOTE.matches(current()) && !isEscaped()) {
+            return Optional.of(chompEnclosedValue(SINGLE_QUOTE, SINGLE_QUOTE));
         }
 
         // double quote string
-        if (Tokens.DOUBLE_QUOTE.matches(current()) && !isEscaped()) {
-            return Optional.of(chompEnclosedValue(Tokens.DOUBLE_QUOTE, Tokens.DOUBLE_QUOTE));
+        if (DOUBLE_QUOTE.matches(current()) && !isEscaped()) {
+            return Optional.of(chompEnclosedValue(DOUBLE_QUOTE, DOUBLE_QUOTE));
         }
 
         return Optional.absent();
@@ -813,6 +819,7 @@ public final class Stream {
 
     @Override
     public String toString() {
+        String source = new String(chars);
         return String.format("%s\u00BB%s", source.substring(0, index), source.substring(index));
     }
 
@@ -823,27 +830,27 @@ public final class Stream {
      * this status until the matching quote symbol is encountered again, unescaped.
      */
     private void updateInString() {
-        final Character current = current();
+        final char current = current();
 
-        if (inString && stringToken.equals(Tokens.DOUBLE_QUOTE)) { // the opening quote was a double quote
-            if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) {
+        if (inString && stringToken.equals(DOUBLE_QUOTE)) { // the opening quote was a double quote
+            if (DOUBLE_QUOTE.matches(current) && !isEscaped()) {
                 // closing quote
                 stringToken = null;
                 inString = false;
             }
         } else if (inString) { // the opening quote was a single quote
-            if (Tokens.SINGLE_QUOTE.matches(current) && !isEscaped()) {
+            if (SINGLE_QUOTE.matches(current) && !isEscaped()) {
                 // closing quote
                 stringToken = null;
                 inString = false;
             }
-        } else if (Tokens.DOUBLE_QUOTE.matches(current) && !isEscaped()) { // check for opening double quote
+        } else if (DOUBLE_QUOTE.matches(current) && !isEscaped()) { // check for opening double quote
             // opening quote
-            stringToken = Tokens.DOUBLE_QUOTE;
+            stringToken = DOUBLE_QUOTE;
             inString = true;
-        } else if (Tokens.SINGLE_QUOTE.matches(current) && !isEscaped()) { // check for opening single quote
+        } else if (SINGLE_QUOTE.matches(current) && !isEscaped()) { // check for opening single quote
             // closing quote
-            stringToken = Tokens.SINGLE_QUOTE;
+            stringToken = SINGLE_QUOTE;
             inString = true;
         }
     }

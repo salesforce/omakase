@@ -18,10 +18,9 @@ package com.salesforce.omakase.broadcast;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -33,7 +32,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public final class QueryableBroadcaster extends AbstractBroadcaster {
     /** important to maintain broadcast order */
-    private final List<Broadcastable> collected = Lists.newArrayList();
+    private final List<Broadcastable> collected = new ArrayList<>();
 
     /**
      * Constructs a new {@link QueryableBroadcaster} instance that will <em>not</em> relay any events to another {@link
@@ -67,8 +66,8 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      *
      * @return All broadcasted events.
      */
-    public List<Broadcastable> all() {
-        return ImmutableList.copyOf(collected);
+    public Iterable<Broadcastable> all() {
+        return Iterables.unmodifiableIterable(collected);
     }
 
     /**
@@ -81,8 +80,8 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      *
      * @return All matching {@link Broadcastable} units that are instances of the given class.
      */
-    public <T extends Broadcastable> List<T> filter(Class<T> klass) {
-        return ImmutableList.copyOf(Iterables.filter(collected, klass));
+    public <T extends Broadcastable> Iterable<T> filter(Class<T> klass) {
+        return Iterables.filter(collected, klass);
     }
 
     /**

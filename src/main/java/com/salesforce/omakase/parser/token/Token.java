@@ -25,13 +25,6 @@ import com.google.common.base.CharMatcher;
  */
 public interface Token {
     /**
-     * Gets the wrapped {@link CharMatcher}.
-     *
-     * @return the wrapped {@link CharMatcher}.
-     */
-    CharMatcher matcher();
-
-    /**
      * Whether the given character matchers this {@link Token}.
      *
      * @param c
@@ -39,7 +32,7 @@ public interface Token {
      *
      * @return true if this token matches the given character.
      */
-    boolean matches(Character c);
+    boolean matches(char c);
 
     /**
      * Gets a description of the token. This is used in error-reporting to indicate what was expected.

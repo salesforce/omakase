@@ -163,7 +163,7 @@ public class StreamTest {
     @Test
     public void forwardOutOfRange() {
         Stream stream = new Stream("abc");
-        exception.expect(IllegalArgumentException.class);
+        exception.expect(IndexOutOfBoundsException.class);
         stream.forward(10);
     }
 
@@ -184,7 +184,7 @@ public class StreamTest {
     @Test
     public void peekOutOfRange() {
         Stream stream = new Stream("abc");
-        assertThat(stream.peek(3)).isNull();
+        assertThat(stream.peek(3)).isEqualTo(Stream.NULL_CHAR);
     }
 
     @Test
@@ -198,7 +198,7 @@ public class StreamTest {
     @Test
     public void peekPreviousWhenAtBeginning() {
         Stream stream = new Stream("abc");
-        assertThat(stream.peekPrevious()).isNull();
+        assertThat(stream.peekPrevious()).isEqualTo(Stream.NULL_CHAR);
     }
 
     @Test

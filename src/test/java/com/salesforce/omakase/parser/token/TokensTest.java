@@ -43,7 +43,7 @@ public class TokensTest {
     @Test
     public void doesntMatchNull() {
         for (Tokens tokens : Tokens.values()) {
-            assertThat(tokens.matches(null)).isFalse();
+            assertThat(tokens.matches('\u0000')).isFalse();
         }
     }
 }

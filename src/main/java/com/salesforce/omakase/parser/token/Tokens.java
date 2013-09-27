@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.token;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicates;
+import com.salesforce.omakase.parser.Stream;
 
 import static com.google.common.base.CharMatcher.*;
 
@@ -34,79 +35,79 @@ public enum Tokens implements Token {
     DIGIT(inRange('0', '9'), "numerical digit [0-9]"),
 
     /** dot, period, full-stop, etc... */
-    DOT(is('.'), "."),
+    DOT('.', "."),
 
     /** hyphen/minus/dash */
-    HYPHEN(is('-'), "-"),
+    HYPHEN('-', "-"),
 
     /** a semicolon */
-    SEMICOLON(is(';'), ";"),
+    SEMICOLON(';', ";"),
 
     /** a regular colon */
-    COLON(is(':'), ":"),
+    COLON(':', ":"),
 
     /** comma */
-    COMMA(is(','), ","),
+    COMMA(',', ","),
 
     /** open bracket */
-    OPEN_BRACE(is('{'), "opening brace '{'"),
+    OPEN_BRACE('{', "opening brace '{'"),
 
     /** closing bracket */
-    CLOSE_BRACE(is('}'), "closing brace '}'"),
+    CLOSE_BRACE('}', "closing brace '}'"),
 
     /** opening parenthesis */
-    OPEN_PAREN(is('('), "opening parenthesis '('"),
+    OPEN_PAREN('(', "opening parenthesis '('"),
 
     /** closing parenthesis */
-    CLOSE_PAREN(is(')'), "closing parenthesis ')'"),
+    CLOSE_PAREN(')', "closing parenthesis ')'"),
 
     /** opening bracket */
-    OPEN_BRACKET(is('['), "opening bracket '['"),
+    OPEN_BRACKET('[', "opening bracket '['"),
 
     /** closing bracket */
-    CLOSE_BRACKET(is(']'), "closing bracket ']'"),
+    CLOSE_BRACKET(']', "closing bracket ']'"),
 
     /** asterisk */
-    STAR(is('*'), "universal selector"),
+    STAR('*', "universal selector"),
 
     /** hash mark */
-    HASH(is('#'), "#"),
+    HASH('#', "#"),
 
     /** at symbol */
-    AT_RULE(is('@'), "@"),
+    AT_RULE('@', "@"),
 
     /** plus character, usually for the combinator symbol */
-    PLUS(is('+'), "+"),
+    PLUS('+', "+"),
 
     /** tilde character, usually for the combinator symbol */
-    TILDE(is('~'), "~"),
+    TILDE('~', "~"),
 
     /** greater than character, usually for the combinator symbol */
-    GREATER_THAN(is('>'), ">"),
+    GREATER_THAN('>', ">"),
 
     /** forward slash */
-    FORWARD_SLASH(is('/'), "/"),
+    FORWARD_SLASH('/', "/"),
 
     /** percentage symbol */
-    PERCENTAGE(is('%'), "%"),
+    PERCENTAGE('%', "%"),
 
     /** exclamation */
-    EXCLAMATION(is('!'), "!"),
+    EXCLAMATION('!', "!"),
 
     /** double quote */
-    DOUBLE_QUOTE(is('"'), "\" (double quote)"),
+    DOUBLE_QUOTE('"', "\" (double quote)"),
 
     /** single quote */
-    SINGLE_QUOTE(is('\''), "' (single quote)"),
+    SINGLE_QUOTE('\'', "' (single quote)"),
 
     /** newline character */
-    NEWLINE(is('\n'), "newline"),
+    NEWLINE('\n', "newline"),
 
     /** CSS escape character */
-    ESCAPE(is('\\'), "CSS escape character"),
+    ESCAPE('\\', "CSS escape character"),
 
-    /** whitespace as defined by the CSS spec */
-    WHITESPACE(anyOf("\u0020\t\r\n\f"), "whitespace"),
+    /** whitespace as defined by the CSS spec (except form feed) */
+    WHITESPACE(anyOf("\u0020\n\t\r"), "whitespace"),
 
     /** negative or positive sign */
     SIGN(anyOf("+-"), "numerical sign (- or +)"),
@@ -127,22 +128,29 @@ public enum Tokens implements Token {
     /** a token that never matches */
     NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches");
 
+    private final char singleChar;
+    private final boolean isSingleChar;
     private final CharMatcher matcher;
     private final String description;
 
     Tokens(CharMatcher matcher, String description) {
+        this.isSingleChar = false;
+        this.singleChar = Stream.NULL_CHAR;
         this.matcher = matcher.precomputed();
         this.description = description;
     }
 
-    @Override
-    public CharMatcher matcher() {
-        return matcher;
+    Tokens(char singleChar, String description) {
+        this.isSingleChar = true;
+        this.singleChar = singleChar;
+        this.matcher = null;
+        this.description = description;
     }
 
     @Override
-    public boolean matches(Character c) {
-        return c != null && matcher.matches(c);
+    public boolean matches(char c) {
+        if (isSingleChar) return (singleChar - c) == 0;
+        return c != Stream.NULL_CHAR && matcher.matches(c);
     }
 
     @Override

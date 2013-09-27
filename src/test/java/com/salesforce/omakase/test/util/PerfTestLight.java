@@ -25,6 +25,7 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -119,10 +120,10 @@ public class PerfTestLight {
             // omakase thin
             List<Long> omakaseParseTimes = Lists.newArrayListWithCapacity(runs);
             for (int i = 0; i < runs; i++) {
-                long start = System.currentTimeMillis();
+                long start = System.nanoTime();
                 parse(Mode.OMAKASE, actual);
-                long end = System.currentTimeMillis();
-                omakaseParseTimes.add(end - start);
+                long end = System.nanoTime();
+                omakaseParseTimes.add(TimeUnit.NANOSECONDS.toMillis(end - start));
             }
             long omakaseTotal = 0;
             for (Long time : omakaseParseTimes) {
@@ -135,10 +136,10 @@ public class PerfTestLight {
             // omakase full
             List<Long> omakaseParseTimes2 = Lists.newArrayListWithCapacity(runs);
             for (int i = 0; i < runs; i++) {
-                long start = System.currentTimeMillis();
+                long start = System.nanoTime();
                 parse(Mode.OMAKASE_FULL, actual);
-                long end = System.currentTimeMillis();
-                omakaseParseTimes2.add(end - start);
+                long end = System.nanoTime();
+                omakaseParseTimes2.add(TimeUnit.NANOSECONDS.toMillis(end - start));
             }
             long omakaseTotal2 = 0;
             for (Long time : omakaseParseTimes2) {
