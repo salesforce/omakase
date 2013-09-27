@@ -27,6 +27,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -41,7 +42,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
  * Note that this will not be automatically created or broadcasted unless the {@link SyntaxTree} plugin is enabled.
  * <p/>
  * You might be looking for a "DeclarationBlock" class. Currently such a class serves no purpose, and all ordered declarations are
- * contained inside of a {@link SyntaxCollection} within this class instead.
+ * contained inside of a {@link SyntaxCollection} within this class instead. However there is a {@link
+ * NotifyDeclarationBlockStart} event you can subscribe to.
  * <p/>
  * Note that if a {@link Rule} does not have any selectors or declarations (or all of it's selectors and declarations are
  * <em>detached</em>) then the rule will not be printed out.

@@ -26,23 +26,6 @@ import com.salesforce.omakase.parser.token.TokenFactory;
  * @author nmcwilliams
  */
 public abstract class AbstractParser implements Parser {
-    private final TokenFactory tokenFactory;
-
-    /** Creates a new {@link AbstractParser} instance with using a standard {@link TokenFactory}. */
-    public AbstractParser() {
-        this(StandardTokenFactory.instance());
-    }
-
-    /**
-     * Creates a new {@link AbstractParser} instance using the given {@link TokenFactory}.
-     *
-     * @param tokenFactory
-     *     Use this factory for retrieving {@link Token} delimiters.
-     */
-    public AbstractParser(TokenFactory tokenFactory) {
-        this.tokenFactory = tokenFactory;
-    }
-
     /**
      * Utility method to create a {@link CombinationParser} comprised of this and the given {@link Parser}.
      *
@@ -62,6 +45,7 @@ public abstract class AbstractParser implements Parser {
      * @return The factory.
      */
     protected TokenFactory tokenFactory() {
-        return tokenFactory;
+        // static instance for now, but later we might want this to be customizable
+        return StandardTokenFactory.instance();
     }
 }

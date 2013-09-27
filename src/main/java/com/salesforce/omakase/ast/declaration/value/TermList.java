@@ -81,7 +81,7 @@ public class TermList extends AbstractSyntax implements PropertyValue {
      * @return this, for chaining.
      */
     public TermList add(TermListMember member) {
-        this.members.add(member);
+        members.add(member);
         return this;
     }
 

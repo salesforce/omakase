@@ -38,7 +38,6 @@ import static com.google.common.base.Preconditions.*;
  * @author nmcwilliams
  */
 public class PropertyName extends AbstractSyntax {
-    /** pattern for the vendor prefix */
     private static final char STAR = '*';
 
     private final String name;
@@ -148,6 +147,71 @@ public class PropertyName extends AbstractSyntax {
         appendable.append(name());
     }
 
+    /**
+     * Gets whether this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
+     * hack.</a>
+     *
+     * @return True if this {@link PropertyName} includes the IE7 star hack.
+     */
+    public boolean hasStarHack() {
+        return starHack;
+    }
+
+    /**
+     * Sets if this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
+     * hack.</a>
+     *
+     * @param starHack
+     *     True if this property name includes the star hack
+     *
+     * @return this, for chaining.
+     */
+    public PropertyName setStarHack(boolean starHack) {
+        this.starHack = starHack;
+        return this;
+    }
+
+    /**
+     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given string.
+     *
+     * @param string
+     *     Match against this property name.
+     *
+     * @return True if this {@link PropertyName} has a name that equals the given string.
+     */
+    public boolean matches(String string) {
+        if (string == null) return false;
+        return name().equals(string);
+    }
+
+    /**
+     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given {@link Property}.
+     *
+     * @param property
+     *     Match against this property.
+     *
+     * @return True if this {@link PropertyName} has a name that equals the given {@link Property}.
+     */
+    public boolean matches(Property property) {
+        if (property == null) return false;
+        return name().equals(property.toString());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof PropertyName) {
+            final PropertyName that = (PropertyName)other;
+            return name().equals(that.name());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name());
+    }
+
     @Override
     public String toString() {
         return As.string(this).add("name", name()).toString();
@@ -215,70 +279,5 @@ public class PropertyName extends AbstractSyntax {
     public static PropertyName using(int line, int column, Property property) {
         checkNotNull(property, "property cannot be null");
         return new PropertyName(line, column, property.toString());
-    }
-
-    /**
-     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given string.
-     *
-     * @param string
-     *     Match against this property name.
-     *
-     * @return True if this {@link PropertyName} has a name that equals the given string.
-     */
-    public boolean matches(String string) {
-        if (string == null) return false;
-        return name().equals(string);
-    }
-
-    /**
-     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given {@link Property}.
-     *
-     * @param property
-     *     Match against this property.
-     *
-     * @return True if this {@link PropertyName} has a name that equals the given {@link Property}.
-     */
-    public boolean matches(Property property) {
-        if (property == null) return false;
-        return name().equals(property.toString());
-    }
-
-    /**
-     * Gets whether this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
-     * hack.</a>
-     *
-     * @return True if this {@link PropertyName} includes the IE7 star hack.
-     */
-    public boolean hasStarHack() {
-        return starHack;
-    }
-
-    /**
-     * Sets if this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
-     * hack.</a>
-     *
-     * @param starHack
-     *     True if this property name includes the star hack
-     *
-     * @return this, for chaining.
-     */
-    public PropertyName setStarHack(boolean starHack) {
-        this.starHack = starHack;
-        return this;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name());
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof PropertyName) {
-            final PropertyName that = (PropertyName)other;
-            return name().equals(that.name());
-        }
-
-        return false;
     }
 }

@@ -2837,7 +2837,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
   margin-right: 10px;
 }
 .replyOwnerIcon img {
-  border: 1px solid #f07e05;     /* TODO: pmagnusson replace with chatter-externalIndicator */
+  border: 1px solid #f07e05;     /* :  replace with chatter-externalIndicator */
 }
 
 .caseEventSeparator {
@@ -4318,7 +4318,7 @@ a.zen-trigger:active .publisherTypeOverflowSelected .publisherattachtext {
   width: 100%;
 }
 
-/* TODO: pmagnusson remove this as soon as I know how to deal with it. */
+/* :  remove this as soon as I know how to deal with it. */
 .feedcontainer .contentActionMenuItem .zen-img {
   width: auto;   /* to undo the width 100% of .feedcontainer .contentMenuItem a */
 }
@@ -6889,7 +6889,7 @@ input#taskCreatePanel_sub {
   background-image: url("/img/knowledge/knowledge24.png");
 }
 
-/** TODO: this should be added as a sprite and be 24 px*/
+/** : this should be added as a sprite and be 24 px*/
 .recommend img.personAccount {
   background : url("/img/icon/perAccounts32.png") -3px -2px no-repeat
 }
@@ -7234,7 +7234,7 @@ body .publishercontainer .quickActionPanel .quickActionForm,
   vertical-align: baseline;
 }
 
-/* TODO: Try to avoid styling tags for performance reasons */
+/* : Try to avoid styling tags for performance reasons */
 .publishercontainer .quickActionPanel .lookupInput a,
 .publishercontainer .quickActionPanel .dateInput .dateFormat a {
   color: #888;
@@ -7258,7 +7258,7 @@ body .publishercontainer .quickActionPanel .quickActionForm,
 }
 
 .publishercontainer .quickActionPanel .multiSelectPicklistTable select {
-  /* TODO: See if this can be done without !important */
+  /* : See if this can be done without !important */
   width: 100% !important;
   height: 100%;
 }

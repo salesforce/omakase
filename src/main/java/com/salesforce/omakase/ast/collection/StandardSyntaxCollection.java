@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
@@ -43,9 +42,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T>> implements SyntaxCollection<P, T> {
-    private final LinkedList<T> list = Lists.newLinkedList();
-    private Optional<Broadcaster> broadcaster;
+    private final LinkedList<T> list = new LinkedList<>();
     private final P parent;
+    private Optional<Broadcaster> broadcaster;
 
     /**
      * Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}.
@@ -229,6 +228,30 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
         return parent;
     }
 
+    @Override
+    public SyntaxCollection<P, T> broadcaster(Broadcaster broadcaster) {
+        this.broadcaster = Optional.fromNullable(broadcaster);
+        return this;
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        // save a reference so that subsequent appended/prepended units will be broadcasted
+        broadcaster(broadcaster);
+
+        // make a defensive copy as this collection may be modified as a result of broadcasting
+        ImmutableList<T> units = ImmutableList.copyOf(list);
+
+        for (T unit : units) {
+            unit.propagateBroadcast(broadcaster);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).indent().add("items", list).toString();
+    }
+
     /**
      * Internal method to broadcast newly added units.
      *
@@ -244,29 +267,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
         if (broadcaster.isPresent() && unit.status() == Status.UNBROADCASTED) {
             broadcaster.get().broadcast(unit, true);
         }
-    }
-
-    @Override
-    public SyntaxCollection<P, T> broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = Optional.fromNullable(broadcaster);
-        return this;
-    }
-
-    @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        broadcaster(broadcaster);
-
-        // make a defensive copy as this collection may be modified as a result of broadcasting
-        ImmutableList<T> units = ImmutableList.copyOf(list);
-
-        for (T unit : units) {
-            unit.propagateBroadcast(broadcaster);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this).indent().add("items", list).toString();
     }
 
     /**

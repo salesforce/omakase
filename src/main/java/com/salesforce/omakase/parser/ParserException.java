@@ -67,7 +67,7 @@ public class ParserException extends OmakaseException {
 
     /** formats the error message */
     private static String indicator(Stream stream) {
-        StringBuilder builder = new StringBuilder(128);
+        StringBuilder builder = new StringBuilder(256);
         builder.append("\n ")
             .append("at line ").append(stream.line()).append(", ")
             .append("column ").append(stream.column()).append(" ")

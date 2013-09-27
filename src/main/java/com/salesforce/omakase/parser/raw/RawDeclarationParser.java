@@ -49,11 +49,14 @@ public class RawDeclarationParser extends AbstractRefinableParser {
         // get the property, which is everything up to the delimiter
         int line = stream.line();
         int column = stream.column();
+
         String content = stream.until(tokenFactory().propertyNameEnd());
+
         if (starHack.isPresent()) {
             // if we found the star hack, we need to write it back out
             content = starHack.get() + content;
         }
+
         RawSyntax property = new RawSyntax(line, column, content.trim());
 
         stream.skipWhitepace();

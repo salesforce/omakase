@@ -62,8 +62,7 @@ public final class RawSyntax extends AbstractSyntax {
 
     @Override
     public void comments(Iterable<String> commentsToAdd) {
-        // I don't see any reason to support this right now, so this is more of an assertion that it won't accidentally get
-        // called.
+        // I don't see any reason to support this right now
         throw new UnsupportedOperationException("cannot add comments to raw syntax");
     }
 
