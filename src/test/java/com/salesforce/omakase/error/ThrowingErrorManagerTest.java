@@ -41,11 +41,29 @@ public class ThrowingErrorManagerTest {
     }
 
     @Test
-    public void fatalWithStringMessageThrowsException() {
-        ClassSelector s = new ClassSelector("cs");
+    public void fatalWithStringMessage() {
+        ClassSelector s = new ClassSelector(5, 2, "cs");
         exception.expect(FatalException.class);
-        exception.expectMessage("message");
+        exception.expectMessage("Omakase CSS Parser Validation Problem - message:\n" +
+            "at line 5, column 2, caused by\n" +
+            "ClassSelector {\n" +
+            "  abstract: {line=5, column=2}\n" +
+            "  name: cs\n" +
+            "}");
         new ThrowingErrorManager().report(ErrorLevel.FATAL, s, "message");
+    }
+
+    @Test
+    public void fatalWithStringAndSourceName() {
+        ClassSelector s = new ClassSelector(5, 2, "cs");
+        exception.expect(FatalException.class);
+        exception.expectMessage("Omakase CSS Parser Validation Problem - message:\n" +
+            "at line 5, column 2 in source /css/source.css, caused by\n" +
+            "ClassSelector {\n" +
+            "  abstract: {line=5, column=2}\n" +
+            "  name: cs\n" +
+            "}");
+        new ThrowingErrorManager("/css/source.css").report(ErrorLevel.FATAL, s, "message");
     }
 
     @Test

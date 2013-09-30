@@ -30,6 +30,16 @@ import org.slf4j.LoggerFactory;
 public final class ThrowingErrorManager implements ErrorManager {
     private static final Logger logger = LoggerFactory.getLogger(ErrorManager.class);
 
+    private final String sourceName;
+
+    public ThrowingErrorManager() {
+        this(null);
+    }
+
+    public ThrowingErrorManager(String sourceName) {
+        this.sourceName = sourceName;
+    }
+
     @Override
     public void report(ErrorLevel level, ParserException exception) {
         switch (level) {
@@ -51,15 +61,28 @@ public final class ThrowingErrorManager implements ErrorManager {
     }
 
     /** formats the error message */
-    private static String format(String message) {
+    private String format(String message) {
         return String.format("Omakase CSS Parser - %s", message);
     }
 
-    private static String format(String message, Syntax cause) {
-        return String.format("Omakase CSS Parser - %s \n cause: %s \n at line %s, column %s.",
-            message,
-            cause.toString(),
-            cause.line(),
-            cause.column());
+    private String format(String message, Syntax cause) {
+        if (sourceName != null) {
+            return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s in source %s, " +
+                "caused by\n%s",
+                message,
+                cause.line(),
+                cause.column(),
+                sourceName,
+                cause.toString()
+            );
+        } else {
+            return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s, caused by\n%s",
+                message,
+                cause.line(),
+                cause.column(),
+                cause.toString()
+            );
+        }
+
     }
 }

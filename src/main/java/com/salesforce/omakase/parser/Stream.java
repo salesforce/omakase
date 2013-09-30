@@ -210,15 +210,6 @@ public final class Stream {
     }
 
     /**
-     * Gets a string description of the position of this {@link Stream} within the original source.
-     *
-     * @return The message.
-     */
-    public String anchorPositionMessage() {
-        return String.format("(starting from line %s, column %s in original source", anchorLine, anchorColumn);
-    }
-
-    /**
      * Gets whether this a sub-sequence.
      *
      * @return True if either the {@link #anchorLine()} or {@link #anchorColumn()} is greater than 1.
@@ -821,6 +812,36 @@ public final class Stream {
     public String toString() {
         String source = new String(chars);
         return String.format("%s\u00BB%s", source.substring(0, index), source.substring(index));
+    }
+
+    /**
+     * An alternative to {@link #toString()} that limits the returned string to 75 characters before and after the current
+     * position in the source.
+     *
+     * @return The contextualized string.
+     */
+    public String toStringContextual() {
+        if (length < 255) return toString();
+
+        // ensure we stay within the index bounds
+        int start = Math.max(0, index - 75);
+        int end = Math.min(length, index + 75);
+
+        // take a substring of the whole source
+        String contextual = toString().substring(start, end);
+
+        StringBuilder builder = new StringBuilder(256);
+        if (start > 0) {
+            builder.append("(...snipped...)");
+        }
+
+        builder.append(contextual);
+
+        if (end < length) {
+            builder.append("(...snipped...)");
+        }
+
+        return builder.toString();
     }
 
     /**

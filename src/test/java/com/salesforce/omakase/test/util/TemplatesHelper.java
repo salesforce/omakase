@@ -21,7 +21,29 @@ package com.salesforce.omakase.test.util;
  *
  * @author nmcwilliams
  */
+@SuppressWarnings("JavaDoc")
 public final class TemplatesHelper {
+    public static final String GENERIC_CSS_SOURCE = ".test {\n" +
+        "  color: #16ff2b;\n" +
+        "}\n" +
+        "\n" +
+        "#test2 {\n" +
+        "  margin: 5px 10px;\n" +
+        "  padding: 10px;\n" +
+        "  border: 1px solid red;\n" +
+        "  border-radius: 10px;\n" +
+        "}\n" +
+        "\n" +
+        "a:link {\n" +
+        "  color: blue;\n" +
+        "  text-decoration: none;\n" +
+        "}\n" +
+        "\n" +
+        "a:hover, a:focus {\n" +
+        "  color: red;\n" +
+        "  text-decoration: red;\n" +
+        "}";
+
     private static final String TEMPLATE_SELECTOR = "%s { color: red; }";
     private static final String TEMPLATE_PROPERTY_VALUE = ".test { %s: %s; }";
 
@@ -52,6 +74,20 @@ public final class TemplatesHelper {
      */
     public static String fillDeclaration(String name, String value) {
         return String.format(TEMPLATE_PROPERTY_VALUE, name, value);
+    }
+
+    /**
+     * Gets a version of {@link #GENERIC_CSS_SOURCE} that's a lot lot longer.
+     *
+     * @return The source.
+     */
+    public static StringBuilder longSource() {
+        StringBuilder src = new StringBuilder(GENERIC_CSS_SOURCE.length() * 40);
+        for (int i = 0; i < 40; i++) {
+            src.append(GENERIC_CSS_SOURCE).append("\n\n");
+        }
+
+        return src;
     }
 
     /**

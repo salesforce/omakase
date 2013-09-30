@@ -32,11 +32,11 @@ public class ParserException extends OmakaseException {
      *
      * @param stream
      *     The stream containing the source of the error.
-     * @param msg
+     * @param message
      *     The error message.
      */
-    public ParserException(Stream stream, Message msg) {
-        this(stream, msg.message());
+    public ParserException(Stream stream, Message message) {
+        this(stream, message.message());
     }
 
     /**
@@ -44,13 +44,13 @@ public class ParserException extends OmakaseException {
      *
      * @param stream
      *     The stream containing the source of the error.
-     * @param msg
+     * @param message
      *     The error message.
      * @param args
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
-    public ParserException(Stream stream, Message msg, Object... args) {
-        this(stream, msg.message(args));
+    public ParserException(Stream stream, Message message, Object... args) {
+        this(stream, message.message(args));
     }
 
     /**
@@ -58,25 +58,32 @@ public class ParserException extends OmakaseException {
      *
      * @param stream
      *     The stream containing the source of the error.
-     * @param msg
+     * @param message
      *     The error message.
      */
-    public ParserException(Stream stream, String msg) {
-        super(msg + indicator(stream));
+    public ParserException(Stream stream, String message) {
+        super(format(message, stream));
     }
 
     /** formats the error message */
-    private static String indicator(Stream stream) {
-        StringBuilder builder = new StringBuilder(256);
-        builder.append("\n ")
-            .append("at line ").append(stream.line()).append(", ")
-            .append("column ").append(stream.column()).append(" ")
-            .append("in '").append(stream).append("'");
-
-        if (stream.isSubStream()) {
-            builder.append(" ").append(stream.anchorPositionMessage());
+    private static String format(String message, Stream stream) {
+        if (!stream.isSubStream()) {
+            return String.format("Omakase CSS Parser - %s:\nat line %s, column %s in source\n'%s'",
+                message,
+                stream.line(),
+                stream.column(),
+                stream.toStringContextual()
+            );
+        } else {
+            return String.format("Omakase CSS Parser - %s:\nat line %s, column %s (starting from line %s, " +
+                "column %s in original source) in substring of original source\n'%s'",
+                message,
+                stream.line(),
+                stream.column(),
+                stream.anchorLine(),
+                stream.anchorColumn(),
+                stream.toStringContextual()
+            );
         }
-
-        return builder.toString();
     }
 }

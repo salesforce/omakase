@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
+import com.salesforce.omakase.test.util.TemplatesHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -721,6 +722,69 @@ public class StreamTest {
         stream.next();
         stream.next();
         assertThat(stream.toString()).isEqualTo("a\nb\u00BBcd");
+    }
+
+    @Test
+    public void toStringContextualShort() {
+        Stream stream = new Stream("abcabcabcabc");
+        stream.forward(4);
+        assertThat(stream.toStringContextual()).isEqualTo(stream.toString());
+    }
+
+    @Test
+    public void toStringContextualLong() {
+        Stream stream = new Stream(TemplatesHelper.longSource());
+        stream.forward(2586);
+        assertThat(stream.toStringContextual()).isEqualTo("(...snipped...)k {\n" +
+            "  color: blue;\n" +
+            "  text-decoration: none;\n" +
+            "}\n" +
+            "\n" +
+            "a:hover, a:focus {\n" +
+            "  color: \u00BBred;\n" +
+            "  text-decoration: red;\n" +
+            "}\n" +
+            "\n" +
+            ".test {\n" +
+            "  color: #16ff2b;\n" +
+            "}\n" +
+            "\n" +
+            "#test2 {\n" +
+            "  ma(...snipped...)");
+    }
+
+    @Test
+    public void toStringContextualLongAtBeginning() {
+        Stream stream = new Stream(TemplatesHelper.longSource());
+        stream.forward(50);
+        assertThat(stream.toStringContextual()).isEqualTo(".test {\n" +
+            "  color: #16ff2b;\n" +
+            "}\n" +
+            "\n" +
+            "#test2 {\n" +
+            "  margin: 5p\u00BBx 10px;\n" +
+            "  padding: 10px;\n" +
+            "  border: 1px solid red;\n" +
+            "  border-radius: 10px;\n" +
+            "}(...snipped...)");
+    }
+
+    @Test
+    public void toStringContextualLongAtEnd() {
+        Stream stream = new Stream(TemplatesHelper.longSource());
+        stream.forward(stream.length() - 50);
+        assertThat(stream.toStringContextual()).isEqualTo("(...snipped...)us: 10px;\n" +
+            "}\n" +
+            "\n" +
+            "a:link {\n" +
+            "  color: blue;\n" +
+            "  text-decoration: none;\n" +
+            "}\n" +
+            "\n" +
+            "a:hover, a\u00BB:focus {\n" +
+            "  color: red;\n" +
+            "  text-decoration: red;\n" +
+            "}\n");
     }
 
     @Test
