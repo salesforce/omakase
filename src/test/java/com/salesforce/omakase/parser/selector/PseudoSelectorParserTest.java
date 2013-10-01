@@ -138,7 +138,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
         for (ParseResult<String> result : results) {
             PseudoElementSelector selector = result.broadcaster.findOnly(PseudoElementSelector.class).get();
             assertThat(selector.name())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }
@@ -158,7 +158,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
         for (ParseResult<String> result : results) {
             PseudoClassSelector selector = result.broadcaster.findOnly(PseudoClassSelector.class).get();
             assertThat(selector.name())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }
@@ -175,7 +175,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
         for (ParseResult<String> result : results) {
             PseudoClassSelector selector = result.broadcaster.findOnly(PseudoClassSelector.class).get();
             assertThat(selector.args().get())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

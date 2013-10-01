@@ -82,7 +82,7 @@ public class SelectorGroupParserTest extends AbstractParserTest<SelectorGroupPar
             withExpectedResult(".class,\n.class2, \n.class3 ", 3));
 
         for (ParseResult<Integer> result : results) {
-            assertThat(result.broadcasted).describedAs(result.stream.toString()).hasSize(result.expected);
+            assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(result.expected);
         }
     }
 

@@ -27,7 +27,7 @@ import com.salesforce.omakase.ast.selector.Selector;
  */
 public interface PostProcessingPlugin extends Plugin {
     /**
-     * This method will be called after all processing has completed (preprocessing, rework, and validation).
+     * This method will be called after all processing has completed (rework and validation).
      * <p/>
      * This could be used when the {@link Plugin} must defer it's processing until it is certain that all {@link Selector}s and
      * {@link Declaration}s within the source are processed.

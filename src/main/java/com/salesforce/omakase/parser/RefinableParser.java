@@ -27,11 +27,11 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  */
 public interface RefinableParser extends Parser {
     /**
-     * Same as {@link #parse(Stream, Broadcaster)}, except a {@link Refiner} instance to pass along to any created {@link
+     * Same as {@link #parse(Source, Broadcaster)}, except a {@link Refiner} instance to pass along to any created {@link
      * Refinable} AST objects is given.
      *
-     * @param stream
-     *     The stream to parse.
+     * @param source
+     *     The source to parse.
      * @param broadcaster
      *     The {@link Broadcaster} to receive any events from the parser.
      * @param refiner
@@ -40,5 +40,15 @@ public interface RefinableParser extends Parser {
      * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
      *         of true does not indicate that the parsed content was actually valid syntax.
      */
-    boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner);
+    boolean parse(Source source, Broadcaster broadcaster, Refiner refiner);
+
+    /**
+     * Utility for creating a {@link RefinableCombinationParser}.
+     *
+     * @param other
+     *     The other {@link RefinableParser} in addition to this one to use for creating the {@link RefinableCombinationParser}.
+     *
+     * @return The {@link RefinableCombinationParser}.
+     */
+    RefinableParser or(RefinableParser other);
 }

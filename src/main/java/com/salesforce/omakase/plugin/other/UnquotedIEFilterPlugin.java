@@ -19,8 +19,8 @@ package com.salesforce.omakase.plugin.other;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.parser.refiner.UnquotedIEFilterStrategy;
-import com.salesforce.omakase.parser.refiner.RefinableStrategy;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 /**
@@ -51,11 +51,11 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @author nmcwilliams
  * @see UnquotedIEFilter
  */
-public class UnquotedIEFilterPlugin implements SyntaxPlugin {
-    private static final RefinableStrategy STRATEGY = new UnquotedIEFilterStrategy();
+public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
+    private static final RefinerStrategy STRATEGY = new UnquotedIEFilterStrategy();
 
     @Override
-    public RefinableStrategy getRefinableStrategy() {
+    public RefinerStrategy getRefinableStrategy() {
         return STRATEGY;
     }
 }

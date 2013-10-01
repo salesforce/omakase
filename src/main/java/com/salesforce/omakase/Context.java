@@ -28,17 +28,19 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.EmittingBroadcaster;
 import com.salesforce.omakase.broadcast.VisitingBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.PreProcess;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.broadcast.emitter.Emitter;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,8 +48,8 @@ import java.util.Set;
  * Broadcaster}). Note: this class is not exposed as an API itself.
  * <p/>
  * All broadcasting events are collected and stored during parsing. After the source is completely parsed, each event is replayed
- * once in each of the three phases: preprocess ({@link PreProcess} annotated methods), process ({@link Observe} and {@link
- * Rework} annotated methods), then finally validation ({@link Validate} annotated methods).
+ * once in each of the two phases: process ({@link Observe} and {@link Rework} annotated methods), then  validation ({@link
+ * Validate} annotated methods).
  *
  * @author nmcwilliams
  */
@@ -140,12 +142,16 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     /**
-     * Gets the {@link Broadcaster}.
+     * Creates a new refiner instance with the {@link Broadcaster} set on this {@link Context}, and the given list of custom
+     * refiners. This should be called <em>after</em> {@link #broadcaster(Broadcaster)}.
      *
-     * @return the {@link Broadcaster}.
+     * @param customRefiners
+     *     List of custom refiners.
+     *
+     * @return The {@link Refiner} instance.
      */
-    public Broadcaster broadcaster() {
-        return broadcaster;
+    public Refiner createRefiner(List<RefinerStrategy> customRefiners) {
+        return new Refiner(broadcaster, customRefiners);
     }
 
     /**
@@ -192,10 +198,6 @@ final class Context implements Broadcaster, PluginRegistry {
      * in such information. This also replays the stored broadcasts for each phase.
      */
     protected void after() {
-        // run preprocessors
-        emittingBroadcaster.phase(SubscriptionPhase.PREPROCESS);
-        visitor.visit();
-
         // run observers and reworkers
         emittingBroadcaster.phase(SubscriptionPhase.PROCESS);
         visitor.visit();
@@ -214,4 +216,5 @@ final class Context implements Broadcaster, PluginRegistry {
     private <T extends Plugin> Iterable<T> filter(Class<T> klass) {
         return Iterables.filter(registry.values(), klass);
     }
+
 }

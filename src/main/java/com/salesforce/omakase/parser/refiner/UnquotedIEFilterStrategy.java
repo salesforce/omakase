@@ -29,7 +29,7 @@ import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
  *
  * @author nmcwilliams
  */
-public class UnquotedIEFilterStrategy implements RefinableStrategy {
+public final class UnquotedIEFilterStrategy implements RefinerStrategy {
     private static final String PROGID = "progid:";
 
     @Override

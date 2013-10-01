@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.salesforce.omakase.parser.refiner.ConditionalRefinableStrategy;
-import com.salesforce.omakase.parser.refiner.RefinableStrategy;
+import com.salesforce.omakase.parser.refiner.ConditionalRefinerStrategy;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 import java.util.HashSet;
@@ -28,7 +28,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-public class Conditionals implements SyntaxPlugin {
+public final class Conditionals implements SyntaxPlugin {
     private final Set<String> trueConditions;
 
     public Conditionals() {
@@ -60,7 +60,7 @@ public class Conditionals implements SyntaxPlugin {
     }
 
     @Override
-    public RefinableStrategy getRefinableStrategy() {
-        return new ConditionalRefinableStrategy(trueConditions);
+    public RefinerStrategy getRefinableStrategy() {
+        return new ConditionalRefinerStrategy(trueConditions);
     }
 }

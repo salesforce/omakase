@@ -57,7 +57,7 @@ public class StylesheetTest {
     @Test
     public void orphanedCommentsPresent() {
         Stylesheet sheet = new Stylesheet();
-        sheet.orphanedComment(new OrphanedComment("s", OrphanedComment.Location.STYLESHEET));
+        sheet.orphanedComment(new Comment("s"));
         assertThat(sheet.orphanedComments()).hasSize(1);
     }
 

@@ -39,11 +39,11 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * Library-standard CSS extensions (e.g ., conditionals) are implemented through this functionality as well.
  *
  * @author nmcwilliams
- * @see StandardRefinableStrategy
+ * @see StandardRefinerStrategy
  * @see Refiner
  * @see SyntaxPlugin
  */
-public interface RefinableStrategy {
+public interface RefinerStrategy {
     /**
      * Refines an {@link AtRule}.
      * <p/>
@@ -56,6 +56,9 @@ public interface RefinableStrategy {
      * {@link Subscribable} annotation and implement {@link Syntax}). Be sure to actually add the objects to the {@link AtRule}
      * using the {@link AtRule#expression(AtRuleExpression)} and {@link AtRule#block(AtRuleBlock)} methods. One or both of these
      * methods should be called (i.e., it's fine if your customized object does not have both).
+     * <p/>
+     * If the actual at-rule name (e.g., "@media")should be discarded then call {@link AtRule#shouldWriteName(boolean)} with
+     * false.
      *
      * @param atRule
      *     The {@link AtRule} to refine.
@@ -64,7 +67,7 @@ public interface RefinableStrategy {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinableStrategy} objects
+     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinerStrategy} objects
      *         will be executed for the given {@link AtRule} instance.
      */
     boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner);
@@ -90,7 +93,7 @@ public interface RefinableStrategy {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinableStrategy} objects
+     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinerStrategy} objects
      *         will be executed for the given {@link Selector} instance.
      */
     boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner);
@@ -98,7 +101,7 @@ public interface RefinableStrategy {
     /**
      * Refines a {@link Declaration}.
      * <p/>
-     * The information in the given {@link Declaration} can be used to determine if the selector is applicable to your custom
+     * The information in the given {@link Declaration} can be used to determine if the declaration is applicable to your custom
      * syntax (e.g., checking {@link Declaration#rawPropertyValue()}.
      * <p/>
      * Utilize the {@link Declaration#rawPropertyValue()} to get the raw, unrefined property value syntax. Note that it is not
@@ -117,7 +120,7 @@ public interface RefinableStrategy {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinableStrategy} objects
+     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinerStrategy} objects
      *         will be executed for the given {@link Declaration} instance.
      */
     boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner);

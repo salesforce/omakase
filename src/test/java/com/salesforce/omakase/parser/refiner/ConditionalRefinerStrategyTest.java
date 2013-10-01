@@ -35,12 +35,12 @@ import org.junit.rules.ExpectedException;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
- * Unit tests for {@link ConditionalRefinableStrategy}.
+ * Unit tests for {@link ConditionalRefinerStrategy}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class ConditionalRefinableStrategyTest {
+public class ConditionalRefinerStrategyTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     public static final String VALID_NAME = "if";
@@ -50,13 +50,13 @@ public class ConditionalRefinableStrategyTest {
 
     private Refiner refiner;
     private QueryableBroadcaster broadcaster;
-    private ConditionalRefinableStrategy strategy;
+    private ConditionalRefinerStrategy strategy;
 
     @Before
     public void setup() {
-        strategy = new ConditionalRefinableStrategy(Sets.newHashSet("ie7"));
+        strategy = new ConditionalRefinerStrategy(Sets.newHashSet("ie7"));
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, Lists.<RefinableStrategy>newArrayList(strategy));
+        refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }
 
     @Test

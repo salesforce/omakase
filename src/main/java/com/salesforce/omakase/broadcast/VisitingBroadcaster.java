@@ -21,6 +21,7 @@ package com.salesforce.omakase.broadcast;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Status;
 
 import java.util.List;
 
@@ -50,6 +51,11 @@ public final class VisitingBroadcaster extends AbstractBroadcaster {
     @Override
     public void broadcast(Broadcastable broadcastable) {
         list.add(broadcastable);
+
+        // update status to prevent a unit from being broadcasted too many times
+        if (broadcastable.status() == Status.UNBROADCASTED) {
+            broadcastable.status(Status.QUEUED);
+        }
 
         // while a visit is in progress, immediately send out any received broadcasts (can occur if a refinement results
         // in new syntax instances, or rework results in new syntax units being added).

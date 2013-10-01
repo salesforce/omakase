@@ -25,7 +25,6 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -35,12 +34,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * The root-level {@link Syntax} object.
- * <p/>
- * Note that this will not be automatically created or broadcasted unless the {@link SyntaxTree} plugin is enabled.
  * <p/>
  * Comments that appear in the original CSS source at the beginning of the stylesheet are actually going to be associated with the
  * first {@link Statement} in the sheet instead. Comments after the last {@link Statement} (or if the sheet is empty) will be
@@ -50,10 +47,10 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
  * @see StylesheetParser
  */
 @Subscribable
-@Description(broadcasted = SYNTAX_TREE)
+@Description(broadcasted = AUTOMATIC)
 public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     private final SyntaxCollection<Stylesheet, Statement> statements;
-    private List<OrphanedComment> orphanedComments;
+    private List<Comment> orphanedComments;
 
     /** Creates a new instance with no {@link Broadcaster} specified. Usually only used for dynamically created stylesheets. */
     public Stylesheet() {
@@ -99,26 +96,26 @@ public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     }
 
     /**
-     * Adds an {@link OrphanedComment}. Orphaned comments appear after the last statement in the stylesheet.
+     * Adds an orphaned {@link Comment}. Orphaned comments appear after the last statement in the stylesheet.
      *
      * @param comment
      *     The comment.
      */
-    public void orphanedComment(OrphanedComment comment) {
+    public void orphanedComment(Comment comment) {
         checkNotNull(comment, "comment cannot be null");
-        orphanedComments = (orphanedComments == null) ? new ArrayList<OrphanedComment>() : orphanedComments;
+        orphanedComments = (orphanedComments == null) ? new ArrayList<Comment>() : orphanedComments;
         orphanedComments.add(comment);
     }
 
     /**
-     * Gets all {@link OrphanedComment}s.
+     * Gets all orphaned {@link Comment}s.
      * <p/>
      * A comment is considered <em>orphaned</em> if there are no statements that follow the comment within the stylesheet.
      *
      * @return The list of comments, or an empty list if none exist.
      */
-    public List<OrphanedComment> orphanedComments() {
-        return orphanedComments == null ? ImmutableList.<OrphanedComment>of() : ImmutableList.copyOf(orphanedComments);
+    public List<Comment> orphanedComments() {
+        return orphanedComments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override

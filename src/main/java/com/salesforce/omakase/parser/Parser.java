@@ -29,18 +29,18 @@ import com.salesforce.omakase.plugin.Plugin;
  */
 public interface Parser {
     /**
-     * Parse from the current position of the given stream, notifying the given {@link Plugin}s of any applicable events and
+     * Parse from the current position of the given source, notifying the given {@link Plugin}s of any applicable events and
      * data.
      *
-     * @param stream
-     *     The stream to parse.
+     * @param source
+     *     The source to parse.
      * @param broadcaster
      *     The {@link Broadcaster} to receive any events from the parser.
      *
      * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
      *         of true does not indicate that the parsed content was actually valid syntax.
      */
-    boolean parse(Stream stream, Broadcaster broadcaster);
+    boolean parse(Source source, Broadcaster broadcaster);
 
     /**
      * Utility for creating a {@link CombinationParser}.

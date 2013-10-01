@@ -21,7 +21,6 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * Indicates the conditions for an {@link Subscribable} type to be broadcasted.
@@ -31,9 +30,6 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 public enum BroadcastRequirement {
     /** automatically broadcasted (except for Syntax, where some syntax items are only broadcasted during refinement) */
     AUTOMATIC("Automatic"),
-
-    /** requires the {@link SyntaxTree} plugin */
-    SYNTAX_TREE("SyntaxTree"),
 
     /** refine must be called on {@link Selector}s, e.g., with {@link AutoRefiner#selectors()} */
     REFINED_SELECTOR("Selector#refine"),

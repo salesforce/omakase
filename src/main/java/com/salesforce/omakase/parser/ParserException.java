@@ -30,39 +30,39 @@ public class ParserException extends OmakaseException {
     /**
      * Construct a new instance of a {@link ParserException} with the given {@link Message}.
      *
-     * @param stream
-     *     The stream containing the source of the error.
+     * @param source
+     *     The source containing the source of the error.
      * @param message
      *     The error message.
      */
-    public ParserException(Stream stream, Message message) {
-        this(stream, message.message());
+    public ParserException(Source source, Message message) {
+        this(source, message.message());
     }
 
     /**
      * Construct a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
      *
-     * @param stream
-     *     The stream containing the source of the error.
+     * @param source
+     *     The source containing the source of the error.
      * @param message
      *     The error message.
      * @param args
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
-    public ParserException(Stream stream, Message message, Object... args) {
-        this(stream, message.message(args));
+    public ParserException(Source source, Message message, Object... args) {
+        this(source, message.message(args));
     }
 
     /**
      * Construct a new instance of a {@link ParserException}.
      *
-     * @param stream
-     *     The stream containing the source of the error.
+     * @param source
+     *     The source containing the source of the error.
      * @param message
      *     The error message.
      */
-    public ParserException(Stream stream, String message) {
-        super(format(stream, message));
+    public ParserException(Source source, String message) {
+        super(format(source, message));
     }
 
     public ParserException(int line, int column, Message message) {
@@ -74,23 +74,23 @@ public class ParserException extends OmakaseException {
     }
 
     /** formats the error message */
-    private static String format(Stream stream, String message) {
-        if (!stream.isSubStream()) {
+    private static String format(Source source, String message) {
+        if (!source.isSubStream()) {
             return String.format("Omakase CSS Parser - %s:\nat line %s, column %s in source\n'%s'",
                 message,
-                stream.line(),
-                stream.column(),
-                stream.toStringContextual()
+                source.line(),
+                source.column(),
+                source.toStringContextual()
             );
         } else {
             return String.format("Omakase CSS Parser - %s:\nat line %s, column %s (starting from line %s, " +
                 "column %s in original source) in substring of original source\n'%s'",
                 message,
-                stream.line(),
-                stream.column(),
-                stream.anchorLine(),
-                stream.anchorColumn(),
-                stream.toStringContextual()
+                source.line(),
+                source.column(),
+                source.anchorLine(),
+                source.anchorColumn(),
+                source.toStringContextual()
             );
         }
     }

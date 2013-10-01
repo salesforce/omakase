@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser.token;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicates;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 
 import static com.google.common.base.CharMatcher.*;
 
@@ -135,7 +135,7 @@ public enum Tokens implements Token {
 
     Tokens(CharMatcher matcher, String description) {
         this.isSingleChar = false;
-        this.singleChar = Stream.NULL_CHAR;
+        this.singleChar = Source.NULL_CHAR;
         this.matcher = matcher.precomputed();
         this.description = description;
     }
@@ -150,7 +150,7 @@ public enum Tokens implements Token {
     @Override
     public boolean matches(char c) {
         if (isSingleChar) return (singleChar - c) == 0;
-        return c != Stream.NULL_CHAR && matcher.matches(c);
+        return c != Source.NULL_CHAR && matcher.matches(c);
     }
 
     @Override

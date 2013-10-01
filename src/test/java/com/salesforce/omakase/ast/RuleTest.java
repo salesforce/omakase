@@ -64,7 +64,7 @@ public class RuleTest {
     @Test
     public void orphanedCommentsPresent() {
         Rule rule = new Rule();
-        rule.orphanedComment(new OrphanedComment("test", OrphanedComment.Location.RULE));
+        rule.orphanedComment(new Comment("test"));
         assertThat(rule.orphanedComments()).hasSize(1);
     }
 

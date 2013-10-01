@@ -23,7 +23,7 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.RefinableParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 
 /**
  * Parses a group of comma-separated selectors.
@@ -33,12 +33,12 @@ import com.salesforce.omakase.parser.Stream;
 public class SelectorGroupParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
-        stream.skipWhitepace();
-        stream.collectComments();
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+        source.skipWhitepace();
+        source.collectComments();
 
         // check if the next character is a valid first character for a selector
-        if (!tokenFactory().selectorBegin().matches(stream.current())) return false;
+        if (!tokenFactory().selectorBegin().matches(source.current())) return false;
 
         boolean foundDelimiter = false;
         boolean foundSelector = false;
@@ -46,17 +46,17 @@ public class SelectorGroupParser extends AbstractRefinableParser {
 
         do {
             // try to parse a selector
-            stream.skipWhitepace();
-            foundSelector = parser.parse(stream, broadcaster, refiner);
+            source.skipWhitepace();
+            foundSelector = parser.parse(source, broadcaster, refiner);
 
             if (foundDelimiter && !foundSelector) {
-                throw new ParserException(stream, Message.EXPECTED_SELECTOR, tokenFactory().selectorDelimiter().description());
+                throw new ParserException(source, Message.EXPECTED_SELECTOR, tokenFactory().selectorDelimiter().description());
             }
 
-            stream.skipWhitepace();
+            source.skipWhitepace();
 
             // try to parse a delimiter (e.g., comma)
-            foundDelimiter = stream.optionallyPresent(tokenFactory().selectorDelimiter());
+            foundDelimiter = source.optionallyPresent(tokenFactory().selectorDelimiter());
         } while (foundDelimiter);
 
         return true;

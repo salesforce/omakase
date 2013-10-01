@@ -78,7 +78,7 @@ public class ImportantParserTest extends AbstractParserTest<ImportantParser> {
     @Override
     public void matchesExpectedBroadcastCount() {
         for (GenericParseResult result : parse(validSources())) {
-            assertThat(result.broadcasted).describedAs(result.stream.toString()).hasSize(0);
+            assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(0);
         }
     }
 

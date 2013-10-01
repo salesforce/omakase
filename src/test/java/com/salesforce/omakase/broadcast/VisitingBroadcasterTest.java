@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.broadcast;
 
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import org.junit.Test;
 
@@ -45,5 +46,19 @@ public class VisitingBroadcasterTest {
         vb.visit();
 
         assertThat(qb.all()).hasSize(1);
+    }
+
+    @Test
+    public void updatesStatus() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        VisitingBroadcaster vb = new VisitingBroadcaster(qb);
+
+        ClassSelector cs = new ClassSelector("class");
+        cs.status(Status.UNBROADCASTED);
+
+        vb.broadcast(cs);
+
+        qb.broadcast(cs);
+        assertThat(cs.status()).isSameAs(Status.QUEUED);
     }
 }

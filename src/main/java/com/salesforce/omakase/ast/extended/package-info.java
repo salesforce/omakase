@@ -14,23 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin;
-
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
-
 /**
- * A {@link Plugin} that registers a custom {@link RefinerStrategy}.
- * <p/>
- * The {@link RefinerStrategy} can be used to customize and extends the standard CSS syntax. See the readme file for more
- * details and examples.
- *
- * @author nmcwilliams
+ * Contains customized, extended syntax objects that are not part of the standard CSS spec.
  */
-public interface SyntaxPlugin extends Plugin {
-    /**
-     * Gets the {@link RefinerStrategy} instance.
-     *
-     * @return The {@link RefinerStrategy} instance.
-     */
-    RefinerStrategy getRefinableStrategy();
-}
+package com.salesforce.omakase.ast.extended;

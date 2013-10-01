@@ -99,7 +99,7 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
         for (ParseResult<String> result : results) {
             KeywordValue value = result.broadcaster.findOnly(KeywordValue.class).get();
             assertThat(value.keyword())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

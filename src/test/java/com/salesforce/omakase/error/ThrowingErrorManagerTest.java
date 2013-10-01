@@ -18,7 +18,7 @@ package com.salesforce.omakase.error;
 
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -37,7 +37,7 @@ public class ThrowingErrorManagerTest {
     public void fatalThrowsException() {
         exception.expect(FatalException.class);
         exception.expectMessage("e");
-        new ThrowingErrorManager().report(ErrorLevel.FATAL, new ParserException(new Stream(""), "e"));
+        new ThrowingErrorManager().report(ErrorLevel.FATAL, new ParserException(new Source(""), "e"));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class ThrowingErrorManagerTest {
 
     @Test
     public void warningNoException() {
-        new ThrowingErrorManager().report(ErrorLevel.WARNING, new ParserException(new Stream(""), "e"));
+        new ThrowingErrorManager().report(ErrorLevel.WARNING, new ParserException(new Source(""), "e"));
         // no exception
     }
 }

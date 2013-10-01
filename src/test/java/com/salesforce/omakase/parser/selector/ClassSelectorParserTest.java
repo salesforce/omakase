@@ -78,7 +78,7 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
         for (ParseResult<String> result : results) {
             ClassSelector selector = result.broadcaster.findOnly(ClassSelector.class).get();
             assertThat(selector.name())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

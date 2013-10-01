@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
@@ -26,16 +26,17 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 
 /**
- * Standard {@link RefinableStrategy} implementation.
+ * Standard {@link RefinerStrategy} implementation.
  *
  * @author nmcwilliams
  */
-public class StandardRefinableStrategy implements RefinableStrategy {
+public final class StandardRefinerStrategy implements RefinerStrategy {
     @Override
     public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
         // do nothing -- there's no default refinement for at-rules
@@ -44,24 +45,28 @@ public class StandardRefinableStrategy implements RefinableStrategy {
 
     @Override
     public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-        QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
-        Stream stream = new Stream(selector.rawContent(), false);
+        // use a queue so that we can hold off on broadcasting the individual parts until we ahve them all. This makes rework
+        // plugins that utilize order (#isFirst(), etc...) work smoothly.
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
+        Source source = new Source(selector.rawContent(), false);
 
         // parse the contents
-        ParserFactory.complexSelectorParser().parse(stream, qb);
+        ParserFactory.complexSelectorParser().parse(source, queryable);
+
+        // grab orphaned comments
+        for (String comment : source.collectComments().flushComments()) {
+            selector.orphanedComment(new Comment(comment));
+        }
 
         // there should be nothing left
-        if (!stream.eof()) {
-            throw new ParserException(stream, Message.UNPARSABLE_SELECTOR);
-        }
+        if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_SELECTOR);
 
         // store the parsed selector parts
-        selector.appendAll(qb.filter(SelectorPart.class));
+        selector.appendAll(queryable.filter(SelectorPart.class));
 
-        // check for orphaned comments
-        for (OrphanedComment comment : qb.filter(OrphanedComment.class)) {
-            selector.orphanedComment(comment);
-        }
+        // once they are all added we're good to send them out
+        queue.resume();
 
         return true;
     }
@@ -69,23 +74,23 @@ public class StandardRefinableStrategy implements RefinableStrategy {
     @Override
     public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
-        Stream stream = new Stream(declaration.rawPropertyValue().content(), declaration.line(), declaration.column());
+        Source source = new Source(declaration.rawPropertyValue().content(), declaration.line(), declaration.column());
 
         // parse the contents
-        ParserFactory.termListParser().parse(stream, qb);
+        ParserFactory.termListParser().parse(source, qb);
 
-        // there should be nothing left
-        if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_VALUE);
+        // grab orphaned comments
+        for (String comment : source.collectComments().flushComments()) {
+            declaration.orphanedComment(new Comment(comment));
+        }
+
+        // there should be nothing left in the source
+        if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE);
 
         // store the parsed value
         Optional<PropertyValue> first = qb.find(PropertyValue.class);
-        if (!first.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALUE);
+        if (!first.isPresent()) throw new ParserException(source, Message.EXPECTED_VALUE);
         declaration.propertyValue(first.get());
-
-        // check for orphaned comments
-        for (OrphanedComment comment : qb.filter(OrphanedComment.class)) {
-            declaration.orphanedComment(comment);
-        }
 
         return true;
     }

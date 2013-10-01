@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.IdSelector;
@@ -158,13 +157,13 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
             withExpectedResult(".class/*comment*/.class", 2),
             withExpectedResult(".class\n/*comment*/\n.class", 3),
             withExpectedResult(".class /*comment*//*comment*/ .class", 3),
-            withExpectedResult(".class .class /*comment*/", 4),
+            withExpectedResult(".class .class /*comment*/", 3),
             withExpectedResult("*::before", 2))
         );
 
         for (ParseResult<Integer> result : results) {
             assertThat(result.broadcasted)
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .hasSize(result.expected);
         }
     }
@@ -206,7 +205,6 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         assertThat(broadcasted.get(2)).isInstanceOf(ClassSelector.class);
         assertThat(broadcasted.get(3)).isInstanceOf(Combinator.class);
         assertThat(broadcasted.get(4)).isInstanceOf(IdSelector.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(OrphanedComment.class);
     }
 
     @Test
@@ -228,15 +226,5 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
         GenericParseResult result = parse(".class ").get(0);
         assertThat(result.broadcasted).hasSize(1);
         assertThat(Iterables.get(result.broadcasted, 0)).isNotInstanceOf(Combinator.class);
-    }
-
-    @Test
-    public void orphanedComments() {
-        GenericParseResult result = parse(".class /* comment *//* comment */").get(0);
-        assertThat(result.broadcasted).hasSize(3);
-        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(OrphanedComment.class);
-        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(OrphanedComment.class);
-        OrphanedComment orphaned = (OrphanedComment)Iterables.get(result.broadcasted, 1);
-        assertThat(orphaned.content()).isEqualTo(" comment ");
     }
 }

@@ -23,8 +23,8 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.Stream;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;
 
@@ -36,47 +36,48 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public class RawAtRuleParser extends AbstractRefinableParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         TokenFactory tf = tokenFactory();
 
-        stream.skipWhitepace();
-        stream.collectComments();
+        source.skipWhitepace();
+        source.collectComments();
 
-        // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        // save off current line and column
+        int startLine = source.line();
+        int startColumn = source.column();
 
         // must begin with '@'
-        if (!stream.optionallyPresent(Tokens.AT_RULE)) return false;
+        if (!source.optionallyPresent(Tokens.AT_RULE)) return false;
 
         // read the name
-        Optional<String> name = stream.readIdent();
-        if (!name.isPresent()) throw new ParserException(stream, Message.MISSING_AT_RULE_NAME);
+        Optional<String> name = source.readIdent();
+        if (!name.isPresent()) throw new ParserException(source, Message.MISSING_AT_RULE_NAME);
 
         // read everything up until the end of the at-rule expression (usually a semicolon or open bracket).
-        int line = stream.line();
-        int column = stream.column();
-        String content = stream.until(tf.atRuleExpressionEnd()).trim();
+        int line = source.line();
+        int column = source.column();
+        String content = source.until(tf.atRuleExpressionEnd()).trim();
         RawSyntax expression = content.isEmpty() ? null : new RawSyntax(line, column, content);
 
         // skip whitespace after the expression
-        stream.skipWhitepace();
+        source.skipWhitepace();
 
         RawSyntax block = null;
 
         // parse the termination (usually ';' or the start of an at-rule block), then parse the block
-        if (!stream.optionallyPresent(tf.atRuleTermination()) && tf.atRuleBlockBegin().matches(stream.current())) {
-            line = stream.line();
-            column = stream.column();
-            content = stream.chompEnclosedValue(tf.atRuleBlockBegin(), tf.atRuleBlockEnd()).trim();
+        if (!source.optionallyPresent(tf.atRuleTermination()) && tf.atRuleBlockBegin().matches(source.current())) {
+            line = source.line();
+            column = source.column();
+            content = source.chompEnclosedValue(tf.atRuleBlockBegin(), tf.atRuleBlockEnd()).trim();
             block = content.isEmpty() ? null : new RawSyntax(line, column, content);
         }
 
         // expression content must be present
-        if (expression == null && block == null) throw new ParserException(stream, Message.MISSING_AT_RULE_VALUE);
+        if (expression == null && block == null) throw new ParserException(source, Message.MISSING_AT_RULE_VALUE);
 
         // create and broadcast the new rule
-        AtRule rule = new AtRule(snapshot.line, snapshot.column, name.get(), expression, block, refiner);
-        rule.comments(stream.flushComments());
+        AtRule rule = new AtRule(startLine, startColumn, name.get(), expression, block, refiner);
+        rule.comments(source.flushComments());
         broadcaster.broadcast(rule);
 
         return true;

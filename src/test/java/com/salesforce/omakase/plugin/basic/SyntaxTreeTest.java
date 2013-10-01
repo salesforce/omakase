@@ -23,12 +23,18 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.test.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Unit tests for {@link SyntaxTree}. */
+/**
+ * Unit tests for {@link SyntaxTree}.
+ * <p/>
+ * This contains some tests that strictly speaking aren't necessarily testing {@link SyntaxTree} itself. This is due to leftovers
+ * from refactoring... but meh, doesn't hurt to keep them for now.
+ */
 @SuppressWarnings("JavaDoc")
 public class SyntaxTreeTest {
     private static final String SRC = "@charset \"UTF8\";\n" +
@@ -40,11 +46,12 @@ public class SyntaxTreeTest {
         "#div1, #div2 { position:absolute; /*orphaned-r*/}\n" +
         "/*orphaned-s*/";
 
+    private SyntaxTree tree;
     private Stylesheet stylesheet;
 
     @Before
     public void setup() {
-        SyntaxTree tree = new SyntaxTree();
+        tree = new SyntaxTree();
         Omakase.source(SRC).request(tree).process();
         stylesheet = tree.stylesheet();
     }
@@ -89,5 +96,10 @@ public class SyntaxTreeTest {
     @Test
     public void sheetOrphanedComments() {
         assertThat(stylesheet.orphanedComments()).isNotEmpty();
+    }
+
+    @Test
+    public void toStringTest() {
+        assertThat(tree.toString()).isNotEqualTo(Util.originalToString(tree));
     }
 }

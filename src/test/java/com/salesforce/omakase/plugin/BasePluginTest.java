@@ -16,13 +16,14 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import org.junit.Test;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -37,12 +38,18 @@ public class BasePluginTest {
     public void hasMethodForEverySubscribable() throws InvocationTargetException, IllegalAccessException {
         Method[] declaredMethods = BasePlugin.class.getDeclaredMethods();
 
-        Reflections reflections = new Reflections("com.salesforce.omakase.ast", "com.salesforce.omakase.notification");
-        int expected = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class)).size();
+        Set<Class<?>> subscriptions = Sets.newHashSetWithExpectedSize(32);
+        for (Method method : declaredMethods) {
+            subscriptions.add(method.getParameterTypes()[0]);
+        }
 
-        assertThat(declaredMethods.length)
-            .overridingErrorMessage("BasePlugin.java must have a subscription method for each subscribable syntax type")
-            .isEqualTo(expected);
+        Reflections reflections = new Reflections("com.salesforce.omakase.ast");
+        Set<Class<?>> subscribables = Sets.newHashSet(reflections.getTypesAnnotatedWith(Subscribable.class));
+
+        assertThat(subscriptions).containsAll(subscribables);
+
+        Sets.SetView<Class<?>> difference = Sets.difference(subscriptions, subscribables);
+        assertThat(difference).describedAs("BasePlugin has a subscription to an object that is not subscribable").isEmpty();
 
         BasePlugin p = new BasePlugin();
         for (Method m : declaredMethods) {

@@ -14,23 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser.raw;
-
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Stream;
-
 /**
- * TODO description
- *
- * @author nmcwilliams
+ * Rarely used or discouraged library-provided Plugins.
  */
-public class RawStatementParser extends AbstractParser {
-    @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
-        stream.skipWhitepace();
-
-
-        return false;  // TODO unimplemented
-    }
-}
+package com.salesforce.omakase.plugin.other;

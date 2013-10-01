@@ -17,32 +17,32 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second parser will
- * be executed.
+ * TODO description
  *
  * @author nmcwilliams
  */
-public class CombinationParser extends AbstractParser {
-    private final Parser first;
-    private final Parser second;
+public class RefinableCombinationParser extends AbstractRefinableParser {
+    private final RefinableParser first;
+    private final RefinableParser second;
 
     /**
-     * Construct a new {@link CombinationParser} instance with the given two {@link Parser}s.
+     * Construct a new {@link RefinableCombinationParser} instance with the given two {@link RefinableParser}s.
      *
      * @param first
-     *     The first {@link Parser} to try.
+     *     The first {@link RefinableParser} to try.
      * @param second
-     *     The second {@link Parser} to try,
+     *     The second {@link RefinableParser} to try,
      */
-    public CombinationParser(Parser first, Parser second) {
+    public RefinableCombinationParser(RefinableParser first, RefinableParser second) {
         this.first = first;
         this.second = second;
     }
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
-        return first.parse(source, broadcaster) || second.parse(source, broadcaster);
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+        return first.parse(source, broadcaster, refiner) || second.parse(source, broadcaster, refiner);
     }
 }

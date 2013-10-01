@@ -23,7 +23,7 @@ import com.salesforce.omakase.parser.token.TokenEnum;
  * opposed to a single token.
  * <p/>
  * By adding this interface to an Enum it allows a value to be easily parsed to the correct Enum member using {@link
- * Stream#optionalFromConstantEnum(Class)}.
+ * Source#optionalFromConstantEnum(Class)}.
  * <p/>
  * {@link TokenEnum} should be preferred over this if possible as matching a single token is more performant than matching a
  * constant.

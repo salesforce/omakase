@@ -17,12 +17,13 @@
 package com.salesforce.omakase.broadcast;
 
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link QueuingBroadcaster}.
@@ -211,5 +212,15 @@ public class QueuingBroadcasterTest {
         queue.broadcast(u3);
 
         assertThat(queue.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void updatesStatus() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        Syntax u1 = new ClassSelector("test1");
+
+        u1.status(Status.UNBROADCASTED);
+        qb.broadcast(u1);
+        assertThat(u1.status()).isSameAs(Status.QUEUED);
     }
 }

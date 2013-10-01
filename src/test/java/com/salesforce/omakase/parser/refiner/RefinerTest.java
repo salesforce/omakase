@@ -37,7 +37,7 @@ public class RefinerTest {
     @Test
     public void customAtRuleRefinement() {
         AtRuleStrategy strategy = new AtRuleStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinableStrategy>of(strategy));
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
         refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
         assertThat(strategy.called).isTrue();
     }
@@ -46,7 +46,7 @@ public class RefinerTest {
     public void testMultipleCustomAtRule() {
         AtRuleStrategyFalse strategy1 = new AtRuleStrategyFalse();
         AtRuleStrategy strategy2 = new AtRuleStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinableStrategy>of(strategy1, strategy2));
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
         refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -62,7 +62,7 @@ public class RefinerTest {
     @Test
     public void customSelectorRefinement() {
         SelectorStrategy strategy = new SelectorStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinableStrategy>of(strategy));
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
         refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
         assertThat(strategy.called).isTrue();
     }
@@ -71,7 +71,7 @@ public class RefinerTest {
     public void testMultipleCustomSelector() {
         SelectorStrategyFalse strategy1 = new SelectorStrategyFalse();
         SelectorStrategy strategy2 = new SelectorStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinableStrategy>of(strategy1, strategy2));
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
         refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -88,7 +88,7 @@ public class RefinerTest {
     @Test
     public void customDeclarationRefinement() {
         DeclarationStrategy strategy = new DeclarationStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinableStrategy>of(strategy));
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
         refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
         assertThat(strategy.called).isTrue();
     }
@@ -97,7 +97,7 @@ public class RefinerTest {
     public void testMultipleCustomDeclaration() {
         DeclarationStrategyFalse strategy1 = new DeclarationStrategyFalse();
         DeclarationStrategy strategy2 = new DeclarationStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinableStrategy>of(strategy1, strategy2));
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
         refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -110,7 +110,7 @@ public class RefinerTest {
         refiner.refine(declaration);
     }
 
-    public static final class AtRuleStrategy implements RefinableStrategy {
+    public static final class AtRuleStrategy implements RefinerStrategy {
         boolean called;
 
         @Override
@@ -130,7 +130,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class AtRuleStrategyFalse implements RefinableStrategy {
+    public static final class AtRuleStrategyFalse implements RefinerStrategy {
         boolean called;
 
         @Override
@@ -150,7 +150,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class SelectorStrategy implements RefinableStrategy {
+    public static final class SelectorStrategy implements RefinerStrategy {
         boolean called;
 
         @Override
@@ -170,7 +170,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class SelectorStrategyFalse implements RefinableStrategy {
+    public static final class SelectorStrategyFalse implements RefinerStrategy {
         boolean called;
 
         @Override
@@ -190,7 +190,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class DeclarationStrategy implements RefinableStrategy {
+    public static final class DeclarationStrategy implements RefinerStrategy {
         boolean called;
 
         @Override
@@ -210,7 +210,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class DeclarationStrategyFalse implements RefinableStrategy {
+    public static final class DeclarationStrategyFalse implements RefinerStrategy {
         boolean called;
 
         @Override

@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 
 /**
  * Parses a {@link Selector}.
@@ -32,22 +32,22 @@ import com.salesforce.omakase.parser.Stream;
 public class RawSelectorParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
-        stream.skipWhitepace();
-        stream.collectComments();
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+        source.skipWhitepace();
+        source.collectComments();
 
-        if (!tokenFactory().selectorBegin().matches(stream.current())) return false;
+        if (!tokenFactory().selectorBegin().matches(source.current())) return false;
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // grab everything until the end of the selector
-        String content = stream.until(tokenFactory().selectorEnd());
+        String content = source.until(tokenFactory().selectorEnd());
         RawSyntax raw = new RawSyntax(snapshot.line, snapshot.column, content.trim());
 
         // create selector and associate comments
         Selector selector = new Selector(raw, refiner);
-        selector.comments(stream.flushComments());
+        selector.comments(source.flushComments());
 
         // notify listeners of new selector
         broadcaster.broadcast(selector);

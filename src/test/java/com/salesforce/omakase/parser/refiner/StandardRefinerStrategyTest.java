@@ -34,12 +34,12 @@ import java.util.Set;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
- * Unit tests for {@link StandardRefinableStrategy}.
+ * Unit tests for {@link StandardRefinerStrategy}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class StandardRefinableStrategyTest {
+public class StandardRefinerStrategyTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
@@ -76,17 +76,17 @@ public class StandardRefinableStrategyTest {
     }
 
     @Test
-    public void refineThrowsErrorIfUnparsableContent() {
+    public void refineDeclarationThrowsErrorIfUnparsableContent() {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none ^^^^^^");
 
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNPARSABLE_VALUE.message());
+        exception.expectMessage(Message.UNPARSABLE_DECLARATION_VALUE.message());
         new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
     }
 
     @Test
-    public void refineAddsOrphanedComments() {
+    public void refineDeclarationAddsOrphanedComments() {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");
         Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
@@ -102,7 +102,7 @@ public class StandardRefinableStrategyTest {
                 fail("unit shouldn't be broadcasted twice!");
             }
             all.add(broadcastable);
-            broadcastable.status(Status.BROADCASTED_PREPROCESS);
+            broadcastable.status(Status.PROCESSED);
         }
     }
 }

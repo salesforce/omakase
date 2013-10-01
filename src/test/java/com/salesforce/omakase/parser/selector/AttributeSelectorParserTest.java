@@ -117,7 +117,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
         for (ParseResult<String> result : results) {
             AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
             assertThat(selector.attribute())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }
@@ -142,7 +142,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
         for (ParseResult<AttributeMatchType> result : results) {
             AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
             assertThat(selector.matchType().get())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isSameAs(result.expected);
         }
     }
@@ -175,7 +175,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
         for (ParseResult<String> result : results) {
             AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
             assertThat(selector.value().get())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

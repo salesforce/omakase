@@ -38,7 +38,7 @@ import static com.salesforce.omakase.parser.token.Tokens.*;
  *
  * @author nmcwilliams
  */
-public final class Stream {
+public final class Source {
     /** the "null" character, this is used to represent the absence of a char value */
     public static final char NULL_CHAR = '\u0000';
 
@@ -57,10 +57,10 @@ public final class Stream {
     /** current column in the source */
     private int column = 1;
 
-    /** line from the original source from which this sub-stream was derived */
+    /** line from the original source from which this sub-source was derived */
     private final int anchorLine;
 
-    /** column from the original source from which this sub-stream was derived */
+    /** column from the original source from which this sub-source was derived */
     private final int anchorColumn;
 
     /** last index checked, so that #skipWhitespace can be short-circuited if the index hasn't changed */
@@ -85,42 +85,42 @@ public final class Stream {
     private List<String> comments;
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source.
+     * Creates a new instance of a {@link Source}, to be used for reading one character at a time from the given source.
      *
      * @param source
      *     The source to read.
      */
-    public Stream(CharSequence source) {
+    public Source(CharSequence source) {
         this(source, 1, 1, true);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
-     * use the line and column from the given {@link RawSyntax} as the anchor/starting point.
+     * Creates a new instance of a {@link Source}, to be used for reading one character at a time from the content in the given
+     * {@link RawSyntax}. This will use the line and column from the given {@link RawSyntax} as the anchor/starting point.
      *
      * @param raw
      *     The {@link RawSyntax} containing the source.
      */
-    public Stream(RawSyntax raw) {
+    public Source(RawSyntax raw) {
         this(raw.content(), raw.line(), raw.column(), true);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
-     * use the line and column from the given {@link RawSyntax} as the anchor/starting point.
+     * Creates a new instance of a {@link Source}, to be used for reading one character at a time from the content in the given
+     * {@link RawSyntax}. This will use the line and column from the given {@link RawSyntax} as the anchor/starting point.
      *
      * @param raw
      *     The {@link RawSyntax} containing the source.
      * @param checkInString
-     *     Whether the stream should keep track of whether we are in a string or not. The main reason to specify false here is for
+     *     Whether the source should keep track of whether we are in a string or not. The main reason to specify false here is for
      *     performance reasons, to avoid extra processing that we know wouldn't be relevant.
      */
-    public Stream(RawSyntax raw, boolean checkInString) {
+    public Source(RawSyntax raw, boolean checkInString) {
         this(raw.content(), raw.line(), raw.column(), checkInString);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * Creates a new instance of a {@link Source}, to be used for reading one character at a time from the given source. This will
      * use the given starting line and column.
      *
      * @param source
@@ -130,12 +130,12 @@ public final class Stream {
      * @param anchorColumn
      *     The starting column.
      */
-    public Stream(CharSequence source, int anchorLine, int anchorColumn) {
+    public Source(CharSequence source, int anchorLine, int anchorColumn) {
         this(source, anchorLine, anchorColumn, true);
     }
 
     /**
-     * Creates a new instance of a {@link Stream}, to be used for reading one character at a time from the given source. This will
+     * Creates a new instance of a {@link Source}, to be used for reading one character at a time from the given source. This will
      * use the given starting line and column.
      *
      * @param source
@@ -145,10 +145,10 @@ public final class Stream {
      * @param anchorColumn
      *     The starting column.
      * @param checkInString
-     *     Whether the stream should keep track of whether we are in a string or not. The main reason to specify false here is for
+     *     Whether the source should keep track of whether we are in a string or not. The main reason to specify false here is for
      *     performance reasons, to avoid extra processing that we know wouldn't be relevant.
      */
-    public Stream(CharSequence source, int anchorLine, int anchorColumn, boolean checkInString) {
+    public Source(CharSequence source, int anchorLine, int anchorColumn, boolean checkInString) {
         this.chars = source.toString().toCharArray();
         this.length = chars.length;
         this.anchorLine = anchorLine;
@@ -190,20 +190,20 @@ public final class Stream {
     }
 
     /**
-     * Gets the original line of this {@link Stream} within the original source. This is mainly useful for sub-sequences
+     * Gets the original line of this {@link Source} within the original source. This is mainly useful for sub-sequences
      * (sequences created from a substring of the original source).
      *
-     * @return The line number of the start of this stream in the original source.
+     * @return The line number of the start of this source in the original source.
      */
     public int anchorLine() {
         return anchorLine;
     }
 
     /**
-     * Gets the original column of this {@link Stream} within the original source. This is mainly useful for sub-sequences
+     * Gets the original column of this {@link Source} within the original source. This is mainly useful for sub-sequences
      * (sequences created from a substring of the original source).
      *
-     * @return The column number of the start of this stream in the original source.
+     * @return The column number of the start of this source in the original source.
      */
     public int anchorColumn() {
         return anchorColumn;
@@ -223,7 +223,7 @@ public final class Stream {
      *
      * @return The full original source.
      */
-    public String source() {
+    public String fullSource() {
         return new String(chars);
     }
 
@@ -288,11 +288,11 @@ public final class Stream {
      * <p/>
      * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this preprocessing
      * as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF then the line/column
-     * number reported by this stream (e.g., in error messages) will be incorrect. This seems acceptable as that information is
-     * mostly just useful for development purposes anyway. (http://dev.w3 .org/csswg/css-syntax/#preprocessing-the-input-stream)
+     * number reported by this source (e.g., in error messages) will be incorrect. This seems acceptable as that information is
+     * mostly just useful for development purposes anyway. (http://dev.w3 .org/csswg/css-syntax/#preprocessing-the-input-source)
      *
      * @return The next character (i.e., the character at the current position after the result of this call), or {@link
-     *         #NULL_CHAR} if at the end of the stream.
+     *         #NULL_CHAR} if at the end of the source.
      */
     public char next() {
         // if we are at the end then return null
@@ -335,7 +335,7 @@ public final class Stream {
     /**
      * Gets the next character without advancing the current position.
      *
-     * @return The next character, or null if at the end of the stream.
+     * @return The next character, or null if at the end of the source.
      */
     public char peek() {
         return peek(1);
@@ -347,7 +347,7 @@ public final class Stream {
      * @param numCharacters
      *     The number of characters ahead to peak.
      *
-     * @return The character, or null if the end of the stream occurs first.
+     * @return The character, or null if the end of the source occurs first.
      */
     public char peek(int numCharacters) {
         return ((index + numCharacters) < length) ? chars[index + numCharacters] : NULL_CHAR;
@@ -475,7 +475,7 @@ public final class Stream {
 
     /**
      * Advances the current character position until the current character matches the given {@link Token}. If the given {@link
-     * Token} is never matched then this will advance to the end of the stream.
+     * Token} is never matched then this will advance to the end of the source.
      * <p/>
      * This will skip over values inside parenthesis (mainly because ';' can be a valid part of a declaration value, e.g.,
      * data-uris). This will also skip over values inside of strings, but {@link #checkInString} must be turned on.
@@ -517,7 +517,7 @@ public final class Stream {
 
         }
 
-        // closing token wasn't found, so return the substring from the start to the end of the stream
+        // closing token wasn't found, so return the substring from the start to the end of the source
         return new String(chars, start, length - start);
     }
 
@@ -547,7 +547,7 @@ public final class Stream {
      * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing delimiter {@link
      * Token}.
      * <p/>
-     * The opening token must be present at the current position of this stream or an error will be thrown. In other words, don't
+     * The opening token must be present at the current position of this source or an error will be thrown. In other words, don't
      * call this until you've checked that the opening token is there, and only if you expect it to be properly closed.
      * <p/>
      * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about handling
@@ -613,7 +613,7 @@ public final class Stream {
      *
      * @return this, for chaining.
      */
-    public Stream collectComments() {
+    public Source collectComments() {
         return collectComments(true);
     }
 
@@ -632,7 +632,7 @@ public final class Stream {
      *
      * @return this, for chaining.
      */
-    public Stream collectComments(boolean skipWhitespace) {
+    public Source collectComments(boolean skipWhitespace) {
         // if we already checked at this index then don't waste time checking again
         if (lastCheckedCommentIndex == index) return this;
 
@@ -736,7 +736,7 @@ public final class Stream {
     /**
      * Reads a constant string at the current position.
      * <p/>
-     * If a match is found the stream is advanced to the end of the constant value. Otherwise the current position will remain
+     * If a match is found the source is advanced to the end of the constant value. Otherwise the current position will remain
      * unchanged. The constant must be matched exactly -- case does matter.
      * <p/>
      * If possible this method should be avoided as it's less performant than using a {@link Token} based method.
@@ -878,7 +878,7 @@ public final class Stream {
 
     /** data object */
     public static final class Snapshot {
-        private final Stream stream;
+        private final Source source;
 
         /** the captured index */
         public final int index;
@@ -892,8 +892,8 @@ public final class Stream {
         /** whether we are in a string at the captured index */
         public final boolean inString;
 
-        private Snapshot(Stream stream, int index, int line, int column, boolean inString) {
-            this.stream = stream;
+        private Snapshot(Source source, int index, int line, int column, boolean inString) {
+            this.source = source;
             this.index = index;
             this.line = line;
             this.column = column;
@@ -907,10 +907,10 @@ public final class Stream {
          */
 
         public boolean rollback() {
-            stream.index = index;
-            stream.line = line;
-            stream.column = column;
-            stream.inString = inString;
+            source.index = index;
+            source.line = line;
+            source.column = column;
+            source.inString = inString;
             return false;
         }
 
@@ -925,10 +925,13 @@ public final class Stream {
          *     The error message.
          * @param args
          *     Optional args for the error message.
+         *
+         * @throws ParserException
+         *     An exception with the given message.
          */
         public void rollback(Message message, Object... args) {
             rollback();
-            throw new ParserException(stream, message, args);
+            throw new ParserException(source, message, args);
         }
     }
 }

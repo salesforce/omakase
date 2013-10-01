@@ -105,7 +105,7 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
 
         for (ParseResult<SelectorPartType> result : results) {
             Combinator combinator = result.broadcaster.findOnly(Combinator.class).get();
-            assertThat(combinator.type()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+            assertThat(combinator.type()).describedAs(result.source.toString()).isEqualTo(result.expected);
         }
     }
 
@@ -116,10 +116,10 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
         for (GenericParseResult result : results) {
             Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
             assertThat(syntax.line())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(1);
             assertThat(syntax.column())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(1);
         }
     }

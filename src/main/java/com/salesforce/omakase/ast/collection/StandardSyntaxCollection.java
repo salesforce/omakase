@@ -42,8 +42,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T>> implements SyntaxCollection<P, T> {
-    private final LinkedList<T> list = new LinkedList<>();
     private final P parent;
+    private final LinkedList<T> list;
     private Optional<Broadcaster> broadcaster;
 
     /**
@@ -66,6 +66,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      */
     public StandardSyntaxCollection(P parent, Broadcaster broadcaster) {
         this.parent = parent;
+        this.list = new LinkedList<>();
         this.broadcaster = Optional.fromNullable(broadcaster);
     }
 

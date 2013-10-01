@@ -26,7 +26,7 @@ import com.salesforce.omakase.plugin.Plugin;
 /**
  * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
  * <p/>
- * Any particular {@link Syntax} unit is actually broadcasted at most once per phase, based on {@link Syntax#status()}.
+ * Any particular {@link Syntax} unit is actually emitted at most once per phase, based on {@link Syntax#status()}.
  *
  * @author nmcwilliams
  * @see Emitter
@@ -91,7 +91,7 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
 
         if (status.shouldBroadcastForPhase(phase)) {
             // set the status to broadcasting
-            broadcastable.status(Status.BROADCASTING);
+            broadcastable.status(Status.EMITTING);
 
             // send to listeners
             emitter.emit(broadcastable, em);

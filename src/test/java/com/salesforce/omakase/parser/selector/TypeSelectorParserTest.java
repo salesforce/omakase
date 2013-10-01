@@ -81,7 +81,7 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
         for (ParseResult<String> result : results) {
             TypeSelector selector = result.broadcaster.findOnly(TypeSelector.class).get();
             assertThat(selector.name())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

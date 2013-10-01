@@ -32,7 +32,7 @@ import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.RefinableParser;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 import java.util.Set;
@@ -42,11 +42,11 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-public class ConditionalRefinableStrategy implements RefinableStrategy {
+public final class ConditionalRefinerStrategy implements RefinerStrategy {
     private static final String IF = "if";
     private final Set<String> trueConditions;
 
-    public ConditionalRefinableStrategy(Set<String> trueConditions) {
+    public ConditionalRefinerStrategy(Set<String> trueConditions) {
         this.trueConditions = trueConditions;
     }
 
@@ -70,16 +70,16 @@ public class ConditionalRefinableStrategy implements RefinableStrategy {
 
         // parse the condition, lower-case for comparison purposes
         RawSyntax rawExpression = atRule.rawExpression().get();
-        Stream stream = new Stream(rawExpression.content(), rawExpression.line(), rawExpression.column(), false);
-        String condition = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim().toLowerCase();
+        Source source = new Source(rawExpression.content(), rawExpression.line(), rawExpression.column(), false);
+        String condition = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim().toLowerCase();
 
         // nothing should be left
-        stream.skipWhitepace();
-        if (!stream.eof()) throw new ParserException(stream, Message.UNPARSABLE_CONDITIONAL_CONTENT, stream.remaining());
+        source.skipWhitepace();
+        if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_CONDITIONAL_CONTENT, source.remaining());
 
         // setup stuff for parsing inner statements
         RawSyntax rawBlock = atRule.rawBlock().get();
-        stream = new Stream(rawBlock.content(), rawBlock.line(), rawBlock.column());
+        source = new Source(rawBlock.content(), rawBlock.line(), rawBlock.column());
 
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster);
         QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
@@ -90,13 +90,13 @@ public class ConditionalRefinableStrategy implements RefinableStrategy {
         queue.pause();
 
         // parse the inner statements
-        while (!stream.eof()) {
-            boolean matched = rule.parse(stream, queryable, refiner);
-            stream.skipWhitepace();
+        while (!source.eof()) {
+            boolean matched = rule.parse(source, queryable, refiner);
+            source.skipWhitepace();
 
-            // after parsing there should be nothing left in the stream
-            if (!matched && !stream.eof()) {
-                throw new ParserException(stream, Message.UNPARSABLE_CONDITIONAL_CONTENT, stream.remaining());
+            // after parsing there should be nothing left in the source
+            if (!matched && !source.eof()) {
+                throw new ParserException(source, Message.UNPARSABLE_CONDITIONAL_CONTENT, source.remaining());
             }
         }
 

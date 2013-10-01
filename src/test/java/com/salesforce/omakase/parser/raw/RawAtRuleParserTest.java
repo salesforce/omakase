@@ -214,9 +214,9 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
         for (ParseResult<String> result : results) {
             AtRule r = result.broadcaster.findOnly(AtRule.class).get();
             if (result.expected == null || result.expected.isEmpty()) {
-                assertThat(r.rawExpression().isPresent()).describedAs(result.stream.toString()).isFalse();
+                assertThat(r.rawExpression().isPresent()).describedAs(result.source.toString()).isFalse();
             } else {
-                assertThat(r.rawExpression().get().content()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+                assertThat(r.rawExpression().get().content()).describedAs(result.source.toString()).isEqualTo(result.expected);
             }
         }
     }
@@ -261,7 +261,7 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
 
         for (ParseResult<String> result : results) {
             AtRule r = result.broadcaster.findOnly(AtRule.class).get();
-            assertThat(r.name()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+            assertThat(r.name()).describedAs(result.source.toString()).isEqualTo(result.expected);
         }
     }
 
@@ -321,9 +321,9 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
         for (ParseResult<String> result : results) {
             AtRule r = result.broadcaster.findOnly(AtRule.class).get();
             if (result.expected == null || result.expected.isEmpty()) {
-                assertThat(r.rawBlock().isPresent()).describedAs(result.stream.toString()).isFalse();
+                assertThat(r.rawBlock().isPresent()).describedAs(result.source.toString()).isFalse();
             } else {
-                assertThat(r.rawBlock().get().content()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+                assertThat(r.rawBlock().get().content()).describedAs(result.source.toString()).isEqualTo(result.expected);
             }
         }
     }

@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 
 /**
@@ -28,15 +29,6 @@ import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
  * @author nmcwilliams
  */
 public enum Status {
-    /** For units that should never be broadcasted */
-    @SuppressWarnings("UnusedDeclaration")
-    DO_NOT_BROADCAST {
-        @Override
-        public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
-            return false;
-        }
-    },
-
     /** The unit has never been broadcasted */
     UNBROADCASTED {
         @Override
@@ -45,32 +37,32 @@ public enum Status {
         }
     },
 
-    /** The unit is currently being broadcasted */
-    BROADCASTING {
+    /** The unit has been given to a {@link Broadcaster} but has been emitted yet */
+    QUEUED {
+        @Override
+        public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
+            return true;
+        }
+    },
+
+    /** The unit is currently being emitted */
+    EMITTING {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
             return false;
         }
     },
 
-    /** The unit has been broadcasted in the {@link SubscriptionPhase#PREPROCESS} phase */
-    BROADCASTED_PREPROCESS {
-        @Override
-        public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
-            return phase == SubscriptionPhase.PROCESS || phase == SubscriptionPhase.VALIDATE;
-        }
-    },
-
-    /** The unit has been broadcasted in the {@link SubscriptionPhase#PROCESS} phase */
-    BROADCASTED_PROCESS {
+    /** The unit has been broadcasted (emitted) in the {@link SubscriptionPhase#PROCESS} phase */
+    PROCESSED {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
             return phase == SubscriptionPhase.VALIDATE;
         }
     },
 
-    /** The unit has been broadcasted in the {@link SubscriptionPhase#VALIDATE} phase */
-    BROADCASTED_VALIDATION {
+    /** The unit has been broadcasted (emitted)  in the {@link SubscriptionPhase#VALIDATE} phase */
+    VALIDATED {
         @Override
         public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
             return false;
@@ -97,12 +89,10 @@ public enum Status {
      */
     public static Status nextStatusAfterPhase(SubscriptionPhase phase) {
         switch (phase) {
-        case PREPROCESS:
-            return Status.BROADCASTED_PREPROCESS;
         case PROCESS:
-            return Status.BROADCASTED_PROCESS;
+            return Status.PROCESSED;
         case VALIDATE:
-            return Status.BROADCASTED_VALIDATION;
+            return Status.VALIDATED;
         }
         return null;
     }

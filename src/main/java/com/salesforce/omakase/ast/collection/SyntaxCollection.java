@@ -21,14 +21,9 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 /**
  * A collection of related {@link Syntax} units.
- * <p/>
- * If you are using any of these methods in a plugin you will need to register the {@link SyntaxTree} as a dependency. See {@link
- * DependentPlugin} for more details.
  *
  * @param <T>
  *     The type of {@link Syntax} contained within the collection.

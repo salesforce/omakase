@@ -18,7 +18,6 @@ package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -26,10 +25,8 @@ import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
-
-import java.util.List;
 
 import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
 
@@ -44,11 +41,11 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_CO
  */
 public class ComplexSelectorParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
-        stream.skipWhitepace();
+    public boolean parse(Source source, Broadcaster broadcaster) {
+        source.skipWhitepace();
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // setup inner parsers
         Parser combinator = ParserFactory.combinatorParser();
@@ -66,13 +63,13 @@ public class ComplexSelectorParser extends AbstractParser {
             matchedThisTime = false;
 
             // try parsing a universal or type selector
-            if (typeOrUniversal.parse(stream, queue)) {
+            if (typeOrUniversal.parse(source, queue)) {
                 matchedAnything = true;
                 matchedThisTime = true;
             }
 
             // parse remaining selectors in the sequence
-            while (repeatableSelector.parse(stream, queue)) {
+            while (repeatableSelector.parse(source, queue)) {
                 matchedAnything = true;
                 matchedThisTime = true;
             }
@@ -87,23 +84,17 @@ public class ComplexSelectorParser extends AbstractParser {
                     snapshot.rollback(Message.TRAILING_COMBINATOR, lastCombinator.type());
                 }
             } else {
-                // so that if there is a trailing combinator error the stream points to the right location
-                snapshot = stream.snapshot();
+                // so that if there is a trailing combinator error the source points to the right location
+                snapshot = source.snapshot();
             }
-        } while (combinator.parse(stream, queue));
+        } while (combinator.parse(source, queue));
 
         // check for known possible errors
-        if (!stream.eof()) {
-            snapshot = stream.snapshot();
-            if (typeOrUniversal.parse(stream, queue)) {
+        if (!source.eof()) {
+            snapshot = source.snapshot();
+            if (typeOrUniversal.parse(source, queue)) {
                 snapshot.rollback(Message.NAME_SELECTORS_NOT_ALLOWED);
             }
-        }
-
-        // orphaned comments, e.g., ".class, #id /*orphaned*/ {}"
-        List<String> orphaned = stream.collectComments().flushComments();
-        for (String comment : orphaned) {
-            queue.broadcast(new OrphanedComment(comment, OrphanedComment.Location.SELECTOR));
         }
 
         // we're good, send out all queued broadcasts

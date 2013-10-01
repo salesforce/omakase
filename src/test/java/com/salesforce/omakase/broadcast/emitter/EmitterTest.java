@@ -20,7 +20,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.PreProcess;
+import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class EmitterTest {
     @Test
     public void defaultPhase() {
         Emitter emitter = new Emitter();
-        assertThat(emitter.phase()).isSameAs(SubscriptionPhase.PREPROCESS);
+        assertThat(emitter.phase()).isSameAs(SubscriptionPhase.PROCESS);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class EmitterTest {
     public static final class EmitterPlugin2 implements Plugin {
         int count;
 
-        @PreProcess
+        @Rework
         @SuppressWarnings("UnusedParameters")
         public void preprocess(ClassSelector cs) {
             count++;

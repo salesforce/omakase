@@ -17,7 +17,6 @@
 package com.salesforce.omakase.test.util;
 
 import ch.qos.logback.classic.Level;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -26,6 +25,8 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
+import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.BasePlugin;
@@ -199,8 +200,15 @@ public final class EchoLogger extends BasePlugin {
         logger.trace("stringValue: {}", stringValue);
     }
 
+    @Observe
     @Override
-    public void orphanedSelectorComment(OrphanedComment orphaned) {
-        logger.trace("orphanedComment: {}", orphaned);
+    public void unquotedIEFilter(UnquotedIEFilter filter) {
+        logger.trace("unquotedIEFilter: {}", filter);
+    }
+
+    @Observe
+    @Override
+    public void conditionalAtRuleBlock(ConditionalAtRuleBlock block) {
+        logger.trace("conditionalAtRuleBlock: {}", block);
     }
 }

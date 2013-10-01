@@ -27,8 +27,13 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 public abstract class AbstractRefinableParser extends AbstractParser implements RefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
-        return parse(stream, broadcaster, new Refiner(broadcaster));
+    public boolean parse(Source source, Broadcaster broadcaster) {
+        return parse(source, broadcaster, new Refiner(broadcaster));
+    }
+
+    @Override
+    public RefinableParser or(RefinableParser other) {
+        return new RefinableCombinationParser(this, other);
     }
 
 }

@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -34,27 +34,27 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public class NumericalValueParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // parse the optional sign
-        Optional<Character> sign = stream.optional(Tokens.SIGN);
+        Optional<Character> sign = source.optional(Tokens.SIGN);
 
         // integer value
-        String integerValue = stream.chomp(Tokens.DIGIT);
+        String integerValue = source.chomp(Tokens.DIGIT);
         Long integer = integerValue.isEmpty() ? null : Long.valueOf(integerValue);
 
         // decimal
         Long decimal = null;
-        if (stream.optionallyPresent(Tokens.DOT)) {
-            String decimalValue = stream.chomp(Tokens.DIGIT);
+        if (source.optionallyPresent(Tokens.DOT)) {
+            String decimalValue = source.chomp(Tokens.DIGIT);
             if (decimalValue.isEmpty()) {
                 // there must be a number after a decimal
-                throw new ParserException(stream, Message.EXPECTED_DECIMAL);
+                throw new ParserException(source, Message.EXPECTED_DECIMAL);
             }
             decimal = Long.valueOf(decimalValue);
         }
@@ -77,13 +77,13 @@ public class NumericalValueParser extends AbstractParser {
         }
 
         // check for a % or unit
-        Optional<String> unit = stream.optionallyPresent(Tokens.PERCENTAGE) ? Optional.of("%") : stream.readIdent();
+        Optional<String> unit = source.optionallyPresent(Tokens.PERCENTAGE) ? Optional.of("%") : source.readIdent();
         if (unit.isPresent()) {
             value.unit(unit.get());
         }
 
         broadcaster.broadcast(value);
-        value.comments(stream.flushComments());
+        value.comments(source.flushComments());
         return true;
     }
 }

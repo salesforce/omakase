@@ -30,10 +30,10 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class ParserExceptionTest {
     @Test
     public void exceptionMessage() {
-        Stream stream = new Stream(TemplatesHelper.GENERIC_CSS_SOURCE);
-        stream.forward(32);
+        Source source = new Source(TemplatesHelper.GENERIC_CSS_SOURCE);
+        source.forward(32);
 
-        String msg = new ParserException(stream, "test exception").getMessage();
+        String msg = new ParserException(source, "test exception").getMessage();
         assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
             "at line 5, column 4 in source\n" +
             "'.test {\n" +
@@ -60,9 +60,9 @@ public class ParserExceptionTest {
 
     @Test
     public void exceptionMessageForLongStream() {
-        Stream stream = new Stream(TemplatesHelper.longSource());
-        stream.forward(4003);
-        String msg = new ParserException(stream, "test exception").getMessage();
+        Source source = new Source(TemplatesHelper.longSource());
+        source.forward(4003);
+        String msg = new ParserException(source, "test exception").getMessage();
         assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
             "at line 353, column 18 in source\n" +
             "'(...snipped...)x;\n" +
@@ -87,10 +87,10 @@ public class ParserExceptionTest {
 
     @Test
     public void exceptionMessageForNestedStream() {
-        Stream stream = new Stream(TemplatesHelper.GENERIC_CSS_SOURCE, 22, 3);
-        stream.forward(32);
+        Source source = new Source(TemplatesHelper.GENERIC_CSS_SOURCE, 22, 3);
+        source.forward(32);
 
-        String msg = new ParserException(stream, "test exception").getMessage();
+        String msg = new ParserException(source, "test exception").getMessage();
         assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
             "at line 5, column 4 (starting from line 22, column 3 in original source) in substring of original source\n" +
             "'.test {\n" +

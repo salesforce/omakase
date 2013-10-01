@@ -23,7 +23,6 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.PreProcess;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
@@ -148,30 +147,18 @@ public class ContextTest {
     @Test
     @SuppressWarnings("ConstantConditions")
     public void afterMethodPhaseOrder() {
-        PluginWithPreProcess preprocess = new PluginWithPreProcess();
         PluginWithObserve observe = new PluginWithObserve();
         PluginWithRework rework = new PluginWithRework();
         PluginWithValidate validate = new PluginWithValidate();
 
-        c.register(Lists.newArrayList(rework, preprocess, validate, observe));
+        c.register(Lists.newArrayList(rework, validate, observe));
 
         c.before();
         c.broadcast(new ClassSelector("test"));
         c.after();
 
-        assertThat(preprocess.order < observe.order).isTrue();
-        assertThat(preprocess.order < rework.order).isTrue();
-        assertThat(preprocess.order < validate.order).isTrue();
-
         assertThat(observe.order < validate.order).isTrue();
-        assertThat(observe.order > preprocess.order).isTrue();
-
         assertThat(rework.order < validate.order).isTrue();
-        assertThat(rework.order > preprocess.order).isTrue();
-
-        assertThat(validate.order > rework.order).isTrue();
-        assertThat(validate.order > observe.order).isTrue();
-        assertThat(validate.order > preprocess.order).isTrue();
     }
 
     @Test
@@ -246,16 +233,6 @@ public class ContextTest {
     }
 
     @SuppressWarnings("StaticNonFinalField") static int num;
-
-    public static final class PluginWithPreProcess implements Plugin {
-        int order;
-
-        @PreProcess
-        @SuppressWarnings("UnusedParameters")
-        public void classSelector(ClassSelector cs) {
-            order = num++;
-        }
-    }
 
     public static final class PluginWithObserve implements Plugin {
         int order;

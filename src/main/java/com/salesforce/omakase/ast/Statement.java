@@ -21,19 +21,16 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * A top-level {@link Syntax} unit, for example a {@link Rule} or {@link AtRule}.
- * <p/>
- * Note that {@link Statement}s are not be created unless the {@link SyntaxTree} plugin is enabled.
  *
  * @author nmcwilliams
  */
 @Subscribable
-@Description(value = "rule or at-rule", broadcasted = SYNTAX_TREE)
+@Description(value = "rule or at-rule", broadcasted = AUTOMATIC)
 public interface Statement extends Syntax, Groupable<Stylesheet, Statement> {
     /**
      * Gets this statement as an {@link Rule}, if possible. This is an alternative to using an <pre>instanceof</pre> check.

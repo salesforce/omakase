@@ -18,7 +18,6 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.value.Term;
 import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.ast.declaration.value.TermOperator;
@@ -28,10 +27,8 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.List;
 
 /**
  * Parses a {@link TermList}.
@@ -41,12 +38,12 @@ import java.util.List;
  */
 public class TermListParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
-        stream.skipWhitepace();
+    public boolean parse(Source source, Broadcaster broadcaster) {
+        source.skipWhitepace();
 
         // grab the line and column number before parsing anything
-        int line = stream.line();
-        int column = stream.column();
+        int line = source.line();
+        int column = source.column();
 
         // setup
         TermList termList = null;
@@ -57,10 +54,10 @@ public class TermListParser extends AbstractParser {
 
         // try parsing another term until there are no more term operators
         do {
-            stream.collectComments();
+            source.collectComments();
 
             // try to parse a term
-            termParser.parse(stream, singleTermBroadcaster.reset());
+            termParser.parse(source, singleTermBroadcaster.reset());
             term = singleTermBroadcaster.broadcasted();
 
             // if we have a term, add it to the list
@@ -80,20 +77,20 @@ public class TermListParser extends AbstractParser {
 
                 // try to parse another term operator. The presence of a space *could* be the "single space" term
                 // operator. Or it could just be whitespace around another term operator.
-                stream.collectComments(false);
-                boolean mightBeSpaceOperator = stream.optionallyPresent(Tokens.WHITESPACE);
+                source.collectComments(false);
+                boolean mightBeSpaceOperator = source.optionallyPresent(Tokens.WHITESPACE);
 
                 // if we already know that a space is present, we must skip past all other whitespace
                 if (mightBeSpaceOperator) {
-                    stream.skipWhitepace();
+                    source.skipWhitepace();
                 }
 
                 // after we've already checked for the single space operator, it's ok to consume comments and surrounding
                 // whitespace.
-                stream.collectComments();
+                source.collectComments();
 
                 // see if there is an actual non-space operator
-                operator = stream.optionalFromEnum(TermOperator.class);
+                operator = source.optionalFromEnum(TermOperator.class);
 
                 // if no operator is parsed and we parsed at least one space then we know it's a single space operator
                 if (mightBeSpaceOperator && !operator.isPresent()) {
@@ -102,7 +99,7 @@ public class TermListParser extends AbstractParser {
             } else {
                 // if we didn't find a term but we did find a non-space operator then it's an erroneous trailing operator
                 if (operator.isPresent() && operator.get() != TermOperator.SPACE) {
-                    throw new ParserException(stream, Message.TRAILING_OPERATOR, operator.get());
+                    throw new ParserException(source, Message.TRAILING_OPERATOR, operator.get());
                 }
                 operator = Optional.absent();
             }
@@ -112,18 +109,7 @@ public class TermListParser extends AbstractParser {
         if (termList == null) return false;
 
         // check for !important
-        termList.important(ParserFactory.importantParser().parse(stream, broadcaster));
-
-        // orphaned comments, e.g., ".class { margin: 1px /*orphaned*/;}"
-        List<String> orphaned = stream.collectComments().flushComments();
-        for (String comment : orphaned) {
-            broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.DECLARATION));
-        }
-
-        // if we haven't been able to parse everything... check for terms separated only by a comment, e.g., 1px/*x*/1px"
-        if (!stream.eof() && !orphaned.isEmpty()) {
-            throw new ParserException(stream, Message.MISSING_OPERATOR_NEAR_COMMENT);
-        }
+        termList.important(ParserFactory.importantParser().parse(source, broadcaster));
 
         // broadcast the new term list
         broadcaster.broadcast(termList);

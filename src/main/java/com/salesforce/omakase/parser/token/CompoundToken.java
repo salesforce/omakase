@@ -17,7 +17,7 @@
 package com.salesforce.omakase.parser.token;
 
 import com.salesforce.omakase.As;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 
 /**
  * A combination matcher that does an OR comparison of two {@link Token}s.
@@ -55,7 +55,7 @@ public final class CompoundToken implements Token {
 
     @Override
     public boolean matches(char c) {
-        if (c == Stream.NULL_CHAR) return false;
+        if (c == Source.NULL_CHAR) return false;
         return first.matches(c) || second.matches(c);
     }
 

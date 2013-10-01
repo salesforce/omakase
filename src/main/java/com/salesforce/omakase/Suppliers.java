@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 
 import java.util.Map;
 
@@ -43,6 +45,18 @@ final class Suppliers {
             @Override
             public AutoRefiner get() {
                 return new AutoRefiner();
+            }
+        })
+        .put(StandardValidation.class, new Supplier<StandardValidation>() {
+            @Override
+            public StandardValidation get() {
+                return new StandardValidation();
+            }
+        })
+        .put(PseudoElementValidator.class, new Supplier<PseudoElementValidator>() {
+            @Override
+            public PseudoElementValidator get() {
+                return new PseudoElementValidator();
             }
         })
         .build();

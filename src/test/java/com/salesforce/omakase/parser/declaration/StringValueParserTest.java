@@ -90,7 +90,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
         for (ParseResult<String> result : results) {
             StringValue value = result.broadcaster.findOnly(StringValue.class).get();
             assertThat(value.content())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

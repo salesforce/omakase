@@ -24,7 +24,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.PreProcess;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
@@ -74,21 +73,8 @@ final class AnnotationScanner {
         for (Method method : klass.getMethods()) {
             boolean annotated = false;
 
-            // the preprocess annotation
-            if (method.isAnnotationPresent(PreProcess.class)) {
-                annotated = true;
-
-                // must have exactly one parameter
-                Class<?>[] params = method.getParameterTypes();
-                if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
-
-                // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PREPROCESS));
-            }
-
             // the observe annotation
             if (method.isAnnotationPresent(Observe.class)) {
-                if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
                 annotated = true;
 
                 // must have exactly one parameter
@@ -115,6 +101,7 @@ final class AnnotationScanner {
             // the validate annotation
             if (method.isAnnotationPresent(Validate.class)) {
                 if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                annotated = true;
 
                 // must have exactly two parameters
                 Class<?>[] params = method.getParameterTypes();

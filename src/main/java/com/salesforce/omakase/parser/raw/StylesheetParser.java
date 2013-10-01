@@ -17,19 +17,18 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
+import com.salesforce.omakase.ast.Comment;
+import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.notification.NotifyStylesheetEnd;
-import com.salesforce.omakase.notification.NotifyStylesheetStart;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.RefinableParser;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.Stream;
-
-import java.util.List;
 
 /**
  * Parses a top-level {@link Stylesheet}.
@@ -40,35 +39,39 @@ import java.util.List;
 public class StylesheetParser extends AbstractRefinableParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
-        // broadcast the start of the stylesheet event
-        NotifyStylesheetStart.broadcast(broadcaster);
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+        // use a queue so that we can group all statements together before sending them out. This makes some plugins that
+        // depend on order (isFirst(), etc...) work more smoothly.
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
 
-        RefinableParser rule = ParserFactory.ruleParser();
-        RefinableParser atRule = ParserFactory.atRuleParser();
-
-        // continually parse until we get to the end of the stream
-        while (!stream.eof()) {
-            // parse the next statement
-            boolean matched = rule.parse(stream, broadcaster, refiner);
-            if (!matched) matched = atRule.parse(stream, broadcaster, refiner);
-
-            // skip whitespace
-            stream.skipWhitepace();
-
-            // after all rules and content is parsed, there should be nothing left in the stream
-            if (!matched && !stream.eof()) throw new ParserException(stream, Message.EXTRANEOUS, stream.remaining());
+        // parse all statements
+        RefinableParser statement = ParserFactory.statementParser();
+        while (true) {
+            if (!statement.parse(source, queryable, refiner)) break;
         }
 
-        // orphaned comments, e.g., ".class{color:red} /*orphaned*/"
-        List<String> orphaned = stream.flushComments();
-        for (String comment : orphaned) {
-            broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.STYLESHEET));
+        // collect any orphaned comments and move past trailing space
+        source.collectComments();
+
+        // after all rules and content is parsed, there should be nothing left in the source
+        if (!source.eof()) throw new ParserException(source, Message.EXTRANEOUS, source.remaining());
+
+        // create the stylesheet
+        Stylesheet stylesheet = new Stylesheet(broadcaster);
+
+        // append all parsed statements
+        stylesheet.statements().appendAll(queryable.filter(Statement.class));
+
+        // orphaned at end of the stylesheet comments, e.g., ".class{color:red} /*orphaned*/"
+        for (String comment : source.collectComments().flushComments()) {
+            stylesheet.orphanedComment(new Comment(comment));
         }
 
-        // broadcast the end of the stylesheet event
-        NotifyStylesheetEnd.broadcast(broadcaster);
+        // now that we have all the rules added resume the queue
+        queue.resume();
 
+        broadcaster.broadcast(stylesheet);
         return true;
     }
 

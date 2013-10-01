@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 
 /**
  * Parses a {@link KeywordValue}.
@@ -31,19 +31,19 @@ import com.salesforce.omakase.parser.Stream;
 public class KeywordValueParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // read the keyword
-        Optional<String> keyword = stream.readIdent();
+        Optional<String> keyword = source.readIdent();
         if (!keyword.isPresent()) return false;
 
         KeywordValue value = new KeywordValue(snapshot.line, snapshot.column, keyword.get());
-        value.comments(stream.flushComments());
+        value.comments(source.flushComments());
         broadcaster.broadcast(value);
 
         return true;

@@ -94,7 +94,7 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
         for (ParseResult<String> result : results) {
             IdSelector selector = result.broadcaster.findOnly(IdSelector.class).get();
             assertThat(selector.name())
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
     }

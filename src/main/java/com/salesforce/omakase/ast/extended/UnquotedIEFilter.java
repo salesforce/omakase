@@ -46,7 +46,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "proprietary microsoft filter", broadcasted = REFINED_DECLARATION)
-public class UnquotedIEFilter extends AbstractSyntax implements PropertyValue {
+public final class UnquotedIEFilter extends AbstractSyntax implements PropertyValue {
     private final String content;
 
     /**

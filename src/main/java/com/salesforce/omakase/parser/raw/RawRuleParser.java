@@ -16,17 +16,16 @@
 
 package com.salesforce.omakase.parser.raw;
 
-import com.salesforce.omakase.ast.OrphanedComment;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.notification.NotifyDeclarationBlockEnd;
-import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractRefinableParser;
 import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.Stream;
-
-import java.util.List;
 
 /**
  * Parses a {@link Rule}.
@@ -35,44 +34,49 @@ import java.util.List;
  * @see Rule
  */
 public class RawRuleParser extends AbstractRefinableParser {
-
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster, Refiner refiner) {
-        stream.skipWhitepace();
-        stream.collectComments();
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+        source.skipWhitepace();
+        source.collectComments();
 
-        // if there wasn't a selector then we aren't a rule
-        if (!ParserFactory.selectorGroupParser().parse(stream, broadcaster, refiner)) return false;
+        // save off current line and column
+        int line = source.line();
+        int column = source.column();
+
+        // wrap the broadcaster inside a queryable so we can gather the selectors and declarations
+        QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
+
+        // if there isn't a selector then we aren't a rule
+        if (!ParserFactory.selectorGroupParser().parse(source, queryable, refiner)) return false;
 
         // skip whitespace after selectors
-        stream.skipWhitepace();
+        source.skipWhitepace();
 
         // parse the declaration block
-        stream.expect(tokenFactory().declarationBlockBegin());
-
-        // broadcast the beginning of the declaration block event
-        NotifyDeclarationBlockStart.broadcast(broadcaster);
+        source.expect(tokenFactory().declarationBlockBegin());
 
         // parse all declarations
         do {
-            stream.skipWhitepace();
-            ParserFactory.rawDeclarationParser().parse(stream, broadcaster, refiner);
-            stream.skipWhitepace();
-        } while (stream.optionallyPresent(tokenFactory().declarationDelimiter()));
+            source.skipWhitepace();
+            ParserFactory.rawDeclarationParser().parse(source, queryable, refiner);
+            source.skipWhitepace();
+        } while (source.optionallyPresent(tokenFactory().declarationDelimiter()));
 
-        // orphaned comments e.g., ".class{color:red; /*orphaned*/}"
-        List<String> orphaned = stream.collectComments().flushComments();
-        for (String comment : orphaned) {
-            broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.RULE));
+        // create the rule and add selectors and declarations
+        Rule rule = new Rule(line, column, broadcaster);
+        rule.selectors().appendAll(queryable.filter(Selector.class));
+        rule.declarations().appendAll(queryable.filter(Declaration.class));
+
+        // add orphaned comments e.g., ".class{color:red; /*orphaned*/}"
+        for (String comment : source.collectComments().flushComments()) {
+            rule.orphanedComment(new Comment(comment));
         }
 
-        // parse the end of the block
-        stream.expect(tokenFactory().declarationBlockEnd());
+        // parse the end of the block (must be after orphaned comments parsing)
+        source.expect(tokenFactory().declarationBlockEnd());
 
-        // broadcast the end of the declaration block event
-        NotifyDeclarationBlockEnd.broadcast(broadcaster);
-
+        // broadcast the rule
+        broadcaster.broadcast(rule);
         return true;
     }
-
 }

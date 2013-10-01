@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -34,23 +34,23 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class ClassSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // first character must be a dot
-        if (!stream.optionallyPresent(Tokens.DOT)) return snapshot.rollback();
+        if (!source.optionallyPresent(Tokens.DOT)) return snapshot.rollback();
 
         // parse the class name
-        Optional<String> name = stream.readIdent();
-        if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_CLASS);
+        Optional<String> name = source.readIdent();
+        if (!name.isPresent()) throw new ParserException(source, Message.EXPECTED_VALID_CLASS);
 
         // broadcast the new class selector
         ClassSelector selector = new ClassSelector(snapshot.line, snapshot.column, name.get());
-        selector.comments(stream.flushComments());
+        selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
 
         return true;

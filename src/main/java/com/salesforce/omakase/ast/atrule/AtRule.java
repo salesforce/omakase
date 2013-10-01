@@ -27,8 +27,9 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -59,6 +60,8 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     // refined
     private Optional<AtRuleExpression> expression;
     private Optional<AtRuleBlock> block;
+
+    private boolean shouldWriteName = true;
 
     /**
      * Constructs a new {@link AtRule} instance.
@@ -120,6 +123,20 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     }
 
     /**
+     * Specifies whether the name should be written out. This might be specified as false by custom {@link RefinerStrategy}
+     * objects where the name of the custom at-rule is not applicable in the final CSS source.
+     *
+     * @param shouldWriteName
+     *     Whether the at-rule name (and @ symbol) should be written out.
+     *
+     * @return this, for chaining.
+     */
+    public AtRule shouldWriteName(boolean shouldWriteName) {
+        this.shouldWriteName = shouldWriteName;
+        return this;
+    }
+
+    /**
      * Gets the original, raw, non-validated expression if present (e.g., "utf-8", or "all and (min-width: 800px)".
      *
      * @return The raw expression, or {@link Optional#absent()} if not present.
@@ -146,7 +163,7 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
      * @return this, for chaining.
      */
     public AtRule expression(AtRuleExpression expression) {
-        checkState(expression != null || block != null, "either the expression or the block must be present");
+        checkState(expression != null || block.isPresent(), "either the expression or the block must be present");
         this.expression = Optional.fromNullable(expression);
         return this;
     }
@@ -169,7 +186,7 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
      * @return this, for chaining.
      */
     public AtRule block(AtRuleBlock block) {
-        checkState(expression != null || block != null, "either the expression or the block must be present");
+        checkState(expression.isPresent() || block != null, "either the expression or the block must be present");
         this.block = Optional.fromNullable(block);
         return this;
     }
@@ -215,21 +232,20 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
-            appendable.append('@');
-            appendable.append(name);
+            // name
+            if (shouldWriteName) {
+                appendable.append('@');
+                appendable.append(name);
+            }
 
+            // expression
             if (expression.isPresent()) {
                 writer.write(expression.get(), appendable);
             }
 
+            // block
             if (block.isPresent()) {
-                appendable.spaceIf(!writer.isCompressed());
-                appendable.append('{');
-                appendable.newlineIf(writer.isVerbose());
-                appendable.indentIf(writer.isVerbose());
                 writer.write(block.get(), appendable);
-                appendable.newlineIf(writer.isVerbose());
-                appendable.append('}');
             }
 
         } else {
@@ -273,6 +289,7 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
             .add("rawBlock", rawBlock)
             .add("expression", expression)
             .add("block", block)
+            .addIf(!shouldWriteName, "shouldWriteName", shouldWriteName)
             .toString();
     }
 }

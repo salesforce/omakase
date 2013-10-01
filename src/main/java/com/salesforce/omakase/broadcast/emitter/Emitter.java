@@ -62,11 +62,10 @@ public final class Emitter {
         });
 
     /* order is important so that subscribers are notified in the order they were registered, hence linked map */
-    private final LinkedHashMap<Class<?>, Set<Subscription>> preprocessors = new LinkedHashMap<>(8);
     private final LinkedHashMap<Class<?>, Set<Subscription>> processors = new LinkedHashMap<>(32);
     private final LinkedHashMap<Class<?>, Set<Subscription>> validators = new LinkedHashMap<>(32);
 
-    private SubscriptionPhase phase = SubscriptionPhase.PREPROCESS;
+    private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
 
     /**
      * Sets the current {@link SubscriptionPhase}. This determines which registered subscribers receive broadcasts.
@@ -104,14 +103,6 @@ public final class Emitter {
             Set<Subscription> subscriptions;
 
             switch (subscription.phase()) {
-            case PREPROCESS:
-                subscriptions = preprocessors.get(entry.getKey());
-                if (subscriptions == null) {
-                    subscriptions = new HashSet<>(4);
-                    preprocessors.put(entry.getKey(), subscriptions);
-                }
-                subscriptions.add(subscription);
-                break;
             case PROCESS:
                 subscriptions = processors.get(entry.getKey());
                 if (subscriptions == null) {
@@ -146,9 +137,6 @@ public final class Emitter {
      */
     public void emit(Object event, ErrorManager em) {
         switch (phase) {
-        case PREPROCESS:
-            emit(preprocessors, event, em);
-            break;
         case PROCESS:
             emit(processors, event, em);
             break;

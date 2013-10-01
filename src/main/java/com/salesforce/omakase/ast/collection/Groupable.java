@@ -17,25 +17,16 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.OrphanedComment;
-import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcast.annotation.PreProcess;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 import java.util.List;
 
 /**
  * Represents an item that appears in a group or chain of other related units, for usage with {@link SyntaxCollection}.
- * <p/>
- * If you are using any of these methods in a plugin you will need to register the {@link SyntaxTree} as a dependency. See {@link
- * DependentPlugin} for more details.
  * <p/>
  * In many cases you may need to check if this item is <em>detached</em> first (true if explicitly detached or if it's a new
  * instance not yet added to the tree). Detached items usually should be ignored, except to reattach.
@@ -63,15 +54,8 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     /**
      * Gets whether this unit is the first within its group.
      * <p/>
-     * Some units will not be linked if the {@link SyntaxTree} plugin is not enabled. For example, {@link Rule}, {@link Selector},
-     * {@link Declaration}.
-     * <p/>
-     * Please note, if you are making decisions based on this value there are a few things to keep in mind. First, if you are
-     * doing something in a {@link PreProcess} method, there is a good chance there are still more units to be added, so while
-     * this unit may be first or last now that could shortly change. Secondly, any rework plugins may add or remove new units
-     * before or after this one. As such, don't use this in a {@link PreProcess} method, be thoughtful about usage in a {@link
-     * Rework} method, and prefer if possible to use in a {@link Validate} method, when all preprocessing and rework should be
-     * completed.
+     * Please note, if you are making decisions based on this value there are a few things to keep in mind. Any rework plugins may
+     * add or remove new units before or after this one. As such, be thoughtful about usage in a {@link Rework} method.
      *
      * @return True if the unit is first within its group. Always returns true if this unit is detached.
      */
@@ -80,15 +64,8 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     /**
      * Gets whether this unit is the last within its group.
      * <p/>
-     * Some units will not be linked if the {@link SyntaxTree} plugin is not enabled. For example, {@link Rule}, {@link Selector},
-     * {@link Declaration}.
-     * <p/>
-     * Please note, if you are making decisions based on this value there are a few things to keep in mind. First, if you are
-     * doing something in a {@link PreProcess} method, there is a good chance there are still more units to be added, so while
-     * this unit may be first or last now that could shortly change. Secondly, any rework plugins may add or remove new units
-     * before or after this one. As such, don't use this in a {@link PreProcess} method, be thoughtful about usage in a {@link
-     * Rework} method, and prefer if possible to use in a {@link Validate} method, when all preprocessing and rework should be
-     * completed.
+     * Please note, if you are making decisions based on this value there are a few things to keep in mind. Any rework plugins may
+     * add or remove new units before or after this one. As such, be thoughtful about usage in a {@link Rework} method.
      *
      * @return True if the unit is last within its group. Always returns true if this unit is detached.
      */
@@ -181,20 +158,20 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     Optional<P> parent();
 
     /**
-     * Adds an {@link OrphanedComment}.
+     * Adds an orphaned {@link Comment}.
      *
      * @param comment
      *     The comment.
      */
-    void orphanedComment(OrphanedComment comment);
+    void orphanedComment(Comment comment);
 
     /**
-     * Gets all {@link OrphanedComment}s.
+     * Gets all orphaned {@link Comment}s.
      * <p/>
      * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
      * at the end of a stylesheet or declaration block.
      *
      * @return The list of comments, or an empty list if none are specified.
      */
-    List<OrphanedComment> orphanedComments();
+    List<Comment> orphanedComments();
 }

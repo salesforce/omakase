@@ -33,8 +33,8 @@ public class CombinationParserTest {
     @Test
     public void parsesEither() {
         CombinationParser c = new CombinationParser(new KeywordValueParser(), new NumericalValueParser());
-        assertThat(c.parse(new Stream("red"), new QueryableBroadcaster())).isTrue();
-        assertThat(c.parse(new Stream("3px"), new QueryableBroadcaster())).isTrue();
-        assertThat(c.parse(new Stream("!"), new QueryableBroadcaster())).isFalse();
+        assertThat(c.parse(new Source("red"), new QueryableBroadcaster())).isTrue();
+        assertThat(c.parse(new Source("3px"), new QueryableBroadcaster())).isTrue();
+        assertThat(c.parse(new Source("!"), new QueryableBroadcaster())).isFalse();
     }
 }

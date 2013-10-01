@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains objects used for notification-only events.
+ * Classes to handle refinement parsing of refinable AST objects.
  */
-package com.salesforce.omakase.notification;
+package com.salesforce.omakase.parser.refiner;

@@ -23,9 +23,9 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.refiner.RefinableStrategy;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
@@ -75,15 +75,15 @@ public final class Omakase {
      * by default.
      */
     public static final class Request {
-        private final List<RefinableStrategy> customRefiners;
+        private final List<RefinerStrategy> customRefiners;
         private final Context context;
-        private final Stream stream;
+        private final Source source;
         private ErrorManager em;
 
         Request(CharSequence source) {
             this.context = new Context();
             this.em = new ThrowingErrorManager();
-            this.stream = new Stream(source.toString());
+            this.source = new Source(source.toString());
             this.customRefiners = new ArrayList<>();
         }
 
@@ -230,10 +230,10 @@ public final class Omakase {
             context.errorManager(em);
             context.before();
 
-            Refiner refiner = new Refiner(context.broadcaster(), customRefiners);
+            Refiner refiner = context.createRefiner(customRefiners);
 
             try {
-                ParserFactory.stylesheetParser().parse(stream, context, refiner);
+                ParserFactory.stylesheetParser().parse(source, context, refiner);
             } catch (ParserException e) {
                 em.report(ErrorLevel.FATAL, e);
             }

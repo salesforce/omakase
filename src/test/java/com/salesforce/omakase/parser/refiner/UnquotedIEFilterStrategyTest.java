@@ -43,7 +43,7 @@ public class UnquotedIEFilterStrategyTest {
     public void setup() {
         strategy = new UnquotedIEFilterStrategy();
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, Lists.<RefinableStrategy>newArrayList(strategy));
+        refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }
 
     @Test

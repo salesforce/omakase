@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -25,14 +24,13 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
-import com.salesforce.omakase.notification.NotifyStylesheetEnd;
-import com.salesforce.omakase.notification.NotifyStylesheetStart;
+import com.salesforce.omakase.plugin.basic.Conditionals;
 import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
 
 /**
@@ -48,42 +46,6 @@ import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
  */
 @SuppressWarnings("UnusedParameters")
 public class BasePlugin implements Plugin {
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive
-     * notification of this event.
-     *
-     * @param event
-     *     The event that occurred.
-     */
-    public void notifyStylesheetStart(NotifyStylesheetStart event) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive
-     * notification of this event.
-     *
-     * @param event
-     *     The event that occurred.
-     */
-    public void notifyStylesheetEnd(NotifyStylesheetEnd event) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive
-     * notification of this event.
-     *
-     * @param event
-     *     The event that occurred.
-     */
-    public void notifyDeclarationBlockStart(NotifyDeclarationBlockStart event) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive
-     * notification of this event.
-     *
-     * @param event
-     *     The event that occurred.
-     */
-    public void notifyDeclarationBlockEnd(NotifyStylesheetEnd event) {}
-
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link Syntax}.
@@ -320,19 +282,19 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link OrphanedComment}.
-     *
-     * @param orphaned
-     *     The {@link OrphanedComment} instance.
-     */
-    public void orphanedSelectorComment(OrphanedComment orphaned) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link UnquotedIEFilter} (only enabled with the {@link UnquotedIEFilterPlugin} plugin.
      *
      * @param filter
      *     The {@link UnquotedIEFilter} instance.
      */
     public void unquotedIEFilter(UnquotedIEFilter filter) {}
+
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for {@link Syntax} units of type {@link ConditionalAtRuleBlock} (only enabled with the {@link Conditionals} plugin.
+     *
+     * @param block
+     *     The {@link ConditionalAtRuleBlock} instance.
+     */
+    public void conditionalAtRuleBlock(ConditionalAtRuleBlock block) {}
 }

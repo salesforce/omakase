@@ -18,6 +18,7 @@ package com.salesforce.omakase.broadcast;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.salesforce.omakase.ast.Status;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -40,8 +41,7 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
 
     private enum State {
         READY,
-        PAUSED,
-        BROADCASTING
+        PAUSED
     }
 
     /**
@@ -58,20 +58,36 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
     public void broadcast(Broadcastable broadcastable) {
         queue.addLast(broadcastable);
 
-        if (state == State.PAUSED || state == State.BROADCASTING) return;
+        // update status to prevent a unit from being broadcasted too many times
+        if (broadcastable.status() == Status.UNBROADCASTED) {
+            broadcastable.status(Status.QUEUED);
+        }
 
-        flush();
+        // broadcast the unit unless the queue is paused
+        if (state == State.READY) {
+            flush();
+        }
     }
 
-    /** Pauses the queue. While pause, all broadcasts will be stored and will not be relayed until {@link #resume()} is called. */
-    public void pause() {
+    /**
+     * Pauses the queue. While pause, all broadcasts will be stored and will not be relayed until {@link #resume()} is called.
+     *
+     * @return this, for chaining.
+     */
+    public QueuingBroadcaster pause() {
         state = State.PAUSED;
+        return this;
     }
 
-    /** Resumes broadcasts. Any broadcasts currently in the queue will be immediately sent out. */
-    public void resume() {
+    /**
+     * Resumes broadcasts. Any broadcasts currently in the queue will be immediately sent out.
+     *
+     * @return this, for chaining.
+      */
+    public QueuingBroadcaster resume() {
         flush();
         state = State.READY;
+        return this;
     }
 
     /**

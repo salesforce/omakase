@@ -20,7 +20,7 @@ import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.ast.declaration.value.StringValue.QuotationMode;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -31,28 +31,28 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public class StringValueParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         QuotationMode mode;
         String value;
 
-        if (Tokens.SINGLE_QUOTE.matches(stream.current()) && !stream.isEscaped()) {
+        if (Tokens.SINGLE_QUOTE.matches(source.current()) && !source.isEscaped()) {
             mode = QuotationMode.SINGLE;
-            value = stream.chompEnclosedValue(Tokens.SINGLE_QUOTE, Tokens.SINGLE_QUOTE);
-        } else if (Tokens.DOUBLE_QUOTE.matches(stream.current()) && !stream.isEscaped()) {
+            value = source.chompEnclosedValue(Tokens.SINGLE_QUOTE, Tokens.SINGLE_QUOTE);
+        } else if (Tokens.DOUBLE_QUOTE.matches(source.current()) && !source.isEscaped()) {
             mode = QuotationMode.DOUBLE;
-            value = stream.chompEnclosedValue(Tokens.DOUBLE_QUOTE, Tokens.DOUBLE_QUOTE);
+            value = source.chompEnclosedValue(Tokens.DOUBLE_QUOTE, Tokens.DOUBLE_QUOTE);
         } else {
             return false;
         }
 
         StringValue string = new StringValue(snapshot.line, snapshot.column, mode, value);
-        string.comments(stream.flushComments());
+        string.comments(source.flushComments());
         broadcaster.broadcast(string);
 
         return true;

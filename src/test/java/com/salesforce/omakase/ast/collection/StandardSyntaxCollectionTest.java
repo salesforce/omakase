@@ -335,7 +335,7 @@ public class StandardSyntaxCollectionTest {
                 fail("unit shouldn't be broadcasted twice!");
             }
             all.add(broadcastable);
-            broadcastable.status(Status.BROADCASTED_PREPROCESS);
+            broadcastable.status(Status.PROCESSED);
         }
     }
 }

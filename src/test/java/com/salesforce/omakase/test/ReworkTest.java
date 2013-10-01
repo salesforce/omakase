@@ -40,7 +40,7 @@ import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.validator.Validation;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -85,7 +85,7 @@ public class ReworkTest {
             .request(replaceClassName) // add plugin instance
             .request(addZoomToInlineBlock) // add plugin instance
             .request(addNewRules) // add plugin instance
-            .request(Validation.normal()) // add all default validation plugins
+            .request(new StandardValidation()) // add all default validation plugins
             .request(inlineWriter) // add the inline mode writer
             .process(); // process the css source + run plugins
 

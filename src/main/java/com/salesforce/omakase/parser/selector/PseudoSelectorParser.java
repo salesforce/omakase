@@ -25,7 +25,7 @@ import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
@@ -37,24 +37,24 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
  */
 public class PseudoSelectorParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace, as it could skip over a descendant combinator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // first character must be a colon
-        if (!stream.optionallyPresent(Tokens.COLON)) return false;
+        if (!source.optionallyPresent(Tokens.COLON)) return false;
 
         // one colon (already parsed above) equals pseudo class selector, two colons equals pseudo element selector
-        SelectorPartType type = stream.optionallyPresent(Tokens.COLON) ? PSEUDO_ELEMENT_SELECTOR : PSEUDO_CLASS_SELECTOR;
+        SelectorPartType type = source.optionallyPresent(Tokens.COLON) ? PSEUDO_ELEMENT_SELECTOR : PSEUDO_CLASS_SELECTOR;
 
         // read the name
-        Optional<String> name = stream.readIdent();
+        Optional<String> name = source.readIdent();
 
         // name must be present
-        if (!name.isPresent()) throw new ParserException(stream, Message.MISSING_PSEUDO_NAME);
+        if (!name.isPresent()) throw new ParserException(source, Message.MISSING_PSEUDO_NAME);
 
         // certain pseudo elements can still use pseudo class syntax
         if (PseudoElementSelector.POSERS.contains(name.get())) {
@@ -68,14 +68,14 @@ public class PseudoSelectorParser extends AbstractParser {
         } else {
             // check for arguments (currently only applies to pseudo classes)
             String args = null;
-            if (Tokens.OPEN_PAREN.matches(stream.current())) {
-                args = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim();
+            if (Tokens.OPEN_PAREN.matches(source.current())) {
+                args = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim();
             }
 
             selector = new PseudoClassSelector(snapshot.line, snapshot.column, name.get(), args);
         }
 
-        selector.comments(stream.flushComments());
+        selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;
     }

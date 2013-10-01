@@ -16,15 +16,19 @@
 
 package com.salesforce.omakase.parser.raw;
 
-import com.salesforce.omakase.ast.OrphanedComment;
-import com.salesforce.omakase.notification.NotifyStylesheetEnd;
-import com.salesforce.omakase.notification.NotifyStylesheetStart;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
-import org.junit.Rule;
+import com.salesforce.omakase.parser.Source;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -35,34 +39,36 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class StylesheetParserTest {
-    @Rule
+    @org.junit.Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testEof() {
         exception.expect(ParserException.class);
         exception.expectMessage("Extraneous text found at the end of the source");
-        new StylesheetParser().parse(new Stream(".abc{color:red}   `"), new QueryableBroadcaster());
+        new StylesheetParser().parse(new Source(".abc{color:red}   `"), new QueryableBroadcaster());
+    }
+
+    @Test
+    public void expectedBroadcastContent() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        new StylesheetParser().parse(new Source(".abc{color:red}\n.xyz{color:blue;}"), qb);
+        List<Broadcastable> all = Lists.newArrayList(qb.all());
+
+        assertThat(all).hasSize(7);
+        assertThat(all.get(0)).isInstanceOf(Selector.class);
+        assertThat(all.get(1)).isInstanceOf(Declaration.class);
+        assertThat(all.get(2)).isInstanceOf(Rule.class);
+        assertThat(all.get(3)).isInstanceOf(Selector.class);
+        assertThat(all.get(4)).isInstanceOf(Declaration.class);
+        assertThat(all.get(5)).isInstanceOf(Rule.class);
+        assertThat(all.get(6)).isInstanceOf(Stylesheet.class);
     }
 
     @Test
     public void testOrphanedComment() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        new StylesheetParser().parse(new Stream(".abc{color:red} /*comment*/"), qb);
-        assertThat(qb.filter(OrphanedComment.class)).hasSize(1);
-    }
-
-    @Test
-    public void sendsNotificationStart() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        new StylesheetParser().parse(new Stream(".abc{color:red}"), qb);
-        assertThat(qb.filter(NotifyStylesheetStart.class)).hasSize(1);
-    }
-
-    @Test
-    public void sendsNotificationEnd() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        new StylesheetParser().parse(new Stream(".abc{color:red}"), qb);
-        assertThat(qb.filter(NotifyStylesheetEnd.class)).hasSize(1);
+        new StylesheetParser().parse(new Source(".abc{color:red} /*comment*/"), qb);
+        assertThat(qb.find(Stylesheet.class).get().orphanedComments()).hasSize(1);
     }
 }

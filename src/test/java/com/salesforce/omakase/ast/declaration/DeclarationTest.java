@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.OrphanedComment;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
@@ -123,10 +123,10 @@ public class DeclarationTest {
         StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
         Rule rule = new Rule(1, 1, broadcaster);
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        d.status(Status.BROADCASTED_PREPROCESS);
+        d.status(Status.PROCESSED);
 
         TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
-        newValue.status(Status.BROADCASTED_PREPROCESS);
+        newValue.status(Status.PROCESSED);
         d.propertyValue(newValue);
 
         rule.declarations().append(d);
@@ -217,9 +217,9 @@ public class DeclarationTest {
 
     @Test
     public void setOrphanedComments() {
-        OrphanedComment c = new OrphanedComment("c", OrphanedComment.Location.DECLARATION);
+        Comment c = new Comment("c");
         fromRaw.orphanedComment(c);
-        assertThat(fromRaw.orphanedComments()).contains(c);
+        assertThat(fromRaw.orphanedComments()).containsExactly(c);
     }
 
     @Test
@@ -304,7 +304,7 @@ public class DeclarationTest {
                 fail("unit shouldn't be broadcasted twice!");
             }
             all.add(broadcastable);
-            broadcastable.status(Status.BROADCASTED_PREPROCESS);
+            broadcastable.status(Status.PROCESSED);
         }
     }
 

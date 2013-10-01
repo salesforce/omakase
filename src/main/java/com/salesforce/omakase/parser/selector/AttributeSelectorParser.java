@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.selector.AttributeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -34,57 +34,57 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public class AttributeSelectorParser extends AbstractParser {
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // opening bracket [
-        if (!stream.optionallyPresent(Tokens.OPEN_BRACKET)) return false;
+        if (!source.optionallyPresent(Tokens.OPEN_BRACKET)) return false;
 
         // skip whitespace after the bracket
-        stream.skipWhitepace();
+        source.skipWhitepace();
 
         // read the attribute name
-        Optional<String> attribute = stream.readIdent();
-        if (!attribute.isPresent()) throw new ParserException(stream, Message.EXPECTED_ATTRIBUTE_NAME);
+        Optional<String> attribute = source.readIdent();
+        if (!attribute.isPresent()) throw new ParserException(source, Message.EXPECTED_ATTRIBUTE_NAME);
 
         // skip whitespace after the name
-        stream.skipWhitepace();
+        source.skipWhitepace();
 
         // try to parse the optional match type
 
-        Optional<AttributeMatchType> type = stream.optionalFromConstantEnum(AttributeMatchType.class);
+        Optional<AttributeMatchType> type = source.optionalFromConstantEnum(AttributeMatchType.class);
         Optional<String> value = Optional.absent();
 
         if (type.isPresent()) {
             // skip whitespace after the match type
-            stream.skipWhitepace();
+            source.skipWhitepace();
 
             // more performant to try string first as it's more likely to be used
-            value = stream.readString();
+            value = source.readString();
 
             // if not matched then try an ident token
             if (!value.isPresent()) {
-                value = stream.readIdent();
+                value = source.readIdent();
             }
 
             // value must be present since the match type is present
-            if (!value.isPresent()) throw new ParserException(stream, Message.EXPECTED_ATTRIBUTE_MATCH_VALUE);
+            if (!value.isPresent()) throw new ParserException(source, Message.EXPECTED_ATTRIBUTE_MATCH_VALUE);
         }
 
         // closing bracket ]
-        stream.skipWhitepace();
-        stream.expect(Tokens.CLOSE_BRACKET);
+        source.skipWhitepace();
+        source.expect(Tokens.CLOSE_BRACKET);
 
         // create the selector and broadcast it
         AttributeSelector selector = new AttributeSelector(snapshot.line, snapshot.column, attribute.get());
         if (type.isPresent()) {
             selector.match(type.get(), value.get().trim());
         }
-        selector.comments(stream.flushComments());
+        selector.comments(source.flushComments());
 
         broadcaster.broadcast(selector);
         return true;

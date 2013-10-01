@@ -18,6 +18,7 @@ package com.salesforce.omakase.broadcast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
@@ -134,6 +135,14 @@ public class QueryableBroadcasterTest {
         QueryableBroadcaster qb = new QueryableBroadcaster(ib);
         qb.broadcast(sample1);
         assertThat(ib.called).isTrue();
+    }
+
+    @Test
+    public void updatesStatus() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        sample1.status(Status.UNBROADCASTED);
+        qb.broadcast(sample1);
+        assertThat(sample1.status()).isSameAs(Status.QUEUED);
     }
 
     public static final class InnerBroadcaster implements Broadcaster {

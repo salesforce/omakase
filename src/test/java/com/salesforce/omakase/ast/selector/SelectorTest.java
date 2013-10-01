@@ -18,7 +18,7 @@ package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.OrphanedComment;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
@@ -112,7 +112,7 @@ public class SelectorTest {
     @Test
     public void addOrphanedComment() {
         selector = new Selector(new ClassSelector("test"));
-        OrphanedComment c = new OrphanedComment("test", OrphanedComment.Location.SELECTOR);
+        Comment c = new Comment("test");
         selector.orphanedComment(c);
         assertThat(selector.orphanedComments()).containsExactly(c);
     }
@@ -192,7 +192,7 @@ public class SelectorTest {
                 fail("unit shouldn't be broadcasted twice!");
             }
             all.add(broadcastable);
-            broadcastable.status(Status.BROADCASTED_PREPROCESS);
+            broadcastable.status(Status.PROCESSED);
         }
     }
 }

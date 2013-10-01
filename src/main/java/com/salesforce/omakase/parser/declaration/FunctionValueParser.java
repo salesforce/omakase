@@ -20,8 +20,8 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Stream;
-import com.salesforce.omakase.parser.Stream.Snapshot;
+import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.Source.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -36,26 +36,26 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class FunctionValueParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Snapshot snapshot = stream.snapshot();
+        Snapshot snapshot = source.snapshot();
 
         // read the function name
-        Optional<String> name = stream.readIdent();
+        Optional<String> name = source.readIdent();
         if (!name.isPresent()) return false;
 
         // must be an open parenthesis
-        if (!Tokens.OPEN_PAREN.matches(stream.current())) return snapshot.rollback();
+        if (!Tokens.OPEN_PAREN.matches(source.current())) return snapshot.rollback();
 
         // read the arguments. This behavior itself differs from the spec a little. We aren't validating what's inside
         // the arguments. The more specifically typed function values will be responsible for validating their own args.
-        String args = stream.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+        String args = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
 
         FunctionValue value = new FunctionValue(snapshot.line, snapshot.column, name.get(), args);
-        value.comments(stream.flushComments());
+        value.comments(source.flushComments());
         broadcaster.broadcast(value);
 
         return true;

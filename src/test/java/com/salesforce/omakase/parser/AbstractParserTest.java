@@ -55,7 +55,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     /**
      * A list of valid sources. It is expected for each source to be parsed completely, i.e., a successful parse should result in
-     * {@link Stream#eof()} being true.
+     * {@link Source#eof()} being true.
      */
     public abstract List<String> validSources();
 
@@ -73,7 +73,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void returnsFalseOnFailure() {
         List<GenericParseResult> results = parse(invalidSources());
         for (GenericParseResult result : results) {
-            assertThat(result.success).describedAs(result.stream.toString()).isFalse();
+            assertThat(result.success).describedAs(result.source.toString()).isFalse();
         }
     }
 
@@ -82,7 +82,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void returnsTrueOnSuccess() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
-            assertThat(result.success).describedAs(result.stream.toString()).isTrue();
+            assertThat(result.success).describedAs(result.source.toString()).isTrue();
         }
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public void eofOnValidSources() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
-            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
+            assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Override
     public void matchesExpectedBroadcastCount() {
         for (GenericParseResult result : parse(validSources())) {
-            assertThat(result.broadcasted).describedAs(result.stream.toString()).hasSize(1);
+            assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(1);
         }
     }
 
@@ -110,11 +110,11 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         for (GenericParseResult result : parse(invalidSources())) {
             // parsers skipping past whitespace is ok
             if (allowedToTrimLeadingWhitespace()) {
-                final String source = result.stream.source();
+                final String source = result.source.fullSource();
                 int index = source.length() - CharMatcher.WHITESPACE.trimLeadingFrom(source).length();
-                assertThat(result.stream.index()).describedAs(result.stream.toString()).isEqualTo(index);
+                assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(index);
             } else {
-                assertThat(result.stream.index()).describedAs(result.stream.toString()).isEqualTo(0);
+                assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(0);
             }
         }
     }
@@ -123,7 +123,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Override
     public void expectedStreamPositionOnSuccess() {
         for (ParseResult<Integer> result : parseWithExpected(validSourcesWithExpectedEndIndex())) {
-            assertThat(result.stream.index()).describedAs(result.stream.toString()).isEqualTo(result.expected);
+            assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(result.expected);
         }
     }
 
@@ -134,14 +134,14 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     // for (GenericParseResult result : parse(validSources())) {
     // Syntax first = result.broadcasted.get(0);
     //
-    // assertThat(first.line()).describedAs(result.stream.toString()).isEqualTo(1);
+    // assertThat(first.line()).describedAs(result.source.toString()).isEqualTo(1);
     //
     // if (allowedToTrimLeadingWhitespace()) {
-    // String trim = result.stream.source().trim();
-    // int column = result.stream.source().indexOf(trim) + 1;
-    // assertThat(first.column()).describedAs(result.stream.toString()).isEqualTo(column);
+    // String trim = result.source.source().trim();
+    // int column = result.source.source().indexOf(trim) + 1;
+    // assertThat(first.column()).describedAs(result.source.toString()).isEqualTo(column);
     // } else {
-    // assertThat(first.column()).describedAs(result.stream.toString()).isEqualTo(1);
+    // assertThat(first.column()).describedAs(result.source.toString()).isEqualTo(1);
     // }
     // }
     // }
@@ -158,8 +158,8 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         for (String source : sources) {
             GenericParseResult result = new GenericParseResult();
             result.broadcaster = new QueryableBroadcaster();
-            result.stream = new Stream(source);
-            result.success = parser.parse(result.stream, result.broadcaster);
+            result.source = new Source(source);
+            result.success = parser.parse(result.source, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
             result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
             results.add(result);
@@ -181,8 +181,8 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         for (SourceWithExpectedResult<R> ts : sources) {
             ParseResult<R> result = new ParseResult<>();
             result.broadcaster = new QueryableBroadcaster();
-            result.stream = new Stream(ts.source);
-            result.success = parser.parse(result.stream, result.broadcaster);
+            result.source = new Source(ts.source);
+            result.success = parser.parse(result.source, result.broadcaster);
             result.broadcasted = result.broadcaster.all();
             result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
             result.expected = ts.expected;
@@ -198,7 +198,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         public Iterable<Broadcastable> broadcasted;
         public Iterable<Syntax> broadcastedSyntax;
         public boolean success;
-        public Stream stream;
+        public Source source;
         public T expected;
     }
 

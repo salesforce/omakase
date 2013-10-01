@@ -24,21 +24,23 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
+import java.util.List;
+
 /**
  * Responsible for refining {@link Refinable} objects, such as {@link Selector} and {@link Declaration}.
  * <p/>
- * A list of {@link RefinableStrategy} objects can be registered to customize and extends the standard CSS syntax. See the readme
+ * A list of {@link RefinerStrategy} objects can be registered to customize and extends the standard CSS syntax. See the readme
  * file for more details.
  *
  * @author nmcwilliams
- * @see RefinableStrategy
+ * @see RefinerStrategy
  * @see SyntaxPlugin
  */
 public final class Refiner {
-    private static final RefinableStrategy STANDARD = new StandardRefinableStrategy();
+    private static final RefinerStrategy STANDARD = new StandardRefinerStrategy();
 
     private final Broadcaster broadcaster;
-    private final ImmutableList<RefinableStrategy> strategies;
+    private final List<RefinerStrategy> strategies;
 
     /**
      * Creates a new {@link Refiner} instance with the given {@link Broadcaster} to use for new refined AST objects.
@@ -47,19 +49,19 @@ public final class Refiner {
      *     The {@link Broadcaster} to use for refined AST objects.
      */
     public Refiner(Broadcaster broadcaster) {
-        this(broadcaster, ImmutableList.<RefinableStrategy>of());
+        this(broadcaster, ImmutableList.<RefinerStrategy>of());
     }
 
     /**
-     * Creates a new {@link Refiner} instance with the given {@link Broadcaster} and list of custom {@link RefinableStrategy}
+     * Creates a new {@link Refiner} instance with the given {@link Broadcaster} and list of custom {@link RefinerStrategy}
      * objects.
      *
      * @param broadcaster
      *     The {@link Broadcaster} to use for refined AST objects.
      * @param strategies
-     *     List of {@link RefinableStrategy} objects to consult in the refining process, in order.
+     *     List of {@link RefinerStrategy} objects to consult in the refining process, in order.
      */
-    public Refiner(Broadcaster broadcaster, Iterable<RefinableStrategy> strategies) {
+    public Refiner(Broadcaster broadcaster, Iterable<RefinerStrategy> strategies) {
         this.broadcaster = broadcaster;
         this.strategies = ImmutableList.copyOf(strategies);
     }
@@ -67,8 +69,8 @@ public final class Refiner {
     /**
      * Refines an {@link AtRule} object.
      * <p/>
-     * Any registered {@link RefinableStrategy} objects will be consulted in the registered order. If no {@link RefinableStrategy}
-     * decides to handle the instance, or if none are registered then {@link RefinableStrategy#refineAtRule(AtRule, Broadcaster,
+     * Any registered {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy}
+     * decides to handle the instance, or if none are registered then {@link RefinerStrategy#refineAtRule(AtRule, Broadcaster,
      * Refiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
@@ -77,7 +79,7 @@ public final class Refiner {
      *     The {@link AtRule} to refine.
      */
     public void refine(AtRule atRule) {
-        for (RefinableStrategy strategy : strategies) {
+        for (RefinerStrategy strategy : strategies) {
             if (strategy.refineAtRule(atRule, broadcaster, this)) return;
         }
 
@@ -88,8 +90,8 @@ public final class Refiner {
     /**
      * Refines a {@link Selector} object.
      * <p/>
-     * Any registered {@link RefinableStrategy} objects will be consulted in the registered order. If no {@link RefinableStrategy}
-     * decides to handle the instance, or if none are registered then {@link RefinableStrategy#refineSelector(Selector,
+     * Any registered {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy}
+     * decides to handle the instance, or if none are registered then {@link RefinerStrategy#refineSelector(Selector,
      * Broadcaster, Refiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
@@ -98,7 +100,7 @@ public final class Refiner {
      *     The {@link Selector} to refine.
      */
     public void refine(Selector selector) {
-        for (RefinableStrategy strategy : strategies) {
+        for (RefinerStrategy strategy : strategies) {
             if (strategy.refineSelector(selector, broadcaster, this)) return;
         }
 
@@ -109,8 +111,8 @@ public final class Refiner {
     /**
      * Refines a {@link Declaration} object.
      * <p/>
-     * Any registered {@link RefinableStrategy} objects will be consulted in the registered order. If no {@link RefinableStrategy}
-     * decides to handle the instance, or if none are registered then {@link RefinableStrategy#refineDeclaration (Declaration,
+     * Any registered {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy}
+     * decides to handle the instance, or if none are registered then {@link RefinerStrategy#refineDeclaration (Declaration,
      * Broadcaster)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
@@ -119,7 +121,7 @@ public final class Refiner {
      *     The {@link Declaration} to refine.
      */
     public void refine(Declaration declaration) {
-        for (RefinableStrategy strategy : strategies) {
+        for (RefinerStrategy strategy : strategies) {
             if (strategy.refineDeclaration(declaration, broadcaster, this)) return;
         }
 

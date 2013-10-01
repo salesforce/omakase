@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.declaration.value.HexColorValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -33,26 +33,26 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class HexColorValueParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // starts with hash and then a valid hex character
-        if (Tokens.HASH.matches(stream.current()) && Tokens.HEX_COLOR.matches(stream.peek())) {
+        if (Tokens.HASH.matches(source.current()) && Tokens.HEX_COLOR.matches(source.peek())) {
             // skip the has mark
-            stream.next();
+            source.next();
 
             // get the color value
-            String color = stream.chomp(Tokens.HEX_COLOR);
+            String color = source.chomp(Tokens.HEX_COLOR);
 
             // check for a valid length
-            if (color.length() != 6 && color.length() != 3) throw new ParserException(stream, Message.INVALID_HEX, color);
+            if (color.length() != 6 && color.length() != 3) throw new ParserException(source, Message.INVALID_HEX, color);
 
             HexColorValue value = new HexColorValue(snapshot.line, snapshot.column, color);
-            value.comments(stream.flushComments());
+            value.comments(source.flushComments());
 
             broadcaster.broadcast(value);
             return true;

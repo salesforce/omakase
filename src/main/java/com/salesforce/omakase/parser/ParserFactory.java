@@ -49,14 +49,19 @@ public final class ParserFactory {
 
     /* generic parsers */
     private static final RefinableParser stylesheet = new StylesheetParser();
+
     private static final RefinableParser atRule = new RawAtRuleParser();
     private static final RefinableParser rule = new RawRuleParser();
-    private static final RefinableParser rawDeclaration = new RawDeclarationParser();
+    private static final RefinableParser statement = rule.or(atRule);
+
+    private static final RefinableParser selector = new RawSelectorParser();
     private static final RefinableParser selectorGroup = new SelectorGroupParser();
-    private static final RefinableParser rawSelector = new RawSelectorParser();
+
+    private static final RefinableParser declaration = new RawDeclarationParser();
 
     /* refined selectors */
     private static final Parser complexSelector = new ComplexSelectorParser();
+
     private static final Parser combinator = new CombinatorParser();
     private static final Parser classSelector = new ClassSelectorParser();
     private static final Parser idSelector = new IdSelectorParser();
@@ -72,7 +77,7 @@ public final class ParserFactory {
 
     private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
-    /* declaration values */
+    /* refined declaration values */
     private static final Parser termList = new TermListParser();
     private static final Parser important = new ImportantParser();
 
@@ -112,6 +117,24 @@ public final class ParserFactory {
     }
 
     /**
+     * Gets a parser to parse a single statement (rule or at-rule).
+     *
+     * @return The parser instance.
+     */
+    public static RefinableParser statementParser() {
+        return statement;
+    }
+
+    /**
+     * Gets the {@link RawSelectorParser}.
+     *
+     * @return The parser instance.
+     */
+    public static RefinableParser rawSelectorParser() {
+        return selector;
+    }
+
+    /**
      * Gets the {@link SelectorGroupParser}.
      *
      * @return The parser instance.
@@ -121,21 +144,12 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link RawSelectorParser}.
-     *
-     * @return The parser instance.
-     */
-    public static RefinableParser rawSelectorParser() {
-        return rawSelector;
-    }
-
-    /**
      * Gets the {@link RawDeclarationParser}.
      *
      * @return The parser instance.
      */
     public static RefinableParser rawDeclarationParser() {
-        return rawDeclaration;
+        return declaration;
     }
 
     /**
@@ -145,25 +159,6 @@ public final class ParserFactory {
      */
     public static Parser complexSelectorParser() {
         return complexSelector;
-    }
-
-    /**
-     * Gets the parser to parse {@link SimpleSelector} (excluding type and universal selectors) or a {@link
-     * PseudoElementSelector}.
-     *
-     * @return The parser instance.
-     */
-    public static Parser repeatableSelector() {
-        return repeatableSelector;
-    }
-
-    /**
-     * Gets the parser to parse a {@link TypeSelector} or a {@link UniversalSelectorParser}.
-     *
-     * @return The parser instance.
-     */
-    public static Parser typeOrUniversaleSelectorParser() {
-        return typeOrUniversal;
     }
 
     /**
@@ -230,6 +225,25 @@ public final class ParserFactory {
     }
 
     /**
+     * Gets the parser to parse {@link SimpleSelector} (excluding type and universal selectors) or a {@link
+     * PseudoElementSelector}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser repeatableSelector() {
+        return repeatableSelector;
+    }
+
+    /**
+     * Gets the parser to parse a {@link TypeSelector} or a {@link UniversalSelectorParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser typeOrUniversaleSelectorParser() {
+        return typeOrUniversal;
+    }
+
+    /**
      * Gets the {@link TermListParser}.
      *
      * @return The parser instance.
@@ -239,20 +253,65 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the parser to parse a {@link Term} value.
-     *
-     * @return The parser instance.
-     */
-    public static Parser termParser() {
-        return term;
-    }
-
-    /**
      * Gets the parser to parse a "important!" value.
      *
      * @return The parser instance.
      */
     public static Parser importantParser() {
         return important;
+    }
+
+    /**
+     * Gets the {@link NumericalValueParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser numericalValueParser() {
+        return numericalValue;
+    }
+
+    /**
+     * Gets the {@link FunctionValueParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser functionValueParser() {
+        return functionValue;
+    }
+
+    /**
+     * Gets the {@link KeywordValueParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser keywordValueParser() {
+        return keywordValue;
+    }
+
+    /**
+     * Gets the {@link HexColorValueParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser hexColorValueParser() {
+        return hexColorValue;
+    }
+
+    /**
+     * Gets the {@link StringValueParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser stringValueParser() {
+        return stringValue;
+    }
+
+    /**
+     * Gets the parser to parse a {@link Term} value.
+     *
+     * @return The parser instance.
+     */
+    public static Parser termParser() {
+        return term;
     }
 }

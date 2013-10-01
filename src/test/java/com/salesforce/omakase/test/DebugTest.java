@@ -19,7 +19,7 @@ package com.salesforce.omakase.test;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.validator.Validation;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.test.util.EchoLogger;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -37,7 +37,7 @@ public class DebugTest {
             .request(tree)
                 // .request(refinement)
             .request(logging)
-            .request(Validation.normal())
+            .request(new StandardValidation())
             .request(writer)
             .process();
 

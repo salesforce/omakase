@@ -19,7 +19,7 @@ package com.salesforce.omakase.parser.selector;
 import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -30,20 +30,20 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class UniversalSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // first character must be a dot
-        boolean matched = stream.optionallyPresent(Tokens.STAR);
+        boolean matched = source.optionallyPresent(Tokens.STAR);
         if (!matched) return false;
 
         // broadcast the new selector
         UniversalSelector selector = new UniversalSelector(snapshot.line, snapshot.column);
-        selector.comments(stream.flushComments());
+        selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;
     }

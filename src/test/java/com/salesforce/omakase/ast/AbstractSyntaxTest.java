@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link AbstractSyntax}. */
 @SuppressWarnings("JavaDoc")
@@ -75,8 +75,8 @@ public class AbstractSyntaxTest {
     @Test
     public void testStatus() throws Exception {
         TestClass t = new TestClass(10, 15);
-        t.status(Status.BROADCASTED_PREPROCESS);
-        assertThat(t.status()).isSameAs(Status.BROADCASTED_PREPROCESS);
+        t.status(Status.PROCESSED);
+        assertThat(t.status()).isSameAs(Status.PROCESSED);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class AbstractSyntaxTest {
     @Test
     public void testPropagateBroadcastAlreadyBroadcasted() throws Exception {
         TestClass t = new TestClass(10, 15);
-        t.status(Status.BROADCASTED_PREPROCESS);
+        t.status(Status.PROCESSED);
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         t.propagateBroadcast(broadcaster);
         assertThat(broadcaster.all()).isEmpty();

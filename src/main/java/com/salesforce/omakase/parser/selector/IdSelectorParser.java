@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -38,23 +38,23 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class IdSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
-        stream.collectComments(false);
+        source.collectComments(false);
 
         // snapshot the current state before parsing
-        Stream.Snapshot snapshot = stream.snapshot();
+        Source.Snapshot snapshot = source.snapshot();
 
         // first character must be a hash
-        if (!stream.optionallyPresent(Tokens.HASH)) return false;
+        if (!source.optionallyPresent(Tokens.HASH)) return false;
 
         // parse the id name
-        Optional<String> name = stream.readIdent();
-        if (!name.isPresent()) throw new ParserException(stream, Message.EXPECTED_VALID_ID);
+        Optional<String> name = source.readIdent();
+        if (!name.isPresent()) throw new ParserException(source, Message.EXPECTED_VALID_ID);
 
         // broadcast the new id selector
         IdSelector selector = new IdSelector(snapshot.line, snapshot.column, name.get());
-        selector.comments(stream.flushComments());
+        selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;
     }

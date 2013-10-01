@@ -18,11 +18,13 @@ package com.salesforce.omakase.broadcast;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.Status;
 
 /**
  * A {@link Broadcaster} that expects at most one particular {@link Broadcastable} instance to be broadcasted.
  * <p/>
- * If more than one or the wrong type of unit is broadcasted then an exception is thrown.
+ * If more than one or the wrong type of unit is broadcasted then an exception is thrown. This is more performant than a {@link
+ * QueryableBroadcaster} as it doesn't create a new list.
  *
  * @param <T>
  *     The expected broadcastable type.
@@ -62,6 +64,10 @@ public class SingleBroadcaster<T extends Broadcastable> extends AbstractBroadcas
     public void broadcast(Broadcastable broadcastable) {
         if (broadcasted != null) throw new IllegalArgumentException(Message.ONE_BROADCASTED_EVENT.message());
         if (!klass.isInstance(broadcastable)) throw new IllegalArgumentException(Message.WRONG_INSTANCE.message(klass));
+
+        if (broadcastable.status() == Status.UNBROADCASTED) {
+            broadcastable.status(Status.QUEUED);
+        }
 
         // cast is safe -- guarded by above isInstance check
         broadcasted = (T)broadcastable;

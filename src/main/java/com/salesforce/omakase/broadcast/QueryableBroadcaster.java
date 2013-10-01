@@ -19,6 +19,7 @@ package com.salesforce.omakase.broadcast;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,11 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
     @Override
     public void broadcast(Broadcastable broadcastable) {
         collected.add(broadcastable);
+
+        // update status to prevent a unit from being broadcasted too many times
+        if (broadcastable.status() == Status.UNBROADCASTED) {
+            broadcastable.status(Status.QUEUED);
+        }
 
         if (relay != null) {
             relay.broadcast(broadcastable);

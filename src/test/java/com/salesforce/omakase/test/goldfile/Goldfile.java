@@ -22,7 +22,7 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
-import com.salesforce.omakase.plugin.validator.Validation;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
@@ -74,7 +74,7 @@ public final class Goldfile {
         Omakase.Request request = Omakase.source(source);
         request.add(tree);
         request.add(writer);
-        request.add(Validation.normal());
+        request.add(new StandardValidation(false));
         request.add(new UnquotedIEFilterPlugin());
         if (autoRefine) request.add(refiner);
 

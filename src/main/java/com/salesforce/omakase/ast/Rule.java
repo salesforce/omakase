@@ -27,23 +27,18 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.notification.NotifyDeclarationBlockStart;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS Rule.
  * <p/>
- * Note that this will not be automatically created or broadcasted unless the {@link SyntaxTree} plugin is enabled.
- * <p/>
  * You might be looking for a "DeclarationBlock" class. Currently such a class serves no purpose, and all ordered declarations are
- * contained inside of a {@link SyntaxCollection} within this class instead. However there is a {@link
- * NotifyDeclarationBlockStart} event you can subscribe to.
+ * contained inside of a {@link SyntaxCollection} within this class instead.
  * <p/>
  * Note that if a {@link Rule} does not have any selectors or declarations (or all of it's selectors and declarations are
  * <em>detached</em>) then the rule will not be printed out.
@@ -68,7 +63,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.SYNTAX_TREE;
  */
 
 @Subscribable
-@Description(broadcasted = SYNTAX_TREE)
+@Description(broadcasted = AUTOMATIC)
 public class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
     private final SyntaxCollection<Rule, Selector> selectors;
     private final SyntaxCollection<Rule, Declaration> declarations;
@@ -165,7 +160,7 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
             if (declaration.isWritable()) {
                 appendable.indentIf(writer.isVerbose());
                 writer.write(declaration, appendable);
-                if (writer.isVerbose() || !declaration.isLast() && !declaration.isDetached()) appendable.append(';');
+                if (writer.isVerbose() || !declaration.isLast()) appendable.append(';');
                 appendable.spaceIf(writer.isInline() && !declaration.isLast());
                 appendable.newlineIf(writer.isVerbose());
             }

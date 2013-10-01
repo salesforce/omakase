@@ -19,7 +19,6 @@ package com.salesforce.omakase.broadcast.emitter;
 import com.google.common.collect.Maps;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.PreProcess;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
@@ -31,7 +30,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link AnnotationScanner}.
@@ -47,24 +46,6 @@ public class AnnotationScannerTest {
     @Before
     public void setup() {
         scanner = new AnnotationScanner();
-    }
-
-    @Test
-    public void findsPreProcess() {
-        Map<String, Subscription> map = Maps.newHashMap();
-        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
-            map.put(subscription.method().getName(), subscription);
-        }
-
-        Subscription preprocess = map.get("preprocess");
-        assertThat(preprocess != null).describedAs("expected to find method annotated with @PreProcess");
-        assertThat(preprocess.phase()).isSameAs(SubscriptionPhase.PREPROCESS);
-    }
-
-    @Test
-    public void errorsIfInvalidPreprocess() {
-        exception.expect(Exception.class);
-        scanner.scan(new InvalidPreprocess());
     }
 
     @Test
@@ -123,10 +104,6 @@ public class AnnotationScannerTest {
 
     @SuppressWarnings("UnusedParameters")
     public static final class AllValid implements Plugin {
-        @PreProcess
-        public void preprocess(ClassSelector cs) {
-        }
-
         @Observe
         public void observe(ClassSelector cs) {
         }
@@ -137,12 +114,6 @@ public class AnnotationScannerTest {
 
         @Validate
         public void validate(ClassSelector cs, ErrorManager em) {
-        }
-    }
-
-    public static final class InvalidPreprocess implements Plugin {
-        @PreProcess
-        public void preprocess() {
         }
     }
 

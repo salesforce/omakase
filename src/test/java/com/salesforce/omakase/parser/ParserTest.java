@@ -44,18 +44,18 @@ public interface ParserTest {
     @Test
     public void matchesExpectedBroadcastContent();
 
-    /** Tests that the stream's index doesn't change if parsing is not successful. */
+    /** Tests that the source's index doesn't change if parsing is not successful. */
     @Test
     public void noChangeToStreamOnFailure();
 
     /**
      * Tests that the line and column number are from the beginning of the matched content (e.g., that it was saved off
-     * before parsing the stream).
+     * before parsing the source).
      */
     // @Test
     // public void correctLineAndColumnNumber();
 
-    /** Tests that the stream advances to the expected index if parsing is successful. */
+    /** Tests that the source advances to the expected index if parsing is successful. */
     @Test
     public void expectedStreamPositionOnSuccess();
 }

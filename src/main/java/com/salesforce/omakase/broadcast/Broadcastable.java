@@ -49,7 +49,7 @@ public interface Broadcastable {
     Status status();
 
     /**
-     * Broadcasts all child units using the given {@link Broadcaster}.
+     * Broadcasts all unbroadcasted child units using the given {@link Broadcaster}.
      * <p/>
      * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
      * itself is broadcasted, this method should be called on the parent unit in order to propagate the broadcast event to the

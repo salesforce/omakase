@@ -19,8 +19,6 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.OrphanedComment;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
@@ -131,7 +129,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
 
         for (ParseResult<Integer> result : results) {
             assertThat(result.broadcasted)
-                .describedAs(result.stream.toString())
+                .describedAs(result.source.toString())
                 .hasSize(result.expected + 1); // +1 to account for the term list broadcast
         }
     }
@@ -173,13 +171,11 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
 
         List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
 
-        assertThat(broadcasted).hasSize(6);
+        assertThat(broadcasted).hasSize(4);
         assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(1)).isInstanceOf(KeywordValue.class);
         assertThat(broadcasted.get(2)).isInstanceOf(KeywordValue.class);
-        assertThat(broadcasted.get(3)).isInstanceOf(OrphanedComment.class);
-        assertThat(broadcasted.get(4)).isInstanceOf(OrphanedComment.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(TermList.class);
+        assertThat(broadcasted.get(3)).isInstanceOf(TermList.class);
     }
 
     @Test
@@ -191,7 +187,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         ));
 
         for (GenericParseResult result : parse) {
-            assertThat(result.stream.eof()).isTrue();
+            assertThat(result.source.eof()).isTrue();
         }
     }
 
@@ -210,13 +206,6 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
     }
 
     @Test
-    public void errorsIfNestedCommentWithoutOperator() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_OPERATOR_NEAR_COMMENT.message());
-        parse("1px /*x*/ 1px 1px/*x*/1px");
-    }
-
-    @Test
     public void parsesImportant() {
         List<String> sourcesWithSpace = new ArrayList<>();
         List<String> sourcesWithoutSpace = new ArrayList<>();
@@ -227,13 +216,28 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         }
 
         for (GenericParseResult result : parse(sourcesWithSpace)) {
-            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
-            assertThat(result.success).describedAs(result.stream.toString()).isTrue();
+            assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
+            assertThat(result.success).describedAs(result.source.toString()).isTrue();
         }
 
         for (GenericParseResult result : parse(sourcesWithoutSpace)) {
-            assertThat(result.stream.eof()).describedAs(result.stream.toString()).isTrue();
-            assertThat(result.success).describedAs(result.stream.toString()).isTrue();
+            assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
+            assertThat(result.success).describedAs(result.source.toString()).isTrue();
         }
     }
+
+    @Test
+    public void noErrorIfUnrecognizedTermNoOperator() {
+        GenericParseResult result = parse("1px 1px/*x*/%").get(0);
+        // no error
+        assertThat(result.source.index()).isEqualTo(12);
+    }
+
+    @Test
+    public void errorsIfUnrecognizedTermAfterOperator() {
+        exception.expect(ParserException.class);
+        exception.expectMessage("Expected to find another term");
+        parse("1px 1px/*x*/,%");
+    }
+
 }

@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Stream;
+import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -35,15 +35,15 @@ public class ImportantParser extends AbstractParser {
     private static final String IMPORTANT = "important";
 
     @Override
-    public boolean parse(Stream stream, Broadcaster broadcaster) {
-        stream.skipWhitepace();
+    public boolean parse(Source source, Broadcaster broadcaster) {
+        source.skipWhitepace();
 
-        if (!stream.optionallyPresent(Tokens.EXCLAMATION)) return false;
+        if (!source.optionallyPresent(Tokens.EXCLAMATION)) return false;
 
         // spec says that there can be a comment between ! and the word important; not allowing this here
-        Optional<String> ident = stream.readIdent();
+        Optional<String> ident = source.readIdent();
         if (!ident.isPresent() || !ident.get().equalsIgnoreCase(IMPORTANT)) {
-            throw new ParserException(stream, Message.EXPECTED_IMPORTANT);
+            throw new ParserException(source, Message.EXPECTED_IMPORTANT);
         }
 
         return true;
