@@ -114,4 +114,11 @@ public class ParserExceptionTest {
             "  text-decoration: red;\n" +
             "}'");
     }
+
+    @Test
+    public void exceptionMessageWithLineAndColumnOnly() {
+        String msg = new ParserException(5, 12, "test exception").getMessage();
+        assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
+            "at line 5, column 12.");
+    }
 }

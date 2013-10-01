@@ -38,6 +38,7 @@ public enum Message {
     EXTRANEOUS("Extraneous text found at the end of the source '%s'"),
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_VALUE("Unable to parse remaining declaration value"),
+    UNPARSABLE_CONDITIONAL_CONTENT("Unable to parse the remaining content in the conditional at-rule: %s"),
     EXPECTED_VALUE("Expected to parse a property value!"),
     EXPECTED_TO_FIND("Expected to find %s"),
     EXPECTED_CLOSING("Expected to find closing %s"),
@@ -65,7 +66,10 @@ public enum Message {
     EXPECTED_IMPORTANT("Expected to find 'important'"),
     EXPECTED_ATTRIBUTE_MATCH_VALUE("Expected to find the attribute selector's match value (a string or an identifier)"),
     ONE_BROADCASTED_EVENT("Only one broadcasted event is allowed"),
-    WRONG_INSTANCE("Expected to find an instance of %s");
+    WRONG_INSTANCE("Expected to find an instance of %s"),
+    MISSING_CONDITIONAL_EXPRESSION("Missing expression for conditional at-rule (@if). Expressions must be within parenthesis, " +
+        "e.g., (ie7)"),
+    MISSING_CONDITIONAL_BLOCK("Missing block for the conditional at-rule (@oif). The block must be encased within curly braces {}");
 
     private final String message;
 

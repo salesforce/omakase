@@ -25,6 +25,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;

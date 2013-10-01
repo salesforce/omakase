@@ -61,11 +61,13 @@ public interface RefinableStrategy {
      *     The {@link AtRule} to refine.
      * @param broadcaster
      *     Used to broadcast any {@link Broadcastable} objects.
+     * @param refiner
+     *     Pass this refiner to any parser methods that require one.
      *
      * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinableStrategy} objects
      *         will be executed for the given {@link AtRule} instance.
      */
-    boolean refineAtRule(AtRule atRule, Broadcaster broadcaster);
+    boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner);
 
     /**
      * Refines a {@link Selector}.
@@ -85,11 +87,13 @@ public interface RefinableStrategy {
      *     The {@link Selector} to refine.
      * @param broadcaster
      *     Used to broadcast any {@link Broadcastable} objects.
+     * @param refiner
+     *     Pass this refiner to any parser methods that require one.
      *
      * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinableStrategy} objects
      *         will be executed for the given {@link Selector} instance.
      */
-    boolean refineSelector(Selector selector, Broadcaster broadcaster);
+    boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner);
 
     /**
      * Refines a {@link Declaration}.
@@ -110,9 +114,11 @@ public interface RefinableStrategy {
      *     The {@link Declaration} to refine.
      * @param broadcaster
      *     Used to broadcast any {@link Broadcastable} objects.
+     * @param refiner
+     *     Pass this refiner to any parser methods that require one.
      *
      * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinableStrategy} objects
      *         will be executed for the given {@link Declaration} instance.
      */
-    boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster);
+    boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner);
 }

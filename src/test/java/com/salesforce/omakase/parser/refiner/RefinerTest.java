@@ -114,18 +114,18 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return true;
         }
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
     }
@@ -134,18 +134,18 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return false;
         }
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
     }
@@ -154,18 +154,18 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return true;
         }
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
     }
@@ -174,18 +174,18 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return false;
         }
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
     }
@@ -194,17 +194,17 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return true;
         }
@@ -214,17 +214,17 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
             return false;
         }
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return false;
         }

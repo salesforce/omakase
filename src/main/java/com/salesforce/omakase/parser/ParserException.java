@@ -62,11 +62,19 @@ public class ParserException extends OmakaseException {
      *     The error message.
      */
     public ParserException(Stream stream, String message) {
-        super(format(message, stream));
+        super(format(stream, message));
+    }
+
+    public ParserException(int line, int column, Message message) {
+        this(line, column, message.message());
+    }
+
+    public ParserException(int line, int column, String message) {
+        super(format(line, column, message));
     }
 
     /** formats the error message */
-    private static String format(String message, Stream stream) {
+    private static String format(Stream stream, String message) {
         if (!stream.isSubStream()) {
             return String.format("Omakase CSS Parser - %s:\nat line %s, column %s in source\n'%s'",
                 message,
@@ -85,5 +93,13 @@ public class ParserException extends OmakaseException {
                 stream.toStringContextual()
             );
         }
+    }
+
+    private static String format(int line, int column, String message) {
+        return String.format("Omakase CSS Parser - %s:\nat line %s, column %s.",
+            message,
+            line,
+            column
+        );
     }
 }

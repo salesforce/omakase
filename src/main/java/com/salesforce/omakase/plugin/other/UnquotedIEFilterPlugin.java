@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.plugin.other;
 
-import com.salesforce.omakase.ast.declaration.value.UnquotedIEFilter;
+import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.parser.refiner.UnquotedIEFilterStrategy;

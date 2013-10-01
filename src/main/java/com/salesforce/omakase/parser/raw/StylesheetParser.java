@@ -61,7 +61,7 @@ public class StylesheetParser extends AbstractRefinableParser {
         }
 
         // orphaned comments, e.g., ".class{color:red} /*orphaned*/"
-        List<String> orphaned = stream.collectComments().flushComments();
+        List<String> orphaned = stream.flushComments();
         for (String comment : orphaned) {
             broadcaster.broadcast(new OrphanedComment(comment, OrphanedComment.Location.STYLESHEET));
         }

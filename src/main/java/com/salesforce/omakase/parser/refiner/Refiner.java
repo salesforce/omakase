@@ -68,8 +68,8 @@ public final class Refiner {
      * Refines an {@link AtRule} object.
      * <p/>
      * Any registered {@link RefinableStrategy} objects will be consulted in the registered order. If no {@link RefinableStrategy}
-     * decides to handle the instance, or if none are registered then {@link StandardRefinableStrategy#refineAtRule(AtRule,
-     * Broadcaster)} will be used.
+     * decides to handle the instance, or if none are registered then {@link RefinableStrategy#refineAtRule(AtRule, Broadcaster,
+     * Refiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
      *
@@ -78,19 +78,19 @@ public final class Refiner {
      */
     public void refine(AtRule atRule) {
         for (RefinableStrategy strategy : strategies) {
-            if (strategy.refineAtRule(atRule, broadcaster)) return;
+            if (strategy.refineAtRule(atRule, broadcaster, this)) return;
         }
 
         // fallback to the default refiner
-        STANDARD.refineAtRule(atRule, broadcaster);
+        STANDARD.refineAtRule(atRule, broadcaster, this);
     }
 
     /**
      * Refines a {@link Selector} object.
      * <p/>
      * Any registered {@link RefinableStrategy} objects will be consulted in the registered order. If no {@link RefinableStrategy}
-     * decides to handle the instance, or if none are registered then {@link StandardRefinableStrategy#refineSelector(Selector,
-     * Broadcaster)} will be used.
+     * decides to handle the instance, or if none are registered then {@link RefinableStrategy#refineSelector(Selector,
+     * Broadcaster, Refiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
      *
@@ -99,19 +99,19 @@ public final class Refiner {
      */
     public void refine(Selector selector) {
         for (RefinableStrategy strategy : strategies) {
-            if (strategy.refineSelector(selector, broadcaster)) return;
+            if (strategy.refineSelector(selector, broadcaster, this)) return;
         }
 
         // fallback to the default refiner
-        STANDARD.refineSelector(selector, broadcaster);
+        STANDARD.refineSelector(selector, broadcaster, this);
     }
 
     /**
      * Refines a {@link Declaration} object.
      * <p/>
      * Any registered {@link RefinableStrategy} objects will be consulted in the registered order. If no {@link RefinableStrategy}
-     * decides to handle the instance, or if none are registered then {@link StandardRefinableStrategy#refineDeclaration
-     * (Declaration, Broadcaster)} will be used.
+     * decides to handle the instance, or if none are registered then {@link RefinableStrategy#refineDeclaration (Declaration,
+     * Broadcaster)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
      *
@@ -120,11 +120,11 @@ public final class Refiner {
      */
     public void refine(Declaration declaration) {
         for (RefinableStrategy strategy : strategies) {
-            if (strategy.refineDeclaration(declaration, broadcaster)) return;
+            if (strategy.refineDeclaration(declaration, broadcaster, this)) return;
         }
 
         // fallback to the default refiner
-        STANDARD.refineDeclaration(declaration, broadcaster);
+        STANDARD.refineDeclaration(declaration, broadcaster, this);
     }
 
     /**

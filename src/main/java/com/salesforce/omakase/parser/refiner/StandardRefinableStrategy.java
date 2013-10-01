@@ -37,13 +37,13 @@ import com.salesforce.omakase.parser.Stream;
  */
 public class StandardRefinableStrategy implements RefinableStrategy {
     @Override
-    public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+    public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
         // do nothing -- there's no default refinement for at-rules
         return false;
     }
 
     @Override
-    public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+    public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
         Stream stream = new Stream(selector.rawContent(), false);
 
@@ -67,7 +67,7 @@ public class StandardRefinableStrategy implements RefinableStrategy {
     }
 
     @Override
-    public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+    public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
         Stream stream = new Stream(declaration.rawPropertyValue().content(), declaration.line(), declaration.column());
 

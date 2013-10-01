@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration.value;
+package com.salesforce.omakase.ast.extended;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;

@@ -19,7 +19,7 @@ package com.salesforce.omakase.parser.refiner;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.value.UnquotedIEFilter;
+import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
@@ -33,17 +33,17 @@ public class UnquotedIEFilterStrategy implements RefinableStrategy {
     private static final String PROGID = "progid:";
 
     @Override
-    public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster) {
+    public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
         return false;
     }
 
     @Override
-    public boolean refineSelector(Selector selector, Broadcaster broadcaster) {
+    public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
         return false;
     }
 
     @Override
-    public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster) {
+    public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
         RawSyntax raw = declaration.rawPropertyValue();
         if (raw.content().startsWith(PROGID)) {
             declaration.propertyValue(new UnquotedIEFilter(raw.line(), raw.column(), raw.content()));

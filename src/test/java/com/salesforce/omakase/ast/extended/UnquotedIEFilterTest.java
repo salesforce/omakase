@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration.value;
+package com.salesforce.omakase.ast.extended;
 
 import com.salesforce.omakase.writer.StyleWriter;
+import org.fest.assertions.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link UnquotedIEFilter}.
@@ -38,7 +37,7 @@ public class UnquotedIEFilterTest {
     @Test
     public void testGetContent() {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        assertThat(ief.content()).isEqualTo(FILTER);
+        Assertions.assertThat(ief.content()).isEqualTo(FILTER);
     }
 
     @Test
@@ -51,13 +50,13 @@ public class UnquotedIEFilterTest {
     @Test
     public void isImportantAlwaysFalse() {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER + " !important");
-        assertThat(ief.isImportant()).isFalse();
+        Assertions.assertThat(ief.isImportant()).isFalse();
     }
 
     @Test
     public void write() throws IOException {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        assertThat(StyleWriter.compressed().writeSnippet(ief)).isEqualTo(FILTER);
+        Assertions.assertThat(StyleWriter.compressed().writeSnippet(ief)).isEqualTo(FILTER);
     }
 
 }

@@ -49,22 +49,22 @@ public enum Tokens implements Token {
     /** comma */
     COMMA(',', ","),
 
-    /** open bracket */
+    /** open brace { */
     OPEN_BRACE('{', "opening brace '{'"),
 
-    /** closing bracket */
+    /** closing brace } */
     CLOSE_BRACE('}', "closing brace '}'"),
 
-    /** opening parenthesis */
+    /** opening parenthesis ( */
     OPEN_PAREN('(', "opening parenthesis '('"),
 
-    /** closing parenthesis */
+    /** closing parenthesis ) */
     CLOSE_PAREN(')', "closing parenthesis ')'"),
 
-    /** opening bracket */
+    /** opening bracket [ */
     OPEN_BRACKET('[', "opening bracket '['"),
 
-    /** closing bracket */
+    /** closing bracket ] */
     CLOSE_BRACKET(']', "closing bracket ']'"),
 
     /** asterisk */

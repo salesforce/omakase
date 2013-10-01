@@ -63,7 +63,7 @@ public class RawAtRuleParser extends AbstractRefinableParser {
 
         RawSyntax block = null;
 
-        // parse the termination (usually ';' or the at-rule block)
+        // parse the termination (usually ';' or the start of an at-rule block), then parse the block
         if (!stream.optionallyPresent(tf.atRuleTermination()) && tf.atRuleBlockBegin().matches(stream.current())) {
             line = stream.line();
             column = stream.column();
