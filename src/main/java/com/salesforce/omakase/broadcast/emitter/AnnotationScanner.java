@@ -101,7 +101,6 @@ final class AnnotationScanner {
             // the validate annotation
             if (method.isAnnotationPresent(Validate.class)) {
                 if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
-                annotated = true;
 
                 // must have exactly two parameters
                 Class<?>[] params = method.getParameterTypes();

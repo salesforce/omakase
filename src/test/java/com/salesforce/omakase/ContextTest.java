@@ -145,7 +145,6 @@ public class ContextTest {
     }
 
     @Test
-    @SuppressWarnings("ConstantConditions")
     public void afterMethodPhaseOrder() {
         PluginWithObserve observe = new PluginWithObserve();
         PluginWithRework rework = new PluginWithRework();

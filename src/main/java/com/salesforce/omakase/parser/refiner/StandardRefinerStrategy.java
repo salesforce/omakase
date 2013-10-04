@@ -45,7 +45,7 @@ public final class StandardRefinerStrategy implements RefinerStrategy {
 
     @Override
     public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-        // use a queue so that we can hold off on broadcasting the individual parts until we ahve them all. This makes rework
+        // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
         // plugins that utilize order (#isFirst(), etc...) work smoothly.
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
         QueryableBroadcaster queryable = new QueryableBroadcaster(queue);

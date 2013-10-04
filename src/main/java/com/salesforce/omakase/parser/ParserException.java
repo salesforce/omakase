@@ -28,7 +28,7 @@ public class ParserException extends OmakaseException {
     private static final long serialVersionUID = -8952238331167900360L;
 
     /**
-     * Construct a new instance of a {@link ParserException} with the given {@link Message}.
+     * Constructs a new instance of a {@link ParserException} with the given {@link Message}.
      *
      * @param source
      *     The source containing the source of the error.
@@ -40,7 +40,7 @@ public class ParserException extends OmakaseException {
     }
 
     /**
-     * Construct a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
+     * Constructs a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
      *
      * @param source
      *     The source containing the source of the error.
@@ -54,7 +54,7 @@ public class ParserException extends OmakaseException {
     }
 
     /**
-     * Construct a new instance of a {@link ParserException}.
+     * Constructs a new instance of a {@link ParserException}.
      *
      * @param source
      *     The source containing the source of the error.
@@ -65,10 +65,32 @@ public class ParserException extends OmakaseException {
         super(format(source, message));
     }
 
+    /**
+     * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
+     * a {@link Source} if possible instead.
+     *
+     * @param line
+     *     The line where the error occurred.
+     * @param column
+     *     The column where the error occurred.
+     * @param message
+     *     The error message.
+     */
     public ParserException(int line, int column, Message message) {
         this(line, column, message.message());
     }
 
+    /**
+     * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
+     * a {@link Source} if possible instead.
+     *
+     * @param line
+     *     The line where the error occurred.
+     * @param column
+     *     The column where the error occurred.
+     * @param message
+     *     The error message.
+     */
     public ParserException(int line, int column, String message) {
         super(format(line, column, message));
     }
