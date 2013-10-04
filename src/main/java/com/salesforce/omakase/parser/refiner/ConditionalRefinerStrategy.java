@@ -31,21 +31,29 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.RefinableParser;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
+import com.salesforce.omakase.plugin.basic.Conditionals;
 
 import java.util.Set;
 
 /**
- * TODO description
+ * Parses {@link AtRule} objects that are {@link ConditionalAtRuleBlock}s.
  *
  * @author nmcwilliams
+ * @see ConditionalAtRuleBlock
+ * @see Conditionals
  */
 public final class ConditionalRefinerStrategy implements RefinerStrategy {
     private static final String IF = "if";
     private final Set<String> trueConditions;
 
+    /**
+     * Creates a new {@link ConditionalRefinerStrategy} instance with the given set of true conditions.
+     *
+     * @param trueConditions
+     *     Set containing the strings that should evaluate to "true" in a {@link ConditionalAtRuleBlock}.
+     */
     public ConditionalRefinerStrategy(Set<String> trueConditions) {
         this.trueConditions = trueConditions;
     }
@@ -81,17 +89,14 @@ public final class ConditionalRefinerStrategy implements RefinerStrategy {
         RawSyntax rawBlock = atRule.rawBlock().get();
         source = new Source(rawBlock.content(), rawBlock.line(), rawBlock.column());
 
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster);
-        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
-        RefinableParser rule = ParserFactory.ruleParser();
-
-        // we want to hold emitting statements until they get shuffled into a syntax collection. This is so that any plugins
+        // we want to hold off emitting statements until they get shuffled into a syntax collection. This is so that any plugins
         // that depend on order (appending, prepending, etc...) will work.
-        queue.pause();
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
 
         // parse the inner statements
         while (!source.eof()) {
-            boolean matched = rule.parse(source, queryable, refiner);
+            boolean matched = ParserFactory.ruleParser().parse(source, queryable, refiner);
             source.skipWhitepace();
 
             // after parsing there should be nothing left in the source

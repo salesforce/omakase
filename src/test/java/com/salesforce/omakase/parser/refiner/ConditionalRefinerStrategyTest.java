@@ -111,6 +111,26 @@ public class ConditionalRefinerStrategyTest {
     }
 
     @Test
+    public void errorsIfExtraUnparsableExpressionContent() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie7)$"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        exception.expect(ParserException.class);
+        exception.expectMessage("Unable to parse the remaining content in the conditional at-rule");
+        strategy.refineAtRule(ar, broadcaster, refiner);
+    }
+
+    @Test
+    public void errorsIfExtraUnparsableBlockContent() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, new RawSyntax(1, 1, ".class{color:red} $"), refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        exception.expect(ParserException.class);
+        exception.expectMessage("Unable to parse the remaining content in the conditional at-rule");
+        strategy.refineAtRule(ar, broadcaster, refiner);
+    }
+
+    @Test
     public void whenSuccessfulReturnsTrue() {
         AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
@@ -128,24 +148,49 @@ public class ConditionalRefinerStrategyTest {
         strategy.refineAtRule(ar, broadcaster, refiner);
 
         assertThat(ar.block().get()).isInstanceOf(ConditionalAtRuleBlock.class);
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
 
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
         assertThat(block.condition()).isEqualTo("ie7");
         assertThat(block.statements()).hasSize(2);
     }
 
     @Test
     public void whenSuccessfulBroadcastsTheBlock() {
-        fail("unimplemented");
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refineAtRule(ar, broadcaster, refiner);
+
+        Iterable<ConditionalAtRuleBlock> found = broadcaster.filter(ConditionalAtRuleBlock.class);
+        assertThat(found).hasSize(1);
+    }
+
+    public void statementsArePropertyOrganized() {
+        // statements should be aware of their order with respect to each other
+
+        // MOVE
+
     }
 
     @Test
     public void parsedConditionIsLowerCased() {
-        fail("unimplemented");
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(IE7)"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refineAtRule(ar, broadcaster, refiner);
+
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        assertThat(block.condition()).isEqualTo("ie7");
     }
 
     @Test
     public void parsedConditionIsTrimmed() {
-        fail("unimplemented");
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(  ie7 )"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refineAtRule(ar, broadcaster, refiner);
+
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        assertThat(block.condition()).isEqualTo("ie7");
     }
 }

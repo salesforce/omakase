@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.extended;
 
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -33,7 +34,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
 
 /**
- * TODO description
+ * An extension to the standard CSS syntax that allows for conditional at-rules.
+ * <p/>
+ * Example of a conditional at-rule:
+ * <pre>
+ * {@code @}if(ie7) { .test{color:red} }
+ * </pre>
+ * <p/>
+ * This block will output its inner statements if its condition (argument) is contained within a specified set of strings that
+ * should evaluate to "true".
+ * <p/>
+ * For more information on using and configuring conditionals see the main readme file.
  *
  * @author nmcwilliams
  */
@@ -44,16 +55,47 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
     private final Set<String> trueConditions;
     private final String condition;
 
+    /**
+     * Creates a new {@link ConditionalAtRuleBlock} instance with the given true conditions, condition, and set of statements.
+     * <p/>
+     * The given set of conditions represents the set of strings that equal the "true" values. During printing/writing of the CSS
+     * source, this block will only be printed if its given condition is contained with the trueConditions set. Note that this is
+     * case-sensitive. It is highly recommended to enforce a single case (e.g., lower-case) among the given condition and set of
+     * trueConditions in order to ensure this works properly.
+     * <p/>
+     * It is acceptable for the given Set to be changed after being passed to this class, allowing for producing multiple
+     * variations of the CSS source from a single parse operation. For example, set the trueConditions, write out the source,
+     * change the trueConditions, write out the source again, etc... . However also note that this also makes this class not
+     * thread-safe, depending on how the given set is used or altered outside of this class.
+     *
+     * @param trueConditions
+     *     Set containing the strings that should evaluate to "true".
+     * @param condition
+     *     The condition for this particular conditional at-rule block.
+     * @param statements
+     *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
+     *     set.
+     */
     public ConditionalAtRuleBlock(Set<String> trueConditions, String condition, SyntaxCollection<Stylesheet, Statement> statements) {
-        this.trueConditions = checkNotNull(trueConditions, "trueConditions cannot be null");
         this.condition = checkNotNull(condition, "condition cannot be null");
+        this.trueConditions = checkNotNull(trueConditions, "trueConditions cannot be null");
         this.statements = checkNotNull(statements, "statements cannot be null");
     }
 
+    /**
+     * Gets the condition (argument) of the conditional at-rule block.
+     *
+     * @return The lower-cased condition string.
+     */
     public String condition() {
         return condition;
     }
 
+    /**
+     * Gets the {@link SyntaxCollection} of statements within this conditional at-rule block.
+     *
+     * @return The collection of statements within this conditional at-rule block.
+     */
     public SyntaxCollection<Stylesheet, Statement> statements() {
         return statements;
     }
@@ -68,5 +110,15 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
         for (Statement statement : statements) {
             writer.write(statement, appendable);
         }
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this)
+            .indent()
+            .add("condition", condition)
+            .add("trueConditions", trueConditions)
+            .add("statements", statements)
+            .toString();
     }
 }
