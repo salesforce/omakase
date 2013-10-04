@@ -21,7 +21,9 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.error.ThrowingErrorManager;
+import com.salesforce.omakase.error.ErrorLevel;
+import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Test;
 
@@ -54,7 +56,13 @@ public class EmitterTest {
         emitter.register(plugin);
         emitter.phase(SubscriptionPhase.PROCESS);
 
-        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        emitter.emit(new ClassSelector("test"), new ErrorManager() {
+            @Override
+            public void report(ErrorLevel level, ParserException exception) {}
+
+            @Override
+            public void report(ErrorLevel level, Syntax cause, String message) {}
+        });
 
         assertThat(plugin.calledClassSelector).isTrue();
         assertThat(plugin.calledSimpleSelector).isTrue();
@@ -68,7 +76,13 @@ public class EmitterTest {
         emitter.register(plugin);
         emitter.register(plugin);
 
-        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        emitter.emit(new ClassSelector("test"), new ErrorManager() {
+            @Override
+            public void report(ErrorLevel level, ParserException exception) {}
+
+            @Override
+            public void report(ErrorLevel level, Syntax cause, String message) {}
+        });
 
         assertThat(plugin.count).isEqualTo(1);
     }

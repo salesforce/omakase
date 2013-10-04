@@ -32,10 +32,19 @@ public final class ThrowingErrorManager implements ErrorManager {
 
     private final String sourceName;
 
+    /** Creates a new {@link ThrowingErrorManager} instance with no given name. */
     public ThrowingErrorManager() {
         this(null);
     }
 
+    /**
+     * Creates a new {@link ThrowingErrorManager} instance with the given name.
+     * <p/>
+     * The name is used to provide more meaningful information on what CSS file or resource caused the problem.
+     *
+     * @param sourceName
+     *     Name of the CSS file, to be used for error reporting.
+     */
     public ThrowingErrorManager(String sourceName) {
         this.sourceName = sourceName;
     }
