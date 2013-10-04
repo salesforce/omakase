@@ -137,6 +137,16 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     }
 
     /**
+     * Gets whether the name of the atRule should be written out. Default is true, but can be modified via {@link
+     * #shouldWriteName(boolean)}.
+     *
+     * @return True if the name of the atRule should be written out.
+     */
+    public boolean shouldWriteName() {
+        return shouldWriteName;
+    }
+
+    /**
      * Gets the original, raw, non-validated expression if present (e.g., "utf-8", or "all and (min-width: 800px)".
      *
      * @return The raw expression, or {@link Optional#absent()} if not present.

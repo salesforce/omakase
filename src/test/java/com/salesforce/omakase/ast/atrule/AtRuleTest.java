@@ -182,6 +182,12 @@ public class AtRuleTest {
     }
 
     @Test
+    public void shouldWriteNameTrueByDefault() {
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
+        assertThat(ar.shouldWriteName()).isTrue();
+    }
+
+    @Test
     public void shouldWriteNameFalse() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
         ar.shouldWriteName(false);

@@ -118,6 +118,10 @@ public final class ConditionalRefinerStrategy implements RefinerStrategy {
         // set and broadcast it
         atRule.block(block);
         broadcaster.broadcast(block);
+
+        // don't print out the name of the at-rule
+        atRule.shouldWriteName(false);
+
         return true;
     }
 

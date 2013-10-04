@@ -165,11 +165,13 @@ public class ConditionalRefinerStrategyTest {
         assertThat(found).hasSize(1);
     }
 
-    public void statementsArePropertyOrganized() {
-        // statements should be aware of their order with respect to each other
+    @Test
+    public void setsAtRuleToNotPrintOutName() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
 
-        // MOVE
-
+        strategy.refineAtRule(ar, broadcaster, refiner);
+        assertThat(ar.shouldWriteName()).isFalse();
     }
 
     @Test

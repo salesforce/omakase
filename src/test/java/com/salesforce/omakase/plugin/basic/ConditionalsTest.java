@@ -42,7 +42,7 @@ public class ConditionalsTest {
         Conditionals conditionals = new Conditionals("ie7");
         assertThat(conditionals.trueConditions()).hasSize(1);
         assertThat(Iterables.get(conditionals.trueConditions(), 0)).isEqualTo("ie7");
-        conditionals.removeCondition("ie7");
+        conditionals.removeTrueCondition("ie7");
         assertThat(conditionals.trueConditions()).isEmpty();
     }
 

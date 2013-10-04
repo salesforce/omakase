@@ -84,6 +84,18 @@ public final class Conditionals implements SyntaxPlugin {
      * Adds the given strings to the trueConditions set. Each string will be automatically lower-cased for comparison purposes.
      *
      * @param trueConditions
+     *     The strings that should evaluate to "true".
+     *
+     * @return this, for chaining.
+     */
+    public Conditionals addTrueConditions(String... trueConditions) {
+        return addTrueConditions(Sets.newHashSet(trueConditions));
+    }
+
+    /**
+     * Adds the given strings to the trueConditions set. Each string will be automatically lower-cased for comparison purposes.
+     *
+     * @param trueConditions
      *     Iterable of the strings that should evaluate to "true".
      *
      * @return this, for chaining.
@@ -105,7 +117,7 @@ public final class Conditionals implements SyntaxPlugin {
      *
      * @return this, for chaining.
      */
-    public Conditionals removeCondition(String condition) {
+    public Conditionals removeTrueCondition(String condition) {
         trueConditions.remove(condition);
         return this;
     }
