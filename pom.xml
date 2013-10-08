@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.salesforce</groupId>
 	<artifactId>omakase</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Omakase CSS Parser</name>
 
 	<properties>
@@ -39,7 +39,7 @@
 			<version>2.0M10</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- for tests only -->
+		<!-- for tests only! -->
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
