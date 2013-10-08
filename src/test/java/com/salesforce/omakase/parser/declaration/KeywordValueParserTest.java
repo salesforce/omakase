@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.value.KeywordValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -77,6 +78,11 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
             withExpectedResult("_1afafkslf", 10),
             withExpectedResult("afa____--___---___-afafaf---123123afafa afafa", 39),
             withExpectedResult("red 1red-1red red", 3));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.value.StringValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -71,6 +72,11 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
             withExpectedResult("\"this is a \\\"string\\\".\", afa'f\"ad", 23),
             withExpectedResult("'this is a \"string\".' 'afafafa'", 21),
             withExpectedResult("'this is a \\'string\\'.'\"afa\"", 23));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

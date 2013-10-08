@@ -42,7 +42,7 @@ public class KeywordValueParser extends AbstractParser {
         Optional<String> keyword = source.readIdent();
         if (!keyword.isPresent()) return false;
 
-        KeywordValue value = new KeywordValue(snapshot.line, snapshot.column, keyword.get());
+        KeywordValue value = new KeywordValue(snapshot.originalLine, snapshot.originalColumn, keyword.get());
         value.comments(source.flushComments());
         broadcaster.broadcast(value);
 

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -109,6 +110,11 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
                 withExpectedResult("blahblah(1,1,1,2$*_918930939, , , , ,    ,, ~-``9289)", 53),
                 withExpectedResult("abc()", 5),
                 withExpectedResult("-one-two-three--four__abc(1)", 28));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

@@ -70,6 +70,11 @@ public class ImportantParserTest extends AbstractParserTest<ImportantParser> {
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return null;
+    }
+
+    @Override
     public boolean allowedToTrimLeadingWhitespace() {
         return true;
     }

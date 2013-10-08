@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.value.HexColorValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -81,6 +82,16 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
+    }
+
+    @Override
+    public boolean allowedToTrimLeadingWhitespace() {
+        return false;
+    }
+
+    @Override
     @Test
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<String>> results = parseWithExpected(
@@ -99,11 +110,6 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
             HexColorValue hex = result.broadcaster.findOnly(HexColorValue.class).get();
             assertThat(hex.color()).isEqualTo(result.expected);
         }
-    }
-
-    @Override
-    public boolean allowedToTrimLeadingWhitespace() {
-        return false;
     }
 
     @Test

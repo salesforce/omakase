@@ -60,7 +60,7 @@ public class CombinatorParser extends AbstractParser {
             source.skipWhitepace();
 
             // create and broadcast the combinator
-            Combinator combinator = new Combinator(snapshot.line, snapshot.column, type.get());
+            Combinator combinator = new Combinator(snapshot.originalLine, snapshot.originalColumn, type.get());
             broadcaster.broadcast(combinator);
             return true;
         }

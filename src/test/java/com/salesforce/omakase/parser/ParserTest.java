@@ -48,14 +48,11 @@ public interface ParserTest {
     @Test
     public void noChangeToStreamOnFailure();
 
-    /**
-     * Tests that the line and column number are from the beginning of the matched content (e.g., that it was saved off
-     * before parsing the source).
-     */
-    // @Test
-    // public void correctLineAndColumnNumber();
-
     /** Tests that the source advances to the expected index if parsing is successful. */
     @Test
     public void expectedStreamPositionOnSuccess();
+
+    /** Tests that created AST objects have the correct line and column numbers. */
+    @Test
+    public void lineAndColumnForSubStreams();
 }

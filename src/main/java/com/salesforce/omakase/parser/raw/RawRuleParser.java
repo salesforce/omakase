@@ -40,8 +40,8 @@ public class RawRuleParser extends AbstractRefinableParser {
         source.collectComments();
 
         // save off current line and column
-        int line = source.line();
-        int column = source.column();
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // wrap the broadcaster inside a queryable so we can gather the selectors and declarations
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);

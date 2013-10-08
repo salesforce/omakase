@@ -43,8 +43,8 @@ public class RawAtRuleParser extends AbstractRefinableParser {
         source.collectComments();
 
         // save off current line and column
-        int startLine = source.line();
-        int startColumn = source.column();
+        int startLine = source.originalLine();
+        int startColumn = source.originalColumn();
 
         // must begin with '@'
         if (!source.optionallyPresent(Tokens.AT_RULE)) return false;
@@ -54,8 +54,8 @@ public class RawAtRuleParser extends AbstractRefinableParser {
         if (!name.isPresent()) throw new ParserException(source, Message.MISSING_AT_RULE_NAME);
 
         // read everything up until the end of the at-rule expression (usually a semicolon or open bracket).
-        int line = source.line();
-        int column = source.column();
+        int line = source.originalLine();
+        int column = source.originalColumn();
         String content = source.until(tf.atRuleExpressionEnd()).trim();
         RawSyntax expression = content.isEmpty() ? null : new RawSyntax(line, column, content);
 
@@ -66,8 +66,8 @@ public class RawAtRuleParser extends AbstractRefinableParser {
 
         // parse the termination (usually ';' or the start of an at-rule block), then parse the block
         if (!source.optionallyPresent(tf.atRuleTermination()) && tf.atRuleBlockBegin().matches(source.current())) {
-            line = source.line();
-            column = source.column();
+            line = source.originalLine();
+            column = source.originalColumn();
             content = source.chompEnclosedValue(tf.atRuleBlockBegin(), tf.atRuleBlockEnd()).trim();
             block = content.isEmpty() ? null : new RawSyntax(line, column, content);
         }

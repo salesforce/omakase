@@ -80,6 +80,11 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
+    }
+
+    @Override
     public boolean allowedToTrimLeadingWhitespace() {
         return false;
     }

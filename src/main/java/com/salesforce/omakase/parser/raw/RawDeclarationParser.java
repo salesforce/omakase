@@ -46,8 +46,8 @@ public class RawDeclarationParser extends AbstractRefinableParser {
         if (!tokenFactory().declarationBegin().matches(source.current())) return snapshot.rollback();
 
         // get the property, which is everything up to the delimiter
-        int line = source.line();
-        int column = source.column();
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         String content = source.until(tokenFactory().propertyNameEnd());
 
@@ -63,8 +63,8 @@ public class RawDeclarationParser extends AbstractRefinableParser {
         source.skipWhitepace();
 
         // get the value, which is everything until the end of the declaration
-        line = source.line();
-        column = source.column();
+        line = source.originalLine();
+        column = source.originalColumn();
         content = source.until(tokenFactory().declarationEnd());
         RawSyntax value = new RawSyntax(line, column, content.trim());
 

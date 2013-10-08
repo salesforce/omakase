@@ -54,7 +54,7 @@ public class FunctionValueParser extends AbstractParser {
         // the arguments. The more specifically typed function values will be responsible for validating their own args.
         String args = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
 
-        FunctionValue value = new FunctionValue(snapshot.line, snapshot.column, name.get(), args);
+        FunctionValue value = new FunctionValue(snapshot.originalLine, snapshot.originalColumn, name.get(), args);
         value.comments(source.flushComments());
         broadcaster.broadcast(value);
 

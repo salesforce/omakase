@@ -103,6 +103,11 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
+    }
+
+    @Override
     public boolean allowedToTrimLeadingWhitespace() {
         return true;
     }

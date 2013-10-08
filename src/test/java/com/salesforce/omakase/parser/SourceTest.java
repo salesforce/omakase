@@ -36,7 +36,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public class SourceTest {
     static final String INLINE = ".class, #id { color: red }";
 
@@ -88,7 +88,71 @@ public class SourceTest {
     @Test
     public void isSubstream() {
         Source source = new Source(INLINE, 10, 5);
-        assertThat(source.isSubStream()).isTrue();
+        assertThat(source.isSubSource()).isTrue();
+    }
+
+    @Test
+    public void originalLineAnchorLineIs1LineIs1() {
+        Source source = new Source("abcdef", 1, 1);
+        assertThat(source.originalLine()).isEqualTo(1);
+    }
+
+    @Test
+    public void originalLineAnchorLineIs1LineMoreThan1() {
+        Source source = new Source("abc\ndef", 1, 1);
+        source.forward(4);
+        assertThat(source.line()).isEqualTo(2);
+        assertThat(source.originalLine()).isEqualTo(2);
+    }
+
+    @Test
+    public void originalLineAnchorLineMoreThan1LineIs1() {
+        Source source = new Source("abcdef", 2, 1);
+        assertThat(source.originalLine()).isEqualTo(2);
+    }
+
+    @Test
+    public void originalLineAnchorLineMoreThan1LineMoreThan1() {
+        Source source = new Source("abc\nd\nef", 6, 1);
+        source.forward(6);
+        assertThat(source.line()).isEqualTo(3);
+        assertThat(source.originalLine()).isEqualTo(8);
+    }
+
+    @Test
+    public void originalColumnAnchorColumn1ColumnIs1() {
+        Source source = new Source("abcdef", 1, 1);
+        assertThat(source.originalColumn()).isEqualTo(1);
+    }
+
+    @Test
+    public void originalColumnAnchorColumnIs1ColumnMoreThan1() {
+        Source source = new Source("abcdef", 1, 1);
+        source.forward(4);
+        assertThat(source.column()).isEqualTo(5);
+        assertThat(source.originalColumn()).isEqualTo(5);
+    }
+
+    @Test
+    public void originalColumnAnchorColumnMoreThan1ColumnIs1() {
+        Source source = new Source("abcdef", 1, 5);
+        assertThat(source.originalColumn()).isEqualTo(5);
+    }
+
+    @Test
+    public void originalColumnAnchorColumnMoreThan1ColumnMoreThan1() {
+        Source source = new Source("abcdef", 1, 3);
+        source.forward(4);
+        assertThat(source.column()).isEqualTo(5);
+        assertThat(source.originalColumn()).isEqualTo(7);
+    }
+
+    @Test
+    public void originalColumnWhenLineGreaterThan1() {
+        Source source = new Source("ab\ncdef", 3, 3);
+        source.forward(4);
+        assertThat(source.column()).isEqualTo(2);
+        assertThat(source.originalColumn()).isEqualTo(2);
     }
 
     @Test
@@ -254,14 +318,14 @@ public class SourceTest {
     @Test
     public void optionalFromEnumMatches() {
         Source source = new Source("abc123");
-        assertThat(source.optionalFromEnum(StreamEnum.class).get()).isSameAs(StreamEnum.ONE);
+        assertThat(source.optionalFromEnum(SourceEnum.class).get()).isSameAs(SourceEnum.ONE);
         assertThat(source.index()).isEqualTo(1);
     }
 
     @Test
     public void optionalFromEnumDoesntMatch() {
         Source source = new Source("___abc");
-        assertThat(source.optionalFromEnum(StreamEnum.class).isPresent()).isFalse();
+        assertThat(source.optionalFromEnum(SourceEnum.class).isPresent()).isFalse();
         assertThat(source.index()).isEqualTo(0);
     }
 
@@ -878,13 +942,13 @@ public class SourceTest {
         assertThat(source.inString()).isFalse();
     }
 
-    public enum StreamEnum implements TokenEnum {
+    public enum SourceEnum implements TokenEnum {
         ONE(Tokens.ALPHA),
         TWO(Tokens.DIGIT);
 
         private final Token token;
 
-        StreamEnum(Token token) {
+        SourceEnum(Token token) {
             this.token = token;
         }
 

@@ -135,6 +135,11 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
+    }
+
+    @Override
     public boolean allowedToTrimLeadingWhitespace() {
         return true;
     }

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.AttributeMatchType;
 import com.salesforce.omakase.ast.selector.AttributeSelector;
@@ -28,7 +29,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link AttributeSelectorParser}.
@@ -86,6 +87,11 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
             withExpectedResult("[href=\"http://peri]s[]hab\\\"lepr'ess.com\"] #id", 41),
             withExpectedResult("[href] > .class", 6),
             withExpectedResult("[foo*=\"bar\"]\n[href]", 12));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -81,6 +82,11 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
         }
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

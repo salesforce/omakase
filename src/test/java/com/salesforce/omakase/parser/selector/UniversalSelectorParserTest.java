@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
@@ -53,6 +54,11 @@ public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSel
             withExpectedResult("*#div", 1),
             withExpectedResult("*.class", 1),
             withExpectedResult("* class", 1));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

@@ -110,6 +110,11 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
+    }
+
+    @Override
     public boolean allowedToTrimLeadingWhitespace() {
         return true;
     }

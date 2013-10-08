@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -60,6 +61,11 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
             withExpectedResult("div.class", 3),
             withExpectedResult("div div div", 3),
             withExpectedResult("a:link", 1));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

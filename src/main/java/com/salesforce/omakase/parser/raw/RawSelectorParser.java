@@ -43,7 +43,7 @@ public class RawSelectorParser extends AbstractRefinableParser {
 
         // grab everything until the end of the selector
         String content = source.until(tokenFactory().selectorEnd());
-        RawSyntax raw = new RawSyntax(snapshot.line, snapshot.column, content.trim());
+        RawSyntax raw = new RawSyntax(snapshot.originalLine, snapshot.originalColumn, content.trim());
 
         // create selector and associate comments
         Selector selector = new Selector(raw, refiner);

@@ -49,7 +49,7 @@ public class ClassSelectorParser extends AbstractParser {
         if (!name.isPresent()) throw new ParserException(source, Message.EXPECTED_VALID_CLASS);
 
         // broadcast the new class selector
-        ClassSelector selector = new ClassSelector(snapshot.line, snapshot.column, name.get());
+        ClassSelector selector = new ClassSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
 

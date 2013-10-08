@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -134,6 +135,11 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
                 withExpectedResult("*color:red", 10),
                 withExpectedResult("/*comment*//*comment*/ *color: red", 34)
             );
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

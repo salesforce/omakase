@@ -53,7 +53,7 @@ public class IdSelectorParser extends AbstractParser {
         if (!name.isPresent()) throw new ParserException(source, Message.EXPECTED_VALID_ID);
 
         // broadcast the new id selector
-        IdSelector selector = new IdSelector(snapshot.line, snapshot.column, name.get());
+        IdSelector selector = new IdSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;

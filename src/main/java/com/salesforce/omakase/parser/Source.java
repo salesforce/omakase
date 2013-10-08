@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -162,7 +163,20 @@ public final class Source {
     }
 
     /**
+     * Gets the current index position within the original source. Not to be confused with the current column position, which is
+     * found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
+     *
+     * @return The current index position.
+     */
+    public int index() {
+        return index;
+    }
+
+    /**
      * Gets the current line number.
+     * <p/>
+     * If you want to get the line number from the original source, regardless of whether this is a sub-source or not then you may
+     * want to use {@link #originalLine()} instead.
      *
      * @return The current line number.
      */
@@ -172,21 +186,14 @@ public final class Source {
 
     /**
      * Gets the current column position.
+     * <p/>
+     * If you want to get the column number from the original source, regardless of whether this is a sub-source or not then you
+     * may want to use {@link #originalColumn()} instead.
      *
      * @return The current column position.
      */
     public int column() {
         return column;
-    }
-
-    /**
-     * Gets the current index position within the original source. Not to be confused with the current column position, which is
-     * found with {@link #column()} instead. Note that unlike the line and column number, index is 0-based.
-     *
-     * @return The current index position.
-     */
-    public int index() {
-        return index;
     }
 
     /**
@@ -210,11 +217,40 @@ public final class Source {
     }
 
     /**
-     * Gets whether this a sub-sequence.
+     * Gets the original line, taking into account both the {@link #anchorLine()} and the current {@link #line()}.
+     * <p/>
+     * This should be used when you want to get the real line in the original source, even if this {@link Source} is a sub-source
+     * from the original. This is accurate to use even if this source is not a sub-source.
+     * <p/>
+     * If you want the current line within this exact {@link Source} only then use {@link #line()} instead.
+     *
+     * @return The original line number.
+     */
+    public int originalLine() {
+        return anchorLine + line - 1;
+    }
+
+    /**
+     * Gets the original column, taking into account both the {@link #anchorColumn()} and the current {@link #column()}.
+     * <p/>
+     * This should be used when you want to get the real column in the original source, even if this {@link Source} is a
+     * sub-source from the original. This is accurate to use even if this source is not a sub-source.
+     * <p/>
+     * If you want the current column within this exact {@link Source} only then use {@link #column()} instead.
+     *
+     * @return The original column number.
+     */
+    public int originalColumn() {
+        return (line == 1) ? anchorColumn + column - 1 : column;
+    }
+
+    /**
+     * Gets whether this a sub-sequence. In other words, this will be true if this source was created from a sub-sequence of a
+     * parent source. This is commonly true for AST objects created through {@link Refinable#refine()} methods.
      *
      * @return True if either the {@link #anchorLine()} or {@link #anchorColumn()} is greater than 1.
      */
-    public boolean isSubStream() {
+    public boolean isSubSource() {
         return anchorLine != 1 || anchorColumn != 1;
     }
 
@@ -892,12 +928,20 @@ public final class Source {
         /** whether we are in a string at the captured index */
         public final boolean inString;
 
+        /** the original source line. See {@link Source#originalLine()}. */
+        public final int originalLine;
+
+        /** the original source column. See {@link Source#originalColumn()}. */
+        public final int originalColumn;
+
         private Snapshot(Source source, int index, int line, int column, boolean inString) {
             this.source = source;
             this.index = index;
             this.line = line;
             this.column = column;
             this.inString = inString;
+            this.originalLine = source.originalLine();
+            this.originalColumn = source.originalColumn();
         }
 
         /**

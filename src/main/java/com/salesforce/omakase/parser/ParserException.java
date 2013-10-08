@@ -97,7 +97,7 @@ public class ParserException extends OmakaseException {
 
     /** formats the error message */
     private static String format(Source source, String message) {
-        if (!source.isSubStream()) {
+        if (!source.isSubSource()) {
             return String.format("Omakase CSS Parser - %s:\nat line %s, column %s in source\n'%s'",
                 message,
                 source.line(),

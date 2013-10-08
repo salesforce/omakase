@@ -43,7 +43,7 @@ public class TypeSelectorParser extends AbstractParser {
         if (!name.isPresent()) return false;
 
         // create and broadcast the new selector
-        TypeSelector selector = new TypeSelector(snapshot.line, snapshot.column, name.get());
+        TypeSelector selector = new TypeSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;

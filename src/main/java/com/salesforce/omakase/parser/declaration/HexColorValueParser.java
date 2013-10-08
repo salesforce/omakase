@@ -51,7 +51,7 @@ public class HexColorValueParser extends AbstractParser {
             // check for a valid length
             if (color.length() != 6 && color.length() != 3) throw new ParserException(source, Message.INVALID_HEX, color);
 
-            HexColorValue value = new HexColorValue(snapshot.line, snapshot.column, color);
+            HexColorValue value = new HexColorValue(snapshot.originalLine, snapshot.originalColumn, color);
             value.comments(source.flushComments());
 
             broadcaster.broadcast(value);

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.parser.AbstractParserTest;
@@ -153,6 +154,11 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                     123),
                 withExpectedResult("@media tv and (min-width: 700px) and (orientation: landscape) { ... }\n@media", 69)
             );
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.selector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -71,6 +72,11 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
             withExpectedResult("#id123", 6),
             withExpectedResult("#-name~a", 6),
             withExpectedResult("#-NAMEname1_aAz234ABCdefafklsjfseuf+.huise____hfie", 35));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

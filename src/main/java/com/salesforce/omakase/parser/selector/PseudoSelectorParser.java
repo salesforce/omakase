@@ -64,7 +64,7 @@ public class PseudoSelectorParser extends AbstractParser {
         Syntax selector;
 
         if (type == PSEUDO_ELEMENT_SELECTOR) {
-            selector = new PseudoElementSelector(snapshot.line, snapshot.column, name.get());
+            selector = new PseudoElementSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
         } else {
             // check for arguments (currently only applies to pseudo classes)
             String args = null;
@@ -72,7 +72,7 @@ public class PseudoSelectorParser extends AbstractParser {
                 args = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim();
             }
 
-            selector = new PseudoClassSelector(snapshot.line, snapshot.column, name.get(), args);
+            selector = new PseudoClassSelector(snapshot.originalLine, snapshot.originalColumn, name.get(), args);
         }
 
         selector.comments(source.flushComments());

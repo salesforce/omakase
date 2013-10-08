@@ -51,7 +51,7 @@ public class StringValueParser extends AbstractParser {
             return false;
         }
 
-        StringValue string = new StringValue(snapshot.line, snapshot.column, mode, value);
+        StringValue string = new StringValue(snapshot.originalLine, snapshot.originalColumn, mode, value);
         string.comments(source.flushComments());
         broadcaster.broadcast(string);
 

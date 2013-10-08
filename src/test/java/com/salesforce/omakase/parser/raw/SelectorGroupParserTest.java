@@ -87,6 +87,11 @@ public class SelectorGroupParserTest extends AbstractParserTest<SelectorGroupPar
     }
 
     @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
+    }
+
+    @Override
     public boolean allowedToTrimLeadingWhitespace() {
         return true;
     }

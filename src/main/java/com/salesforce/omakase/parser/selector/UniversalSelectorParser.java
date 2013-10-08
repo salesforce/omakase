@@ -42,7 +42,7 @@ public class UniversalSelectorParser extends AbstractParser {
         if (!matched) return false;
 
         // broadcast the new selector
-        UniversalSelector selector = new UniversalSelector(snapshot.line, snapshot.column);
+        UniversalSelector selector = new UniversalSelector(snapshot.originalLine, snapshot.originalColumn);
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;

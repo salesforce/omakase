@@ -64,7 +64,7 @@ public class NumericalValueParser extends AbstractParser {
 
         // create the numerical value instance
         Long realIntegerValue = integer == null ? 0 : integer;
-        NumericalValue value = new NumericalValue(snapshot.line, snapshot.column, realIntegerValue);
+        NumericalValue value = new NumericalValue(snapshot.originalLine, snapshot.originalColumn, realIntegerValue);
 
         // add the decimal value if applicable
         if (decimal != null) {

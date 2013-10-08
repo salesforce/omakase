@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue;
 import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
@@ -90,6 +91,11 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
             withExpectedResult("-1px -", 4),
             withExpectedResult("1px red", 3),
             withExpectedResult("1px\nred", 3));
+    }
+
+    @Override
+    public String validSourceForPositionTesting() {
+        return Iterables.get(validSources(), 0);
     }
 
     @Override

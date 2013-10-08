@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
@@ -29,7 +30,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Base class for testing parsers.
@@ -58,6 +59,12 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
      * {@link Source#eof()} being true.
      */
     public abstract List<String> validSources();
+
+    /**
+     * A valid source that upon parsing should result in at least one broadcaster AST object. See {@link
+     * #lineAndColumnForSubStreams()}. Return null if no AST objects are expected to be broadcasted.
+     */
+    public abstract String validSourceForPositionTesting();
 
     /** A list of sources with the expected index after a successful parse. */
     public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
@@ -127,24 +134,24 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
-    // this needs to skip over comments in addition to whitespace
-    // @Test
-    // @Override
-    // public void correctLineAndColumnNumber() {
-    // for (GenericParseResult result : parse(validSources())) {
-    // Syntax first = result.broadcasted.get(0);
-    //
-    // assertThat(first.line()).describedAs(result.source.toString()).isEqualTo(1);
-    //
-    // if (allowedToTrimLeadingWhitespace()) {
-    // String trim = result.source.source().trim();
-    // int column = result.source.source().indexOf(trim) + 1;
-    // assertThat(first.column()).describedAs(result.source.toString()).isEqualTo(column);
-    // } else {
-    // assertThat(first.column()).describedAs(result.source.toString()).isEqualTo(1);
-    // }
-    // }
-    // }
+    @Test
+    @Override
+    public void lineAndColumnForSubStreams() {
+        String content = validSourceForPositionTesting();
+        if (content == null) return;
+
+        Source source = new Source(content, 3, 2);
+        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
+        parser.parse(source, broadcaster);
+
+        Optional<Syntax> syntax = broadcaster.find(Syntax.class);
+        if (!syntax.isPresent()) {
+            fail("Test Error: expected source to broadcast a Syntax object");
+        }
+
+        assertThat(syntax.get().line()).isEqualTo(3);
+        assertThat(syntax.get().column()).isEqualTo(2);
+    }
 
     /** helper method */
     protected List<GenericParseResult> parse(String... sources) {
