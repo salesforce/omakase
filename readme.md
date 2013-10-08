@@ -26,17 +26,9 @@ Omakase is built 100% solely for parsing CSS, which means that the error message
 
 ### Awesome standard plugins
 
-Omakase comes with some nifty plugins out of the box that mirror highly-touted _CSS Preprocessor_ functionality:
+Omakase comes with some nifty plugins out of the box that mirror common _CSS Preprocessor_ functionality:
 
-- mixins
-- right-to-left swapping
-- automatic vendor prefixing
-- CSS annotations
-- custom functions
-- theme variables(?)
-- url cache busting for images
-
-TODO add descriptions 
+TODO add 
 
 Usage
 -----
@@ -53,7 +45,7 @@ Omakase.source(input).process();
 
 However this is not very useful in and of itself. Usually you will register various plugins according to your needs.
 
-The most basic principle to understand when using Omakase is that nearly everything is organized into a set of _plugins_. Need a syntax tree? Add the `SyntaxTree` plugin. Need to output the processed code in compressed or dev mode format? Register a `StyleWriter` plugin. Want some validation or linting? Add the applicable plugins.
+The most basic principle to understand when using Omakase is that nearly everything is organized into a set of _plugins_. Need to output the processed code in compressed or dev mode format? Register a `StyleWriter` plugin. Want to enable built-in validations? Register a `StandardValidation` plugin. Want to add your own custom rework, validation and linting? Create and register the applicable plugins.
 
 This loosely coupled architecture allows us to achieve better performance and caters to the pattern of parsing a CSS source over and over with different configurations as opposed to parsing just once (which other libraries might necessitate for performance cost reasons).
 
@@ -86,85 +78,54 @@ StyleWriter inline = StyleWriter.inline();
 StyleWriter compressed = StyleWriter.compressed();
 ```
 
-In some cases you may want to write out an individual unit:
+In some cases you may want to write out an individual, stand-alone syntax unit:
 
 ```java
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
 StyleWriter.compressed().writeSnippet(declaration);
 ```
 
-Finally, you can also override how any individual syntax unit is written. You could use this to prepend or append certain content, for example. For more information see the "Custom writers" section below.
+Finally, you can also override how any individual syntax unit is written. For more information see the "Custom writers" section below.
 
 ### Validation
 
 In Omakase, _validation_ refers to both actual syntax validation (e.g., that the arguments to an `rgba` function are well-formed) as well as what is commonly known as _linting_ (e.g., that fonts are specified using relative units instead of pixels).
 
-All validation is written and registered as plugins. When full syntax validation is desired you usually want to enable every standard built-in validation plugin as well as auto-refinement on everything:
+All validation is written and registered as plugins. To enable the standard validations, register an instance of the `StandardValidation` plugin:
 
 ```java
-Omakase.source(input)
-    .request(new AutoRefiner().all())
-    .request(Validation.normal())
-    .process();
+Omakase.source(input).request(new StandardValidation()).process();
 ```
 
-This auto-refines every selector, declaration and at-rule (see the "Specifying common plugins" section below for more information) and registers the basic list of built-in validators.
+This auto-refines every selector, declaration and at-rule (see the "AutoRefiner" section below for more information on auto-refinement) and registers the standard list of built-in validators.
 
-Validation methods will always be invoked after rework methods, but otherwise they will be executed in the order that the plugin class was registered.
+Keep in mind that validation methods will always be invoked after rework methods, but otherwise they will be executed in the order that the plugin class was registered.
 
 You can also add your own custom validators. For examples see the "Custom validation" section below.
 
-#### Linting
-In addition to syntax validation you can optionally register the following built-in linters as well:
-
-- TODO add list of linters 
-
-
 ### Registering plugins
 
-When specifying plugins there are important details to keep in mind:
+When registering plugins there are important details to keep in mind:
 
 - Only one instance of a plugin can be registered to a single parse operation.
 - Subscription methods will be executed in the order that its plugin class was registered.
-- All `@Rework` annotated methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
+- All `@Rework` subscription methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
 
-There are two particular standard plugins that you need to be aware of when using Omakase.
+### Library-provided Plugins
+
 
 #### SyntaxTree
 
-The `SyntaxTree` plugin is responsible for, well creating the syntax tree. The phrase "syntax tree" refers to the data structure of the hierarchically and relationally organized list of objects representing the CSS source code. In basic form the syntax tree can be visualized like this:
-
-- Stylesheet
-    - Rule 1
-        - Selector 1
-            - Class Selector
-            - Combinator
-            - IdSelector
-        - Selector 2
-            - Class Selector
-        - Declaration 1
-            - HexColorValue 
-        - Declaration 2
-            - KeywordValue 
-    - Rule 2
-        - ...
-
-Without the `SyntaxTree` plugin registered then processing will essentially just create a stream of `Selector`, `Declaration` and `AtRule` objects only. In other words, `Stylesheet` and `Rule` objects will not be created.
-
-In addition, `Selector` and `Declaration` objects will not be aware of their relationship or order with respect to other `Selector` and `Declaration` objects. In order to utilize this information a `SyntaxTree` plugin instance must be registered.
-
-Plugins that depend on this information will register the dependency themselves and you will not have to worry about it (unless of course you are authoring the plugin itself). However in some cases you may want to get direct access to the tree anyway:
+The `SyntaxTree` plugin is an extremely simple plugin that only grabs and stores a reference to the parsed `Stylesheet` object. It's an easy way for you to get access to the `Stylesheet` object without you having to write a custom plugin.
 
 ```java
 SyntaxTree tree = new SyntaxTree();
-
 Omakase.source(input).request(tree).process();
-
 Stylesheet stylesheet = tree.stylesheet();
 System.out.println("#statements = " + stylesheet.statements().size());
 ```
 
-To help working with the `Statement` objects within the `Stylesheet`, there are a few helper methods available:
+When working with the `Statement` objects within the `Stylesheet`, there are a few helper methods available:
 
 ```java
 Stylesheet stylesheet = tree.stylesheet();
@@ -189,20 +150,39 @@ AutoRefiner selectors = new AutoRefiner().selectors(); // refine all selectors
 AutoRefiner declarations = new AutoRefiner().declarations(); // refine all declarations
 ```
 
-Many plugins will automatically register an `AutoRefiner` anyway, but it's important to register it yourself if you need to ensure that the unrefined objects are validated:
+Many plugins will automatically register an `AutoRefiner` as a dependency anyway, but it's important to register it yourself if you need to ensure that the unrefined objects are validated:
 
 ```java
 AutoRefiner refinement = new AutoRefiner().all();
 Omakase.source(input).request(refinement).process();
 ```
 
-Note that there are some cases when you don't need auto-refinement. For example, if you have already validated the CSS content during a build step, but now you are parsing the source code again in production to change a few dynamic values.
+Note that there are some cases when you don't need auto-refinement. For example, you usually want to ensure that you have valid CSS on the first parsing pass during a build step. However when parsing the already-validated CSS code again during runtime for, say, dynamic value substitutions, you may want to skip over this validation and save time.
 
-### Using built-in preprocessor plugins
+#### Conditionals
 
-The following preprocessing plugins are available for registration:
+TODO
 
-- TODO
+#### UnquotedIEFilterPlugin
+
+If you are in the unfortunate situation of using crappy legacy IE filters then the UnquotedIEFilterPlugin must be registered, otherwise syntax errors will occur.
+
+```java
+UnquotedIEFilterPlugin ieFilters = new UnquotedIEFilterPlugin();
+Omakase.source(input).request(ieFilters).process();
+```
+
+Note that *quoted* IE filters do not require this plugin. An example of an unquoted IE filter:
+
+```css
+filter: progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3);
+```
+
+compared to quoted:
+
+```css
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)";
+```
 
 ### Creating custom plugins
 
@@ -210,7 +190,7 @@ In addition to the standard library plugins, you can create and register your ow
 
 Plugins are essentially plain java objects that implement one of the _plugin interfaces_ and define one or more _subscription methods_ to a particular AST object (e.g., `Selector` or `Declaration`). The subscription method does the actual rework or validation as appropriate.
 
-Plugins are registered exactly the same as as any of the standard built-in plugins such as `StyleWriter` or `SyntaxTree`.
+Plugins are registered exactly the same as as any of the standard built-in plugins such as `StyleWriter` or `AutoRefiner`.
 
 See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
 
@@ -254,28 +234,7 @@ Notice the following details:
 
 This is the general pattern of performing rework. The class adds as many methods as desired, each with the `@Rework` annotation and a single argument which is the type of syntax unit to rework. The method will be automatically invoked by the framework, allowing you to perform any operations on the given unit.
 
-Actually this example is not quite complete. This plugin should be a `DependentPlugin` because it cares about the order of the selectors (it uses the `prepend` method). The class should look like this instead:
-
-```java
-public class PrefixAllSelectors implements DependentPlugin {
-    @Override
-    public void dependencies(PluginRegistry registry) {
-        registry.require(SyntaxTree.class);
-    }
-
-    @Rework
-    public void prefixClass(Selector selector) {
-        // create and add a new class selector to the beginning
-        selector.parts().prepend(new ClassSelector("myPrefix"));
-    }
-}
-```
-
-By implementing `DependentPlugin`, the `#dependencies(PluginRegistry)` method will be called automatically, giving us a chance to declare any plugins that our code requires.
-
-We require a `SyntaxTree`, because without it our call to `#prepend` won't work (if this doesn't make sense then read the "Syntax Tree" section above and the "Dependent plugins" section below).
-
-See the "Dependent plugins" section below for more details on dependencies. For more advanced examples on performing rework see the `ReworkTest.java` class. 
+For more advanced examples on performing rework see the `ReworkTest.java` class. 
 
 ##### Dynamic AST creation and modification
 
@@ -356,7 +315,7 @@ someRule.detach();
 
 // for more examples see the many unit tests
 ```
-Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins, so long as they are registered correctly.
+Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins, so long as the plugins are registered correctly.
 
 #### Custom validation
 
@@ -412,9 +371,7 @@ Keep in mind that all validators run after the rework phase has been completed. 
 
 As mentioned above, many plugins, especially ones with `@Rework`, will need to register dependencies on other plugins. 
 
-You must have a dependency on `SyntaxTree` if you are subscribing to `Rule` or `Stylesheet` objects. You also have this dependency if you do any kind operation or checking of the relationship of units between one another, for example `prepend`, `append`, `isFirst`, `isLast`, and so on. In other words, all operations that utilize `SyntaxCollection` objects. 
-
-You also will have a dependency on `AutoRefiner` in many cases where you have subscriptions to syntax unit types more specific than `Selector` and `Declaration`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below. 
+You  will have a dependency on `AutoRefiner` in cases where you have subscriptions to syntax unit types more specific than `Selector`, `Declaration` or `AutoRefiner`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below. 
 
 If your plugin only needs refined selector units then `AutoRefiner#selectors()` will suffice, or `AutoRefiner#declarations()` for declarations. To nab everything then you can use `AutoRefiner#all()`.
 
@@ -424,7 +381,6 @@ Here is an example of a plugin with dependencies:
 public class Dependent implements DependentPlugin {
     @Override
     public void dependencies(PluginRegistry registry) {
-        registry.require(SyntaxTree.class);
         registry.require(AutoRefiner.class).selectors();
     }
 }
@@ -452,19 +408,11 @@ Within a particular class, the more specifically-typed subscription will be deli
 
 See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
 
-#### Observe and PreProcess
+#### Observe
 
-Besides `@Rework` and `@Validate`, there are two more annotations that can be used to make a subscription method.
-
-##### @Observe
+Besides `@Rework` and `@Validate`, there is one more annotation that can be used to make a subscription method.
 
 `@Observe` can be used in place of `@Rework` when your intention is to simply utilize information from the AST object and you do not intend to make any changes. In terms of execution order, `@Observe` and `@Rework` are equivalent. Currently the only difference `@Observe` makes is providing a better description of what the method intends to do.
-
-##### @PreProcess
-
-Methods can be annotated with `@PreProcess` as well. Methods with this annotation will be invoked before all subscription methods of *any other type* (rework, validate, etc...).
-
-Generally speaking, this is not the annotation to use in most cases. It's more so utilized internally by the framework. In particular, it will only be called on units within the original CSS source code, not for dynamically created syntax units.
 
 #### Base plugin
 
@@ -544,7 +492,7 @@ AST objects are automatically associated with all comments that logically preced
 - **16, 17** - orphaned comments linked to the `Rule`
 - **18, 19** - orphaned comments linked to the `Stylesheet`
 
-Note that without a `SyntaxTree` plugin registered, some of the orphaned comments will be dropped. Also, without refinement the comments on the inner segments of the `Selector`s and `Declaration`s will not be known.
+Note that without refinement, the comments on the inner segments of the `Selector`s and `Declaration`s will not be known.
 
 #### Annotations
 
@@ -554,7 +502,7 @@ TODO
 
 #### Orphaned comments
 
-The term _orphaned comment_ refers to a comment that does not logically precede any particular AST unit. There are four places where orphaned comments can be found, which is at the end of a selector, at the end of a declaration (before the semi-colon), at the end of a rule, and at the end of a stylesheet. Here are some examples:
+The term _orphaned comment_ refers to a comment that does not logically precede any particular AST unit. There are four places where orphaned comments can be found, which are at the end of a selector, at the end of a declaration (before the semi-colon), at the end of a rule, and at the end of a stylesheet. Here are some examples:
 
 ```css
 .class1 .class2 > a:hover /* an orphaned comment */, #id a:hover /*another orphaned comment*/ {
@@ -566,10 +514,11 @@ The term _orphaned comment_ refers to a comment that does not logically precede 
 /* an orphaned comment */
 ```
 
-Use the `#orphanedComments` method on a `Selector`, `Declaration`, `Rule` or `Stylesheet` to retrieve them. Orphaned comments are also the only comments that you can directly subscribe to. This allows you to do things such as:
+Use the `#orphanedComments` method on a `Selector`, `Declaration`, `Rule` or `Stylesheet` to retrieve them. This allows you to do things such as:
 
 - Place an annotation directive in a comment dictating certain processing behavior.
 - Conditionally perform some action on the selector, rule, or stylesheet based on the content of the comment.
+- If for some reason you really need access to every possible comment in the source code then this allows you to get at the ones not associated with an immediately subsequent AST unit.
 
 Subscribable Syntax Units
 -------------------------
@@ -580,36 +529,33 @@ Following is the list of all supported syntax types that you can subscribe to in
     Name                           Description                                               Enablement / Dependency     Type
     ----------------------------   -------------------------------------------------------   -------------------------   ---------------
 01: Refinable                      raw syntax that can be further refined                    Automatic                   interface
-02: Statement                      rule or at-rule                                           SyntaxTree                  interface
+02: Statement                      rule or at-rule                                           Automatic                   interface
 03: Syntax                         parent interface of all subscribable units                Under certain conditions*   interface
-04: OrphanedComment                A comment unassociated with any syntax unit               Under certain conditions*   class
-05: Rule                           (no description)                                          SyntaxTree                  class
-06: Stylesheet                     (no description)                                          SyntaxTree                  class
-07: AtRule                         (no description)                                          Automatic                   class
-08: Declaration                    (no description)                                          Automatic                   class
-09: PropertyValue                  interface for all property values                         Declaration#refine          interface
-10: Term                           a single segment of a property value                      Declaration#refine          interface
-11: FunctionValue                  individual function value                                 Declaration#refine          class
-12: HexColorValue                  individual hex color value                                Declaration#refine          class
-13: KeywordValue                   individual keyword value                                  Declaration#refine          class
-14: NumericalValue                 individual numerical value                                Declaration#refine          class
-15: StringValue                    individual string value                                   Declaration#refine          class
-16: TermList                       default, generic property value                           Declaration#refine          class
-17: NotifyDeclarationBlockEnd      the end of a declaration block                            Automatic                   class
-18: NotifyDeclarationBlockStart    the beginning of a declaration block                      Automatic                   class
-19: NotifyStylesheetEnd            the end of a stylesheet                                   Automatic                   class
-20: NotifyStylesheetStart          the beginning of a stylesheet                             Automatic                   class
-21: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-22: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-23: AttributeSelector              attribute selector segment                                Selector#refine             class
-24: ClassSelector                  class selector segment                                    Selector#refine             class
-25: Combinator                     combinator segment                                        Selector#refine             class
-26: IdSelector                     id selector segment                                       Selector#refine             class
-27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
-28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
-29: Selector                       (no description)                                          Automatic                   class
-30: TypeSelector                   type/element selector segment                             Selector#refine             class
-31: UniversalSelector              universal selector segment                                Selector#refine             class
+04: Rule                           (no description)                                          Automatic                   class
+05: Stylesheet                     (no description)                                          Automatic                   class
+06: AtRule                         (no description)                                          Automatic                   class
+07: Declaration                    (no description)                                          Automatic                   class
+08: PropertyValue                  interface for all property values                         Declaration#refine          interface
+09: Term                           a single segment of a property value                      Declaration#refine          interface
+10: FunctionValue                  individual function value                                 Declaration#refine          class
+11: HexColorValue                  individual hex color value                                Declaration#refine          class
+12: KeywordValue                   individual keyword value                                  Declaration#refine          class
+13: NumericalValue                 individual numerical value                                Declaration#refine          class
+14: StringValue                    individual string value                                   Declaration#refine          class
+15: TermList                       default, generic property value                           Declaration#refine          class
+16: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
+17: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
+18: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+19: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+20: AttributeSelector              attribute selector segment                                Selector#refine             class
+21: ClassSelector                  class selector segment                                    Selector#refine             class
+22: Combinator                     combinator segment                                        Selector#refine             class
+23: IdSelector                     id selector segment                                       Selector#refine             class
+24: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
+25: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
+26: Selector                       (no description)                                          Automatic                   class
+27: TypeSelector                   type/element selector segment                             Selector#refine             class
+28: UniversalSelector              universal selector segment                                Selector#refine             class
 
 Generated by SubscribableSyntaxTable.java
 </pre>
@@ -622,7 +568,7 @@ Generated by SubscribableSyntaxTable.java
 Development and Contribution
 ----------------------------
 
-Before checking *anything* in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of the `idea` or `eclipse` folders.
+Before checking anything in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of the `idea` or `eclipse` folders.
 
 As of right now the (strongly) preferred IDE for contribution is intellij IDEA. This is mainly because the existing source code and style closely conforms to the idea settings included in the project. If you use eclipse or something else then be sure to following the existing coding conventions manually if need be.
 
@@ -719,7 +665,7 @@ A `Plugin` subscribes to one or more AST objects (one per method) to perform rew
 
 Plugins are registered during parser setup via `Omakase#request` or `Omakase#add`. Plugins can and often do have dependencies on each other, which can be registered by implementing the `DependentPlugin` interface. 
 
-The general Omakase philosophy is that much of the internal logic as well as all of the consumer logic is organized into a set of plugins. For example, the `SyntaxTree` object is a plugin which simply listens for `Selector`, `Declaration` and `AtRule` objects and constructs the full syntax tree from there.
+The general Omakase philosophy is that much of the internal logic as well as all of the consumer logic is organized into a set of plugins.
 
 ### Broadcasters
 **Key Classes** `Broadcaster` `Emitter` `AnnotationScanner` `Subscription`
@@ -740,5 +686,5 @@ Error managers are responsible for dealing with errors during processing, includ
 
 ### Notes
 
-Omakase is not a thread-safe parser. That is, things will most definitely blow up if you try to reuse the same AST objects or SyntaxTree in multiple threads.
+Omakase is *not* explicitly designed for thread-safety. Specifically, it is not recommended to try to share AST objects (anything that extends from `Syntax`) between threads.
 

@@ -49,7 +49,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
  * @author nmcwilliams
  */
 @Subscribable
-@Description(value = "condtionals", broadcasted = REFINED_AT_RULE)
+@Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
 public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBlock {
     private final SyntaxCollection<Stylesheet, Statement> statements;
     private final Set<String> trueConditions;
