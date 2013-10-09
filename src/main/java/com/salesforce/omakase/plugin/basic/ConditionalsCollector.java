@@ -58,7 +58,7 @@ public class ConditionalsCollector implements DependentPlugin {
     }
 
     /**
-     * Whether the given condition was found.
+     * Gets whether the given condition was found.
      *
      * @param condition
      *     Check if this condition was found. This should be lower-cased (unless you otherwise knowingly and explicitly arranged

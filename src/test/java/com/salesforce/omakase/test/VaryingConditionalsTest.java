@@ -59,6 +59,19 @@ public class VaryingConditionalsTest {
         "  body {color: black}\n" +
         "}";
 
+    private static final String PASSTHROUGH = ".class {color:red}\n" +
+        "@if(ie7) {\n" +
+        "  .class {color:blue}\n" +
+        "  #id:hover {border:1px solid red}\n" +
+        "}\n" +
+        "#id2:hover {border:5px solid black}\n" +
+        "@if(ie7) {\n" +
+        "  #id2:hover {border:1px solid red}\n" +
+        "}\n" +
+        "@if(webkit) {\n" +
+        "  body {color:black}\n" +
+        "}";
+
     private static final String EXPECTED_IE7 = ".class {color:red}\n" +
         ".class {color:blue}\n" +
         "#id:hover {border:1px solid red}\n" +
@@ -103,20 +116,24 @@ public class VaryingConditionalsTest {
         assertThat(inline.write()).describedAs("ie7 only").isEqualTo(EXPECTED_IE7);
 
         // ie7 + webkit
-        conditionals.addTrueConditions("webkit");
+        conditionals.manager().addTrueConditions("webkit");
         assertThat(inline.write()).describedAs("ie7 + webkit").isEqualTo(EXPECTED_BOTH);
 
         // webkit only
-        conditionals.removeTrueCondition("ie7");
+        conditionals.manager().removeTrueCondition("ie7");
         assertThat(inline.write()).describedAs("webkit only").isEqualTo(WEBKIT_ONLY);
 
         // ie8
-        conditionals.clearTrueConditions().addTrueConditions("ie8");
+        conditionals.manager().clearTrueConditions().addTrueConditions("ie8");
         assertThat(inline.write()).describedAs("ie8").isEqualTo(NONE);
 
         // none
-        conditionals.clearTrueConditions();
+        conditionals.manager().clearTrueConditions();
         assertThat(inline.write()).describedAs("ie8").isEqualTo(NONE);
+
+        // passthrough
+        conditionals.manager().passthroughMode(true);
+        assertThat(inline.write()).describedAs("passthrough").isEqualTo(PASSTHROUGH);
     }
 
     @Test

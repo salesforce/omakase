@@ -34,8 +34,7 @@ import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 import com.salesforce.omakase.plugin.basic.Conditionals;
-
-import java.util.Set;
+import com.salesforce.omakase.plugin.basic.ConditionalsManager;
 
 /**
  * Parses {@link AtRule} objects that are {@link ConditionalAtRuleBlock}s.
@@ -46,16 +45,16 @@ import java.util.Set;
  */
 public final class ConditionalRefinerStrategy implements RefinerStrategy {
     private static final String IF = "if";
-    private final Set<String> trueConditions;
+    private final ConditionalsManager manager;
 
     /**
      * Creates a new {@link ConditionalRefinerStrategy} instance with the given set of true conditions.
      *
-     * @param trueConditions
-     *     Set containing the strings that should evaluate to "true" in a {@link ConditionalAtRuleBlock}.
+     * @param manager
+     *     The {@link ConditionalsManager} instance, to be passed all new {@link ConditionalAtRuleBlock} instances.
      */
-    public ConditionalRefinerStrategy(Set<String> trueConditions) {
-        this.trueConditions = trueConditions;
+    public ConditionalRefinerStrategy(ConditionalsManager manager) {
+        this.manager = manager;
     }
 
     @Override
@@ -113,7 +112,7 @@ public final class ConditionalRefinerStrategy implements RefinerStrategy {
         queue.resume();
 
         // create the new conditional node
-        ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(trueConditions, condition, statements);
+        ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(manager, condition, statements);
 
         // set and broadcast it
         atRule.block(block);

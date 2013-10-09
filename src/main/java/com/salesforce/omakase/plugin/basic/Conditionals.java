@@ -16,13 +16,11 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.parser.refiner.ConditionalRefinerStrategy;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -38,24 +36,24 @@ import java.util.Set;
  * <p/>
  * To enable conditionals, register an instance of this plugin during parser setup:
  * <pre>
- * Conditionals conditionals = new Conditionals(Sets.newHashSet("ie7"));
+ * Conditionals conditionals = new Conditionals("ie7");
  * Omakase.source(input).request(conditionals).process();
  * </pre>
  * <p/>
  * For more information on using and configuring conditionals see the main readme file.
  *
  * @author nmcwilliams
+ * @see ConditionalsManager
+ * @see ConditionalsCollector
  */
 public final class Conditionals implements SyntaxPlugin {
-    private final Set<String> trueConditions;
+    private final ConditionalsManager manager = new ConditionalsManager();
 
     /**
      * Creates a new {@link Conditionals} plugin instance with no specified true conditions. Be sure to add the conditions later
      * if applicable.
      */
-    public Conditionals() {
-        this.trueConditions = new HashSet<>();
-    }
+    public Conditionals() {}
 
     /**
      * Creates a new {@link Conditionals} plugin instance with the given list of true conditions. Each string in the set will be
@@ -76,73 +74,21 @@ public final class Conditionals implements SyntaxPlugin {
      *     Set containing the strings that should evaluate to "true".
      */
     public Conditionals(Set<String> trueConditions) {
-        this.trueConditions = new HashSet<>(trueConditions.size());
-        addTrueConditions(trueConditions);
+        manager.addTrueConditions(trueConditions);
     }
 
     @Override
     public RefinerStrategy getRefinableStrategy() {
-        return new ConditionalRefinerStrategy(trueConditions);
+        return new ConditionalRefinerStrategy(manager);
     }
 
     /**
-     * Adds the given strings to the trueConditions set. Each string will be automatically lower-cased for comparison purposes.
+     * Gets the {@link ConditionalsManager} instance. The {@link ConditionalsManager} can be used to add, remove, or update the
+     * set of "trueConditions".
      *
-     * @param trueConditions
-     *     The strings that should evaluate to "true".
-     *
-     * @return this, for chaining.
+     * @return The {@link ConditionalsManager} instance.
      */
-    public Conditionals addTrueConditions(String... trueConditions) {
-        return addTrueConditions(Sets.newHashSet(trueConditions));
-    }
-
-    /**
-     * Adds the given strings to the trueConditions set. Each string will be automatically lower-cased for comparison purposes.
-     *
-     * @param trueConditions
-     *     Iterable of the strings that should evaluate to "true".
-     *
-     * @return this, for chaining.
-     */
-    public Conditionals addTrueConditions(Iterable<String> trueConditions) {
-        // add each condition, making sure it's lower-cased for comparison purposes
-        for (String condition : trueConditions) {
-            this.trueConditions.add(condition.toLowerCase());
-        }
-
-        return this;
-    }
-
-    /**
-     * Removes the given condition from the trueConditions set. This condition will no longer evaluate as "true".
-     *
-     * @param condition
-     *     The condition to remove.
-     *
-     * @return this, for chaining.
-     */
-    public Conditionals removeTrueCondition(String condition) {
-        trueConditions.remove(condition);
-        return this;
-    }
-
-    /**
-     * Removes all current trueConditions.
-     *
-     * @return this, for chaining.
-     */
-    public Conditionals clearTrueConditions() {
-        trueConditions.clear();
-        return this;
-    }
-
-    /**
-     * Returns an immutable copy of the trueConditions set.
-     *
-     * @return An immutable copy of the trueConditions set.
-     */
-    public ImmutableSet<String> trueConditions() {
-        return ImmutableSet.copyOf(trueConditions);
+    public ConditionalsManager manager() {
+        return manager;
     }
 }

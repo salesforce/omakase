@@ -17,7 +17,6 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -27,12 +26,13 @@ import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.plugin.basic.ConditionalsManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link ConditionalRefinerStrategy}.
@@ -54,7 +54,7 @@ public class ConditionalRefinerStrategyTest {
 
     @Before
     public void setup() {
-        strategy = new ConditionalRefinerStrategy(Sets.newHashSet("ie7"));
+        strategy = new ConditionalRefinerStrategy(new ConditionalsManager().addTrueConditions("ie7"));
         broadcaster = new QueryableBroadcaster();
         refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }

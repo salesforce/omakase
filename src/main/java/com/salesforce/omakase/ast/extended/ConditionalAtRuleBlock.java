@@ -24,11 +24,11 @@ import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.plugin.basic.ConditionalsManager;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
@@ -52,7 +52,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
 public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBlock {
     private final SyntaxCollection<Stylesheet, Statement> statements;
-    private final Set<String> trueConditions;
+    private final ConditionalsManager manager;
     private final String condition;
 
     /**
@@ -68,17 +68,17 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
      * change the trueConditions, write out the source again, etc... . However also note that this also makes this class not
      * thread-safe, depending on how the given set is used or altered outside of this class.
      *
-     * @param trueConditions
-     *     Set containing the strings that should evaluate to "true".
+     * @param manager
+     *     The {@link ConditionalsManager} instance.
      * @param condition
      *     The condition for this particular conditional at-rule block.
      * @param statements
      *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
      *     set.
      */
-    public ConditionalAtRuleBlock(Set<String> trueConditions, String condition, SyntaxCollection<Stylesheet, Statement> statements) {
+    public ConditionalAtRuleBlock(ConditionalsManager manager, String condition, SyntaxCollection<Stylesheet, Statement> statements) {
         this.condition = checkNotNull(condition, "condition cannot be null");
-        this.trueConditions = checkNotNull(trueConditions, "trueConditions cannot be null");
+        this.manager = checkNotNull(manager, "manager cannot be null");
         this.statements = checkNotNull(statements, "statements cannot be null");
     }
 
@@ -102,13 +102,26 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
 
     @Override
     public boolean isWritable() {
-        return trueConditions.contains(condition);
+        return manager.isPassthroughMode() || manager.hasCondition(condition);
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (manager.isPassthroughMode()) {
+            appendable.append("@if(").append(condition).append(')');
+            appendable.spaceIf(!writer.isCompressed());
+            appendable.append('{');
+            appendable.newlineIf(!writer.isCompressed());
+        }
+
         for (Statement statement : statements) {
+            appendable.indentIf(manager.isPassthroughMode() && writer.isInline());
             writer.write(statement, appendable);
+        }
+
+        if (manager.isPassthroughMode()) {
+            appendable.newlineIf(!writer.isCompressed());
+            appendable.append('}');
         }
     }
 
@@ -117,7 +130,7 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
         return As.string(this)
             .indent()
             .add("condition", condition)
-            .add("trueConditions", trueConditions)
+            .add("manager", manager)
             .add("statements", statements)
             .toString();
     }

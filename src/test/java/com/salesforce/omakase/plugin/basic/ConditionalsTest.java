@@ -16,11 +16,9 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Conditionals}.
@@ -30,27 +28,8 @@ import static org.fest.assertions.api.Assertions.*;
 @SuppressWarnings("JavaDoc")
 public class ConditionalsTest {
     @Test
-    public void addCondition() {
-        Conditionals conditionals = new Conditionals();
-        conditionals.addTrueConditions(Sets.newHashSet("ie7"));
-        assertThat(conditionals.trueConditions()).hasSize(1);
-        assertThat(Iterables.get(conditionals.trueConditions(), 0)).isEqualTo("ie7");
-    }
-
-    @Test
-    public void removeCondition() {
+    public void getsManager() {
         Conditionals conditionals = new Conditionals("ie7");
-        assertThat(conditionals.trueConditions()).hasSize(1);
-        assertThat(Iterables.get(conditionals.trueConditions(), 0)).isEqualTo("ie7");
-        conditionals.removeTrueCondition("ie7");
-        assertThat(conditionals.trueConditions()).isEmpty();
-    }
-
-    @Test
-    public void clearConditions() {
-        Conditionals conditionals = new Conditionals(Sets.newHashSet("ie7", "ie8"));
-        assertThat(conditionals.trueConditions()).hasSize(2);
-        conditionals.clearTrueConditions();
-        assertThat(conditionals.trueConditions()).isEmpty();
+        assertThat(conditionals.manager().hasCondition("ie7")).isTrue();
     }
 }
