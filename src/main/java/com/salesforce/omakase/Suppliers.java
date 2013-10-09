@@ -21,6 +21,8 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.Conditionals;
+import com.salesforce.omakase.plugin.basic.ConditionalsCollector;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
@@ -45,6 +47,18 @@ final class Suppliers {
             @Override
             public AutoRefiner get() {
                 return new AutoRefiner();
+            }
+        })
+        .put(Conditionals.class, new Supplier<Conditionals>() {
+            @Override
+            public Conditionals get() {
+                return new Conditionals();
+            }
+        })
+        .put(ConditionalsCollector.class, new Supplier<ConditionalsCollector>() {
+            @Override
+            public ConditionalsCollector get() {
+                return new ConditionalsCollector();
             }
         })
         .put(StandardValidation.class, new Supplier<StandardValidation>() {

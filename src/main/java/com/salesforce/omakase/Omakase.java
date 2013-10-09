@@ -23,14 +23,9 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
-import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -75,7 +70,6 @@ public final class Omakase {
      * by default.
      */
     public static final class Request {
-        private final List<RefinerStrategy> customRefiners;
         private final Context context;
         private final Source source;
         private ErrorManager em;
@@ -84,7 +78,6 @@ public final class Omakase {
             this.context = new Context();
             this.em = new ThrowingErrorManager();
             this.source = new Source(source.toString());
-            this.customRefiners = new ArrayList<>();
         }
 
         /**
@@ -153,44 +146,6 @@ public final class Omakase {
         }
 
         /**
-         * Registers a {@link SyntaxPlugin} which is used to customize and extend the standard CSS syntax. See the readme file for
-         * more information.
-         * <p/>
-         * This is equivalent to {@link #request(SyntaxPlugin...)}. Choose based on which reads better for your usage ("request"
-         * is preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param plugins
-         *     The plugin(s) to add.
-         *
-         * @return this, for chaining.
-         */
-        public Request add(SyntaxPlugin... plugins) {
-            return request(plugins);
-        }
-
-        /**
-         * Registers a {@link SyntaxPlugin} which is used to customize and extend the standard CSS syntax. See the readme file for
-         * more information.
-         * <p/>
-         * This is equivalent to {@link #add(SyntaxPlugin...)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param plugins
-         *     The plugins to add.
-         *
-         * @return this, for chaining.
-         */
-        public Request request(SyntaxPlugin... plugins) {
-            for (SyntaxPlugin plugin : plugins) {
-                customRefiners.add(plugin.getRefinableStrategy());
-                context.register(plugin);
-            }
-            return this;
-        }
-
-        /**
          * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
          *
          * @param em
@@ -230,7 +185,7 @@ public final class Omakase {
             context.errorManager(em);
             context.before();
 
-            Refiner refiner = context.createRefiner(customRefiners);
+            Refiner refiner = context.createRefiner();
 
             try {
                 ParserFactory.stylesheetParser().parse(source, context, refiner);

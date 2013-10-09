@@ -80,6 +80,11 @@ public final class Conditionals implements SyntaxPlugin {
         addTrueConditions(trueConditions);
     }
 
+    @Override
+    public RefinerStrategy getRefinableStrategy() {
+        return new ConditionalRefinerStrategy(trueConditions);
+    }
+
     /**
      * Adds the given strings to the trueConditions set. Each string will be automatically lower-cased for comparison purposes.
      *
@@ -139,10 +144,5 @@ public final class Conditionals implements SyntaxPlugin {
      */
     public ImmutableSet<String> trueConditions() {
         return ImmutableSet.copyOf(trueConditions);
-    }
-
-    @Override
-    public RefinerStrategy getRefinableStrategy() {
-        return new ConditionalRefinerStrategy(trueConditions);
     }
 }
