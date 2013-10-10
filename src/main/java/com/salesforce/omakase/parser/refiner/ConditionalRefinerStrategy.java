@@ -112,7 +112,8 @@ public final class ConditionalRefinerStrategy implements RefinerStrategy {
         queue.resume();
 
         // create the new conditional node
-        ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(manager, condition, statements);
+        ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), manager, condition,
+            statements);
 
         // set and broadcast it
         atRule.block(block);

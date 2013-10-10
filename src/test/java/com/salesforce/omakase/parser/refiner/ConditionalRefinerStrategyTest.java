@@ -195,4 +195,16 @@ public class ConditionalRefinerStrategyTest {
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
         assertThat(block.condition()).isEqualTo("ie7");
     }
+
+    @Test
+    public void setsLineAndColumnNumbers() {
+        AtRule ar = new AtRule(5, 2, VALID_NAME, new RawSyntax(5, 3, "(  ie7 )"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refineAtRule(ar, broadcaster, refiner);
+
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        assertThat(block.line()).isEqualTo(5);
+        assertThat(block.column()).isEqualTo(2);
+    }
 }

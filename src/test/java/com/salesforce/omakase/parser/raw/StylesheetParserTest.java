@@ -45,7 +45,7 @@ public class StylesheetParserTest {
     @Test
     public void testEof() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Extraneous text found at the end of the source");
+        exception.expectMessage("Unparsable text found at the end of the source");
         new StylesheetParser().parse(new Source(".abc{color:red}   `"), new QueryableBroadcaster());
     }
 

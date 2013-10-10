@@ -189,11 +189,11 @@ public final class Omakase {
 
             try {
                 ParserFactory.stylesheetParser().parse(source, context, refiner);
+                context.after();
             } catch (ParserException e) {
                 em.report(ErrorLevel.FATAL, e);
             }
 
-            context.after();
             return context;
         }
     }

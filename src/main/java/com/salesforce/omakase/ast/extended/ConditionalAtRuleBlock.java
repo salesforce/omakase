@@ -24,6 +24,8 @@ import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.parser.refiner.ConditionalRefinerStrategy;
+import com.salesforce.omakase.plugin.basic.Conditionals;
 import com.salesforce.omakase.plugin.basic.ConditionalsManager;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -47,6 +49,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
  * For more information on using and configuring conditionals see the main readme file.
  *
  * @author nmcwilliams
+ * @see Conditionals
+ * @see ConditionalRefinerStrategy
  */
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
@@ -54,6 +58,24 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
     private final SyntaxCollection<Stylesheet, Statement> statements;
     private final ConditionalsManager manager;
     private final String condition;
+
+    /**
+     * See the notes on the {@link #ConditionalAtRuleBlock(int, int, ConditionalsManager, String, SyntaxCollection)} constructor.
+     * This is the same except that it defaults to no line and column numbers. This should be used for dynamically created
+     * conditional at-rule blocks.
+     *
+     * @param manager
+     *     The {@link ConditionalsManager} instance.
+     * @param condition
+     *     The condition for this particular conditional at-rule block.
+     * @param statements
+     *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
+     *     set.
+     */
+    public ConditionalAtRuleBlock(ConditionalsManager manager, String condition, SyntaxCollection<Stylesheet,
+        Statement> statements) {
+        this(-1, -1, manager, condition, statements);
+    }
 
     /**
      * Creates a new {@link ConditionalAtRuleBlock} instance with the given true conditions, condition, and set of statements.
@@ -68,6 +90,10 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
      * change the trueConditions, write out the source again, etc... . However also note that this also makes this class not
      * thread-safe, depending on how the given set is used or altered outside of this class.
      *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
      * @param manager
      *     The {@link ConditionalsManager} instance.
      * @param condition
@@ -76,7 +102,9 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
      *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
      *     set.
      */
-    public ConditionalAtRuleBlock(ConditionalsManager manager, String condition, SyntaxCollection<Stylesheet, Statement> statements) {
+    public ConditionalAtRuleBlock(int line, int column, ConditionalsManager manager, String condition,
+        SyntaxCollection<Stylesheet, Statement> statements) {
+        super(line, column);
         this.condition = checkNotNull(condition, "condition cannot be null");
         this.manager = checkNotNull(manager, "manager cannot be null");
         this.statements = checkNotNull(statements, "statements cannot be null");

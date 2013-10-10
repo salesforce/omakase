@@ -17,8 +17,10 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.Sets;
+import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.parser.refiner.ConditionalRefinerStrategy;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 import java.util.Set;
@@ -46,14 +48,26 @@ import java.util.Set;
  * @see ConditionalsManager
  * @see ConditionalsCollector
  */
-public final class Conditionals implements SyntaxPlugin {
+public final class Conditionals implements SyntaxPlugin, DependentPlugin {
     private final ConditionalsManager manager = new ConditionalsManager();
 
     /**
      * Creates a new {@link Conditionals} plugin instance with no specified true conditions. Be sure to add the conditions later
-     * if applicable.
+     * via the {@link #manager()} method if applicable.
      */
     public Conditionals() {}
+
+    /**
+     * Creates a new {@link Conditionals} plugin instance with passthroughMode set as given. See {@link
+     * ConditionalsManager#passthroughMode(boolean)} for more information. Be sure to add the conditions later via the {@link
+     * #manager()} method if applicable.
+     *
+     * @param passthroughMode
+     *     Whether passthroughMode should be enabled.
+     */
+    public Conditionals(boolean passthroughMode) {
+        manager.passthroughMode(passthroughMode);
+    }
 
     /**
      * Creates a new {@link Conditionals} plugin instance with the given list of true conditions. Each string in the set will be
@@ -75,6 +89,11 @@ public final class Conditionals implements SyntaxPlugin {
      */
     public Conditionals(Set<String> trueConditions) {
         manager.addTrueConditions(trueConditions);
+    }
+
+    @Override
+    public void dependencies(PluginRegistry registry) {
+        registry.require(AutoRefiner.class).atRules();
     }
 
     @Override
