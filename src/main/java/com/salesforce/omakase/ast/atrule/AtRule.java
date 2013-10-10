@@ -28,8 +28,8 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -240,7 +240,23 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     }
 
     @Override
+    public boolean isWritable() {
+        if (isRefined()) {
+            if (shouldWriteName) return true;
+            if (expression.isPresent() && expression.get().isWritable()) return true;
+            return block.isPresent() && block.get().isWritable();
+        }
+        return true;
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        // newlines (unless first statement)
+        if (!writer.isCompressed() && !isFirst()) {
+            appendable.newline();
+            appendable.newlineIf(writer.isVerbose());
+        }
+
         if (isRefined()) {
             // name
             if (shouldWriteName) {
@@ -281,12 +297,6 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');
             }
-        }
-
-        // newlines (unless last statement)
-        if (!writer.isCompressed() && !isLast()) {
-            appendable.newline();
-            appendable.newlineIf(writer.isVerbose());
         }
     }
 

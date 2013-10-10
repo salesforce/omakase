@@ -139,6 +139,12 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        // newlines (unless first statement)
+        if (!writer.isCompressed() && !isFirst()) {
+            appendable.newline();
+            appendable.newlineIf(writer.isVerbose());
+        }
+
         // selectors
         for (Selector selector : selectors) {
             if (selector.isWritable()) {
@@ -168,12 +174,6 @@ public class Rule extends AbstractGroupable<Stylesheet, Statement> implements St
 
         // close declaration block
         appendable.append('}');
-
-        // newlines (unless last statement)
-        if (!writer.isCompressed() && !isLast()) {
-            appendable.newline();
-            appendable.newlineIf(writer.isVerbose());
-        }
     }
 
     @Override

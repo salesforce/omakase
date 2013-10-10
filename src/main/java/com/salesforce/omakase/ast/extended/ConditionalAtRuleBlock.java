@@ -143,7 +143,6 @@ public class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBloc
         }
 
         for (Statement statement : statements) {
-            appendable.indentIf(manager.isPassthroughMode() && writer.isInline());
             writer.write(statement, appendable);
         }
 

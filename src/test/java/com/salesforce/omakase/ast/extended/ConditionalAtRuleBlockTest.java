@@ -115,7 +115,7 @@ public class ConditionalAtRuleBlockTest {
 
         ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(manager, "webkit", statements);
-        assertThat(StyleWriter.inline().writeSnippet(b)).isEqualTo("@if(webkit) {\n  .test {display:none}\n}");
+        assertThat(StyleWriter.inline().writeSnippet(b)).isEqualTo("@if(webkit) {\n.test {display:none}\n}");
     }
 
     @Test

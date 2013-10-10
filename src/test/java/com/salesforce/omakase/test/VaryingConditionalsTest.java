@@ -33,7 +33,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests a broader usage of {@link Conditionals}.
@@ -61,22 +61,22 @@ public class VaryingConditionalsTest {
 
     private static final String PASSTHROUGH = ".class {color:red}\n" +
         "@if(ie7) {\n" +
-        "  .class {color:blue}\n" +
-        "  #id:hover {border:1px solid red}\n" +
+        ".class {color:blue}\n" +
+        "#id:hover {border:1px solid red}\n" +
         "}\n" +
         "#id2:hover {border:5px solid black}\n" +
         "@if(ie7) {\n" +
-        "  #id2:hover {border:1px solid red}\n" +
+        "#id2:hover {border:1px solid red}\n" +
         "}\n" +
         "@if(webkit) {\n" +
-        "  body {color:black}\n" +
+        "body {color:black}\n" +
         "}";
 
     private static final String EXPECTED_IE7 = ".class {color:red}\n" +
         ".class {color:blue}\n" +
         "#id:hover {border:1px solid red}\n" +
         "#id2:hover {border:5px solid black}\n" +
-        "#id2:hover {border:1px solid red}\n";
+        "#id2:hover {border:1px solid red}";
 
     private static final String EXPECTED_BOTH = ".class {color:red}\n" +
         ".class {color:blue}\n" +
@@ -86,14 +86,11 @@ public class VaryingConditionalsTest {
         "body {color:black}";
 
     private static final String WEBKIT_ONLY = ".class {color:red}\n" +
-        "\n" +
         "#id2:hover {border:5px solid black}\n" +
-        "\n" +
         "body {color:black}";
 
     private static final String NONE = ".class {color:red}\n" +
-        "\n" +
-        "#id2:hover {border:5px solid black}\n\n";
+        "#id2:hover {border:5px solid black}";
 
     @Test
     public void test() throws IOException {
