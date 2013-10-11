@@ -33,12 +33,12 @@ import org.junit.rules.ExpectedException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link ConditionalRefinerStrategy}.
+ * Unit tests for {@link ConditionalsRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class ConditionalRefinerStrategyTest {
+public class ConditionalsRefinerTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     public static final String VALID_NAME = "if";
@@ -48,11 +48,11 @@ public class ConditionalRefinerStrategyTest {
 
     private Refiner refiner;
     private QueryableBroadcaster broadcaster;
-    private ConditionalRefinerStrategy strategy;
+    private ConditionalsRefiner strategy;
 
     @Before
     public void setup() {
-        strategy = new ConditionalRefinerStrategy(new ConditionalsManager().addTrueConditions("ie7"));
+        strategy = new ConditionalsRefiner(new ConditionalsManager().addTrueConditions("ie7"));
         broadcaster = new QueryableBroadcaster();
         refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }

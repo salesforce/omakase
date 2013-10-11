@@ -42,14 +42,6 @@ public class StringValue extends AbstractSyntax implements Term {
     private QuotationMode mode;
     private String content;
 
-    /** Type of quotation mark */
-    public enum QuotationMode {
-        /** single quotes */
-        SINGLE,
-        /** double quotes */
-        DOUBLE
-    }
-
     /**
      * Constructs a new {@link StringValue} instance.
      * <p/>
@@ -128,7 +120,7 @@ public class StringValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * Creates a new {@link StringValue} instance using the given {@link StringValue.QuotationMode} and content.
+     * Creates a new {@link StringValue} instance using the given {@link QuotationMode} and content.
      * <p/>
      * Example:
      * <pre>

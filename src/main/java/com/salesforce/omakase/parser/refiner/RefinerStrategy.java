@@ -29,7 +29,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * Library-standard CSS extensions (e.g ., conditionals) are implemented through this functionality as well.
  *
  * @author nmcwilliams
- * @see StandardRefinerStrategy
+ * @see StandardRefiner
  * @see Refiner
  * @see SyntaxPlugin
  */

@@ -41,17 +41,17 @@ import com.salesforce.omakase.plugin.basic.ConditionalsManager;
  * @see ConditionalAtRuleBlock
  * @see Conditionals
  */
-public final class ConditionalRefinerStrategy implements AtRuleRefinerStrategy {
+public final class ConditionalsRefiner implements AtRuleRefinerStrategy {
     private static final String IF = "if";
     private final ConditionalsManager manager;
 
     /**
-     * Creates a new {@link ConditionalRefinerStrategy} instance with the given set of true conditions.
+     * Creates a new {@link ConditionalsRefiner} instance with the given set of true conditions.
      *
      * @param manager
      *     The {@link ConditionalsManager} instance, to be passed all new {@link ConditionalAtRuleBlock} instances.
      */
-    public ConditionalRefinerStrategy(ConditionalsManager manager) {
+    public ConditionalsRefiner(ConditionalsManager manager) {
         this.manager = manager;
     }
 

@@ -27,19 +27,19 @@ import org.junit.Test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link UnquotedIEFilterStrategy}.
+ * Unit tests for {@link UnquotedIEFilterRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class UnquotedIEFilterStrategyTest {
+public class UnquotedIEFilterRefinerTest {
     private Refiner refiner;
     private QueryableBroadcaster broadcaster;
-    private UnquotedIEFilterStrategy strategy;
+    private UnquotedIEFilterRefiner strategy;
 
     @Before
     public void setup() {
-        strategy = new UnquotedIEFilterStrategy();
+        strategy = new UnquotedIEFilterRefiner();
         broadcaster = new QueryableBroadcaster();
         refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }

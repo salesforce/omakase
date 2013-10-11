@@ -20,7 +20,7 @@ import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
-import com.salesforce.omakase.parser.refiner.UnquotedIEFilterStrategy;
+import com.salesforce.omakase.parser.refiner.UnquotedIEFilterRefiner;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 /**
@@ -52,7 +52,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @see UnquotedIEFilter
  */
 public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
-    private static final RefinerStrategy STRATEGY = new UnquotedIEFilterStrategy();
+    private static final RefinerStrategy STRATEGY = new UnquotedIEFilterRefiner();
 
     @Override
     public RefinerStrategy getRefinableStrategy() {

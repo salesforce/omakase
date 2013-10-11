@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -32,13 +33,20 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 
+import java.util.Set;
+
 /**
  * Standard {@link RefinerStrategy} implementation.
  *
  * @author nmcwilliams
  */
-public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, SelectorRefinerStrategy,
+public final class StandardRefiner implements AtRuleRefinerStrategy, SelectorRefinerStrategy,
     DeclarationRefinerStrategy, FunctionValueRefinerStrategy {
+
+    private static final Set<FunctionValueRefinerStrategy> STANDARD_FUNCTIONS = ImmutableSet.<FunctionValueRefinerStrategy>of(
+        new UrlFunctionRefiner()
+    );
+
     @Override
     public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
         // do nothing -- there's no default refinement for at-rules
@@ -99,6 +107,10 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
 
     @Override
     public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
-        return false; // TODO add refined stuff here
+        // TESTME
+        for (FunctionValueRefinerStrategy strategy : STANDARD_FUNCTIONS) {
+            if (strategy.refine(functionValue, broadcaster, refiner)) return true;
+        }
+        return false;
     }
 }

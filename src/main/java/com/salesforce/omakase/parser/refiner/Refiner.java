@@ -37,7 +37,7 @@ import java.util.List;
  * @see SyntaxPlugin
  */
 public final class Refiner {
-    private static final StandardRefinerStrategy STANDARD = new StandardRefinerStrategy();
+    private static final StandardRefiner STANDARD = new StandardRefiner();
 
     private final Broadcaster broadcaster;
     private final List<AtRuleRefinerStrategy> atRuleRefiners;
@@ -103,7 +103,7 @@ public final class Refiner {
      * Refines an {@link AtRule} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(AtRule, Broadcaster, Refiner)} will be
+     * the instance, or if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, Refiner)} will be
      * used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
@@ -126,7 +126,7 @@ public final class Refiner {
      * Refines a {@link Selector} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Selector, Broadcaster, Refiner)} will be
+     * the instance, or if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, Refiner)} will be
      * used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
@@ -149,7 +149,7 @@ public final class Refiner {
      * Refines a {@link Declaration} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Declaration, Broadcaster, Refiner)} will
+     * the instance, or if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, Refiner)} will
      * be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
@@ -172,7 +172,7 @@ public final class Refiner {
      * Refines a {@link FunctionValue} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Declaration, Broadcaster, Refiner)} will
+     * the instance, or if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, Refiner)} will
      * be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link FunctionValue#refine()} instead.

@@ -29,51 +29,51 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class StringValueTest {
     @Test
     public void positioning() {
-        StringValue s = new StringValue(3, 1, StringValue.QuotationMode.SINGLE, "test");
+        StringValue s = new StringValue(3, 1, QuotationMode.SINGLE, "test");
         assertThat(s.line()).isEqualTo(3);
         assertThat(s.column()).isEqualTo(1);
     }
 
     @Test
     public void getContent() {
-        StringValue s = new StringValue(StringValue.QuotationMode.DOUBLE, "test");
+        StringValue s = new StringValue(QuotationMode.DOUBLE, "test");
         assertThat(s.content()).isEqualTo("test");
     }
 
     @Test
     public void setContent() {
-        StringValue s = new StringValue(StringValue.QuotationMode.DOUBLE, "test");
-        s.content(StringValue.QuotationMode.SINGLE, "test2");
+        StringValue s = new StringValue(QuotationMode.DOUBLE, "test");
+        s.content(QuotationMode.SINGLE, "test2");
         assertThat(s.content()).isEqualTo("test2");
     }
 
     @Test
     public void writeVerbose() throws IOException {
-        StringValue s = StringValue.of(StringValue.QuotationMode.SINGLE, "xyz");
+        StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
 
-        s.content(StringValue.QuotationMode.DOUBLE, "xyz");
+        s.content(QuotationMode.DOUBLE, "xyz");
         assertThat(writer.writeSnippet(s)).isEqualTo("\"xyz\"");
     }
 
     @Test
     public void writeInline() throws IOException {
-        StringValue s = StringValue.of(StringValue.QuotationMode.SINGLE, "xyz");
+        StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.inline();
         assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
     }
 
     @Test
     public void writeCompressed() throws IOException {
-        StringValue s = StringValue.of(StringValue.QuotationMode.SINGLE, "xyz");
+        StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
     }
 
     @Test
     public void toStringTest() {
-        StringValue value = StringValue.of(StringValue.QuotationMode.SINGLE, "xyz");
+        StringValue value = StringValue.of(QuotationMode.SINGLE, "xyz");
         assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

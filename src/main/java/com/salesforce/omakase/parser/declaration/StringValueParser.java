@@ -17,7 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.salesforce.omakase.ast.declaration.value.StringValue;
-import com.salesforce.omakase.ast.declaration.value.StringValue.QuotationMode;
+import com.salesforce.omakase.ast.declaration.value.QuotationMode;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;

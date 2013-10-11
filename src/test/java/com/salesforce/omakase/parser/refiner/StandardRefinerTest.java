@@ -34,12 +34,12 @@ import java.util.Set;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
- * Unit tests for {@link StandardRefinerStrategy}.
+ * Unit tests for {@link StandardRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class StandardRefinerStrategyTest {
+public class StandardRefinerTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

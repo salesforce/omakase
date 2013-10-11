@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.salesforce.omakase.ast.declaration.value.StringValue.QuotationMode;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Value}. */
