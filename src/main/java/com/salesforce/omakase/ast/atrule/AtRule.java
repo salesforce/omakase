@@ -49,7 +49,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements Statement, Refinable<AtRule> {
+public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements Statement, Refinable {
     private final Refiner refiner;
     private final String name;
 
@@ -216,12 +216,12 @@ public class AtRule extends AbstractGroupable<Stylesheet, Statement> implements 
     }
 
     @Override
-    public AtRule refine() {
+    public boolean refine() {
         if (!isRefined() && refiner != null) {
-            refiner.refine(this);
+            return refiner.refine(this);
         }
 
-        return this;
+        return false;
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.selector.CombinatorType;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -32,7 +33,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public class CombinatorParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.collectComments(false);
 
         // snapshot the current state before parsing

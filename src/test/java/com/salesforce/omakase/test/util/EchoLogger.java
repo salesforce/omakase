@@ -52,7 +52,7 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void refinable(Refinable<?> refinable) {
+    public void refinable(Refinable refinable) {
         logger.trace("refinable: {}", refinable);
     }
 

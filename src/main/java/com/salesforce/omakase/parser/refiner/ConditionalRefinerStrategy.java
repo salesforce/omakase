@@ -23,9 +23,7 @@ import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
@@ -43,7 +41,7 @@ import com.salesforce.omakase.plugin.basic.ConditionalsManager;
  * @see ConditionalAtRuleBlock
  * @see Conditionals
  */
-public final class ConditionalRefinerStrategy implements RefinerStrategy {
+public final class ConditionalRefinerStrategy implements AtRuleRefinerStrategy {
     private static final String IF = "if";
     private final ConditionalsManager manager;
 
@@ -58,7 +56,7 @@ public final class ConditionalRefinerStrategy implements RefinerStrategy {
     }
 
     @Override
-    public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
         // must be named  "if"
         if (!atRule.name().equals(IF)) return false;
 
@@ -123,15 +121,5 @@ public final class ConditionalRefinerStrategy implements RefinerStrategy {
         atRule.shouldWriteName(false);
 
         return true;
-    }
-
-    @Override
-    public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-        return false;
-    }
-
-    @Override
-    public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
-        return false;
     }
 }

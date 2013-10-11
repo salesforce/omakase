@@ -20,6 +20,7 @@ import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -30,7 +31,7 @@ import com.salesforce.omakase.parser.token.Tokens;
 public class UniversalSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 

@@ -17,13 +17,11 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.broadcast.AbstractBroadcaster;
-import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
@@ -31,7 +29,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.*;
 
@@ -106,7 +103,8 @@ public class SelectorTest {
     public void refine() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
-        assertThat(selector.refine().parts()).isNotEmpty();
+        selector.refine();
+        assertThat(selector.parts()).isNotEmpty();
     }
 
     @Test
@@ -126,19 +124,22 @@ public class SelectorTest {
     @Test
     public void writeVerboseRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        assertThat(StyleWriter.verbose().writeSnippet(selector.refine())).isEqualTo(".class > #id");
+        selector.refine();
+        assertThat(StyleWriter.verbose().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        assertThat(StyleWriter.inline().writeSnippet(selector.refine())).isEqualTo(".class>#id");
+        selector.refine();
+        assertThat(StyleWriter.inline().writeSnippet(selector)).isEqualTo(".class>#id");
     }
 
     @Test
     public void writeCompressedRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        assertThat(StyleWriter.compressed().writeSnippet(selector.refine())).isEqualTo(".class>#id");
+        selector.refine();
+        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo(".class>#id");
     }
 
     @Test
@@ -181,18 +182,5 @@ public class SelectorTest {
     public void toStringTest() {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         assertThat(selector.toString()).isNotEqualTo(Util.originalToString(selector));
-    }
-
-    private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private final Set<Broadcastable> all = Sets.newHashSet();
-
-        @Override
-        public void broadcast(Broadcastable broadcastable) {
-            if (all.contains(broadcastable)) {
-                fail("unit shouldn't be broadcasted twice!");
-            }
-            all.add(broadcastable);
-            broadcastable.status(Status.PROCESSED);
-        }
     }
 }

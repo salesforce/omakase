@@ -31,16 +31,20 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * refining the object will verify it's grammatical compliance, which can be coupled with custom validation to ensure correct
  * usage.
  *
- * @param <T>
- *     Refine to this Type of object.
- *
  * @author nmcwilliams
  * @see Syntax
  * @see Refiner
  */
 @Subscribable
 @Description("raw syntax that can be further refined")
-public interface Refinable<T> extends Syntax {
+public interface Refinable extends Syntax {
+    /**
+     * Gets whether this unit is refined.
+     *
+     * @return True if this unit is refined.
+     */
+    boolean isRefined();
+
     /**
      * Refines the object to its more specific and detailed state or representation.
      * <p/>
@@ -48,12 +52,5 @@ public interface Refinable<T> extends Syntax {
      *
      * @return The refined object.
      */
-    T refine();
-
-    /**
-     * Gets whether this unit is refined.
-     *
-     * @return True if this unit is refined.
-     */
-    boolean isRefined();
+    boolean refine();
 }

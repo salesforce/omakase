@@ -50,7 +50,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
+public class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable {
     private final Refiner refiner;
 
     /* unrefined */
@@ -299,7 +299,8 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      * @return The property value.
      */
     public PropertyValue propertyValue() {
-        return refine().propertyValue;
+        refine();
+        return propertyValue;
     }
 
     @Override
@@ -308,13 +309,13 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     @Override
-    public Declaration refine() {
+    public boolean refine() {
         if (!isRefined() && refiner != null) {
             refinePropertyName();
-            refiner.refine(this);
+            return refiner.refine(this);
         }
 
-        return this;
+        return false;
     }
 
     /** Refines just the property name */

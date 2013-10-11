@@ -211,8 +211,9 @@ public class DeclarationTest {
 
     @Test
     public void refine() {
-        assertThat(fromRaw.refine().propertyName()).isNotNull();
-        assertThat(fromRaw.refine().propertyValue()).isNotNull();
+        fromRaw.refine();
+        assertThat(fromRaw.propertyName()).isNotNull();
+        assertThat(fromRaw.propertyValue()).isNotNull();
     }
 
     @Test

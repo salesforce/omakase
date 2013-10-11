@@ -21,9 +21,7 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.plugin.basic.ConditionalsManager;
@@ -60,23 +58,9 @@ public class ConditionalRefinerStrategyTest {
     }
 
     @Test
-    public void refineSelectorReturnsFalse() {
-        Selector s = new Selector(new RawSyntax(5, 5, "p"), refiner);
-        assertThat(strategy.refineSelector(s, broadcaster, refiner)).isFalse();
-        assertThat(s.isRefined()).isFalse();
-    }
-
-    @Test
-    public void refineDeclarationReturnsFalse() {
-        Declaration d = new Declaration(new RawSyntax(2, 3, "display"), new RawSyntax(2, 5, "none"), refiner);
-        assertThat(strategy.refineDeclaration(d, broadcaster, refiner)).isFalse();
-        assertThat(d.isRefined()).isFalse();
-    }
-
-    @Test
     public void returnsFalseForNonMatchingAtRule() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "{}"), refiner);
-        assertThat(strategy.refineAtRule(ar, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isFalse();
         assertThat(ar.isRefined()).isFalse();
     }
 
@@ -87,7 +71,7 @@ public class ConditionalRefinerStrategyTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage(Message.MISSING_CONDITIONAL_EXPRESSION.message());
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
     }
 
     @Test
@@ -97,7 +81,7 @@ public class ConditionalRefinerStrategyTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage(Message.MISSING_CONDITIONAL_BLOCK.message());
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
     }
 
     @Test
@@ -107,7 +91,7 @@ public class ConditionalRefinerStrategyTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find opening parenthesis");
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
     }
 
     @Test
@@ -117,7 +101,7 @@ public class ConditionalRefinerStrategyTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage("Unable to parse the remaining content in the conditional at-rule");
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
     }
 
     @Test
@@ -127,7 +111,7 @@ public class ConditionalRefinerStrategyTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage("Unable to parse the remaining content in the conditional at-rule");
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
     }
 
     @Test
@@ -135,7 +119,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        boolean result = strategy.refineAtRule(ar, broadcaster, refiner);
+        boolean result = strategy.refine(ar, broadcaster, refiner);
         assertThat(result).isTrue();
         assertThat(ar.isRefined()).isTrue();
     }
@@ -145,7 +129,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
 
         assertThat(ar.block().get()).isInstanceOf(ConditionalAtRuleBlock.class);
 
@@ -159,7 +143,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
 
         Iterable<ConditionalAtRuleBlock> found = broadcaster.filter(ConditionalAtRuleBlock.class);
         assertThat(found).hasSize(1);
@@ -170,7 +154,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
         assertThat(ar.shouldWriteName()).isFalse();
     }
 
@@ -179,7 +163,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(IE7)"), VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
 
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
         assertThat(block.condition()).isEqualTo("ie7");
@@ -190,7 +174,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(  ie7 )"), VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
 
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
         assertThat(block.condition()).isEqualTo("ie7");
@@ -201,7 +185,7 @@ public class ConditionalRefinerStrategyTest {
         AtRule ar = new AtRule(5, 2, VALID_NAME, new RawSyntax(5, 3, "(  ie7 )"), VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        strategy.refineAtRule(ar, broadcaster, refiner);
+        strategy.refine(ar, broadcaster, refiner);
 
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
         assertThat(block.line()).isEqualTo(5);

@@ -23,10 +23,9 @@ import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
-import com.salesforce.omakase.parser.AbstractRefinableParser;
+import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.RefinableParser;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
@@ -36,7 +35,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see Stylesheet
  */
-public class StylesheetParser extends AbstractRefinableParser {
+public class StylesheetParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
@@ -46,9 +45,8 @@ public class StylesheetParser extends AbstractRefinableParser {
         QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
 
         // parse all statements
-        RefinableParser statement = ParserFactory.statementParser();
         while (true) {
-            if (!statement.parse(source, queryable, refiner)) break;
+            if (!ParserFactory.statementParser().parse(source, queryable, refiner)) break;
         }
 
         // collect any orphaned comments and move past trailing space

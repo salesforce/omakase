@@ -27,6 +27,7 @@ import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
 
@@ -41,7 +42,7 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_CO
  */
 public class ComplexSelectorParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();
 
         // snapshot the current state before parsing

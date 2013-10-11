@@ -62,7 +62,7 @@ public class BasePlugin implements Plugin {
      * @param refinable
      *     The {@link Refinable} instance.
      */
-    public void refinable(Refinable<?> refinable) {}
+    public void refinable(Refinable refinable) {}
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events

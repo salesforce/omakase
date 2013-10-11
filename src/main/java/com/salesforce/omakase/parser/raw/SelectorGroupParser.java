@@ -18,19 +18,18 @@ package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractRefinableParser;
+import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
-import com.salesforce.omakase.parser.RefinableParser;
-import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
  * Parses a group of comma-separated selectors.
  *
  * @author nmcwilliams
  */
-public class SelectorGroupParser extends AbstractRefinableParser {
+public class SelectorGroupParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
@@ -42,12 +41,11 @@ public class SelectorGroupParser extends AbstractRefinableParser {
 
         boolean foundDelimiter = false;
         boolean foundSelector = false;
-        RefinableParser parser = ParserFactory.rawSelectorParser();
 
         do {
             // try to parse a selector
             source.skipWhitepace();
-            foundSelector = parser.parse(source, broadcaster, refiner);
+            foundSelector = ParserFactory.rawSelectorParser().parse(source, broadcaster, refiner);
 
             if (foundDelimiter && !foundSelector) {
                 throw new ParserException(source, Message.EXPECTED_SELECTOR, tokenFactory().selectorDelimiter().description());

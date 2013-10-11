@@ -23,6 +23,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -35,7 +36,7 @@ public class ImportantParser extends AbstractParser {
     private static final String IMPORTANT = "important";
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
+    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();
 
         if (!source.optionallyPresent(Tokens.EXCLAMATION)) return false;

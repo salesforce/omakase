@@ -16,17 +16,21 @@
 
 package com.salesforce.omakase.ast.declaration.value;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.declaration.FunctionValueParser;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
@@ -38,9 +42,12 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "individual function value", broadcasted = REFINED_DECLARATION)
-public class FunctionValue extends AbstractSyntax implements Term {
+public class FunctionValue extends AbstractSyntax implements Term, Refinable {
+    private final Refiner refiner;
+
     private String name;
     private String args;
+    private Optional<RefinedFunctionValue> refined = Optional.absent();
 
     /**
      * Constructs a new {@link FunctionValue} instance with the given function name and arguments.
@@ -55,11 +62,14 @@ public class FunctionValue extends AbstractSyntax implements Term {
      *     The name of the function.
      * @param args
      *     The raw, non-validated function arguments.
+     * @param refiner
+     *     The {@link Refiner} to be used later during refinement of this object.
      */
-    public FunctionValue(int line, int column, String name, String args) {
+    public FunctionValue(int line, int column, String name, String args, Refiner refiner) {
         super(line, column);
         this.name = name;
         this.args = args;
+        this.refiner = refiner;
     }
 
     /**
@@ -74,10 +84,11 @@ public class FunctionValue extends AbstractSyntax implements Term {
     public FunctionValue(String name, String args) {
         name(name);
         args(args);
+        refiner = null;
     }
 
     /**
-     * Sets the function name.
+     * Sets the function name. Note that changing this value will invalidate any previous refinement.
      *
      * @param name
      *     The function name.
@@ -85,6 +96,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
      * @return this, for chaining.
      */
     public FunctionValue name(String name) {
+        checkState(!isRefined(), "Cannot change the name after being refined. Work with the refined object instead.");
         this.name = checkNotNull(name, "name cannot be null");
         return this;
     }
@@ -99,7 +111,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
     }
 
     /**
-     * Sets the raw arguments.
+     * Sets the raw arguments. Note that changing this value will invalidate any previous refinement.
      *
      * @param args
      *     The arguments.
@@ -107,6 +119,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
      * @return this, for chaining.
      */
     public FunctionValue args(String args) {
+        checkState(!isRefined(), "Cannot change the args after being refined. Work with the refined object instead.");
         this.args = checkNotNull(args, "args cannot be null");
         return this;
     }
@@ -120,10 +133,55 @@ public class FunctionValue extends AbstractSyntax implements Term {
         return args;
     }
 
+    /**
+     * Sets the refined function value delegate object. If this is specified then the {@link #write(StyleWriter, StyleAppendable)}
+     * method will delegate completely to the specified object.
+     *
+     * @param refined
+     *     The refined function value delegate.
+     *
+     * @return this, for chaining.
+     */
+    public FunctionValue refinedValue(RefinedFunctionValue refined) {
+        this.refined = Optional.of(refined);
+        return this;
+    }
+
+    /**
+     * Gets the refined function value, if present.
+     *
+     * @return The refined function value, or {@link Optional#absent()} if not present.
+     */
+    public Optional<RefinedFunctionValue> refinedValue() {
+        return refined;
+    }
+
+    @Override
+    public boolean isRefined() {
+        return refined.isPresent();
+    }
+
+    @Override
+    public boolean refine() {
+        if (!isRefined() && refiner != null) {
+            return refiner.refine(this);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isWritable() {
+        return !isRefined() || refined.get().isWritable();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // TODO compression for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
-        appendable.append(name).append('(').append(args).append(')');
+        if (isRefined()) {
+            refined.get().write(writer, appendable);
+        } else {
+            // TODO compression for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
+            appendable.append(name).append('(').append(args).append(')');
+        }
     }
 
     @Override
@@ -131,6 +189,7 @@ public class FunctionValue extends AbstractSyntax implements Term {
         return As.string(this)
             .add("name", name)
             .add("args", args)
+            .addIf(isRefined(), "refined", refined)
             .addUnlessEmpty("comments", comments())
             .toString();
     }

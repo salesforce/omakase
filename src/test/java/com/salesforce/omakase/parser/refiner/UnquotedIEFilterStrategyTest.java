@@ -18,10 +18,8 @@ package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,23 +45,9 @@ public class UnquotedIEFilterStrategyTest {
     }
 
     @Test
-    public void refineSelectorReturnsFalse() {
-        Selector s = new Selector(new RawSyntax(5, 5, "p"), refiner);
-        assertThat(strategy.refineSelector(s, broadcaster, refiner)).isFalse();
-        assertThat(s.isRefined()).isFalse();
-    }
-
-    @Test
-    public void refineAtRuleReturnsFalse() {
-        AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "{}"), refiner);
-        assertThat(strategy.refineAtRule(ar, broadcaster, refiner)).isFalse();
-        assertThat(ar.isRefined()).isFalse();
-    }
-
-    @Test
     public void refineDeclarationNoMatchReturnsFalse() {
         Declaration d = new Declaration(new RawSyntax(2, 3, "display"), new RawSyntax(2, 5, "none"), refiner);
-        assertThat(strategy.refineDeclaration(d, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(d, broadcaster, refiner)).isFalse();
         assertThat(d.isRefined()).isFalse();
     }
 
@@ -72,7 +56,7 @@ public class UnquotedIEFilterStrategyTest {
         Declaration d = new Declaration(new RawSyntax(2, 3, "filter"), new RawSyntax(2, 5,
             "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)"), refiner);
 
-        assertThat(strategy.refineDeclaration(d, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(d, broadcaster, refiner)).isTrue();
         assertThat(d.propertyValue()).isInstanceOf(UnquotedIEFilter.class);
 
         UnquotedIEFilter ief = (UnquotedIEFilter)d.propertyValue();

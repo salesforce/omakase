@@ -46,7 +46,8 @@ public class StandardRefinerStrategyTest {
     public void refineSelector() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         Selector selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
-        assertThat(selector.refine().parts()).isNotEmpty();
+        selector.refine();
+        assertThat(selector.parts()).isNotEmpty();
     }
 
     @Test
@@ -63,7 +64,8 @@ public class StandardRefinerStrategyTest {
     public void refinedSelectorAddsOrphanedComments() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id /*orphaned*/");
         Selector selector = new Selector(raw, new Refiner(new StatusChangingBroadcaster()));
-        assertThat(selector.refine().orphanedComments()).isNotEmpty();
+        selector.refine();
+        assertThat(selector.orphanedComments()).isNotEmpty();
     }
 
     @Test
@@ -71,8 +73,9 @@ public class StandardRefinerStrategyTest {
         RawSyntax rawName = new RawSyntax(2, 3, "display");
         RawSyntax rawValue = new RawSyntax(2, 5, "none");
         Declaration declaration = new Declaration(rawName, rawValue, new Refiner(new StatusChangingBroadcaster()));
-        assertThat(declaration.refine().propertyName()).isNotNull();
-        assertThat(declaration.refine().propertyValue()).isNotNull();
+        declaration.refine();
+        assertThat(declaration.propertyName()).isNotNull();
+        assertThat(declaration.propertyValue()).isNotNull();
     }
 
     @Test
@@ -89,7 +92,8 @@ public class StandardRefinerStrategyTest {
     public void refineDeclarationAddsOrphanedComments() {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");
-        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
+        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster()));
+        d.refine();
         assertThat(d.orphanedComments()).isNotEmpty();
     }
 

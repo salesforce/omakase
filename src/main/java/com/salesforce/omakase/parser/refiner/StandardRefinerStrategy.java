@@ -21,6 +21,7 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.declaration.value.PropertyValue;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
@@ -36,15 +37,16 @@ import com.salesforce.omakase.parser.Source;
  *
  * @author nmcwilliams
  */
-public final class StandardRefinerStrategy implements RefinerStrategy {
+public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, SelectorRefinerStrategy,
+    DeclarationRefinerStrategy, FunctionValueRefinerStrategy {
     @Override
-    public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
         // do nothing -- there's no default refinement for at-rules
         return false;
     }
 
     @Override
-    public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner) {
         // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
         // plugins that utilize order (#isFirst(), etc...) work smoothly.
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
@@ -72,7 +74,7 @@ public final class StandardRefinerStrategy implements RefinerStrategy {
     }
 
     @Override
-    public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
         Source source = new Source(declaration.rawPropertyValue().content(), declaration.line(), declaration.column());
 
@@ -93,5 +95,10 @@ public final class StandardRefinerStrategy implements RefinerStrategy {
         declaration.propertyValue(first.get());
 
         return true;
+    }
+
+    @Override
+    public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
+        return false; // TODO add refined stuff here
     }
 }

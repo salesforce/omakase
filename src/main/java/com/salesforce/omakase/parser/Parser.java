@@ -16,7 +16,9 @@
 
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
@@ -41,6 +43,22 @@ public interface Parser {
      *         of true does not indicate that the parsed content was actually valid syntax.
      */
     boolean parse(Source source, Broadcaster broadcaster);
+
+    /**
+     * Same as {@link #parse(Source, Broadcaster)}, except a {@link Refiner} instance to pass along to any created {@link
+     * Refinable} AST objects is given.
+     *
+     * @param source
+     *     The source to parse.
+     * @param broadcaster
+     *     The {@link Broadcaster} to receive any events from the parser.
+     * @param refiner
+     *     The {@link Refiner} to give to created AST objects.
+     *
+     * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
+     *         of true does not indicate that the parsed content was actually valid syntax.
+     */
+    boolean parse(Source source, Broadcaster broadcaster, Refiner refiner);
 
     /**
      * Utility for creating a {@link CombinationParser}.

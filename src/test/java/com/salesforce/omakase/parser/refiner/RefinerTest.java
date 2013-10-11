@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -110,121 +111,105 @@ public class RefinerTest {
         refiner.refine(declaration);
     }
 
-    public static final class AtRuleStrategy implements RefinerStrategy {
-        boolean called;
-
-        @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-            called = true;
-            return true;
-        }
-
-        @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-
-        @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
+    @Test
+    public void functionValueRefinement() {
+        FunctionValueStrategy strategy = new FunctionValueStrategy();
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
+        refiner.refine(new FunctionValue(1, 1, "test", "blah", refiner));
+        assertThat(strategy.called).isTrue();
     }
 
-    public static final class AtRuleStrategyFalse implements RefinerStrategy {
-        boolean called;
-
-        @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-            called = true;
-            return false;
-        }
-
-        @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-
-        @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
+    @Test
+    public void testMultipleFunctionValue() {
+        FunctionValueStrategyFalse strategy1 = new FunctionValueStrategyFalse();
+        FunctionValueStrategy strategy2 = new FunctionValueStrategy();
+        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
+        refiner.refine(new FunctionValue(1, 1, "test", "blah", refiner));
+        assertThat(strategy1.called).isTrue();
+        assertThat(strategy2.called).isTrue();
     }
 
-    public static final class SelectorStrategy implements RefinerStrategy {
-        boolean called;
-
-        @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-
-        @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-            called = true;
-            return true;
-        }
-
-        @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
+    @Test
+    public void standardFunctionValueRefinement() {
+        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        refiner.refine(new FunctionValue(1, 1, "test", "blah", refiner)); // no errors
     }
 
-    public static final class SelectorStrategyFalse implements RefinerStrategy {
+    public static final class AtRuleStrategy implements AtRuleRefinerStrategy {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-
-        @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-            called = true;
-            return false;
-        }
-
-        @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-    }
-
-    public static final class DeclarationStrategy implements RefinerStrategy {
-        boolean called;
-
-        @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-
-        @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
-            return false;
-        }
-
-        @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return true;
         }
     }
 
-    public static final class DeclarationStrategyFalse implements RefinerStrategy {
+    public static final class AtRuleStrategyFalse implements AtRuleRefinerStrategy {
         boolean called;
 
         @Override
-        public boolean refineAtRule(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+            called = true;
             return false;
         }
+    }
+
+    public static final class SelectorStrategy implements SelectorRefinerStrategy {
+        boolean called;
 
         @Override
-        public boolean refineSelector(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+            called = true;
+            return true;
+        }
+    }
+
+    public static final class SelectorStrategyFalse implements SelectorRefinerStrategy {
+        boolean called;
+
+        @Override
+        public boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+            called = true;
             return false;
         }
+    }
+
+    public static final class DeclarationStrategy implements DeclarationRefinerStrategy {
+        boolean called;
 
         @Override
-        public boolean refineDeclaration(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+            called = true;
+            return true;
+        }
+    }
+
+    public static final class DeclarationStrategyFalse implements DeclarationRefinerStrategy {
+        boolean called;
+
+        @Override
+        public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+            called = true;
+            return false;
+        }
+    }
+
+    public static final class FunctionValueStrategy implements FunctionValueRefinerStrategy {
+        boolean called;
+
+        @Override
+        public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
+            called = true;
+            return true;
+        }
+    }
+
+    public static final class FunctionValueStrategyFalse implements FunctionValueRefinerStrategy {
+        boolean called;
+
+        @Override
+        public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return false;
         }

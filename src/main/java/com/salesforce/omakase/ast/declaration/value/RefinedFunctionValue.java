@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser;
+package com.salesforce.omakase.ast.declaration.value;
 
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.ast.Syntax;
 
 /**
- * Base class for {@link RefinableParser}.
+ * A more specific, refined {@link FunctionValue}. This can represent either standard CSS functions (url, rgba, etc...) or custom
+ * functions.
  *
  * @author nmcwilliams
+ * @see FunctionValue
  */
-public abstract class AbstractRefinableParser extends AbstractParser implements RefinableParser {
-
-    @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
-        return parse(source, broadcaster, new Refiner(broadcaster));
-    }
-
-    @Override
-    public RefinableParser or(RefinableParser other) {
-        return new RefinableCombinationParser(this, other);
-    }
-
+public interface RefinedFunctionValue extends Syntax {
+    /**
+     * Gets whether this {@link RefinedFunctionValue} is a custom function, as opposed to be standard CSS.
+     *
+     * @return True if this is a custom function.
+     */
+    boolean isCustom();
 }
