@@ -90,6 +90,23 @@ public class ParserException extends OmakaseException {
      *     The column where the error occurred.
      * @param message
      *     The error message.
+     * @param args
+     *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
+     */
+    public ParserException(int line, int column, Message message, Object... args) {
+        this(line, column, message.message(args));
+    }
+
+    /**
+     * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
+     * a {@link Source} if possible instead.
+     *
+     * @param line
+     *     The line where the error occurred.
+     * @param column
+     *     The column where the error occurred.
+     * @param message
+     *     The error message.
      */
     public ParserException(int line, int column, String message) {
         super(format(line, column, message));

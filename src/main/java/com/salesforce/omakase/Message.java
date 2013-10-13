@@ -75,7 +75,8 @@ public enum Message {
         "parenthesis, " +
         "e.g., (ie7)"),
     MISSING_CONDITIONAL_BLOCK("Missing block for the conditional at-rule (@oif). The block must be encased within curly " +
-        "braces {}");
+        "braces {}"),
+    UNEXPECTED_AFTER_QUOTE("Unexpected content in url after closing quote '%s'");
 
     private final String message;
 

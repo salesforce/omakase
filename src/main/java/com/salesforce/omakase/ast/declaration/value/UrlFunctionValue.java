@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.declaration.value;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -31,8 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public class UrlFunctionValue extends AbstractSyntax implements RefinedFunctionValue {
+    private Optional<QuotationMode> quotationMode = Optional.absent();
     private String url;
-    private Optional<QuotationMode> quotationMode;
 
     /**
      * Creates a new {@link UrlFunctionValue} instance. If the url is quoted then use {@link #quotationMode(QuotationMode)} to
@@ -136,5 +137,15 @@ public class UrlFunctionValue extends AbstractSyntax implements RefinedFunctionV
                 appendable.append('\'');
             }
         }
+
+        appendable.append(')');
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this)
+            .add("url", url)
+            .addIf(quotationMode.isPresent(), "quotes", quotationMode)
+            .toString();
     }
 }

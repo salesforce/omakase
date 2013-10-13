@@ -76,6 +76,7 @@ public class KeywordValueTest {
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(value)).isEqualTo("inline-block");
     }
+
     @Test
     public void toStringTest() {
         value = KeywordValue.of(Keyword.INLINE_BLOCK);

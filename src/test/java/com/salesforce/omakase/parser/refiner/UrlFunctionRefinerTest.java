@@ -19,12 +19,16 @@ package com.salesforce.omakase.parser.refiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
+import com.salesforce.omakase.ast.declaration.value.QuotationMode;
 import com.salesforce.omakase.ast.declaration.value.UrlFunctionValue;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.parser.ParserException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link UrlFunctionRefiner}.
@@ -33,6 +37,8 @@ import static org.fest.assertions.api.Assertions.*;
  */
 @SuppressWarnings("JavaDoc")
 public class UrlFunctionRefinerTest {
+    @Rule public final ExpectedException exception = ExpectedException.none();
+
     private UrlFunctionRefiner urlRefiner;
     private QueryableBroadcaster broadcaster;
     private Refiner refiner;
@@ -59,34 +65,45 @@ public class UrlFunctionRefinerTest {
 
     @Test
     public void assignsCorrectLineAndColumn() {
-        fail("unimplemented");
+        FunctionValue functionValue = new FunctionValue(5, 2, "url", "/imgs/poof.png", refiner);
+        urlRefiner.refine(functionValue, broadcaster, refiner);
+        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        assertThat(value.line()).isEqualTo(5);
+        assertThat(value.column()).isEqualTo(2);
     }
 
     @Test
     public void errorIfMissingClosingQuote() {
-        fail("unimplemented");
+        FunctionValue functionValue = new FunctionValue("url", "\"/imgs/poof.png");
+        exception.expect(ParserException.class);
+        urlRefiner.refine(functionValue, broadcaster, refiner);
     }
 
     @Test
     public void correctlyFindsDoubleQuotes() {
-        fail("unimplemented");
+        FunctionValue functionValue = new FunctionValue("url", "\"/imgs/poof.png\"");
+        urlRefiner.refine(functionValue, broadcaster, refiner);
+        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        assertThat(value.url()).isEqualTo("/imgs/poof.png");
+        assertThat(value.quotationMode().get()).isEqualTo(QuotationMode.DOUBLE);
     }
 
     @Test
     public void correctFindsSingleQuotes() {
-        fail("unimplemented");
+        FunctionValue functionValue = new FunctionValue("url", "'/imgs/poof.png'");
+        urlRefiner.refine(functionValue, broadcaster, refiner);
+        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        assertThat(value.url()).isEqualTo("/imgs/poof.png");
+        assertThat(value.quotationMode().get()).isEqualTo(QuotationMode.SINGLE);
     }
 
     @Test
-    public void correctlyGetsArgsWhenQuotesPresent() {
-        fail("unimplemented");
-    }
-
-    @Test
-    public void correctlyGetsArgsWhenQuotesNotPresent() {
+    public void correctlyFindsNoQuotes() {
         FunctionValue functionValue = new FunctionValue("url", "/imgs/poof.png");
         urlRefiner.refine(functionValue, broadcaster, refiner);
-        assertThat(((UrlFunctionValue)functionValue.refinedValue().get()).url()).isEqualTo("/imgs/poof.png");
+        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        assertThat(value.url()).isEqualTo("/imgs/poof.png");
+        assertThat(value.quotationMode().isPresent()).isFalse();
     }
 
     @Test
@@ -95,5 +112,13 @@ public class UrlFunctionRefinerTest {
         urlRefiner.refine(functionValue, broadcaster, refiner);
         assertThat(broadcaster.all()).hasSize(1);
         assertThat(Iterables.get(broadcaster.all(), 0)).isInstanceOf(UrlFunctionValue.class);
+    }
+
+    @Test
+    public void errorsIfContentAfterClosingQuote() {
+        FunctionValue functionValue = new FunctionValue("url", "\"/imgs/poof.png\"aaa");
+        exception.expect(ParserException.class);
+        exception.expectMessage("Unexpected content in url after closing quote");
+        urlRefiner.refine(functionValue, broadcaster, refiner);
     }
 }

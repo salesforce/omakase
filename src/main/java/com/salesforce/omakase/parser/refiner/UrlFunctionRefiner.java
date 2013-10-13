@@ -16,10 +16,12 @@
 
 package com.salesforce.omakase.parser.refiner;
 
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.declaration.value.QuotationMode;
 import com.salesforce.omakase.ast.declaration.value.UrlFunctionValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
@@ -46,10 +48,13 @@ public class UrlFunctionRefiner implements FunctionValueRefinerStrategy {
             mode = QuotationMode.SINGLE;
         }
 
-        // TODO error if "multiple args?"
-
         // get the url content
         String args = (mode != null) ? source.readString().get() : functionValue.args();
+
+        // there shouldn't be any content after a closing quote
+        if (mode != null && !source.eof()) {
+            throw new ParserException(functionValue.line(), functionValue.column(), Message.UNEXPECTED_AFTER_QUOTE, source.toString());
+        }
 
         // create the value object
         UrlFunctionValue url = new UrlFunctionValue(functionValue.line(), functionValue.column(), args);

@@ -107,7 +107,6 @@ public final class StandardRefiner implements AtRuleRefinerStrategy, SelectorRef
 
     @Override
     public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
-        // TESTME
         for (FunctionValueRefinerStrategy strategy : STANDARD_FUNCTIONS) {
             if (strategy.refine(functionValue, broadcaster, refiner)) return true;
         }

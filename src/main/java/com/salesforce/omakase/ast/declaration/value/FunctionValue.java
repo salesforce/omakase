@@ -187,6 +187,8 @@ public class FunctionValue extends AbstractSyntax implements Term, Refinable {
     @Override
     public String toString() {
         return As.string(this)
+            .add("line", line())
+            .add("column", column())
             .add("name", name)
             .add("args", args)
             .addIf(isRefined(), "refined", refined)

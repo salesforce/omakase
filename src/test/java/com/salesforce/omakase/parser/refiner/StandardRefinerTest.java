@@ -16,22 +16,19 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.value.FunctionValue;
+import com.salesforce.omakase.ast.declaration.value.UrlFunctionValue;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.broadcast.AbstractBroadcaster;
-import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Set;
-
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StandardRefiner}.
@@ -97,16 +94,10 @@ public class StandardRefinerTest {
         assertThat(d.orphanedComments()).isNotEmpty();
     }
 
-    private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private final Set<Broadcastable> all = Sets.newHashSet();
-
-        @Override
-        public void broadcast(Broadcastable broadcastable) {
-            if (all.contains(broadcastable)) {
-                fail("unit shouldn't be broadcasted twice!");
-            }
-            all.add(broadcastable);
-            broadcastable.status(Status.PROCESSED);
-        }
+    @Test
+    public void refinedUrlFunctionValue() {
+        FunctionValue f = new FunctionValue(5, 2, "url", "one.png", new Refiner(new StatusChangingBroadcaster()));
+        f.refine();
+        assertThat(f.refinedValue().get()).isInstanceOf(UrlFunctionValue.class);
     }
 }
