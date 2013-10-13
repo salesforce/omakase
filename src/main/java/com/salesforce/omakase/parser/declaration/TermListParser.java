@@ -58,7 +58,7 @@ public class TermListParser extends AbstractParser {
             source.collectComments();
 
             // try to parse a term
-            termParser.parse(source, singleTermBroadcaster.reset());
+            termParser.parse(source, singleTermBroadcaster.reset(), refiner);
             term = singleTermBroadcaster.broadcasted();
 
             // if we have a term, add it to the list
@@ -110,7 +110,7 @@ public class TermListParser extends AbstractParser {
         if (termList == null) return false;
 
         // check for !important
-        termList.important(ParserFactory.importantParser().parse(source, broadcaster));
+        termList.important(ParserFactory.importantParser().parse(source, broadcaster, refiner));
 
         // broadcast the new term list
         broadcaster.broadcast(termList);

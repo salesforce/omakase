@@ -62,7 +62,7 @@ public final class StandardRefiner implements AtRuleRefinerStrategy, SelectorRef
         Source source = new Source(selector.rawContent(), false);
 
         // parse the contents
-        ParserFactory.complexSelectorParser().parse(source, queryable);
+        ParserFactory.complexSelectorParser().parse(source, queryable, refiner);
 
         // grab orphaned comments
         for (String comment : source.collectComments().flushComments()) {
@@ -87,7 +87,7 @@ public final class StandardRefiner implements AtRuleRefinerStrategy, SelectorRef
         Source source = new Source(declaration.rawPropertyValue().content(), declaration.line(), declaration.column());
 
         // parse the contents
-        ParserFactory.termListParser().parse(source, qb);
+        ParserFactory.termListParser().parse(source, qb, refiner);
 
         // grab orphaned comments
         for (String comment : source.collectComments().flushComments()) {

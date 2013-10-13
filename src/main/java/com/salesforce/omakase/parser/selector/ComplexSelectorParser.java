@@ -64,13 +64,13 @@ public class ComplexSelectorParser extends AbstractParser {
             matchedThisTime = false;
 
             // try parsing a universal or type selector
-            if (typeOrUniversal.parse(source, queue)) {
+            if (typeOrUniversal.parse(source, queue, refiner)) {
                 matchedAnything = true;
                 matchedThisTime = true;
             }
 
             // parse remaining selectors in the sequence
-            while (repeatableSelector.parse(source, queue)) {
+            while (repeatableSelector.parse(source, queue, refiner)) {
                 matchedAnything = true;
                 matchedThisTime = true;
             }
@@ -88,12 +88,12 @@ public class ComplexSelectorParser extends AbstractParser {
                 // so that if there is a trailing combinator error the source points to the right location
                 snapshot = source.snapshot();
             }
-        } while (combinator.parse(source, queue));
+        } while (combinator.parse(source, queue, refiner));
 
         // check for known possible errors
         if (!source.eof()) {
             snapshot = source.snapshot();
-            if (typeOrUniversal.parse(source, queue)) {
+            if (typeOrUniversal.parse(source, queue, refiner)) {
                 snapshot.rollback(Message.NAME_SELECTORS_NOT_ALLOWED);
             }
         }
