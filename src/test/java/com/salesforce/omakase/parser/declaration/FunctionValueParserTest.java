@@ -152,7 +152,7 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
             withExpectedResult("_theme(1 )", "1 "));
 
         for (ParseResult<String> result : results) {
-            GenericFunctionValue f = result.broadcaster.findOnly(GenericFunctionValue.class).get();
+            GenericFunctionValue f = result.broadcaster.find(GenericFunctionValue.class).get();
             assertThat(f.args()).isEqualTo(result.expected);
         }
     }
@@ -173,8 +173,16 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
             withExpectedResult("-theme__theme-t--t-11234(  )", "-theme__theme-t--t-11234"));
 
         for (ParseResult<String> result : results) {
-            GenericFunctionValue f = result.broadcaster.findOnly(GenericFunctionValue.class).get();
+            GenericFunctionValue f = result.broadcaster.find(GenericFunctionValue.class).get();
             assertThat(f.name()).isEqualTo(result.expected);
+        }
+    }
+
+    @Test
+    @Override
+    public void matchesExpectedBroadcastCount() {
+        for (GenericParseResult result : parse(validSources())) {
+            assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(2); // raw function + specific function
         }
     }
 

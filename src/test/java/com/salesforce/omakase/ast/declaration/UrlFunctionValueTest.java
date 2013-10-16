@@ -16,8 +16,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.ast.declaration.QuotationMode;
-import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;

@@ -34,7 +34,7 @@ public class ParserExceptionTest {
         source.forward(32);
 
         String msg = new ParserException(source, "test exception").getMessage();
-        assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
+        assertThat(msg).isEqualTo("test exception:\n" +
             "at line 5, column 4 in source\n" +
             "'.test {\n" +
             "  color: #16ff2b;\n" +
@@ -63,7 +63,7 @@ public class ParserExceptionTest {
         Source source = new Source(TemplatesHelper.longSource());
         source.forward(4003);
         String msg = new ParserException(source, "test exception").getMessage();
-        assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
+        assertThat(msg).isEqualTo("test exception:\n" +
             "at line 353, column 18 in source\n" +
             "'(...snipped...)x;\n" +
             "}\n" +
@@ -91,7 +91,7 @@ public class ParserExceptionTest {
         source.forward(32);
 
         String msg = new ParserException(source, "test exception").getMessage();
-        assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
+        assertThat(msg).isEqualTo("test exception:\n" +
             "at line 5, column 4 (starting from line 22, column 3 in original source) in substring of original source\n" +
             "'.test {\n" +
             "  color: #16ff2b;\n" +
@@ -118,7 +118,7 @@ public class ParserExceptionTest {
     @Test
     public void exceptionMessageWithLineAndColumnOnly() {
         String msg = new ParserException(5, 12, "test exception").getMessage();
-        assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
+        assertThat(msg).isEqualTo("test exception:\n" +
             "at line 5, column 12.");
     }
 }

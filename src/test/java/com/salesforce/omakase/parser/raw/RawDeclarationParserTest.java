@@ -201,7 +201,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
     @Test
     public void missingColon() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find :");
+        exception.expectMessage("Malformed declaration");
         parse("color red");
     }
 

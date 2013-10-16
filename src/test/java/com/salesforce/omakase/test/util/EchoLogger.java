@@ -51,7 +51,7 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void refinable(Refinable refinable) {
+    public void refinable(Refinable<?> refinable) {
         logger.trace("refinable: {}", refinable);
     }
 
@@ -171,8 +171,8 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void functionValue(GenericFunctionValue functionValue) {
-        logger.trace("functionValue: {}", functionValue);
+    public void genericFunction(GenericFunctionValue function) {
+        logger.trace("genericFunction: {}", function);
     }
 
     @Observe

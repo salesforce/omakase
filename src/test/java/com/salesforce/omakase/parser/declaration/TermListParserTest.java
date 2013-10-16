@@ -23,6 +23,7 @@ import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.broadcast.Broadcastable;
@@ -127,9 +128,9 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
             withExpectedResult("#ffcc11 ", 1),
             withExpectedResult("1px\n1px", 2),
             withExpectedResult("1px\t1px", 2),
-            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 3),
+            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 6), // RawFunction adds each
             withExpectedResult("-1px 1px 0 #222", 4),
-            withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 8),
+            withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 10), // RawFunction adds 1 each
             withExpectedResult("-1px 1px 0 #222", 4)));
 
         for (ParseResult<Integer> result : results) {
@@ -149,18 +150,20 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
 
 
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
-        assertThat(broadcasted).hasSize(10);
+        assertThat(broadcasted).hasSize(12);
 
         assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(1)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(2)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(3)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(4)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(4)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(5)).isInstanceOf(GenericFunctionValue.class);
         assertThat(broadcasted.get(6)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(7)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(8)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(9)).isInstanceOf(TermList.class);
+        assertThat(broadcasted.get(8)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(9)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(10)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(broadcasted.get(11)).isInstanceOf(TermList.class);
     }
 
     @Test

@@ -40,9 +40,9 @@ public enum Message {
     UNPARSABLE_DECLARATION_VALUE("Unable to parse remaining declaration value"),
     UNPARSABLE_CONDITIONAL_CONTENT("Unable to parse the remaining content in the conditional at-rule: %s"),
     EXPECTED_VALUE("Expected to parse a property value!"),
-    EXPECTED_TO_FIND("Expected to find '%s'"),
-    EXPECTED_CLOSING("Expected to find closing '%s'"),
-    INVALID_HEX("Expected a hex color of length 3 or 6, but found '%s'"),
+    EXPECTED_TO_FIND("Expected to find %s"),
+    EXPECTED_CLOSING("Expected to find closing %s"),
+    INVALID_HEX("Expected a hex color of length 3 or 6, but found %s"),
     EXPECTED_DECIMAL("Expected to find decimal value"),
     TRAILING_OPERATOR("Expected to find another term following the term operator (%s). Either the operator should be removed, " +
         "the subsequent term is missing, or the subsequent term is not currently recognized"),

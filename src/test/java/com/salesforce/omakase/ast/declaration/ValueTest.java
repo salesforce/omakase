@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
