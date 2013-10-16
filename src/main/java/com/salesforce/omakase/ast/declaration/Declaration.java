@@ -341,6 +341,15 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     @Override
+    public boolean isWritable() {
+        // TESTME
+        if (isRefined()) {
+            return super.isWritable() && propertyName.isWritable() && propertyValue.isWritable();
+        }
+        return super.isWritable();
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             // property name
