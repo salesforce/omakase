@@ -17,60 +17,60 @@
 package com.salesforce.omakase.broadcast;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Status;
 
 /**
- * A {@link Broadcaster} that expects at most one particular {@link Broadcastable} instance to be broadcasted.
+ * A {@link Broadcaster} that is interested in only a single broadcast of a particular type.
  * <p/>
- * If more than one or the wrong type of unit is broadcasted then an exception is thrown. This is more performant than a {@link
- * QueryableBroadcaster} as it doesn't create a new list.
+ * Any broadcasts that do not match the expected type will be ignored, and only the <em>first</em> broadcast of the desired type
+ * will be stored. All broadcasts, matching or not, will still be passed along to the relay if the relay is specified.
+ * <p/>
+ * This is a better performing {@link Broadcaster} over {@link QueryableBroadcaster} as it does not create a new list object. To
+ * further this benefit, use the {@link #reset()} as well.
  *
  * @param <T>
  *     The expected broadcastable type.
  *
  * @author nmcwilliams
  */
-public final class SingleBroadcaster<T extends Broadcastable> extends AbstractBroadcaster {
+public final class SingleInterestBroadcaster<T extends Broadcastable> extends AbstractBroadcaster {
     private final Class<T> klass;
     private T broadcasted;
 
     /**
-     * Constructs a new {@link SingleBroadcaster} instance that will <em>not</em> relay any events to another {@link
+     * Constructs a new {@link SingleInterestBroadcaster} instance that will <em>not</em> relay any events to another {@link
      * Broadcaster}.
      *
      * @param klass
      *     Class of the expected broadcastable.
      */
-    public SingleBroadcaster(Class<T> klass) {
+    public SingleInterestBroadcaster(Class<T> klass) {
         this(klass, null);
     }
 
     /**
-     * Constructs a new {@link SingleBroadcaster} instance that will relay all events to the given {@link Broadcaster}.
+     * Constructs a new {@link SingleInterestBroadcaster} instance that will relay all events to the given {@link Broadcaster}.
      *
      * @param klass
      *     Class of the expected broadcastable.
      * @param relay
      *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
      */
-    public SingleBroadcaster(Class<T> klass, Broadcaster relay) {
+    public SingleInterestBroadcaster(Class<T> klass, Broadcaster relay) {
         this.klass = klass;
         wrap(relay);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void broadcast(Broadcastable broadcastable) {
-        if (broadcasted != null) throw new IllegalArgumentException(Message.ONE_BROADCASTED_EVENT.message());
-        if (!klass.isInstance(broadcastable)) throw new IllegalArgumentException(Message.WRONG_INSTANCE.message(klass));
-
         if (broadcastable.status() == Status.UNBROADCASTED) {
             broadcastable.status(Status.QUEUED);
         }
 
-        // cast is safe -- guarded by above isInstance check
-        broadcasted = (T)broadcastable;
+        // store off the first occurrence of our expected type
+        if (broadcasted == null && klass.isInstance(broadcastable)) {
+            broadcasted = klass.cast(broadcastable);
+        }
 
         if (relay != null) {
             relay.broadcast(broadcastable);
@@ -91,7 +91,7 @@ public final class SingleBroadcaster<T extends Broadcastable> extends AbstractBr
      *
      * @return this, for chaining.
      */
-    public SingleBroadcaster<T> reset() {
+    public SingleInterestBroadcaster<T> reset() {
         this.broadcasted = null;
         return this;
     }

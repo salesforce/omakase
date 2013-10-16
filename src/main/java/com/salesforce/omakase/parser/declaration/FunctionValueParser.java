@@ -17,8 +17,8 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
@@ -60,7 +60,12 @@ public final class FunctionValueParser extends AbstractParser {
         RawFunction raw = new RawFunction(snapshot.originalLine, snapshot.originalColumn, name.get(), args);
         raw.comments(source.flushComments());
 
-        // refiner will broadcast the actual function term
+        // we are broadcasting this to allow for plugins to modify the raw args before it gets to the refiners. However
+        // RawFunction is NOT an instance of Term and will not be stored or maintained by the TermList itself. It's
+        // essentially discarded after the refiners deal with it.
+        broadcaster.broadcast(raw);
+
+        // a refiner will broadcast the actual function term
         refiner.refine(raw, broadcaster);
 
         return true;

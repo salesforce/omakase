@@ -17,6 +17,7 @@
 package com.salesforce.omakase.error;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.parser.Source;
 
 /**
  * Utils for working with errors.
@@ -32,7 +33,7 @@ public final class ErrorUtils {
      * @param message
      *     The error message.
      *
-     * @return The error message.
+     * @return The formatted message.
      */
     public static String format(String message) {
         return String.format("Omakase CSS Parser - %s", message);
@@ -46,7 +47,7 @@ public final class ErrorUtils {
      * @param cause
      *     The {@link Syntax} that has the problem.
      *
-     * @return The error message.
+     * @return The formatted message.
      */
     public static String format(String message, Syntax cause) {
         return format(null, message, cause);
@@ -62,7 +63,7 @@ public final class ErrorUtils {
      * @param cause
      *     The {@link Syntax} that has the problem.
      *
-     * @return The error message.
+     * @return The formatted message.
      */
     public static String format(String sourceName, String message, Syntax cause) {
         if (sourceName != null) {
@@ -82,5 +83,56 @@ public final class ErrorUtils {
                 cause.toString()
             );
         }
+    }
+
+    /**
+     * Formats an parsing error message.
+     *
+     * @param source
+     *     The source where the error occurred.
+     * @param message
+     *     The error message.
+     *
+     * @return The formatted message.
+     */
+    public static String format(Source source, String message) {
+        if (!source.isSubSource()) {
+            return String.format("%s:\nat line %s, column %s in source\n'%s'",
+                message,
+                source.line(),
+                source.column(),
+                source.toStringContextual()
+            );
+        } else {
+            return String.format("%s:\nat line %s, column %s (starting from line %s, " +
+                "column %s in original source) in substring of original source\n'%s'",
+                message,
+                source.line(),
+                source.column(),
+                source.anchorLine(),
+                source.anchorColumn(),
+                source.toStringContextual()
+            );
+        }
+    }
+
+    /**
+     * Formats a parsing error message. Prefer {@link #format(Source, String)} over this one.
+     *
+     * @param line
+     *     The line where the error occurred.
+     * @param column
+     *     The column where the error occurred.
+     * @param message
+     *     The error message.
+     *
+     * @return The formatted message.
+     */
+    public static String format(int line, int column, String message) {
+        return String.format("%s:\nat line %s, column %s.",
+            message,
+            line,
+            column
+        );
     }
 }

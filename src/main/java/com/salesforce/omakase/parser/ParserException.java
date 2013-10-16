@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.error.ErrorUtils;
 import com.salesforce.omakase.error.OmakaseException;
 
 /**
@@ -62,7 +63,7 @@ public class ParserException extends OmakaseException {
      *     The error message.
      */
     public ParserException(Source source, String message) {
-        super(format(source, message));
+        super(ErrorUtils.format(source, message));
     }
 
     /**
@@ -109,36 +110,6 @@ public class ParserException extends OmakaseException {
      *     The error message.
      */
     public ParserException(int line, int column, String message) {
-        super(format(line, column, message));
-    }
-
-    /** formats the error message */
-    private static String format(Source source, String message) {
-        if (!source.isSubSource()) {
-            return String.format("Omakase CSS Parser - %s:\nat line %s, column %s in source\n'%s'",
-                message,
-                source.line(),
-                source.column(),
-                source.toStringContextual()
-            );
-        } else {
-            return String.format("Omakase CSS Parser - %s:\nat line %s, column %s (starting from line %s, " +
-                "column %s in original source) in substring of original source\n'%s'",
-                message,
-                source.line(),
-                source.column(),
-                source.anchorLine(),
-                source.anchorColumn(),
-                source.toStringContextual()
-            );
-        }
-    }
-
-    private static String format(int line, int column, String message) {
-        return String.format("Omakase CSS Parser - %s:\nat line %s, column %s.",
-            message,
-            line,
-            column
-        );
+        super(ErrorUtils.format(line, column, message));
     }
 }

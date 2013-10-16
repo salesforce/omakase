@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -57,6 +58,9 @@ public final class RawDeclarationParser extends AbstractParser {
         }
 
         RawSyntax property = new RawSyntax(line, column, content.trim());
+
+        // check for malformed declaration
+        if (source.eof()) snapshot.rollback(Message.MALFORMED_DECLARATION);
 
         source.skipWhitepace();
         source.expect(tokenFactory().propertyNameEnd());

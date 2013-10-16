@@ -17,7 +17,11 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.parser.refiner.FunctionRefinerStrategy;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.refiner.StandardRefinerStrategy;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -25,19 +29,25 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Raw syntax representing a function.
  * <p/>
- * This is usually just an intermediary object passed to {@link Refiner#refine(RawFunction)}.
+ * This is usually just an intermediary object passed to {@link Refiner#refine(RawFunction)}. You can subscribe to this method if
+ * you would like to check ALL function-like values (e.g., to modify the raw args) before they are refined into the more
+ * specifically-typed function value.
  *
  * @author nmcwilliams
+ * @see FunctionRefinerStrategy
  * @see StandardRefinerStrategy#refine(RawFunction, Broadcaster, Refiner)
  * @see GenericFunctionValue
  */
-
+@Subscribable
+@Description(value = "a raw function before refinement", broadcasted = BroadcastRequirement.REFINED_DECLARATION)
 public final class RawFunction extends AbstractSyntax {
-    private final String name;
-    private final String args;
+    private String name;
+    private String args;
 
     /**
      * Creates a new {@link RawFunction} instance.
@@ -58,12 +68,38 @@ public final class RawFunction extends AbstractSyntax {
     }
 
     /**
+     * Changes the name of the function.
+     *
+     * @param name
+     *     The new function name.
+     *
+     * @return this, for chaining.
+     */
+    public RawFunction name(String name) {
+        this.name = checkNotNull(name, "name cannot be null");
+        return this;
+    }
+
+    /**
      * Gets the function name.
      *
      * @return The function name.
      */
     public String name() {
         return name;
+    }
+
+    /**
+     * Changes the raw function args.
+     *
+     * @param args
+     *     The new function args.
+     *
+     * @return this, for chaining.
+     */
+    public RawFunction args(String args) {
+        this.args = checkNotNull(args, "args cannot be null");
+        return this;
     }
 
     /**

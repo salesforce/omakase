@@ -30,6 +30,7 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Set;
 
 /**
@@ -101,6 +102,7 @@ final class AnnotationScanner {
             // the validate annotation
             if (method.isAnnotationPresent(Validate.class)) {
                 if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                annotated = true;
 
                 // must have exactly two parameters
                 Class<?>[] params = method.getParameterTypes();
@@ -112,6 +114,11 @@ final class AnnotationScanner {
 
                 // add the metadata
                 set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.VALIDATE));
+            }
+
+            // this is required for anonymous inner classes
+            if (annotated && Modifier.isPublic(method.getModifiers())) {
+                method.setAccessible(true);
             }
         }
 
