@@ -78,6 +78,8 @@ public interface Syntax extends Writable, Broadcastable {
      *
      * @param commentsToAdd
      *     The comments to add.
+     *
+     * @return this, for chaining.
      */
     Syntax comments(Iterable<String> commentsToAdd);
 
@@ -90,6 +92,8 @@ public interface Syntax extends Writable, Broadcastable {
      *
      * @param commentsToAdd
      *     The comments to add.
+     *
+     * @return this, for chaining.
      */
     Syntax directComments(Iterable<Comment> commentsToAdd);
 

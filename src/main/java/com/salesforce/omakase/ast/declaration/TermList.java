@@ -126,10 +126,10 @@ public final class TermList extends AbstractPropertyValue {
         ImmutableList.Builder<Term> builder = ImmutableList.builder();
 
         for (TermListMember member : members) {
-            if (member instanceof Term) {
-                builder.add((Term)member);
-            } else if (member instanceof TermView) {
+            if (member instanceof TermView) {
                 builder.addAll(((TermView)member).terms());
+            } else if (member instanceof Term) {
+                builder.add((Term)member);
             }
         }
 

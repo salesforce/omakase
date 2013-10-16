@@ -26,7 +26,7 @@ import com.salesforce.omakase.ast.Syntax;
  * @author nmcwilliams
  */
 public abstract class AbstractPropertyValue extends AbstractSyntax implements PropertyValue {
-    private Optional<Declaration> parent;
+    private Optional<Declaration> parent = Optional.absent();
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractPropertyValue() {}

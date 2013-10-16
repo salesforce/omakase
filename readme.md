@@ -14,7 +14,7 @@ The two main goals of Omakase are speed and flexibility.
 
 Omakase is written with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional sensitivities of runtime-level performance.
 
-Part of the speed gains come from a 2-level parsing strategy. The first level separates the source code into selectors, declarations and at-rules only. The (optional or targeted) second level breaks each unit down further into more specific details. The second level can be conditionally applied to specific selectors, declarations and at-rules or all of them depending on applicability. 
+Part of the speed gains come from a 2-level parsing strategy. The first level separates the source code into selectors, declarations and at-rules only. The (optional or targeted) second level breaks each unit down further into more specific details. The second level can be conditionally applied to specific selectors, declarations and at-rules or all of them depending on applicability.
 
 ### Focus on flexibility
 
@@ -28,7 +28,7 @@ Omakase is built 100% solely for parsing CSS, which means that the error message
 
 Omakase comes with some nifty plugins out of the box that mirror common _CSS Preprocessor_ functionality:
 
-TODO add 
+TODO add
 
 Usage
 -----
@@ -140,9 +140,9 @@ for (Statement statement : stylesheet.statements()) {
 
 #### AutoRefiner
 
-The `AutoRefiner` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`). 
+The `AutoRefiner` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`).
 
-It is important to realize that unless refinement occurs, the unrefined syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until `#refine()` is called on that selector instance. The `AutoRefiner` plugin can handle automatically calling the `#refine()` method on any and everything that is refinable, thus enabling this additional level of syntax validation across the board: 
+It is important to realize that unless refinement occurs, the unrefined syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until `#refine()` is called on that selector instance. The `AutoRefiner` plugin can handle automatically calling the `#refine()` method on any and everything that is refinable, thus enabling this additional level of syntax validation across the board:
 
 ```java
 AutoRefiner all = new AutoRefiner().all(); // refine everything
@@ -186,7 +186,7 @@ compared to quoted:
 
 ### Creating custom plugins
 
-In addition to the standard library plugins, you can create and register your own custom plugins as well. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules. 
+In addition to the standard library plugins, you can create and register your own custom plugins as well. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules.
 
 Plugins are essentially plain java objects that implement one of the _plugin interfaces_ and define one or more _subscription methods_ to a particular AST object (e.g., `Selector` or `Declaration`). The subscription method does the actual rework or validation as appropriate.
 
@@ -207,7 +207,7 @@ Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
 
 #### Custom rework
 
-The term _rework_ refers to the process of changing the processed CSS source code, e.g., changing a class name, adding a declaration, removing a rule, etc... Omakase's rework capabilities allow you to easily change nearly any aspect of the CSS. You can add, change or remove selectors, add, change or remove declarations, add, change or remove rules, and... you get the picture. 
+The term _rework_ refers to the process of changing the processed CSS source code, e.g., changing a class name, adding a declaration, removing a rule, etc... Omakase's rework capabilities allow you to easily change nearly any aspect of the CSS. You can add, change or remove selectors, add, change or remove declarations, add, change or remove rules, and... you get the picture.
 
 Each AST object contains setters and getters for working with its values. In addition there are several utility classes to make everything as convenient as possible. For Omakase, reworking the CSS tree is a first-class operation and is fully supported.
 
@@ -221,7 +221,7 @@ public class PrefixAllSelectors implements Plugin {
         ClassSelector prefix = new ClassSelector("myPrefix");
 
         // prepend the simple selector to the beginning of the selector
-        selector.parts().prepend(prefix); 
+        selector.parts().prepend(prefix);
     }
 }
 ```
@@ -234,7 +234,7 @@ Notice the following details:
 
 This is the general pattern of performing rework. The class adds as many methods as desired, each with the `@Rework` annotation and a single argument which is the type of syntax unit to rework. The method will be automatically invoked by the framework, allowing you to perform any operations on the given unit.
 
-For more advanced examples on performing rework see the `ReworkTest.java` class. 
+For more advanced examples on performing rework see the `ReworkTest.java` class.
 
 ##### Dynamic AST creation and modification
 
@@ -341,7 +341,7 @@ public class Validations implements Plugin {
     @Validate
     public void validateIncludesUnprefixed(Declaration declaration, ErrorManager em) {
         // check that all prefixed declarations include an unprefixed declaration as well.
-        
+
         if (declaration.isDetached()) return; // ignore removed declarations
 
         PropertyName propertyName = declaration.propertyName();
@@ -369,9 +369,9 @@ Keep in mind that all validators run after the rework phase has been completed. 
 
 #### Dependent plugins
 
-As mentioned above, many plugins, especially ones with `@Rework`, will need to register dependencies on other plugins. 
+As mentioned above, many plugins, especially ones with `@Rework`, will need to register dependencies on other plugins.
 
-You  will have a dependency on `AutoRefiner` in cases where you have subscriptions to syntax unit types more specific than `Selector`, `Declaration` or `AutoRefiner`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below. 
+You  will have a dependency on `AutoRefiner` in cases where you have subscriptions to syntax unit types more specific than `Selector`, `Declaration` or `AutoRefiner`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below.
 
 If your plugin only needs refined selector units then `AutoRefiner#selectors()` will suffice, or `AutoRefiner#declarations()` for declarations. To nab everything then you can use `AutoRefiner#all()`.
 
@@ -386,7 +386,7 @@ public class Dependent implements DependentPlugin {
 }
 ```
 
-The `#require` method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case. 
+The `#require` method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case.
 
 You can also require your own custom plugins by using the `#require(Class, Supplier)` method.
 
@@ -396,7 +396,7 @@ There is another, more performant alternative to using `AutoRefiner`. You can in
 
 Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation does not need to be separated out in to multiple classes.
 
-You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework, validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order. 
+You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework, validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order.
 
 #### Subscribing to interfaces
 
@@ -404,7 +404,7 @@ Not only can you subscribe to concrete types such as `ClassSelector` and `IdSele
 
 Subscribing to an interface type will allow you to receive all instances of that type, which can be useful in certain scenarios. For example, `AutoRefiner` only has one subscription to `Refinable` instead of having to add a method for `Declaration`, `Selector`, etc...
 
-Within a particular class, the more specifically-typed subscription will be delivered before the more generally-typed subscriptions. For example, in a class with subscriptions to `ClassSelector`, `SimpleSelector` and `Syntax`, the methods will always be invoked in that exact order. 
+Within a particular class, the more specifically-typed subscription will be delivered before the more generally-typed subscriptions. For example, in a class with subscriptions to `ClassSelector`, `SimpleSelector` and `Syntax`, the methods will always be invoked in that exact order.
 
 See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
 
@@ -420,7 +420,7 @@ You can extend the `BasePlugin` class, which comes with a predefined subscriptio
 
 ### Custom error handling
 
-The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily guess will throw an exception on the first fatal error that is reported. For warnings it will only log a message. 
+The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily guess will throw an exception on the first fatal error that is reported. For warnings it will only log a message.
 
 You can alternatively specify your own `ErrorManager` implementation, for example to store all errors and present them in full at once at the end of parsing. To do so, create a class that implements the `ErrorManager` interface and provide it during parser setup:
 
@@ -467,13 +467,13 @@ You can only register one override per AST object type.
 AST objects are automatically associated with all comments that logically precede them. You can access the list of comments by calling the `Syntax#comments` method on the syntax unit. In other words, comments are linked to the AST object that directly follows them (with the exception of orphaned comments, as explained below). Take this example:
 
 ```css
-/*0*/ 
+/*0*/
 
-/*1*/.class /*2*/ /*3*/.class/*4*/.class /*5*/, /*6*/ p#id /*7*/ { /*8*/ 
-  /*9*/ border: /*10*/ 1px/*11*/ solid red /*12*/;/*13*/ /*14*/ 
-  /*15*/ margin: 1px; /*16*/ 
-  /*17*/ 
-} 
+/*1*/.class /*2*/ /*3*/.class/*4*/.class /*5*/, /*6*/ p#id /*7*/ { /*8*/
+  /*9*/ border: /*10*/ 1px/*11*/ solid red /*12*/;/*13*/ /*14*/
+  /*15*/ margin: 1px; /*16*/
+  /*17*/
+}
 
 /*18*//*19*/
 ```
@@ -534,28 +534,29 @@ Following is the list of all supported syntax types that you can subscribe to in
 04: Rule                           (no description)                                          Automatic                   class
 05: Stylesheet                     (no description)                                          Automatic                   class
 06: AtRule                         (no description)                                          Automatic                   class
-07: Declaration                    (no description)                                          Automatic                   class
-08: PropertyValue                  interface for all property values                         Declaration#refine          interface
-09: Term                           a single segment of a property value                      Declaration#refine          interface
-10: FunctionValue                  individual function value                                 Declaration#refine          class
+07: PropertyValue                  interface for all property values                         Declaration#refine          interface
+08: Term                           a single segment of a property value                      Declaration#refine          interface
+09: Declaration                    (no description)                                          Automatic                   class
+10: GenericFunctionValue           unknown function value                                    Declaration#refine          class
 11: HexColorValue                  individual hex color value                                Declaration#refine          class
 12: KeywordValue                   individual keyword value                                  Declaration#refine          class
 13: NumericalValue                 individual numerical value                                Declaration#refine          class
 14: StringValue                    individual string value                                   Declaration#refine          class
 15: TermList                       default, generic property value                           Declaration#refine          class
-16: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
-17: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
-18: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-19: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-20: AttributeSelector              attribute selector segment                                Selector#refine             class
-21: ClassSelector                  class selector segment                                    Selector#refine             class
-22: Combinator                     combinator segment                                        Selector#refine             class
-23: IdSelector                     id selector segment                                       Selector#refine             class
-24: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
-25: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
-26: Selector                       (no description)                                          Automatic                   class
-27: TypeSelector                   type/element selector segment                             Selector#refine             class
-28: UniversalSelector              universal selector segment                                Selector#refine             class
+16: UrlFunctionValue               url function                                              Declaration#refine          class
+17: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
+18: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
+19: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+20: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+21: AttributeSelector              attribute selector segment                                Selector#refine             class
+22: ClassSelector                  class selector segment                                    Selector#refine             class
+23: Combinator                     combinator segment                                        Selector#refine             class
+24: IdSelector                     id selector segment                                       Selector#refine             class
+25: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
+26: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
+27: Selector                       (no description)                                          Automatic                   class
+28: TypeSelector                   type/element selector segment                             Selector#refine             class
+29: UniversalSelector              universal selector segment                                Selector#refine             class
 
 Generated by SubscribableSyntaxTable.java
 </pre>
@@ -579,7 +580,7 @@ Once you get everything set up, read the "Architecture" section (found below) so
 The project relies on the following technologies:
 
 1. git (duh)
-2. java 7 (make sure both the IDE and maven are setup to use it) 
+2. java 7 (make sure both the IDE and maven are setup to use it)
 3. maven 3+
 
 run `mvn clean install` to get things going from the command line. It should build and run tests successfully. Afterwards you can import the maven project into your IDE and go from there.
@@ -637,15 +638,15 @@ The project requires _Java 7_, _git_ and _maven_. The general architecture of th
 ### Parsers
 **Key Classes** `Token` `Tokens` `Stream` `Parser` `ParserFactory`
 
-Parsers are simple java objects that know how to parse specific aspects of CSS syntax. Parsers do not maintain any state, and only one instance of each parser is instantiated and stored in `ParserFactory`. 
+Parsers are simple java objects that know how to parse specific aspects of CSS syntax. Parsers do not maintain any state, and only one instance of each parser is instantiated and stored in `ParserFactory`.
 
-Parsers employ a 2-level parsing strategy. The first level will comb through the CSS source and extract the at-rules, selectors and declarations (and no more). Any errors at this grammatical level will be caught immediately (for example, a missing curly bracket to close a rule). However any errors at a more specific level (e.g., within a selector or within a declaration) will not be caught until that particular object is refined. 
+Parsers employ a 2-level parsing strategy. The first level will comb through the CSS source and extract the at-rules, selectors and declarations (and no more). Any errors at this grammatical level will be caught immediately (for example, a missing curly bracket to close a rule). However any errors at a more specific level (e.g., within a selector or within a declaration) will not be caught until that particular object is refined.
 
 The second level occurs individually per instance, e.g., each particular `Selector` or `Declaration` instance. When `Refinable#refine` is called on the instance, it will utilize parsers to parse its raw syntax snippet, potentially catching syntax errors along the way.
 
 It's important to understand that the second level may or may not be executed or may only be executed on certain instances. Also the second level for one selector instance may occur at a different time than another selector instance.
 
-This process allows us to be more specific about what actually gets parsed. For example, on a first parsing pass we may want to parse and validate everything, but on a second pass we may not care about fully parsing selectors anymore. This pinpointed level of detail allows for better performance, especially important in production scenarios. 
+This process allows us to be more specific about what actually gets parsed. For example, on a first parsing pass we may want to parse and validate everything, but on a second pass we may not care about fully parsing selectors anymore. This pinpointed level of detail allows for better performance, especially important in production scenarios.
 
 (However, even when doing away with this separation and always parsing and refining everything every time, Omakase still executes faster than other leading open-source CSS parsers.)
 
@@ -656,21 +657,21 @@ When a `Parser` has successfully parsed some content, it will construct the appr
 
 AST (Abstract Syntax Tree) objects are simple data objects representing various aspects o CSS syntax, e.g., selectors, declarations, etc... AST objects generally have getters and setters for various values. AST objects are also responsible for writing their own content out when a `StyleWriter` asks for it.
 
-AST objects generally contain little to no validation logic. Most validation is written in the form of a `Plugin` that subscribes to the unit it is going to validate. 
+AST objects generally contain little to no validation logic. Most validation is written in the form of a `Plugin` that subscribes to the unit it is going to validate.
 
 ### Plugins
 **Key Classes** `Plugin` `DependentPlugin`
 
 A `Plugin` subscribes to one or more AST objects (one per method) to perform rework or validation. Methods on the plugin are annotated with `@Rework` or `@Validate` annotations as appropriate. These methods are known as subscription methods. Each subscription method is subscribed to one particular AST object type via its parameter. This parameter is how we know which methods to invoke when various AST objects are sent to be broadcasted.
 
-Plugins are registered during parser setup via `Omakase#request` or `Omakase#add`. Plugins can and often do have dependencies on each other, which can be registered by implementing the `DependentPlugin` interface. 
+Plugins are registered during parser setup via `Omakase#request` or `Omakase#add`. Plugins can and often do have dependencies on each other, which can be registered by implementing the `DependentPlugin` interface.
 
 The general Omakase philosophy is that much of the internal logic as well as all of the consumer logic is organized into a set of plugins.
 
 ### Broadcasters
 **Key Classes** `Broadcaster` `Emitter` `AnnotationScanner` `Subscription`
 
-A `Broadcaster` is something that handles broadcasts of various AST objects. You can think of this as the _observer_ pattern, or the _event listener_ pattern, where the AST object itself is the event, the plugins are the listeners, and the broadcasters are responsible for receiving the AST objects from the parsers and delivering it to all registered subscriptions. 
+A `Broadcaster` is something that handles broadcasts of various AST objects. You can think of this as the _observer_ pattern, or the _event listener_ pattern, where the AST object itself is the event, the plugins are the listeners, and the broadcasters are responsible for receiving the AST objects from the parsers and delivering it to all registered subscriptions.
 
 However, broadcasters do no necessarily deliver the AST objects right away. The `Broadcaster` interface utilizes the _decorator_ pattern (think `Reader`, `BufferedReader`, etc...). That is, broadcasters can be wrapped inside of each other, relaying broadcasters to their inner broadcasters. For example, a `QueingBroadcaster` may be wrapped around an `EmittingBroadcaster`. The `QueingBroadcaster` may hold on to all of its broadcasts until a certain condition has been verified. At the bottom of the chain is almost always the `EmittingBroadcaster`, which is the one responsible for using an `Emitter` to actually invoke the subscription methods.
 

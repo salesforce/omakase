@@ -18,10 +18,12 @@ package com.salesforce.omakase.test.util.tool;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.declaration.Keyword;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utility to take list of css names and fromStrings them to the {@link Keyword} enum.
@@ -35,10 +37,16 @@ public final class KeywordToEnum {
     public static void main(String[] args) {
         Collections.sort(list);
 
+        Set<String> used = Sets.newHashSet();
+
         StringBuilder builder = new StringBuilder(1024);
 
         for (int i = 0; i < list.size(); i++) {
             String p = list.get(i);
+
+            if (used.contains(p)) throw new RuntimeException("'" + p + "' is already defined");
+            used.add(p);
+
             builder.append("/** CSS keyword named '").append(p).append("' */").append("\n");
             builder.append(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE, p));
             builder.append("(\"").append(p).append("\")");
@@ -59,6 +67,7 @@ public final class KeywordToEnum {
         "absolute",
         "all",
         "always",
+        "aqua",
         "auto",
         "avoid",
         "avoid-column",
@@ -66,7 +75,9 @@ public final class KeywordToEnum {
         "balance",
         "baseline",
         "below",
+        "black",
         "block",
+        "blue",
         "bold",
         "bolder",
         "border-box",
@@ -84,15 +95,23 @@ public final class KeywordToEnum {
         "combo-box",
         "condensed",
         "continuous",
+        "dashed",
         "decimal",
         "decimal-leading-zero",
         "desktop",
+        "dotted",
+        "double",
         "end",
         "expanded",
         "field",
         "fill",
         "fixed",
+        "fuchsia",
+        "gray",
+        "green",
         "grid",
+        "groove",
+        "hidden",
         "hidden",
         "hide",
         "higher",
@@ -105,9 +124,11 @@ public final class KeywordToEnum {
         "inline-box",
         "inline-grid",
         "inline-table",
+        "inset",
         "italic",
         "justify",
         "left",
+        "lime",
         "line",
         "list-item",
         "list-menu",
@@ -119,28 +140,35 @@ public final class KeywordToEnum {
         "lowercase",
         "ltr",
         "manual",
+        "maroon",
         "max-height",
         "menu",
         "menu-item",
         "middle",
         "multiple",
+        "navy",
         "none",
         "normal",
         "nowrap",
+        "olive",
         "open",
         "optimizeLegibility",
         "optimizeSpeed",
         "outline-tree",
+        "outset",
         "outside",
         "page",
         "pre",
         "pre-line",
         "pre-wrap",
+        "purple",
         "read-only",
         "read-write",
+        "red",
         "relative",
         "repeat",
         "reverse",
+        "ridge",
         "right",
         "round",
         "rows",
@@ -149,7 +177,9 @@ public final class KeywordToEnum {
         "semi-condensed",
         "semi-expanded",
         "separate",
+        "silver",
         "small-caps",
+        "solid",
         "square",
         "start",
         "stroke",
@@ -165,6 +195,7 @@ public final class KeywordToEnum {
         "table-header-group",
         "table-row",
         "table-row-group",
+        "teal",
         "text",
         "text-after-edge",
         "text-before-edge",
@@ -180,5 +211,7 @@ public final class KeywordToEnum {
         "upper-roman",
         "uppercase",
         "vertical",
-        "visible");
+        "visible",
+        "white",
+        "yellow");
 }

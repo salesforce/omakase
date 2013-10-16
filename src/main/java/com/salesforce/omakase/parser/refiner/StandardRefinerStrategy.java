@@ -20,11 +20,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Comment;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -104,9 +104,8 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
 
         // store the parsed value
         Optional<PropertyValue> first = qb.find(PropertyValue.class);
-        if (!first.isPresent()) {
-            throw new ParserException(source, Message.EXPECTED_VALUE);
-        }
+        if (!first.isPresent()) throw new ParserException(source, Message.EXPECTED_VALUE);
+
         declaration.propertyValue(first.get());
 
         return true;

@@ -56,6 +56,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @see UnquotedIEFilter
  */
 public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
+    /** refiner */
     protected static final DeclarationRefinerStrategy REFINER = new DeclarationRefinerStrategy() {
         @Override
         public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {

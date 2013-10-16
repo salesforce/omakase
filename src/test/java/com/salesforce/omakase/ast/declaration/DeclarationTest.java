@@ -127,6 +127,14 @@ public class DeclarationTest {
     }
 
     @Test
+    public void setPropertyValueAssignsParent() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        d.propertyValue(newValue);
+        assertThat(d.propertyValue().parentDeclaration().get()).isSameAs(d);
+    }
+
+    @Test
     public void propagatebroadcastBroadcastsPropertyValue() {
         PropertyValue pv = TermList.singleValue(KeywordValue.of(Keyword.NONE));
         Declaration d = new Declaration(Property.DISPLAY, pv);

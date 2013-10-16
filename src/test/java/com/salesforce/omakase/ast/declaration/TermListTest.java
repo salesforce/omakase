@@ -16,16 +16,13 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.ast.declaration.HexColorValue;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.TermList;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
+import org.fest.util.Iterables;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -71,6 +68,18 @@ public class TermListTest {
 
         assertThat(tl.members()).hasSize(3);
         assertThat(tl.terms()).containsExactly(n1, n2);
+    }
+
+    @Test
+    public void termsIncludesTermViewTerms() {
+        CustomTermView custom = new CustomTermView();
+        TermList tl = new TermList();
+
+        tl.append(NumericalValue.of(0));
+        tl.append(OperatorType.SPACE);
+        tl.append(custom);
+
+        assertThat(tl.terms()).hasSize(1 + Iterables.sizeOf(custom.terms()));
     }
 
     @Test
@@ -130,8 +139,37 @@ public class TermListTest {
     }
 
     @Test
+    public void defaultNoParentDeclaration() {
+        TermList tl = TermList.singleValue(NumericalValue.of(1));
+        assertThat(tl.parentDeclaration().isPresent()).isFalse();
+    }
+
+    @Test
+    public void setParentDeclaration() {
+        TermList tl = TermList.singleValue(NumericalValue.of(0));
+        Declaration d = new Declaration(Property.FONT_SIZE, NumericalValue.of(1, "px"));
+        tl.parentDeclaration(d);
+        assertThat(tl.parentDeclaration().get()).isSameAs(d);
+    }
+
+    @Test
     public void toStringTest() {
         TermList tl = TermList.singleValue(NumericalValue.of(1));
         assertThat(tl.toString()).isNotEqualTo(Util.originalToString(tl));
+    }
+
+    private static final class CustomTermView extends AbstractTerm implements TermView {
+        @Override
+        public Iterable<Term> terms() {
+            return Lists.<Term>newArrayList(
+                NumericalValue.of(1, "px"),
+                KeywordValue.of(Keyword.SOLID),
+                KeywordValue.of(Keyword.BLACK));
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

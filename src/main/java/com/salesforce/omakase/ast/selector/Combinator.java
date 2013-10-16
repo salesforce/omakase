@@ -79,7 +79,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
         case GENERAL_SIBLING:
             return SelectorPartType.GENERAL_SIBLING_COMBINATOR;
         }
-        throw new RuntimeException("unknown combinator type");
+        throw new AssertionError("unknown combinator type");
     }
 
     @Override

@@ -37,6 +37,9 @@ public enum Keyword {
     /** CSS keyword named 'always' */
     ALWAYS("always"),
 
+    /** CSS keyword named 'aqua' */
+    AQUA("aqua"),
+
     /** CSS keyword named 'auto' */
     AUTO("auto"),
 
@@ -58,8 +61,14 @@ public enum Keyword {
     /** CSS keyword named 'below' */
     BELOW("below"),
 
+    /** CSS keyword named 'black' */
+    BLACK("black"),
+
     /** CSS keyword named 'block' */
     BLOCK("block"),
+
+    /** CSS keyword named 'blue' */
+    BLUE("blue"),
 
     /** CSS keyword named 'bold' */
     BOLD("bold"),
@@ -112,6 +121,9 @@ public enum Keyword {
     /** CSS keyword named 'continuous' */
     CONTINUOUS("continuous"),
 
+    /** CSS keyword named 'dashed' */
+    DASHED("dashed"),
+
     /** CSS keyword named 'decimal' */
     DECIMAL("decimal"),
 
@@ -120,6 +132,12 @@ public enum Keyword {
 
     /** CSS keyword named 'desktop' */
     DESKTOP("desktop"),
+
+    /** CSS keyword named 'dotted' */
+    DOTTED("dotted"),
+
+    /** CSS keyword named 'double' */
+    DOUBLE("double"),
 
     /** CSS keyword named 'end' */
     END("end"),
@@ -136,8 +154,20 @@ public enum Keyword {
     /** CSS keyword named 'fixed' */
     FIXED("fixed"),
 
+    /** CSS keyword named 'fuchsia' */
+    FUCHSIA("fuchsia"),
+
+    /** CSS keyword named 'gray' */
+    GRAY("gray"),
+
+    /** CSS keyword named 'green' */
+    GREEN("green"),
+
     /** CSS keyword named 'grid' */
     GRID("grid"),
+
+    /** CSS keyword named 'groove' */
+    GROOVE("groove"),
 
     /** CSS keyword named 'hidden' */
     HIDDEN("hidden"),
@@ -175,6 +205,9 @@ public enum Keyword {
     /** CSS keyword named 'inline-table' */
     INLINE_TABLE("inline-table"),
 
+    /** CSS keyword named 'inset' */
+    INSET("inset"),
+
     /** CSS keyword named 'italic' */
     ITALIC("italic"),
 
@@ -183,6 +216,9 @@ public enum Keyword {
 
     /** CSS keyword named 'left' */
     LEFT("left"),
+
+    /** CSS keyword named 'lime' */
+    LIME("lime"),
 
     /** CSS keyword named 'line' */
     LINE("line"),
@@ -217,6 +253,9 @@ public enum Keyword {
     /** CSS keyword named 'manual' */
     MANUAL("manual"),
 
+    /** CSS keyword named 'maroon' */
+    MAROON("maroon"),
+
     /** CSS keyword named 'max-height' */
     MAX_HEIGHT("max-height"),
 
@@ -232,6 +271,9 @@ public enum Keyword {
     /** CSS keyword named 'multiple' */
     MULTIPLE("multiple"),
 
+    /** CSS keyword named 'navy' */
+    NAVY("navy"),
+
     /** CSS keyword named 'none' */
     NONE("none"),
 
@@ -240,6 +282,9 @@ public enum Keyword {
 
     /** CSS keyword named 'nowrap' */
     NOWRAP("nowrap"),
+
+    /** CSS keyword named 'olive' */
+    OLIVE("olive"),
 
     /** CSS keyword named 'open' */
     OPEN("open"),
@@ -252,6 +297,9 @@ public enum Keyword {
 
     /** CSS keyword named 'outline-tree' */
     OUTLINE_TREE("outline-tree"),
+
+    /** CSS keyword named 'outset' */
+    OUTSET("outset"),
 
     /** CSS keyword named 'outside' */
     OUTSIDE("outside"),
@@ -268,11 +316,17 @@ public enum Keyword {
     /** CSS keyword named 'pre-wrap' */
     PRE_WRAP("pre-wrap"),
 
+    /** CSS keyword named 'purple' */
+    PURPLE("purple"),
+
     /** CSS keyword named 'read-only' */
     READ_ONLY("read-only"),
 
     /** CSS keyword named 'read-write' */
     READ_WRITE("read-write"),
+
+    /** CSS keyword named 'red' */
+    RED("red"),
 
     /** CSS keyword named 'relative' */
     RELATIVE("relative"),
@@ -282,6 +336,9 @@ public enum Keyword {
 
     /** CSS keyword named 'reverse' */
     REVERSE("reverse"),
+
+    /** CSS keyword named 'ridge' */
+    RIDGE("ridge"),
 
     /** CSS keyword named 'right' */
     RIGHT("right"),
@@ -307,8 +364,14 @@ public enum Keyword {
     /** CSS keyword named 'separate' */
     SEPARATE("separate"),
 
+    /** CSS keyword named 'silver' */
+    SILVER("silver"),
+
     /** CSS keyword named 'small-caps' */
     SMALL_CAPS("small-caps"),
+
+    /** CSS keyword named 'solid' */
+    SOLID("solid"),
 
     /** CSS keyword named 'square' */
     SQUARE("square"),
@@ -354,6 +417,9 @@ public enum Keyword {
 
     /** CSS keyword named 'table-row-group' */
     TABLE_ROW_GROUP("table-row-group"),
+
+    /** CSS keyword named 'teal' */
+    TEAL("teal"),
 
     /** CSS keyword named 'text' */
     TEXT("text"),
@@ -401,7 +467,13 @@ public enum Keyword {
     VERTICAL("vertical"),
 
     /** CSS keyword named 'visible' */
-    VISIBLE("visible");
+    VISIBLE("visible"),
+
+    /** CSS keyword named 'white' */
+    WHITE("white"),
+
+    /** CSS keyword named 'yellow' */
+    YELLOW("yellow");
 
     private final String keyword;
 

@@ -56,7 +56,7 @@ public final class ErrorUtils {
      * Formats an error message.
      *
      * @param sourceName
-     *     Name of the resource (e.g., file name) that has the probem.
+     *     Name of the resource (e.g., file name) that has the problem.
      * @param message
      *     The error message.
      * @param cause

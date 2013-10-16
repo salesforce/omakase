@@ -35,7 +35,7 @@ public class TypeSelectorTest {
 
     @Test
     public void setName() {
-        TypeSelector ts = new TypeSelector(1, 1, "p");
+        TypeSelector ts = new TypeSelector("p");
         ts.name("div");
         assertThat(ts.name()).isEqualTo("div");
     }
