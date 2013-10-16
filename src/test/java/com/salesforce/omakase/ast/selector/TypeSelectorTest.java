@@ -41,16 +41,6 @@ public class TypeSelectorTest {
     }
 
     @Test
-    public void isSelector() {
-        assertThat(new TypeSelector("p").isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new TypeSelector("p").isCombinator()).isFalse();
-    }
-
-    @Test
     public void type() {
         assertThat(new TypeSelector(1, 1, "p").type()).isSameAs(SelectorPartType.TYPE_SELECTOR);
     }

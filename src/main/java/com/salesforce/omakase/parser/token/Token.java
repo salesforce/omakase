@@ -16,10 +16,8 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.google.common.base.CharMatcher;
-
 /**
- * An object wrapper over {@link CharMatcher}s.
+ * A matcher for a single character.
  *
  * @author nmcwilliams
  */

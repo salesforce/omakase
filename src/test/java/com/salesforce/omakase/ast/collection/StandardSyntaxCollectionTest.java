@@ -17,11 +17,9 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.AbstractBroadcaster;
-import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -30,9 +28,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-import java.util.Set;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link StandardSyntaxCollection}. */
 @SuppressWarnings("JavaDoc")
@@ -127,7 +124,7 @@ public class StandardSyntaxCollectionTest {
 
     @Test
     public void prependingUnbroadcastedGetsBroadcasted() {
-        collection.broadcaster(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(new StatusChangingBroadcaster());
         assertThat(child1.status()).isSameAs(Status.UNBROADCASTED);
         collection.prepend(child1);
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
@@ -144,7 +141,7 @@ public class StandardSyntaxCollectionTest {
     @Test
     public void forPrependAllEachUnbroadcastedGetsBroadcasted() {
         collection.append(child3);
-        collection.broadcaster(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(new StatusChangingBroadcaster());
         collection.prependAll(Lists.newArrayList(child2, child1));
 
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
@@ -168,7 +165,7 @@ public class StandardSyntaxCollectionTest {
     @Test
     public void prependBeforeUnbroadcastedGetsBroadcasted() {
         collection.append(child1).append(child2);
-        collection.broadcaster(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(new StatusChangingBroadcaster());
         collection.prependBefore(child1, child3);
         assertThat(child3.status()).isNotSameAs(Status.UNBROADCASTED);
     }
@@ -188,7 +185,7 @@ public class StandardSyntaxCollectionTest {
 
     @Test
     public void appendingUnbroadcastedGetsBroadcasted() {
-        collection.broadcaster(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(new StatusChangingBroadcaster());
         assertThat(child1.status()).isSameAs(Status.UNBROADCASTED);
         collection.append(child1);
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
@@ -206,7 +203,7 @@ public class StandardSyntaxCollectionTest {
     @Test
     public void forAppendAllEachUnbroadcastedGetsBroadcasted() {
         collection.append(child3);
-        collection.broadcaster(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(new StatusChangingBroadcaster());
         collection.appendAll(Lists.newArrayList(child2, child1));
 
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
@@ -230,7 +227,7 @@ public class StandardSyntaxCollectionTest {
     @Test
     public void appendAfterUnbroadcastedGetsBroadcasted() {
         collection.append(child1).append(child2);
-        collection.broadcaster(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(new StatusChangingBroadcaster());
         collection.appendAfter(child1, child3);
         assertThat(child3.status()).isNotSameAs(Status.UNBROADCASTED);
     }
@@ -323,19 +320,6 @@ public class StandardSyntaxCollectionTest {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             //noop
-        }
-    }
-
-    private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private final Set<Broadcastable> all = Sets.newHashSet();
-
-        @Override
-        public void broadcast(Broadcastable broadcastable) {
-            if (all.contains(broadcastable)) {
-                fail("unit shouldn't be broadcasted twice!");
-            }
-            all.add(broadcastable);
-            broadcastable.status(Status.PROCESSED);
         }
     }
 }

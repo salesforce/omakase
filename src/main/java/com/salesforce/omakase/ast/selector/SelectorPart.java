@@ -49,20 +49,6 @@ public interface SelectorPart extends Syntax, Groupable<Selector, SelectorPart> 
     Optional<Selector> parentSelector();
 
     /**
-     * Gets whether this {@link SelectorPart} is a selector ({@link SimpleSelector} or {@link PseudoElementSelector}).
-     *
-     * @return True if this {@link SelectorPart} is a selector.
-     */
-    boolean isSelector();
-
-    /**
-     * Gets whether this {@link SelectorPart} is a {@link Combinator}.
-     *
-     * @return True if this {@link SelectorPart} is a {@link Combinator}.
-     */
-    boolean isCombinator();
-
-    /**
      * Gets the {@link SelectorPartType} of this {@link SelectorPart}. This is a delegate to {@link Groupable#parent()}.
      *
      * @return The {@link SelectorPartType}.

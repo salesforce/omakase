@@ -152,7 +152,6 @@ public final class Emitter {
 
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Class<?> klass : hierarchy(eventType)) {
-
             Set<Subscription> subscriptions = map.get(klass);
             if (subscriptions == null) continue;
 

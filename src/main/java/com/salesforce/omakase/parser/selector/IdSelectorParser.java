@@ -36,15 +36,16 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see IdSelector
  */
-public class IdSelectorParser extends AbstractParser {
+public final class IdSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // first character must be a hash
         if (!source.optionallyPresent(Tokens.HASH)) return false;
@@ -54,7 +55,7 @@ public class IdSelectorParser extends AbstractParser {
         if (!name.isPresent()) throw new ParserException(source, Message.EXPECTED_VALID_ID);
 
         // broadcast the new id selector
-        IdSelector selector = new IdSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
+        IdSelector selector = new IdSelector(line, column, name.get());
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;

@@ -64,7 +64,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
+public final class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
     private final SyntaxCollection<Rule, Selector> selectors;
     private final SyntaxCollection<Rule, Declaration> declarations;
 

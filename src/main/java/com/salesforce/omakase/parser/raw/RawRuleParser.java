@@ -33,7 +33,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see Rule
  */
-public class RawRuleParser extends AbstractParser {
+public final class RawRuleParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();

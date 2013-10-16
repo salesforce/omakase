@@ -18,13 +18,12 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.value.Term;
-import com.salesforce.omakase.ast.declaration.value.TermList;
-import com.salesforce.omakase.ast.declaration.value.TermOperator;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.SingleBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
@@ -37,20 +36,19 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see TermList
  */
-public class TermListParser extends AbstractParser {
+public final class TermListParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();
 
         // grab the line and column number before parsing anything
-        int line = source.line();
-        int column = source.column();
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // setup
         TermList termList = null;
         Optional<Term> term;
-        Optional<TermOperator> operator = Optional.absent();
-        Parser termParser = ParserFactory.termParser();
+        Optional<OperatorType> operator = Optional.absent();
         SingleBroadcaster<Term> singleTermBroadcaster = new SingleBroadcaster<>(Term.class, broadcaster);
 
         // try parsing another term until there are no more term operators
@@ -58,23 +56,23 @@ public class TermListParser extends AbstractParser {
             source.collectComments();
 
             // try to parse a term
-            termParser.parse(source, singleTermBroadcaster.reset(), refiner);
+            ParserFactory.termParser().parse(source, singleTermBroadcaster.reset(), refiner);
             term = singleTermBroadcaster.broadcasted();
 
             // if we have a term, add it to the list
             if (term.isPresent()) {
                 // delayed creation of the term list
                 if (termList == null) {
-                    termList = new TermList(line, column);
+                    termList = new TermList(line, column, broadcaster);
                 }
 
                 // add the previous operator as a member to term list before adding the term
                 if (operator.isPresent()) {
-                    termList.add(operator.get());
+                    termList.append(operator.get());
                 }
 
                 // add the term to the list
-                termList.add(term.get());
+                termList.append(term.get());
 
                 // try to parse another term operator. The presence of a space *could* be the "single space" term
                 // operator. Or it could just be whitespace around another term operator.
@@ -91,15 +89,15 @@ public class TermListParser extends AbstractParser {
                 source.collectComments();
 
                 // see if there is an actual non-space operator
-                operator = source.optionalFromEnum(TermOperator.class);
+                operator = source.optionalFromEnum(OperatorType.class);
 
                 // if no operator is parsed and we parsed at least one space then we know it's a single space operator
                 if (mightBeSpaceOperator && !operator.isPresent()) {
-                    operator = Optional.of(TermOperator.SPACE);
+                    operator = Optional.of(OperatorType.SPACE);
                 }
             } else {
                 // if we didn't find a term but we did find a non-space operator then it's an erroneous trailing operator
-                if (operator.isPresent() && operator.get() != TermOperator.SPACE) {
+                if (operator.isPresent() && operator.get() != OperatorType.SPACE) {
                     throw new ParserException(source, Message.TRAILING_OPERATOR, operator.get());
                 }
                 operator = Optional.absent();

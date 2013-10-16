@@ -25,7 +25,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  *
  * @author nmcwilliams
  */
-public class CombinationParser extends AbstractParser {
+public final class CombinationParser extends AbstractParser {
     private final Parser first;
     private final Parser second;
 

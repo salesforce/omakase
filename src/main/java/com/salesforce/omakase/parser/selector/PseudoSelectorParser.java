@@ -36,14 +36,15 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
  *
  * @author nmcwilliams
  */
-public class PseudoSelectorParser extends AbstractParser {
+public final class PseudoSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace, as it could skip over a descendant combinator
         source.collectComments(false);
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // first character must be a colon
         if (!source.optionallyPresent(Tokens.COLON)) return false;
@@ -65,7 +66,7 @@ public class PseudoSelectorParser extends AbstractParser {
         Syntax selector;
 
         if (type == PSEUDO_ELEMENT_SELECTOR) {
-            selector = new PseudoElementSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
+            selector = new PseudoElementSelector(line, column, name.get());
         } else {
             // check for arguments (currently only applies to pseudo classes)
             String args = null;
@@ -73,7 +74,7 @@ public class PseudoSelectorParser extends AbstractParser {
                 args = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim();
             }
 
-            selector = new PseudoClassSelector(snapshot.originalLine, snapshot.originalColumn, name.get(), args);
+            selector = new PseudoClassSelector(line, column, name.get(), args);
         }
 
         selector.comments(source.flushComments());

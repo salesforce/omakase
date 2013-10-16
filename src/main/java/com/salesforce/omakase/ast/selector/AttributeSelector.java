@@ -39,7 +39,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "attribute selector segment", broadcasted = REFINED_SELECTOR)
-public class AttributeSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class AttributeSelector extends AbstractSelectorPart implements SimpleSelector {
     private static final Pattern SIMPLE_VALUE = Pattern.compile("[a-zA-Z][a-zA-Z0-9-_]*");
 
     private String attribute;
@@ -147,23 +147,8 @@ public class AttributeSelector extends AbstractSelectorPart implements SimpleSel
     }
 
     @Override
-    public boolean isSelector() {
-        return true;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return false;
-    }
-
-    @Override
     public SelectorPartType type() {
         return SelectorPartType.ATTRIBUTE_SELECTOR;
-    }
-
-    @Override
-    protected SelectorPart self() {
-        return this;
     }
 
     @Override

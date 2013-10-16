@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.salesforce.omakase.ast.declaration.value.StringValue;
-import com.salesforce.omakase.ast.declaration.value.QuotationMode;
+import com.salesforce.omakase.ast.declaration.QuotationMode;
+import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
@@ -30,14 +30,15 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see StringValue
  */
-public class StringValueParser extends AbstractParser {
+public final class StringValueParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
         source.collectComments(false);
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         QuotationMode mode;
         String value;
@@ -52,7 +53,7 @@ public class StringValueParser extends AbstractParser {
             return false;
         }
 
-        StringValue string = new StringValue(snapshot.originalLine, snapshot.originalColumn, mode, value);
+        StringValue string = new StringValue(line, column, mode, value);
         string.comments(source.flushComments());
         broadcaster.broadcast(string);
 

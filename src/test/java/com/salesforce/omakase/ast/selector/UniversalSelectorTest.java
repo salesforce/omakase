@@ -27,21 +27,10 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /** Unit tests for {@link UniversalSelector}. */
 @SuppressWarnings("JavaDoc")
 public class UniversalSelectorTest {
-
     @Test
     public void positioning() {
         assertThat(new UniversalSelector(5, 6).line()).isEqualTo(5);
         assertThat(new UniversalSelector(5, 6).column()).isEqualTo(6);
-    }
-
-    @Test
-    public void isSelector() {
-        assertThat(new UniversalSelector().isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new UniversalSelector().isCombinator()).isFalse();
     }
 
     @Test

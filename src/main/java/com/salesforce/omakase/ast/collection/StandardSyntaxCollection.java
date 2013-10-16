@@ -44,7 +44,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T>> implements SyntaxCollection<P, T> {
     private final P parent;
     private final LinkedList<T> list;
-    private Optional<Broadcaster> broadcaster;
+    private Broadcaster broadcaster;
 
     /**
      * Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}.
@@ -67,7 +67,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     public StandardSyntaxCollection(P parent, Broadcaster broadcaster) {
         this.parent = parent;
         this.list = new LinkedList<>();
-        this.broadcaster = Optional.fromNullable(broadcaster);
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -230,15 +230,9 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public SyntaxCollection<P, T> broadcaster(Broadcaster broadcaster) {
-        this.broadcaster = Optional.fromNullable(broadcaster);
-        return this;
-    }
-
-    @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         // save a reference so that subsequent appended/prepended units will be broadcasted
-        broadcaster(broadcaster);
+        this.broadcaster = broadcaster;
 
         // make a defensive copy as this collection may be modified as a result of broadcasting
         ImmutableList<T> units = ImmutableList.copyOf(list);
@@ -265,8 +259,8 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
         // broadcasted when added. Of course, we can't do anything if we don't have a broadcaster yet,
         // which will be true for dynamically created units with collections, such as rules. In that case,
         // it's vital that propagateBroadcast is called on this collection by the Rule as soon as it gets broadcasted itself.
-        if (broadcaster.isPresent() && unit.status() == Status.UNBROADCASTED) {
-            broadcaster.get().broadcast(unit, true);
+        if (broadcaster != null && unit.status() == Status.UNBROADCASTED) {
+            broadcaster.broadcast(unit, true);
         }
     }
 

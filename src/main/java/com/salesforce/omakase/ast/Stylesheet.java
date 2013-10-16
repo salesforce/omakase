@@ -48,7 +48,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
+public final class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
     private final SyntaxCollection<Stylesheet, Statement> statements;
     private List<Comment> orphanedComments;
 

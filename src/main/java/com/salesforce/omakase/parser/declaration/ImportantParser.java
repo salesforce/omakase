@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.value.PropertyValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see PropertyValue
  */
-public class ImportantParser extends AbstractParser {
+public final class ImportantParser extends AbstractParser {
     private static final String IMPORTANT = "important";
 
     @Override

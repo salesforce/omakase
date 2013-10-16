@@ -17,29 +17,30 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.ast.declaration.value.QuotationMode;
-import com.salesforce.omakase.ast.declaration.value.UrlFunctionValue;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.QuotationMode;
+import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * Refines {@link FunctionValue}s to {@link UrlFunctionValue}s.
+ * Refines {@link GenericFunctionValue}s to {@link UrlFunctionValue}s.
  *
  * @author nmcwilliams
  * @see UrlFunctionValue
  */
-public class UrlFunctionRefiner implements FunctionValueRefinerStrategy {
+public final class UrlFunctionRefiner implements FunctionRefinerStrategy {
     private static final String NAME = "url";
 
     @Override
-    public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
-        if (!functionValue.name().equals(NAME)) return false;
+    public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
+        if (!raw.name().equals(NAME)) return false;
 
         // check for quotes
-        Source source = new Source(functionValue.args());
+        Source source = new Source(raw.args(), raw.line(), raw.column());
         QuotationMode mode = null;
 
         if (Tokens.DOUBLE_QUOTE.matches(source.current())) {
@@ -49,22 +50,17 @@ public class UrlFunctionRefiner implements FunctionValueRefinerStrategy {
         }
 
         // get the url content
-        String args = (mode != null) ? source.readString().get() : functionValue.args();
+        String args = (mode != null) ? source.readString().get() : raw.args();
 
         // there shouldn't be any content after a closing quote
         if (mode != null && !source.eof()) {
-            throw new ParserException(functionValue.line(), functionValue.column(), Message.UNEXPECTED_AFTER_QUOTE, source.toString());
+            throw new ParserException(raw.line(), raw.column(), Message.UNEXPECTED_AFTER_QUOTE, source.toString());
         }
 
-        // create the value object
-        UrlFunctionValue url = new UrlFunctionValue(functionValue.line(), functionValue.column(), args);
+        // create the value object and broadcast it
+        UrlFunctionValue url = new UrlFunctionValue(raw.line(), raw.column(), args);
         url.quotationMode(mode);
-
-        // broadcast it
         broadcaster.broadcast(url);
-
-        // add it to the function value
-        functionValue.refinedValue(url);
 
         return true;
     }

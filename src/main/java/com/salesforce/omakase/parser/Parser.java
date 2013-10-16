@@ -19,7 +19,6 @@ package com.salesforce.omakase.parser;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * Used to parse an aspect of CSS source code.
@@ -31,7 +30,7 @@ import com.salesforce.omakase.plugin.Plugin;
  */
 public interface Parser {
     /**
-     * Parse from the current position of the given source, notifying the given {@link Plugin}s of any applicable events and
+     * Parse from the current position of the given source, notifying the given {@link Broadcaster} of any applicable events and
      * data.
      *
      * @param source

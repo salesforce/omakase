@@ -63,7 +63,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Selector extends AbstractGroupable<Rule, Selector> implements Refinable {
+public final class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
     private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax rawContent;
     private final Refiner refiner;
@@ -125,8 +125,7 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
      * @return The list of {@link SelectorPart} members.
      */
     public SyntaxCollection<Selector, SelectorPart> parts() {
-        refine();
-        return parts;
+        return refine().parts;
     }
 
     /**
@@ -148,12 +147,12 @@ public class Selector extends AbstractGroupable<Rule, Selector> implements Refin
     }
 
     @Override
-    public boolean refine() {
+    public Selector refine() {
         if (!isRefined() && refiner != null) {
-            return refiner.refine(this);
+            refiner.refine(this);
         }
 
-        return false;
+        return this;
     }
 
     @Override

@@ -35,7 +35,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see Stylesheet
  */
-public class StylesheetParser extends AbstractParser {
+public final class StylesheetParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {

@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link PseudoElementSelector}. */
@@ -39,16 +38,6 @@ public class PseudoElementSelectorTest {
         PseudoElementSelector s = new PseudoElementSelector(5, 5, "before");
         s.name("after");
         assertThat(s.name()).isEqualTo("after");
-    }
-
-    @Test
-    public void isSelector() {
-        assertThat(new PseudoElementSelector(5, 5, "before").isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new PseudoElementSelector(5, 5, "before").isCombinator()).isFalse();
     }
 
     @Test

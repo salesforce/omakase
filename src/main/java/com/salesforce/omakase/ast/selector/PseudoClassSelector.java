@@ -34,14 +34,14 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  * Represents a CSS pseudo class selector.
  * <p/>
  * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b> considered pseudo
- * classes in this library, but as {@link PseudoElementSelector}s.
+ * classes in this parser, but as {@link PseudoElementSelector}s.
  *
  * @author nmcwilliams
  * @see PseudoSelectorParser
  */
 @Subscribable
 @Description(value = "pseudo class selector segment", broadcasted = REFINED_SELECTOR)
-public class PseudoClassSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class PseudoClassSelector extends AbstractSelectorPart implements SimpleSelector {
     private String name;
     private Optional<String> args = Optional.absent();
 
@@ -139,23 +139,8 @@ public class PseudoClassSelector extends AbstractSelectorPart implements SimpleS
     }
 
     @Override
-    public boolean isSelector() {
-        return true;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return false;
-    }
-
-    @Override
     public SelectorPartType type() {
         return SelectorPartType.PSEUDO_CLASS_SELECTOR;
-    }
-
-    @Override
-    protected PseudoClassSelector self() {
-        return this;
     }
 
     @Override

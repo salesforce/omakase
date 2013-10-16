@@ -29,7 +29,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  *
  * @author nmcwilliams
  */
-public class SelectorGroupParser extends AbstractParser {
+public final class SelectorGroupParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {

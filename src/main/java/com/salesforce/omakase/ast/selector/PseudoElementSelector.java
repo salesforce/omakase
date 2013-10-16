@@ -39,7 +39,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "pseudo element selector segment", broadcasted = REFINED_SELECTOR)
-public class PseudoElementSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class PseudoElementSelector extends AbstractSelectorPart implements SimpleSelector {
     /** these can use pseudo class syntax but are actually pseudo elements */
     public static final Set<String> POSERS = Sets.newHashSet("first-line", "first-letter", "before", "after");
 
@@ -96,23 +96,8 @@ public class PseudoElementSelector extends AbstractSelectorPart implements Simpl
     }
 
     @Override
-    public boolean isSelector() {
-        return true;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return false;
-    }
-
-    @Override
     public SelectorPartType type() {
         return SelectorPartType.PSEUDO_ELEMENT_SELECTOR;
-    }
-
-    @Override
-    protected PseudoElementSelector self() {
-        return this;
     }
 
     @Override
@@ -122,10 +107,6 @@ public class PseudoElementSelector extends AbstractSelectorPart implements Simpl
 
     @Override
     public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("name", name)
-            .toString();
+        return As.string(this).indent().add("abstract", super.toString()).add("name", name).toString();
     }
 }

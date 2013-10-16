@@ -41,18 +41,6 @@ public class ClassSelectorTest {
     }
 
     @Test
-    public void isSelector() {
-        ClassSelector cs = new ClassSelector("test");
-        assertThat(cs.isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        ClassSelector cs = new ClassSelector("test");
-        assertThat(cs.isCombinator()).isFalse();
-    }
-
-    @Test
     public void type() {
         ClassSelector cs = new ClassSelector("test");
         assertThat(cs.type()).isSameAs(SelectorPartType.CLASS_SELECTOR);

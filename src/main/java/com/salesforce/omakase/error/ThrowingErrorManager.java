@@ -53,9 +53,9 @@ public final class ThrowingErrorManager implements ErrorManager {
     public void report(ErrorLevel level, ParserException exception) {
         switch (level) {
         case FATAL:
-            throw new FatalException(format(exception.getMessage()), exception);
+            throw new FatalException(ErrorUtils.format(exception.getMessage()), exception);
         case WARNING:
-            logger.warn(format(exception.getMessage()), exception);
+            logger.warn(ErrorUtils.format(exception.getMessage()), exception);
         }
     }
 
@@ -63,35 +63,9 @@ public final class ThrowingErrorManager implements ErrorManager {
     public void report(ErrorLevel level, Syntax cause, String message) {
         switch (level) {
         case FATAL:
-            throw new FatalException(format(message, cause));
+            throw new FatalException(ErrorUtils.format(sourceName, message, cause));
         case WARNING:
-            logger.warn(format(message, cause));
+            logger.warn(ErrorUtils.format(sourceName, message, cause));
         }
-    }
-
-    /** formats the error message */
-    private String format(String message) {
-        return String.format("Omakase CSS Parser - %s", message);
-    }
-
-    private String format(String message, Syntax cause) {
-        if (sourceName != null) {
-            return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s in source %s, " +
-                "caused by\n%s",
-                message,
-                cause.line(),
-                cause.column(),
-                sourceName,
-                cause.toString()
-            );
-        } else {
-            return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s, caused by\n%s",
-                message,
-                cause.line(),
-                cause.column(),
-                cause.toString()
-            );
-        }
-
     }
 }

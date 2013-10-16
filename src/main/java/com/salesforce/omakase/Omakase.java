@@ -32,9 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Main entry point for the Omakase CSS Parser.
  * <p/>
- * For usage information, see the readme.md file, or check out (link).
- * <p/>
- * Please note that the parser does not currently support the following:
+ * For usage information, see the readme.md file, or check out (link). Please note that the parser does not currently support the
+ * following:
  * <p/>
  * {@code cdo and cdc, escaping (in most cases)}
  *

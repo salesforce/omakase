@@ -54,8 +54,9 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     /**
      * Gets whether this unit is the first within its group.
      * <p/>
-     * Please note, if you are making decisions based on this value there are a few things to keep in mind. Any rework plugins may
-     * add or remove new units before or after this one. As such, be thoughtful about usage in a {@link Rework} method.
+     * Please note, if you are making decisions based on this value then keep in mind that any rework plugins may add or remove
+     * new units before or after this one. As such, this usually means it's best that plugins with {@link Rework} methods
+     * utilizing this value are registered last.
      *
      * @return True if the unit is first within its group. Always returns true if this unit is detached.
      */
@@ -64,8 +65,9 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     /**
      * Gets whether this unit is the last within its group.
      * <p/>
-     * Please note, if you are making decisions based on this value there are a few things to keep in mind. Any rework plugins may
-     * add or remove new units before or after this one. As such, be thoughtful about usage in a {@link Rework} method.
+     * Please note, if you are making decisions based on this value then keep in mind that any rework plugins may add or remove
+     * new units before or after this one. As such, this usually means it's best that plugins with {@link Rework} methods
+     * utilizing this value are registered last.
      *
      * @return True if the unit is last within its group. Always returns true if this unit is detached.
      */
@@ -125,8 +127,8 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     void detach();
 
     /**
-     * Gets whether this unit is detached. This should be true if either this unit was explicitly detached, or it is yet to be
-     * added to a unit within the tree.
+     * Gets whether this unit is detached. This is true if either this unit was explicitly detached, or it is yet to be added to a
+     * unit within the tree.
      *
      * @return True if this unit is detached.
      */

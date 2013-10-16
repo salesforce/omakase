@@ -20,7 +20,8 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
@@ -28,22 +29,23 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 import java.util.List;
 
 /**
- * Responsible for refining {@link Refinable} objects, such as {@link Selector} and {@link Declaration}.
+ * Used for refining {@link Refinable} objects, such as {@link Selector} and {@link Declaration}, and other "refinable" syntax
+ * such as custom functions.
  * <p/>
- * A list of {@link RefinerStrategy} objects can be registered to customize and extends the standard CSS syntax. See the readme
- * file for more details.
+ * {@link RefinerStrategy} objects can be registered to customize and extends the standard CSS syntax. See the readme file for
+ * more details.
  *
  * @author nmcwilliams
  * @see SyntaxPlugin
  */
 public final class Refiner {
-    private static final StandardRefiner STANDARD = new StandardRefiner();
+    private static final StandardRefinerStrategy STANDARD = new StandardRefinerStrategy();
 
-    private final Broadcaster broadcaster;
+    private final Broadcaster defaultBroadcaster;
     private final List<AtRuleRefinerStrategy> atRuleRefiners;
     private final List<SelectorRefinerStrategy> selectorRefiners;
     private final List<DeclarationRefinerStrategy> declarationRefiners;
-    private final List<FunctionValueRefinerStrategy> functionValueRefiners;
+    private final List<FunctionRefinerStrategy> functionRefiners;
 
     /**
      * Creates a new {@link Refiner} instance with the given {@link Broadcaster} to use for new refined AST objects.
@@ -52,12 +54,11 @@ public final class Refiner {
      *     The {@link Broadcaster} to use for refined AST objects.
      */
     public Refiner(Broadcaster broadcaster) {
-        this.broadcaster = broadcaster;
-
+        this.defaultBroadcaster = broadcaster;
         this.atRuleRefiners = ImmutableList.of();
         this.selectorRefiners = ImmutableList.of();
         this.declarationRefiners = ImmutableList.of();
-        this.functionValueRefiners = ImmutableList.of();
+        this.functionRefiners = ImmutableList.of();
     }
 
     /**
@@ -73,19 +74,19 @@ public final class Refiner {
      *     The custom {@link RefinerStrategy}s, in explicit order.
      */
     public Refiner(Broadcaster broadcaster, Iterable<RefinerStrategy> strategies) {
-        this.broadcaster = broadcaster;
+        this.defaultBroadcaster = broadcaster;
 
         // ladies and gentlemen, consumer convenience over efficiency and performance
         ImmutableList.Builder<AtRuleRefinerStrategy> atRuleBuilder = ImmutableList.builder();
         ImmutableList.Builder<SelectorRefinerStrategy> selectorBuilder = ImmutableList.builder();
         ImmutableList.Builder<DeclarationRefinerStrategy> declarationBuilder = ImmutableList.builder();
-        ImmutableList.Builder<FunctionValueRefinerStrategy> functionValueBuilder = ImmutableList.builder();
+        ImmutableList.Builder<FunctionRefinerStrategy> functionValueBuilder = ImmutableList.builder();
 
         for (RefinerStrategy strategy : strategies) {
             if (strategy instanceof AtRuleRefinerStrategy) {
                 atRuleBuilder.add((AtRuleRefinerStrategy)strategy);
-            } else if (strategy instanceof FunctionValueRefinerStrategy) {
-                functionValueBuilder.add((FunctionValueRefinerStrategy)strategy);
+            } else if (strategy instanceof FunctionRefinerStrategy) {
+                functionValueBuilder.add((FunctionRefinerStrategy)strategy);
             } else if (strategy instanceof DeclarationRefinerStrategy) {
                 declarationBuilder.add((DeclarationRefinerStrategy)strategy);
             } else if (strategy instanceof SelectorRefinerStrategy) {
@@ -96,14 +97,14 @@ public final class Refiner {
         this.atRuleRefiners = atRuleBuilder.build();
         this.selectorRefiners = selectorBuilder.build();
         this.declarationRefiners = declarationBuilder.build();
-        this.functionValueRefiners = functionValueBuilder.build();
+        this.functionRefiners = functionValueBuilder.build();
     }
 
     /**
      * Refines an {@link AtRule} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, Refiner)} will be
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(AtRule, Broadcaster, Refiner)} will be
      * used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
@@ -114,6 +115,26 @@ public final class Refiner {
      * @return Whether refinement occurred or not.
      */
     public boolean refine(AtRule atRule) {
+        return refine(atRule, defaultBroadcaster);
+    }
+
+    /**
+     * Refines an {@link AtRule} object.
+     * <p/>
+     * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(AtRule, Broadcaster, Refiner)} will be
+     * used.
+     * <p/>
+     * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
+     *
+     * @param atRule
+     *     The {@link AtRule} to refine.
+     * @param broadcaster
+     *     {@link Broadcaster} to use.
+     *
+     * @return Whether refinement occurred or not.
+     */
+    public boolean refine(AtRule atRule, Broadcaster broadcaster) {
         for (AtRuleRefinerStrategy strategy : atRuleRefiners) {
             if (strategy.refine(atRule, broadcaster, this)) return true;
         }
@@ -126,7 +147,7 @@ public final class Refiner {
      * Refines a {@link Selector} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, Refiner)} will be
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Selector, Broadcaster, Refiner)} will be
      * used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
@@ -137,6 +158,26 @@ public final class Refiner {
      * @return Whether refinement occurred or not.
      */
     public boolean refine(Selector selector) {
+        return refine(selector, defaultBroadcaster);
+    }
+
+    /**
+     * Refines a {@link Selector} object.
+     * <p/>
+     * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Selector, Broadcaster, Refiner)} will be
+     * used.
+     * <p/>
+     * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
+     *
+     * @param selector
+     *     The {@link Selector} to refine.
+     * @param broadcaster
+     *     {@link Broadcaster} to use.
+     *
+     * @return Whether refinement occurred or not.
+     */
+    public boolean refine(Selector selector, Broadcaster broadcaster) {
         for (SelectorRefinerStrategy strategy : selectorRefiners) {
             if (strategy.refine(selector, broadcaster, this)) return true;
         }
@@ -149,7 +190,7 @@ public final class Refiner {
      * Refines a {@link Declaration} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, Refiner)} will
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Declaration, Broadcaster, Refiner)} will
      * be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
@@ -160,6 +201,26 @@ public final class Refiner {
      * @return Whether refinement occurred or not.
      */
     public boolean refine(Declaration declaration) {
+        return refine(declaration, defaultBroadcaster);
+    }
+
+    /**
+     * Refines a {@link Declaration} object.
+     * <p/>
+     * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(Declaration, Broadcaster, Refiner)} will
+     * be used.
+     * <p/>
+     * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
+     *
+     * @param declaration
+     *     The {@link Declaration} to refine.
+     * @param broadcaster
+     *     {@link Broadcaster} to use.
+     *
+     * @return Whether refinement occurred or not.
+     */
+    public boolean refine(Declaration declaration, Broadcaster broadcaster) {
         for (DeclarationRefinerStrategy strategy : declarationRefiners) {
             if (strategy.refine(declaration, broadcaster, this)) return true;
         }
@@ -169,26 +230,42 @@ public final class Refiner {
     }
 
     /**
-     * Refines a {@link FunctionValue} object.
+     * Refines a {@link GenericFunctionValue} object.
      * <p/>
      * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
-     * the instance, or if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, Refiner)} will
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(RawFunction, Broadcaster, Refiner)} will
      * be used.
-     * <p/>
-     * <b>Note:</b> Non-library code usually should not call this method directly, but {@link FunctionValue#refine()} instead.
      *
-     * @param functionValue
-     *     The {@link FunctionValue} to refine.
+     * @param raw
+     *     The {@link RawFunction} to refine.
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(FunctionValue functionValue) {
-        for (FunctionValueRefinerStrategy strategy : functionValueRefiners) {
-            if (strategy.refine(functionValue, broadcaster, this)) return true;
+    public boolean refine(RawFunction raw) {
+        return refine(raw, defaultBroadcaster);
+    }
+
+    /**
+     * Refines a {@link GenericFunctionValue} object.
+     * <p/>
+     * {@link RefinerStrategy} objects will be consulted in the registered order. If no {@link RefinerStrategy} decides to handle
+     * the instance, or if none are registered then {@link StandardRefinerStrategy#refine(RawFunction, Broadcaster, Refiner)} will
+     * be used.
+     *
+     * @param raw
+     *     The {@link RawFunction} to refine.
+     * @param broadcaster
+     *     {@link Broadcaster} to use.
+     *
+     * @return Whether refinement occurred or not.
+     */
+    public boolean refine(RawFunction raw, Broadcaster broadcaster) {
+        for (FunctionRefinerStrategy strategy : functionRefiners) {
+            if (strategy.refine(raw, broadcaster, this)) return true;
         }
 
         // fallback to the default refiner
-        return STANDARD.refine(functionValue, broadcaster, this);
+        return STANDARD.refine(raw, broadcaster, this);
     }
 
     /**
@@ -197,7 +274,7 @@ public final class Refiner {
      * @return The {@link Broadcaster}.
      */
     public Broadcaster broadcaster() {
-        return broadcaster;
+        return defaultBroadcaster;
     }
 }
 

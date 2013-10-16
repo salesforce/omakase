@@ -17,10 +17,10 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -113,18 +113,18 @@ public class RefinerTest {
 
     @Test
     public void functionValueRefinement() {
-        FunctionValueStrategy strategy = new FunctionValueStrategy();
+        FunctionStrategy strategy = new FunctionStrategy();
         Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
-        refiner.refine(new FunctionValue(1, 1, "test", "blah", refiner));
+        refiner.refine(new RawFunction(1, 1, "test", "blah"));
         assertThat(strategy.called).isTrue();
     }
 
     @Test
     public void testMultipleFunctionValue() {
-        FunctionValueStrategyFalse strategy1 = new FunctionValueStrategyFalse();
-        FunctionValueStrategy strategy2 = new FunctionValueStrategy();
+        FunctionStrategyFalse strategy1 = new FunctionStrategyFalse();
+        FunctionStrategy strategy2 = new FunctionStrategy();
         Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
-        refiner.refine(new FunctionValue(1, 1, "test", "blah", refiner));
+        refiner.refine(new RawFunction(1, 1, "test", "blah"));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
     }
@@ -132,7 +132,7 @@ public class RefinerTest {
     @Test
     public void standardFunctionValueRefinement() {
         Refiner refiner = new Refiner(new QueryableBroadcaster());
-        refiner.refine(new FunctionValue(1, 1, "test", "blah", refiner)); // no errors
+        refiner.refine(new RawFunction(1, 1, "test", "blah")); // no errors
     }
 
     public static final class AtRuleStrategy implements AtRuleRefinerStrategy {
@@ -195,21 +195,21 @@ public class RefinerTest {
         }
     }
 
-    public static final class FunctionValueStrategy implements FunctionValueRefinerStrategy {
+    public static final class FunctionStrategy implements FunctionRefinerStrategy {
         boolean called;
 
         @Override
-        public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return true;
         }
     }
 
-    public static final class FunctionValueStrategyFalse implements FunctionValueRefinerStrategy {
+    public static final class FunctionStrategyFalse implements FunctionRefinerStrategy {
         boolean called;
 
         @Override
-        public boolean refine(FunctionValue functionValue, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
             called = true;
             return false;
         }

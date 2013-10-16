@@ -25,7 +25,7 @@ import static com.salesforce.omakase.parser.token.Tokens.*;
  *
  * @author nmcwilliams
  */
-public class StandardTokenFactory implements TokenFactory {
+public final class StandardTokenFactory implements TokenFactory {
     private static final Token AT_RULE_BLOCK_BEGIN = OPEN_BRACE;
     private static final Token AT_RULE_BLOCK_END = CLOSE_BRACE;
     private static final Token AT_RULE_TERMINATION = SEMICOLON;

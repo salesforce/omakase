@@ -29,6 +29,14 @@ import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
  * @author nmcwilliams
  */
 public enum Status {
+    /** The unit should never be emitted */
+    NEVER_EMIT {
+        @Override
+        public boolean shouldBroadcastForPhase(SubscriptionPhase phase) {
+            return false;
+        }
+    },
+
     /** The unit has never been broadcasted */
     UNBROADCASTED {
         @Override

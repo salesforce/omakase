@@ -189,16 +189,6 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
     P parent();
 
     /**
-     * Specifies the {@link Broadcaster} to use when new units are added to the collection.
-     *
-     * @param broadcaster
-     *     Used to broadcast newly added units.
-     *
-     * @return this, for chaining.
-     */
-    SyntaxCollection<P, T> broadcaster(Broadcaster broadcaster);
-
-    /**
      * Calls {@link Syntax#propagateBroadcast(Broadcaster)} on all units within this collection using the given {@link
      * Broadcaster}.
      *

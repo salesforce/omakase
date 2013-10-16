@@ -21,7 +21,10 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 
 /**
- * A {@link Plugin} that wishes to be notified when all processing is completed.
+ * A {@link Plugin} that wishes to be notified when all processing (rework and validation) is completed.
+ * <p/>
+ * Please be aware that as this is post processing, and changes or modifications made to AST objects will not be automatically
+ * provided to plugin subscription methods. Post processing is generally best for read-only operations.
  *
  * @author nmcwilliams
  */

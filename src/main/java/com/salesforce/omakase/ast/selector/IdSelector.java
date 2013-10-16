@@ -37,7 +37,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "id selector segment", broadcasted = REFINED_SELECTOR)
-public class IdSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class IdSelector extends AbstractSelectorPart implements SimpleSelector {
     private String name;
 
     /**
@@ -90,23 +90,8 @@ public class IdSelector extends AbstractSelectorPart implements SimpleSelector {
     }
 
     @Override
-    public boolean isSelector() {
-        return true;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return false;
-    }
-
-    @Override
     public SelectorPartType type() {
         return SelectorPartType.ID_SELECTOR;
-    }
-
-    @Override
-    protected SelectorPart self() {
-        return this;
     }
 
     @Override
@@ -116,10 +101,6 @@ public class IdSelector extends AbstractSelectorPart implements SimpleSelector {
 
     @Override
     public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("name", name)
-            .toString();
+        return As.string(this).indent().add("abstract", super.toString()).add("name", name).toString();
     }
 }

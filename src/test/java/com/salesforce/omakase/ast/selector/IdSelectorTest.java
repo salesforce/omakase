@@ -41,16 +41,6 @@ public class IdSelectorTest {
     }
 
     @Test
-    public void isSelector() {
-        assertThat(new IdSelector(1, 1, "test").isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new IdSelector(1, 1, "test").isCombinator()).isFalse();
-    }
-
-    @Test
     public void type() {
         assertThat(new IdSelector("test").type()).isSameAs(SelectorPartType.ID_SELECTOR);
     }

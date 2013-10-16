@@ -29,22 +29,23 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see TypeSelector
  */
-public class TypeSelectorParser extends AbstractParser {
+public final class TypeSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // find the name
         Optional<String> name = source.readIdent();
         if (!name.isPresent()) return false;
 
         // create and broadcast the new selector
-        TypeSelector selector = new TypeSelector(snapshot.originalLine, snapshot.originalColumn, name.get());
+        TypeSelector selector = new TypeSelector(line, column, name.get());
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;

@@ -17,10 +17,9 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.ast.declaration.value.QuotationMode;
-import com.salesforce.omakase.ast.declaration.value.UrlFunctionValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.declaration.QuotationMode;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import org.junit.Before;
@@ -52,71 +51,63 @@ public class UrlFunctionRefinerTest {
 
     @Test
     public void returnsFalseForNonMatchingFunction() {
-        FunctionValue functionValue = new FunctionValue("blah", "blah");
+        RawFunction functionValue = new RawFunction(5, 2, "blah", "blah");
         assertThat(urlRefiner.refine(functionValue, broadcaster, refiner)).isFalse();
     }
 
     @Test
     public void refinesToUrlFunctionValueInstance() {
-        FunctionValue functionValue = new FunctionValue("url", "/imgs/poof.png");
+        RawFunction functionValue = new RawFunction(1, 1, "url", "/imgs/poof.png");
         urlRefiner.refine(functionValue, broadcaster, refiner);
-        assertThat(functionValue.refinedValue().get()).isInstanceOf(UrlFunctionValue.class);
+        assertThat(broadcaster.findOnly(UrlFunctionValue.class).isPresent()).isTrue();
     }
 
     @Test
     public void assignsCorrectLineAndColumn() {
-        FunctionValue functionValue = new FunctionValue(5, 2, "url", "/imgs/poof.png", refiner);
+        RawFunction functionValue = new RawFunction(5, 2, "url", "/imgs/poof.png");
         urlRefiner.refine(functionValue, broadcaster, refiner);
-        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        UrlFunctionValue value = broadcaster.findOnly(UrlFunctionValue.class).get();
         assertThat(value.line()).isEqualTo(5);
         assertThat(value.column()).isEqualTo(2);
     }
 
     @Test
     public void errorIfMissingClosingQuote() {
-        FunctionValue functionValue = new FunctionValue("url", "\"/imgs/poof.png");
+        RawFunction functionValue = new RawFunction(1, 1, "url", "\"/imgs/poof.png");
         exception.expect(ParserException.class);
         urlRefiner.refine(functionValue, broadcaster, refiner);
     }
 
     @Test
     public void correctlyFindsDoubleQuotes() {
-        FunctionValue functionValue = new FunctionValue("url", "\"/imgs/poof.png\"");
+        RawFunction functionValue = new RawFunction(1, 1, "url", "\"/imgs/poof.png\"");
         urlRefiner.refine(functionValue, broadcaster, refiner);
-        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        UrlFunctionValue value = broadcaster.findOnly(UrlFunctionValue.class).get();
         assertThat(value.url()).isEqualTo("/imgs/poof.png");
         assertThat(value.quotationMode().get()).isEqualTo(QuotationMode.DOUBLE);
     }
 
     @Test
     public void correctFindsSingleQuotes() {
-        FunctionValue functionValue = new FunctionValue("url", "'/imgs/poof.png'");
+        RawFunction functionValue = new RawFunction(1, 1, "url", "'/imgs/poof.png'");
         urlRefiner.refine(functionValue, broadcaster, refiner);
-        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        UrlFunctionValue value = broadcaster.findOnly(UrlFunctionValue.class).get();
         assertThat(value.url()).isEqualTo("/imgs/poof.png");
         assertThat(value.quotationMode().get()).isEqualTo(QuotationMode.SINGLE);
     }
 
     @Test
     public void correctlyFindsNoQuotes() {
-        FunctionValue functionValue = new FunctionValue("url", "/imgs/poof.png");
+        RawFunction functionValue = new RawFunction(1, 1, "url", "/imgs/poof.png");
         urlRefiner.refine(functionValue, broadcaster, refiner);
-        UrlFunctionValue value = (UrlFunctionValue)functionValue.refinedValue().get();
+        UrlFunctionValue value = broadcaster.findOnly(UrlFunctionValue.class).get();
         assertThat(value.url()).isEqualTo("/imgs/poof.png");
         assertThat(value.quotationMode().isPresent()).isFalse();
     }
 
     @Test
-    public void broadcastsUrlFunctionValue() {
-        FunctionValue functionValue = new FunctionValue("url", "/imgs/poof.png");
-        urlRefiner.refine(functionValue, broadcaster, refiner);
-        assertThat(broadcaster.all()).hasSize(1);
-        assertThat(Iterables.get(broadcaster.all(), 0)).isInstanceOf(UrlFunctionValue.class);
-    }
-
-    @Test
     public void errorsIfContentAfterClosingQuote() {
-        FunctionValue functionValue = new FunctionValue("url", "\"/imgs/poof.png\"aaa");
+        RawFunction functionValue = new RawFunction(1, 1, "url", "\"/imgs/poof.png\"aaa");
         exception.expect(ParserException.class);
         exception.expectMessage("Unexpected content in url after closing quote");
         urlRefiner.refine(functionValue, broadcaster, refiner);

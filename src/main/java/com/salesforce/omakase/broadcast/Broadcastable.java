@@ -18,10 +18,9 @@ package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.emitter.Emitter;
 
 /**
- * Something that can be broadcasted via an {@link Emitter}.
+ * Something that can be broadcasted.
  * <p/>
  * The most common {@link Broadcastable} is {@link Syntax}. {@link Syntax} units are usually broadcasted upon creation.
  *

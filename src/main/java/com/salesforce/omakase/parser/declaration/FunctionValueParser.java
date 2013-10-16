@@ -17,7 +17,8 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
@@ -26,15 +27,15 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * Parses a {@link FunctionValue}.
+ * Parses a {@link GenericFunctionValue}.
  * <p/>
  * This does not validate the arguments inside of the parenthesis, but only that the the opening and closing parenthesis are
  * matched.
  *
  * @author nmcwilliams
- * @see FunctionValue
+ * @see GenericFunctionValue
  */
-public class FunctionValueParser extends AbstractParser {
+public final class FunctionValueParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
@@ -51,13 +52,16 @@ public class FunctionValueParser extends AbstractParser {
         // must be an open parenthesis
         if (!Tokens.OPEN_PAREN.matches(source.current())) return snapshot.rollback();
 
-        // read the arguments. This behavior itself differs from the spec a little. We aren't validating what's inside
-        // the arguments. The more specifically typed function values will be responsible for validating their own args.
+        // read the arguments. We aren't validating what's inside the arguments. The more specifically typed function values
+        // will be responsible for validating their own args.
         String args = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
 
-        FunctionValue value = new FunctionValue(snapshot.originalLine, snapshot.originalColumn, name.get(), args, refiner);
-        value.comments(source.flushComments());
-        broadcaster.broadcast(value);
+        // create the intermediary raw function
+        RawFunction raw = new RawFunction(snapshot.originalLine, snapshot.originalColumn, name.get(), args);
+        raw.comments(source.flushComments());
+
+        // refiner will broadcast the actual function term
+        refiner.refine(raw, broadcaster);
 
         return true;
     }

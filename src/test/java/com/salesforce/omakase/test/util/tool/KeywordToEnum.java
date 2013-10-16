@@ -18,7 +18,7 @@ package com.salesforce.omakase.test.util.tool;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.value.Keyword;
+import com.salesforce.omakase.ast.declaration.Keyword;
 
 import java.util.Collections;
 import java.util.List;

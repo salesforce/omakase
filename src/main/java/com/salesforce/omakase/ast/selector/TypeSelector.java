@@ -37,7 +37,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "type/element selector segment", broadcasted = REFINED_SELECTOR)
-public class TypeSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class TypeSelector extends AbstractSelectorPart implements SimpleSelector {
     private String name;
 
     /**
@@ -91,23 +91,8 @@ public class TypeSelector extends AbstractSelectorPart implements SimpleSelector
     }
 
     @Override
-    public boolean isSelector() {
-        return true;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return false;
-    }
-
-    @Override
     public SelectorPartType type() {
         return SelectorPartType.TYPE_SELECTOR;
-    }
-
-    @Override
-    protected SelectorPart self() {
-        return this;
     }
 
     @Override
@@ -117,10 +102,6 @@ public class TypeSelector extends AbstractSelectorPart implements SimpleSelector
 
     @Override
     public String toString() {
-        return As.string(this)
-            .indent()
-            .add("syntax", super.toString())
-            .add("name", name)
-            .toString();
+        return As.string(this).indent().add("syntax", super.toString()).add("name", name).toString();
     }
 }

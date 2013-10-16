@@ -37,7 +37,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "combinator segment", broadcasted = REFINED_SELECTOR)
-public class Combinator extends AbstractSelectorPart implements SimpleSelector {
+public final class Combinator extends AbstractSelectorPart implements SimpleSelector {
     private final CombinatorType type;
 
     /**
@@ -68,16 +68,6 @@ public class Combinator extends AbstractSelectorPart implements SimpleSelector {
     }
 
     @Override
-    public boolean isSelector() {
-        return false;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return true;
-    }
-
-    @Override
     public SelectorPartType type() {
         switch (type) {
         case DESCENDANT:
@@ -90,11 +80,6 @@ public class Combinator extends AbstractSelectorPart implements SimpleSelector {
             return SelectorPartType.GENERAL_SIBLING_COMBINATOR;
         }
         throw new RuntimeException("unknown combinator type");
-    }
-
-    @Override
-    protected SelectorPart self() {
-        return this;
     }
 
     @Override
@@ -123,11 +108,7 @@ public class Combinator extends AbstractSelectorPart implements SimpleSelector {
 
     @Override
     public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("type", type)
-            .toString();
+        return As.string(this).indent().add("abstract", super.toString()).add("type", type).toString();
     }
 
     /**

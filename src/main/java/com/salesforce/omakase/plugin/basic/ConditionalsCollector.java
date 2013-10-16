@@ -37,7 +37,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-public class ConditionalsCollector implements DependentPlugin {
+public final class ConditionalsCollector implements DependentPlugin {
     private final Set<String> conditions = Sets.newHashSet();
 
     @Override

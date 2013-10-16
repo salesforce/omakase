@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;

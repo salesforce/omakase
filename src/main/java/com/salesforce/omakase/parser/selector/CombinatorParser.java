@@ -31,7 +31,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see Combinator
  */
-public class CombinatorParser extends AbstractParser {
+public final class CombinatorParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.collectComments(false);

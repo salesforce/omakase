@@ -18,7 +18,7 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.parser.refiner.ConditionalsRefiner;
+import com.salesforce.omakase.parser.refiner.ConditionalsRefinerStrategy;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
@@ -97,8 +97,8 @@ public final class Conditionals implements SyntaxPlugin, DependentPlugin {
     }
 
     @Override
-    public RefinerStrategy getRefinableStrategy() {
-        return new ConditionalsRefiner(manager);
+    public RefinerStrategy getRefinerStrategy() {
+        return new ConditionalsRefinerStrategy(manager);
     }
 
     /**

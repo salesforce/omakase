@@ -34,7 +34,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-public class ConditionalsManager {
+public final class ConditionalsManager {
     private final Set<String> trueConditions = Sets.newHashSet();
     private boolean passthroughMode;
 
@@ -91,7 +91,7 @@ public class ConditionalsManager {
     }
 
     /**
-     * Removes the given condition from the trueConditions set. This condition will no longer evaluate as "true". F
+     * Removes the given condition from the trueConditions set. This condition will no longer evaluate as "true".
      *
      * @param condition
      *     The condition to remove.

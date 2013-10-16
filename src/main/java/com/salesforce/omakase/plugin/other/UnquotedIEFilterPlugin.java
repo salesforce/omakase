@@ -16,11 +16,15 @@
 
 package com.salesforce.omakase.plugin.other;
 
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.parser.refiner.DeclarationRefinerStrategy;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
-import com.salesforce.omakase.parser.refiner.UnquotedIEFilterRefiner;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 /**
@@ -52,10 +56,22 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @see UnquotedIEFilter
  */
 public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
-    private static final RefinerStrategy STRATEGY = new UnquotedIEFilterRefiner();
+    protected static final DeclarationRefinerStrategy REFINER = new DeclarationRefinerStrategy() {
+        @Override
+        public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+            RawSyntax raw = declaration.rawPropertyValue().get();
+
+            if (raw.content().startsWith("progid:")) {
+                declaration.propertyValue(new UnquotedIEFilter(raw.line(), raw.column(), raw.content()));
+                return true;
+            }
+
+            return false;
+        }
+    };
 
     @Override
-    public RefinerStrategy getRefinableStrategy() {
-        return STRATEGY;
+    public RefinerStrategy getRefinerStrategy() {
+        return REFINER;
     }
 }

@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -126,20 +126,20 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
     @Override
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<String>> results = parseWithExpected(
-            withExpectedResult("url(one.png)", "one.png"),
-            withExpectedResult("url(/one/one.png)", "/one/one.png"),
-            withExpectedResult("url(\"one.png\")", "\"one.png\""),
-            withExpectedResult("url(\"one two three\")", "\"one two three\""),
+            withExpectedResult("urlx(one.png)", "one.png"),
+            withExpectedResult("urlx(/one/one.png)", "/one/one.png"),
+            withExpectedResult("urlx(\"one.png\")", "\"one.png\""),
+            withExpectedResult("urlx(\"one two three\")", "\"one two three\""),
             withExpectedResult("calc(100%/3 - 2*1em - 2*1px)", "100%/3 - 2*1em - 2*1px"),
             withExpectedResult(
-                "url(data:image/gif;base64," +
+                "urlx(data:image/gif;base64," +
                     "R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7" +
                     "////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7)",
                 "data:image/gif;base64," +
                     "R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7" +
                     "////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7"),
             withExpectedResult(
-                "url('data:image/gif;base64," +
+                "urlx('data:image/gif;base64," +
                     "R0lGOD(lhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7" +
                     "////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7')",
                 "'data:image/gif;base64," +
@@ -152,7 +152,7 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
             withExpectedResult("_theme(1 )", "1 "));
 
         for (ParseResult<String> result : results) {
-            FunctionValue f = result.broadcaster.findOnly(FunctionValue.class).get();
+            GenericFunctionValue f = result.broadcaster.findOnly(GenericFunctionValue.class).get();
             assertThat(f.args()).isEqualTo(result.expected);
         }
     }
@@ -160,20 +160,20 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
     @Test
     public void matchesExpectedFunctionName() {
         List<ParseResult<String>> results = parseWithExpected(
-            withExpectedResult("url(one.png)", "url"),
+            withExpectedResult("urlx(one.png)", "urlx"),
             withExpectedResult("calc(100%/3 - 2*1em - 2*1px)", "calc"),
             withExpectedResult(
-                "url(data:image/gif;base64," +
+                "urlx(data:image/gif;base64," +
                     "R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7" +
                     "////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7)",
-                "url"),
+                "urlx"),
             withExpectedResult("blahblah(1,1,1,2$*_918930939, , , , ,    ,, ~-``9289,)", "blahblah"),
             withExpectedResult("theme(one.\\(theme.co\\)lor)", "theme"),
             withExpectedResult("_theme(1 )", "_theme"),
             withExpectedResult("-theme__theme-t--t-11234(  )", "-theme__theme-t--t-11234"));
 
         for (ParseResult<String> result : results) {
-            FunctionValue f = result.broadcaster.findOnly(FunctionValue.class).get();
+            GenericFunctionValue f = result.broadcaster.findOnly(GenericFunctionValue.class).get();
             assertThat(f.name()).isEqualTo(result.expected);
         }
     }

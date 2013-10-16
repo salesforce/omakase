@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
@@ -74,8 +75,8 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public void comments(Iterable<String> commentsToAdd) {
-        if (commentsToAdd == null) return;
+    public Syntax comments(Iterable<String> commentsToAdd) {
+        if (commentsToAdd == null) return this;
 
         // delayed creation of comments list
         if (comments == null) {
@@ -86,6 +87,21 @@ public abstract class AbstractSyntax implements Syntax {
         for (String comment : commentsToAdd) {
             comments.add(new Comment(comment));
         }
+
+        return this;
+    }
+
+    @Override
+    public Syntax directComments(Iterable<Comment> commentsToAdd) {
+        if (commentsToAdd == null) return this;
+
+        // delayed creation of comments list
+        if (comments == null) {
+            comments = new ArrayList<>(2);
+        }
+
+        Iterables.addAll(comments, commentsToAdd);
+        return this;
     }
 
     @Override

@@ -50,7 +50,7 @@ import java.util.Set;
  * Broadcaster}). Note: this class is not exposed as an API itself.
  * <p/>
  * All broadcasting events are collected and stored during parsing. After the source is completely parsed, each event is replayed
- * once in each of the two phases: process ({@link Observe} and {@link Rework} annotated methods), then  validation ({@link
+ * once in each of the two phases: process ({@link Observe} and {@link Rework} annotated methods), then validation ({@link
  * Validate} annotated methods).
  *
  * @author nmcwilliams
@@ -155,7 +155,7 @@ final class Context implements Broadcaster, PluginRegistry {
         List<RefinerStrategy> customRefiners = Lists.newArrayList();
 
         for (SyntaxPlugin plugin : filter(SyntaxPlugin.class)) {
-            customRefiners.add(plugin.getRefinableStrategy());
+            customRefiners.add(plugin.getRefinerStrategy());
         }
 
         return new Refiner(broadcaster, customRefiners);
@@ -223,5 +223,4 @@ final class Context implements Broadcaster, PluginRegistry {
     private <T extends Plugin> Iterable<T> filter(Class<T> klass) {
         return Iterables.filter(registry.values(), klass);
     }
-
 }

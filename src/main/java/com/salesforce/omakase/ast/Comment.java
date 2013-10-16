@@ -30,7 +30,7 @@ import java.io.IOException;
  * By default, comments are not written out except for in {@link WriterMode#VERBOSE}.
  */
 
-public class Comment implements Writable {
+public final class Comment implements Writable {
     private final String content;
 
     /**

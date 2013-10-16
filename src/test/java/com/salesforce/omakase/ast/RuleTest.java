@@ -18,9 +18,9 @@ package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.Property;
-import com.salesforce.omakase.ast.declaration.value.Keyword;
-import com.salesforce.omakase.ast.declaration.value.KeywordValue;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue;
+import com.salesforce.omakase.ast.declaration.Keyword;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;

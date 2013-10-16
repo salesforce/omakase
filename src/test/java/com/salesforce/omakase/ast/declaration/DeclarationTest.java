@@ -21,13 +21,6 @@ import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.declaration.value.Keyword;
-import com.salesforce.omakase.ast.declaration.value.KeywordValue;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue;
-import com.salesforce.omakase.ast.declaration.value.PropertyValue;
-import com.salesforce.omakase.ast.declaration.value.TermList;
-import com.salesforce.omakase.ast.declaration.value.TermOperator;
-import com.salesforce.omakase.ast.declaration.value.Value;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.refiner.Refiner;
@@ -60,8 +53,8 @@ public class DeclarationTest {
 
     @Test
     public void rawValues() {
-        assertThat(fromRaw.rawPropertyName()).isSameAs(rawName);
-        assertThat(fromRaw.rawPropertyValue()).isSameAs(rawValue);
+        assertThat(fromRaw.rawPropertyName().get()).isSameAs(rawName);
+        assertThat(fromRaw.rawPropertyValue().get()).isSameAs(rawValue);
         assertThat(fromRaw.line()).isEqualTo(rawName.line());
         assertThat(fromRaw.column()).isEqualTo(rawName.column());
     }
@@ -230,7 +223,7 @@ public class DeclarationTest {
 
     @Test
     public void writeVerboseRefined() throws IOException {
-        TermList terms = TermList.ofValues(TermOperator.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(d)).isEqualTo("margin: 1px 2px");
@@ -238,7 +231,7 @@ public class DeclarationTest {
 
     @Test
     public void writeInlineRefined() throws IOException {
-        TermList terms = TermList.ofValues(TermOperator.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         StyleWriter writer = StyleWriter.inline();
         assertThat(writer.writeSnippet(d)).isEqualTo("margin:1px 2px");
@@ -246,7 +239,7 @@ public class DeclarationTest {
 
     @Test
     public void writeCompressedRefined() throws IOException {
-        TermList terms = TermList.ofValues(TermOperator.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(d)).isEqualTo("margin:1px 2px");

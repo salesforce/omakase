@@ -85,16 +85,6 @@ public class PseudoClassSelectorTest {
     }
 
     @Test
-    public void isSelector() {
-        assertThat(new PseudoClassSelector("hover").isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new PseudoClassSelector("hover").isCombinator()).isFalse();
-    }
-
-    @Test
     public void type() {
         assertThat(new PseudoClassSelector("hover").type()).isSameAs(SelectorPartType.PSEUDO_CLASS_SELECTOR);
     }

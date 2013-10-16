@@ -17,7 +17,7 @@
 package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.declaration.value.KeywordValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
@@ -29,21 +29,22 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see KeywordValue
  */
-public class KeywordValueParser extends AbstractParser {
+public final class KeywordValueParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
         source.collectComments(false);
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // read the keyword
         Optional<String> keyword = source.readIdent();
         if (!keyword.isPresent()) return false;
 
-        KeywordValue value = new KeywordValue(snapshot.originalLine, snapshot.originalColumn, keyword.get());
+        KeywordValue value = new KeywordValue(line, column, keyword.get());
         value.comments(source.flushComments());
         broadcaster.broadcast(value);
 

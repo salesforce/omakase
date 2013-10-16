@@ -29,7 +29,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see Selector
  */
-public class RawSelectorParser extends AbstractParser {
+public final class RawSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
@@ -38,12 +38,13 @@ public class RawSelectorParser extends AbstractParser {
 
         if (!tokenFactory().selectorBegin().matches(source.current())) return false;
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // grab everything until the end of the selector
         String content = source.until(tokenFactory().selectorEnd());
-        RawSyntax raw = new RawSyntax(snapshot.originalLine, snapshot.originalColumn, content.trim());
+        RawSyntax raw = new RawSyntax(line, column, content.trim());
 
         // create selector and associate comments
         Selector selector = new Selector(raw, refiner);

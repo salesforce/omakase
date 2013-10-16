@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.ast.declaration.value.Term;
+import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;

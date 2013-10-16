@@ -45,17 +45,36 @@ public enum SelectorPartType {
     PSEUDO_ELEMENT_SELECTOR,
 
     /** a descendant combinator */
-    DESCENDANT_COMBINATOR,
+    DESCENDANT_COMBINATOR(true),
 
     /** a child combinator */
-    CHILD_COMBINATOR,
+    CHILD_COMBINATOR(true),
 
     /** an adjacent sibling combinator */
-    ADJACENT_SIBLING_COMBINATOR,
+    ADJACENT_SIBLING_COMBINATOR(true),
 
     /** a general sibling combinator */
-    GENERAL_SIBLING_COMBINATOR,
+    GENERAL_SIBLING_COMBINATOR(true),
 
     /** a comment that is not associated with another syntax unit */
-    ORPHANED_COMMENT
+    ORPHANED_COMMENT;
+
+    private final boolean isCombinator;
+
+    SelectorPartType() {
+        this(false);
+    }
+
+    SelectorPartType(boolean isCombinator) {
+        this.isCombinator = isCombinator;
+    }
+
+    /**
+     * Gets whether this type represents a combinator.
+     *
+     * @return True if this type represents a combinator.
+     */
+    public boolean isCombinator() {
+        return isCombinator;
+    }
 }

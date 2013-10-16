@@ -22,8 +22,7 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.ast.selector.*;
@@ -62,7 +61,7 @@ public class BasePlugin implements Plugin {
      * @param refinable
      *     The {@link Refinable} instance.
      */
-    public void refinable(Refinable refinable) {}
+    public void refinable(Refinable<?> refinable) {}
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
@@ -237,12 +236,21 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link FunctionValue}.
+     * for {@link Syntax} units of type {@link GenericFunctionValue}.
      *
      * @param functionValue
-     *     The {@link FunctionValue} instance.
+     *     The {@link GenericFunctionValue} instance.
      */
-    public void functionValue(FunctionValue functionValue) {}
+    public void functionValue(GenericFunctionValue functionValue) {}
+
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for {@link Syntax} units of type {@link UrlFunctionValue}.
+     *
+     * @param url
+     *     The {@link UrlFunctionValue} instance.
+     */
+    public void urlValue(UrlFunctionValue url) {}
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events

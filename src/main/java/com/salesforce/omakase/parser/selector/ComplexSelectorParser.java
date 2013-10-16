@@ -40,7 +40,7 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_CO
  * @author nmcwilliams
  * @see Selector
  */
-public class ComplexSelectorParser extends AbstractParser {
+public final class ComplexSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();
@@ -54,8 +54,7 @@ public class ComplexSelectorParser extends AbstractParser {
         Parser typeOrUniversal = ParserFactory.typeOrUniversaleSelectorParser();
 
         // we queue the broadcasts because we don't want the last unit to be a trailing descendant combinator.
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster);
-        queue.pause(); // don't actually broadcast anything until we can do some checking later
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
 
         boolean matchedAnything = false;
         boolean matchedThisTime = false;

@@ -21,8 +21,6 @@ import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.ast.declaration.value.RefinedFunctionValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -36,8 +34,8 @@ import java.util.Set;
  * <p/>
  * Generally this is used when your {@link Plugin} has a subscription to a lower-level {@link Syntax} unit not exposed during the
  * high-level parsing phase. The {@link Refinable} responsible for parsing that syntax unit must be refined before the syntax unit
- * will be exposed. Examples of lower-level {@link Syntax} units include {@link ClassSelector} and {@link IdSelector}, and even
- * custom {@link RefinedFunctionValue}s. For more information on auto-refinement see the readme file.
+ * will be exposed. Examples of lower-level {@link Syntax} units include {@link ClassSelector} and {@link IdSelector}. For more
+ * information on auto-refinement see the readme file.
  * <p/>
  * Example:
  * <pre><code> public class MyPlugin implements DependentPlugin {
@@ -51,7 +49,7 @@ import java.util.Set;
  * @author nmcwilliams
  */
 public final class AutoRefiner implements Plugin {
-    private final Set<Class<? extends Refinable>> refinables = Sets.newHashSet();
+    private final Set<Class<? extends Refinable<?>>> refinables = Sets.newHashSet();
     private boolean all;
 
     /**
@@ -82,15 +80,6 @@ public final class AutoRefiner implements Plugin {
     }
 
     /**
-     * Specifies that all {@link FunctionValue}s should be automatically refined.
-     *
-     * @return this, for chaining.
-     */
-    public AutoRefiner functions() {
-        return include(FunctionValue.class);
-    }
-
-    /**
      * Includes the given class in auto-refinement. This means that {@link Refinable#refine()} will be automatically called on the
      * instance.
      *
@@ -99,7 +88,7 @@ public final class AutoRefiner implements Plugin {
      *
      * @return this, for chaining.
      */
-    public AutoRefiner include(Class<? extends Refinable> klass) {
+    public AutoRefiner include(Class<? extends Refinable<?>> klass) {
         refinables.add(klass);
         return this;
     }
@@ -121,7 +110,7 @@ public final class AutoRefiner implements Plugin {
      *     A refinable object.
      */
     @Rework
-    public void refine(Refinable refinable) {
+    public void refine(Refinable<?> refinable) {
         if (all || refinables.contains(refinable.getClass())) refinable.refine();
     }
 }

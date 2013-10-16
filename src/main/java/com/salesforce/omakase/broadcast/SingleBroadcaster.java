@@ -31,7 +31,7 @@ import com.salesforce.omakase.ast.Status;
  *
  * @author nmcwilliams
  */
-public class SingleBroadcaster<T extends Broadcastable> extends AbstractBroadcaster {
+public final class SingleBroadcaster<T extends Broadcastable> extends AbstractBroadcaster {
     private final Class<T> klass;
     private T broadcasted;
 

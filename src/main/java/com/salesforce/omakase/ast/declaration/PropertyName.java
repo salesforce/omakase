@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.*;
  *
  * @author nmcwilliams
  */
-public class PropertyName extends AbstractSyntax {
+public final class PropertyName extends AbstractSyntax {
     private static final char STAR = '*';
 
     private final String name;

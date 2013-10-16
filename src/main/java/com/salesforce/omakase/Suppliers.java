@@ -23,6 +23,7 @@ import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.Conditionals;
 import com.salesforce.omakase.plugin.basic.ConditionalsCollector;
+import com.salesforce.omakase.plugin.basic.ConditionalsValidator;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
@@ -59,6 +60,12 @@ final class Suppliers {
             @Override
             public ConditionalsCollector get() {
                 return new ConditionalsCollector();
+            }
+        })
+        .put(ConditionalsValidator.class, new Supplier<ConditionalsValidator>() {
+            @Override
+            public ConditionalsValidator get() {
+                return new ConditionalsValidator();
             }
         })
         .put(StandardValidation.class, new Supplier<StandardValidation>() {

@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.declaration.value.StringValue;
+import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;

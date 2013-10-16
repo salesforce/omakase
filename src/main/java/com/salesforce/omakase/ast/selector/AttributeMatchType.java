@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.parser.ConstantEnum;
+import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;

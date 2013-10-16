@@ -82,9 +82,9 @@ public class SyntaxTreeTest {
     public void declarationsOrder() {
         Rule rule = Iterables.get(stylesheet.statements(), 2).asRule().get();
         assertThat(rule.declarations()).hasSize(3);
-        assertThat(Iterables.get(rule.declarations(), 0).rawPropertyName().content()).isEqualTo("color");
-        assertThat(Iterables.get(rule.declarations(), 1).rawPropertyName().content()).isEqualTo("font-size");
-        assertThat(Iterables.get(rule.declarations(), 2).rawPropertyName().content()).isEqualTo("margin");
+        assertThat(Iterables.get(rule.declarations(), 0).rawPropertyName().get().content()).isEqualTo("color");
+        assertThat(Iterables.get(rule.declarations(), 1).rawPropertyName().get().content()).isEqualTo("font-size");
+        assertThat(Iterables.get(rule.declarations(), 2).rawPropertyName().get().content()).isEqualTo("margin");
     }
 
     @Test

@@ -16,20 +16,18 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.declaration.value.PropertyValue;
-import com.salesforce.omakase.ast.declaration.value.Term;
-import com.salesforce.omakase.ast.declaration.value.TermList;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -42,7 +40,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  * Represents a CSS declaration.
  * <p/>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
- * grammar validation. See the notes on {@link Refinable}.
+ * grammar validation. See the notes on {@link Refinable} and in the readme.
+ * <p/>
  *
  * @author nmcwilliams
  * @see RawDeclarationParser
@@ -50,7 +49,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable {
+public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
     private final Refiner refiner;
 
     /* unrefined */
@@ -91,7 +90,7 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
      * <pre>
      * {@code NumericalValue px10 = NumericalValue.of(10, "px");
      *   NumericalValue em5 = NumericalValue.of(5, "em");
-     *   PropertyValue value = TermList.ofValues(TermOperator.SPACE, px10, em5);
+     *   PropertyValue value = TermList.ofValues(OperatorType.SPACE, px10, em5);
      *   new Declaration(Property.BORDER_RADIUS, value)}
      * </pre>
      * <p/>
@@ -165,39 +164,28 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
         this.refiner = null;
         this.rawPropertyName = null;
         this.rawPropertyValue = null;
-        this.propertyName = checkNotNull(propertyName);
-        this.propertyValue = checkNotNull(propertyValue);
+        propertyName(propertyName);
+        propertyValue(propertyValue);
     }
 
     /**
      * Gets the original, raw, non-validated property name.
      *
-     * @return The raw property name.
+     * @return The raw property name, or {@link Optional#absent()} if the raw property name is not set (e.g., a dynamically
+     *         created unit).
      */
-    public RawSyntax rawPropertyName() {
-        return rawPropertyName;
+    public Optional<RawSyntax> rawPropertyName() {
+        return Optional.fromNullable(rawPropertyName);
     }
 
     /**
      * Gets the original, raw, non-validated property value.
      *
-     * @return The raw property value.
+     * @return The raw property value, or {@link Optional#absent()} if the raw property value is not set (e.g., a dynamically
+     *         created unit).
      */
-    public RawSyntax rawPropertyValue() {
-        return rawPropertyValue;
-    }
-
-    /**
-     * Sets a new property name. Generally, doing this should be avoided.
-     *
-     * @param propertyName
-     *     The new property name.
-     *
-     * @return this, for chaining.
-     */
-    public Declaration propertyName(PropertyName propertyName) {
-        this.propertyName = checkNotNull(propertyName, "propertyName cannot be null");
-        return this;
+    public Optional<RawSyntax> rawPropertyValue() {
+        return Optional.fromNullable(rawPropertyValue);
     }
 
     /**
@@ -214,41 +202,25 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     /**
+     * Sets a new property name. Generally, doing this should be avoided.
+     *
+     * @param propertyName
+     *     The new property name.
+     *
+     * @return this, for chaining.
+     */
+    public Declaration propertyName(PropertyName propertyName) {
+        this.propertyName = checkNotNull(propertyName, "propertyName cannot be null");
+        return this;
+    }
+
+    /**
      * Gets the property name.
      *
      * @return The property name.
      */
     public PropertyName propertyName() {
-        return propertyName == null ? refinePropertyName() : propertyName;
-    }
-
-    /**
-     * Gets whether this {@link Declaration} has the given {@link PropertyName}.
-     *
-     * @param propertyName
-     *     The property name.
-     *
-     * @return True if this {@link Declaration} has the given property name.
-     */
-    public boolean isProperty(PropertyName propertyName) {
-        return propertyName().equals(propertyName);
-    }
-
-    /**
-     * Gets whether this {@link Declaration} has the given {@link Property} name.
-     * <p/>
-     * Example:
-     * <pre>
-     * <code>if (declaration.isProperty(Property.BORDER_RADIUS)) {...}</code>
-     * </pre>
-     *
-     * @param property
-     *     The property name.
-     *
-     * @return True of this {@link Declaration} has the given property name.
-     */
-    public boolean isProperty(Property property) {
-        return propertyName().matches(property);
+        return refinePropertyName();
     }
 
     /**
@@ -269,16 +241,32 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     /**
-     * Sets a new property value.
+     * Gets whether this {@link Declaration} has the given {@link Property} name.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>if (declaration.isProperty(Property.BORDER_RADIUS)) {...}</code>
+     * </pre>
      *
-     * @param propertyValue
-     *     The new property value.
+     * @param property
+     *     The property name.
      *
-     * @return this, for chaining.
+     * @return True of this {@link Declaration} has the given property name.
      */
-    public Declaration propertyValue(PropertyValue propertyValue) {
-        this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
-        return this;
+    public boolean isProperty(Property property) {
+        return propertyName().matches(property);
+    }
+
+    /**
+     * Gets whether this {@link Declaration} has the given {@link PropertyName}.
+     *
+     * @param propertyName
+     *     The property name.
+     *
+     * @return True if this {@link Declaration} has the given property name.
+     */
+    public boolean isProperty(PropertyName propertyName) {
+        return propertyName().equals(propertyName);
     }
 
     /**
@@ -294,13 +282,26 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     /**
+     * Sets a new property value.
+     *
+     * @param propertyValue
+     *     The new property value.
+     *
+     * @return this, for chaining.
+     */
+    public Declaration propertyValue(PropertyValue propertyValue) {
+        this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
+        propertyValue.parentDeclaration(this);
+        return this;
+    }
+
+    /**
      * Gets the property value.
      *
      * @return The property value.
      */
     public PropertyValue propertyValue() {
-        refine();
-        return propertyValue;
+        return refine().propertyValue;
     }
 
     @Override
@@ -309,13 +310,13 @@ public class Declaration extends AbstractGroupable<Rule, Declaration> implements
     }
 
     @Override
-    public boolean refine() {
+    public Declaration refine() {
         if (!isRefined() && refiner != null) {
             refinePropertyName();
-            return refiner.refine(this);
+            refiner.refine(this);
         }
 
-        return false;
+        return this;
     }
 
     /** Refines just the property name */

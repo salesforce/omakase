@@ -18,8 +18,8 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue.Sign;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue.Sign;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
@@ -33,7 +33,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see NumericalValue
  */
-public class NumericalValueParser extends AbstractParser {
+public final class NumericalValueParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator

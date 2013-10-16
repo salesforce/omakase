@@ -39,12 +39,12 @@ public abstract class AbstractParser implements Parser {
     }
 
     /**
-     * Gets the {@link TokenFactory} to use for various {@link Token} delimiters.
+     * Gets the {@link TokenFactory} to use for various {@link Token} delimiters. Static for now, but later customization might
+     * allow for this to be consumer overridden.
      *
      * @return The factory.
      */
-    protected TokenFactory tokenFactory() {
-        // static instance for now, but later we might want this to be customizable
+    protected static TokenFactory tokenFactory() {
         return StandardTokenFactory.instance();
     }
 }

@@ -28,7 +28,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  *
  * @author nmcwilliams
  */
-public class UniversalSelectorParser extends AbstractParser {
+public final class UniversalSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {

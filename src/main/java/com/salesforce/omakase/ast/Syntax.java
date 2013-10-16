@@ -19,10 +19,10 @@ package com.salesforce.omakase.ast;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.writer.Writable;
 
 import java.util.List;
@@ -79,7 +79,19 @@ public interface Syntax extends Writable, Broadcastable {
      * @param commentsToAdd
      *     The comments to add.
      */
-    void comments(Iterable<String> commentsToAdd);
+    Syntax comments(Iterable<String> commentsToAdd);
+
+    /**
+     * Adds the given comments to this unit.
+     * <p/>
+     * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
+     * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
+     * Declaration} itself instead of the property name or value inside of it.
+     *
+     * @param commentsToAdd
+     *     The comments to add.
+     */
+    Syntax directComments(Iterable<Comment> commentsToAdd);
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.

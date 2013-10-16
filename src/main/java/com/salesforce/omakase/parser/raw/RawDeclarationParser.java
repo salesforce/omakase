@@ -31,7 +31,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see Declaration
  */
-public class RawDeclarationParser extends AbstractParser {
+public final class RawDeclarationParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();

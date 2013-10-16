@@ -34,7 +34,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "universal selector segment", broadcasted = REFINED_SELECTOR)
-public class UniversalSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class UniversalSelector extends AbstractSelectorPart implements SimpleSelector {
     /**
      * Constructs a new {@link UniversalSelector} instance.
      * <p/>
@@ -53,23 +53,8 @@ public class UniversalSelector extends AbstractSelectorPart implements SimpleSel
     public UniversalSelector() {}
 
     @Override
-    public boolean isSelector() {
-        return true;
-    }
-
-    @Override
-    public boolean isCombinator() {
-        return false;
-    }
-
-    @Override
     public SelectorPartType type() {
         return SelectorPartType.UNIVERSAL_SELECTOR;
-    }
-
-    @Override
-    protected SelectorPart self() {
-        return this;
     }
 
     @Override
@@ -79,9 +64,6 @@ public class UniversalSelector extends AbstractSelectorPart implements SimpleSel
 
     @Override
     public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .toString();
+        return As.string(this).indent().add("abstract", super.toString()).toString();
     }
 }

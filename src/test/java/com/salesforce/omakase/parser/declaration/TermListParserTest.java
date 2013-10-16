@@ -19,12 +19,12 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.value.FunctionValue;
-import com.salesforce.omakase.ast.declaration.value.KeywordValue;
-import com.salesforce.omakase.ast.declaration.value.NumericalValue;
-import com.salesforce.omakase.ast.declaration.value.TermList;
-import com.salesforce.omakase.ast.declaration.value.TermListMember;
-import com.salesforce.omakase.ast.declaration.value.TermOperator;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.Operator;
+import com.salesforce.omakase.ast.declaration.TermList;
+import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -145,29 +145,22 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         GenericParseResult result = Iterables
             .getOnlyElement(parse("0 1px\n3px /1em   rgba(0, 0, 0, 0.7),0 1px , 0 rgba(0, 0, 0, 0.3) "));
 
-        TermList tl = result.broadcaster.find(TermList.class).get();
-        List<TermListMember> members = tl.members();
+        List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
+
 
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
-        assertThat(members).hasSize(17);
+        assertThat(broadcasted).hasSize(10);
 
-        assertThat(members.get(0)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(1)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(2)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(3)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(4)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(5)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(6)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(7)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(8)).isInstanceOf(FunctionValue.class);
-        assertThat(members.get(9)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(10)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(11)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(12)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(13)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(14)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(15)).isInstanceOf(TermOperator.class);
-        assertThat(members.get(16)).isInstanceOf(FunctionValue.class);
+        assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(1)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(2)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(3)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(4)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(broadcasted.get(5)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(6)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(7)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(8)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(broadcasted.get(9)).isInstanceOf(TermList.class);
     }
 
     @Test
@@ -181,6 +174,36 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         assertThat(broadcasted.get(1)).isInstanceOf(KeywordValue.class);
         assertThat(broadcasted.get(2)).isInstanceOf(KeywordValue.class);
         assertThat(broadcasted.get(3)).isInstanceOf(TermList.class);
+    }
+
+    @Test
+    public void matchesExpectedMembersContentAndOrder() {
+        GenericParseResult result = Iterables
+            .getOnlyElement(parse("0 1px\n3px /1em   rgba(0, 0, 0, 0.7),0 1px , 0 rgba(0, 0, 0, 0.3) "));
+
+        TermList tl = result.broadcaster.find(TermList.class).get();
+        List<TermListMember> members = Lists.newArrayList(tl.members());
+
+        // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
+        assertThat(members).hasSize(17);
+
+        assertThat(members.get(0)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(1)).isInstanceOf(Operator.class);
+        assertThat(members.get(2)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(3)).isInstanceOf(Operator.class);
+        assertThat(members.get(4)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(5)).isInstanceOf(Operator.class);
+        assertThat(members.get(6)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(7)).isInstanceOf(Operator.class);
+        assertThat(members.get(8)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(members.get(9)).isInstanceOf(Operator.class);
+        assertThat(members.get(10)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(11)).isInstanceOf(Operator.class);
+        assertThat(members.get(12)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(13)).isInstanceOf(Operator.class);
+        assertThat(members.get(14)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(15)).isInstanceOf(Operator.class);
+        assertThat(members.get(16)).isInstanceOf(GenericFunctionValue.class);
     }
 
     @Test

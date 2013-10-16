@@ -174,7 +174,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
 
         for (ParseResult<String> result : results) {
             Declaration d = result.broadcaster.findOnly(Declaration.class).get();
-            assertThat(d.rawPropertyValue().content()).isEqualTo(result.expected);
+            assertThat(d.rawPropertyValue().get().content()).isEqualTo(result.expected);
         }
     }
 
@@ -194,7 +194,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
 
         for (ParseResult<String> result : results) {
             Declaration d = result.broadcaster.findOnly(Declaration.class).get();
-            assertThat(d.rawPropertyName().content()).isEqualTo(result.expected);
+            assertThat(d.rawPropertyName().get().content()).isEqualTo(result.expected);
         }
     }
 

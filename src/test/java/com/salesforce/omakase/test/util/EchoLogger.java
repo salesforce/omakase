@@ -23,8 +23,7 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.value.*;
+import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.ast.selector.*;
@@ -172,7 +171,7 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void functionValue(FunctionValue functionValue) {
+    public void functionValue(GenericFunctionValue functionValue) {
         logger.trace("functionValue: {}", functionValue);
     }
 
@@ -210,5 +209,11 @@ public final class EchoLogger extends BasePlugin {
     @Override
     public void conditionalAtRuleBlock(ConditionalAtRuleBlock block) {
         logger.trace("conditionalAtRuleBlock: {}", block);
+    }
+
+    @Observe
+    @Override
+    public void urlValue(UrlFunctionValue url) {
+        logger.trace("url: {}", url);
     }
 }

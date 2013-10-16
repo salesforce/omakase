@@ -32,5 +32,5 @@ public interface SyntaxPlugin extends Plugin {
      *
      * @return The {@link RefinerStrategy} instance.
      */
-    RefinerStrategy getRefinableStrategy();
+    RefinerStrategy getRefinerStrategy();
 }

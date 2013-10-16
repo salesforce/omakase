@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see ClassSelector
  */
-public class ClassSelectorParser extends AbstractParser {
+public final class ClassSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {

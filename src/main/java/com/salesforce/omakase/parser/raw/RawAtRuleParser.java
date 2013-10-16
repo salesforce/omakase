@@ -34,7 +34,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see AtRule
  */
-public class RawAtRuleParser extends AbstractParser {
+public final class RawAtRuleParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         TokenFactory tf = tokenFactory();

@@ -61,12 +61,6 @@ public final class RawSyntax extends AbstractSyntax {
     }
 
     @Override
-    public void comments(Iterable<String> commentsToAdd) {
-        // I don't see any reason to support this right now
-        throw new UnsupportedOperationException("cannot add comments to raw syntax");
-    }
-
-    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (writer.isCompressed()) {
             // TODO compression

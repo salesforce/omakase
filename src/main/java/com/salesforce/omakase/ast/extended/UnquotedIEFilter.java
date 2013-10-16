@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.ast.AbstractSyntax;
-import com.salesforce.omakase.ast.declaration.value.PropertyValue;
+import com.salesforce.omakase.ast.declaration.AbstractPropertyValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -46,7 +46,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "proprietary microsoft filter", broadcasted = REFINED_DECLARATION)
-public final class UnquotedIEFilter extends AbstractSyntax implements PropertyValue {
+public final class UnquotedIEFilter extends AbstractPropertyValue {
     private final String content;
 
     /**
@@ -80,7 +80,7 @@ public final class UnquotedIEFilter extends AbstractSyntax implements PropertyVa
 
     @Override
     public PropertyValue important(boolean important) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("UnquotedIEFilter does not check for the presence of !important");
     }
 
     @Override

@@ -41,11 +41,13 @@ public interface AtRuleRefinerStrategy extends RefinerStrategy {
      * Utilize the {@link AtRule#rawExpression()} and {@link AtRule#rawBlock()} methods to get the raw, unrefined syntax. Parse
      * this information into your own {@link AtRuleExpression} and {@link AtRuleBlock} objects and then optionally broadcast them
      * using the given {@link Broadcaster} (if you intend to broadcast your custom AST objects they must be annotated with the
-     * {@link Subscribable} annotation and implement {@link Syntax}). Be sure to actually add the objects to the {@link AtRule}
-     * using the {@link AtRule#expression(AtRuleExpression)} and {@link AtRule#block(AtRuleBlock)} methods. One or both of these
-     * methods should be called (i.e., it's fine if your customized object does not have both).
+     * {@link Subscribable} annotation and implement {@link Syntax}).
      * <p/>
-     * If the actual at-rule name (e.g., "@media")should be discarded then call {@link AtRule#shouldWriteName(boolean)} with
+     * Be sure to actually add the objects to the {@link AtRule} using the {@link AtRule#expression(AtRuleExpression)} and {@link
+     * AtRule#block(AtRuleBlock)} methods. One or both of these methods should be called (i.e., it's fine if your customized
+     * object does not have both).
+     * <p/>
+     * If the actual at-rule name (e.g., "@media") should be discarded then call {@link AtRule#shouldWriteName(boolean)} with
      * false.
      *
      * @param atRule

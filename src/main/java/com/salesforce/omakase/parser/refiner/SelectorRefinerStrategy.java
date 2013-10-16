@@ -43,7 +43,7 @@ public interface SelectorRefinerStrategy extends RefinerStrategy {
      * the {@link Subscribable} annotation and implement {@link Syntax}). Be sure to actually add the objects to the {@link
      * Selector} by using the {@link Selector#appendAll(Iterable)} method.
      * <p/>
-     * Do <b>not</b> use anything on {@link Selector#parts()}, as that will result in an infinite loop!
+     * Do <b>not</b> use anything on {@link Selector#parts()}, as that will result in infinite recursion!
      *
      * @param selector
      *     The {@link Selector} to refine.

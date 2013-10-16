@@ -28,16 +28,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class CombinatorTest {
     @Test
-    public void isSelector() {
-        assertThat(new Combinator(1, 1, CombinatorType.CHILD).isSelector()).isFalse();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new Combinator(1, 1, CombinatorType.CHILD).isCombinator()).isTrue();
-    }
-
-    @Test
     public void typeWhenDescendant() {
         Combinator c = Combinator.descendant();
         assertThat(c.type()).isSameAs(SelectorPartType.DESCENDANT_COMBINATOR);

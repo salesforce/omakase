@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link AbstractSelectorPart}. */
 @SuppressWarnings("JavaDoc")
@@ -73,21 +73,6 @@ public class AbstractSelectorPartTest {
     }
 
     public static final class TestSelectorPart extends AbstractSelectorPart {
-        @Override
-        protected SelectorPart self() {
-            return this;
-        }
-
-        @Override
-        public boolean isSelector() {
-            return false;
-        }
-
-        @Override
-        public boolean isCombinator() {
-            return false;
-        }
-
         @Override
         public SelectorPartType type() {
             return null;

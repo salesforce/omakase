@@ -19,6 +19,7 @@ package com.salesforce.omakase.parser;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;

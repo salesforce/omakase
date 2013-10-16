@@ -93,16 +93,6 @@ public class AttributeSelectorTest {
     }
 
     @Test
-    public void isSelector() {
-        assertThat(new AttributeSelector("a").isSelector()).isTrue();
-    }
-
-    @Test
-    public void isCombinator() {
-        assertThat(new AttributeSelector("a").isCombinator()).isFalse();
-    }
-
-    @Test
     public void type() {
         assertThat(new AttributeSelector("a").type()).isSameAs(SelectorPartType.ATTRIBUTE_SELECTOR);
     }

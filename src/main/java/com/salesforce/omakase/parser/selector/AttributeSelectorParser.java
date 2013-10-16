@@ -33,14 +33,15 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see AttributeSelector
  */
-public class AttributeSelectorParser extends AbstractParser {
+public final class AttributeSelectorParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 
-        // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        // grab the current position before parsing
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // opening bracket [
         if (!source.optionallyPresent(Tokens.OPEN_BRACKET)) return false;
@@ -81,7 +82,7 @@ public class AttributeSelectorParser extends AbstractParser {
         source.expect(Tokens.CLOSE_BRACKET);
 
         // create the selector and broadcast it
-        AttributeSelector selector = new AttributeSelector(snapshot.originalLine, snapshot.originalColumn, attribute.get());
+        AttributeSelector selector = new AttributeSelector(line, column, attribute.get());
         if (type.isPresent()) {
             selector.match(type.get(), value.get().trim());
         }
