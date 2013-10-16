@@ -95,4 +95,32 @@ public final class SingleInterestBroadcaster<T extends Broadcastable> extends Ab
         this.broadcasted = null;
         return this;
     }
+
+    /**
+     * Convenience method to create a new {@link SingleInterestBroadcaster} instance.
+     *
+     * @param klass
+     *     Class of the expected broadcastable.
+     * @param <E>
+     *     The expected broadcastable type.
+     *
+     * @return The new instance.
+     */
+    public static <E extends Broadcastable> SingleInterestBroadcaster<E> of(Class<E> klass) {
+        return new SingleInterestBroadcaster<>(klass);
+    }
+
+    /**
+     * @param klass
+     *     Class of the expected broadcastable.
+     * @param relay
+     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     * @param <E>
+     *     The expected broadcastable type.
+     *
+     * @return The new instance.
+     */
+    public static <E extends Broadcastable> SingleInterestBroadcaster<E> of(Class<E> klass, Broadcaster relay) {
+        return new SingleInterestBroadcaster<>(klass, relay);
+    }
 }
