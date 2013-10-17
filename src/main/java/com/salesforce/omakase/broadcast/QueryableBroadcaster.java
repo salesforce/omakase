@@ -125,4 +125,13 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
         }
         return found;
     }
+
+    /**
+     * Gets the total number of broadcasted units.
+     *
+     * @return The number of broadcasted units.
+     */
+    public int count() {
+        return collected.size();
+    }
 }

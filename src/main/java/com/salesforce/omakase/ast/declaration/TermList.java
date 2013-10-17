@@ -53,6 +53,11 @@ public final class TermList extends AbstractPropertyValue {
     private final SyntaxCollection<TermList, TermListMember> members;
     private boolean important;
 
+    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
+    public TermList() {
+        this(-1, -1, null);
+    }
+
     /**
      * Constructs a new {@link TermList} instance.
      *
@@ -66,11 +71,6 @@ public final class TermList extends AbstractPropertyValue {
     public TermList(int line, int column, Broadcaster broadcaster) {
         super(line, column);
         members = StandardSyntaxCollection.create(this, broadcaster);
-    }
-
-    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
-    public TermList() {
-        this.members = StandardSyntaxCollection.create(this);
     }
 
     /**
@@ -155,7 +155,6 @@ public final class TermList extends AbstractPropertyValue {
 
     @Override
     public boolean isWritable() {
-        // TESTME
         return !members.isEmptyOrAllDetached();
     }
 

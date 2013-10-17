@@ -36,7 +36,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class HexColorValueParserTest extends AbstractParserTest<HexColorValueParser> {
-
     @Override
     public List<String> invalidSources() {
         return ImmutableList.of(

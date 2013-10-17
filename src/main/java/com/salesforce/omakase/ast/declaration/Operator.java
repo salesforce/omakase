@@ -63,6 +63,15 @@ public final class Operator extends AbstractGroupable<TermList, TermListMember> 
         status(Status.NEVER_EMIT);
     }
 
+    /**
+     * Gets the {@link OperatorType}.
+     *
+     * @return The {@link OperatorType}.
+     */
+    public OperatorType type() {
+        return type;
+    }
+
     @Override
     protected TermListMember self() {
         return this;

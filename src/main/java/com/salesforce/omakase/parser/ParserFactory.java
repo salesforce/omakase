@@ -16,17 +16,13 @@
 
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
-import com.salesforce.omakase.parser.declaration.FunctionValueParser;
-import com.salesforce.omakase.parser.declaration.HexColorValueParser;
-import com.salesforce.omakase.parser.declaration.ImportantParser;
-import com.salesforce.omakase.parser.declaration.KeywordValueParser;
-import com.salesforce.omakase.parser.declaration.NumericalValueParser;
-import com.salesforce.omakase.parser.declaration.StringValueParser;
-import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.declaration.*;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawRuleParser;
@@ -78,16 +74,22 @@ public final class ParserFactory {
     private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
     /* refined declaration values */
-    private static final Parser termList = new TermListParser();
-    private static final Parser important = new ImportantParser();
-
     private static final Parser numericalValue = new NumericalValueParser();
     private static final Parser functionValue = new FunctionValueParser();
     private static final Parser keywordValue = new KeywordValueParser();
     private static final Parser hexColorValue = new HexColorValueParser();
     private static final Parser stringValue = new StringValueParser();
 
-    private static final Parser term = numericalValue.or(functionValue).or(keywordValue).or(hexColorValue).or(stringValue);
+    private static final Parser term = numericalValue
+        .or(functionValue)
+        .or(keywordValue)
+        .or(hexColorValue)
+        .or(stringValue);
+
+    private static final Parser termSequence = new TermSequenceParser();
+    private static final Parser operator = new OperatorParser();
+    private static final Parser important = new ImportantParser();
+    private static final Parser termList = new TermListParser();
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -244,24 +246,6 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link TermListParser}.
-     *
-     * @return The parser instance.
-     */
-    public static Parser termListParser() {
-        return termList;
-    }
-
-    /**
-     * Gets the parser to parse a "important!" value.
-     *
-     * @return The parser instance.
-     */
-    public static Parser importantParser() {
-        return important;
-    }
-
-    /**
      * Gets the {@link NumericalValueParser}.
      *
      * @return The parser instance.
@@ -307,11 +291,55 @@ public final class ParserFactory {
     }
 
     /**
+     * Gets the {@link OperatorParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser operatorParser() {
+        return operator;
+    }
+
+    /**
+     * Gets the parser to parse a "important!" value.
+     *
+     * @return The parser instance.
+     */
+    public static Parser importantParser() {
+        return important;
+    }
+
+    /**
      * Gets the parser to parse a {@link Term} value.
+     * <p/>
+     * This differs from the other term parsers in that it parses just a single {@link Term}.
      *
      * @return The parser instance.
      */
     public static Parser termParser() {
         return term;
+    }
+
+    /**
+     * Gets the {@link TermSequenceParser}.
+     * <p/>
+     * This differs from the other term parsers in that it parses a list of both {@link Term}s AND {@link Operator}s, but it does
+     * not parse importants or broadcast a {@link TermList}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser termSequenceParser() {
+        return termSequence;
+    }
+
+    /**
+     * Gets the {@link TermListParser}.
+     * <p/>
+     * This differs from the other term parsers in that it parses a list of both {@link Term}s AND {@link Operator}s, plus it
+     * parses importants and broadcasts a {@link TermList}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser termListParser() {
+        return termList;
     }
 }

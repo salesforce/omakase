@@ -110,6 +110,25 @@ public class TermListTest {
     }
 
     @Test
+    public void isWritableIfHasNonDetachedTerm() {
+        TermList tl = TermList.singleValue(NumericalValue.of(1));
+        assertThat(tl.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isNotWritableWhenAllTermsDetached() {
+        TermList tl = TermList.singleValue(NumericalValue.of(1));
+        tl.members().first().get().detach();
+        assertThat(tl.isWritable()).isFalse();
+    }
+
+    @Test
+    public void isNotWritableWhenNoTerms() {
+        TermList tl = new TermList();
+        assertThat(tl.isWritable()).isFalse();
+    }
+
+    @Test
     public void writeWhenNotImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);

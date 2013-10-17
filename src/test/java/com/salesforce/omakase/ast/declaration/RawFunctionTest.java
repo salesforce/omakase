@@ -16,36 +16,32 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.test.util.Util;
-import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link Operator}.
+ * Unit tests for {@link RawFunction}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class OperatorTest {
+public class RawFunctionTest {
     @Test
-    public void testGetType() {
-        Operator operator = new Operator(OperatorType.COMMA);
-        assertThat(operator.type()).isSameAs(OperatorType.COMMA);
+    public void testName() {
+        RawFunction raw = new RawFunction(1, 1, "name", "args args");
+        assertThat(raw.name()).isEqualTo("name");
+
+        raw.name("changed");
+        assertThat(raw.name()).isEqualTo("changed");
     }
 
     @Test
-    public void testWrite() throws IOException {
-        Operator operator = new Operator(OperatorType.COMMA);
-        assertThat(StyleWriter.compressed().writeSnippet(operator)).isEqualTo(",");
-    }
+    public void testArgs() {
+        RawFunction raw = new RawFunction(1, 1, "name", "args args");
+        assertThat(raw.args()).isEqualTo("args args");
 
-    @Test
-    public void toStringTest() {
-        Operator operator = new Operator(OperatorType.SLASH);
-        assertThat(operator.toString()).isNotEqualTo(Util.originalToString(operator));
+        raw.args("changed");
+        assertThat(raw.args()).isEqualTo("changed");
     }
 }

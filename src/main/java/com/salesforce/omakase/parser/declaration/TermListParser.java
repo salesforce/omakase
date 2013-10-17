@@ -16,19 +16,14 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.google.common.base.Optional;
-import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.declaration.TermList;
+import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link TermList}.
@@ -45,73 +40,25 @@ public final class TermListParser extends AbstractParser {
         int line = source.originalLine();
         int column = source.originalColumn();
 
-        // setup
-        TermList termList = null;
-        Optional<Term> term;
-        Optional<OperatorType> operator = Optional.absent();
-        SingleInterestBroadcaster<Term> termBroadcaster = new SingleInterestBroadcaster<>(Term.class, broadcaster);
-
-        // try parsing another term until there are no more term operators
-        do {
-            source.collectComments();
-
-            // try to parse a term
-            ParserFactory.termParser().parse(source, termBroadcaster.reset(), refiner);
-            term = termBroadcaster.broadcasted();
-
-            // if we have a term, add it to the list
-            if (term.isPresent()) {
-                // delayed creation of the term list
-                if (termList == null) {
-                    termList = new TermList(line, column, broadcaster);
-                }
-
-                // add the previous operator as a member to term list before adding the term
-                if (operator.isPresent()) {
-                    termList.append(operator.get());
-                }
-
-                // add the term to the list
-                termList.append(term.get());
-
-                // try to parse another term operator. The presence of a space *could* be the "single space" term
-                // operator. Or it could just be whitespace around another term operator.
-                source.collectComments(false);
-                boolean mightBeSpaceOperator = source.optionallyPresent(Tokens.WHITESPACE);
-
-                // if we already know that a space is present, we must skip past all other whitespace
-                if (mightBeSpaceOperator) {
-                    source.skipWhitepace();
-                }
-
-                // after we've already checked for the single space operator, it's ok to consume comments and surrounding
-                // whitespace.
-                source.collectComments();
-
-                // see if there is an actual non-space operator
-                operator = source.optionalFromEnum(OperatorType.class);
-
-                // if no operator is parsed and we parsed at least one space then we know it's a single space operator
-                if (mightBeSpaceOperator && !operator.isPresent()) {
-                    operator = Optional.of(OperatorType.SPACE);
-                }
-            } else {
-                // if we didn't find a term but we did find a non-space operator then it's an erroneous trailing operator
-                if (operator.isPresent() && operator.get() != OperatorType.SPACE) {
-                    throw new ParserException(source, Message.TRAILING_OPERATOR, operator.get());
-                }
-                operator = Optional.absent();
-            }
-        } while (operator.isPresent());
+        // parse terms and operators
+        QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+        ParserFactory.termSequenceParser().parse(source, qb, refiner);
 
         // if no terms were parsed then return false
-        if (termList == null) return false;
+        if (qb.count() == 0) return false;
+
+        // create the term list and add the members
+        TermList termList = new TermList(line, column, broadcaster);
+        termList.members().appendAll(qb.filter(TermListMember.class));
 
         // check for !important
         termList.important(ParserFactory.importantParser().parse(source, broadcaster, refiner));
 
-        // broadcast the new term list
-        broadcaster.broadcast(termList);
+        // broadcast the new term list. we set propagate as true to allow for custom functions that did not broadcast
+        // their terms during refinement (because it is not desired for the parsed terms to be directly added to this term list)
+        // to have their inner terms broadcasted now.
+        broadcaster.broadcast(termList, true);
+
         return true;
     }
 }

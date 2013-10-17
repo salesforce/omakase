@@ -32,6 +32,11 @@ public interface Parser {
     /**
      * Parse from the current position of the given source, notifying the given {@link Broadcaster} of any applicable events and
      * data.
+     * <p/>
+     * <b>Important:</b> This method should only be used in limited circumstances. For example, doing partial content parsing.
+     * <p/>
+     * Generally speaking, if you have a {@link Refiner} instance given to you then you should use {@link #parse(Source,
+     * Broadcaster, Refiner)} almost always, as it will perform a lot better.
      *
      * @param source
      *     The source to parse.

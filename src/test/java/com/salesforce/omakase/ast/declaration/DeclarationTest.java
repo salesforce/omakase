@@ -16,24 +16,22 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.broadcast.AbstractBroadcaster;
-import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-import java.util.Set;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Declaration}. */
 @SuppressWarnings("JavaDoc")
@@ -297,22 +295,48 @@ public class DeclarationTest {
         assertThat(d.isWritable()).isFalse();
     }
 
-    private static final class StatusChangingBroadcaster extends AbstractBroadcaster {
-        private final Set<Broadcastable> all = Sets.newHashSet();
+    @Test
+    public void isWritableWhenUnrefinedAndAttached() {
+        RawSyntax name = new RawSyntax(2, 3, "border");
+        RawSyntax value = new RawSyntax(2, 5, "1px solid red");
+        Declaration d = new Declaration(name, value, new Refiner(new StatusChangingBroadcaster()));
+        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        rule.declarations().append(d);
+        assertThat(d.isWritable()).isTrue();
+    }
 
-        @Override
-        public void broadcast(Broadcastable broadcastable) {
-            if (all.contains(broadcastable)) {
-                fail("unit shouldn't be broadcasted twice!");
-            }
-            all.add(broadcastable);
-            broadcastable.status(Status.PROCESSED);
-        }
+    @Test
+    public void isNotWritableWhenPropertyValueNotWritable() {
+        Declaration d = new Declaration(Property.DISPLAY, new TestPropertyValue());
+        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        rule.declarations().append(d);
+        assertThat(d.isWritable()).isFalse();
     }
 
     @Test
     public void toStringTest() {
         Declaration value = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
+    }
+
+    private static final class TestPropertyValue extends AbstractPropertyValue {
+        @Override
+        public boolean isWritable() {
+            return false;
+        }
+
+        @Override
+        public boolean isImportant() {
+            return false;
+        }
+
+        @Override
+        public PropertyValue important(boolean important) {
+            return this;
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
     }
 }

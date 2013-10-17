@@ -145,6 +145,15 @@ public class QueryableBroadcasterTest {
         assertThat(sample1.status()).isSameAs(Status.QUEUED);
     }
 
+    @Test
+    public void count() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        qb.broadcast(sample1);
+        qb.broadcast(sample1a);
+        qb.broadcast(sample1b);
+        assertThat(qb.count()).isEqualTo(3);
+    }
+
     public static final class InnerBroadcaster implements Broadcaster {
         boolean called = false;
 

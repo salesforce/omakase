@@ -31,7 +31,7 @@ import static org.fest.assertions.api.Assertions.fail;
  * @author nmcwilliams
  */
 public final class StatusChangingBroadcaster extends AbstractBroadcaster {
-    private final Set<Broadcastable> all = Sets.newHashSet();
+    public final Set<Broadcastable> all = Sets.newHashSet();
 
     @Override
     public void broadcast(Broadcastable broadcastable) {
