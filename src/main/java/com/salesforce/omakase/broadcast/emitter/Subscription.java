@@ -79,7 +79,7 @@ final class Subscription {
             throw new SubscriptionException("Subscription method is not accessible", e);
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof OmakaseException) throw (OmakaseException)e.getCause();
-            throw new SubscriptionException("A problem was encountered while invoking the subscription method (see cause)", e);
+            throw new SubscriptionException("A problem was encountered while invoking the subscription method", e);
         }
     }
 

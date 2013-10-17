@@ -55,6 +55,6 @@ public class SubscriptionException extends OmakaseException {
      *     The underlying cause.
      */
     public SubscriptionException(String message, Throwable cause) {
-        super(message, cause);
+        super(message + ":\n  " + cause.getMessage(), cause);
     }
 }
