@@ -21,6 +21,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.writer.Writable;
 
 /**
  * A collection of related {@link Syntax} units.
@@ -55,6 +56,15 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
      * @see Groupable#isDetached()
      */
     boolean isEmptyOrAllDetached();
+
+    /**
+     * Gets whether this collection is empty, or all contained elements are not writable.
+     *
+     * @return True if there are no units in this collection or all units are not writable.
+     *
+     * @see Writable#isWritable()
+     */
+    boolean isEmptyOrNoneWritable();
 
     /**
      * Gets whether the given unit is contained within this collection.

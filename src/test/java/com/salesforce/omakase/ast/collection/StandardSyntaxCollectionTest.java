@@ -82,6 +82,26 @@ public class StandardSyntaxCollectionTest {
     }
 
     @Test
+    public void isEmptyOrNoneWritableTrueWhenEmpty() {
+        assertThat(collection.isEmpty()).isTrue();
+        assertThat(collection.isEmptyOrNoneWritable()).isTrue();
+    }
+
+    @Test
+    public void isEmptyOrNonWritableFalse() {
+        collection.append(child1);
+        assertThat(child1.isWritable()).isTrue();
+        assertThat(collection.isEmptyOrNoneWritable()).isFalse();
+    }
+
+    @Test
+    public void isEmptyOrNoneWritableTrue() {
+        SyntaxCollection<Parent, ChildNotWritable> c = StandardSyntaxCollection.create(new Parent());
+        c.append(new ChildNotWritable());
+        assertThat(collection.isEmptyOrNoneWritable()).isTrue();
+    }
+
+    @Test
     public void containsTrue() {
         collection.append(child1).append(child3);
         assertThat(collection.contains(child3)).isTrue();
@@ -319,7 +339,22 @@ public class StandardSyntaxCollectionTest {
 
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-            //noop
+        }
+    }
+
+    private static final class ChildNotWritable extends AbstractGroupable<Parent, ChildNotWritable> implements Syntax {
+        @Override
+        protected ChildNotWritable self() {
+            return this;
+        }
+
+        @Override
+        public boolean isWritable() {
+            return false;
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         }
     }
 }

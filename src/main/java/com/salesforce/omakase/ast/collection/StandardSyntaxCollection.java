@@ -95,6 +95,15 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
+    public boolean isEmptyOrNoneWritable() {
+        for (T unit : list) {
+            if (unit.isWritable()) return false;
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean contains(T unit) {
         return list.contains(unit);
     }

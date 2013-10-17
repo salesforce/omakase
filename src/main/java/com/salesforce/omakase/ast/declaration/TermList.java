@@ -155,7 +155,7 @@ public final class TermList extends AbstractPropertyValue {
 
     @Override
     public boolean isWritable() {
-        return !members.isEmptyOrAllDetached();
+        return !members.isEmptyOrNoneWritable();
     }
 
     @Override

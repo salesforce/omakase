@@ -116,9 +116,8 @@ public class TermListTest {
     }
 
     @Test
-    public void isNotWritableWhenAllTermsDetached() {
-        TermList tl = TermList.singleValue(NumericalValue.of(1));
-        tl.members().first().get().detach();
+    public void isNotWritableWhenNoTermsAreWritable() {
+        TermList tl = TermList.singleValue(new NonWritableTerm());
         assertThat(tl.isWritable()).isFalse();
     }
 
@@ -189,6 +188,17 @@ public class TermListTest {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    private static final class NonWritableTerm extends AbstractTerm {
+        @Override
+        public boolean isWritable() {
+            return false;
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         }
     }
 }
