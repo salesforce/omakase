@@ -76,12 +76,13 @@ public interface Syntax extends Writable, Broadcastable {
      * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
      * Declaration} itself instead of the property name or value inside of it.
      *
+     *
      * @param commentsToAdd
      *     The comments to add.
      *
      * @return this, for chaining.
      */
-    Syntax comments(Iterable<String> commentsToAdd);
+    Syntax comments(List<String> commentsToAdd);
 
     /**
      * Adds the given comments to this unit.
@@ -90,12 +91,13 @@ public interface Syntax extends Writable, Broadcastable {
      * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
      * Declaration} itself instead of the property name or value inside of it.
      *
+     *
      * @param commentsToAdd
      *     The comments to add.
      *
      * @return this, for chaining.
      */
-    Syntax directComments(Iterable<Comment> commentsToAdd);
+    Syntax directComments(List<Comment> commentsToAdd);
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.

@@ -83,8 +83,7 @@ public final class ConditionalsRefinerStrategy implements AtRuleRefinerStrategy 
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_CONDITIONAL_CONTENT, source.remaining());
 
         // setup stuff for parsing inner statements
-        RawSyntax rawBlock = atRule.rawBlock().get();
-        source = new Source(rawBlock.content(), rawBlock.line(), rawBlock.column());
+        source = new Source(atRule.rawBlock().get());
 
         // we want to hold off emitting statements until they get shuffled into a syntax collection. This is so that any plugins
         // that depend on order (appending, prepending, etc...) will work.

@@ -537,13 +537,12 @@ public final class Source {
             char current = chars[index];
 
             if (!inString) {
-                boolean escaped = isEscaped();
                 // check for closing parenthesis
-                if (OPEN_PAREN.matches(current) && !escaped) {
+                if (OPEN_PAREN.matches(current) && !isEscaped()) {
                     insideParens = true;
-                } else if (insideParens && CLOSE_PAREN.matches(current) && !escaped) {
+                } else if (insideParens && CLOSE_PAREN.matches(current) && !isEscaped()) {
                     insideParens = false;
-                } else if (!insideParens && token.matches(current) && !escaped) {
+                } else if (!insideParens && token.matches(current) && !isEscaped()) {
                     // if unescaped then this is the matching token
                     return new String(chars, start, index - start);
                 }

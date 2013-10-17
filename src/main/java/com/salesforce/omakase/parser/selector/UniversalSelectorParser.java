@@ -36,14 +36,14 @@ public final class UniversalSelectorParser extends AbstractParser {
         source.collectComments(false);
 
         // snapshot the current state before parsing
-        Source.Snapshot snapshot = source.snapshot();
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // first character must be a dot
-        boolean matched = source.optionallyPresent(Tokens.STAR);
-        if (!matched) return false;
+        if (!source.optionallyPresent(Tokens.STAR)) return false;
 
         // broadcast the new selector
-        UniversalSelector selector = new UniversalSelector(snapshot.originalLine, snapshot.originalColumn);
+        UniversalSelector selector = new UniversalSelector(line, column);
         selector.comments(source.flushComments());
         broadcaster.broadcast(selector);
         return true;

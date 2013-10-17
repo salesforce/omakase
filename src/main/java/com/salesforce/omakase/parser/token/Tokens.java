@@ -126,7 +126,7 @@ public enum Tokens implements Token {
     HYPHEN_OR_DIGIT(is('-').or(inRange('0', '9')), "hyphen or digit"),
 
     /** a token that never matches */
-    NEVER_MATCH(CharMatcher.forPredicate(Predicates.alwaysFalse()), "a token that never matches");
+    NEVER_MATCH(forPredicate(Predicates.alwaysFalse()), "a token that never matches");
 
     private final char singleChar;
     private final boolean isSingleChar;

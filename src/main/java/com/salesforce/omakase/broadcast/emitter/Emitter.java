@@ -31,6 +31,7 @@ import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -62,8 +63,8 @@ public final class Emitter {
         });
 
     /* order is important so that subscribers are notified in the order they were registered, hence linked map */
-    private final LinkedHashMap<Class<?>, Set<Subscription>> processors = new LinkedHashMap<>(32);
-    private final LinkedHashMap<Class<?>, Set<Subscription>> validators = new LinkedHashMap<>(32);
+    private final Map<Class<?>, Set<Subscription>> processors = new LinkedHashMap<>(32);
+    private final Map<Class<?>, Set<Subscription>> validators = new LinkedHashMap<>(32);
 
     private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
 
@@ -136,18 +137,15 @@ public final class Emitter {
      *     The {@link ErrorManager} instance.
      */
     public void emit(Object event, ErrorManager em) {
-        switch (phase) {
-        case PROCESS:
+        if (phase == SubscriptionPhase.PROCESS)
             emit(processors, event, em);
-            break;
-        case VALIDATE:
+        else {
             emit(validators, event, em);
-            break;
         }
     }
 
     /** handles emits for a particular phase */
-    private void emit(LinkedHashMap<Class<?>, Set<Subscription>> map, Object event, ErrorManager em) {
+    private void emit(Map<Class<?>, Set<Subscription>> map, Object event, ErrorManager em) {
         Class<?> eventType = event.getClass();
 
         // for each subscribable type in the event's hierarchy, inform each subscription to that type

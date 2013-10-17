@@ -115,7 +115,7 @@ public class PerfTestLight {
             perfRun.linesOfCode = loc;
 
             // take an average of 7 runs
-            final int runs = 7;
+            final int runs = 3;
 
             // omakase thin
             List<Long> omakaseParseTimes = Lists.newArrayListWithCapacity(runs);

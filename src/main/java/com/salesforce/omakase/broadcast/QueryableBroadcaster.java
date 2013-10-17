@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public final class QueryableBroadcaster extends AbstractBroadcaster {
     /** important to maintain broadcast order */
-    private final List<Broadcastable> collected = new ArrayList<>();
+    private final List<Broadcastable> collected = new ArrayList<>(32);
 
     /**
      * Constructs a new {@link QueryableBroadcaster} instance that will <em>not</em> relay any events to another {@link

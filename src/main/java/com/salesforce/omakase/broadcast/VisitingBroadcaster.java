@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public final class VisitingBroadcaster extends AbstractBroadcaster {
-    private final List<Broadcastable> list = Lists.newArrayList();
+    private final List<Broadcastable> list = Lists.newArrayListWithExpectedSize(64);
     private boolean visiting;
 
     /**
