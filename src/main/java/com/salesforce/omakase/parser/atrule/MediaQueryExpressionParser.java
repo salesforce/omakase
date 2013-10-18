@@ -31,8 +31,6 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME
- * <p/>
  * Parsers a {@link MediaQueryExpression}.
  * <p/>
  * In the following example:
@@ -48,30 +46,40 @@ public class MediaQueryExpressionParser extends AbstractParser {
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();
 
+        // grab the current position before parsing anything
         int line = source.originalLine();
         int column = source.originalColumn();
 
+        // check for the open paren
         if (!source.optionallyPresent(Tokens.OPEN_PAREN)) return false;
 
         source.skipWhitepace();
 
-        Optional<String> ident = source.readIdent();
-
-        if (!ident.isPresent()) throw new ParserException(source, Message.MISSING_FEATURE);
+        // read the feature name
+        Optional<String> feature = source.readIdent();
+        if (!feature.isPresent()) throw new ParserException(source, Message.MISSING_FEATURE);
 
         source.skipWhitepace();
 
-        MediaQueryExpression expression = new MediaQueryExpression(line, column, ident.get());
+        MediaQueryExpression expression = new MediaQueryExpression(line, column, feature.get());
 
+        // read the optional terms
         if (source.optionallyPresent(Tokens.COLON)) {
             source.skipWhitepace();
 
             QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
             ParserFactory.termSequenceParser().parse(source, qb, refiner);
+
             Iterable<TermListMember> terms = qb.filter(TermListMember.class);
             if (Iterables.isEmpty(terms)) throw new ParserException(source, Message.MISSING_MEDIA_TERMS);
+
             expression.terms(terms);
         }
+
+        source.skipWhitepace();
+
+        // parse closing paren
+        source.expect(Tokens.CLOSE_PAREN);
 
         broadcaster.broadcast(expression);
         return true;

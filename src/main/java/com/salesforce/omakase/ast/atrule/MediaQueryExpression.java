@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
@@ -29,8 +30,6 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME
- * <p/>
  * Represents a media query expression.
  * <p/>
  * In the following example:
@@ -42,32 +41,76 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see MediaQueryExpressionParser
  */
 public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, MediaQueryExpression> {
-    private String feature;
     private List<TermListMember> terms;
+    private String feature;
 
+    /**
+     * Creates a new {@link MediaQueryExpression} instance.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     *
+     * @param feature
+     *     The media feature name, e.g., "min-width".
+     */
     public MediaQueryExpression(String feature) {
         this(-1, -1, feature);
     }
 
+    /**
+     * Creates a new {@link MediaQueryExpression} instance.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param feature
+     *     The media feature name, e.g., "min-width".
+     */
     public MediaQueryExpression(int line, int column, String feature) {
         super(line, column);
         feature(feature);
     }
 
+    /**
+     * Sets the terms and operators in this {@link MediaQueryExpression}.
+     *
+     * @param terms
+     *     The list of terms and operators.
+     *
+     * @return this, for chaining.
+     */
     public MediaQueryExpression terms(Iterable<TermListMember> terms) {
         this.terms = Lists.newArrayList(checkNotNull(terms, "terms cannot be null"));
         return this;
     }
 
+    /**
+     * Gets the list of terms and operators.
+     *
+     * @return The list of  terms and operators.
+     */
     public List<TermListMember> terms() {
         return terms != null ? terms : Lists.<TermListMember>newArrayList();
     }
 
-    private MediaQueryExpression feature(String feature) {
+    /**
+     * Sets the media feature name.
+     *
+     * @param feature
+     *     The media feature, e.g., "min-width".
+     *
+     * @return this, for chaining.
+     */
+    public MediaQueryExpression feature(String feature) {
         this.feature = checkNotNull(feature, "feature cannot be null");
         return this;
     }
 
+    /**
+     * Gets the media feature name.
+     *
+     * @return The media feature name.
+     */
     public String feature() {
         return feature;
     }
@@ -86,7 +129,7 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
         appendable.append(feature);
 
         // the terms
-        if (!terms.isEmpty()) {
+        if (terms != null && !terms.isEmpty()) {
             appendable.append(':');
             appendable.spaceIf(!writer.isCompressed());
 
@@ -97,5 +140,10 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
 
         // closing parent
         appendable.append(')');
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).add("feature", feature).add("terms", terms).toString();
     }
 }
