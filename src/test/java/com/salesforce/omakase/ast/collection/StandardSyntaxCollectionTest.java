@@ -327,6 +327,46 @@ public class StandardSyntaxCollectionTest {
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
     }
 
+    @Test
+    public void testNextPresent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.next(child1).get()).isSameAs(child2);
+    }
+
+    @Test
+    public void testNextAbsent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.next(child2).isPresent()).isFalse();
+    }
+
+    @Test
+    public void errorsIfNextNotPresent() {
+        exception.expect(IllegalArgumentException.class);
+        collection.next(child1);
+    }
+
+    @Test
+    public void textPreviousPresent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.previous(child2).get()).isSameAs(child1);
+    }
+
+    @Test
+    public void testPreviousAbsent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.previous(child1).isPresent()).isFalse();
+    }
+
+    @Test
+    public void errorsIfPreviousNotPresent() {
+        exception.expect(IllegalArgumentException.class);
+        collection.previous(child1);
+    }
+
     private static final class Parent {
         private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
     }

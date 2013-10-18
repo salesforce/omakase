@@ -75,19 +75,16 @@ public abstract class AbstractGroupable<P, T extends Syntax & Groupable<P, T>> e
 
     @Override
     public Optional<T> previous() {
-        // TESTME
         return isDetached() ? Optional.<T>absent() : group.previous(self());
     }
 
     @Override
     public Optional<T> next() {
-        // TESTME
         return isDetached() ? Optional.<T>absent() : group.next(self());
     }
 
     @Override
     public boolean haxNextAndNextNotDetached() {
-        // TESTME
         Optional<T> next = next();
         return next.isPresent() && !next.get().isDetached();
     }

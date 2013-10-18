@@ -120,16 +120,14 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public Optional<T> next(T unit) {
-        // TESTME
         int index = list.indexOf(unit);
         if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
-        if (index >= list.size()) return Optional.absent();
+        if (index >= list.size() - 1) return Optional.absent();
         return Optional.of(list.get(index + 1));
     }
 
     @Override
     public Optional<T> previous(T unit) {
-        // TESTME
         int index = list.indexOf(unit);
         if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
         if (index == 0) return Optional.absent();

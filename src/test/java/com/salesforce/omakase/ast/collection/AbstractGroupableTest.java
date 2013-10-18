@@ -207,6 +207,41 @@ public class AbstractGroupableTest {
         assertThat(child1.parent().isPresent()).isFalse();
     }
 
+    @Test
+    public void previousWhenDetached() {
+        assertThat(child1.previous().isPresent()).isFalse();
+    }
+
+    @Test
+    public void getPrevious() {
+        parent.collection.append(child1).append(child2);
+        assertThat(child2.previous().get()).isSameAs(child1);
+    }
+
+    @Test
+    public void nextWhenDetached() {
+        assertThat(child1.next().isPresent()).isFalse();
+    }
+
+    @Test
+    public void getNext() {
+        parent.collection.append(child1).append(child2);
+        assertThat(child1.next().get()).isSameAs(child2);
+    }
+
+    @Test
+    public void hasNextAndNextNotDetachedTrue() {
+        parent.collection.append(child1).append(child2);
+        assertThat(child1.haxNextAndNextNotDetached()).isTrue();
+    }
+
+    @Test
+    public void hasNextAndNextNotDetachedFalse() {
+        parent.collection.append(child1).append(child2);
+        child2.detach();
+        assertThat(child1.haxNextAndNextNotDetached()).isFalse();
+    }
+
     private static final class Parent {
         private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
     }
