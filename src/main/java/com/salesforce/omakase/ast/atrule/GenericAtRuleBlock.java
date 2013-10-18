@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -28,8 +29,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * TESTME
- * <p/>
  * A generic wrapper containing a list of statements. This is used for refined {@link AtRule}s (standard or custom) that contain a
  * simple list of statements inside the block.
  *
@@ -37,6 +36,17 @@ import java.io.IOException;
  */
 public final class GenericAtRuleBlock extends AbstractSyntax implements AtRuleBlock {
     private final SyntaxCollection<Stylesheet, Statement> statements;
+
+    /**
+     * Creates a new {@link GenericAtRuleBlock} instance. Be sure to call {@link #propagateBroadcast(Broadcaster)} as soon as a
+     * broadcaster is available.
+     *
+     * @param parent
+     *     The parent stylesheet.
+     */
+    public GenericAtRuleBlock(Stylesheet parent) {
+        this(parent, ImmutableList.<Statement>of(), null);
+    }
 
     /**
      * Creates a new {@link GenericAtRuleBlock} instance.
