@@ -41,7 +41,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see MediaQueryExpression
  */
-public class MediaQueryExpressionParser extends AbstractParser {
+public final class MediaQueryExpressionParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();

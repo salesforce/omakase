@@ -30,8 +30,6 @@ import java.io.IOException;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * TESTME
- * <p/>
  * Represents a media query.
  * <p/>
  * In the following example:
@@ -48,42 +46,87 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQuery> {
     private Optional<String> type = Optional.absent();
-    private Optional<Restriction> restriction = Optional.absent();
+    private Optional<MediaRestriction> restriction = Optional.absent();
     private final SyntaxCollection<MediaQuery, MediaQueryExpression> expressions;
 
-    public enum Restriction {
-        ONLY,
-        NOT
-    }
-
+    /**
+     * Constructs a new {@link MediaQuery} instance.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     */
     public MediaQuery() {
         this(-1, -1, null);
     }
 
+    /**
+     * Constructs a new {@link MediaQuery} instance.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param broadcaster
+     *     Used for broadcasting.
+     */
     public MediaQuery(int line, int column, Broadcaster broadcaster) {
         super(line, column);
         this.expressions = StandardSyntaxCollection.create(this, broadcaster);
     }
 
-    public MediaQuery restriction(Restriction restriction) {
+    /**
+     * Sets the media restriction (only|not). The type must be present if the given value is not null.
+     *
+     * @param restriction
+     *     The restriction, or null to remove it.
+     *
+     * @return this, for chaining.
+     *
+     * @throws IllegalStateException
+     *     When setting the restriction to null but the type is still present.
+     */
+    public MediaQuery restriction(MediaRestriction restriction) {
         this.restriction = Optional.fromNullable(restriction);
         checkState(!this.restriction.isPresent() || type.isPresent(), "cannot have a restriction without a media type");
         return this;
     }
 
-    public Optional<Restriction> restriction() {
+    /**
+     * Gets the media restriction (only|not).
+     *
+     * @return The media restriction, or {@link Optional#absent()} if not present.
+     */
+    public Optional<MediaRestriction> restriction() {
         return restriction;
     }
 
+    /**
+     * Sets the media type (e.g., "screen" or "all"). Note that the type will be automatically lower-cased.
+     *
+     * @param type
+     *     The media type, or null to remove it.
+     *
+     * @return this, for chaining.
+     */
     public MediaQuery type(String type) {
         this.type = type != null ? Optional.of(type.toLowerCase()) : Optional.<String>absent();
         return this;
     }
 
+    /**
+     * Gets the media type, if present.
+     *
+     * @return The media type, or {@link Optional#absent()} if not present.
+     */
     public Optional<String> type() {
         return type;
     }
 
+    /**
+     * Gets the collection of expressions. You can add, remove or change the expression using the methods on the returned {@link
+     * SyntaxCollection} object.
+     *
+     * @return The expressions.
+     */
     public SyntaxCollection<MediaQuery, MediaQueryExpression> expressions() {
         return expressions;
     }
@@ -108,23 +151,24 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // the restriction
         if (restriction.isPresent()) {
-            appendable.append(restriction.get() == Restriction.ONLY ? "only" : "and");
+            writer.write(restriction.get(), appendable);
             appendable.space();
         }
 
-        // the feature (if feature == all then it can be left out)
+        // the type (if type == all then it can be left out)
         boolean printedType = false;
-        if (type.isPresent() && !type.get().equals("all")) {
+        if (restriction.isPresent() || (type.isPresent() && !type.get().equals("all"))) {
             printedType = true;
             appendable.append(type.get());
         }
 
+        // the expressions
         boolean isFirst = true;
         for (MediaQueryExpression expression : expressions) {
-            if (!isFirst || printedType) {
-                appendable.append(" and");
-                writer.write(expression, appendable);
+            if ((!isFirst || printedType) && expression.isWritable()) {
+                appendable.append(" and ");
             }
+            writer.write(expression, appendable);
             isFirst = false;
         }
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -24,38 +24,30 @@ import com.salesforce.omakase.writer.Writable;
 import java.io.IOException;
 
 /**
- * Represents the match type in an {@link AttributeSelector}.
+ * For media queries, represents the keywords 'and' and 'or'.
  *
  * @author nmcwilliams
  */
-public enum AttributeMatchType implements Writable, ConstantEnum {
-    /** exact attribute match */
-    EQUALS("="),
-    /** attributes with whitespace-separated words, one of which is a specific value */
-    INCLUDES("~="),
-    /** attribute has exact value, or value immediately followed by '-' */
-    DASHMATCH("|="),
-    /** attribute value starts with */
-    PREFIXMATCH("^="),
-    /** attribute value ends with */
-    SUFFIXMATCH("$="),
-    /** attribute value contains */
-    SUBSTRINGMATCH("*=");
+public enum MediaRestriction implements ConstantEnum, Writable {
+    /** 'only' keyword */
+    ONLY("only"),
+    /** 'not' keyword */
+    NOT("not");
 
-    private final String matcher;
+    private final String constant;
 
-    private AttributeMatchType(String matcher) {
-        this.matcher = matcher;
+    MediaRestriction(String constant) {
+        this.constant = constant;
     }
 
     @Override
     public String constant() {
-        return matcher;
+        return constant;
     }
 
     @Override
     public boolean caseSensitive() {
-        return true;
+        return false;
     }
 
     @Override
@@ -65,6 +57,6 @@ public enum AttributeMatchType implements Writable, ConstantEnum {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        appendable.append(matcher);
+        appendable.append(constant);
     }
 }

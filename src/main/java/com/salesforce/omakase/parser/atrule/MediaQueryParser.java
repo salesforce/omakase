@@ -17,6 +17,7 @@
 package com.salesforce.omakase.parser.atrule;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQuery;
 import com.salesforce.omakase.ast.atrule.MediaQueryExpression;
@@ -27,12 +28,11 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.token.Tokens;
 
-import static com.salesforce.omakase.ast.atrule.MediaQuery.Restriction;
+import com.salesforce.omakase.ast.atrule.MediaRestriction;
 
 /**
- * TESTME
- * <p/>
  * Parsers a {@link MediaQuery}.
  * <p/>
  * In the following example:
@@ -47,9 +47,7 @@ import static com.salesforce.omakase.ast.atrule.MediaQuery.Restriction;
  * @author nmcwilliams
  * @see MediaQuery
  */
-public class MediaQueryParser extends AbstractParser {
-    private static final String NOT = "not";
-    private static final String ONLY = "only";
+public final class MediaQueryParser extends AbstractParser {
     private static final String AND = "and";
 
     @Override
@@ -60,52 +58,48 @@ public class MediaQueryParser extends AbstractParser {
         int line = source.originalLine();
         int column = source.originalColumn();
 
-        Restriction restriction = null;
-        String type = null;
+        // read the optional restriction and type
+        Optional<MediaRestriction> restriction = source.optionalFromConstantEnum(MediaRestriction.class);
+        Source.Snapshot snapshot = source.skipWhitepace().snapshot();
+        Optional<String> type = source.readIdent();
 
-        Optional<String> ident = source.readIdent();
-        if (ident.isPresent()) {
-            // the ident could be a restriction (only|not) or it could be the media type
-            if (ident.get().equalsIgnoreCase(NOT)) {
-                restriction = Restriction.NOT;
-            } else if (ident.get().equalsIgnoreCase(ONLY)) {
-                restriction = Restriction.ONLY;
-            } else {
-                type = ident.get();
-            }
-
-            // if it was a restriction then the media type is required
-            if (restriction != null) {
-                source.skipWhitepace();
-                ident = source.readIdent();
-                if (!ident.isPresent()) throw new ParserException(source, Message.MISSING_MEDIA_TYPE);
-                type = ident.get();
-            }
+        // if restriction is present then there must be a type ('and' is not a type)
+        if (restriction.isPresent() && (!type.isPresent() || type.get().equalsIgnoreCase(AND))) {
+            snapshot.rollback(Message.MISSING_MEDIA_TYPE);
         }
 
         source.skipWhitepace();
 
-        boolean readAnd = type != null && source.readConstant(AND);
+        // 'and' is required before an expression if the type is present
+        boolean readAnd = type.isPresent() && source.readConstantCaseInsensitive(AND);
+        if (readAnd) {
+            source.expect(Tokens.WHITESPACE);// space required after and
+        }
 
-        Source.Snapshot snapshot = source.snapshot();
+        snapshot = source.snapshot();
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
 
-        if (ParserFactory.mediaExpressionParser().parse(source, qb, refiner) && type != null && !readAnd) {
+        // try reading one expression. if there was a type then we must have parsed an 'and' beforehand
+        if (ParserFactory.mediaExpressionParser().parse(source, qb, refiner) && type.isPresent() && !readAnd) {
             snapshot.rollback(Message.MISSING_AND);
         }
 
-        source.skipWhitepace();
-
-        while (source.readConstant(AND)) {
-            source.skipWhitepace();
+        // read the rest of the expressions
+        while (source.skipWhitepace().readConstantCaseInsensitive(AND)) {
+            source.expect(Tokens.WHITESPACE).skipWhitepace();
             if (!ParserFactory.mediaExpressionParser().parse(source, qb, refiner)) {
                 throw new ParserException(source, Message.TRAILING_AND);
             }
-            source.skipWhitepace();
         }
 
-        MediaQuery query = new MediaQuery(line, column, broadcaster).restriction(restriction).type(type);
-        query.expressions().appendAll(qb.filter(MediaQueryExpression.class));
+        Iterable<MediaQueryExpression> expressions = qb.filter(MediaQueryExpression.class);
+
+        // if we haven't parsed a type (and thus no restriction either) and no expressions, return false
+        if (!type.isPresent() && Iterables.isEmpty(expressions)) return false;
+
+        // create and broadcast the media query
+        MediaQuery query = new MediaQuery(line, column, broadcaster);
+        query.type(type.orNull()).restriction(restriction.orNull()).expressions().appendAll(expressions);
         broadcaster.broadcast(query);
         return true;
     }

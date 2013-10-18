@@ -331,17 +331,49 @@ public class SourceTest {
     }
 
     @Test
-    public void optionalFromConstantEnumMatches() {
-        Source source = new Source("123 abc");
-        Optional<EnumWithConstants> matched = source.optionalFromConstantEnum(EnumWithConstants.class);
-        assertThat(matched.get()).isSameAs(EnumWithConstants.TWO);
+    public void constantEnumCaseInsensitiveMatchesCase() {
+        Source source = new Source("abc  1");
+        Optional<ConstantsCaseInsensitive> matched = source.optionalFromConstantEnum(ConstantsCaseInsensitive.class);
+        assertThat(matched.get()).isSameAs(ConstantsCaseInsensitive.ONE);
         assertThat(source.index()).isEqualTo(3);
     }
 
     @Test
-    public void optionalFromConstantEnumDoesntMatch() {
-        Source source = new Source("foobar 123 abc");
-        Optional<EnumWithConstants> matched = source.optionalFromConstantEnum(EnumWithConstants.class);
+    public void constantEnumCaseInsensitiveMatchesUpperCase() {
+        Source source = new Source("ABC  1");
+        Optional<ConstantsCaseInsensitive> matched = source.optionalFromConstantEnum(ConstantsCaseInsensitive.class);
+        assertThat(matched.get()).isSameAs(ConstantsCaseInsensitive.ONE);
+        assertThat(source.index()).isEqualTo(3);
+    }
+
+    @Test
+    public void optionalFromConstantEnumCaseInsensitiveDoesntMatch() {
+        Source source = new Source("foobar abc");
+        Optional<ConstantsCaseInsensitive> matched = source.optionalFromConstantEnum(ConstantsCaseInsensitive.class);
+        assertThat(matched.isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void constantEnumCaseSensitiveMatchesCase() {
+        Source source = new Source("abc  1");
+        Optional<ConstantsCaseSensitive> matched = source.optionalFromConstantEnum(ConstantsCaseSensitive.class);
+        assertThat(matched.get()).isSameAs(ConstantsCaseSensitive.ONE);
+        assertThat(source.index()).isEqualTo(3);
+    }
+
+    @Test
+    public void constantEnumCaseSensitiveMatchesUpperCase() {
+        Source source = new Source("ABC  1");
+        Optional<ConstantsCaseSensitive> matched = source.optionalFromConstantEnum(ConstantsCaseSensitive.class);
+        assertThat(matched.isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void optionalFromConstantEnumCaseSensitiveDoesntMatch() {
+        Source source = new Source("foobar abc");
+        Optional<ConstantsCaseSensitive> matched = source.optionalFromConstantEnum(ConstantsCaseSensitive.class);
         assertThat(matched.isPresent()).isFalse();
         assertThat(source.index()).isEqualTo(0);
     }
@@ -661,6 +693,24 @@ public class SourceTest {
     }
 
     @Test
+    public void readConstantCaseInsensitiveMatches() {
+        Source source = new Source("ABC DEF GHI");
+        boolean result = source.readConstantCaseInsensitive("abc");
+
+        assertThat(result).isTrue();
+        assertThat(source.index()).isEqualTo(3);
+    }
+
+    @Test
+    public void readConstantCaseInsensitiveDoesntMatch() {
+        Source source = new Source("ABC DEF GHI");
+        boolean result = source.readConstantCaseInsensitive("DEF");
+
+        assertThat(result).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
     public void readConstantEof() {
         Source source = new Source("abc");
         source.forward(3);
@@ -959,13 +1009,13 @@ public class SourceTest {
         }
     }
 
-    public enum EnumWithConstants implements ConstantEnum {
+    public enum ConstantsCaseInsensitive implements ConstantEnum {
         ONE("abc"),
         TWO("123");
 
         private final String constant;
 
-        EnumWithConstants(String constant) {
+        ConstantsCaseInsensitive(String constant) {
             this.constant = constant;
         }
 
@@ -973,5 +1023,32 @@ public class SourceTest {
         public String constant() {
             return constant;
         }
+
+        @Override
+        public boolean caseSensitive() {
+            return false;
+        }
+    }
+
+    public enum ConstantsCaseSensitive implements ConstantEnum {
+        ONE("abc"),
+        TWO("123");
+
+        private final String constant;
+
+        ConstantsCaseSensitive(String constant) {
+            this.constant = constant;
+        }
+
+        @Override
+        public String constant() {
+            return constant;
+        }
+
+        @Override
+        public boolean caseSensitive() {
+            return true;
+        }
+
     }
 }

@@ -60,14 +60,14 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
      */
     public abstract List<String> validSources();
 
+    /** A list of sources with the expected index after a successful parse. */
+    public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
+
     /**
      * A valid source that upon parsing should result in at least one broadcaster AST object. See {@link
      * #lineAndColumnForSubStreams()}. Return null if no AST objects are expected to be broadcasted.
      */
     public abstract String validSourceForPositionTesting();
-
-    /** A list of sources with the expected index after a successful parse. */
-    public abstract List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex();
 
     /**
      * Whether the parser is allowed to trim whitespace even if it doesn't successfully parse. (not allowed in some cases where

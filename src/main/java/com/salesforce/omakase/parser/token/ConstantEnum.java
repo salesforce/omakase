@@ -37,4 +37,13 @@ public interface ConstantEnum {
      * @return The constant value.
      */
     String constant();
+
+    /**
+     * Whether the constant is case-sensitive. Returning true is more performant.
+     * <p/>
+     * <b>Important:</b> if returning false (not case-sensitive), the value from {@link #constant()} must be lower-cased.
+     *
+     * @return True if the constant is case-sensitive, e.g., must match exactly.
+     */
+    boolean caseSensitive();
 }

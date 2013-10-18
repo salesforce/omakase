@@ -403,22 +403,25 @@ public final class Source {
      * If the current character is whitespace then skip it along with all subsequent whitespace characters.
      * <p/>
      * This doesn't match form feed \f as per the spec because... stupid to use that.
+     *
+     * @return this, for chaining.
      */
-    public void skipWhitepace() {
+    public Source skipWhitepace() {
         // don't check the same index twice
-        if (lastCheckedWhitespaceIndex == index) return;
+        if (lastCheckedWhitespaceIndex == index) return this;
 
         // store the last checked index
         lastCheckedWhitespaceIndex = index;
 
         // nothing to skip if we are at the end
-        if (eof()) return;
+        if (eof()) return this;
 
         // skip characters until the current character is not whitespace
         char current = current();
         while ('\u0020' == current || '\n' == current || '\t' == current || '\r' == current) {
             current = next();
         }
+        return this;
     }
 
     /**
@@ -494,6 +497,7 @@ public final class Source {
     public <T extends Enum<T> & ConstantEnum> Optional<T> optionalFromConstantEnum(Class<T> klass) {
         for (T member : klass.getEnumConstants()) {
             if (readConstant(member.constant())) return Optional.of(member);
+            if (!member.caseSensitive() && readConstant(member.constant().toUpperCase())) return Optional.of(member);
         }
         return Optional.absent();
     }
@@ -504,10 +508,13 @@ public final class Source {
      *
      * @param token
      *     Ensure that the current token matches this {@link Token} before we advance.
+     *
+     * @return this, for chaining.
      */
-    public void expect(Token token) {
+    public Source expect(Token token) {
         if (!token.matches(current())) throw new ParserException(this, Message.EXPECTED_TO_FIND, token.description());
         next();
+        return this;
     }
 
     /**
@@ -799,6 +806,20 @@ public final class Source {
         forward(index + constantLength);
 
         return true;
+    }
+
+    /**
+     * Same as {@link #readConstant(String)}, except this version is case-insensitive (and thus less performant).
+     * <p/>
+     * <b>Important:</b> the constant given MUST be lower-cased.
+     *
+     * @param constant
+     *     The lower-cased version of the constant.
+     *
+     * @return true if the constant was matched.
+     */
+    public boolean readConstantCaseInsensitive(String constant) {
+        return readConstant(constant) || readConstant(constant.toUpperCase());
     }
 
     /**
