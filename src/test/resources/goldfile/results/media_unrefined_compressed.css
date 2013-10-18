@@ -1,0 +1,7 @@
+.class{background:blue}@media screen and (max-width: 600px){.class {
+    background: #ccc;
+  }}@media screen and (min-width: 600px) and (max-width: 900px){.class {
+    background: #333;
+  }}@media screen and (max-device-width: 480px){.class {
+    background: #000;
+  }}

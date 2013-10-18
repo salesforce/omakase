@@ -31,6 +31,8 @@ import java.io.IOException;
 /**
  * A generic wrapper containing a list of statements. This is used for refined {@link AtRule}s (standard or custom) that contain a
  * simple list of statements inside the block.
+ * <p/>
+ * TODO no parent?
  *
  * @author nmcwilliams
  */
@@ -95,8 +97,13 @@ public final class GenericAtRuleBlock extends AbstractSyntax implements AtRuleBl
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.spaceIf(!writer.isCompressed());
+        appendable.append('{');
+        appendable.newlineIf(!writer.isCompressed());
         for (Statement statement : statements) {
             writer.write(statement, appendable);
         }
+        appendable.newlineIf(!writer.isCompressed());
+        appendable.append('}');
     }
 }

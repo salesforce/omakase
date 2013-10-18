@@ -86,8 +86,20 @@ public class GenericAtRuleBlockTest {
     }
 
     @Test
-    public void testWrite() throws IOException {
+    public void writeVerbose() throws IOException {
         GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
-        assertThat(StyleWriter.compressed().writeSnippet(block)).isEqualTo(".test{display:none}");
+        assertThat(StyleWriter.verbose().writeSnippet(block)).isEqualTo(" {\n.test {\n  display: none;\n}\n}");
+    }
+
+    @Test
+    public void writeInline() throws IOException {
+        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        assertThat(StyleWriter.inline().writeSnippet(block)).isEqualTo(" {\n.test {display:none}\n}");
+    }
+
+    @Test
+    public void writeCompressed() throws IOException {
+        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        assertThat(StyleWriter.compressed().writeSnippet(block)).isEqualTo("{.test{display:none}}");
     }
 }
