@@ -34,9 +34,9 @@ import com.salesforce.omakase.parser.token.Tokens;
  * Parsers a {@link MediaQueryExpression}.
  * <p/>
  * In the following example:
- * <pre>    {@code@}media all and (min-width: 800px) { ... }</pre>
+ * <pre>    {@code @}media all and (min-width: 800px) { ... }</pre>
  * <p/>
- * The expression is {@code (min-width: 800px)}
+ * The expression is <code>(min-width: 800px)</code>
  *
  * @author nmcwilliams
  * @see MediaQueryExpression

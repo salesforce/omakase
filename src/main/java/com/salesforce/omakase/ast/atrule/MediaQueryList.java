@@ -35,7 +35,7 @@ import java.io.IOException;
  * Represents a list of media queries.
  * <p/>
  * In the following example the media query list is everything until the opening curly brace:
- * <pre>    {@code@}media all and (min-width: 800px), projection and (color) { ... }</pre>
+ * <pre>    {@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
  *
  * @author nmcwilliams
  * @see MediaQueryListParser

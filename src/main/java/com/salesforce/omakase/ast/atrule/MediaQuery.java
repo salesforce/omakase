@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkState;
  * Represents a media query.
  * <p/>
  * In the following example:
- * <pre>    {@code@}media all and (min-width: 800px), projection and (color) { ... }</pre>
+ * <pre>    {@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
  * <p/>
  * There are two media queries,
  * <p/>
