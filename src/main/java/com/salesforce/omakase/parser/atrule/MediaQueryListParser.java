@@ -29,8 +29,6 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME
- * <p/>
  * Parsers a {@link MediaQueryList}.
  * <p/>
  * In the following example the media query list is everything until the opening curly brace:
@@ -48,18 +46,18 @@ public final class MediaQueryListParser extends AbstractParser {
 
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
 
+        // try parsing a media query
         if (!ParserFactory.mediaQueryParser().parse(source, qb, refiner)) return false;
 
-        source.skipWhitepace();
-
-        while (source.optionallyPresent(Tokens.COMMA)) {
+        // parse the remaining media queries
+        while (source.skipWhitepace().optionallyPresent(Tokens.COMMA)) {
             source.skipWhitepace();
             if (!ParserFactory.mediaQueryParser().parse(source, qb, refiner)) {
                 throw new ParserException(source, Message.TRAILING, Tokens.COMMA.description());
             }
-            source.skipWhitepace();
         }
 
+        // create the list and broadcast it
         MediaQueryList list = new MediaQueryList(line, column, broadcaster);
         list.queries().appendAll(qb.filter(MediaQuery.class));
         broadcaster.broadcast(list);

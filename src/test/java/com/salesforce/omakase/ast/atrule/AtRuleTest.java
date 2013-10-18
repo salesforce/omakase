@@ -50,49 +50,49 @@ public class AtRuleTest {
 
     @Test
     public void getName() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
-        assertThat(ar.name()).isEqualTo("media");
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        assertThat(ar.name()).isEqualTo("media-x");
     }
 
     @Test
     public void getRawExpression() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.rawExpression().get()).isSameAs(rawExpression);
     }
 
     @Test
     public void getRawBlock() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.rawBlock().get()).isSameAs(rawBlock);
     }
 
     @Test
     public void expressionAbsentByDefault() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.expression().isPresent()).isFalse();
     }
 
     @Test
     public void blockAbsentByDefault() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.block().isPresent()).isFalse();
     }
 
     @Test
     public void isRefinedFalse() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.isRefined()).isFalse();
     }
 
     @Test
     public void asRule() {
-        Statement ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        Statement ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.asRule().isPresent()).isFalse();
     }
 
     @Test
     public void asAtRule() {
-        Statement ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        Statement ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
         assertThat(ar.asAtRule().isPresent()).isTrue();
     }
 
@@ -166,7 +166,7 @@ public class AtRuleTest {
     @Test
     public void writeCustomExpressionOnly() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), null);
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test(custom)");
+        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test (custom)");
     }
 
     @Test
@@ -178,7 +178,7 @@ public class AtRuleTest {
     @Test
     public void writeCustomExpressionAndBlock() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test(custom){custom}");
+        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test (custom){custom}");
     }
 
     @Test

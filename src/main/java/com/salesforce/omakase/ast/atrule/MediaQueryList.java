@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -30,8 +31,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * TESTME
- * <p/>
  * Represents a list of media queries.
  * <p/>
  * In the following example the media query list is everything until the opening curly brace:
@@ -45,15 +44,36 @@ import java.io.IOException;
 public final class MediaQueryList extends AbstractSyntax implements AtRuleExpression {
     private final SyntaxCollection<MediaQueryList, MediaQuery> queries;
 
+    /**
+     * Constructs a new {@link MediaQueryList} instance.
+     * <p/>
+     * This should be used for dynamically created declarations.
+     */
     public MediaQueryList() {
         this(-1, -1, null);
     }
 
+    /**
+     * Constructs a new {@link MediaQuery} instance.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param broadcaster
+     *     Used for broadcasting.
+     */
     public MediaQueryList(int line, int column, Broadcaster broadcaster) {
         super(line, column);
         queries = StandardSyntaxCollection.create(this, broadcaster);
     }
 
+    /**
+     * Gets the {@link SyntaxCollection} of {@link MediaQuery} objects. You can used the {@link SyntaxCollection} to remove or add
+     * additional queries.
+     *
+     * @return The media queries.
+     */
     public SyntaxCollection<MediaQueryList, MediaQuery> queries() {
         return queries;
     }
@@ -73,10 +93,15 @@ public final class MediaQueryList extends AbstractSyntax implements AtRuleExpres
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (MediaQuery query : queries) {
             writer.write(query, appendable);
-            if (!query.haxNextAndNextNotDetached()) {
+            if (query.haxNextAndNextNotDetached()) {
                 appendable.append(',');
                 appendable.spaceIf(!writer.isCompressed());
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).indent().add("abstract", super.toString()).add("queries", queries).toString();
     }
 }

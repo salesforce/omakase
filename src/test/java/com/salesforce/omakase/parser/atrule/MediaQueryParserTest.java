@@ -205,6 +205,13 @@ public class MediaQueryParserTest extends AbstractParserTest<MediaQueryParser> {
     }
 
     @Test
+    public void errorsIfTrailingAndNoExpression() {
+        exception.expect(ParserException.class);
+        exception.expectMessage(Message.TRAILING_AND.message());
+        parse("all and ");
+    }
+
+    @Test
     public void errorsIfNoSpacAfterAnd() {
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find");

@@ -49,9 +49,6 @@ public final class MediaRefiner implements AtRuleRefinerStrategy {
         // must be named media
         if (!atRule.name().equals(MEDIA)) return false;
 
-        // the at-rule must have a parent (so don't call this on a dynamically created at-rule not yet inserted into the tree)
-        if (!atRule.parent().isPresent()) throw new IllegalArgumentException("atRule must have a parent specified");
-
         // must have an expression
         if (!atRule.rawExpression().isPresent()) throw new ParserException(atRule.line(), atRule.column(), Message.MEDIA_EXPR);
 
@@ -91,7 +88,7 @@ public final class MediaRefiner implements AtRuleRefinerStrategy {
         }
 
         // create and add the block
-        atRule.block(new GenericAtRuleBlock(atRule.parent().get(), queryable.filter(Statement.class), broadcaster));
+        atRule.block(new GenericAtRuleBlock(atRule.parent().orNull(), queryable.filter(Statement.class), broadcaster));
 
         // once they are in the syntax collection, now we can let them be broadcasted
         queue.resume();

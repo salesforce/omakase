@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -171,5 +172,15 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
             writer.write(expression, appendable);
             isFirst = false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this)
+            .indent()
+            .add("restriction", restriction)
+            .add("type", type)
+            .add("expressions", expressions)
+            .toString();
     }
 }

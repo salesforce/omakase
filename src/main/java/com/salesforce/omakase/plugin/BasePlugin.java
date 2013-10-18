@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
@@ -314,4 +315,13 @@ public class BasePlugin implements Plugin {
      *     The {@link ConditionalAtRuleBlock} instance.
      */
     public void conditionalAtRuleBlock(ConditionalAtRuleBlock block) {}
+
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for {@link Syntax} units of type {@link MediaQueryList}.
+     *
+     * @param list
+     *     The {@link MediaQueryList} instance.
+     */
+    public void mediaQueryList(MediaQueryList list) {}
 }

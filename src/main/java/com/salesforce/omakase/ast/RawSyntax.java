@@ -63,7 +63,7 @@ public final class RawSyntax extends AbstractSyntax {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (writer.isCompressed()) {
-            // TODO compression
+            // XXX compression
             appendable.append(content);
         } else {
             appendable.append(content);

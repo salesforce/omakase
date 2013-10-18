@@ -121,7 +121,8 @@ public final class GenericFunctionValue extends AbstractTerm {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // TODO compression for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
+        // XXX compression
+        // for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
         appendable.append(name).append('(').append(args).append(')');
     }
 

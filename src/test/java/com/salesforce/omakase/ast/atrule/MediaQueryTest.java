@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -178,5 +179,10 @@ public class MediaQueryTest {
         mq.type("screen").expressions().append(exp1).append(exp2);
         exp2.detach();
         assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (min-width:800px)");
+    }
+
+    @Test
+    public void toStringTest() {
+        assertThat(mq.toString()).isNotEqualTo(Util.originalToString(mq));
     }
 }

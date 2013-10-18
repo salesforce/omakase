@@ -71,8 +71,8 @@ public final class MediaQueryParser extends AbstractParser {
         source.skipWhitepace();
 
         // 'and' is required before an expression if the type is present
-        boolean readAnd = type.isPresent() && source.readConstantCaseInsensitive(AND);
-        if (readAnd) {
+        boolean hasAndAfterType = type.isPresent() && source.readConstantCaseInsensitive(AND);
+        if (hasAndAfterType) {
             source.expect(Tokens.WHITESPACE);// space required after and
         }
 
@@ -80,7 +80,7 @@ public final class MediaQueryParser extends AbstractParser {
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
 
         // try reading one expression. if there was a type then we must have parsed an 'and' beforehand
-        if (ParserFactory.mediaExpressionParser().parse(source, qb, refiner) && type.isPresent() && !readAnd) {
+        if (ParserFactory.mediaExpressionParser().parse(source, qb, refiner) && type.isPresent() && !hasAndAfterType) {
             snapshot.rollback(Message.MISSING_AND);
         }
 
@@ -93,9 +93,13 @@ public final class MediaQueryParser extends AbstractParser {
         }
 
         Iterable<MediaQueryExpression> expressions = qb.filter(MediaQueryExpression.class);
+        boolean hasExpressions = !Iterables.isEmpty(expressions);
+
+        // check for a trailing 'and'
+        if (!hasExpressions && hasAndAfterType) throw new ParserException(source, Message.TRAILING_AND);
 
         // if we haven't parsed a type (and thus no restriction either) and no expressions, return false
-        if (!type.isPresent() && Iterables.isEmpty(expressions)) return false;
+        if (!type.isPresent() && !hasExpressions) return false;
 
         // create and broadcast the media query
         MediaQuery query = new MediaQuery(line, column, broadcaster);

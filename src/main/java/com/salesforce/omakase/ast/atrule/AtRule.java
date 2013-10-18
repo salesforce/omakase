@@ -275,6 +275,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
             if (shouldWriteName) {
                 appendable.append('@');
                 appendable.append(name);
+                appendable.spaceIf(expression.isPresent() && expression.get().isWritable());
             }
 
             // expression
@@ -293,7 +294,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
             appendable.append(name);
             appendable.space();
 
-            // TODO compression
+            // XXX compression
 
             // expression
             if (rawExpression.isPresent()) {

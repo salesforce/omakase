@@ -75,6 +75,16 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
      */
     public abstract boolean allowedToTrimLeadingWhitespace();
 
+    /**
+     * The class of the main AST object being created. Override this if the first thing broadcasted from {@link
+     * #validSourceForPositionTesting()} isn't the main AST object being tested.
+     *
+     * @return The class.
+     */
+    public Class<? extends Syntax> mainAstObjectClass() {
+        return Syntax.class;
+    }
+
     @Test
     @Override
     public void returnsFalseOnFailure() {
@@ -144,7 +154,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         parser.parse(source, broadcaster);
 
-        Optional<Syntax> syntax = broadcaster.find(Syntax.class);
+        Optional<? extends Syntax> syntax = broadcaster.find(mainAstObjectClass());
         if (!syntax.isPresent()) {
             fail("Test Error: expected source to broadcast a Syntax object");
         }

@@ -60,9 +60,6 @@ public final class ConditionalsRefinerStrategy implements AtRuleRefinerStrategy 
         // must be named  "if"
         if (!atRule.name().equals(IF)) return false;
 
-        // the at-rule must have a parent (so don't call this on a dynamically created at-rule not yet inserted into the tree)
-        if (!atRule.parent().isPresent()) throw new IllegalArgumentException("atRule must have a parent specified");
-
         // the at-rule must have an expression
         if (!atRule.rawExpression().isPresent()) {
             throw new ParserException(atRule.line(), atRule.column(), Message.MISSING_CONDITIONAL_EXPRESSION);
@@ -102,7 +99,7 @@ public final class ConditionalsRefinerStrategy implements AtRuleRefinerStrategy 
         }
 
         // add all parsed statements into a new syntax collection
-        SyntaxCollection<Stylesheet, Statement> statements = StandardSyntaxCollection.create(atRule.parent().get());
+        SyntaxCollection<Stylesheet, Statement> statements = StandardSyntaxCollection.create(atRule.parent().orNull());
         statements.appendAll(queryable.filter(Statement.class));
 
         // once they are in the syntax collection, now we can let them be broadcasted

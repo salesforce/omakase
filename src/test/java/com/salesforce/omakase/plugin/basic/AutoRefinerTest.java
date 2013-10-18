@@ -16,20 +16,14 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.refiner.AtRuleRefinerStrategy;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -40,15 +34,11 @@ public class AutoRefinerTest {
     private Selector selector;
     private Declaration declaration;
     private AutoRefiner autoRefiner;
-    private CustomAtRuleStrategy customAtRuleStrategy;
 
     @Before
     public void setup() {
-        customAtRuleStrategy = new CustomAtRuleStrategy();
-        Set<RefinerStrategy> set = Sets.<RefinerStrategy>newHashSet(customAtRuleStrategy);
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), set);
-
-        atRule = new AtRule(5, 5, "media", new RawSyntax(1, 1, "all"), new RawSyntax(1, 1, "{p {color:red}}"), refiner);
+        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        atRule = new AtRule(5, 5, "media", new RawSyntax(1, 1, "all"), new RawSyntax(1, 1, "p {color:red}"), refiner);
         selector = new Selector(new RawSyntax(1, 1, ".class"), refiner);
         declaration = new Declaration(new RawSyntax(1, 1, "color"), new RawSyntax(1, 1, "red"), refiner);
         autoRefiner = new AutoRefiner();
@@ -62,7 +52,7 @@ public class AutoRefinerTest {
         autoRefiner.refine(selector);
         autoRefiner.refine(declaration);
 
-        assertThat(customAtRuleStrategy.called).isFalse();
+        assertThat(atRule.isRefined()).isFalse();
         assertThat(selector.isRefined()).isTrue();
         assertThat(declaration.isRefined()).isFalse();
     }
@@ -75,7 +65,7 @@ public class AutoRefinerTest {
         autoRefiner.refine(selector);
         autoRefiner.refine(declaration);
 
-        assertThat(customAtRuleStrategy.called).isFalse();
+        assertThat(atRule.isRefined()).isFalse();
         assertThat(selector.isRefined()).isFalse();
         assertThat(declaration.isRefined()).isTrue();
     }
@@ -89,7 +79,7 @@ public class AutoRefinerTest {
         autoRefiner.refine(selector);
         autoRefiner.refine(declaration);
 
-        assertThat(customAtRuleStrategy.called).isTrue();
+        assertThat(atRule.isRefined()).isTrue();
         assertThat(selector.isRefined()).isFalse();
         assertThat(declaration.isRefined()).isFalse();
     }
@@ -101,18 +91,8 @@ public class AutoRefinerTest {
         autoRefiner.refine(selector);
         autoRefiner.refine(declaration);
 
-        assertThat(customAtRuleStrategy.called).isTrue();
+        assertThat(atRule.isRefined()).isTrue();
         assertThat(selector.isRefined()).isTrue();
         assertThat(declaration.isRefined()).isTrue();
-    }
-
-    public static final class CustomAtRuleStrategy implements AtRuleRefinerStrategy {
-        boolean called;
-
-        @Override
-        public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-            called = true;
-            return false;
-        }
     }
 }
