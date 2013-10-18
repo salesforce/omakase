@@ -44,13 +44,20 @@ import java.util.Set;
 public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, SelectorRefinerStrategy,
     DeclarationRefinerStrategy, FunctionRefinerStrategy {
 
+    private static final Set<AtRuleRefinerStrategy> STANDARD_AT_RULES = ImmutableSet.<AtRuleRefinerStrategy>of(
+        new MediaRefiner()
+    );
+
     private static final Set<FunctionRefinerStrategy> STANDARD_FUNCTIONS = ImmutableSet.<FunctionRefinerStrategy>of(
         new UrlFunctionRefiner()
     );
 
     @Override
     public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-        // do nothing -- there's no default refinement for at-rules
+        //TESTME
+        for (AtRuleRefinerStrategy strategy : STANDARD_AT_RULES) {
+            if (strategy.refine(atRule, broadcaster, refiner)) return true;
+        }
         return false;
     }
 

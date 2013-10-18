@@ -74,6 +74,30 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
     boolean isLast();
 
     /**
+     * Gets the unit following this one in the same collection, if there is one. This will always return {@link Optional#absent
+     * ()} if detached.
+     *
+     * @return The next unit, or {@link Optional#absent()} if there isn't one.
+     */
+    Optional<T> next();
+
+    /**
+     * Gets the unit preceding this one in the same collection, if there is one. This will always return {@link Optional#absent
+     * ()} if detached.
+     *
+     * @return The previous unit, or {@link Optional#absent()} if there isn't one.
+     */
+    Optional<T> previous();
+
+    /**
+     * Gets whether there is a subsequent unit in this collection, and if the subsequent unit is not detached. This will always
+     * return {@link Optional#absent()} if detached.
+     *
+     * @return True if the there is a next unit and the next unit is not detached.
+     */
+    boolean haxNextAndNextNotDetached();
+
+    /**
      * Prepends the given unit before this one.
      * <p/>
      * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or

@@ -25,6 +25,7 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
@@ -165,7 +166,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     /**
-     * Sets the {@link AtRuleExpression}.
+     * Sets the {@link AtRuleExpression}. XXX this should propagate
      *
      * @param expression
      *     The expression.
@@ -188,7 +189,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     /**
-     * Sets the {@link AtRuleBlock}.
+     * Sets the {@link AtRuleBlock}. XXX this should propagate
      *
      * @param block
      *     The block.
@@ -237,6 +238,18 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     @Override
     protected Statement self() {
         return this;
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        // TESTME
+        super.propagateBroadcast(broadcaster);
+        if (expression.isPresent()) {
+            expression().get().propagateBroadcast(broadcaster);
+        }
+        if (block.isPresent()) {
+            block.get().propagateBroadcast(broadcaster);
+        }
     }
 
     @Override

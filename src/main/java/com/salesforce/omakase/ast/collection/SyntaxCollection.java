@@ -91,6 +91,26 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
     Optional<T> last();
 
     /**
+     * Gets the next unit after the given one, if there is one.
+     *
+     * @param unit
+     *     Get the next unit after this one.
+     *
+     * @return The next unit, or {@link Optional#absent()} if not present.
+     */
+    Optional<T> next(T unit);
+
+    /**
+     * Gets the previous unit before the given one, if there is one.
+     *
+     * @param unit
+     *     Get the unit before this one.
+     *
+     * @return The previous unit, or {@link Optional#absent()} if not present.
+     */
+    Optional<T> previous(T unit);
+
+    /**
      * Prepends the given unit the beginning of this collection.
      *
      * @param unit

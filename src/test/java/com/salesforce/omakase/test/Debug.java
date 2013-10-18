@@ -17,7 +17,7 @@
 package com.salesforce.omakase.test;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
@@ -29,7 +29,7 @@ import java.io.IOException;
 /** Temp test for debugging. */
 @SuppressWarnings("JavaDoc")
 public final class Debug {
-    public static final String SRC = ".class {\n" +
+    public static final String SRC = "@media blah {\n" +
         "    background: url(BLAH);\n" +
         "}";
 
@@ -44,8 +44,8 @@ public final class Debug {
             .request(new StandardValidation())
             .request(new Plugin() {
                 @Observe
-                public void observe(RawFunction raw) {
-                    raw.args("changed");
+                public void observe(AtRule ar) {
+                    System.out.println(ar);
                 }
             })
             .process();

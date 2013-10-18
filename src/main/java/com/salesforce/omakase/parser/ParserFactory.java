@@ -22,6 +22,9 @@ import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
+import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
+import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
+import com.salesforce.omakase.parser.atrule.MediaQueryParser;
 import com.salesforce.omakase.parser.declaration.*;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
@@ -90,6 +93,11 @@ public final class ParserFactory {
     private static final Parser operator = new OperatorParser();
     private static final Parser important = new ImportantParser();
     private static final Parser termList = new TermListParser();
+
+    /* refined at rules */
+    private static final Parser mediaQueryList = new MediaQueryListParser();
+    private static final Parser mediaQuery = new MediaQueryParser();
+    private static final Parser mediaQueryExpression = new MediaQueryExpressionParser();
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -341,5 +349,32 @@ public final class ParserFactory {
      */
     public static Parser termListParser() {
         return termList;
+    }
+
+    /**
+     * Gets the {@link MediaQueryListParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser mediaQueryListParser() {
+        return mediaQueryList;
+    }
+
+    /**
+     * Gets the {@link MediaQueryParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser mediaQueryParser() {
+        return mediaQuery;
+    }
+
+    /**
+     * Gets the {@link MediaQueryExpressionParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser mediaExpressionParser() {
+        return mediaQueryExpression;
     }
 }

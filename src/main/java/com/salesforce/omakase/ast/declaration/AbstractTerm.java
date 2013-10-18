@@ -53,7 +53,8 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
 
     @Override
     public boolean isWritable() {
-        // based on the override to #detach as explained above.
+        // based on the override to #detach as explained above. Other behavior is probably based on this behavior too,
+        // like the loose terms in a MediaQueryExpression.
         return true;
     }
 

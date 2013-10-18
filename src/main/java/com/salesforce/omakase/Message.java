@@ -39,6 +39,7 @@ public enum Message {
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
     UNPARSABLE_DECLARATION_VALUE("Unable to parse remaining declaration value"),
     UNPARSABLE_CONDITIONAL_CONTENT("Unable to parse the remaining content in the conditional at-rule: %s"),
+    UNPARSABLE_MEDIA("Unable to parse the remaining content in the media query: %s"),
     EXPECTED_VALUE("Expected to parse a property value!"),
     EXPECTED_TO_FIND("Expected to find %s"),
     EXPECTED_CLOSING("Expected to find closing %s"),
@@ -47,6 +48,8 @@ public enum Message {
     TRAILING_OPERATOR("Expected to find another term following the term operator (%s). Either the operator should be removed, " +
         "the subsequent term is missing, or the subsequent term is not currently recognized"),
     TRAILING_COMBINATOR("Trailing combinator (%s)"),
+    TRAILING_AND("Trailing 'and' in media query"),
+    TRAILING("Unexpected trailing '%s'"),
     NAME_SELECTORS_NOT_ALLOWED("universal or type selector not allowed here"),
     COMMENTS_NOT_ALLOWED("Comments not allowed in this location. Please place the comment at the beginning of the " +
         "declaration" +
@@ -75,7 +78,14 @@ public enum Message {
     MISSING_CONDITIONAL_BLOCK("Missing block for the conditional at-rule (@oif). The block must be encased within curly " +
         "braces {}"),
     UNEXPECTED_AFTER_QUOTE("Unexpected content in url after closing quote '%s'"),
-    MALFORMED_DECLARATION("Malformed declaration. Did you forget to add the property name or the colon delimiter?");
+    MALFORMED_DECLARATION("Malformed declaration. Did you forget to add the property name or the colon delimiter?"),
+    MEDIA_EXPR("Missing the media query's expression"),
+    MEDIA_BLOCK("Missing the media query's block"),
+    DIDNT_FIND_MEDIA_LIST("Expected to parse a valid media query list"),
+    MISSING_MEDIA_TYPE("Expected to find media type (e.g., 'screen', the type is required after 'only' or 'not')"),
+    MISSING_AND("Expected to find keyword 'and'"),
+    MISSING_FEATURE("Expected to find media feature name (e.g., 'min-width')"),
+    MISSING_MEDIA_TERMS("Expected to find one or more terms");
 
     private final String message;
 
