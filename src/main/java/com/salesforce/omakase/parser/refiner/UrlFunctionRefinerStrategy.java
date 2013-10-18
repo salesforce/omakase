@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see UrlFunctionValue
  */
-public final class UrlFunctionRefiner implements FunctionRefinerStrategy {
+public final class UrlFunctionRefinerStrategy implements FunctionRefinerStrategy {
     private static final String NAME = "url";
 
     @Override

@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
@@ -104,5 +105,14 @@ public class StandardRefinerStrategyTest {
 
         assertThat(qb.all()).hasSize(1);
         assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(UrlFunctionValue.class);
+    }
+
+    @Test
+    public void refinedMediaQuery() {
+        Refiner refiner = new Refiner(new StatusChangingBroadcaster());
+        AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
+        new StandardRefinerStrategy().refine(ar, refiner.broadcaster(), refiner);
+
+        assertThat(ar.isRefined()).isTrue();
     }
 }

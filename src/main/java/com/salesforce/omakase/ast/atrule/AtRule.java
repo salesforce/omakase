@@ -166,7 +166,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     /**
-     * Sets the {@link AtRuleExpression}. XXX this should propagate
+     * Sets the {@link AtRuleExpression}.
      *
      * @param expression
      *     The expression.
@@ -180,7 +180,8 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     /**
-     * Gets the at-rule expression, if present. Note that this attempts refinement if not already done so.
+     * Gets the at-rule expression, if present. Note that this attempts refinement on the expression unless a refined expression
+     * is already set.
      *
      * @return The expression, or {@link Optional#absent()} if not present.
      */
@@ -189,7 +190,16 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     /**
-     * Sets the {@link AtRuleBlock}. XXX this should propagate
+     * Gets whether a refined expression has been set on this at-rule.
+     *
+     * @return True if a refined expression has been set.
+     */
+    public boolean hasRefinedExpression() {
+        return expression.isPresent();
+    }
+
+    /**
+     * Sets the {@link AtRuleBlock}.
      *
      * @param block
      *     The block.
@@ -203,12 +213,21 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     /**
-     * Gets the at-rule block, if present. Note that this attempts refinement if not already done so.
+     * Gets the at-rule block, if present. Note that this attempts refinement on the block unless a refined block is already set.
      *
      * @return The block, or {@link Optional#absent()} if not present.
      */
     public Optional<AtRuleBlock> block() {
         return refine().block;
+    }
+
+    /**
+     * Gets whether a refined block has been set on this at-rule.
+     *
+     * @return True if a refined block has been set.
+     */
+    public boolean hasRefinedBlock() {
+        return block.isPresent();
     }
 
     @Override
@@ -242,10 +261,9 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        // TESTME
         super.propagateBroadcast(broadcaster);
         if (expression.isPresent()) {
-            expression().get().propagateBroadcast(broadcaster);
+            expression.get().propagateBroadcast(broadcaster);
         }
         if (block.isPresent()) {
             block.get().propagateBroadcast(broadcaster);
@@ -266,15 +284,13 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // newlines (unless first statement)
         if (!writer.isCompressed() && !isFirst()) {
-            appendable.newline();
-            appendable.newlineIf(writer.isVerbose());
+            appendable.newline().newlineIf(writer.isVerbose());
         }
 
         if (isRefined()) {
             // name
             if (shouldWriteName) {
-                appendable.append('@');
-                appendable.append(name);
+                appendable.append('@').append(name);
                 appendable.spaceIf(expression.isPresent() && expression.get().isWritable());
             }
 
@@ -290,9 +306,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
 
         } else {
             // symbol and name
-            appendable.append('@');
-            appendable.append(name);
-            appendable.space();
+            appendable.append('@').append(name).space();
 
             // XXX compression
 
@@ -305,8 +319,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
             if (rawBlock.isPresent()) {
                 appendable.spaceIf(!writer.isCompressed());
                 appendable.append('{');
-                appendable.newlineIf(writer.isVerbose());
-                appendable.indentIf(writer.isVerbose());
+                appendable.newlineIf(writer.isVerbose()).indentIf(writer.isVerbose());
                 writer.write(rawBlock.get(), appendable);
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');

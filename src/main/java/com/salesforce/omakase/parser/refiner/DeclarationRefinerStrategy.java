@@ -54,8 +54,9 @@ public interface DeclarationRefinerStrategy extends RefinerStrategy {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinerStrategy} objects
-     *         will be executed for the given {@link Declaration} instance.
+     * @return True if <em>complete</em> refinement was performed, otherwise false. If true, no other registered {@link
+     *         RefinerStrategy} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
+     *         segment of the object and still return false.
      */
     boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner);
 }

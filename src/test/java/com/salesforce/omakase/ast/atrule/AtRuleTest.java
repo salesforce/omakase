@@ -131,11 +131,38 @@ public class AtRuleTest {
     }
 
     @Test
+    public void hasRefinedExpressionTrue() {
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        CustomExpression expression = new CustomExpression();
+        assertThat(ar.expression(expression).hasRefinedExpression()).isTrue();
+    }
+
+    @Test
+    public void hasRefinedExpressionFalse() {
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        assertThat(ar.hasRefinedExpression()).isFalse();
+    }
+
+    @Test
     public void setCustomBlock() {
         AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
         CustomBlock block = new CustomBlock();
         ar.block(block);
         assertThat(ar.block().get()).isSameAs(block);
+    }
+
+    @Test
+    public void hasRefinedBlockTrue() {
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        CustomBlock block = new CustomBlock();
+        ar.block(block);
+        assertThat(ar.block(block).hasRefinedBlock()).isTrue();
+    }
+
+    @Test
+    public void hasRefinedBlockFalse() {
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        assertThat(ar.hasRefinedBlock()).isFalse();
     }
 
     @Test
@@ -154,6 +181,28 @@ public class AtRuleTest {
 
         exception.expect(IllegalStateException.class);
         ar.expression(null);
+    }
+
+    @Test
+    public void propagatesBroadcastToExpression() {
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        CustomExpression expression = new CustomExpression();
+        ar.expression(expression);
+
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        ar.propagateBroadcast(qb);
+        assertThat(qb.find(CustomExpression.class).get()).isSameAs(expression);
+    }
+
+    @Test
+    public void propagatesBroadcastToBlock() {
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        CustomBlock block = new CustomBlock();
+        ar.block(block);
+
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        ar.propagateBroadcast(qb);
+        assertThat(qb.find(CustomBlock.class).get()).isSameAs(block);
     }
 
     @Test

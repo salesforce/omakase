@@ -45,16 +45,15 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
     DeclarationRefinerStrategy, FunctionRefinerStrategy {
 
     private static final Set<AtRuleRefinerStrategy> STANDARD_AT_RULES = ImmutableSet.<AtRuleRefinerStrategy>of(
-        new MediaRefiner()
+        new MediaRefinerStrategy()
     );
 
     private static final Set<FunctionRefinerStrategy> STANDARD_FUNCTIONS = ImmutableSet.<FunctionRefinerStrategy>of(
-        new UrlFunctionRefiner()
+        new UrlFunctionRefinerStrategy()
     );
 
     @Override
     public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-        //TESTME
         for (AtRuleRefinerStrategy strategy : STANDARD_AT_RULES) {
             if (strategy.refine(atRule, broadcaster, refiner)) return true;
         }
