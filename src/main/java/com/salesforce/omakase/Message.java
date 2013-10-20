@@ -40,7 +40,7 @@ public enum Message {
     UNPARSABLE_DECLARATION_VALUE("Unable to parse remaining declaration value"),
     UNPARSABLE_CONDITIONAL_CONTENT("Unable to parse the remaining content in the conditional at-rule: %s"),
     UNPARSABLE_MEDIA("Unable to parse the remaining content in the media query '%s'"),
-    EXPECTED_VALUE("Expected to parse a property value!"),
+    EXPECTED_VALUE("Expected to parse a property value"),
     EXPECTED_TO_FIND("Expected to find %s"),
     EXPECTED_CLOSING("Expected to find closing %s"),
     INVALID_HEX("Expected a hex color of length 3 or 6, but found %s"),
