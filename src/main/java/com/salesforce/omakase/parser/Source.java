@@ -512,7 +512,24 @@ public final class Source {
      * @return this, for chaining.
      */
     public Source expect(Token token) {
-        if (!token.matches(current())) throw new ParserException(this, Message.EXPECTED_TO_FIND, token.description());
+        return expect(token, Message.EXPECTED_TO_FIND, token.description());
+    }
+
+    /**
+     * Similar to {@link #next()}, except it will enforce that the <b>current</b> character matches the given {@link Token} before
+     * advancing, otherwise an error will be thrown.
+     *
+     * @param token
+     *     Ensure that the current token matches this {@link Token} before we advance.
+     * @param errorMessage
+     *     The error message to use if there isn't a match.
+     * @param args
+     *     Optional error message arguments to String#format.
+     *
+     * @return this, for chaining.
+     */
+    public Source expect(Token token, Message errorMessage, Object... args) {
+        if (!token.matches(current())) throw new ParserException(this, errorMessage, args);
         next();
         return this;
     }

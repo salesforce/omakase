@@ -97,20 +97,17 @@ public final class ErrorUtils {
      */
     public static String format(Source source, String message) {
         if (!source.isSubSource()) {
-            return String.format("%s:\nat line %s, column %s in source\n'%s'",
+            return String.format("%s:\nat line %s, column %s in\n'%s'",
                 message,
-                source.line(),
-                source.column(),
+                source.originalLine(),
+                source.originalColumn(),
                 source.toStringContextual()
             );
         } else {
-            return String.format("%s:\nat line %s, column %s (starting from line %s, " +
-                "column %s in original source) in substring of original source\n'%s'",
+            return String.format("%s:\nat line %s, column %s near\n'%s'",
                 message,
-                source.line(),
-                source.column(),
-                source.anchorLine(),
-                source.anchorColumn(),
+                source.originalLine(),
+                source.originalColumn(),
                 source.toStringContextual()
             );
         }

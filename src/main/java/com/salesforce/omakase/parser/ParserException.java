@@ -29,18 +29,6 @@ public class ParserException extends OmakaseException {
     private static final long serialVersionUID = -8952238331167900360L;
 
     /**
-     * Constructs a new instance of a {@link ParserException} with the given {@link Message}.
-     *
-     * @param source
-     *     The source containing the source of the error.
-     * @param message
-     *     The error message.
-     */
-    public ParserException(Source source, Message message) {
-        this(source, message.message());
-    }
-
-    /**
      * Constructs a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
      *
      * @param source
@@ -51,7 +39,7 @@ public class ParserException extends OmakaseException {
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
     public ParserException(Source source, Message message, Object... args) {
-        this(source, message.message(args));
+        this(source, args == null || args.length == 0 ? message.message() : message.message(args));
     }
 
     /**
@@ -76,26 +64,11 @@ public class ParserException extends OmakaseException {
      *     The column where the error occurred.
      * @param message
      *     The error message.
-     */
-    public ParserException(int line, int column, Message message) {
-        this(line, column, message.message());
-    }
-
-    /**
-     * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
-     * a {@link Source} if possible instead.
-     *
-     * @param line
-     *     The line where the error occurred.
-     * @param column
-     *     The column where the error occurred.
-     * @param message
-     *     The error message.
      * @param args
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
     public ParserException(int line, int column, Message message, Object... args) {
-        this(line, column, message.message(args));
+        this(line, column, args == null || args.length == 0 ? message.message() : message.message(args));
     }
 
     /**

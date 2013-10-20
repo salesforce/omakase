@@ -35,7 +35,7 @@ public class ParserExceptionTest {
 
         String msg = new ParserException(source, "test exception").getMessage();
         assertThat(msg).isEqualTo("test exception:\n" +
-            "at line 5, column 4 in source\n" +
+            "at line 5, column 4 in\n" +
             "'.test {\n" +
             "  color: #16ff2b;\n" +
             "}\n" +
@@ -64,7 +64,7 @@ public class ParserExceptionTest {
         source.forward(4003);
         String msg = new ParserException(source, "test exception").getMessage();
         assertThat(msg).isEqualTo("test exception:\n" +
-            "at line 353, column 18 in source\n" +
+            "at line 353, column 18 in\n" +
             "'(...snipped...)x;\n" +
             "}\n" +
             "\n" +
@@ -92,7 +92,7 @@ public class ParserExceptionTest {
 
         String msg = new ParserException(source, "test exception").getMessage();
         assertThat(msg).isEqualTo("test exception:\n" +
-            "at line 5, column 4 (starting from line 22, column 3 in original source) in substring of original source\n" +
+            "at line 26, column 4 near\n" +
             "'.test {\n" +
             "  color: #16ff2b;\n" +
             "}\n" +

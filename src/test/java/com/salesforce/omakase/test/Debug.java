@@ -29,8 +29,10 @@ import java.io.IOException;
 /** Temp test for debugging. */
 @SuppressWarnings("JavaDoc")
 public final class Debug {
-    public static final String SRC = "@media blah {\n" +
-        "    background: url(BLAH);\n" +
+    public static final String SRC = ".test {\n" +
+        "    margin: 0;\n" +
+        "    padding 1px;\n" +
+        "    color: red;\n" +
         "}";
 
     private Debug() {}
@@ -45,7 +47,7 @@ public final class Debug {
             .request(new Plugin() {
                 @Observe
                 public void observe(AtRule ar) {
-                    System.out.println(ar);
+
                 }
             })
             .process();

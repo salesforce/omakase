@@ -85,7 +85,8 @@ public enum Message {
     MISSING_MEDIA_TYPE("Expected to find media type (e.g., 'screen', the type is required after 'only' or 'not')"),
     MISSING_AND("Expected to find keyword 'and'"),
     MISSING_FEATURE("Expected to find media feature name (e.g., 'min-width')"),
-    MISSING_MEDIA_TERMS("Expected to find one or more terms");
+    MISSING_MEDIA_TERMS("Expected to find one or more terms"),
+    MISSING_COLON("Expected to find ':' after the property name");
 
     private final String message;
 

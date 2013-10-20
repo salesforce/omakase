@@ -35,40 +35,30 @@ import com.salesforce.omakase.parser.token.Tokens;
 public final class RawDeclarationParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
-        source.skipWhitepace();
         source.collectComments();
 
-        // the IE7 star hack - http://en.wikipedia.org/wiki/CSS_filter#Star_hack -
-        // is not part of the CSS spec, but it still needs to be handled
+        // grab our current position before parsing anything
         Source.Snapshot snapshot = source.snapshot();
+
+        // the IE7 star hack - http://en.wikipedia.org/wiki/CSS_filter#Star_hack - is not part of the CSS spec,
+        // but it still needs to be handled
         Optional<Character> starHack = source.optional(Tokens.STAR);
 
-        // the first non comment or space character must match the beginning of a declaration
-        if (!tokenFactory().declarationBegin().matches(source.current())) return snapshot.rollback();
+        // read the property name
+        Optional<String> ident = source.readIdent();
+        if (!ident.isPresent()) return snapshot.rollback();
 
-        // get the property, which is everything up to the delimiter
+        String content = starHack.isPresent() ? starHack.get() + ident.get() : ident.get();
+        RawSyntax property = new RawSyntax(snapshot.originalLine, snapshot.originalColumn, content.trim());
+
+        // read colon
+        source.skipWhitepace();
+        source.expect(tokenFactory().propertyNameEnd(), Message.MISSING_COLON);
+        source.skipWhitepace();
+
+        //read the property value
         int line = source.originalLine();
         int column = source.originalColumn();
-
-        String content = source.until(tokenFactory().propertyNameEnd());
-
-        // if we found the star hack, we need to write it back out
-        if (starHack.isPresent()) {
-            content = starHack.get() + content;
-        }
-
-        RawSyntax property = new RawSyntax(line, column, content.trim());
-
-        // check for malformed declaration
-        if (source.eof()) snapshot.rollback(Message.MALFORMED_DECLARATION);
-
-        source.skipWhitepace();
-        source.expect(tokenFactory().propertyNameEnd());
-        source.skipWhitepace();
-
-        // get the value, which is everything until the end of the declaration
-        line = source.originalLine();
-        column = source.originalColumn();
         content = source.until(tokenFactory().declarationEnd());
         RawSyntax value = new RawSyntax(line, column, content.trim());
 

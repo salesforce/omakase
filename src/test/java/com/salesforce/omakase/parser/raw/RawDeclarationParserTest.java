@@ -18,6 +18,7 @@ package com.salesforce.omakase.parser.raw;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -43,7 +44,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
             "   ",
             "\n",
             "{color: red}",
-            "_test:red",
+            "--test:red",
             "*",
             "$name");
     }
@@ -201,7 +202,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
     @Test
     public void missingColon() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Malformed declaration");
+        exception.expectMessage(Message.MISSING_COLON.message());
         parse("color red");
     }
 
