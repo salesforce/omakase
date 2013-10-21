@@ -45,7 +45,7 @@ public interface Writable {
      * The {@link StyleWriter} should be used to make decisions based on writer settings (e.g., compressed vs. verbose output
      * mode), as well as for writing inner or child {@link Writable}s. Do <b>not</b> call the this method method directly on inner
      * or child {@link Writable}s! That would bypass any overrides that are set on the {@link StyleWriter}. Use {@link
-     * StyleWriter#write(Writable, StyleAppendable)} instead.
+     * StyleWriter#writeInner(Writable, StyleAppendable)} instead.
      *
      * @param writer
      *     Writer to use for output settings and for writing inner {@link Writable}s.

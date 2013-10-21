@@ -101,7 +101,7 @@ public final class GenericAtRuleBlock extends AbstractSyntax implements AtRuleBl
         appendable.append('{');
         appendable.newlineIf(!writer.isCompressed());
         for (Statement statement : statements) {
-            writer.write(statement, appendable);
+            writer.writeInner(statement, appendable);
         }
         appendable.newlineIf(!writer.isCompressed());
         appendable.append('}');

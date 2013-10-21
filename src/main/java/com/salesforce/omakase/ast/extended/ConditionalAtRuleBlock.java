@@ -143,7 +143,7 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax implements AtRu
         }
 
         for (Statement statement : statements) {
-            writer.write(statement, appendable);
+            writer.writeInner(statement, appendable);
         }
 
         if (manager.isPassthroughMode()) {

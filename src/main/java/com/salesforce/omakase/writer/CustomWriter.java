@@ -32,7 +32,7 @@ import java.io.IOException;
  * {@link ClassSelector} override will not be utilized unless {@link Selector#refine()} is called on the parent {@link Selector}.
  * An easy way to handle this is with an {@link AutoRefiner}. See the notes on that class for more information.
  * <p/>
- * <b>Also Important:</b> The default {@link StyleWriter} (in {@link StyleWriter#write(Writable, StyleAppendable)}) usually checks
+ * <b>Also Important:</b> The default {@link StyleWriter} (in {@link StyleWriter#writeInner(Writable, StyleAppendable)}) usually checks
  * that the unit should actually be written out via {@link Writable#isWritable()}. Generally custom writers should check this as
  * well before writing.
  *
@@ -51,7 +51,7 @@ public interface CustomWriter<T extends Writable> {
      * StyleAppendable}.
      * <p/>
      * If you are augmenting the write process instead, you can output the default representation of the unit by calling {@link
-     * StyleWriter#write(Writable, StyleAppendable)} before or after your augmentations, as appropriate.
+     * StyleWriter#writeInner(Writable, StyleAppendable)} before or after your augmentations, as appropriate.
      * <p/>
      * Do not use the {@link StyleWriter} in an attempt to write direct content (Strings, chars, etc...). Use the {@link
      * StyleAppendable}.

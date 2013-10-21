@@ -161,7 +161,7 @@ public final class TermList extends AbstractPropertyValue {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (TermListMember member : members) {
-            writer.write(member, appendable);
+            writer.writeInner(member, appendable);
         }
 
         if (important) {

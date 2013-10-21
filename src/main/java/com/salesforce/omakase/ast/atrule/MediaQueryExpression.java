@@ -134,7 +134,7 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
             appendable.spaceIf(!writer.isCompressed());
 
             for (TermListMember term : terms) {
-                writer.write(term, appendable);
+                writer.writeInner(term, appendable);
             }
         }
 

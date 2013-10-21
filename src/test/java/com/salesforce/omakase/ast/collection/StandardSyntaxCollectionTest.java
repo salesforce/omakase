@@ -16,9 +16,14 @@
 
 package com.salesforce.omakase.ast.collection;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -133,6 +138,29 @@ public class StandardSyntaxCollectionTest {
     @Test
     public void getLastWhenEmpty() {
         assertThat(collection.last().isPresent()).isFalse();
+    }
+
+    @Test
+    public void findPresent() {
+        Selector s = new Selector();
+        ClassSelector part1 = new ClassSelector("test");
+        IdSelector part2 = new IdSelector("test");
+        s.parts().append(part1).append(part2);
+
+        Optional<IdSelector> found = s.parts().find(IdSelector.class);
+        assertThat(found.isPresent()).isTrue();
+        assertThat(found.get()).isSameAs(part2);
+    }
+
+    @Test
+    public void findAbsent() {
+        Selector s = new Selector();
+        ClassSelector part1 = new ClassSelector("test");
+        IdSelector part2 = new IdSelector("test");
+        s.parts().append(part1).append(part2);
+
+        Optional<PseudoClassSelector> found = s.parts().find(PseudoClassSelector.class);
+        assertThat(found.isPresent()).isFalse();
     }
 
     @Test

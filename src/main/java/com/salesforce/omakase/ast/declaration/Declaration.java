@@ -352,24 +352,24 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             // property name
-            writer.write(propertyName, appendable);
+            writer.writeInner(propertyName, appendable);
 
             // colon
             appendable.append(':');
             appendable.spaceIf(writer.isVerbose());
 
             // property value
-            writer.write(propertyValue, appendable);
+            writer.writeInner(propertyValue, appendable);
         } else {
             // property name
-            writer.write(rawPropertyName, appendable);
+            writer.writeInner(rawPropertyName, appendable);
 
             // colon
             appendable.append(':');
             appendable.spaceIf(writer.isVerbose());
 
             // property value
-            writer.write(rawPropertyValue, appendable);
+            writer.writeInner(rawPropertyValue, appendable);
         }
     }
 

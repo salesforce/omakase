@@ -170,10 +170,10 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
             for (SelectorPart part : parts) {
-                writer.write(part, appendable);
+                writer.writeInner(part, appendable);
             }
         } else {
-            writer.write(rawContent, appendable);
+            writer.writeInner(rawContent, appendable);
         }
     }
 

@@ -17,7 +17,9 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
@@ -116,6 +118,13 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     @Override
     public Optional<T> last() {
         return list.isEmpty() ? Optional.<T>absent() : Optional.of(list.peekLast());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <S extends T> Optional<S> find(Class<S> klass) {
+        // cast is safe because we ensure S extends T, and the predicate only returns true for types of S.
+        return (Optional<S>)Iterables.tryFind(list, Predicates.instanceOf(klass));
     }
 
     @Override

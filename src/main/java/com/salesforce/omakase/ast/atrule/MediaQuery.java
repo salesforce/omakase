@@ -152,7 +152,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // the restriction
         if (restriction.isPresent()) {
-            writer.write(restriction.get(), appendable);
+            writer.writeInner(restriction.get(), appendable);
             appendable.space();
         }
 
@@ -169,7 +169,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
             if ((!isFirst || printedType) && expression.isWritable()) {
                 appendable.append(" and ");
             }
-            writer.write(expression, appendable);
+            writer.writeInner(expression, appendable);
             isFirst = false;
         }
     }

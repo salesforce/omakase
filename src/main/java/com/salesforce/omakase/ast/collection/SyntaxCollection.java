@@ -26,10 +26,10 @@ import com.salesforce.omakase.writer.Writable;
 /**
  * A collection of related {@link Syntax} units.
  *
- * @param <T>
- *     The type of {@link Syntax} contained within the collection.
  * @param <P>
  *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
+ * @param <T>
+ *     The type of {@link Syntax} contained within the collection.
  *
  * @author nmcwilliams
  */
@@ -89,6 +89,18 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
      * @return The last unit in the collection, or {@link Optional#absent()} if empty.
      */
     Optional<T> last();
+
+    /**
+     * Finds the <em>first</em> item in this collection that is a type of a the given class.
+     *
+     * @param klass
+     *     Find the first instance of this class.
+     * @param <S>
+     *     Type of the instance to find.
+     *
+     * @return The first instance, or {@link Optional#absent()} if none match.
+     */
+    <S extends T> Optional<S> find(Class<S> klass);
 
     /**
      * Gets the next unit after the given one, if there is one.

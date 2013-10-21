@@ -94,6 +94,12 @@ public class StyleWriterTest {
         assertThat(sample.called).isTrue();
     }
 
+    @Test
+    public void writeSingle() {
+        ClassSelector s = new ClassSelector("test");
+        assertThat(StyleWriter.writeSingle(s)).isEqualTo(".test");
+    }
+
     public static final class SampleCustomWriter implements CustomWriter<Selector> {
         boolean called;
 

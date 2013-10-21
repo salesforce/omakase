@@ -17,6 +17,7 @@
 package com.salesforce.omakase.writer;
 
 import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
@@ -46,6 +47,9 @@ import static com.google.common.base.Preconditions.*;
  * StyleWriter verbose = StyleWriter.verbose();
  * Omakase.source(input).request(verbose).process();
  * verbose.writeTo(System.out);
+ * </code></pre>
+ * <pre><code>
+ * String classSelector = StyleWriter.writeSingle(new ClassSelector("test"));
  * </code></pre>
  * <p/>
  * Unless otherwise specified, {@link WriterMode#INLINE} will be used.
@@ -136,7 +140,7 @@ public final class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * Writes the processed CSS source code to the given {@link Appendable}.
+     * Writes the entire processed stylesheet to the given {@link Appendable}.
      *
      * @param appendable
      *     Write the processed CSS source code to this appendable.
@@ -149,7 +153,7 @@ public final class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * Writes the processed CSS source code to the given {@link StyleAppendable}.
+     * Writes the entire processed stylesheet to the given {@link StyleAppendable}.
      *
      * @param appendable
      *     Write the processed CSS source code to this appendable.
@@ -160,11 +164,11 @@ public final class StyleWriter implements DependentPlugin {
     public void writeTo(StyleAppendable appendable) throws IOException {
         checkNotNull(appendable, "appendable cannot be null");
         checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
-        write(tree.stylesheet(), appendable);
+        writeInner(tree.stylesheet(), appendable);
     }
 
     /**
-     * Writes the processed CSS source to a string.
+     * Writes the entire processed stylesheet to a string.
      *
      * @return The CSS output.
      */
@@ -175,7 +179,7 @@ public final class StyleWriter implements DependentPlugin {
         try {
             writeTo(appendable);
         } catch (IOException e) {
-            throw new RuntimeException("Using a StringBuilder shouldn't cause an IOException.", e);
+            throw new AssertionError("Using a StringBuilder shouldn't cause an IOException.", e);
         }
         return appendable.toString();
     }
@@ -186,6 +190,9 @@ public final class StyleWriter implements DependentPlugin {
      * <p/>
      * Note that the unit will only be written if {@link Writable#isWritable()} returns true. This may be false if the unit is
      * detached, for example.
+     * <p/>
+     * This is usually used within implementations of {@link Writable#write(StyleWriter, StyleAppendable)} to write inner units .
+     * To write a single, isolated object then use {@link #writeSnippet (Writable)} instead.
      *
      * @param <T>
      *     Type of the unit to write.
@@ -198,7 +205,7 @@ public final class StyleWriter implements DependentPlugin {
      *     If an I/O error occurs.
      */
     @SuppressWarnings("unchecked")
-    public <T extends Writable> void write(T writable, StyleAppendable appendable) throws IOException {
+    public <T extends Writable> void writeInner(T writable, StyleAppendable appendable) throws IOException {
         Class<? extends Writable> klass = writable.getClass();
 
         if (overrides.containsKey(klass)) {
@@ -215,10 +222,13 @@ public final class StyleWriter implements DependentPlugin {
      * <p/>
      * <b>Important:</b> This method is for writing disjoint units only. Examples would be for usage in test classes or in cases
      * where you are operating on a single CSS snippet as opposed to a whole CSS source. If you are implementing a syntax unit's
-     * write method then most of the time the method you want to use is {@link #write(Writable, StyleAppendable)}, passing in the
+     * write method then most of the time the method you want to use is {@link #writeInner(Writable, StyleAppendable)}, passing in the
      * same {@link StyleAppendable} that you were given.
+     *
+     * The difference between this and {@link #writeSingle(Writable)} is that this is a non-static method that takes into
+     * account any given {@link CustomWriter} overrides.
      * <p/>
-     * As this is for writing snippets, it bypasses the {@link Writable#isWritable()} check.
+     * As this is for writing individual units, it bypasses the {@link Writable#isWritable()} check.
      *
      * @param writable
      *     The unit to write.
@@ -226,21 +236,23 @@ public final class StyleWriter implements DependentPlugin {
      *     Type of the unit to write.
      *
      * @return The output CSS code for the given unit.
-     *
-     * @throws IOException
-     *     If an I/O error occurs.
      */
     @SuppressWarnings("unchecked")
-    public <T extends Writable> String writeSnippet(T writable) throws IOException {
+    public <T extends Writable> String writeSnippet(T writable) {
         Class<? extends Writable> klass = writable.getClass();
         StyleAppendable appendable = new StyleAppendable();
 
-        if (overrides.containsKey(klass)) {
-            // cast is safe as long as the map is guarded by #override
-            ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
-        } else {
-            // skip isWritable check
-            writable.write(this, appendable);
+        try {
+            if (overrides.containsKey(klass)) {
+                // cast is safe as long as the map is guarded by #override
+                ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
+            } else {
+                // skip isWritable check
+                writable.write(this, appendable);
+            }
+        } catch (IOException e) {
+            // we don't expect an IO error because we know our appendable is using a string builder.
+            throw new AssertionError("unexpected IO error");
         }
 
         return appendable.toString();
@@ -271,5 +283,35 @@ public final class StyleWriter implements DependentPlugin {
      */
     public static StyleWriter compressed() {
         return new StyleWriter(WriterMode.COMPRESSED);
+    }
+
+    /**
+     * A shortcut to {@link #writeSnippet(Writable)} that doesn't use any {@link CustomWriter} overrides. This also bypasses the
+     * {@link Writable#isWritable()} check. {@link WriterMode#INLINE} is used as a default.
+     * <p/>
+     * This is the simplest way to get the output of a single {@link Writable} instance.
+     *
+     * @param writable
+     *     The {@link Writable} instance, e.g., a {@link Syntax} unit.
+     *
+     * @return The output CSS code for the given unit.
+     */
+    public static String writeSingle(Writable writable) {
+        return writeSingle(writable, WriterMode.INLINE);
+    }
+
+    /**
+     * A shortcut to {@link #writeSnippet(Writable)} that doesn't use any {@link CustomWriter} overrides. This also bypasses the
+     * {@link Writable#isWritable()} check.
+     *
+     * @param writable
+     *     The {@link Writable} instance, e.g., a {@link Syntax} unit.
+     * @param mode
+     *     The {@link WriterMode}.
+     *
+     * @return The output CSS code for the given unit.
+     */
+    public static String writeSingle(Writable writable, WriterMode mode) {
+        return new StyleWriter(mode).writeSnippet(writable);
     }
 }

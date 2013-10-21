@@ -296,12 +296,12 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
 
             // expression
             if (expression.isPresent()) {
-                writer.write(expression.get(), appendable);
+                writer.writeInner(expression.get(), appendable);
             }
 
             // block
             if (block.isPresent()) {
-                writer.write(block.get(), appendable);
+                writer.writeInner(block.get(), appendable);
             }
 
         } else {
@@ -312,7 +312,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
 
             // expression
             if (rawExpression.isPresent()) {
-                writer.write(rawExpression.get(), appendable);
+                writer.writeInner(rawExpression.get(), appendable);
             }
 
             // block
@@ -320,7 +320,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
                 appendable.spaceIf(!writer.isCompressed());
                 appendable.append('{');
                 appendable.newlineIf(writer.isVerbose()).indentIf(writer.isVerbose());
-                writer.write(rawBlock.get(), appendable);
+                writer.writeInner(rawBlock.get(), appendable);
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');
             }

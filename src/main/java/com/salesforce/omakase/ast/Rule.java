@@ -148,7 +148,7 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
         // selectors
         for (Selector selector : selectors) {
             if (selector.isWritable()) {
-                writer.write(selector, appendable);
+                writer.writeInner(selector, appendable);
                 if (!selector.isLast()) {
                     appendable.append(',');
                     appendable.spaceIf(!writer.isCompressed());
@@ -165,7 +165,7 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
         for (Declaration declaration : declarations) {
             if (declaration.isWritable()) {
                 appendable.indentIf(writer.isVerbose());
-                writer.write(declaration, appendable);
+                writer.writeInner(declaration, appendable);
                 if (writer.isVerbose() || !declaration.isLast()) appendable.append(';');
                 appendable.spaceIf(writer.isInline() && !declaration.isLast());
                 appendable.newlineIf(writer.isVerbose());

@@ -162,7 +162,7 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
         //  the match and value if present
         if (matchType.isPresent()) {
             // match type
-            writer.write(matchType.get(), appendable);
+            writer.writeInner(matchType.get(), appendable);
 
             // the value. In simple cases where we know quotes aren't needed we omit them.
             // This could be handled better...

@@ -92,7 +92,7 @@ public final class MediaQueryList extends AbstractSyntax implements AtRuleExpres
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (MediaQuery query : queries) {
-            writer.write(query, appendable);
+            writer.writeInner(query, appendable);
             if (query.haxNextAndNextNotDetached()) {
                 appendable.append(',');
                 appendable.spaceIf(!writer.isCompressed());

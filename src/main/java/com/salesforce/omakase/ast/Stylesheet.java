@@ -121,7 +121,7 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (Statement statement : statements) {
-            writer.write(statement, appendable);
+            writer.writeInner(statement, appendable);
         }
     }
 
