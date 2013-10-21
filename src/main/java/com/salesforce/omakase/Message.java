@@ -37,7 +37,7 @@ public enum Message {
     EXPECTED_ATTRIBUTE_NAME("Expected to find the attribute name ([-_0-9a-zA-Z], cannot start with a number, --, or -[0-9])"),
     EXTRANEOUS("Unparsable text found at the end of the source '%s'"),
     UNPARSABLE_SELECTOR("Unable to parse remaining selector content (Check that the selector is valid and is allowed here)"),
-    UNPARSABLE_DECLARATION_VALUE("Unable to parse remaining declaration value (did you forget a semicolon?)"),
+    UNPARSABLE_DECLARATION_VALUE("Unable to parse remaining declaration value '%s' (did you forget a semicolon?)"),
     UNPARSABLE_CONDITIONAL_CONTENT("Unable to parse the remaining content in the conditional at-rule: %s"),
     UNPARSABLE_MEDIA("Unable to parse the remaining content in the media query '%s'"),
     EXPECTED_VALUE("Expected to parse a property value"),

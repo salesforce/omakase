@@ -45,4 +45,14 @@ public class OmakaseException extends RuntimeException {
     protected OmakaseException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    /**
+     * Creates a mew exception with the given cause.
+     *
+     * @param cause
+     *     The cause of the exception.
+     */
+    public OmakaseException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -95,7 +95,7 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
         if (declaration.isRefined()) return false;
 
         QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
-        Source source = new Source(declaration.rawPropertyValue().get().content(), declaration.line(), declaration.column());
+        Source source = new Source(declaration.rawPropertyValue().get());
 
         // parse the contents
         ParserFactory.termListParser().parse(source, qb, refiner);
@@ -106,7 +106,7 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
         }
 
         // there should be nothing left in the source
-        if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE);
+        if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE, source.remaining());
 
         // store the parsed value
         Optional<PropertyValue> first = qb.find(PropertyValue.class);

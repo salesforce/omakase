@@ -78,6 +78,11 @@ public final class Operator extends AbstractGroupable<TermList, TermListMember> 
     }
 
     @Override
+    public boolean isWritable() {
+        return true;
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         type.write(writer, appendable);
     }

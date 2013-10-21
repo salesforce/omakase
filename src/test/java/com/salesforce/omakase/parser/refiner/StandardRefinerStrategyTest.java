@@ -84,7 +84,7 @@ public class StandardRefinerStrategyTest {
         RawSyntax value = new RawSyntax(2, 5, "none ^^^^^^");
 
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNPARSABLE_DECLARATION_VALUE.message());
+        exception.expectMessage("Unable to parse remaining declaration value");
         new Declaration(name, value, new Refiner(new StatusChangingBroadcaster())).refine();
     }
 
