@@ -513,7 +513,7 @@ public enum Keyword {
      * @return True if this keyword is the only value in the {@link PropertyValue}.
      */
     public boolean isOnlyValueIn(PropertyValue value) {
-        Optional<KeywordValue> keywordValue = Value.asKeyword(value);
+        Optional<KeywordValue> keywordValue = Values.asKeyword(value);
         return keywordValue.isPresent() && keywordValue.get().keyword().equals(keyword);
     }
 

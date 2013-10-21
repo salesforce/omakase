@@ -19,17 +19,19 @@ package com.salesforce.omakase.ast.selector;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 /** Base class for {@link SelectorPart}s. */
 public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, SelectorPart> implements SelectorPart {
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
-    public AbstractSelectorPart() {
-    }
+    public AbstractSelectorPart() {}
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -46,6 +48,32 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
     @Override
     public Optional<Selector> parentSelector() {
         return parent();
+    }
+
+    @Override
+    public Iterable<SelectorPart> adjoining() {
+        if (isDetached() || type().isCombinator()) return Sets.newHashSet(self());
+
+        Deque<SelectorPart> deque = new ArrayDeque<>();
+
+        // add previous parts until we hit a combinator
+        Optional<SelectorPart> previous = previous();
+        while (previous.isPresent() && !previous.get().type().isCombinator()) {
+            deque.addFirst(previous.get());
+            previous = previous.get().previous();
+        }
+
+        // add self
+        deque.addLast(self());
+
+        // add all subsequent parts until we hit a combinator
+        Optional<SelectorPart> next = next();
+        while (next.isPresent() && !next.get().type().isCombinator()) {
+            deque.addLast(next.get());
+            next = next.get().next();
+        }
+
+        return deque;
     }
 
     @Override

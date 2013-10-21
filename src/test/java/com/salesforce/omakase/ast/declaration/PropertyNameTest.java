@@ -150,24 +150,13 @@ public class PropertyNameTest {
     }
 
     @Test
-    public void consistentHashCode() {
-        assertThat(prefixed.hashCode()).isEqualTo(PropertyName.using(5, 5, PREFIX + NAME).hashCode());
+    public void matchesSameInstance() {
+        assertThat(unprefixed.matches(unprefixed)).isTrue();
     }
 
     @Test
-    public void equalsSameInstance() {
-        assertThat(unprefixed.equals(unprefixed)).isTrue();
-    }
-
-    @Test
-    public void equalsAnotherPropertyNameWithSameName() {
-        assertThat(unprefixed.equals(PropertyName.using(NAME))).isTrue();
-    }
-
-    @Test
-    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
-    public void doesntEqualAnotherType() {
-        assertThat(unprefixed.equals("aa")).isFalse();
+    public void matchesAnotherPropertyNameWithSameName() {
+        assertThat(unprefixed.matches(PropertyName.using(NAME))).isTrue();
     }
 
     @Test
@@ -183,8 +172,8 @@ public class PropertyNameTest {
     }
 
     @Test
-    public void doesNotEqualPropertyNameWithDifferentName() {
-        assertThat(unprefixed.equals(PropertyName.using("zyx"))).isFalse();
+    public void doesNotMatchPropertyNameWithDifferentName() {
+        assertThat(unprefixed.matches(PropertyName.using("zyx"))).isFalse();
     }
 
     @Test

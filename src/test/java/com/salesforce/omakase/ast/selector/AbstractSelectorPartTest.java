@@ -29,18 +29,35 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /** Unit tests for {@link AbstractSelectorPart}. */
 @SuppressWarnings("JavaDoc")
 public class AbstractSelectorPartTest {
-    private TestSelectorPart obj;
+    private TestSelectorPart obj1;
+    private TestSelectorPart obj2;
+    private TestSelectorPart obj3;
+    private TestSelectorPart obj4;
+    private TestSelectorPart obj5;
+    private TestSelectorPart obj6;
+    private Combinator combinator;
     private Selector selector;
+    private Selector full;
 
     @Before
     public void setup() {
-        obj = new TestSelectorPart();
-        selector = new Selector(obj);
+        obj1 = new TestSelectorPart();
+        selector = new Selector(obj1);
+    }
+
+    private void fill() {
+        obj2 = new TestSelectorPart();
+        obj3 = new TestSelectorPart();
+        obj4 = new TestSelectorPart();
+        obj5 = new TestSelectorPart();
+        obj6 = new TestSelectorPart();
+        combinator = new Combinator(CombinatorType.DESCENDANT);
+        full = selector = new Selector(obj1, obj2, obj3, combinator, obj4, obj5, obj6);
     }
 
     @Test
     public void parentSelector() {
-        assertThat(obj.parentSelector().get()).isSameAs(selector);
+        assertThat(obj1.parentSelector().get()).isSameAs(selector);
     }
 
     @Test
@@ -58,13 +75,13 @@ public class AbstractSelectorPartTest {
     @Test
     public void commentsWhenAttached() {
         selector.comments(Lists.newArrayList("test"));
-        obj.comments(Lists.newArrayList("test"));
-        assertThat(obj.comments()).hasSize(2);
+        obj1.comments(Lists.newArrayList("test"));
+        assertThat(obj1.comments()).hasSize(2);
     }
 
     @Test
     public void writableWhenAttached() {
-        assertThat(obj.isWritable()).isTrue();
+        assertThat(obj1.isWritable()).isTrue();
     }
 
     @Test
@@ -72,10 +89,41 @@ public class AbstractSelectorPartTest {
         assertThat(new TestSelectorPart().isWritable()).isFalse();
     }
 
+    @Test
+    public void adjoiningWhenFirst() {
+        fill();
+        assertThat(obj1.adjoining()).containsExactly(obj1, obj2, obj3);
+    }
+
+    @Test
+    public void adjoiningWhenMiddle() {
+        fill();
+        assertThat(obj2.adjoining()).containsExactly(obj1, obj2, obj3);
+    }
+
+    @Test
+    public void adjoiningWhenEnd() {
+        fill();
+        assertThat(obj3.adjoining()).containsExactly(obj1, obj2, obj3);
+    }
+
+    @Test
+    public void adjoiningWhenCombinator() {
+        fill();
+        assertThat(combinator.adjoining()).containsExactly(combinator);
+    }
+
+    @Test
+    public void adjoiningWhenDetached() {
+        fill();
+        obj2.detach();
+        assertThat(obj2.adjoining()).containsExactly(obj2);
+    }
+
     public static final class TestSelectorPart extends AbstractSelectorPart {
         @Override
         public SelectorPartType type() {
-            return null;
+            return SelectorPartType.CLASS_SELECTOR;
         }
 
         @Override

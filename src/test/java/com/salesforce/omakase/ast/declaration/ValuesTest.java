@@ -24,92 +24,92 @@ import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Unit tests for {@link Value}. */
+/** Unit tests for {@link Values}. */
 @SuppressWarnings("JavaDoc")
-public class ValueTest {
+public class ValuesTest {
     PropertyValue value;
 
     @Test
     public void asTermListPresent() {
         value = TermList.singleValue(NumericalValue.of(1));
-        assertThat(Value.asTermList(value).isPresent()).isTrue();
+        assertThat(Values.asTermList(value).isPresent()).isTrue();
     }
 
     @Test
     public void asTermListAbsent() {
-        assertThat(Value.asTermList(new OtherPropertyValue()).isPresent()).isFalse();
+        assertThat(Values.asTermList(new OtherPropertyValue()).isPresent()).isFalse();
     }
 
     @Test
     public void asHexColorPresentInTermList() {
         value = TermList.singleValue(new HexColorValue("fff"));
-        assertThat(Value.asHexColor(value).isPresent()).isTrue();
+        assertThat(Values.asHexColor(value).isPresent()).isTrue();
     }
 
     @Test
     public void asHexColorNotPresentInTermList() {
         value = TermList.singleValue(new KeywordValue("none"));
-        assertThat(Value.asHexColor(value).isPresent()).isFalse();
+        assertThat(Values.asHexColor(value).isPresent()).isFalse();
     }
 
     @Test
     public void asHexColorNotOnlyOneInTermList() {
         value = TermList.ofValues(OperatorType.SPACE, HexColorValue.of("fff"), NumericalValue.of(1));
-        assertThat(Value.asHexColor(value).isPresent()).isFalse();
+        assertThat(Values.asHexColor(value).isPresent()).isFalse();
     }
 
     @Test
     public void asKeywordPresentInTermList() {
         value = TermList.singleValue(KeywordValue.of(Keyword.NONE));
-        assertThat(Value.asKeyword(value).isPresent()).isTrue();
+        assertThat(Values.asKeyword(value).isPresent()).isTrue();
     }
 
     @Test
     public void asKeywordNotPresentInTermList() {
         value = TermList.singleValue(new HexColorValue("fff"));
-        assertThat(Value.asKeyword(value).isPresent()).isFalse();
+        assertThat(Values.asKeyword(value).isPresent()).isFalse();
     }
 
     @Test
     public void asKeywordNotOnlyOneInTermList() {
         value = TermList.ofValues(OperatorType.SPACE, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
-        assertThat(Value.asKeyword(value).isPresent()).isFalse();
+        assertThat(Values.asKeyword(value).isPresent()).isFalse();
     }
 
     @Test
     public void asNumericalPresentInTermList() {
         value = TermList.singleValue(NumericalValue.of(1, "px"));
-        assertThat(Value.asNumerical(value).isPresent()).isTrue();
+        assertThat(Values.asNumerical(value).isPresent()).isTrue();
     }
 
     @Test
     public void asNumericalNotPresentInTermList() {
         value = TermList.singleValue(KeywordValue.of(Keyword.NONE));
-        assertThat(Value.asNumerical(value).isPresent()).isFalse();
+        assertThat(Values.asNumerical(value).isPresent()).isFalse();
     }
 
     @Test
     public void asNumericalNotOnlyOneInTermList() {
         value = TermList.ofValues(OperatorType.SLASH, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
-        assertThat(Value.asNumerical(value).isPresent()).isFalse();
+        assertThat(Values.asNumerical(value).isPresent()).isFalse();
     }
 
     @Test
     public void asStringPresentInTermList() {
         value = TermList.singleValue(StringValue.of(QuotationMode.DOUBLE, "helloworld"));
-        assertThat(Value.asString(value).isPresent()).isTrue();
+        assertThat(Values.asString(value).isPresent()).isTrue();
     }
 
     @Test
     public void asStringNotPresentInTermList() {
         value = TermList.singleValue(KeywordValue.of(Keyword.NONE));
-        assertThat(Value.asString(value).isPresent()).isFalse();
+        assertThat(Values.asString(value).isPresent()).isFalse();
     }
 
     @Test
     public void asStringNotOnlyOneInTermList() {
         value = TermList.ofValues(OperatorType.SPACE, StringValue.of(QuotationMode.DOUBLE, "h"), NumericalValue.of(1));
-        assertThat(Value.asString(value).isPresent()).isFalse();
+        assertThat(Values.asString(value).isPresent()).isFalse();
     }
 
     private static final class OtherPropertyValue extends AbstractPropertyValue implements PropertyValue {

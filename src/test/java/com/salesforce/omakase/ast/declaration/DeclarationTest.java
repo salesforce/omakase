@@ -94,7 +94,7 @@ public class DeclarationTest {
     public void setPropertyValueShorthand() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         d.propertyValue(KeywordValue.of(Keyword.BLOCK));
-        assertThat(Value.asKeyword(d.propertyValue()).isPresent()).isTrue();
+        assertThat(Values.asKeyword(d.propertyValue()).isPresent()).isTrue();
     }
 
     @Test

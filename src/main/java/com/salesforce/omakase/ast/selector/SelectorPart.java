@@ -54,4 +54,25 @@ public interface SelectorPart extends Syntax, Groupable<Selector, SelectorPart> 
      * @return The {@link SelectorPartType}.
      */
     SelectorPartType type();
+
+    /**
+     * Gets the non-combinator {@link SelectorPart}s contiguous to this one.
+     * <p/>
+     * If this part is a {@link Combinator} then this method will return a collection of one, containing only this {@link
+     * Combinator} instance itself.
+     * <p/>
+     * If this part is <em>not</em> a {@link Combinator} then this method will return all preceding and subsequent {@link
+     * SelectorPart}s up until the first encountered {@link Combinator}. In other words, this will return all parts matching a
+     * single element, such as multiple class selectors.
+     * <p/>
+     * For example, in this selector:
+     * <pre><code>
+     * .test1.test2#test3 .testA.testB#testC
+     * </code></pre>
+     * <p/>
+     * If <code>this</code> is ".test2", this method will return the ".test1", ".test2", and "#test3" parts.
+     *
+     * @return The adjoining {@link SelectorPart}s.
+     */
+    Iterable<SelectorPart> adjoining();
 }

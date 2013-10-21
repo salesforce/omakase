@@ -134,4 +134,22 @@ public abstract class AbstractSyntax implements Syntax {
             .addUnlessEmpty("comments", comments())
             .toString();
     }
+
+    @Override
+    public final int hashCode() {
+        // final because the basic broadcasting behavior assumes identity-based equality. In addition,
+        // there is no universally logical non-identity-based implementation of hashCode and equals that applies to all of the
+        // different usages of AST objects. The definition can vary from one plugin to the next. Thus,
+        // when equality must take on a different meaning it must be dealt with at the container level.
+        return super.hashCode();
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        // final because the basic broadcasting behavior assumes identity-based equality. In addition,
+        // there is no universally logical non-identity-based implementation of hashCode and equals that applies to all of the
+        // different usages of AST objects. The definition can vary from one plugin to the next. Thus,
+        // when equality must take on a different meaning it must be dealt with at the container level.
+        return super.equals(obj);
+    }
 }

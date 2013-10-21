@@ -266,7 +266,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * @return True if this {@link Declaration} has the given property name.
      */
     public boolean isProperty(PropertyName propertyName) {
-        return propertyName().equals(propertyName);
+        return propertyName().matches(propertyName);
     }
 
     /**

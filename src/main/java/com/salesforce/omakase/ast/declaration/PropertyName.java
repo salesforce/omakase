@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
@@ -197,19 +196,16 @@ public final class PropertyName extends AbstractSyntax {
         return name().equals(property.toString());
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof PropertyName) {
-            final PropertyName that = (PropertyName)other;
-            return name().equals(that.name());
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name());
+    /**
+     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the name of the given {@link PropertyName}.
+     *
+     * @param other
+     *     Match against this property name.
+     *
+     * @return True if the names are equal.
+     */
+    public boolean matches(PropertyName other) {
+        return name().equals(other.name());
     }
 
     @Override

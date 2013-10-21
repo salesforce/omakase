@@ -44,9 +44,9 @@ import com.google.common.collect.ImmutableList;
  *
  * @author nmcwilliams
  */
-public final class Value {
+public final class Values {
     /** do not construct */
-    private Value() {}
+    private Values() {}
 
     /**
      * Gets the given value as {@link TermList}.
