@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.test.util;
 
-import ch.qos.logback.classic.Level;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -35,8 +34,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Simply logs the creation or change of {@link Syntax} units. Used for debugging.
  * <p/>
- * Most events are logged at {@link Level#INFO}, however some events are {@link Level#TRACE} or {@link Level#DEBUG}. Update the
- * logging config file as appropriate to filter which levels are shown in the console.
+ * Events are logged at different levels. Update the logging config file as appropriate to filter which levels are shown in the
+ * console.
  *
  * @author nmcwilliams
  */
