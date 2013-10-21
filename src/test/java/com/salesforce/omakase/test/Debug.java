@@ -17,7 +17,8 @@
 package com.salesforce.omakase.test;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
@@ -30,9 +31,7 @@ import java.io.IOException;
 @SuppressWarnings("JavaDoc")
 public final class Debug {
     public static final String SRC = ".test {\n" +
-        "    margin: 0;\n" +
-        "    padding 1px;\n" +
-        "    color: red;\n" +
+        "    background: a(BLAH);" +
         "}";
 
     private Debug() {}
@@ -46,8 +45,13 @@ public final class Debug {
             .request(new StandardValidation())
             .request(new Plugin() {
                 @Observe
-                public void observe(AtRule ar) {
+                public void observe(RawFunction raw) {
+                    raw.args("changed");
+                }
 
+                @Observe
+                public void observe(GenericFunctionValue f) {
+                    System.out.println(f);
                 }
             })
             .process();

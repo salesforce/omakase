@@ -19,6 +19,7 @@ package com.salesforce.omakase.parser.declaration;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.broadcast.Broadcastable;
@@ -49,6 +50,9 @@ public class TermSequenceParser extends AbstractParser {
         boolean matchedThisTime = false;
 
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+
+        // we want to let RawFunctions through so that they can be altered before refinement
+        queue.alwaysFlush(RawFunction.class);
 
         do {
             matchedThisTime = ParserFactory.termParser().parse(source, queue, refiner);

@@ -16,10 +16,11 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,12 +85,7 @@ public class QueuingBroadcasterTest {
         queue.broadcast(u5);
 
         queue.resume();
-
-        assertThat(Iterables.get(qb.all(), 0)).isSameAs(u1);
-        assertThat(Iterables.get(qb.all(), 1)).isSameAs(u2);
-        assertThat(Iterables.get(qb.all(), 2)).isSameAs(u3);
-        assertThat(Iterables.get(qb.all(), 3)).isSameAs(u4);
-        assertThat(Iterables.get(qb.all(), 4)).isSameAs(u5);
+        assertThat(qb.all()).containsExactly(u1, u2, u3, u4, u5);
     }
 
     @Test
@@ -137,10 +133,7 @@ public class QueuingBroadcasterTest {
         queue.reject(u1);
 
         queue.resume();
-
-        assertThat(qb.all()).hasSize(2);
-        assertThat(Iterables.get(qb.all(), 0)).isSameAs(u2);
-        assertThat(Iterables.get(qb.all(), 1)).isSameAs(u3);
+        assertThat(qb.all()).containsExactly(u2, u3);
     }
 
     @Test
@@ -158,10 +151,7 @@ public class QueuingBroadcasterTest {
         queue.reject(u3);
 
         queue.resume();
-
-        assertThat(qb.all()).hasSize(2);
-        assertThat(Iterables.get(qb.all(), 0)).isSameAs(u1);
-        assertThat(Iterables.get(qb.all(), 1)).isSameAs(u2);
+        assertThat(qb.all()).containsExactly(u1, u2);
     }
 
     @Test
@@ -179,10 +169,7 @@ public class QueuingBroadcasterTest {
         queue.reject(u2);
 
         queue.resume();
-
-        assertThat(qb.all()).hasSize(2);
-        assertThat(Iterables.get(qb.all(), 0)).isSameAs(u1);
-        assertThat(Iterables.get(qb.all(), 1)).isSameAs(u3);
+        assertThat(qb.all()).containsExactly(u1, u3);
     }
 
     @Test
@@ -216,11 +203,62 @@ public class QueuingBroadcasterTest {
 
     @Test
     public void updatesStatus() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
         Syntax u1 = new ClassSelector("test1");
 
         u1.status(Status.UNBROADCASTED);
-        qb.broadcast(u1);
+        queue.broadcast(u1);
         assertThat(u1.status()).isSameAs(Status.QUEUED);
+    }
+
+    @Test
+    public void alwaysFlushWhenPausedMatches() {
+        queue.pause();
+
+        ClassSelector u1 = new ClassSelector("test");
+        IdSelector u2 = new IdSelector("test");
+
+        queue.alwaysFlush(IdSelector.class);
+        queue.broadcast(u1);
+        queue.broadcast(u2);
+
+        assertThat(qb.all()).containsExactly(u2);
+    }
+
+    @Test
+    public void alwaysFlushWhenPausedDoesntMatch() {
+        queue.pause();
+
+        ClassSelector u1 = new ClassSelector("test");
+        IdSelector u2 = new IdSelector("test");
+
+        queue.alwaysFlush(PseudoClassSelector.class);
+        queue.broadcast(u1);
+        queue.broadcast(u2);
+
+        assertThat(qb.all()).isEmpty();
+    }
+
+    @Test
+    public void alwaysFlushNotPausedMatches() {
+        ClassSelector u1 = new ClassSelector("test");
+        IdSelector u2 = new IdSelector("test");
+
+        queue.alwaysFlush(IdSelector.class);
+        queue.broadcast(u1);
+        queue.broadcast(u2);
+
+        assertThat(qb.all()).containsExactly(u1, u2);
+    }
+
+    @Test
+    public void alwaysFlushNotPausedDoesntMatch() {
+        ClassSelector u1 = new ClassSelector("test");
+        IdSelector u2 = new IdSelector("test");
+
+        queue.alwaysFlush(PseudoClassSelector.class);
+        queue.broadcast(u1);
+        queue.broadcast(u2);
+
+        assertThat(qb.all()).containsExactly(u1, u2);
     }
 }

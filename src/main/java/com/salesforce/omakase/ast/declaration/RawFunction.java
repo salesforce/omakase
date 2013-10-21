@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -114,5 +115,10 @@ public final class RawFunction extends AbstractSyntax {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).add("name", name).add("args", args).toString();
     }
 }

@@ -62,6 +62,51 @@ public final class StyleAppendable {
     }
 
     /**
+     * Appends the specified integer.
+     *
+     * @param i
+     *     The integer to write.
+     *
+     * @return this, for chaining.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     */
+    public StyleAppendable append(int i) throws IOException {
+        return append(Integer.toString(i));
+    }
+
+    /**
+     * Appends the specified double.
+     *
+     * @param d
+     *     The double to write.
+     *
+     * @return this, for chaining.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     */
+    public StyleAppendable append(double d) throws IOException {
+        return append(Double.toString(d));
+    }
+
+    /**
+     * Appends the specified long.
+     *
+     * @param l
+     *     The long to write.
+     *
+     * @return this, for chaining.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     */
+    public StyleAppendable append(long l) throws IOException {
+        return append(Long.toString(l));
+    }
+
+    /**
      * Appends the specified {@link CharSequence} or String.
      *
      * @param sequence

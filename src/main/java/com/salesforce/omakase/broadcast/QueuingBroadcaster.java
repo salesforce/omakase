@@ -35,6 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class QueuingBroadcaster extends AbstractBroadcaster {
     private final Deque<Broadcastable> queue = new ArrayDeque<>();
+    private Set<Class<? extends Broadcastable>> alwaysFlush;
     private Set<Broadcastable> rejected;
 
     private State state = State.READY;
@@ -56,16 +57,16 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
 
     @Override
     public void broadcast(Broadcastable broadcastable) {
-        queue.addLast(broadcastable);
-
         // update status to prevent a unit from being broadcasted too many times
         if (broadcastable.status() == Status.UNBROADCASTED) {
             broadcastable.status(Status.QUEUED);
         }
 
         // broadcast the unit unless the queue is paused
-        if (state == State.READY) {
-            flush();
+        if (state == State.READY || (alwaysFlush != null && alwaysFlush.contains(broadcastable.getClass()))) {
+            relay.broadcast(broadcastable);
+        } else {
+            queue.addLast(broadcastable);
         }
     }
 
@@ -83,7 +84,7 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
      * Resumes broadcasts. Any broadcasts currently in the queue will be immediately sent out.
      *
      * @return this, for chaining.
-      */
+     */
     public QueuingBroadcaster resume() {
         flush();
         state = State.READY;
@@ -140,6 +141,25 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
             rejected = Sets.newHashSet();
         }
         rejected.add(broadcastable);
+        return this;
+    }
+
+    /**
+     * Specifies that the broadcasts matching the given class should always be flushed, regardless of whether the queue is paused
+     * or not.
+     * <p/>
+     * Note that the class must be equal-- not an instanceof.
+     *
+     * @param broadcastable
+     *     Always flush {@link Broadcastable}s of this class.
+     *
+     * @return this, for chaining.
+     */
+    public QueuingBroadcaster alwaysFlush(Class<? extends Broadcastable> broadcastable) {
+        if (alwaysFlush == null) {
+            alwaysFlush = Sets.newHashSet();
+        }
+        alwaysFlush.add(broadcastable);
         return this;
     }
 

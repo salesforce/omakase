@@ -28,6 +28,7 @@ import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.*;
@@ -125,24 +126,24 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
         assertThat(broadcasted).hasSize(19);
 
-        assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(1)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(0)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(1)).isInstanceOf(RawFunction.class);
         assertThat(broadcasted.get(2)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(3)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(4)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(5)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(6)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(7)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(8)).isInstanceOf(RawFunction.class);
-        assertThat(broadcasted.get(9)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(10)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(11)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(12)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(13)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(14)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(15)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(16)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(17)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(8)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(9)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(10)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(broadcasted.get(11)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(12)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(13)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(14)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(15)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(16)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(17)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(18)).isInstanceOf(GenericFunctionValue.class);
     }
 
@@ -198,5 +199,15 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find another term");
         parse("1px 1px/*x*/,%");
+    }
+
+    @Test
+    public void rawFunctionsBroadcastedBeforeGenericFunctions() {
+        GenericParseResult result = parse("blah(BLAH)").get(0);
+        ArrayList<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
+
+        assertThat(broadcasted).hasSize(2);
+        assertThat(broadcasted.get(0)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(1)).isInstanceOf(GenericFunctionValue.class);
     }
 }
