@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.salesforce</groupId>
 	<artifactId>omakase</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>Omakase CSS Parser</name>
 
 	<properties>
@@ -33,6 +33,18 @@
 			<version>2.0M10</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
             <!-- for tests only! -->
 			<groupId>org.reflections</groupId>
@@ -40,12 +52,6 @@
 			<version>0.9.9-RC1</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.5</version>
-            <scope>test</scope>
-        </dependency>
 	</dependencies>
 
 	<build>
@@ -76,5 +82,18 @@
 
 		</plugins>
 	</build>
+
+    <distributionManagement>
+        <repository>
+            <id>${repo-id}</id>
+            <name>${repo-name-release}</name>
+            <url>${repo-url-release}</url>
+        </repository>
+        <snapshotRepository>
+            <id>${repo-id}</id>
+            <name>${repo-name-snapshots}</name>
+            <url>${repo-url-snapshots}</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
