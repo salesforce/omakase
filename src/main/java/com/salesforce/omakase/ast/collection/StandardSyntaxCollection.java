@@ -68,7 +68,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      */
     public StandardSyntaxCollection(P parent, Broadcaster broadcaster) {
         this.parent = parent;
-        this.list = new LinkedList<>();
+        this.list = new LinkedList<T>();
         this.broadcaster = broadcaster;
     }
 
@@ -313,7 +313,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      * @return The new {@link SyntaxCollection} instance.
      */
     public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent) {
-        return new StandardSyntaxCollection<>(parent);
+        return new StandardSyntaxCollection<P, E>(parent);
     }
 
     /**
@@ -333,6 +333,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
      * @return The new {@link SyntaxCollection} instance.
      */
     public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent, Broadcaster broadcaster) {
-        return new StandardSyntaxCollection<>(parent, broadcaster);
+        return new StandardSyntaxCollection<P, E>(parent, broadcaster);
     }
 }

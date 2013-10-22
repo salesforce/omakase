@@ -103,7 +103,7 @@ public final class TemplatesHelper {
      * @return A new {@link SourceWithExpectedResult} instance.
      */
     public static <T> SourceWithExpectedResult<T> withExpectedResult(String source, T expected) {
-        SourceWithExpectedResult<T> ts = new SourceWithExpectedResult<>();
+        SourceWithExpectedResult<T> ts = new SourceWithExpectedResult<T>();
         ts.source = source;
         ts.expected = expected;
         return ts;

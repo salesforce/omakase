@@ -16,13 +16,13 @@
 
 package com.salesforce.omakase.writer;
 
+import com.google.common.collect.Maps;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.*;
@@ -57,7 +57,7 @@ import static com.google.common.base.Preconditions.*;
  * @author nmcwilliams
  */
 public final class StyleWriter implements DependentPlugin {
-    private final Map<Class<? extends Writable>, CustomWriter<?>> overrides = new HashMap<>();
+    private final Map<Class<? extends Writable>, CustomWriter<?>> overrides = Maps.newHashMap();
     private SyntaxTree tree;
     private WriterMode mode;
 

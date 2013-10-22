@@ -63,8 +63,8 @@ public final class Emitter {
         });
 
     /* order is important so that subscribers are notified in the order they were registered, hence linked map */
-    private final Map<Class<?>, Set<Subscription>> processors = new LinkedHashMap<>(32);
-    private final Map<Class<?>, Set<Subscription>> validators = new LinkedHashMap<>(32);
+    private final Map<Class<?>, Set<Subscription>> processors = new LinkedHashMap<Class<?>, Set<Subscription>>(32);
+    private final Map<Class<?>, Set<Subscription>> validators = new LinkedHashMap<Class<?>, Set<Subscription>>(32);
 
     private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
 
@@ -107,7 +107,7 @@ public final class Emitter {
             case PROCESS:
                 subscriptions = processors.get(entry.getKey());
                 if (subscriptions == null) {
-                    subscriptions = new HashSet<>();
+                    subscriptions = new HashSet<Subscription>();
                     processors.put(entry.getKey(), subscriptions);
                 }
                 subscriptions.add(subscription);
@@ -115,7 +115,7 @@ public final class Emitter {
             case VALIDATE:
                 subscriptions = validators.get(entry.getKey());
                 if (subscriptions == null) {
-                    subscriptions = new HashSet<>();
+                    subscriptions = new HashSet<Subscription>();
                     validators.put(entry.getKey(), subscriptions);
                 }
                 subscriptions.add(subscription);
@@ -137,9 +137,9 @@ public final class Emitter {
      *     The {@link ErrorManager} instance.
      */
     public void emit(Object event, ErrorManager em) {
-        if (phase == SubscriptionPhase.PROCESS)
+        if (phase == SubscriptionPhase.PROCESS) {
             emit(processors, event, em);
-        else {
+        } else {
             emit(validators, event, em);
         }
     }

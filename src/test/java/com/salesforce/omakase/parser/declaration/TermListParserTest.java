@@ -218,8 +218,8 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
 
     @Test
     public void parsesImportant() {
-        List<String> sourcesWithSpace = new ArrayList<>();
-        List<String> sourcesWithoutSpace = new ArrayList<>();
+        List<String> sourcesWithSpace = new ArrayList<String>();
+        List<String> sourcesWithoutSpace = new ArrayList<String>();
 
         for (String source : validSources()) {
             sourcesWithSpace.add(source + " !important");

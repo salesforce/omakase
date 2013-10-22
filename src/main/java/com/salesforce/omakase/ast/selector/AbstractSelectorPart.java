@@ -54,7 +54,7 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
     public Iterable<SelectorPart> adjoining() {
         if (isDetached() || type().isCombinator()) return Sets.newHashSet(self());
 
-        Deque<SelectorPart> deque = new ArrayDeque<>();
+        Deque<SelectorPart> deque = new ArrayDeque<SelectorPart>();
 
         // add previous parts until we hit a combinator
         Optional<SelectorPart> previous = previous();

@@ -107,7 +107,7 @@ public final class SingleInterestBroadcaster<T extends Broadcastable> extends Ab
      * @return The new instance.
      */
     public static <E extends Broadcastable> SingleInterestBroadcaster<E> of(Class<E> klass) {
-        return new SingleInterestBroadcaster<>(klass);
+        return new SingleInterestBroadcaster<E>(klass);
     }
 
     /**
@@ -121,6 +121,6 @@ public final class SingleInterestBroadcaster<T extends Broadcastable> extends Ab
      * @return The new instance.
      */
     public static <E extends Broadcastable> SingleInterestBroadcaster<E> of(Class<E> klass, Broadcaster relay) {
-        return new SingleInterestBroadcaster<>(klass, relay);
+        return new SingleInterestBroadcaster<E>(klass, relay);
     }
 }

@@ -79,7 +79,7 @@ public abstract class AbstractSyntax implements Syntax {
 
         // delayed creation of comments list
         if (comments == null) {
-            comments = new ArrayList<>(commentsToAdd.size());
+            comments = new ArrayList<Comment>(commentsToAdd.size());
         }
 
         // add the comments
@@ -96,7 +96,7 @@ public abstract class AbstractSyntax implements Syntax {
 
         // delayed creation of comments list
         if (comments == null) {
-            comments = new ArrayList<>(commentsToAdd.size());
+            comments = new ArrayList<Comment>(commentsToAdd.size());
         }
 
         comments.addAll(commentsToAdd);

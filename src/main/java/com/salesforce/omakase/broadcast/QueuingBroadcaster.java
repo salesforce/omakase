@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public final class QueuingBroadcaster extends AbstractBroadcaster {
-    private final Deque<Broadcastable> queue = new ArrayDeque<>();
+    private final Deque<Broadcastable> queue = new ArrayDeque<Broadcastable>();
     private Set<Class<? extends Broadcastable>> alwaysFlush;
     private Set<Broadcastable> rejected;
 

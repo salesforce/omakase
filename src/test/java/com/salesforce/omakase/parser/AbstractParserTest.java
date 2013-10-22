@@ -196,7 +196,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         List<ParseResult<R>> results = Lists.newArrayList();
 
         for (SourceWithExpectedResult<R> ts : sources) {
-            ParseResult<R> result = new ParseResult<>();
+            ParseResult<R> result = new ParseResult<R>();
             result.broadcaster = new QueryableBroadcaster();
             result.source = new Source(ts.source);
             result.success = parser.parse(result.source, result.broadcaster);
