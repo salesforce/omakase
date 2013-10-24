@@ -70,6 +70,12 @@ public class ConditionalsManagerTest {
     }
 
     @Test
+    public void replacesConditions() {
+        ConditionalsManager manager = new ConditionalsManager().addTrueConditions("ie7", "ie8");
+        assertThat(manager.replaceTrueConditions("chrome").trueConditions()).containsExactly("chrome");
+    }
+
+    @Test
     public void passthroughModeDefaultFalse() {
         ConditionalsManager manager = new ConditionalsManager();
         assertThat(manager.isPassthroughMode()).isFalse();

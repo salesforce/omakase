@@ -80,8 +80,23 @@ public final class Selectors {
     }
 
     /**
-     * Checks the given parts for a {@link ClassSelector} that matches the given name. If you don't actually need the instance
-     * itself then you can use {@link #hasClassSelector(Iterable, String)} instead.
+     * Checks the given {@link Selector} for a {@link ClassSelector} that matches the given name. If you don't actually need the
+     * instance itself then you can use {@link #hasClassSelector(Selector, String)} instead.
+     *
+     * @param selector
+     *     The selector to check.
+     * @param name
+     *     Check for a {@link ClassSelector} with this name.
+     *
+     * @return The class selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<ClassSelector> findClassSelector(Selector selector, String name) {
+        return findClassSelector(selector.parts(), name);
+    }
+
+    /**
+     * Checks the given parts for the <em>first</em> {@link ClassSelector} that matches the given name. If you don't actually need
+     * the instance itself then you can use {@link #hasClassSelector(Iterable, String)} instead.
      *
      * @param parts
      *     The parts to check.
@@ -99,8 +114,23 @@ public final class Selectors {
     }
 
     /**
-     * Checks the given parts for a {@link IdSelector} that matches the given name. If you don't actually need the instance itself
-     * then you can use {@link #hasIdSelector(Iterable, String)} instead.
+     * Checks the given {@link Selector} for the <em>first</em> {@link IdSelector} that matches the given name. If you don't
+     * actually need the instance itself then you can use {@link #hasIdSelector(Selector, String)} instead.
+     *
+     * @param selector
+     *     The selector to check.
+     * @param name
+     *     Check for a {@link IdSelector} with this name.
+     *
+     * @return The class selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<IdSelector> findIdSelector(Selector selector, String name) {
+        return findIdSelector(selector.parts(), name);
+    }
+
+    /**
+     * Checks the given parts for the <em>first</em> {@link IdSelector} that matches the given name. If you don't actually need
+     * the instance itself then you can use {@link #hasIdSelector(Iterable, String)} instead.
      *
      * @param parts
      *     The parts to check.
@@ -118,8 +148,23 @@ public final class Selectors {
     }
 
     /**
-     * Checks the given parts for a {@link TypeSelector} that matches the given name. If you don't actually need the instance
-     * itself then you can use {@link #hasTypeSelector(Iterable, String)} instead.
+     * Checks the given {@link Selector} for the <em>first</em> {@link TypeSelector} that matches the given name. If you don't
+     * actually need the instance itself then you can use {@link #hasTypeSelector(Selector, String)} instead.
+     *
+     * @param selector
+     *     The selector to check.
+     * @param name
+     *     Check for a {@link TypeSelector} with this name.
+     *
+     * @return The class selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<TypeSelector> findTypeSelector(Selector selector, String name) {
+        return findTypeSelector(selector.parts(), name);
+    }
+
+    /**
+     * Checks the given parts for the <em>first</em> {@link TypeSelector} that matches the given name. If you don't actually need
+     * the instance itself then you can use {@link #hasTypeSelector(Iterable, String)} instead.
      *
      * @param parts
      *     The parts to check.
@@ -134,6 +179,22 @@ public final class Selectors {
             if (type.isPresent() && type.get().name().equals(name)) return type;
         }
         return Optional.absent();
+    }
+
+    /**
+     * Checks the given parts for a {@link ClassSelector} that matches the given name.
+     * <p/>
+     * If you would like access to the found instance itself then use {@link #findClassSelector(Selector, String)} instead.
+     *
+     * @param selector
+     *     The {@link Selector} to check.
+     * @param name
+     *     Check for a {@link ClassSelector} with this name.
+     *
+     * @return True if one of the parts is a {@link ClassSelector} with the given name.
+     */
+    public static boolean hasClassSelector(Selector selector, String name) {
+        return hasClassSelector(selector.parts(), name);
     }
 
     /**
@@ -155,6 +216,22 @@ public final class Selectors {
     /**
      * Checks the given parts for a {@link IdSelector} that matches the given name.
      * <p/>
+     * If you would like access to the found instance itself then use {@link #findIdSelector(Selector, String)} instead.
+     *
+     * @param selector
+     *     The {@link Selector} to check.
+     * @param name
+     *     Check for a {@link IdSelector} with this name.
+     *
+     * @return True if one of the parts is a {@link IdSelector} with the given name.
+     */
+    public static boolean hasIdSelector(Selector selector, String name) {
+        return hasIdSelector(selector.parts(), name);
+    }
+
+    /**
+     * Checks the given parts for a {@link IdSelector} that matches the given name.
+     * <p/>
      * If you would like access to the found instance itself then use {@link #findIdSelector(Iterable, String)} instead.
      *
      * @param parts
@@ -166,6 +243,22 @@ public final class Selectors {
      */
     public static boolean hasIdSelector(Iterable<SelectorPart> parts, String name) {
         return findIdSelector(parts, name).isPresent();
+    }
+
+    /**
+     * Checks the given parts for a {@link TypeSelector} that matches the given name.
+     * <p/>
+     * If you would like access to the found instance itself then use {@link #findTypeSelector(Selector, String)} instead.
+     *
+     * @param selector
+     *     The {@link Selector} to check.
+     * @param name
+     *     Check for a {@link TypeSelector} with this name.
+     *
+     * @return True if one of the parts is a {@link TypeSelector} with the given name.
+     */
+    public static boolean hasTypeSelector(Selector selector, String name) {
+        return hasTypeSelector(selector.parts(), name);
     }
 
     /**

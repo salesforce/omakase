@@ -70,7 +70,7 @@ public final class ConditionalsManager {
      * @return this, for chaining.
      */
     public ConditionalsManager addTrueConditions(String... trueConditions) {
-        return addTrueConditions(Sets.newHashSet(trueConditions));
+        return addTrueConditions(ImmutableSet.copyOf(trueConditions));
     }
 
     /**
@@ -111,6 +111,31 @@ public final class ConditionalsManager {
     public ConditionalsManager clearTrueConditions() {
         trueConditions.clear();
         return this;
+    }
+
+    /**
+     * Removes the currently set true conditions and adds the given true conditions.
+     *
+     * @param trueConditions
+     *     Replace all current true conditions with these.
+     *
+     * @return this, for chaining.
+     */
+    public ConditionalsManager replaceTrueConditions(String... trueConditions) {
+        return replaceTrueConditions(ImmutableSet.copyOf(trueConditions));
+    }
+
+    /**
+     * Removes the currently set true conditions and adds the given true conditions.
+     *
+     * @param trueConditions
+     *     Replace all current true conditions with these.
+     *
+     * @return this, for chaining.
+     */
+    public ConditionalsManager replaceTrueConditions(Iterable<String> trueConditions) {
+        clearTrueConditions();
+        return addTrueConditions(trueConditions);
     }
 
     /**

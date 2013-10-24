@@ -42,6 +42,24 @@ public class StyleAppendableTest {
         sa.append("abc");
         assertThat(sa.toString()).isEqualTo("abc");
     }
+    @Test
+    public void appendInt() throws IOException {
+        StyleAppendable sa = new StyleAppendable();
+        sa.append(1);
+        assertThat(sa.toString()).isEqualTo("1");
+    }
+    @Test
+    public void appendDouble() throws IOException {
+        StyleAppendable sa = new StyleAppendable();
+        sa.append(1d);
+        assertThat(sa.toString()).isEqualTo("1.0");
+    }
+    @Test
+    public void appendLong() throws IOException {
+        StyleAppendable sa = new StyleAppendable();
+        sa.append(1l);
+        assertThat(sa.toString()).isEqualTo("1");
+    }
 
     @Test
     public void newline() throws IOException {

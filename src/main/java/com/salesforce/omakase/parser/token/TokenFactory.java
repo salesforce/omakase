@@ -93,13 +93,6 @@ public interface TokenFactory {
     Token declarationBlockEnd();
 
     /**
-     * Gets the {@link Token} representing what the first character of a {@link Declaration} must be (property name).
-     *
-     * @return {@link Token} representing the first character of a {@link Declaration}.
-     */
-    Token declarationBegin();
-
-    /**
      * Gets the {@link Token} representing the delimiter between {@link Declaration}s.
      *
      * @return The {@link Token} representing the delimiter between {@link Declaration}s.

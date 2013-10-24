@@ -96,11 +96,6 @@ public final class StandardTokenFactory implements TokenFactory {
     }
 
     @Override
-    public Token declarationBegin() {
-        return PROPERTY_START;
-    }
-
-    @Override
     public Token declarationDelimiter() {
         return SEMICOLON;
     }

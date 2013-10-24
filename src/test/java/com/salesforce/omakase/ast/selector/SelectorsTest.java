@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.collect.Sets;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -68,37 +67,61 @@ public class SelectorsTest {
 
     @Test
     public void hasClassSelectorTrue() {
-        Iterable<SelectorPart> parts = Sets.<SelectorPart>newHashSet(new ClassSelector("test"));
-        assertThat(Selectors.hasClassSelector(parts, "test")).isTrue();
+        Selector selector = new Selector(new ClassSelector("test"));
+        assertThat(Selectors.hasClassSelector(selector, "test")).isTrue();
     }
 
     @Test
     public void hasClassSelectorFalse() {
-        Iterable<SelectorPart> parts = Sets.<SelectorPart>newHashSet(new ClassSelector("test"));
-        assertThat(Selectors.hasClassSelector(parts, "boo")).isFalse();
+        Selector selector = new Selector(new ClassSelector("test"));
+        assertThat(Selectors.hasClassSelector(selector, "boo")).isFalse();
     }
 
     @Test
     public void hasIdSelectorTrue() {
-        Iterable<SelectorPart> parts = Sets.<SelectorPart>newHashSet(new IdSelector("test"));
-        assertThat(Selectors.hasIdSelector(parts, "test")).isTrue();
+        Selector selector = new Selector(new IdSelector("test"));
+        assertThat(Selectors.hasIdSelector(selector, "test")).isTrue();
     }
 
     @Test
     public void hasIdSelectorFalse() {
-        Iterable<SelectorPart> parts = Sets.<SelectorPart>newHashSet(new IdSelector("test"));
-        assertThat(Selectors.hasIdSelector(parts, "bad")).isFalse();
+        Selector selector = new Selector(new IdSelector("test"));
+        assertThat(Selectors.hasIdSelector(selector, "bad")).isFalse();
     }
 
     @Test
     public void hasTypeSelectorTrue() {
-        Iterable<SelectorPart> parts = Sets.<SelectorPart>newHashSet(new TypeSelector("test"));
-        assertThat(Selectors.hasTypeSelector(parts, "test")).isTrue();
+        Selector selector = new Selector(new TypeSelector("test"));
+        assertThat(Selectors.hasTypeSelector(selector, "test")).isTrue();
     }
 
     @Test
     public void hasTypeSelectorFalse() {
-        Iterable<SelectorPart> parts = Sets.<SelectorPart>newHashSet(new TypeSelector("test"));
-        assertThat(Selectors.hasTypeSelector(parts, "bud")).isFalse();
+        Selector selector = new Selector(new TypeSelector("test"));
+        assertThat(Selectors.hasTypeSelector(selector, "bud")).isFalse();
+    }
+
+    @Test
+    public void findClassSelector() {
+        ClassSelector s1 = new ClassSelector("test");
+        ClassSelector s2 = new ClassSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findClassSelector(selector, "findme").get()).isSameAs(s2);
+    }
+
+    @Test
+    public void findIdSelectors() {
+        IdSelector s1 = new IdSelector("test");
+        IdSelector s2 = new IdSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findIdSelector(selector, "findme").get()).isSameAs(s2);
+    }
+
+    @Test
+    public void findTypeSelector() {
+        TypeSelector s1 = new TypeSelector("test");
+        TypeSelector s2 = new TypeSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findTypeSelector(selector, "findme").get()).isSameAs(s2);
     }
 }

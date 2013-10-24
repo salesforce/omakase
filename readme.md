@@ -14,21 +14,23 @@ The two main goals of Omakase are speed and flexibility.
 
 Omakase is written with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional sensitivities of runtime-level performance.
 
-Part of the speed gains come from a 2-level parsing strategy. The first level separates the source code into selectors, declarations and at-rules only. The (optional or targeted) second level breaks each unit down further into more specific details. The second level can be conditionally applied to specific selectors, declarations and at-rules or all of them depending on applicability.
+Part of the speed gains come from a 2-level parsing strategy. The first level separates the source code into selectors, declarations and at-rules only. The (optional or targeted) second level breaks each unit down further, for example into class selectors, type selectors, id selectors, etc... The second level can be conditionally applied to certain selectors, declarations and at-rules or all of them depending on applicability.
 
 ### Focus on flexibility
 
-Omakase is a network of *plugins*. Plugins can subscribe to specific CSS syntax units to perform custom validation and/or rework any part of the CSS. The plugin framework is so flexible that much of library-provided functionality and APIs are written using the same plugin infrastructure.
+Omakase is a network of *plugins*. Plugins can subscribe to specific CSS syntax units to perform custom validation and/or rework any part of the CSS. The plugin framework is so flexible that much of the library-provided functionality and APIs are written using the same plugin infrastructure.
 
 ### Better error messaging
 
-Omakase is built 100% solely for parsing CSS, which means that the error messages are often more specific and easier to understand than other parsers created from generic parser generators.
+Omakase is built 100% solely for parsing CSS, which means that the error messages are often more specific and easier to understand than from other parsers created from generic parser generators.
 
 ### Awesome standard plugins
 
-Omakase comes with some nifty plugins out of the box that mirror common _CSS Preprocessor_ functionality:
+Omakase comes with some some plugins out of the box, like `Conditionals`.
 
-TODO add
+### Built-in support for custom syntax
+
+You can easily specify custom syntax for functions, at-rules, declarations and selectors. See the "Extending the CSS syntax" below for more information.
 
 Usage
 -----
@@ -67,7 +69,7 @@ You can also write to an `Appendable`
 StyleWriter verbose = StyleWriter.verbose();
 Omakase.source(input).request(verbose).process();
 StringBuilder builder = new StringBuilder();
-String out = verbose.write(builder);
+String out = verbose.writeTo(builder);
 ```
 
 By default, CSS is written out in _inline_ mode. Other availables modes include _verbose_ and _compressed_. Verbose mode will output newlines, spaces, comments, etc... Inline mode will write each rule on a single line. Compressed mode will eliminate as many characters as possible, including newlines, spaces, etc...
@@ -82,10 +84,17 @@ In some cases you may want to write out an individual, stand-alone syntax unit:
 
 ```java
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-StyleWriter.compressed().writeSnippet(declaration);
+String output = StyleWriter.writeSingle(declaration);
 ```
 
-Finally, you can also override how any individual syntax unit is written. For more information see the "Custom writers" section below.
+If you need to honor any specified *CustomWriter* overrides (explained below) then use the alternative instance method instead:
+
+```java
+Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+writer.writeSnippet(declaration); // will honor any specified overrides
+```
+
+You can also override how any individual syntax unit is written. For more information see the "Custom writers" section below.
 
 ### Validation
 
@@ -112,7 +121,6 @@ When registering plugins there are important details to keep in mind:
 - All `@Rework` subscription methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
 
 ### Library-provided Plugins
-
 
 #### SyntaxTree
 
@@ -157,11 +165,95 @@ AutoRefiner refinement = new AutoRefiner().all();
 Omakase.source(input).request(refinement).process();
 ```
 
-Note that there are some cases when you don't need auto-refinement. For example, you usually want to ensure that you have valid CSS on the first parsing pass during a build step. However when parsing the already-validated CSS code again during runtime for, say, dynamic value substitutions, you may want to skip over this validation and save time.
+You may be wondering when you *wouldn't* want auto refinement. The main use-case is when you need to perform dynamic substitions in the CSS. You first parse the CSS with auto-refinement (automatically done when a StandardValidation plugin is added). This ensures you actually have valid CSS. You can store this preprocessed source code in memory or on the filesystem.
+
+During runtime, you can parse the CSS again to perform the dynamic substitions. However this time, since you have already ensured that the CSS is valid, there is no need to parse more than what is necessary to perform the dynamic substitions. You can simply refine only those selectors or declarations that you need and nothing more. This will result in faster parsing performance and can be the difference in making runtime-level CSS modifications viable. 
 
 #### Conditionals
 
-TODO
+Conditionals allow you to vary the CSS output based on specific *true conditions*. Here's an example:
+
+```css
+.button {
+  background: linear-gradient(#aaa, #ddd);
+}
+
+@if (ie7) {
+  .button {
+    background: #aaa;
+  }
+}
+```
+
+If "ie7" is passed in as a *true condition* then the block will be retained, otherwise it will be removed.
+
+To use conditionals, register the `Conditionals` plugin:
+
+```java
+Conditionals conditionals = new Conditionals("ie7");
+Omakase.source(input).request(conditionals).process();
+```
+
+You can manage the set of *true conditions* to print out variations of the CSS:
+
+```java
+Conditionals conditionals = new Conditionals();
+StyleWriter writer = StyleWriter.compressed();
+Omakase.source(input).request(conditionals).request(writer).process();
+
+// ie7
+conditionals.manager().replaceTrueConditions("ie7");
+String ie7 = writer.write();
+
+// firefox
+conditionals.manager().replaceTrueConditions("firefox");
+String firefox = writer.write();
+
+// chrome
+conditionals.manager().replaceTrueConditions("webkit", "chrome");
+String chrome = writer.write();
+```
+
+Finally, if you would like to enable conditions and validate them but hold off on actually evaluating them, you can specify `passthroughMode` as true:
+
+```java
+new Conditionals("ie7").manager().passthroughMode(true);
+new Conditionals(true).manager().addTrueConditions("ie7"); // same as above
+```
+
+Of course, any string can be used and referred to as a *true condition*, not just browsers. Finally, note that the default behavior is to automatically convert all conditions found in the input as well as the specified *true conditions* to **lower-case**. Thus, usage is not case-dependent.
+
+##### Conditionals Collector
+
+The `ConditionalsCollector` plugin can be used when you need to know what conditions were actually used in the input CSS, say, to determine what CSS variations you need to write.
+
+```java
+StyleWriter writer = StyleWriter.compressed();
+Conditionals conditionals = new Conditionals();
+ConditionalsCollector collector = new ConditionalsCollector();
+Omakase.source(input).request(conditionals).request(collector).request(writer).process();
+
+Map<String, String> variations = new HashMap<String, String>();
+variations.put("default", writer.write());
+
+for (String condition : collector.foundConditions()) {
+    conditionals.manager().replaceTrueConditions(condition);
+    variations.put(condition, writer.write());
+}
+```
+
+Note that `ConditionalsCollector` automatically registers an instance of the `Conditionals` plugin as well. If you are explicitly adding the `Conditionals` plugin, it must be registered *before* the `ConditionalsCollector` instance.
+
+##### Conditionals Validator
+
+The `ConditionalsValidator` plugin can be used to ensure only certain conditions can be used in the CSS:
+
+```java
+ConditionalsValidator validation = new ConditionalsValidator("ie8", "ie9", "ie10", "chrome", "firefox");
+Omakase.source(input).request(validation).process();
+```
+
+Note that `ConditionalsValidator` automatically registers an instance of the `Conditionals` plugin as well. If you are explicitly adding the `Conditionals` plugin, it must be registered *before* the `ConditionalsValidator` instance.
 
 #### UnquotedIEFilterPlugin
 
@@ -199,6 +291,7 @@ See the "Subscribable Syntax Units" section below for the definitive list of all
 To get started, a plugin must first implement one of the _plugin interfaces_, listed as follows:
 
 - **Plugin** - the most basic plugin; essentially just a marker interface.
+- **SyntaxPlugin** - for plugins that register custom CSS syntax.
 - **DependentPlugin** - for plugins that have dependencies on other plugins.
 - **BroadcastingPlugin** - for plugins that need access to a broadcaster.
 - **PostProcessingPlugin** for plugins that need notification after all processing has completed.
@@ -261,6 +354,20 @@ someSelector.append(myNewSelector);
 // change a value on a class selector
 myClassSelector.name("the-new-name");
 
+// check if a selector has a particular (class|id|type) simple selector
+if (Selectors.hasClassSelector(selector, "myClass")) {...}
+if (Selectors.hasClassSelector(selector, "myId")) {...}
+if (Selectors.hasClassSelector(selector, "div")) {...}
+
+// find the first matching (class|id|type) simple selector
+Optional<ClassSelector> button = Selectors.findClassSelector(selector, "button");
+if (button.isPresent()) {
+    System.out.println(button.get());
+}
+
+// check if a 'div' type selector is adjoined to a class selector (e.g., "div.three")
+if(Selectors.hasTypeSelector(myClassSelector.adjoining(), "div")) {...}
+
 // create a new declaration
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
 
@@ -271,7 +378,7 @@ Declaration declaration = new Declaration(name, KeywordValue.of("blah"));
 // another example
 NumericalValue val1 = NumericalValue.of(1, "px");
 NumericalValue val2 = NumericalValue.of(5, "px");
-PropertyValue value = TermList.ofValues(TermOperator.SPACE, val1, val2);
+PropertyValue value = TermList.ofValues(OperatorType.SPACE, val1, val2);
 Declaration declaration = new Declaration(Property.MARGIN, value);
 
 // another example
@@ -293,17 +400,17 @@ if (declaration.isProperty("new-prop")) {...}
 
 // check if a declaration has a value
 PropertyValue value = declaration.propertyValue();
-Optional<KeywordValue> keyword = Value.asKeyword(value);
+Optional<KeywordValue> keyword = Values.asKeyword(value);
 if (keyword.isPresent()) {...}
 
 // use the method appropriate to what value you think it is (say, based on the property name)
-Optional<HexColorValue> color = Value.asHexColor(value);
-Optional<NumericalValue> number = Value.asNumerical(value);
-Optional<StringValue> string = Value.asString(value);
-Optional<TermList> termList = Value.asTermList(value);
+Optional<HexColorValue> color = Values.asHexColor(value);
+Optional<NumericalValue> number = Values.asNumerical(value);
+Optional<StringValue> string = Values.asString(value);
+Optional<TermList> termList = Values.asTermList(value);
 
 // change a property value
-Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue());
+Optional<KeywordValue> keyword = Values.asKeyword(declaration.propertyValue());
 if (keyword.isPresent()) {
     keyword.get().keyword(Keyword.NONE);
 }
@@ -315,7 +422,8 @@ someRule.detach();
 
 // for more examples see the many unit tests
 ```
-Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins, so long as the plugins are registered correctly.
+
+Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins.
 
 #### Custom validation
 
@@ -330,10 +438,9 @@ public class Validations implements Plugin {
         if (declaration.isDetached()) return; // ignore removed declarations
         if (!declaration.isProperty(Property.FONT_SIZE)) return; // only process font-size properties
 
-        Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue());
-        if (!number.isPresent()) return;
+        Optional<NumericalValue> number = Values.asNumerical(declaration.propertyValue());
 
-        if (number.get().unit().equals("px")) {
+        if (number.isPresent() && number.get().unit().equals("px")) {
             em.report(ErrorLevel.FATAL, declaration, "Font sizes must use relative units");
         }
     }
@@ -413,6 +520,37 @@ See the "Subscribable Syntax Units" section below for the definitive list of all
 Besides `@Rework` and `@Validate`, there is one more annotation that can be used to make a subscription method.
 
 `@Observe` can be used in place of `@Rework` when your intention is to simply utilize information from the AST object and you do not intend to make any changes. In terms of execution order, `@Observe` and `@Rework` are equivalent. Currently the only difference `@Observe` makes is providing a better description of what the method intends to do.
+
+#### Extending the CSS syntax
+
+Omakase provides a powerful mechanism for extending the standard CSS syntax. You can easily augment CSS with your own:
+
+- Custom functions
+- Custom at-rules
+- Custom selectors
+- Custom declarations
+
+To get started you must implement the `SyntaxPlugin` interface. This has a single method which requires you to return an instance of a `RefinerStrategy` (it's usually acceptable to return a static instance here). There are several `RefinerStrategy` options based on what you would like to customize:
+
+- **FunctionRefinerStrategy** - for custom functions
+- **AtRuleRefinerStrategy** - for custom at-rule syntax
+- **SelectorRefinerStrategy** - for custom selector syntax
+- **DeclarationRefinerStrategy** for custom declaration syntax
+
+The `RefinerStrategy` you return must implement one or more of these interfaces. Your `SyntaxPlugin` instance is registered just like any other plugn.
+
+See the various *RefinerStrategy interfaces for more instructions on implementing their methods. The general idea is that these custom refiners work in a chain. Whenever an `AtRule`, `Selector`, `Declaration` or `RawFunction` is refined, it gets passed through the chain of registered custom `RefinerStrategy` objects. If the first custom `RefinerStrategy` determines that the given object is not applicable, it returns false and the object is passed on to the next refiner. Finally, if no custom refiners handle the object then the `StandardRefiner` will be used.
+
+For any non-trivial custom syntax you will most likely be required to parse the raw content. You can utilize the `Source` class as a parsing utility. More importantly, nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on `ParserFactory`. For example, here is how you would parse a raw string into a list of terms and operators:
+
+```java
+Source source = new Source(rawContent, xyz.line(), xyz.column());
+QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
+ParserFactory.termSequenceParser().parse(source, queryable, refiner);
+Iterable<TermListMember> members = queryable.filter(TermListMember.class);
+```
+
+For a full example of a `FunctionRefinerStrategy` see `UrlFunctionRefinerStrategy` and related classes. For a full example of a `AtRuleRefinerStrategy` see `ConditionalsRefinerStrategy` and related classes.
 
 #### Base plugin
 
@@ -534,29 +672,31 @@ Following is the list of all supported syntax types that you can subscribe to in
 04: Rule                           (no description)                                          Automatic                   class
 05: Stylesheet                     (no description)                                          Automatic                   class
 06: AtRule                         (no description)                                          Automatic                   class
-07: PropertyValue                  interface for all property values                         Declaration#refine          interface
-08: Term                           a single segment of a property value                      Declaration#refine          interface
-09: Declaration                    (no description)                                          Automatic                   class
-10: GenericFunctionValue           unknown function value                                    Declaration#refine          class
-11: HexColorValue                  individual hex color value                                Declaration#refine          class
-12: KeywordValue                   individual keyword value                                  Declaration#refine          class
-13: NumericalValue                 individual numerical value                                Declaration#refine          class
-14: StringValue                    individual string value                                   Declaration#refine          class
-15: TermList                       default, generic property value                           Declaration#refine          class
-16: UrlFunctionValue               url function                                              Declaration#refine          class
-17: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
-18: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
-19: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-20: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-21: AttributeSelector              attribute selector segment                                Selector#refine             class
-22: ClassSelector                  class selector segment                                    Selector#refine             class
-23: Combinator                     combinator segment                                        Selector#refine             class
-24: IdSelector                     id selector segment                                       Selector#refine             class
-25: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
-26: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
-27: Selector                       (no description)                                          Automatic                   class
-28: TypeSelector                   type/element selector segment                             Selector#refine             class
-29: UniversalSelector              universal selector segment                                Selector#refine             class
+07: MediaQueryList                 full media query string                                   AtRule#refine               class
+08: PropertyValue                  interface for all property values                         Declaration#refine          interface
+09: Term                           a single segment of a property value                      Declaration#refine          interface
+10: Declaration                    (no description)                                          Automatic                   class
+11: GenericFunctionValue           unknown function value                                    Declaration#refine          class
+12: HexColorValue                  individual hex color value                                Declaration#refine          class
+13: KeywordValue                   individual keyword value                                  Declaration#refine          class
+14: NumericalValue                 individual numerical value                                Declaration#refine          class
+15: RawFunction                    a raw function before refinement                          Declaration#refine          class
+16: StringValue                    individual string value                                   Declaration#refine          class
+17: TermList                       default, generic property value                           Declaration#refine          class
+18: UrlFunctionValue               url function                                              Declaration#refine          class
+19: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
+20: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
+21: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+22: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+23: AttributeSelector              attribute selector segment                                Selector#refine             class
+24: ClassSelector                  class selector segment                                    Selector#refine             class
+25: Combinator                     combinator segment                                        Selector#refine             class
+26: IdSelector                     id selector segment                                       Selector#refine             class
+27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
+28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
+29: Selector                       (no description)                                          Automatic                   class
+30: TypeSelector                   type/element selector segment                             Selector#refine             class
+31: UniversalSelector              universal selector segment                                Selector#refine             class
 
 Generated by SubscribableSyntaxTable.java
 </pre>
@@ -634,6 +774,7 @@ The project requires _Java 7_, _git_ and _maven_. The general architecture of th
 4. **Broadcasters and Emitter** - The bridge between parsers and plugins.
 5. **Writers** - Outputs parsed CSS code.
 6. **ErrorHandlers** - Manages errors encountered when parsing CSS source code.
+7. **Refiners** - Handles standard and custom refinement of AST objects.
 
 ### Parsers
 **Key Classes** `Token` `Tokens` `Stream` `Parser` `ParserFactory`
@@ -684,6 +825,11 @@ Writers are fairly simple... they are responsible for taking the parsed `SyntaxT
 **Key Classes** `ErrorManager`
 
 Error managers are responsible for dealing with errors during processing, including parser errors or errors generated from a validator plugin.
+
+### Refiners
+**Key Classes** `Refiner` `RefinerStrategy` `StandardRefinerStrategy`
+
+These classes handle refinement of selectors, declarations, at-rules and functions. These are also what handles custom CSS syntax.
 
 ### Notes
 
