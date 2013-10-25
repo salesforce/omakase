@@ -30,10 +30,8 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  */
 public final class SelectorGroupParser extends AbstractParser {
-
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
-        source.skipWhitepace();
         source.collectComments();
 
         // check if the next character is a valid first character for a selector
@@ -51,10 +49,8 @@ public final class SelectorGroupParser extends AbstractParser {
                 throw new ParserException(source, Message.EXPECTED_SELECTOR, tokenFactory().selectorDelimiter().description());
             }
 
-            source.skipWhitepace();
-
             // try to parse a delimiter (e.g., comma)
-            foundDelimiter = source.optionallyPresent(tokenFactory().selectorDelimiter());
+            foundDelimiter = source.skipWhitepace().optionallyPresent(tokenFactory().selectorDelimiter());
         } while (foundDelimiter);
 
         return true;

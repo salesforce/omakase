@@ -19,9 +19,8 @@ package com.salesforce.omakase.test.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.Omakase.Request;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 
 import java.io.IOException;
 import java.util.List;
@@ -157,14 +156,7 @@ public class PerfTestLight {
         if (mode == Mode.OMAKASE) {
             Omakase.source(src).process();
         } else if (mode == Mode.OMAKASE_FULL) {
-            Request request = Omakase.source(src);
-
-            request.add(new SyntaxTree());
-
-            AutoRefiner autoRefiner = new AutoRefiner().all();
-            request.add(autoRefiner);
-
-            request.process();
+            Omakase.source(src).request(new SyntaxTree()).request(new StandardValidation()).process();
         }
     }
 

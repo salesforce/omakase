@@ -36,7 +36,6 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 public final class RawRuleParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
-        source.skipWhitepace();
         source.collectComments();
 
         // save off current line and column
@@ -49,18 +48,14 @@ public final class RawRuleParser extends AbstractParser {
         // if there isn't a selector then we aren't a rule
         if (!ParserFactory.selectorGroupParser().parse(source, queryable, refiner)) return false;
 
-        // skip whitespace after selectors
-        source.skipWhitepace();
-
         // parse the declaration block
-        source.expect(tokenFactory().declarationBlockBegin());
+        source.skipWhitepace().expect(tokenFactory().declarationBlockBegin());
 
         // parse all declarations
         do {
             source.skipWhitepace();
             ParserFactory.rawDeclarationParser().parse(source, queryable, refiner);
-            source.skipWhitepace();
-        } while (source.optionallyPresent(tokenFactory().declarationDelimiter()));
+        } while (source.skipWhitepace().optionallyPresent(tokenFactory().declarationDelimiter()));
 
         // create the rule and add selectors and declarations
         Rule rule = new Rule(line, column, broadcaster);

@@ -38,7 +38,8 @@ public final class RawDeclarationParser extends AbstractParser {
         source.collectComments();
 
         // grab our current position before parsing anything
-        Source.Snapshot snapshot = source.snapshot();
+        int line = source.originalLine();
+        int column = source.originalColumn();
 
         // the IE7 star hack - http://en.wikipedia.org/wiki/CSS_filter#Star_hack - is not part of the CSS spec,
         // but it still needs to be handled
@@ -46,10 +47,10 @@ public final class RawDeclarationParser extends AbstractParser {
 
         // read the property name
         Optional<String> ident = source.readIdent();
-        if (!ident.isPresent()) return snapshot.rollback();
+        if (!ident.isPresent()) return false;
 
         String content = starHack.isPresent() ? starHack.get() + ident.get() : ident.get();
-        RawSyntax property = new RawSyntax(snapshot.originalLine, snapshot.originalColumn, content.trim());
+        RawSyntax property = new RawSyntax(line, column, content.trim());
 
         // read colon
         source.skipWhitepace();
@@ -57,8 +58,8 @@ public final class RawDeclarationParser extends AbstractParser {
         source.skipWhitepace();
 
         //read the property value
-        int line = source.originalLine();
-        int column = source.originalColumn();
+        line = source.originalLine();
+        column = source.originalColumn();
         content = source.until(tokenFactory().declarationEnd());
         RawSyntax value = new RawSyntax(line, column, content.trim());
 

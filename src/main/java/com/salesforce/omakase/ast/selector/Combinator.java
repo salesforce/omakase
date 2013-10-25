@@ -17,17 +17,13 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.salesforce.omakase.As;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.selector.CombinatorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
 
 /**
  * Represents a CSS combinator.
@@ -35,10 +31,18 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  * @author nmcwilliams
  * @see CombinatorParser
  */
-@Subscribable
-@Description(value = "combinator segment", broadcasted = REFINED_SELECTOR)
 public final class Combinator extends AbstractSelectorPart implements SimpleSelector {
     private final CombinatorType type;
+
+    /**
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     *
+     * @param type
+     *     The {@link CombinatorType}.
+     */
+    public Combinator(CombinatorType type) {
+        this(-1, -1, type);
+    }
 
     /**
      * Creates a new instance with the given line and column numbers, and the {@link CombinatorType}.
@@ -55,16 +59,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
     public Combinator(int line, int column, CombinatorType type) {
         super(line, column);
         this.type = type;
-    }
-
-    /**
-     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
-     *
-     * @param type
-     *     The {@link CombinatorType}.
-     */
-    public Combinator(CombinatorType type) {
-        this.type = checkNotNull(type, "type cannot be null");
+        status(Status.NEVER_EMIT);
     }
 
     @Override

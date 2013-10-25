@@ -31,7 +31,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see Operator
  */
-public class OperatorParser extends AbstractParser {
+public final class OperatorParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         // skip comments at the beginning but not whitespace

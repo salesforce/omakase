@@ -39,7 +39,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  * @author nmcwilliams
  * @see TermListParser
  */
-public class TermSequenceParser extends AbstractParser {
+public final class TermSequenceParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
@@ -57,7 +57,7 @@ public class TermSequenceParser extends AbstractParser {
         do {
             matchedThisTime = ParserFactory.termParser().parse(source, queue, refiner);
             matchedAny = matchedAny || matchedThisTime;
-        } while (matchedThisTime && ParserFactory.operatorParser().parse(source, queue, refiner));
+        } while (matchedThisTime && !source.eof() && ParserFactory.operatorParser().parse(source, queue, refiner));
 
         // check for a trailing operator. if it's a space operator then we want to remove it
         Broadcastable last = queue.peekLast();

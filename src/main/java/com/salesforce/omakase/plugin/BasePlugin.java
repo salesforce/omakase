@@ -129,15 +129,6 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link Combinator}.
-     *
-     * @param combinator
-     *     The {@link Combinator} instance.
-     */
-    public void combinator(Combinator combinator) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link TypeSelector}.
      *
      * @param typeSelector

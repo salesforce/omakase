@@ -49,6 +49,7 @@ public final class RawSyntax extends AbstractSyntax {
     public RawSyntax(int line, int column, String content) {
         super(line, column);
         this.content = content;
+        status(Status.NEVER_EMIT);
     }
 
     /**

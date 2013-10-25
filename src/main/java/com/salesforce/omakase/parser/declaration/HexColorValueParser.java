@@ -44,7 +44,7 @@ public final class HexColorValueParser extends AbstractParser {
 
         // starts with hash and then a valid hex character
         if (Tokens.HASH.matches(source.current()) && Tokens.HEX_COLOR.matches(source.peek())) {
-            // skip the has mark
+            // skip the hash mark
             source.next();
 
             // get the color value

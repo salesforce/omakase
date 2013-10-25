@@ -16,16 +16,17 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.error.ErrorLevel;
-import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -34,7 +35,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"UnusedParameters", "JavaDoc"})
 public class EmitterTest {
     @Test
     public void defaultPhase() {
@@ -56,13 +57,7 @@ public class EmitterTest {
         emitter.register(plugin);
         emitter.phase(SubscriptionPhase.PROCESS);
 
-        emitter.emit(new ClassSelector("test"), new ErrorManager() {
-            @Override
-            public void report(ErrorLevel level, ParserException exception) {}
-
-            @Override
-            public void report(ErrorLevel level, Syntax cause, String message) {}
-        });
+        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
 
         assertThat(plugin.calledClassSelector).isTrue();
         assertThat(plugin.calledSimpleSelector).isTrue();
@@ -76,18 +71,30 @@ public class EmitterTest {
         emitter.register(plugin);
         emitter.register(plugin);
 
-        emitter.emit(new ClassSelector("test"), new ErrorManager() {
-            @Override
-            public void report(ErrorLevel level, ParserException exception) {}
-
-            @Override
-            public void report(ErrorLevel level, Syntax cause, String message) {}
-        });
-
+        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
         assertThat(plugin.count).isEqualTo(1);
     }
 
-    @SuppressWarnings("UnusedParameters")
+    @Test
+    public void maintainsRegistrationOrder() {
+        List<Plugin> list = Lists.newArrayList();
+        TestOrder1 t1 = new TestOrder1(list);
+        TestOrder2 t2 = new TestOrder2(list);
+        TestOrder3 t3 = new TestOrder3(list);
+        TestOrder4 t4 = new TestOrder4(list);
+        TestOrder5 t5 = new TestOrder5(list);
+
+        Emitter emitter = new Emitter();
+        emitter.register(t1);
+        emitter.register(t2);
+        emitter.register(t3);
+        emitter.register(t4);
+        emitter.register(t5);
+
+        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        assertThat(list).containsExactly(t1, t2, t3, t4, t5);
+    }
+
     public static final class EmitterPlugin implements Plugin {
         boolean calledSyntax;
         boolean calledSimpleSelector;
@@ -113,9 +120,63 @@ public class EmitterTest {
         int count;
 
         @Rework
-        @SuppressWarnings("UnusedParameters")
         public void preprocess(ClassSelector cs) {
             count++;
+        }
+    }
+
+    public static final class TestOrder1 implements Plugin {
+        private List<Plugin> list;
+
+        public TestOrder1(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
+        }
+    }
+
+    public static final class TestOrder2 implements Plugin {
+        private List<Plugin> list;
+
+        public TestOrder2(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
+        }
+    }
+
+    public static final class TestOrder3 implements Plugin {
+        private List<Plugin> list;
+
+        public TestOrder3(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
+        }
+    }
+
+    public static final class TestOrder4 implements Plugin {
+        private List<Plugin> list;
+
+        public TestOrder4(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
+        }
+    }
+
+    public static final class TestOrder5 implements Plugin {
+        private List<Plugin> list;
+
+        public TestOrder5(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
         }
     }
 }

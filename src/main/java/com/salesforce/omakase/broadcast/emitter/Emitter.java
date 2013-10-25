@@ -16,11 +16,7 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -29,8 +25,9 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -46,25 +43,10 @@ public final class Emitter {
     private static final AnnotationScanner scanner = new AnnotationScanner();
 
     /** cache of class -> (class + supers). Only supers marked as {@link Subscribable} are stored */
-    private static final LoadingCache<Class<?>, Set<Class<?>>> cache = CacheBuilder.newBuilder()
-        .weakKeys() // use weak references for keys (classes)
-        .initialCapacity(32) // expected number of subscribable syntax classes
-        .build(new CacheLoader<Class<?>, Set<Class<?>>>() {
-            @Override
-            public Set<Class<?>> load(Class<?> klass) {
-                final Builder<Class<?>> builder = ImmutableSet.builder();
-                for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
-                    if (type.isAnnotationPresent(Subscribable.class)) {
-                        builder.add(type);
-                    }
-                }
-                return builder.build();
-            }
-        });
+    private static final Map<Class<?>, List<Class<?>>> map = new HashMap<Class<?>, List<Class<?>>>(32);
 
-    /* order is important so that subscribers are notified in the order they were registered, hence linked map */
-    private final Map<Class<?>, Set<Subscription>> processors = new LinkedHashMap<Class<?>, Set<Subscription>>(32);
-    private final Map<Class<?>, Set<Subscription>> validators = new LinkedHashMap<Class<?>, Set<Subscription>>(32);
+    private final Map<Class<?>, Set<Subscription>> processors = new HashMap<Class<?>, Set<Subscription>>(32);
+    private final Map<Class<?>, Set<Subscription>> validators = new HashMap<Class<?>, Set<Subscription>>(32);
 
     private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
 
@@ -103,23 +85,21 @@ public final class Emitter {
             // perf -- segment the subscriber to the correct phase bucket
             Set<Subscription> subscriptions;
 
-            switch (subscription.phase()) {
-            case PROCESS:
+            // using LinkedHashSets below to main registration order
+            if (subscription.phase() == SubscriptionPhase.PROCESS) {
                 subscriptions = processors.get(entry.getKey());
                 if (subscriptions == null) {
-                    subscriptions = new HashSet<Subscription>();
+                    subscriptions = new LinkedHashSet<Subscription>(5);
                     processors.put(entry.getKey(), subscriptions);
                 }
                 subscriptions.add(subscription);
-                break;
-            case VALIDATE:
+            } else {
                 subscriptions = validators.get(entry.getKey());
                 if (subscriptions == null) {
-                    subscriptions = new HashSet<Subscription>();
+                    subscriptions = new LinkedHashSet<Subscription>(5);
                     validators.put(entry.getKey(), subscriptions);
                 }
                 subscriptions.add(subscription);
-                break;
             }
         }
     }
@@ -151,7 +131,7 @@ public final class Emitter {
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Class<?> klass : hierarchy(eventType)) {
             Set<Subscription> subscriptions = map.get(klass);
-            if (subscriptions == null) continue;
+            if (subscriptions == null || subscriptions.isEmpty()) continue;
 
             for (Subscription subscription : subscriptions) {
                 subscription.deliver(event, em);
@@ -159,7 +139,20 @@ public final class Emitter {
         }
     }
 
-    private Set<Class<?>> hierarchy(Class<?> klass) {
-        return cache.getUnchecked(klass);
+    private List<Class<?>> hierarchy(Class<?> klass) {
+        List<Class<?>> hierarchy = map.get(klass);
+
+        if (hierarchy == null) {
+            ImmutableList.Builder<Class<?>> builder = ImmutableList.builder();
+            for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
+                if (type.isAnnotationPresent(Subscribable.class)) {
+                    builder.add(type);
+                }
+            }
+            hierarchy = builder.build();
+            map.put(klass, hierarchy);
+        }
+
+        return hierarchy;
     }
 }

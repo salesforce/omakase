@@ -30,6 +30,7 @@ import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
+import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
@@ -94,11 +95,11 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
     public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
         if (declaration.isRefined()) return false;
 
-        QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+        SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, broadcaster);
         Source source = new Source(declaration.rawPropertyValue().get());
 
         // parse the contents
-        ParserFactory.termListParser().parse(source, qb, refiner);
+        ParserFactory.termListParser().parse(source, single, refiner);
 
         // grab orphaned comments
         for (String comment : source.collectComments().flushComments()) {
@@ -109,10 +110,10 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE, source.remaining());
 
         // store the parsed value
-        Optional<PropertyValue> first = qb.find(PropertyValue.class);
-        if (!first.isPresent()) throw new ParserException(source, Message.EXPECTED_VALUE);
+        Optional<PropertyValue> value = single.broadcasted();
+        if (!value.isPresent()) throw new ParserException(source, Message.EXPECTED_VALUE);
 
-        declaration.propertyValue(first.get());
+        declaration.propertyValue(value.get());
 
         return true;
     }

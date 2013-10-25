@@ -35,13 +35,4 @@ public abstract class AbstractBroadcaster implements Broadcaster {
     public void wrap(Broadcaster relay) {
         this.relay = relay;
     }
-
-    /**
-     * Gets whether this {@link Broadcaster} is wrapped around a child {@link Broadcaster}.
-     *
-     * @return True if there is an inner {@link Broadcaster} specified.
-     */
-    protected boolean hasRelay() {
-        return relay != null;
-    }
 }

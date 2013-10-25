@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author nmcwilliams
  */
 public final class ThrowingErrorManager implements ErrorManager {
-    private static final Logger logger = LoggerFactory.getLogger(ErrorManager.class);
+    private Logger logger;
 
     private final String sourceName;
 
@@ -55,6 +55,7 @@ public final class ThrowingErrorManager implements ErrorManager {
         case FATAL:
             throw new FatalException(ErrorUtils.format(exception.getMessage()), exception);
         case WARNING:
+            if (logger == null) logger = LoggerFactory.getLogger(ErrorManager.class);
             logger.warn(ErrorUtils.format(exception.getMessage()), exception);
         }
     }
@@ -65,6 +66,7 @@ public final class ThrowingErrorManager implements ErrorManager {
         case FATAL:
             throw new FatalException(ErrorUtils.format(sourceName, message, cause));
         case WARNING:
+            if (logger == null) logger = LoggerFactory.getLogger(ErrorManager.class);
             logger.warn(ErrorUtils.format(sourceName, message, cause));
         }
     }

@@ -83,10 +83,10 @@ public final class ParserFactory {
     private static final Parser hexColorValue = new HexColorValueParser();
     private static final Parser stringValue = new StringValueParser();
 
-    private static final Parser term = numericalValue
+    private static final Parser term = hexColorValue
         .or(functionValue)
         .or(keywordValue)
-        .or(hexColorValue)
+        .or(numericalValue)
         .or(stringValue);
 
     private static final Parser termSequence = new TermSequenceParser();

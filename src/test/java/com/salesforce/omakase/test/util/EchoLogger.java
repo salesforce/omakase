@@ -98,12 +98,6 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void combinator(Combinator combinator) {
-        logger.info("combinator: {}", combinator);
-    }
-
-    @Observe
-    @Override
     public void typeSelector(TypeSelector typeSelector) {
         logger.info("typeSelector: {}", typeSelector);
     }

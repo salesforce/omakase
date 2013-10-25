@@ -33,7 +33,6 @@ public final class RawSelectorParser extends AbstractParser {
 
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
-        source.skipWhitepace();
         source.collectComments();
 
         if (!tokenFactory().selectorBegin().matches(source.current())) return false;

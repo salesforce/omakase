@@ -33,7 +33,6 @@ public final class StandardTokenFactory implements TokenFactory {
     private static final Token SELETOR_BEGIN = DOT.or(HASH).or(ALPHA).or(COLON).or(STAR);
     private static final Token SELECTOR_DELIMITER = COMMA;
     private static final Token SELECTOR_END = SELECTOR_DELIMITER.or(OPEN_BRACE);
-    private static final Token PROPERTY_START = ALPHA.or(HYPHEN);
     private static final Token DECLARATION_END = SEMICOLON.or(CLOSE_BRACE);
 
     private static final TokenFactory instance = new StandardTokenFactory();

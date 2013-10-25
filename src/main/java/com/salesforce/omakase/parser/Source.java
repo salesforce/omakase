@@ -86,6 +86,9 @@ public final class Source {
     /** collection of parsed CSS comments */
     private List<String> comments;
 
+    /** the last snapshot created */
+    private Snapshot lastSnapshot;
+
     /**
      * Creates a new instance of a {@link Source}, to be used for reading one character at a time from the given source.
      *
@@ -745,7 +748,7 @@ public final class Source {
                 if (FORWARD_SLASH.matches(current()) && STAR.matches(peekPrevious())) {
                     inComment = false;
 
-                    // grab the comment contents (+2 to skip the opening /*, -1 to skip the previous *
+                    // grab the comment contents (+2 to skip the opening /*, -1 to skip the previous *)
                     comment = new String(chars, start + 2, index - (start + 2) - 1);
                 } else {
                     if (eof()) throw new ParserException(this, Message.MISSING_COMMENT_CLOSE);
@@ -790,7 +793,8 @@ public final class Source {
      */
 
     public Snapshot snapshot() {
-        return new Snapshot(this, index, line, column, inString);
+        if (lastSnapshot != null && lastSnapshot.index == index) return lastSnapshot;
+        return lastSnapshot = new Snapshot(this, index, line, column, inString);
     }
 
     /**

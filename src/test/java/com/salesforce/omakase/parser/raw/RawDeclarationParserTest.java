@@ -45,7 +45,7 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
             "\n",
             "{color: red}",
             "--test:red",
-            "*",
+            "^",
             "$name");
     }
 

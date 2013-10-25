@@ -138,7 +138,7 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
      */
     public QueuingBroadcaster reject(Broadcastable broadcastable) {
         if (rejected == null) {
-            rejected = Sets.newHashSet();
+            rejected = Sets.newHashSetWithExpectedSize(3);
         }
         rejected.add(broadcastable);
         return this;
@@ -157,7 +157,7 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
      */
     public QueuingBroadcaster alwaysFlush(Class<? extends Broadcastable> broadcastable) {
         if (alwaysFlush == null) {
-            alwaysFlush = Sets.newHashSet();
+            alwaysFlush = Sets.newHashSetWithExpectedSize(3);
         }
         alwaysFlush.add(broadcastable);
         return this;

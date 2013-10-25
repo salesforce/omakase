@@ -77,8 +77,16 @@ public final class NumericalValueParser extends AbstractParser {
             value.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
         }
 
-        // check for a % or unit
-        Optional<String> unit = source.optionallyPresent(Tokens.PERCENTAGE) ? Optional.of("%") : source.readIdent();
+        // check for a unit (% or alpha)
+        Optional<String> unit;
+
+        if (source.optionallyPresent(Tokens.PERCENTAGE)) {
+            unit = Optional.of("%");
+        } else {
+            String string = source.chomp(Tokens.ALPHA);
+            unit = string.isEmpty() ? Optional.<String>absent() : Optional.of(string);
+        }
+
         if (unit.isPresent()) {
             value.unit(unit.get());
         }
