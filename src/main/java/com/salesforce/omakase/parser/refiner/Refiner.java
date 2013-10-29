@@ -85,11 +85,14 @@ public final class Refiner {
         for (RefinerStrategy strategy : strategies) {
             if (strategy instanceof AtRuleRefinerStrategy) {
                 atRuleBuilder.add((AtRuleRefinerStrategy)strategy);
-            } else if (strategy instanceof FunctionRefinerStrategy) {
+            }
+            if (strategy instanceof FunctionRefinerStrategy) {
                 functionValueBuilder.add((FunctionRefinerStrategy)strategy);
-            } else if (strategy instanceof DeclarationRefinerStrategy) {
+            }
+            if (strategy instanceof DeclarationRefinerStrategy) {
                 declarationBuilder.add((DeclarationRefinerStrategy)strategy);
-            } else if (strategy instanceof SelectorRefinerStrategy) {
+            }
+            if (strategy instanceof SelectorRefinerStrategy) {
                 selectorBuilder.add((SelectorRefinerStrategy)strategy);
             }
         }
