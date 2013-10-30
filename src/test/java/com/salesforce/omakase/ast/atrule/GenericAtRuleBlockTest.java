@@ -88,13 +88,13 @@ public class GenericAtRuleBlockTest {
     @Test
     public void writeVerbose() throws IOException {
         GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
-        assertThat(StyleWriter.verbose().writeSnippet(block)).isEqualTo(" {\n.test {\n  display: none;\n}\n}");
+        assertThat(StyleWriter.verbose().writeSnippet(block)).isEqualTo(" {\n  .test {\n    display: none;\n  }\n}");
     }
 
     @Test
     public void writeInline() throws IOException {
         GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
-        assertThat(StyleWriter.inline().writeSnippet(block)).isEqualTo(" {\n.test {display:none}\n}");
+        assertThat(StyleWriter.inline().writeSnippet(block)).isEqualTo(" {\n  .test {display:none}\n}");
     }
 
     @Test

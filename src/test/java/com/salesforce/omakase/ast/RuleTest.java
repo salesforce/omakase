@@ -17,10 +17,10 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.Property;
 import com.salesforce.omakase.ast.declaration.Keyword;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.Property;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -88,9 +88,7 @@ public class RuleTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
 
-        StyleWriter writer = StyleWriter.verbose();
-
-        assertThat(writer.writeSnippet(rule)).isEqualTo(".class, #id {\n  display: none;\n  margin: 5px;\n}");
+        assertThat(StyleWriter.verbose().writeSnippet(rule)).isEqualTo(".class, #id {\n  display: none;\n  margin: 5px;\n}");
     }
 
     @Test
@@ -101,9 +99,7 @@ public class RuleTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
 
-        StyleWriter writer = StyleWriter.inline();
-
-        assertThat(writer.writeSnippet(rule)).isEqualTo(".class, #id {display:none; margin:5px}");
+        assertThat(StyleWriter.inline().writeSnippet(rule)).isEqualTo(".class, #id {display:none; margin:5px}");
     }
 
     @Test
@@ -114,9 +110,7 @@ public class RuleTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
 
-        StyleWriter writer = StyleWriter.compressed();
-
-        assertThat(writer.writeSnippet(rule)).isEqualTo(".class,#id{display:none;margin:5px}");
+        assertThat(StyleWriter.compressed().writeSnippet(rule)).isEqualTo(".class,#id{display:none;margin:5px}");
     }
 
     @Test
@@ -132,8 +126,58 @@ public class RuleTest {
 
         rule.detach();
 
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
+    }
+
+    @Test
+    public void writeWhenFirstSelectorDetached() {
+        Stylesheet stylesheet = new Stylesheet();
+
+        Rule rule = new Rule();
+        Selector selector = new Selector(new ClassSelector("class1"));
+        Selector selector2 = new Selector(new ClassSelector("class2"));
+        Selector selector3 = new Selector(new ClassSelector("class3"));
+        rule.selectors().append(selector).append(selector2).append(selector3);
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
+        stylesheet.append(rule);
+
+        selector.detach();
+
+        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class2, .class3 {display:none}");
+    }
+
+    @Test
+    public void writeWhenMiddleSelectorDetached() {
+        Stylesheet stylesheet = new Stylesheet();
+
+        Rule rule = new Rule();
+        Selector selector = new Selector(new ClassSelector("class1"));
+        Selector selector2 = new Selector(new ClassSelector("class2"));
+        Selector selector3 = new Selector(new ClassSelector("class3"));
+        rule.selectors().append(selector).append(selector2).append(selector3);
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
+        stylesheet.append(rule);
+
+        selector2.detach();
+
+        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class1, .class3 {display:none}");
+    }
+
+    @Test
+    public void writeWhenLastSelectorDetached() {
+        Stylesheet stylesheet = new Stylesheet();
+
+        Rule rule = new Rule();
+        Selector selector = new Selector(new ClassSelector("class1"));
+        Selector selector2 = new Selector(new ClassSelector("class2"));
+        Selector selector3 = new Selector(new ClassSelector("class3"));
+        rule.selectors().append(selector).append(selector2).append(selector3);
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
+        stylesheet.append(rule);
+
+        selector3.detach();
+
+        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class1, .class2 {display:none}");
     }
 
     @Test
@@ -148,8 +192,58 @@ public class RuleTest {
 
         selector.detach();
 
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
+    }
+
+    @Test
+    public void writeWhenFistDeclarationDetached() {
+        Stylesheet stylesheet = new Stylesheet();
+
+        Rule rule = new Rule();
+        rule.selectors().append(new Selector(new ClassSelector("class")));
+        Declaration declaration = new Declaration(Property.MARGIN, NumericalValue.of(1, "px"));
+        Declaration declaration2 = new Declaration(Property.MARGIN, NumericalValue.of(2, "px"));
+        Declaration declaration3 = new Declaration(Property.MARGIN, NumericalValue.of(3, "px"));
+        rule.declarations().append(declaration).append(declaration2).append(declaration3);
+        stylesheet.append(rule);
+
+        declaration.detach();
+
+        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo(".class {\n  margin: 2px;\n  margin: 3px;\n}");
+    }
+
+    @Test
+    public void writeWhenMiddleDeclarationDetached() {
+        Stylesheet stylesheet = new Stylesheet();
+
+        Rule rule = new Rule();
+        rule.selectors().append(new Selector(new ClassSelector("class")));
+        Declaration declaration = new Declaration(Property.MARGIN, NumericalValue.of(1, "px"));
+        Declaration declaration2 = new Declaration(Property.MARGIN, NumericalValue.of(2, "px"));
+        Declaration declaration3 = new Declaration(Property.MARGIN, NumericalValue.of(3, "px"));
+        rule.declarations().append(declaration).append(declaration2).append(declaration3);
+        stylesheet.append(rule);
+
+        declaration2.detach();
+
+        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo(".class {\n  margin: 1px;\n  margin: 3px;\n}");
+    }
+
+    @Test
+    public void writeWhenLastDeclarationDetached() {
+        Stylesheet stylesheet = new Stylesheet();
+
+        Rule rule = new Rule();
+        rule.selectors().append(new Selector(new ClassSelector("class")));
+        Declaration declaration = new Declaration(Property.MARGIN, NumericalValue.of(1, "px"));
+        Declaration declaration2 = new Declaration(Property.MARGIN, NumericalValue.of(2, "px"));
+        Declaration declaration3 = new Declaration(Property.MARGIN, NumericalValue.of(3, "px"));
+        rule.declarations().append(declaration).append(declaration2).append(declaration3);
+        stylesheet.append(rule);
+
+        declaration3.detach();
+
+        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class {margin:1px; margin:2px}");
     }
 
     @Test
@@ -161,8 +255,7 @@ public class RuleTest {
         rule.selectors().append(new Selector(new IdSelector("id")));
         stylesheet.append(rule);
 
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
     }
 
     @Test
@@ -177,8 +270,7 @@ public class RuleTest {
 
         declaration.detach();
 
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
     }
 
     @Test

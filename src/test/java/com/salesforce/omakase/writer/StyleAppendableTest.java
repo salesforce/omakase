@@ -42,18 +42,21 @@ public class StyleAppendableTest {
         sa.append("abc");
         assertThat(sa.toString()).isEqualTo("abc");
     }
+
     @Test
     public void appendInt() throws IOException {
         StyleAppendable sa = new StyleAppendable();
         sa.append(1);
         assertThat(sa.toString()).isEqualTo("1");
     }
+
     @Test
     public void appendDouble() throws IOException {
         StyleAppendable sa = new StyleAppendable();
         sa.append(1d);
         assertThat(sa.toString()).isEqualTo("1.0");
     }
+
     @Test
     public void appendLong() throws IOException {
         StyleAppendable sa = new StyleAppendable();
@@ -104,24 +107,59 @@ public class StyleAppendableTest {
     }
 
     @Test
-    public void indent() throws IOException {
+    public void defaultNoIndentation() {
         StyleAppendable sa = new StyleAppendable();
-        sa.indent();
-        assertThat(sa.toString()).isEqualTo("  ");
+        assertThat(sa.indentationLevel()).isEqualTo(0);
     }
 
     @Test
-    public void indentIf() throws IOException {
+    public void cantUnindentBelowZero() {
+        StyleAppendable sa = new StyleAppendable();
+        sa.unindent();
+        assertThat(sa.indentationLevel()).isEqualTo(0);
+    }
+
+    @Test
+    public void indent() throws IOException {
+        StyleAppendable sa = new StyleAppendable();
+        sa.indent();
+        assertThat(sa.indentationLevel()).isEqualTo(1);
+
+        sa.indent();
+        assertThat(sa.indentationLevel()).isEqualTo(2);
+
+        sa.unindent();
+        assertThat(sa.indentationLevel()).isEqualTo(1);
+    }
+
+    @Test
+    public void indentIfTrue() throws IOException {
         StyleAppendable sa = new StyleAppendable();
         sa.indentIf(true);
-        assertThat(sa.toString()).isEqualTo("  ");
+        assertThat(sa.indentationLevel()).isEqualTo(1);
     }
 
     @Test
     public void indentIfFalse() throws IOException {
         StyleAppendable sa = new StyleAppendable();
         sa.indentIf(false);
-        assertThat(sa.toString()).isEqualTo("");
+        assertThat(sa.indentationLevel()).isEqualTo(0);
+    }
+
+    @Test
+    public void unindentIfTrue() throws IOException {
+        StyleAppendable sa = new StyleAppendable();
+        sa.indent();
+        sa.unindentIf(true);
+        assertThat(sa.indentationLevel()).isEqualTo(0);
+    }
+
+    @Test
+    public void unindentIfFalse() throws IOException {
+        StyleAppendable sa = new StyleAppendable();
+        sa.indent();
+        sa.unindentIf(false);
+        assertThat(sa.indentationLevel()).isEqualTo(1);
     }
 
     @Test

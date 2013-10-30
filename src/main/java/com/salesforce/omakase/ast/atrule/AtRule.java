@@ -305,10 +305,10 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
             }
 
         } else {
+            // XXX compression
+
             // symbol and name
             appendable.append('@').append(name).space();
-
-            // XXX compression
 
             // expression
             if (rawExpression.isPresent()) {
@@ -319,8 +319,10 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
             if (rawBlock.isPresent()) {
                 appendable.spaceIf(!writer.isCompressed());
                 appendable.append('{');
-                appendable.newlineIf(writer.isVerbose()).indentIf(writer.isVerbose());
+                appendable.indentIf(writer.isVerbose());
+                appendable.newlineIf(writer.isVerbose());
                 writer.writeInner(rawBlock.get(), appendable);
+                appendable.unindentIf(writer.isVerbose());
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');
             }

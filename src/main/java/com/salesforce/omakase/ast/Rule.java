@@ -145,34 +145,50 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
             appendable.newlineIf(writer.isVerbose());
         }
 
+        boolean wroteFirst = false;
+
         // selectors
         for (Selector selector : selectors) {
             if (selector.isWritable()) {
-                writer.writeInner(selector, appendable);
-                if (!selector.isLast()) {
+                if (wroteFirst) {
                     appendable.append(',');
                     appendable.spaceIf(!writer.isCompressed());
                 }
+                writer.writeInner(selector, appendable);
+                wroteFirst = true;
             }
         }
 
         // open declaration block
         appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
-        appendable.newlineIf(writer.isVerbose());
+        appendable.indentIf(writer.isVerbose());
 
         // declarations
+        wroteFirst = false;
         for (Declaration declaration : declarations) {
             if (declaration.isWritable()) {
-                appendable.indentIf(writer.isVerbose());
+
+                if (wroteFirst) {
+                    appendable.append(';');
+                }
+
+                if (writer.isVerbose()) {
+                    appendable.newline();
+                } else if (writer.isInline() && wroteFirst) {
+                    appendable.space();
+                }
+
                 writer.writeInner(declaration, appendable);
-                if (writer.isVerbose() || !declaration.isLast()) appendable.append(';');
-                appendable.spaceIf(writer.isInline() && !declaration.isLast());
-                appendable.newlineIf(writer.isVerbose());
+                wroteFirst = true;
             }
         }
 
+        if(wroteFirst && writer.isVerbose()) appendable.append(';');
+
         // close declaration block
+        appendable.unindentIf(writer.isVerbose());
+        appendable.newlineIf(writer.isVerbose());
         appendable.append('}');
     }
 

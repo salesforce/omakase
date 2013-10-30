@@ -28,7 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public final class StyleAppendable {
+    private static final String INDENT_STRING = "            ";
     private final Appendable appendable;
+    private int indent = 0;
 
     /** Creates a new {@link StyleAppendable} using a {@link StringBuilder}. Use {@link #toString()} to get the final output. */
     public StyleAppendable() {
@@ -131,7 +133,9 @@ public final class StyleAppendable {
      *     If an I/O error occurs.
      */
     public StyleAppendable newline() throws IOException {
-        return append('\n');
+        append('\n');
+        if (indent != 0) append(INDENT_STRING.substring(0, indent * 2));
+        return this;
     }
 
     /**
@@ -179,31 +183,60 @@ public final class StyleAppendable {
     }
 
     /**
-     * Appends spaces for indentation.
+     * Increases the indentation level. Indentation spaces are appended when {@link #newline()} or {@link #newlineIf(boolean)} are
+     * called.
      *
      * @return this, for chaining.
-     *
-     * @throws IOException
-     *     If an I/O error occurs.
      */
-    public StyleAppendable indent() throws IOException {
-        return append(' ').append(' ');
+    public StyleAppendable indent() {
+        indent++;
+        return this;
     }
 
     /**
-     * Appends spaces for indentation only if the given condition is true.
+     * Increases the indentation level only if the given condition is true. Indentation spaces are appended when {@link
+     * #newline()} or {@link #newlineIf(boolean)} are called.
      *
      * @param condition
-     *     Only append a newline if this condition is true.
+     *     Only increase the indentation level if this condition is true.
      *
      * @return this, for chaining.
-     *
-     * @throws IOException
-     *     If an I/O error occurs.
      */
-    public StyleAppendable indentIf(boolean condition) throws IOException {
+    public StyleAppendable indentIf(boolean condition) {
         if (condition) indent();
         return this;
+    }
+
+    /**
+     * Decreases the indentation level.
+     *
+     * @return this, for chaining.
+     */
+    public StyleAppendable unindent() {
+        indent = (indent == 0) ? 0 : indent - 1;
+        return this;
+    }
+
+    /**
+     * Decreases the indentation level only if the given condition is true.
+     *
+     * @param condition
+     *     Only decrease the indentation level if this condition is true.
+     *
+     * @return this, for chaining.
+     */
+    public StyleAppendable unindentIf(boolean condition) {
+        if (condition) unindent();
+        return this;
+    }
+
+    /**
+     * Gets the current indentation level.
+     *
+     * @return The current indentation level.
+     */
+    public int indentationLevel() {
+        return indent;
     }
 
     @Override
