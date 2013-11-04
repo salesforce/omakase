@@ -16,334 +16,60 @@
 
 package com.salesforce.omakase.util.tool;
 
-import com.google.common.base.CaseFormat;
+import com.google.common.base.Charsets;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.io.Files;
 import com.salesforce.omakase.data.Property;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** Utility to take list of css names and fromStrings them to the {@link Property} enum. */
 @SuppressWarnings("JavaDoc")
 public final class PropertyToEnum {
     private PropertyToEnum() {}
 
-    public static void main(String[] args) {
-        Collections.sort(list);
+    public static void main(String[] args) throws IOException, TemplateException {
+        // read the input file
+        System.out.println("reading 'properties.txt'...");
+        String source = Tools.readFile("/data/properties.txt");
 
-        StringBuilder builder = new StringBuilder(1024);
+        // reformat into an ordered list
+        System.out.println("generating output...");
 
-        for (int i = 0; i < list.size(); i++) {
-            String p = list.get(i);
-            builder.append("/** CSS property named '").append(p).append("' */").append("\n");
-            builder.append(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE, p));
-            builder.append("(\"").append(p).append("\")");
+        // using set to make unique
+        Set<String> keywords = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
 
-            if (i < (list.size() - 1)) {
-                builder.append(",");
-            } else {
-                builder.append(";");
-            }
-            builder.append("\n\n");
-        }
+        // convert to an order list
+        List<String> ordered = Lists.newArrayList(keywords);
+        Collections.sort(ordered);
 
-        System.out.println(builder.toString());
+        // process the template
+        Template template = Tools.getTemplate("property-to-enum");
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("properties", ordered);
+        data.put("generatorName", PropertyToEnum.class);
+        data.put("package", Property.class.getPackage().getName());
+
+        StringWriter writer = new StringWriter();
+        template.process(data, writer);
+
+        // write it to the source file
+        System.out.println("writing output...");
+        File file = Tools.getSourceFile(Property.class);
+        file.delete();
+        Files.write(writer.toString(), file, Charsets.UTF_8);
+
+        System.out.println("done");
     }
-
-    static final List<String> list = Lists.newArrayList(
-        "alignment-adjust",
-        "alignment-baseline",
-        "animation",
-        "animation-delay",
-        "animation-direction",
-        "animation-duration",
-        "animation-iteration-count",
-        "animation-name",
-        "animation-play-state",
-        "animation-timing-function",
-        "appearance",
-        "azimuth",
-        "backface-visibility",
-        "background",
-        "background-attachment",
-        "background-clip",
-        "background-color",
-        "background-image",
-        "background-origin",
-        "background-position",
-        "background-repeat",
-        "background-size",
-        "baseline-shift",
-        "behavior",
-        "binding",
-        "bleed",
-        "bookmark-label",
-        "bookmark-level",
-        "bookmark-state",
-        "bookmark-target",
-        "border",
-        "border-bottom",
-        "border-bottom-color",
-        "border-bottom-left-radius",
-        "border-bottom-right-radius",
-        "border-bottom-style",
-        "border-bottom-width",
-        "border-collapse",
-        "border-color",
-        "border-image",
-        "border-image-outset",
-        "border-image-repeat",
-        "border-image-slice",
-        "border-image-source",
-        "border-image-width",
-        "border-left",
-        "border-left-color",
-        "border-left-style",
-        "border-left-width",
-        "border-radius",
-        "border-right",
-        "border-right-color",
-        "border-right-style",
-        "border-right-width",
-        "border-spacing",
-        "border-style",
-        "border-top",
-        "border-top-color",
-        "border-top-left-radius",
-        "border-top-right-radius",
-        "border-top-style",
-        "border-top-width",
-        "border-width",
-        "bottom",
-        "box-align",
-        "box-decoration-break",
-        "box-direction",
-        "box-flex",
-        "box-flex-group",
-        "box-lines",
-        "box-ordinal-group",
-        "box-orient",
-        "box-pack",
-        "box-shadow",
-        "box-sizing",
-        "break-after",
-        "break-before",
-        "break-inside",
-        "caption-side",
-        "clear",
-        "clip",
-        "color",
-        "color-profile",
-        "column-count",
-        "column-fill",
-        "column-gap",
-        "column-rule",
-        "column-rule-color",
-        "column-rule-style",
-        "column-rule-width",
-        "column-span",
-        "column-width",
-        "columns",
-        "content",
-        "counter-increment",
-        "counter-reset",
-        "crop",
-        "cue",
-        "cue-after",
-        "cue-before",
-        "cursor",
-        "direction",
-        "display",
-        "dominant-baseline",
-        "drop-initial-after-adjust",
-        "drop-initial-after-align",
-        "drop-initial-before-adjust",
-        "drop-initial-before-align",
-        "drop-initial-size",
-        "drop-initial-value",
-        "elevation",
-        "empty-cells",
-        "filter",
-        "fit",
-        "fit-position",
-        "float",
-        "float-offset",
-        "font",
-        "font-family",
-        "font-size",
-        "font-size-adjust",
-        "font-stretch",
-        "font-style",
-        "font-variant",
-        "font-weight",
-        "grid-cell-stacking",
-        "grid-column",
-        "grid-columns",
-        "grid-column-align",
-        "grid-column-sizing",
-        "grid-column-span",
-        "grid-flow",
-        "grid-layer",
-        "grid-row",
-        "grid-rows",
-        "grid-row-align",
-        "grid-row-span",
-        "grid-row-sizing",
-        "hanging-punctuation",
-        "height",
-        "hyphenate-after",
-        "hyphenate-before",
-        "hyphenate-character",
-        "hyphenate-lines",
-        "hyphenate-resource",
-        "hyphens",
-        "icon",
-        "image-orientation",
-        "image-rendering",
-        "image-resolution",
-        "inline-box-align",
-        "left",
-        "letter-spacing",
-        "line-height",
-        "line-break",
-        "line-stacking",
-        "line-stacking-ruby",
-        "line-stacking-shift",
-        "line-stacking-strategy",
-        "list-style",
-        "list-style-image",
-        "list-style-position",
-        "list-style-type",
-        "margin",
-        "margin-bottom",
-        "margin-left",
-        "margin-right",
-        "margin-top",
-        "mark",
-        "mark-after",
-        "mark-before",
-        "marks",
-        "marquee-direction",
-        "marquee-play-count",
-        "marquee-speed",
-        "marquee-style",
-        "max-height",
-        "max-width",
-        "min-height",
-        "min-width",
-        "move-to",
-        "nav-down",
-        "nav-index",
-        "nav-left",
-        "nav-right",
-        "nav-up",
-        "opacity",
-        "orphans",
-        "outline",
-        "outline-color",
-        "outline-offset",
-        "outline-style",
-        "outline-width",
-        "overflow",
-        "overflow-style",
-        "overflow-x",
-        "overflow-y",
-        "padding",
-        "padding-bottom",
-        "padding-left",
-        "padding-right",
-        "padding-top",
-        "page",
-        "page-break-after",
-        "page-break-before",
-        "page-break-inside",
-        "page-policy",
-        "pause",
-        "pause-after",
-        "pause-before",
-        "perspective",
-        "perspective-origin",
-        "phonemes",
-        "pitch",
-        "pitch-range",
-        "play-during",
-        "pointer-events",
-        "position",
-        "presentation-level",
-        "punctuation-trim",
-        "quotes",
-        "rendering-intent",
-        "resize",
-        "rest",
-        "rest-after",
-        "rest-before",
-        "richness",
-        "right",
-        "rotation",
-        "rotation-point",
-        "ruby-align",
-        "ruby-overhang",
-        "ruby-position",
-        "ruby-span",
-        "size",
-        "speak",
-        "speak-header",
-        "speak-numeral",
-        "speak-punctuation",
-        "speech-rate",
-        "src",
-        "stress",
-        "string-set",
-        "table-layout",
-        "tab-size",
-        "target",
-        "target-name",
-        "target-new",
-        "target-position",
-        "text-align",
-        "text-align-last",
-        "text-decoration",
-        "text-emphasis",
-        "text-height",
-        "text-indent",
-        "text-justify",
-        "text-outline",
-        "text-overflow",
-        "text-rendering",
-        "text-shadow",
-        "text-transform",
-        "text-wrap",
-        "top",
-        "transform",
-        "transform-origin",
-        "transform-style",
-        "transition",
-        "transition-delay",
-        "transition-duration",
-        "transition-property",
-        "transition-timing-function",
-        "unicode-bidi",
-        "user-modify",
-        "user-select",
-        "vertical-align",
-        "visibility",
-        "voice-balance",
-        "voice-duration",
-        "voice-family",
-        "voice-pitch",
-        "voice-pitch-range",
-        "voice-rate",
-        "voice-stress",
-        "voice-volume",
-        "volume",
-        "white-space",
-        "white-space-collapse",
-        "widows",
-        "width",
-        "word-break",
-        "word-spacing",
-        "word-wrap",
-        "z-index",
-        "zoom"
-    );
 }

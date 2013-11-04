@@ -25,9 +25,9 @@ import com.salesforce.omakase.ast.declaration.Values;
 
 /**
  * Enum of all recognized CSS keywords.
- *
+ * </p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- *
+ * </p>
  * See class com.salesforce.omakase.util.tool.KeywordToEnum for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")

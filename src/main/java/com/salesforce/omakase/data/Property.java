@@ -22,9 +22,11 @@ import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Map;
 
 /**
- * Enum of all recognized CSS properties. Generated using PropertyToEnum.java.
+ * Enum of all recognized CSS properties. Use {@link #toString()} to get the CSS-output representation.
  * <p/>
- * Use {@link #toString()} to get the CSS-output version.
+ * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
+ * </p>
+ * See class com.salesforce.omakase.util.tool.PropertyToEnum for instructions on updating.
  */
 public enum Property {
     /** CSS property named 'alignment-adjust' */
@@ -907,7 +909,9 @@ public enum Property {
     Z_INDEX("z-index"),
 
     /** CSS property named 'zoom' */
-    ZOOM("zoom");
+    ZOOM("zoom"),
+
+    ;
 
     /** reverse lookup map */
     private static final Map<String, Property> map;
