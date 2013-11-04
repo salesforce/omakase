@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Prefix;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -35,45 +35,45 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Code generator for the {@link Keyword} enum.
+ * Code generator for the {@link Prefix} enum.
  * <p/>
- * To modify the list of keywords, edit the 'src/test/resources/data/keywords.txt' file and execute the main method on this class
+ * To modify the list of prefixes, edit the 'src/test/resources/data/prefixes.txt' file and execute the main method on this class
  * (also available via bin/run.sh).
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public final class KeywordToEnum {
-    private KeywordToEnum() {}
+public final class PrefixToEnum {
+    private PrefixToEnum() {}
 
     public static void main(String[] args) throws TemplateException, IOException {
         // read the input file
-        System.out.println("reading 'keywords.txt'...");
-        String source = Tools.readFile("/data/keywords.txt");
+        System.out.println("reading 'prefixes.txt'...");
+        String source = Tools.readFile("/data/prefixes.txt");
 
         // reformat into an ordered list
         System.out.println("generating output...");
 
         // using set to make unique
-        Set<String> keywords = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
+        Set<String> prefixes = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
 
         // convert to an order list
-        List<String> ordered = Lists.newArrayList(keywords);
+        List<String> ordered = Lists.newArrayList(prefixes);
         Collections.sort(ordered);
 
         // process the template
-        Template template = Tools.getTemplate("keyword-to-enum");
+        Template template = Tools.getTemplate("prefix-to-enum");
         Map<String, Object> data = Maps.newHashMap();
-        data.put("keywords", ordered);
-        data.put("generatorName", KeywordToEnum.class);
-        data.put("package", Keyword.class.getPackage().getName());
+        data.put("prefixes", ordered);
+        data.put("generatorName", PrefixToEnum.class);
+        data.put("package", Prefix.class.getPackage().getName());
 
         StringWriter writer = new StringWriter();
         template.process(data, writer);
 
         // write it to the source file
         System.out.println("writing output...");
-        File file = Tools.getSourceFile(Keyword.class);
+        File file = Tools.getSourceFile(Prefix.class);
         file.delete();
         Files.write(writer.toString(), file, Charsets.UTF_8);
 

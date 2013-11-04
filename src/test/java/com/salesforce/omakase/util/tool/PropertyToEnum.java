@@ -34,7 +34,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Utility to take list of css names and fromStrings them to the {@link Property} enum. */
+/**
+ * Code generator for the {@link Property} enum.
+ * <p/>
+ * To modify the list of keywords, edit the 'src/test/resources/data/properties.txt' file and execute the main method on this
+ * class (also available via bin/run.sh).
+ *
+ * @author nmcwilliams
+ */
 @SuppressWarnings("JavaDoc")
 public final class PropertyToEnum {
     private PropertyToEnum() {}
@@ -48,10 +55,10 @@ public final class PropertyToEnum {
         System.out.println("generating output...");
 
         // using set to make unique
-        Set<String> keywords = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
+        Set<String> properties = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
 
         // convert to an order list
-        List<String> ordered = Lists.newArrayList(keywords);
+        List<String> ordered = Lists.newArrayList(properties);
         Collections.sort(ordered);
 
         // process the template

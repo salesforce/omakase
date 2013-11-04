@@ -23,19 +23,15 @@ package com.salesforce.omakase.data;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.util.tool.PrefixToEnum for instructions on updating.
+ * See ${generatorName} for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Prefix {
-    /** prefix '-moz-' */
-    MOZ("-moz-"),
+    <#list prefixes as prefix>
+    /** prefix '-${prefix}-' */
+    ${prefix?upper_case}("-${prefix}-"),
 
-    /** prefix '-ms-' */
-    MS("-ms-"),
-
-    /** prefix '-webkit-' */
-    WEBKIT("-webkit-"),
-
+    </#list>
     ;
 
     private final String prefix;
