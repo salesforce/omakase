@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.util;
 
 /**
- * Vendor prefixes.
- * <p/>
- * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}
+ * Test utils.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("UnusedDeclaration")
-public enum Prefix {
-    /** Mozilla Firefox */
-    MOZ("-moz-"),
-    /** Webkit */
-    WEBKIT("-webkit-"),
-    /** Microsoft */
-    MS("-ms-");
+public final class Util {
+    private Util() {}
 
-    private final String prefix;
-
-    Prefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    @Override
-    public String toString() {
-        return prefix;
+    /**
+     * Gets the original toString representation of the object.
+     *
+     * @param object
+     *     Get the original toString of this object.
+     *
+     * @return The original toString result.
+     */
+    public static String originalToString(Object object) {
+        return object.getClass().getName() + "@" + Integer.toHexString(object.hashCode());
     }
 }

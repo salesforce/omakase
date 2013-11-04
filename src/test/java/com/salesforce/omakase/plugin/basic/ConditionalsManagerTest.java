@@ -18,7 +18,7 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.util.Util;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

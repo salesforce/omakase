@@ -6,4 +6,4 @@ else
   echo "If dependencies have been updated then please run 'mvn dependency:copy-dependencies' first"
 fi
 
-java -Xms512m -Xmx4G -cp target/dependency/*:target/classes:target/test-classes com.salesforce.omakase.test.util.perf.PerfTest $1
+java -Xms512m -Xmx4G -cp target/dependency/*:target/classes:target/test-classes com.salesforce.omakase.util.perf.PerfTest $1

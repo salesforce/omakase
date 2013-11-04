@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.error.ErrorLevel;
 
-import static com.salesforce.omakase.test.util.TemplatesHelper.fillSelector;
+import static com.salesforce.omakase.util.TemplatesHelper.fillSelector;
 
 /** Unit tests for {@link PseudoElementValidator}. */
 public class PseudoElementValidatorTest extends SimpleValidatorTest<PseudoElementValidator> {

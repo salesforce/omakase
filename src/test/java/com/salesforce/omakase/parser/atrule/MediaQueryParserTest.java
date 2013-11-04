@@ -23,14 +23,14 @@ import com.salesforce.omakase.ast.atrule.MediaQuery;
 import com.salesforce.omakase.ast.atrule.MediaRestriction;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.test.util.TemplatesHelper;
+import com.salesforce.omakase.util.TemplatesHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
+import static com.salesforce.omakase.util.TemplatesHelper.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

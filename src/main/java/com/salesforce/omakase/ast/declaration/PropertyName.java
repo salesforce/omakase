@@ -19,6 +19,8 @@ package com.salesforce.omakase.ast.declaration;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -243,7 +245,7 @@ public final class PropertyName extends AbstractSyntax {
      * @return The new {@link PropertyName} instance.
      */
     public static PropertyName using(int line, int column, String name) {
-        Property recognized = Property.map.get(name.toLowerCase());
+        Property recognized = Property.lookup(name.toLowerCase());
         String nameToUse = recognized != null ? recognized.toString() : name.toLowerCase();
         return new PropertyName(line, column, nameToUse);
     }

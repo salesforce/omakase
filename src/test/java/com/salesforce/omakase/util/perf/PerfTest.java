@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.util.perf;
+package com.salesforce.omakase.util.perf;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -25,8 +25,6 @@ import java.util.Map;
  * Enum of all recognized CSS properties. Generated using PropertyToEnum.java.
  * <p/>
  * Use {@link #toString()} to get the CSS-output version.
- *
- * @author nmcwilliams
  */
 public enum Property {
     /** CSS property named 'alignment-adjust' */
@@ -912,8 +910,7 @@ public enum Property {
     ZOOM("zoom");
 
     /** reverse lookup map */
-    protected static final Map<String, Property> map;
-
+    private static final Map<String, Property> map;
     static {
         Builder<String, Property> builder = ImmutableMap.builder();
         for (Property pn : Property.values()) {
@@ -931,5 +928,17 @@ public enum Property {
     @Override
     public String toString() {
         return name;
+    }
+
+    /**
+     * Gets the  property associated with the given name
+     *
+     * @param name
+     *     Name of the property.
+     *
+     * @return The matching {@link Property}.
+     */
+    public static Property lookup(String name) {
+        return map.get(name);
     }
 }

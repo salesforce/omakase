@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 

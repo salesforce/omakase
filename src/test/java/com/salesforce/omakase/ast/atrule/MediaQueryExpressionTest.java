@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.ast.declaration.TermListMember;
-import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 

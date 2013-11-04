@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.util;
+package com.salesforce.omakase.data;
 
-/**
- * Test utils.
- *
- * @author nmcwilliams
- */
-public final class Util {
-    private Util() {}
+import org.junit.Test;
 
-    /**
-     * Gets the original toString representation of the object.
-     *
-     * @param object
-     *     Get the original toString of this object.
-     *
-     * @return The original toString result.
-     */
-    public static String originalToString(Object object) {
-        return object.getClass().getName() + "@" + Integer.toHexString(object.hashCode());
+import static org.fest.assertions.api.Assertions.assertThat;
+
+/** Unit tests for {@link Property}. */
+@SuppressWarnings("JavaDoc")
+public class PropertyTest {
+    @Test
+    public void reverseLookup() {
+        assertThat(Property.lookup("display")).isSameAs(Property.DISPLAY);
+    }
+
+    @Test
+    public void toStringTest() {
+        assertThat(Property.BORDER_BOTTOM.toString()).isEqualTo("border-bottom");
     }
 }

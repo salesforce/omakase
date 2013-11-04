@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test;
+package com.salesforce.omakase.test.functional;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.Omakase;

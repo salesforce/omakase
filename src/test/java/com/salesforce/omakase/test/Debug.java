@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.test.util.EchoLogger;
+import com.salesforce.omakase.util.EchoLogger;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;

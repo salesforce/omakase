@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.util.tool;
+package com.salesforce.omakase.util.tool;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.Property;
+import com.salesforce.omakase.data.Property;
 
 import java.util.Collections;
 import java.util.List;

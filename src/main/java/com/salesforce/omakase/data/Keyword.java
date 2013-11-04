@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.data;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.ast.declaration.Values;
 
 /**
- * Enum of all recognized CSS keywords. Generated using KeywordToEnum.java.
+ * Enum of all recognized CSS keywords.
  *
- * @author nmcwilliams
+ * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
+ *
+ * See class com.salesforce.omakase.util.tool.KeywordToEnum for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Keyword {
@@ -473,7 +480,9 @@ public enum Keyword {
     WHITE("white"),
 
     /** CSS keyword named 'yellow' */
-    YELLOW("yellow");
+    YELLOW("yellow"),
+
+    ;
 
     private final String keyword;
 

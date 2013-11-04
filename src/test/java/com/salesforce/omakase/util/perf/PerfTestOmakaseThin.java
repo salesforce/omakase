@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.util.perf;
+package com.salesforce.omakase.util.perf;
 
-@SuppressWarnings("ALL")
-public interface PerfTestParser {
-    char code();
+import com.salesforce.omakase.Omakase;
 
-    String name();
+/**
+ * Omakase, thin mode.
+ *
+ * @author nmcwilliams
+ */
+public final class PerfTestOmakaseThin implements PerfTestParser {
+    @Override
+    public char code() {
+        return 't';
+    }
 
-    void parse(String input);
+    @Override
+    public String name() {
+        return "Omakase Thin";
+    }
+
+    @Override
+    public void parse(String input) {
+        Omakase.source(input).process();
+    }
 }

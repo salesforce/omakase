@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.util.perf;
 
-import org.junit.Test;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-/** Unit tests for {@link Property}. */
-@SuppressWarnings("JavaDoc")
-public class PropertyTest {
-    @Test
-    public void reverseLookup() {
-        assertThat(Property.map.get("display")).isSameAs(Property.DISPLAY);
+/**
+ * Omakase, full mode.
+ *
+ * @author nmcwilliams
+ */
+public final class PerfTestOmakaseFull implements PerfTestParser {
+    @Override
+    public char code() {
+        return 'f';
     }
 
-    @Test
-    public void toStringTest() {
-        assertThat(Property.BORDER_BOTTOM.toString()).isEqualTo("border-bottom");
+    @Override
+    public String name() {
+        return "Omakase Full";
+    }
+
+    @Override
+    public void parse(String input) {
+        Omakase.source(input).request(new SyntaxTree()).request(new StandardValidation()).process();
     }
 }

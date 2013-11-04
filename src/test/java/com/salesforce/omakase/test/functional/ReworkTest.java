@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test;
+package com.salesforce.omakase.test.functional;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
@@ -22,10 +22,10 @@ import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.Prefix;
-import com.salesforce.omakase.ast.declaration.Property;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.ast.declaration.Keyword;
+import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;

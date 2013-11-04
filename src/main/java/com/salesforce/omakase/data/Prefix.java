@@ -14,30 +14,32 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.util.perf;
-
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+package com.salesforce.omakase.data;
 
 /**
- * Omakase, full mode.
+ * Vendor prefixes.
+ * <p/>
+ * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}
  *
  * @author nmcwilliams
  */
-public final class PerfTestOmakaseFull implements PerfTestParser {
-    @Override
-    public char code() {
-        return 'f';
+@SuppressWarnings("UnusedDeclaration")
+public enum Prefix {
+    /** Mozilla Firefox */
+    MOZ("-moz-"),
+    /** Webkit */
+    WEBKIT("-webkit-"),
+    /** Microsoft */
+    MS("-ms-");
+
+    private final String prefix;
+
+    Prefix(String prefix) {
+        this.prefix = prefix;
     }
 
     @Override
-    public String name() {
-        return "Omakase Full";
-    }
-
-    @Override
-    public void parse(String input) {
-        Omakase.source(input).request(new SyntaxTree()).request(new StandardValidation()).process();
+    public String toString() {
+        return prefix;
     }
 }

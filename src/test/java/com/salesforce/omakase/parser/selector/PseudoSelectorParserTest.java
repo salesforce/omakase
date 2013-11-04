@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
+import static com.salesforce.omakase.util.TemplatesHelper.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

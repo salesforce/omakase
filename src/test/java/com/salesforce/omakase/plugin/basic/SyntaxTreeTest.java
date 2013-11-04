@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 
