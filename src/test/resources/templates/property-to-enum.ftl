@@ -26,10 +26,10 @@ import java.util.Map;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See ${generatorName} for instructions on updating.
+ * See ${generator} for instructions on updating.
  */
 public enum Property {
-    <#list properties as property>
+    <#list items as property>
     /** CSS property named '${property}' */
     ${property?upper_case?replace("-","_")}("${property}"),
 

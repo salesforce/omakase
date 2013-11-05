@@ -17,7 +17,7 @@
 package com.salesforce.omakase.data;
 
 /**
- * Vendor prefixes.
+ * Enum of vendor prefixes.
  * <p/>
  * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}.
  * <p/>
@@ -32,6 +32,9 @@ public enum Prefix {
 
     /** prefix '-ms-' */
     MS("-ms-"),
+
+    /** prefix '-o-' */
+    O("-o-"),
 
     /** prefix '-webkit-' */
     WEBKIT("-webkit-"),

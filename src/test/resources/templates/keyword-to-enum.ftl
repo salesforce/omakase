@@ -28,11 +28,11 @@ import com.salesforce.omakase.ast.declaration.Values;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See ${generatorName} for instructions on updating.
+ * See ${generator} for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Keyword {
-    <#list keywords as keyword>
+    <#list items as keyword>
     /** CSS keyword named '${keyword}' */
     ${keyword?upper_case?replace("-","_")}("${keyword}"),
 

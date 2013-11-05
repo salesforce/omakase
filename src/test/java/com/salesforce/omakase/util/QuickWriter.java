@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util.tool;
+package com.salesforce.omakase.util;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;

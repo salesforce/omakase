@@ -16,23 +16,10 @@
 
 package com.salesforce.omakase.util.tool;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.Files;
 import com.salesforce.omakase.data.Prefix;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Code generator for the {@link Prefix} enum.
@@ -47,36 +34,13 @@ public final class PrefixToEnum {
     private PrefixToEnum() {}
 
     public static void main(String[] args) throws TemplateException, IOException {
-        // read the input file
-        System.out.println("reading 'prefixes.txt'...");
-        String source = Tools.readFile("/data/prefixes.txt");
+        EnumWriter writer = new EnumWriter();
 
-        // reformat into an ordered list
-        System.out.println("generating output...");
+        writer.generator(PrefixToEnum.class);
+        writer.enumClass(Prefix.class);
+        writer.source("prefixes.txt");
+        writer.template("prefix-to-enum.ftl");
 
-        // using set to make unique
-        Set<String> prefixes = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
-
-        // convert to an order list
-        List<String> ordered = Lists.newArrayList(prefixes);
-        Collections.sort(ordered);
-
-        // process the template
-        Template template = Tools.getTemplate("prefix-to-enum");
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("prefixes", ordered);
-        data.put("generatorName", PrefixToEnum.class);
-        data.put("package", Prefix.class.getPackage().getName());
-
-        StringWriter writer = new StringWriter();
-        template.process(data, writer);
-
-        // write it to the source file
-        System.out.println("writing output...");
-        File file = Tools.getSourceFile(Prefix.class);
-        file.delete();
-        Files.write(writer.toString(), file, Charsets.UTF_8);
-
-        System.out.println("done");
+        writer.write();
     }
 }

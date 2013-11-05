@@ -30,7 +30,7 @@ import java.net.URL;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "AssignmentToMethodParameter"})
 public final class Tools {
     private static final Configuration FREEMARKER = new Configuration();
 
@@ -58,6 +58,7 @@ public final class Tools {
 
     /** finds a template on the classpath */
     public static Template getTemplate(String name) throws IOException {
-        return FREEMARKER.getTemplate(String.format("%s.ftl", name));
+        if (!name.endsWith(".ftl")) name += ".ftl";
+        return FREEMARKER.getTemplate(name);
     }
 }

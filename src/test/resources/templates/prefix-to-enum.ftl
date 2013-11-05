@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.data;
+package ${package};
 
 /**
- * Vendor prefixes.
+ * Enum of vendor prefixes.
  * <p/>
  * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}.
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See ${generatorName} for instructions on updating.
+ * See ${generator} for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Prefix {
-    <#list prefixes as prefix>
+    <#list items as prefix>
     /** prefix '-${prefix}-' */
     ${prefix?upper_case}("-${prefix}-"),
 

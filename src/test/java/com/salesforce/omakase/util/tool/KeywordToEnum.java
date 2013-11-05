@@ -16,23 +16,7 @@
 
 package com.salesforce.omakase.util.tool;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.Files;
 import com.salesforce.omakase.data.Keyword;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Code generator for the {@link Keyword} enum.
@@ -46,37 +30,14 @@ import java.util.Set;
 public final class KeywordToEnum {
     private KeywordToEnum() {}
 
-    public static void main(String[] args) throws TemplateException, IOException {
-        // read the input file
-        System.out.println("reading 'keywords.txt'...");
-        String source = Tools.readFile("/data/keywords.txt");
+    public static void main(String[] args) throws Exception {
+        EnumWriter writer = new EnumWriter();
 
-        // reformat into an ordered list
-        System.out.println("generating output...");
+        writer.generator(KeywordToEnum.class);
+        writer.enumClass(Keyword.class);
+        writer.source("keywords.txt");
+        writer.template("keyword-to-enum.ftl");
 
-        // using set to make unique
-        Set<String> keywords = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
-
-        // convert to an order list
-        List<String> ordered = Lists.newArrayList(keywords);
-        Collections.sort(ordered);
-
-        // process the template
-        Template template = Tools.getTemplate("keyword-to-enum");
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("keywords", ordered);
-        data.put("generatorName", KeywordToEnum.class);
-        data.put("package", Keyword.class.getPackage().getName());
-
-        StringWriter writer = new StringWriter();
-        template.process(data, writer);
-
-        // write it to the source file
-        System.out.println("writing output...");
-        File file = Tools.getSourceFile(Keyword.class);
-        file.delete();
-        Files.write(writer.toString(), file, Charsets.UTF_8);
-
-        System.out.println("done");
+        writer.write();
     }
 }
