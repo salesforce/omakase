@@ -1,4 +1,0 @@
-moz
-ms
-webkit
-o

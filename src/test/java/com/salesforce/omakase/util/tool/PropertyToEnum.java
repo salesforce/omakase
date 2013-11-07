@@ -34,11 +34,11 @@ public final class PropertyToEnum {
     private PropertyToEnum() {}
 
     public static void main(String[] args) throws IOException, TemplateException {
-        EnumWriter writer = new EnumWriter();
+        SourceWriter writer = new SourceWriter();
 
         writer.generator(PropertyToEnum.class);
-        writer.enumClass(Property.class);
-        writer.source("properties.txt");
+        writer.classToWrite(Property.class);
+        writer.source("properties.yaml");
         writer.template("property-to-enum.ftl");
 
         writer.write();

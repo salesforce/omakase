@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.basic.AutoPrefix;
+import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.Conditionals;
 import com.salesforce.omakase.plugin.basic.ConditionalsCollector;
@@ -51,10 +51,10 @@ final class Suppliers {
                 return new AutoRefiner();
             }
         })
-        .put(AutoPrefix.class, new Supplier<AutoPrefix>() {
+        .put(Prefixer.class, new Supplier<Prefixer>() {
             @Override
-            public AutoPrefix get() {
-                return new AutoPrefix();
+            public Prefixer get() {
+                return Prefixer.defaultSupport();
             }
         })
         .put(Conditionals.class, new Supplier<Conditionals>() {

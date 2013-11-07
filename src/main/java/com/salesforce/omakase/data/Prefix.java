@@ -33,11 +33,11 @@ public enum Prefix {
     /** prefix '-ms-' */
     MS("-ms-"),
 
-    /** prefix '-o-' */
-    O("-o-"),
-
     /** prefix '-webkit-' */
     WEBKIT("-webkit-"),
+
+    /** prefix '-o-' */
+    O("-o-"),
 
     ;
 

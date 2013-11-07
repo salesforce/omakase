@@ -31,11 +31,11 @@ public final class KeywordToEnum {
     private KeywordToEnum() {}
 
     public static void main(String[] args) throws Exception {
-        EnumWriter writer = new EnumWriter();
+        SourceWriter writer = new SourceWriter();
 
         writer.generator(KeywordToEnum.class);
-        writer.enumClass(Keyword.class);
-        writer.source("keywords.txt");
+        writer.classToWrite(Keyword.class);
+        writer.source("keywords.yaml");
         writer.template("keyword-to-enum.ftl");
 
         writer.write();

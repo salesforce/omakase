@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
-
-import com.salesforce.omakase.plugin.Plugin;
+package com.salesforce.omakase.util.tool;
 
 /**
- * TODO description
+ * Runs all source code generators.
  *
  * @author nmcwilliams
  */
-public class AutoPrefix implements Plugin {
+@SuppressWarnings("JavaDoc")
+public final class GenerateAll {
+    private GenerateAll() {}
+
+    public static void main(String[] args) throws Exception {
+        PrefixToEnum.main(new String[]{});
+        KeywordToEnum.main(new String[]{});
+        PropertyToEnum.main(new String[]{});
+        BrowserEnumGenerator.main(new String[]{});
+        PrefixInfoClassGenerator.main(new String[]{});
+    }
 }

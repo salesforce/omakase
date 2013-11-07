@@ -29,6 +29,15 @@ import java.util.Map;
  * See class com.salesforce.omakase.util.tool.PropertyToEnum for instructions on updating.
  */
 public enum Property {
+    /** CSS property named 'align-content' */
+    ALIGN_CONTENT("align-content"),
+
+    /** CSS property named 'align-items' */
+    ALIGN_ITEMS("align-items"),
+
+    /** CSS property named 'align-self' */
+    ALIGN_SELF("align-self"),
+
     /** CSS property named 'alignment-adjust' */
     ALIGNMENT_ADJUST("alignment-adjust"),
 
@@ -46,6 +55,9 @@ public enum Property {
 
     /** CSS property named 'animation-duration' */
     ANIMATION_DURATION("animation-duration"),
+
+    /** CSS property named 'animation-fill-mode' */
+    ANIMATION_FILL_MODE("animation-fill-mode"),
 
     /** CSS property named 'animation-iteration-count' */
     ANIMATION_ITERATION_COUNT("animation-iteration-count"),
@@ -263,6 +275,9 @@ public enum Property {
     /** CSS property named 'break-inside' */
     BREAK_INSIDE("break-inside"),
 
+    /** CSS property named 'calc' */
+    CALC("calc"),
+
     /** CSS property named 'caption-side' */
     CAPTION_SIDE("caption-side"),
 
@@ -374,6 +389,27 @@ public enum Property {
     /** CSS property named 'fit-position' */
     FIT_POSITION("fit-position"),
 
+    /** CSS property named 'flex' */
+    FLEX("flex"),
+
+    /** CSS property named 'flex-basis' */
+    FLEX_BASIS("flex-basis"),
+
+    /** CSS property named 'flex-direction' */
+    FLEX_DIRECTION("flex-direction"),
+
+    /** CSS property named 'flex-flow' */
+    FLEX_FLOW("flex-flow"),
+
+    /** CSS property named 'flex-grow' */
+    FLEX_GROW("flex-grow"),
+
+    /** CSS property named 'flex-shrink' */
+    FLEX_SHRINK("flex-shrink"),
+
+    /** CSS property named 'flex-wrap' */
+    FLEX_WRAP("flex-wrap"),
+
     /** CSS property named 'float' */
     FLOAT("float"),
 
@@ -482,6 +518,9 @@ public enum Property {
     /** CSS property named 'inline-box-align' */
     INLINE_BOX_ALIGN("inline-box-align"),
 
+    /** CSS property named 'justify-content' */
+    JUSTIFY_CONTENT("justify-content"),
+
     /** CSS property named 'left' */
     LEFT("left"),
 
@@ -505,6 +544,9 @@ public enum Property {
 
     /** CSS property named 'line-stacking-strategy' */
     LINE_STACKING_STRATEGY("line-stacking-strategy"),
+
+    /** CSS property named 'linear-gradient' */
+    LINEAR_GRADIENT("linear-gradient"),
 
     /** CSS property named 'list-style' */
     LIST_STYLE("list-style"),
@@ -589,6 +631,9 @@ public enum Property {
 
     /** CSS property named 'opacity' */
     OPACITY("opacity"),
+
+    /** CSS property named 'order' */
+    ORDER("order"),
 
     /** CSS property named 'orphans' */
     ORPHANS("orphans"),
@@ -692,8 +737,17 @@ public enum Property {
     /** CSS property named 'quotes' */
     QUOTES("quotes"),
 
+    /** CSS property named 'radial-gradient' */
+    RADIAL_GRADIENT("radial-gradient"),
+
     /** CSS property named 'rendering-intent' */
     RENDERING_INTENT("rendering-intent"),
+
+    /** CSS property named 'repeating-linear-gradient' */
+    REPEATING_LINEAR_GRADIENT("repeating-linear-gradient"),
+
+    /** CSS property named 'repeating-radial-gradient' */
+    REPEATING_RADIAL_GRADIENT("repeating-radial-gradient"),
 
     /** CSS property named 'resize' */
     RESIZE("resize"),

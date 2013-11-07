@@ -17,15 +17,13 @@
 package com.salesforce.omakase.util.tool;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,79 +31,87 @@ import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Code generator for enums.
+ * Code generator for java files.
+ * <p/>
+ * An optional source file can be provided to {@link #source(String)}, which will load the given file from
+ * 'src/test/resources/data/'. The file given should be in YAML format. If the top-level YAML object is a map, all of the keys in
+ * the map will be available in the template. If the top-level YAML object is a list, the list will be made available to the
+ * template under the key "items".
  *
  * @author nmcwilliam
  */
-@SuppressWarnings("JavaDoc")
-final class EnumWriter {
-    private static final Logger logger = LoggerFactory.getLogger(EnumWriter.class);
+final class SourceWriter {
+    private static final Logger logger = LoggerFactory.getLogger(SourceWriter.class);
+    private static final Yaml yaml = new Yaml();
 
     private final Map<String, Object> data = Maps.newHashMap();
-    private Class<? extends Enum<?>> enumClass;
     private String templateName;
     private Class<?> generator;
+    private Class<?> klass;
     private String source;
 
     /** specifies which class is responsible for generating the enum (for javadoc comment) */
-    public EnumWriter generator(Class<?> generator) {
+    public SourceWriter generator(Class<?> generator) {
         this.generator = generator;
         return this;
     }
 
-    /** specifies the enum to rewrite */
-    public EnumWriter enumClass(Class<? extends Enum<?>> enumClass) {
-        this.enumClass = enumClass;
+    /** specifies the class to rewrite */
+    public SourceWriter classToWrite(Class<?> klass) {
+        this.klass = klass;
         return this;
     }
 
     /** name of the template, with the extension, e.g., "prefix-to-enum.ftl" */
-    public EnumWriter template(String templateName) {
+    public SourceWriter template(String templateName) {
         this.templateName = templateName;
         return this;
     }
 
-    /** data file to read, with extension, to be made available under an "items" list, e.g., "keywords.txt" */
-    public EnumWriter source(String source) {
+    /** data file to read, with extension, to be made available under an "items" list, e.g., "keywords.yaml" */
+    public SourceWriter source(String source) {
         this.source = source;
         return this;
     }
 
     /** adds data for the template */
-    public EnumWriter data(String key, Object data) {
+    public SourceWriter data(String key, Object data) {
         this.data.put(key, data);
         return this;
     }
 
     /** performs the actual writing */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void write() throws IOException, TemplateException {
         checkState(templateName != null, "template not set");
         checkState(generator != null, "generator not set");
-        checkState(enumClass != null, "enumClass not set");
-        logger.info("regenerating '{}'", enumClass);
+        checkState(klass != null, "class to write not set");
+        logger.info("regenerating '{}'", klass);
 
-        File file = Tools.getSourceFile(enumClass);
+        File file = Tools.getSourceFile(klass);
         StringWriter writer = new StringWriter();
 
         // add common data
         data.put("generator", generator);
-        data.put("package", enumClass.getPackage().getName());
+        data.put("package", klass.getPackage().getName());
 
         // optionally add data from specified source file
         if (source != null) {
             logger.info("reading '{}'...", source);
-            String source = Tools.readFile("/data/" + this.source);
+            Object contents = yaml.load(Tools.readFile("/data/" + this.source));
 
-            // using set to make unique
-            Set<String> items = Sets.newHashSet(Splitter.on('\n').omitEmptyStrings().trimResults().split(source));
-            List<String> ordered = Lists.newArrayList(items);
-            Collections.sort(ordered);
-            data.put("items", ordered);
+            if (contents instanceof List) {
+                Collections.sort((List)contents);
+                data.put("items", contents);
+            } else if (contents instanceof Map) {
+                data.putAll((Map)contents);
+            } else {
+                throw new UnsupportedOperationException("Unable to understand data file contents. Check for valid YAML usage.");
+            }
         }
 
         // load the template

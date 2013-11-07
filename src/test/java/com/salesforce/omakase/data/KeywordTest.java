@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.data;
 
-import com.salesforce.omakase.data.Keyword;
-import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.TermList;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

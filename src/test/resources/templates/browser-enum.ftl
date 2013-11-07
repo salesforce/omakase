@@ -29,16 +29,18 @@ import java.util.List;
 public enum Browser {
     <#list browsers as browser>
     /** The '${browser.displayName}' browser */
-    ${browser.enumName}("${browser.displayName}", ${browser.prefix}, ImmutableList.of(${browser.versions})),
+    ${browser.enumName}("${browser.key}", "${browser.displayName}", ${browser.prefix}, ImmutableList.of(${browser.versions})),
 
     </#list>
     ;
 
+    private final String key;
     private final String name;
     private final List<Double> versions;
     private final Prefix prefix;
 
-    Browser(String name, Prefix prefix, List<Double> versions) {
+    Browser(String key, String name, Prefix prefix, List<Double> versions) {
+        this.key = key;
         this.name = name;
         this.prefix = prefix;
         this.versions = versions;
@@ -60,6 +62,15 @@ public enum Browser {
      */
     public Prefix prefix() {
         return prefix;
+    }
+
+    /**
+     * Gets the caniuse.com browser key.
+     *
+     * @return The browser key.
+     */
+    public String key() {
+        return key;
     }
 
     /**

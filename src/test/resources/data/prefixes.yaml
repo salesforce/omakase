@@ -1,0 +1,5 @@
+prefixes:
+  - moz
+  - ms
+  - webkit
+  - o

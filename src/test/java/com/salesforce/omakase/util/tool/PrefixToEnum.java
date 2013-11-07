@@ -34,11 +34,11 @@ public final class PrefixToEnum {
     private PrefixToEnum() {}
 
     public static void main(String[] args) throws TemplateException, IOException {
-        EnumWriter writer = new EnumWriter();
+        SourceWriter writer = new SourceWriter();
 
         writer.generator(PrefixToEnum.class);
-        writer.enumClass(Prefix.class);
-        writer.source("prefixes.txt");
+        writer.classToWrite(Prefix.class);
+        writer.source("prefixes.yaml");
         writer.template("prefix-to-enum.ftl");
 
         writer.write();

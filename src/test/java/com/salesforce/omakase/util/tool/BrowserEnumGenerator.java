@@ -41,11 +41,11 @@ import java.util.Map;
  * @author nmcwilliams
  */
 @SuppressWarnings({"JavaDoc", "rawtypes", "unchecked"})
-public final class BrowserEnum {
+public final class BrowserEnumGenerator {
     private static final String BROWSERS_ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/data.json";
-    private static final Logger logger = LoggerFactory.getLogger(BrowserEnum.class);
+    private static final Logger logger = LoggerFactory.getLogger(BrowserEnumGenerator.class);
 
-    private BrowserEnum() {}
+    private BrowserEnumGenerator() {}
 
     public static void main(String[] args) throws Exception {
         logger.info("downloading browser data...");
@@ -66,20 +66,20 @@ public final class BrowserEnum {
         Map iosSafari = (Map)agents.get("ios_saf");
         Map operaMini = (Map)agents.get("op_mini");
 
-        browsers.add(new BrowserInfo("IE", "Internet Explorer", Prefix.MS, versions(ie)));
-        browsers.add(new BrowserInfo("OPERA", "Opera", Prefix.O, versions(opera)));
-        browsers.add(new BrowserInfo("CHROME", "Chrome", Prefix.WEBKIT, versions(chrome)));
-        browsers.add(new BrowserInfo("SAFARI", "Safari", Prefix.WEBKIT, versions(safari)));
-        browsers.add(new BrowserInfo("FIREFOX", "Firefox", Prefix.MOZ, versions(firefox)));
-        browsers.add(new BrowserInfo("ANDROID", "Android Browser", Prefix.WEBKIT, versions(android)));
-        browsers.add(new BrowserInfo("IE_MOBILE", "IE Mobile", Prefix.MS, versions(ieMobile)));
-        browsers.add(new BrowserInfo("IOS_SAFARI", "Safari on iOS", Prefix.WEBKIT, versions(iosSafari)));
-        browsers.add(new BrowserInfo("OPERA_MINI", "Opera Mini", Prefix.O, versions(operaMini)));
+        browsers.add(new BrowserInfo("ie", "IE", "Internet Explorer", Prefix.MS, versions(ie)));
+        browsers.add(new BrowserInfo("opera", "OPERA", "Opera", Prefix.O, versions(opera)));
+        browsers.add(new BrowserInfo("chrome", "CHROME", "Chrome", Prefix.WEBKIT, versions(chrome)));
+        browsers.add(new BrowserInfo("safari", "SAFARI", "Safari", Prefix.WEBKIT, versions(safari)));
+        browsers.add(new BrowserInfo("firefox", "FIREFOX", "Firefox", Prefix.MOZ, versions(firefox)));
+        browsers.add(new BrowserInfo("android", "ANDROID", "Android Browser", Prefix.WEBKIT, versions(android)));
+        browsers.add(new BrowserInfo("ie_mob", "IE_MOBILE", "IE Mobile", Prefix.MS, versions(ieMobile)));
+        browsers.add(new BrowserInfo("ios_saf", "IOS_SAFARI", "Safari on iOS", Prefix.WEBKIT, versions(iosSafari)));
+        browsers.add(new BrowserInfo("op_mini", "OPERA_MINI", "Opera Mini", Prefix.O, versions(operaMini)));
 
-        EnumWriter writer = new EnumWriter();
+        SourceWriter writer = new SourceWriter();
 
-        writer.generator(BrowserEnum.class);
-        writer.enumClass(Browser.class);
+        writer.generator(BrowserEnumGenerator.class);
+        writer.classToWrite(Browser.class);
         writer.template("browser-enum.ftl");
         writer.data("browsers", browsers);
 
@@ -103,16 +103,22 @@ public final class BrowserEnum {
     }
 
     public static final class BrowserInfo {
+        private final String key;
         private final Prefix prefix;
         private final String enumName;
         private final String displayName;
         private final String versions;
 
-        public BrowserInfo(String enumName, String displayName, Prefix prefix, String versions) {
+        public BrowserInfo(String key, String enumName, String displayName, Prefix prefix, String versions) {
+            this.key = key;
             this.prefix = prefix;
             this.enumName = enumName;
             this.displayName = displayName;
             this.versions = versions;
+        }
+
+        public String getKey() {
+            return key;
         }
 
         public String getPrefix() {

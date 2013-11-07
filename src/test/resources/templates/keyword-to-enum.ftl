@@ -32,7 +32,7 @@ import com.salesforce.omakase.ast.declaration.Values;
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Keyword {
-    <#list items as keyword>
+    <#list keywords as keyword>
     /** CSS keyword named '${keyword}' */
     ${keyword?upper_case?replace("-","_")}("${keyword}"),
 

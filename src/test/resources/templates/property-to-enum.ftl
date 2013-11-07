@@ -29,7 +29,7 @@ import java.util.Map;
  * See ${generator} for instructions on updating.
  */
 public enum Property {
-    <#list items as property>
+    <#list properties as property>
     /** CSS property named '${property}' */
     ${property?upper_case?replace("-","_")}("${property}"),
 

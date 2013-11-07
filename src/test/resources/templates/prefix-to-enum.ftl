@@ -27,7 +27,7 @@ package ${package};
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Prefix {
-    <#list items as prefix>
+    <#list prefixes as prefix>
     /** prefix '-${prefix}-' */
     ${prefix?upper_case}("-${prefix}-"),
 

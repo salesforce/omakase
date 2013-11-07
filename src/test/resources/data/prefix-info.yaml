@@ -1,0 +1,90 @@
+border-radius:
+  - border-radius
+  - border-top-left-radius
+  - border-top-right-radius
+  - border-bottom-left-radius
+  - border-bottom-right-radius
+
+css-boxshadow:
+  - box-shadow
+
+css-animation:
+  - animation
+  - animation-name
+  - animation-duration
+  - animation-fill-mode
+  - animation-iteration-count
+  - animation-play-state
+  - animation-timing-function
+
+css-transitions:
+  - transition
+  - transition-property
+  - transition-duration
+  - transition-delay
+  - transition-timing-function
+
+transforms2d:
+  - transform
+  - transform-origin
+  - transform-style
+  - backface-visibility
+
+css-gradients:
+  - linear-gradient
+  - repeating-linear-gradient
+  - radial-gradient
+  - repeating-radial-gradient
+
+css3-boxsizing:
+  - box-sizing
+
+multicolumn:
+  - columns
+  - column-width
+  - column-gap
+  - column-rule
+  - column-rule-color
+  - column-rule-width
+  - column-count
+  - column-rule-style
+  - column-span
+  - column-fill
+  - break-before
+  - break-after
+  - break-inside
+
+user-select-none:
+  - user-select
+
+flexbox:
+  - flex
+  - flex-grow
+  - flex-shrink
+  - flex-basis
+  - flex-direction
+  - flex-wrap
+  - flex-flow
+  - justify-content
+  - order
+  - align-items
+  - align-self
+  - align-content
+
+calc:
+  - calc
+
+background-img-opts:
+  - background-clip
+  - background-origin
+  - background-size
+
+border-image:
+  - border-image
+
+css-hyphens:
+  - hyphens
+
+css3-tabsize:
+  - tab-size
+
