@@ -76,7 +76,8 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
             "10%",
             "1.1%",
             "+1px",
-            "+1.1em");
+            "+1.1em",
+            "-.8em");
     }
 
     @Override

@@ -94,7 +94,8 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
                 "1px  1px 1px  /*x*/1px",
                 "1px /*x*/ 1px 1px 1px/*x*/",
                 "/*x*/1px /*x*/ 1px 1px 1px",
-                "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)"
+                "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)",
+                "-.8em 0 0 0"
             );
     }
 

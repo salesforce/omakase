@@ -723,24 +723,63 @@ public class SourceTest {
     public void readIdentMatches() {
         Source source = new Source("keyword-one");
         assertThat(source.readIdent().get()).isEqualTo("keyword-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentMatchesUC() {
+        Source source = new Source("KEYWORD-one");
+        assertThat(source.readIdent().get()).isEqualTo("KEYWORD-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentMatchesStartsWithHyphen() {
+        Source source = new Source("-keyword-one");
+        assertThat(source.readIdent().get()).isEqualTo("-keyword-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentMatchesStartsWithUnderscore() {
+        Source source = new Source("_keyword-one");
+        assertThat(source.readIdent().get()).isEqualTo("_keyword-one");
+        assertThat(source.eof());
     }
 
     @Test
     public void readIdentDoesntMatch() {
         Source source = new Source("111a");
         assertThat(source.readIdent().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
     }
 
     @Test
     public void readIdentDoubleHyphen() {
         Source source = new Source("--abc");
         assertThat(source.readIdent().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
     }
 
     @Test
     public void readIdentHypenDigit() {
         Source source = new Source("-1abc");
         assertThat(source.readIdent().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readIdentHyphenOnly() {
+        Source source = new Source("-");
+        assertThat(source.readIdent().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readIdentDoesntMatchOther() {
+        Source source = new Source("$abc");
+        assertThat(source.readIdent().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
     }
 
     @Test

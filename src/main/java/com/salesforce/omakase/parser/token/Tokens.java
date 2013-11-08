@@ -116,7 +116,7 @@ public enum Tokens implements Token {
     HEX_COLOR(inRange('a', 'f').or(inRange('0', '9')).or(inRange('A', 'F')), "hex color [a-fA-F0-9]{3,6}"),
 
     /** first allowed character in a css ident/name (ordered based on likelihood of occurrence) */
-    NMSTART(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z').or(is('_'))), "valid first identifier character (no digits)"),
+    NMSTART(inRange('a', 'z').or(inRange('A', 'Z').or(is('_'))), "valid first identifier character (no digits)"),
 
     /** subsequent allowed characters in a css ident/name (ordered based on likelihood of occurrence) */
     NMCHAR(inRange('a', 'z').or(is('-')).or(inRange('A', 'Z')).or(is('_')).or(inRange('0', '9')),

@@ -43,7 +43,8 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
             "-1afafa",
             "123ABC",
             "  afafk",
-            " 123"
+            " 123",
+            "-"
         );
     }
 

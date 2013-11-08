@@ -854,13 +854,13 @@ public final class Source {
         final char current = current();
 
         if (NMSTART.matches(current)) {
-            // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
-            if (HYPHEN.matches(current) && HYPHEN_OR_DIGIT.matches(peek())) return Optional.absent();
-
-            // return the full ident token
             return Optional.of(chomp(NMCHAR));
+        } else if (HYPHEN.matches(current) && NMSTART.matches(peek())) {
+            // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
+            return Optional.of(chomp(NMCHAR));
+        } else {
+            return Optional.absent();
         }
-        return Optional.absent();
     }
 
     /**
