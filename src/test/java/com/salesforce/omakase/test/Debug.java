@@ -17,10 +17,9 @@
 package com.salesforce.omakase.test;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
-import com.salesforce.omakase.ast.declaration.RawFunction;
-import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.util.EchoLogger;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -31,28 +30,29 @@ import java.io.IOException;
 @SuppressWarnings("JavaDoc")
 public final class Debug {
     public static final String SRC = ".test {\n" +
-        "    background: a(BLAH);" +
+        "    border-radius: 5px;" +
+        "    -moz-border-radius: 5px;" +
+        "    width: calc(2px - 1px);" +
         "}";
 
     private Debug() {}
 
     public static void main(String[] args) throws IOException {
-        StyleWriter writer = StyleWriter.inline();
+        StyleWriter writer = StyleWriter.verbose();
+
+        Prefixer prefixer = Prefixer.defaultBrowserSupport();
+        prefixer.removeUnnecessaryDeclarations(true);
+        prefixer.rearrangeIfAlreadyPresent(true);
+        prefixer.support().browser(Browser.SAFARI, 4);
+        prefixer.support().browser(Browser.FIREFOX, 3.6);
 
         Omakase.source(SRC)
             .request(writer)
             .request(new EchoLogger())
             .request(new StandardValidation())
+            .request(prefixer)
             .request(new Plugin() {
-                @Observe
-                public void observe(RawFunction raw) {
-                    raw.args("changed");
-                }
 
-                @Observe
-                public void observe(GenericFunctionValue f) {
-                    System.out.println(f);
-                }
             })
             .process();
 

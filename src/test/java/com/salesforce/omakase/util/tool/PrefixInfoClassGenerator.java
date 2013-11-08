@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.BrowserVersion;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.PrefixInfo;
 import com.salesforce.omakase.data.Property;
@@ -52,48 +53,12 @@ public final class PrefixInfoClassGenerator {
     private PrefixInfoClassGenerator() {}
 
     public static void main(String[] args) throws IOException, TemplateException {
+        // read the prefix input data
         logger.info("reading prefix-info.yaml...");
-        Map<String, List<String>> categories = (Map)yaml.load(Tools.readFile("/data/prefix-info.yaml"));
+        Map types = (Map)yaml.load(Tools.readFile("/data/prefix-info.yaml"));
 
-        List<Data> info = Lists.newArrayList();
-
-        for (Map.Entry<String, List<String>> category : categories.entrySet()) {
-            // load data for the category
-            logger.info("downloading prefix data for {}...", category.getKey());
-            URLConnection connection = new URL(ENDPOINT + category.getKey() + ".json").openConnection();
-            connection.setUseCaches(false);
-
-            // parse the json and find the "stats" map entry which contains the browser prefix info
-            Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
-            Map<String, Object> stats = (Map)map.get("stats");
-
-            // for each known browser, check if it requires a prefix
-            for (Browser browser : Browser.values()) {
-                Map<String, String> browserSpecific = (Map)stats.get(browser.key());
-                assert browserSpecific != null : String.format("browser %s not found in downloaded stats", browser);
-
-                // find the last browser version that requires a prefix (presence of "x" indicates prefix is required)
-                Double latest = 0d;
-                for (Map.Entry<String, String> browserVersionPrefixInfo : browserSpecific.entrySet()) {
-                    if (browserVersionPrefixInfo.getValue().contains("x")) {
-                        String last = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
-                        latest = Math.max(latest, Double.valueOf(last));
-                    }
-                }
-
-                // if we have a prefix requirement, mark it for each property in the category.
-                if (latest > 0) {
-                    logger.info("- last required with prefix in {} {}", browser, latest);
-
-                    // loop through each property name in the category
-                    for (String property : category.getValue()) {
-                        Property prop = Property.lookup(property);
-                        assert prop != null : String.format("property '%s' not found in the Property enum", property);
-                        info.add(new Data(prop, browser, latest));
-                    }
-                }
-            }
-        }
+        List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
+        List<FunctionInfo> functions = loadFunctions((Map)types.get("functions"));
 
         // write out the new class source
         SourceWriter writer = new SourceWriter();
@@ -101,24 +66,90 @@ public final class PrefixInfoClassGenerator {
         writer.generator(PrefixInfoClassGenerator.class);
         writer.classToWrite(PrefixInfo.class);
         writer.template("prefix-info-class.ftl");
-        writer.data("info", info);
+        writer.data("properties", properties);
+        writer.data("functions", functions);
 
         writer.write();
     }
 
-    public static final class Data {
-        private final Property property;
+    /** load information on all the prefixable properties */
+    private static List<PropertyInfo> loadProperties(Map<String, List<String>> categories) throws IOException {
+        List<PropertyInfo> info = Lists.newArrayList();
+
+        for (Map.Entry<String, List<String>> category : categories.entrySet()) {
+            for (BrowserVersion browserVersion : lastPrefixedBrowserVersions(category.getKey())) {
+                // loop through each property name in the category
+                for (String property : category.getValue()) {
+                    Property prop = Property.lookup(property);
+                    assert prop != null : String.format("property '%s' not found in the Property enum", property);
+                    info.add(new PropertyInfo(prop, browserVersion.browser(), browserVersion.version()));
+                }
+            }
+        }
+
+        return info;
+    }
+
+    /** load information on all the prefixable functions */
+    private static List<FunctionInfo> loadFunctions(Map<String, List<String>> categories) throws IOException {
+        List<FunctionInfo> info = Lists.newArrayList();
+
+        for (Map.Entry<String, List<String>> category : categories.entrySet()) {
+            for (BrowserVersion browserVersion : lastPrefixedBrowserVersions(category.getKey())) {
+                // loop through each property name in the category
+                for (String function : category.getValue()) {
+                    info.add(new FunctionInfo(function, browserVersion.browser(), browserVersion.version()));
+                }
+            }
+        }
+
+        return info;
+    }
+
+    private static List<BrowserVersion> lastPrefixedBrowserVersions(String category) throws IOException {
+        List<BrowserVersion> versions = Lists.newArrayList();
+
+        // load data for the category
+        logger.info("downloading prefix data for {}...", category);
+        URLConnection connection = new URL(ENDPOINT + category + ".json").openConnection();
+        connection.setUseCaches(false);
+
+        // parse the json and find the "stats" map entry which contains the browser prefix info
+        Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
+        Map<String, Object> stats = (Map)map.get("stats");
+
+        // for each known browser, check if it requires a prefix
+        for (Browser browser : Browser.values()) {
+            Map<String, String> browserSpecific = (Map)stats.get(browser.key());
+            assert browserSpecific != null : String.format("browser %s not found in downloaded stats", browser);
+
+            // find the last browser version that requires a prefix (presence of "x" indicates prefix is required)
+            Double latest = 0d;
+            for (Map.Entry<String, String> browserVersionPrefixInfo : browserSpecific.entrySet()) {
+                if (browserVersionPrefixInfo.getValue().contains("x")) {
+                    String last = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
+                    latest = Math.max(latest, Double.valueOf(last));
+                }
+            }
+            latest = Math.min(latest, browser.versions().get(0)); // don't go past the current browser version
+
+            // if we have a prefix requirement, mark it for each property in the category.
+            if (latest > 0) {
+                logger.info("- last required with prefix in {} {}", browser, latest);
+                versions.add(new BrowserVersion(browser, latest));
+            }
+        }
+
+        return versions;
+    }
+
+    private static class Info {
         private final Browser browser;
         private final Double version;
 
-        public Data(Property property, Browser browser, Double version) {
-            this.property = property;
+        public Info(Browser browser, Double version) {
             this.browser = browser;
             this.version = version;
-        }
-
-        public String getProperty() {
-            return property.name();
         }
 
         public String getBrowser() {
@@ -127,6 +158,32 @@ public final class PrefixInfoClassGenerator {
 
         public String getVersion() {
             return version.toString();
+        }
+    }
+
+    public static final class PropertyInfo extends Info {
+        private final Property property;
+
+        public PropertyInfo(Property property, Browser browser, Double version) {
+            super(browser, version);
+            this.property = property;
+        }
+
+        public String getProperty() {
+            return property.name();
+        }
+    }
+
+    public static final class FunctionInfo extends Info {
+        private final String function;
+
+        public FunctionInfo(String function, Browser browser, Double version) {
+            super(browser, version);
+            this.function = function;
+        }
+
+        public String getFunction() {
+            return function;
         }
     }
 }

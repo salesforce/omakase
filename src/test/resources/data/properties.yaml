@@ -81,7 +81,6 @@ properties:
   - break-after
   - break-before
   - break-inside
-  - calc
   - caption-side
   - clear
   - clip
@@ -171,7 +170,6 @@ properties:
   - line-stacking-ruby
   - line-stacking-shift
   - line-stacking-strategy
-  - linear-gradient
   - list-style
   - list-style-image
   - list-style-position
@@ -235,10 +233,7 @@ properties:
   - presentation-level
   - punctuation-trim
   - quotes
-  - radial-gradient
   - rendering-intent
-  - repeating-linear-gradient
-  - repeating-radial-gradient
   - resize
   - rest
   - rest-after

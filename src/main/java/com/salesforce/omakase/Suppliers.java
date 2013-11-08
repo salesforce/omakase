@@ -54,7 +54,7 @@ final class Suppliers {
         .put(Prefixer.class, new Supplier<Prefixer>() {
             @Override
             public Prefixer get() {
-                return Prefixer.defaultSupport();
+                return Prefixer.defaultBrowserSupport();
             }
         })
         .put(Conditionals.class, new Supplier<Conditionals>() {

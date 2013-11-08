@@ -275,9 +275,6 @@ public enum Property {
     /** CSS property named 'break-inside' */
     BREAK_INSIDE("break-inside"),
 
-    /** CSS property named 'calc' */
-    CALC("calc"),
-
     /** CSS property named 'caption-side' */
     CAPTION_SIDE("caption-side"),
 
@@ -545,9 +542,6 @@ public enum Property {
     /** CSS property named 'line-stacking-strategy' */
     LINE_STACKING_STRATEGY("line-stacking-strategy"),
 
-    /** CSS property named 'linear-gradient' */
-    LINEAR_GRADIENT("linear-gradient"),
-
     /** CSS property named 'list-style' */
     LIST_STYLE("list-style"),
 
@@ -737,17 +731,8 @@ public enum Property {
     /** CSS property named 'quotes' */
     QUOTES("quotes"),
 
-    /** CSS property named 'radial-gradient' */
-    RADIAL_GRADIENT("radial-gradient"),
-
     /** CSS property named 'rendering-intent' */
     RENDERING_INTENT("rendering-intent"),
-
-    /** CSS property named 'repeating-linear-gradient' */
-    REPEATING_LINEAR_GRADIENT("repeating-linear-gradient"),
-
-    /** CSS property named 'repeating-radial-gradient' */
-    REPEATING_RADIAL_GRADIENT("repeating-radial-gradient"),
 
     /** CSS property named 'resize' */
     RESIZE("resize"),

@@ -250,7 +250,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * </pre>
      *
      * @param property
-     *     The property name.
+     *     The {@link Property}.
      *
      * @return True of this {@link Declaration} has the given property name.
      */
@@ -262,12 +262,37 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * Gets whether this {@link Declaration} has the given {@link PropertyName}.
      *
      * @param propertyName
-     *     The property name.
+     *     The {@link PropertyName}.
      *
      * @return True if this {@link Declaration} has the given property name.
      */
     public boolean isProperty(PropertyName propertyName) {
         return propertyName().matches(propertyName);
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Same as {@link #isProperty(Property)}, except this ignores the prefix.
+     *
+     * @param property
+     *     The property.
+     *
+     * @return True if this {@link Declaration} has the given property, ignoring the prefix.
+     */
+    public boolean isPropertyIgnorePrefix(Property property) {
+        return propertyName().matchesIgnorePrefix(property);
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Gets whether the {@link PropertyName} is prefixed.
+     *
+     * @return True if the {@link PropertyName} is prefixed.
+     */
+    public boolean isPrefixed() {
+        return propertyName().isPrefixed();
     }
 
     /**

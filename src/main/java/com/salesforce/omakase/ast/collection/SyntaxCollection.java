@@ -123,7 +123,7 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
     Optional<T> previous(T unit);
 
     /**
-     * Prepends the given unit the beginning of this collection.
+     * Prepends the specified unit to the beginning of this collection.
      *
      * @param unit
      *     The unit to prepend.
@@ -143,22 +143,47 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
     SyntaxCollection<P, T> prependAll(Iterable<T> units);
 
     /**
-     * Prepends the given unit before the given existing unit.
+     * Prepends the specified unit before the given index unit.
+     * <p/>
+     * The index unit must be present within this collection. If the unit to prepend already exists in this collection it will be
+     * duplicated (by reference), not moved. If you would like to move the unit (e.g., remove from current position then prepend)
+     * then use {@link #moveBefore(Syntax, Syntax)} instead.
      *
-     * @param existing
-     *     The unit to prepend.
+     * @param index
+     *     Prepend before this unit.
      * @param unit
-     *     Prepend this unit before the existing unit.
+     *     Prepend this unit.
      *
      * @return this, for chaining.
      *
      * @throws IllegalArgumentException
-     *     If existing is not contained within this collection.
+     *     If the index unit is not contained within this collection.
      */
-    SyntaxCollection<P, T> prependBefore(T existing, T unit) throws IllegalArgumentException;
+    SyntaxCollection<P, T> prependBefore(T index, T unit) throws IllegalArgumentException;
 
     /**
-     * Appends the given unit to the end of this collection.
+     * Moves the specified unit before the given index unit.
+     * <p/>
+     * If the specified unit already exists in this collection it will first be removed and then prepended. If it does not
+     * currently exist in this collection it will just be prepended.
+     * <p/>
+     * The index unit must exist in this collection or an exception will be thrown. If you would like to duplicate the unit
+     * instead of moving it, use {@link #prependBefore(Syntax, Syntax)} instead.
+     *
+     * @param index
+     *     Prepend before this unit.
+     * @param unit
+     *     Move this unit.
+     *
+     * @return this, for chaining.
+     *
+     * @throws IllegalArgumentException
+     *     If the index unit does not exist in this collection.
+     */
+    SyntaxCollection<P, T> moveBefore(T index, T unit) throws IllegalArgumentException;
+
+    /**
+     * Appends the specified unit to the end of this collection.
      *
      * @param unit
      *     The unit to append.
@@ -178,19 +203,44 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
     SyntaxCollection<P, T> appendAll(Iterable<T> units);
 
     /**
-     * Appends the given unit after the given existing unit.
+     * Appends the specified unit after the given index unit.
+     * <p/>
+     * The index unit must be present within this collection. If the unit to append already exists in this collection it will be
+     * duplicated (by reference), not moved. If you would like to move the unit (e.g., remove from current position then append)
+     * then use {@link #moveAfter(Syntax, Syntax)} instead.
      *
-     * @param existing
-     *     The unit that already exists in this collection.
+     * @param index
+     *     Append after this unit.
      * @param unit
-     *     The unit to append.
+     *     Append this unit.
      *
      * @return this, for chaining.
      *
      * @throws IllegalArgumentException
      *     If existing is not contained within this collection.
      */
-    SyntaxCollection<P, T> appendAfter(T existing, T unit) throws IllegalArgumentException;
+    SyntaxCollection<P, T> appendAfter(T index, T unit) throws IllegalArgumentException;
+
+    /**
+     * Moves the specified unit after the given index unit.
+     * <p/>
+     * If the specified unit already exists in this collection it will first be removed and then appended. If it does not
+     * currently exist in this collection it will just be appended.
+     * <p/>
+     * The index unit must exist in this collection or an exception will be thrown. If you would like to duplicate the unit
+     * instead of moving it, use {@link #appendAfter(Syntax, Syntax)} instead.
+     *
+     * @param index
+     *     Append after this unit.
+     * @param unit
+     *     Append this unit.
+     *
+     * @return this, for chaining.
+     *
+     * @throws IllegalArgumentException
+     *     If the index unit does not exist in this collection.
+     */
+    SyntaxCollection<P, T> moveAfter(T index, T unit) throws IllegalArgumentException;
 
     /**
      * Replaces <b>all</b> existing units with the given units.

@@ -88,7 +88,7 @@ public final class SupportMatrix {
      * @return this, for chaining.
      */
     public SupportMatrix last(Browser browser, int numVersions) {
-        int actualNumVersions = Math.max(numVersions, browser.versions().size());
+        int actualNumVersions = Math.min(numVersions, browser.versions().size());
         for (int i = 0; i < actualNumVersions; i++) {
             supported.put(browser, browser.versions().get(i));
         }
@@ -114,5 +114,10 @@ public final class SupportMatrix {
      */
     public Set<Browser> supportedBrowsers() {
         return ImmutableSet.copyOf(supported.keySet());
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).indent().add("supported", supported).toString();
     }
 }

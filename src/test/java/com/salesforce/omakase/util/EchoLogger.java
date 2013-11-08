@@ -81,7 +81,7 @@ public final class EchoLogger extends BasePlugin {
     @Observe
     @Override
     public void selector(Selector selector) {
-        logger.info("selector: {}", selector);
+        logger.debug("selector: {}", selector);
     }
 
     @Observe
@@ -99,49 +99,49 @@ public final class EchoLogger extends BasePlugin {
     @Observe
     @Override
     public void typeSelector(TypeSelector typeSelector) {
-        logger.info("typeSelector: {}", typeSelector);
+        logger.debug("typeSelector: {}", typeSelector);
     }
 
     @Observe
     @Override
     public void idSelector(IdSelector idSelector) {
-        logger.info("idSelector: {}", idSelector);
+        logger.debug("idSelector: {}", idSelector);
     }
 
     @Observe
     @Override
     public void classSelector(ClassSelector classSelector) {
-        logger.info("classSelector: {}", classSelector);
+        logger.debug("classSelector: {}", classSelector);
     }
 
     @Observe
     @Override
     public void attributeSelector(AttributeSelector attributeSelector) {
-        logger.info("attributeSelector: {}", attributeSelector);
+        logger.debug("attributeSelector: {}", attributeSelector);
     }
 
     @Observe
     @Override
     public void pseudoClassSelector(PseudoClassSelector pseudoClassSelector) {
-        logger.info("pseudoClassSelector: {}", pseudoClassSelector);
+        logger.debug("pseudoClassSelector: {}", pseudoClassSelector);
     }
 
     @Observe
     @Override
     public void pseudoElementSelector(PseudoElementSelector pseudoElementSelector) {
-        logger.info("pseudoElementSelector: {}", pseudoElementSelector);
+        logger.debug("pseudoElementSelector: {}", pseudoElementSelector);
     }
 
     @Observe
     @Override
     public void universalSelector(UniversalSelector universalSelector) {
-        logger.info("universalSelector: {}", universalSelector);
+        logger.debug("universalSelector: {}", universalSelector);
     }
 
     @Observe
     @Override
     public void declaration(Declaration declaration) {
-        logger.info("declaration: {}", declaration);
+        logger.debug("declaration: {}", declaration);
     }
 
     @Observe
@@ -159,7 +159,7 @@ public final class EchoLogger extends BasePlugin {
     @Observe
     @Override
     public void termList(TermList termList) {
-        logger.info("termList: {}", termList);
+        logger.debug("termList: {}", termList);
     }
 
     @Observe

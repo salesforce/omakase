@@ -94,6 +94,20 @@ public final class PropertyName extends AbstractSyntax {
     }
 
     /**
+     * TESTME
+     * <p/>
+     * Gets whether this {@link PropertyName} has the given {@link Prefix}.
+     *
+     * @param prefix
+     *     Match against this prefix.
+     *
+     * @return True if this {@link PropertyName} has the given {@link Prefix}.
+     */
+    public boolean hasPrefix(Prefix prefix) {
+        return this.prefix.isPresent() && this.prefix.get().equals(prefix.toString());
+    }
+
+    /**
      * Gets the prefix, if present.
      *
      * @return The prefix, or {@link Optional#absent()} if no prefix exists.
@@ -140,12 +154,17 @@ public final class PropertyName extends AbstractSyntax {
         return this;
     }
 
-    @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (starHack) {
-            appendable.append(STAR);
-        }
-        appendable.append(name());
+    /**
+     * TESTME
+     * <p/>
+     * Gets the matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a prefixed
+     * property).
+     *
+     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or the property name is
+     *         unknown.
+     */
+    public Optional<Property> asProperty() {
+        return isPrefixed() ? Optional.<Property>absent() : Optional.fromNullable(Property.lookup(name));
     }
 
     /**
@@ -202,12 +221,48 @@ public final class PropertyName extends AbstractSyntax {
      * Gets whether this {@link PropertyName} has a {@link #name()} that equals the name of the given {@link PropertyName}.
      *
      * @param other
-     *     Match against this property name.
+     *     Match against this property name (including the prefix).
      *
-     * @return True if the names are equal.
+     * @return True if the names (including the prefix) are equal.
      */
     public boolean matches(PropertyName other) {
         return name().equals(other.name());
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Same as {@link #matches(Property)}, except this ignores the prefix.
+     *
+     * @param property
+     *     Match against this property.
+     *
+     * @return True if this {@link PropertyName} has a name that equals the given {@link Property}, ignoring the prefix.
+     */
+    public boolean matchesIgnorePrefix(Property property) {
+        return name.equals(property.toString());
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Same as {@link #matches(PropertyName)}, except this ignores the prefix.
+     *
+     * @param other
+     *     Match against this property name.
+     *
+     * @return True if both {@link PropertyName}s have equal {@link #unprefixedName()}s.
+     */
+    public boolean matchesIgnorePrefix(PropertyName other) {
+        return unprefixedName().equals(other.unprefixedName());
+    }
+
+    @Override
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (starHack) {
+            appendable.append(STAR);
+        }
+        appendable.append(name());
     }
 
     @Override
@@ -277,5 +332,22 @@ public final class PropertyName extends AbstractSyntax {
     public static PropertyName using(int line, int column, Property property) {
         checkNotNull(property, "property cannot be null");
         return new PropertyName(line, column, property.toString());
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Creates a new {@link PropertyName} instance with the same {@link #unprefixedName()} as the given {@link PropertyName} and
+     * the given {@link Prefix}.
+     *
+     * @param originalPropertyName
+     *     Use the unprefixed name from this {@link PropertyName}.
+     * @param prefix
+     *     Apply this {@link Prefix}.
+     *
+     * @return The new {@link PropertyName} instance.
+     */
+    public static PropertyName from(PropertyName originalPropertyName, Prefix prefix) {
+        return using(originalPropertyName.unprefixedName()).prefix(prefix);
     }
 }

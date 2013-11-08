@@ -166,21 +166,28 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
     }
 
     @Override
-    public SyntaxCollection<P, T> prependBefore(T existing, T unit) throws IllegalArgumentException {
-        checkNotNull(existing, "exiting cannot be null");
+    public SyntaxCollection<P, T> prependBefore(T index, T unit) throws IllegalArgumentException {
+        checkNotNull(index, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
 
-        int index = list.indexOf(existing);
-        if (index == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
+        int position = list.indexOf(index);
+        if (position == -1) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
         // add the unit to the list
-        list.add(index, unit);
+        list.add(position, unit);
         unit.group(this);
 
         // ensure the unit is broadcasted
         broadcast(unit);
 
         return this;
+    }
+
+    @Override
+    public SyntaxCollection<P, T> moveBefore(T index, T unit) throws IllegalArgumentException {
+        // TESTME
+        if (!unit.isDetached()) unit.detach();
+        return prependBefore(index, unit);
     }
 
     @Override
@@ -225,6 +232,13 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
         broadcast(unit);
 
         return this;
+    }
+
+    @Override
+    public SyntaxCollection<P, T> moveAfter(T index, T unit) throws IllegalArgumentException {
+        // TESTME
+        if (!unit.isDetached()) unit.detach();
+        return appendAfter(index, unit);
     }
 
     @Override

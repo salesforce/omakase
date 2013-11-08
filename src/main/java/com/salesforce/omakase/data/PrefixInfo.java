@@ -29,6 +29,7 @@ import com.salesforce.omakase.BrowserVersion;
  */
 public final class PrefixInfo {
     private static final Multimap<Property, BrowserVersion> PROPERTIES;
+    private static final Multimap<String, BrowserVersion> FUNCTIONS;
 
     static {
         ImmutableSetMultimap.Builder<Property, BrowserVersion> builder = ImmutableSetMultimap.builder();
@@ -63,20 +64,20 @@ public final class PrefixInfo {
         builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.FIREFOX, 3.6));
         builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.ANDROID, 3.0));
         builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.IOS_SAFARI, 4.3));
-        builder.put(Property.ANIMATION, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.ANIMATION, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.CHROME, 32.0));
+        builder.put(Property.ANIMATION, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.ANIMATION, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.CHROME, 30.0));
         builder.put(Property.ANIMATION, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -91,13 +92,13 @@ public final class PrefixInfo {
         builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.FIREFOX, 15.0));
         builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.FIREFOX, 15.0));
         builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.ANIMATION, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.ANDROID, 4.4));
+        builder.put(Property.ANIMATION, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.ANIMATION, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
@@ -139,14 +140,14 @@ public final class PrefixInfo {
         builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.IE, 9.0));
         builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.IE, 9.0));
         builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.IE, 9.0));
-        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.CHROME, 32.0));
+        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.CHROME, 30.0));
         builder.put(Property.TRANSFORM, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -155,69 +156,45 @@ public final class PrefixInfo {
         builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.FIREFOX, 15.0));
         builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.FIREFOX, 15.0));
         builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.ANDROID, 4.4));
+        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.TRANSFORM, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.LINEAR_GRADIENT, new BrowserVersion(Browser.OPERA, 12.0));
-        builder.put(Property.REPEATING_LINEAR_GRADIENT, new BrowserVersion(Browser.OPERA, 12.0));
-        builder.put(Property.RADIAL_GRADIENT, new BrowserVersion(Browser.OPERA, 12.0));
-        builder.put(Property.REPEATING_RADIAL_GRADIENT, new BrowserVersion(Browser.OPERA, 12.0));
-        builder.put(Property.LINEAR_GRADIENT, new BrowserVersion(Browser.CHROME, 25.0));
-        builder.put(Property.REPEATING_LINEAR_GRADIENT, new BrowserVersion(Browser.CHROME, 25.0));
-        builder.put(Property.RADIAL_GRADIENT, new BrowserVersion(Browser.CHROME, 25.0));
-        builder.put(Property.REPEATING_RADIAL_GRADIENT, new BrowserVersion(Browser.CHROME, 25.0));
-        builder.put(Property.LINEAR_GRADIENT, new BrowserVersion(Browser.SAFARI, 6.0));
-        builder.put(Property.REPEATING_LINEAR_GRADIENT, new BrowserVersion(Browser.SAFARI, 6.0));
-        builder.put(Property.RADIAL_GRADIENT, new BrowserVersion(Browser.SAFARI, 6.0));
-        builder.put(Property.REPEATING_RADIAL_GRADIENT, new BrowserVersion(Browser.SAFARI, 6.0));
-        builder.put(Property.LINEAR_GRADIENT, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.REPEATING_LINEAR_GRADIENT, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.RADIAL_GRADIENT, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.REPEATING_RADIAL_GRADIENT, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.LINEAR_GRADIENT, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.REPEATING_LINEAR_GRADIENT, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.RADIAL_GRADIENT, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.REPEATING_RADIAL_GRADIENT, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.LINEAR_GRADIENT, new BrowserVersion(Browser.IOS_SAFARI, 6.1));
-        builder.put(Property.REPEATING_LINEAR_GRADIENT, new BrowserVersion(Browser.IOS_SAFARI, 6.1));
-        builder.put(Property.RADIAL_GRADIENT, new BrowserVersion(Browser.IOS_SAFARI, 6.1));
-        builder.put(Property.REPEATING_RADIAL_GRADIENT, new BrowserVersion(Browser.IOS_SAFARI, 6.1));
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.CHROME, 9.0));
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.SAFARI, 5.0));
-        builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.FIREFOX, 27.0));
+        builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.ANDROID, 3.0));
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.IOS_SAFARI, 4.3));
-        builder.put(Property.COLUMNS, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.COLUMNS, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.CHROME, 32.0));
-        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.CHROME, 32.0));
+        builder.put(Property.COLUMNS, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMNS, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.CHROME, 30.0));
         builder.put(Property.COLUMNS, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -231,32 +208,32 @@ public final class PrefixInfo {
         builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.COLUMNS, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.COLUMNS, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.ANDROID, 4.4));
-        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.ANDROID, 4.4));
+        builder.put(Property.COLUMNS, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMNS, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMNS, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
@@ -271,113 +248,13 @@ public final class PrefixInfo {
         builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.IE, 11.0));
-        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.OPERA, 18.0));
-        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.CHROME, 32.0));
+        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.CHROME, 30.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.FIREFOX, 27.0));
-        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.ANDROID, 4.4));
+        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.IE_MOBILE, 10.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.IE, 10.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.OPERA, 16.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.CHROME, 28.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.FIREFOX, 21.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.IE_MOBILE, 10.0));
-        builder.put(Property.FLEX, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX_GROW, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX_SHRINK, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX_BASIS, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX_DIRECTION, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX_WRAP, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.FLEX_FLOW, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.JUSTIFY_CONTENT, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.ORDER, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.ALIGN_ITEMS, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.ALIGN_SELF, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.ALIGN_CONTENT, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.CALC, new BrowserVersion(Browser.CHROME, 25.0));
-        builder.put(Property.CALC, new BrowserVersion(Browser.SAFARI, 6.0));
-        builder.put(Property.CALC, new BrowserVersion(Browser.FIREFOX, 15.0));
-        builder.put(Property.CALC, new BrowserVersion(Browser.IOS_SAFARI, 6.1));
         builder.put(Property.BACKGROUND_CLIP, new BrowserVersion(Browser.OPERA, 10.1));
         builder.put(Property.BACKGROUND_ORIGIN, new BrowserVersion(Browser.OPERA, 10.1));
         builder.put(Property.BACKGROUND_SIZE, new BrowserVersion(Browser.OPERA, 10.1));
@@ -395,15 +272,62 @@ public final class PrefixInfo {
         builder.put(Property.BORDER_IMAGE, new BrowserVersion(Browser.IOS_SAFARI, 5.1));
         builder.put(Property.HYPHENS, new BrowserVersion(Browser.IE, 11.0));
         builder.put(Property.HYPHENS, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.HYPHENS, new BrowserVersion(Browser.FIREFOX, 27.0));
+        builder.put(Property.HYPHENS, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.HYPHENS, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.TAB_SIZE, new BrowserVersion(Browser.OPERA, 12.1));
-        builder.put(Property.TAB_SIZE, new BrowserVersion(Browser.FIREFOX, 27.0));
+        builder.put(Property.TAB_SIZE, new BrowserVersion(Browser.FIREFOX, 25.0));
 
         PROPERTIES = builder.build();
     }
 
+    static {
+        ImmutableSetMultimap.Builder<String, BrowserVersion> builder = ImmutableSetMultimap.builder();
+
+        builder.put("calc", new BrowserVersion(Browser.CHROME, 25.0));
+        builder.put("calc", new BrowserVersion(Browser.SAFARI, 6.0));
+        builder.put("calc", new BrowserVersion(Browser.FIREFOX, 15.0));
+        builder.put("calc", new BrowserVersion(Browser.IOS_SAFARI, 6.1));
+        builder.put("linear-gradient", new BrowserVersion(Browser.OPERA, 12.0));
+        builder.put("repeating-linear-gradient", new BrowserVersion(Browser.OPERA, 12.0));
+        builder.put("radial-gradient", new BrowserVersion(Browser.OPERA, 12.0));
+        builder.put("repeating-radial-gradient", new BrowserVersion(Browser.OPERA, 12.0));
+        builder.put("linear-gradient", new BrowserVersion(Browser.CHROME, 25.0));
+        builder.put("repeating-linear-gradient", new BrowserVersion(Browser.CHROME, 25.0));
+        builder.put("radial-gradient", new BrowserVersion(Browser.CHROME, 25.0));
+        builder.put("repeating-radial-gradient", new BrowserVersion(Browser.CHROME, 25.0));
+        builder.put("linear-gradient", new BrowserVersion(Browser.SAFARI, 6.0));
+        builder.put("repeating-linear-gradient", new BrowserVersion(Browser.SAFARI, 6.0));
+        builder.put("radial-gradient", new BrowserVersion(Browser.SAFARI, 6.0));
+        builder.put("repeating-radial-gradient", new BrowserVersion(Browser.SAFARI, 6.0));
+        builder.put("linear-gradient", new BrowserVersion(Browser.FIREFOX, 15.0));
+        builder.put("repeating-linear-gradient", new BrowserVersion(Browser.FIREFOX, 15.0));
+        builder.put("radial-gradient", new BrowserVersion(Browser.FIREFOX, 15.0));
+        builder.put("repeating-radial-gradient", new BrowserVersion(Browser.FIREFOX, 15.0));
+        builder.put("linear-gradient", new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put("repeating-linear-gradient", new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put("radial-gradient", new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put("repeating-radial-gradient", new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put("linear-gradient", new BrowserVersion(Browser.IOS_SAFARI, 6.1));
+        builder.put("repeating-linear-gradient", new BrowserVersion(Browser.IOS_SAFARI, 6.1));
+        builder.put("radial-gradient", new BrowserVersion(Browser.IOS_SAFARI, 6.1));
+        builder.put("repeating-radial-gradient", new BrowserVersion(Browser.IOS_SAFARI, 6.1));
+
+        FUNCTIONS = builder.build();
+    }
+
     private PrefixInfo() {}
+
+    /**
+     * Gets whether prefix info exists for the given {@link Property}.
+     *
+     * @param property
+     *     Check if prefix info exists for this property.
+     *
+     * @return True of prefix info exists for the given property.
+     */
+    public static boolean hasProperty(Property property) {
+        return PROPERTIES.containsKey(property);
+    }
 
     /**
      * Gets the last version of the given browser that requires a prefix for the given property.
@@ -413,12 +337,23 @@ public final class PrefixInfo {
      * @param browser
      *     The browser.
      *
-     * @return The last version, or 0 if all known versions of the browser supports the property unprefixed.
+     * @return The last version, or -1 if all known versions of the browser supports the property unprefixed.
      */
-    public double lastPrefixedVersion(Property property, Browser browser) {
+    public static double lastPrefixedVersion(Property property, Browser browser) {
         for (BrowserVersion browserVersion : PROPERTIES.get(property)) {
             if (browserVersion.browser() == browser) return browserVersion.version();
         }
-        return 0d;
+        return -1d;
+    }
+
+    public static boolean hasFunction(String function) {
+        return FUNCTIONS.containsKey(function);
+    }
+
+    public static double lastPrefixedVersion(String function, Browser browser) {
+        for (BrowserVersion browserVersion : FUNCTIONS.get(function)) {
+            if (browserVersion.browser() == browser) return browserVersion.version();
+        }
+        return -1d;
     }
 }

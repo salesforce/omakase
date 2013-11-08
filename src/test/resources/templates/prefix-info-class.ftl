@@ -29,18 +29,41 @@ import com.salesforce.omakase.BrowserVersion;
  */
 public final class PrefixInfo {
     private static final Multimap<Property, BrowserVersion> PROPERTIES;
+    private static final Multimap<String, BrowserVersion> FUNCTIONS;
 
     static {
         ImmutableSetMultimap.Builder<Property, BrowserVersion> builder = ImmutableSetMultimap.builder();
 
-        <#list info as i>
-        builder.put(Property.${i.property}, new BrowserVersion(Browser.${i.browser}, ${i.version}));
+        <#list properties as p>
+        builder.put(Property.${p.property}, new BrowserVersion(Browser.${p.browser}, ${p.version}));
         </#list>
 
         PROPERTIES = builder.build();
     }
 
+    static {
+        ImmutableSetMultimap.Builder<String, BrowserVersion> builder = ImmutableSetMultimap.builder();
+
+        <#list functions as f>
+        builder.put("${f.function}", new BrowserVersion(Browser.${f.browser}, ${f.version}));
+        </#list>
+
+        FUNCTIONS = builder.build();
+    }
+
     private PrefixInfo() {}
+
+    /**
+     * Gets whether prefix info exists for the given {@link Property}.
+     *
+     * @param property
+     *     Check if prefix info exists for this property.
+     *
+     * @return True of prefix info exists for the given property.
+     */
+    public static boolean hasProperty(Property property) {
+        return PROPERTIES.containsKey(property);
+    }
 
     /**
      * Gets the last version of the given browser that requires a prefix for the given property.
@@ -50,12 +73,23 @@ public final class PrefixInfo {
      * @param browser
      *     The browser.
      *
-     * @return The last version, or 0 if all known versions of the browser supports the property unprefixed.
+     * @return The last version, or -1 if all known versions of the browser supports the property unprefixed.
      */
-    public double lastPrefixedVersion(Property property, Browser browser) {
+    public static double lastPrefixedVersion(Property property, Browser browser) {
         for (BrowserVersion browserVersion : PROPERTIES.get(property)) {
             if (browserVersion.browser() == browser) return browserVersion.version();
         }
-        return 0d;
+        return -1d;
+    }
+
+    public static boolean hasFunction(String function) {
+        return FUNCTIONS.containsKey(function);
+    }
+
+    public static double lastPrefixedVersion(String function, Browser browser) {
+        for (BrowserVersion browserVersion : FUNCTIONS.get(function)) {
+            if (browserVersion.browser() == browser) return browserVersion.version();
+        }
+        return -1d;
     }
 }
