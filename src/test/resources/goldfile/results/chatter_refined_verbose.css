@@ -444,7 +444,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
 .feedclearfloat {
   clear: both;
   height: 0;
-  font-size: .1em;
+  font-size: .01em;
   line-height: 0px;
 }
 
@@ -605,7 +605,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
   white-space: normal;
   margin-bottom: 5px;
   font-weight: bold;
-  font-size: 1.8em;
+  font-size: 1.08em;
   display: block;
 }
 
@@ -5980,7 +5980,7 @@ a.selectBadge {
 }
 
 .paraText {
-  font-size: 1.83em;
+  font-size: 1.083em;
   color: #333333;
 }
 
@@ -6002,7 +6002,7 @@ a.selectBadge {
 
 .badgeButtonsContainer .zen-btn {
   font-family: Arial;
-  font-size: 1.8em;
+  font-size: 1.08em;
   height: 30px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -6018,7 +6018,7 @@ a.selectBadge {
   height: 100%;
   margin-left: 9px;
   margin-bottom: 20px;
-  font-size: 1.0em;
+  font-size: 1.00em;
 }
 
 .ryppleBadgeContent {
@@ -7968,7 +7968,7 @@ a:focus .feedSearchIcon {
 }
 
 #FilePublishToLibraryDialogContent .publishText {
-  font-size: 1.5em;
+  font-size: 1.05em;
   padding: 5px 45px;
 }
 
@@ -8449,7 +8449,7 @@ a:focus .feedSearchIcon {
 
 .fileMultiUploadOverlay .overlayListTableHeader .uploadingStatusInfo, .fileMultiUploadOverlay .overlayListTableHeader .canceledAllStatusInfo {
   font-weight: bold;
-  font-size: 1.3em;
+  font-size: 1.03em;
 }
 
 .fileMultiUploadOverlay .overlayListTableHeader .uploadingStatusInfo {
@@ -8671,7 +8671,7 @@ a:focus .feedSearchIcon {
   font-size: 2.8em;
   padding-bottom: .5em;
   margin-left: -3px;
-  letter-spacing: -.3em;
+  letter-spacing: -.03em;
   font-weight: bold;
   color: #53b9cd;
 }
@@ -9064,7 +9064,7 @@ a.chatterbox_onboarding_download_button:active {
 
 .topics .highlight {
   font-style: italic;
-  font-size: 1.5em;
+  font-size: 1.05em;
   margin: 0 0 10px 0;
   padding: 8px 10px 8px 10px;
 }
@@ -9334,7 +9334,7 @@ a.chatterbox_onboarding_download_button:active {
 }
 
 .topicsAc .autoCompleteRow, .topicsAc .autoCompleteHoverRow, .topicsAc .autoCompleteSelectedRow, .topicsAc .nosuggestions {
-  font-size: 1.5em;
+  font-size: 1.05em;
   padding: 6px 10px;
   height: auto;
   overflow: hidden;

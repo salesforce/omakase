@@ -45,36 +45,33 @@ public final class NumericalValueParser extends AbstractParser {
         // parse the optional sign
         Optional<Character> sign = source.optional(Tokens.SIGN);
 
+        // begin parsing the number
+        StringBuilder value = null;
+
         // integer value
         String integerValue = source.chomp(Tokens.DIGIT);
-        Long integer = integerValue.isEmpty() ? null : Long.valueOf(integerValue);
+        if (!integerValue.isEmpty()) value = new StringBuilder(integerValue);
 
         // decimal
-        Long decimal = null;
         if (source.optionallyPresent(Tokens.DOT)) {
+            if (value == null) value = new StringBuilder();
+            value.append('.');
+
+            // there must be a number after a decimal point
             String decimalValue = source.chomp(Tokens.DIGIT);
-            if (decimalValue.isEmpty()) {
-                // there must be a number after a decimal
-                throw new ParserException(source, Message.EXPECTED_DECIMAL);
-            }
-            decimal = Long.valueOf(decimalValue);
+            if (decimalValue.isEmpty()) throw new ParserException(source, Message.EXPECTED_DECIMAL);
+            value.append(decimalValue);
         }
 
         // integer value or decimal must be present
-        if (integer == null && decimal == null) return snapshot.rollback();
+        if (value == null) return snapshot.rollback();
 
         // create the numerical value instance
-        Long realIntegerValue = integer == null ? 0 : integer;
-        NumericalValue value = new NumericalValue(snapshot.originalLine, snapshot.originalColumn, realIntegerValue);
-
-        // add the decimal value if applicable
-        if (decimal != null) {
-            value.decimalValue(decimal);
-        }
+        NumericalValue numerical = new NumericalValue(snapshot.originalLine, snapshot.originalColumn, value.toString());
 
         // add the sign if applicable
         if (sign.isPresent()) {
-            value.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
+            numerical.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
         }
 
         // check for a unit (% or alpha)
@@ -88,11 +85,11 @@ public final class NumericalValueParser extends AbstractParser {
         }
 
         if (unit.isPresent()) {
-            value.unit(unit.get());
+            numerical.unit(unit.get());
         }
 
-        broadcaster.broadcast(value);
-        value.comments(source.flushComments());
+        broadcaster.broadcast(numerical);
+        numerical.comments(source.flushComments());
         return true;
     }
 }

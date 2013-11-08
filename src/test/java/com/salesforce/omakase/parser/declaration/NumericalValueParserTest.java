@@ -50,6 +50,7 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
             "-",
             "\"1\"",
             "__",
+            "- 1",
             "-anc");
     }
 
@@ -65,6 +66,7 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
             "123456713131890.1234567713188912",
             "123456713131890.1234567713188912px",
             "0.1234567713188912px",
+            "1.0000011",
             "0.1",
             ".1",
             "1em",
@@ -105,21 +107,24 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
 
     @Test
     @Override
+    @SuppressWarnings("unchecked")
     public void matchesExpectedBroadcastContent() {
-        List<ParseResult<Integer>> results = parseWithExpected(
-            withExpectedResult("1", 1),
-            withExpectedResult("0", 0),
-            withExpectedResult("1px", 1),
-            withExpectedResult("1.1px", 1),
-            withExpectedResult("1234567", 1234567),
-            withExpectedResult("1234567131.1234567713188912", 1234567131),
-            withExpectedResult("0.1234567713188912px", 0),
-            withExpectedResult("0.1", 0),
-            withExpectedResult(".1", 0));
+        List<ParseResult<Double>> results = parseWithExpected(
+            withExpectedResult("1", 1d),
+            withExpectedResult("0", 0d),
+            withExpectedResult("1px", 1d),
+            withExpectedResult("1.1px", 1.1),
+            withExpectedResult("1234567", 1234567d),
+            withExpectedResult("1234567131.1234567713188912", 1234567131.1234567713188912),
+            withExpectedResult("0.1234567713188912px", 0.1234567713188912),
+            withExpectedResult("0.1", 0.1),
+            withExpectedResult(".1", 0.1),
+            withExpectedResult("1.001", 1.001)
+        );
 
-        for (ParseResult<Integer> result : results) {
+        for (ParseResult<Double> result : results) {
             NumericalValue n = result.broadcaster.findOnly(NumericalValue.class).get();
-            assertThat(n.integerValue()).isEqualTo(result.expected);
+            assertThat(n.doubleValue()).isEqualTo(result.expected);
         }
     }
 
@@ -156,27 +161,6 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
         List<GenericParseResult> result = parse("1px");
         NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
         assertThat(n.unit().get()).isEqualTo("px");
-    }
-
-    @Test
-    public void decimalAbsent() {
-        List<GenericParseResult> result = parse("1");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
-        assertThat(n.decimalValue().isPresent()).isFalse();
-    }
-
-    @Test
-    public void decimalPresent() {
-        List<GenericParseResult> result = parse("1.55");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
-        assertThat(n.decimalValue().get()).isEqualTo(55);
-    }
-
-    @Test
-    public void integerValueAbsent() {
-        List<GenericParseResult> result = parse(".1");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
-        assertThat(n.integerValue()).isEqualTo(0);
     }
 
     @Test

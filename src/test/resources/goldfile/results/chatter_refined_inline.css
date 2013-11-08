@@ -83,7 +83,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {padding-top:15px
 .feedcontainer .feeditemclientinfo {margin-left:4px}
 .feedcontainer .feeditem a.feeditemtimestamp:hover, .feedcontainer .pollviewfooter a:hover {color:#015ba7}
 .feedcontainer .feeditemlinkpost {padding-left:20px}
-.feedclearfloat {clear:both; height:0; font-size:.1em; line-height:0px}
+.feedclearfloat {clear:both; height:0; font-size:.01em; line-height:0px}
 .feeddata {height:0; font-size:0; line-height:0px}
 .feedcontainer .linkPostLinkContainer a {font-size:1.1em; font-weight:normal}
 .feedcontainer .feedSearchHighlight {font-weight:bold; background-color:#fef49b}
@@ -111,7 +111,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {padding-top:15px
 .selectedFileDetailsContainer .fileDetails input {margin:0 2px 2px; vertical-align:middle}
 .linkedContentDetailsContainer .imgBlock, .selectedFileDetailsContainer .imgBlock {float:left; margin:0 10px}
 .linkedContentDetailsContainer .imgBlock img, .selectedFileDetailsContainer .imgBlock img {display:block}
-.linkedContentDetailsContainer .title, .selectedFileDetailsContainer .title {overflow:hidden; white-space:normal; margin-bottom:5px; font-weight:bold; font-size:1.8em; display:block}
+.linkedContentDetailsContainer .title, .selectedFileDetailsContainer .title {overflow:hidden; white-space:normal; margin-bottom:5px; font-weight:bold; font-size:1.08em; display:block}
 .selectedFileDetailsContainer .title .size {font-weight:normal; color:#888; font-size:.84em}
 .selectedFileDetailsContainer .title {margin-left:2px}
 .linkedContentDetailsContainer .action {color:#015ba7; margin-bottom:5px; overflow:hidden; white-space:normal}
@@ -1038,12 +1038,12 @@ a.selectBadge {color:#015ba7; text-transform:none; text-decoration:none; font-si
 .badgeSection {margin-bottom:20px}
 .sectionHead {font-size:1em; text-transform:uppercase; color:#999999; font-weight:bold}
 .badgeTitle {font-size:1.50em; color:#666666; font-weight:bold; font-family:Arial}
-.paraText {font-size:1.83em; color:#333333}
+.paraText {font-size:1.083em; color:#333333}
 .skillspan {height:20px; margin-top:8px}
 .skillPink {padding:5px 10px 5px 10px; font-size:.917em; color:#4a4a4a; margin:0 5px}
 .badgeButtonsContainer {margin-top:20px}
-.badgeButtonsContainer .zen-btn {font-family:Arial; font-size:1.8em; height:30px; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px; -webkit-box-shadow:0 1px 2px 0 #adadad; -moz-box-shadow:0 1px 2px 0 #adadad; box-shadow:0 1px 2px 0 #adadad; margin-right:20px; padding:0 10px 1px}
-.ryppleBadgeList {height:100%; margin-left:9px; margin-bottom:20px; font-size:1.0em}
+.badgeButtonsContainer .zen-btn {font-family:Arial; font-size:1.08em; height:30px; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px; -webkit-box-shadow:0 1px 2px 0 #adadad; -moz-box-shadow:0 1px 2px 0 #adadad; box-shadow:0 1px 2px 0 #adadad; margin-right:20px; padding:0 10px 1px}
+.ryppleBadgeList {height:100%; margin-left:9px; margin-bottom:20px; font-size:1.00em}
 .ryppleBadgeContent {height:250px; overflow:auto}
 .ryppleBadgeDetail {height:50px}
 .ryppleBadgeInner {text-align:center; display:inline-block; overflow:auto; max-width:115px; vertical-align:top; word-wrap:break-word; zoom:1; *display:inline}
@@ -1389,7 +1389,7 @@ a:focus .feedSearchIcon {background-position:0 -32px}
 #gotoContentLinkBox {margin-top:3px; color:#7d7d84}
 #FilePublishToLibraryDialogContent .publishProgress {background:url(/img/loading32.gif) no-repeat 0 0; float:left; width:32px; height:32px}
 #FilePublishToLibraryDialogContent .publishProgressPanel {margin:100px 150px}
-#FilePublishToLibraryDialogContent .publishText {font-size:1.5em; padding:5px 45px}
+#FilePublishToLibraryDialogContent .publishText {font-size:1.05em; padding:5px 45px}
 #actionProgressPanel #contentContainer {width:442px}
 #actionProgressPanel #progressIcon {background:url(/img/loading32.gif) no-repeat 0 0; float:left; width:32px; height:32px; margin-top:25px}
 #actionProgressPanel #progressMsgContainer {float:left; width:395px; padding-left:10px}
@@ -1492,7 +1492,7 @@ a:focus .feedSearchIcon {background-position:0 -32px}
 .fileMultiUploadOverlay .canceledAllBackGround {background-color:#ffffe2}
 .fileMultiUploadOverlay .finshedBackGroud {background-color:#ffffdc}
 .fileMultiUploadOverlay .overlayListTableHeader td {text-align:center; padding:6px 0}
-.fileMultiUploadOverlay .overlayListTableHeader .uploadingStatusInfo, .fileMultiUploadOverlay .overlayListTableHeader .canceledAllStatusInfo {font-weight:bold; font-size:1.3em}
+.fileMultiUploadOverlay .overlayListTableHeader .uploadingStatusInfo, .fileMultiUploadOverlay .overlayListTableHeader .canceledAllStatusInfo {font-weight:bold; font-size:1.03em}
 .fileMultiUploadOverlay .overlayListTableHeader .uploadingStatusInfo {color:#008040}
 .fileMultiUploadOverlay .overlayListTableHeader .canceledAllStatusInfo {color:#c00000}
 .fileMultiUploadOverlay .overlayListTableHeader .inProgressUploadSpan, .fileMultiUploadOverlay .overlayListTableHeader .inProgressUploadSpan {display:none}
@@ -1527,7 +1527,7 @@ a:focus .feedSearchIcon {background-position:0 -32px}
 .setupTab .chatterbox_onboarding_download, .setupTab #chatterbox_onboarding_download_1, .setupTab #chatterbox_onboarding_download_2 {height:360px; width:680px}
 .chatterbox_onboarding_download {color:#3e4041; position:relative; margin:.5em 2.5em 1.25em 2.5em}
 .chatterbox_onboarding_download_bkground {background-color:#fff}
-.overlayDialog .chatterbox_onboarding_download h2, .chatterbox_onboarding_download h2 {font-size:2.8em; padding-bottom:.5em; margin-left:-3px; letter-spacing:-.3em; font-weight:bold; color:#53b9cd}
+.overlayDialog .chatterbox_onboarding_download h2, .chatterbox_onboarding_download h2 {font-size:2.8em; padding-bottom:.5em; margin-left:-3px; letter-spacing:-.03em; font-weight:bold; color:#53b9cd}
 .setupTab .chatterbox_onboarding_download ul li {margin-left:-20px}
 .chatterbox_onboarding_download ul {margin-top:2em; list-style:disc outside none}
 .chatterbox_onboarding_download li {font-size:1.2em; line-height:1.5em; list-style:none; margin-bottom:5px; margin-left:0; color:#5d5d5d; max-width:450px}
@@ -1598,7 +1598,7 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 .topics a {color:#015ba7; font-weight:normal; text-decoration:none}
 .topics .suggestions {margin-left:-4px}
 .topics .discreteLink, .topics {color:#888888; text-decoration:none}
-.topics .highlight {font-style:italic; font-size:1.5em; margin:0 0 10px 0; padding:8px 10px 8px 10px}
+.topics .highlight {font-style:italic; font-size:1.05em; margin:0 0 10px 0; padding:8px 10px 8px 10px}
 .topics .highlight .editLink {font-style:normal}
 .actionsOnHoverEnabled .feeditem.cxhover .topics .editLink, .topic.hover, .discreteLink.hover {color:#015ba7}
 .topics .mouseOver {display:none}
@@ -1635,7 +1635,7 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 #hotTopicsWidget>ul li.hotTopicHeading h3 {color:#333435; float:left; font-size:1em; margin:0; padding:0}
 .hotTopicActions a {font-size:.9em; line-height:1.4em; position:absolute; right:0; top:0; white-space:nowrap}
 .topicsAc .autoCompleteBoxScrolling {background-color:#fff; border:1px solid #959595; margin-top:-1px; overflow-x:hidden; overflow-y:auto; box-shadow:0 2px 2px #aaa; -moz-box-shadow:0 2px 2px #aaa; -webkit-box-shadow:0 2px 2px #aaa; padding:8px 0}
-.topicsAc .autoCompleteRow, .topicsAc .autoCompleteHoverRow, .topicsAc .autoCompleteSelectedRow, .topicsAc .nosuggestions {font-size:1.5em; padding:6px 10px; height:auto; overflow:hidden}
+.topicsAc .autoCompleteRow, .topicsAc .autoCompleteHoverRow, .topicsAc .autoCompleteSelectedRow, .topicsAc .nosuggestions {font-size:1.05em; padding:6px 10px; height:auto; overflow:hidden}
 .topicsAc .nosuggestions {color:#999}
 .topicsAc .loadingsuggestions {height:20px}
 .topicsAc .loadingsuggestions>img {background-image:url(/img/dataCategories/spinner.gif); background-position:0px 0px; width:16px; height:16px; margin-left:45%}

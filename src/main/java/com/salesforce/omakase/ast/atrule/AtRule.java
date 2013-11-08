@@ -325,6 +325,8 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
                 appendable.unindentIf(writer.isVerbose());
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');
+            } else {
+                appendable.append(';');
             }
         }
     }

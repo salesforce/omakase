@@ -26,21 +26,17 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * A numerical value (e.g., 1 or 1px or 3.5em).
  * <p/>
- * The decimal point and unit are both optional. THe unit is any keyword directly following the number value, such as px, em, or
- * ms.
- * <p/>
- * The sign is optional, and is only defined if explicitly included in the source. In other words, in "5px" the sign will
- * <b>not</b> be {@link Sign#POSITIVE} but {@link Optional#absent()}.
- * <p/>
- * We use two integers instead of a double because we want to preserve the information regarding the presence of the decimal point
- * as authored.
+ * The unit is optional and is any keyword directly following the number value, such as px, em, or ms. The sign is also optional,
+ * and is only defined if explicitly included in the source. In other words, in "5px" the sign will <b>not</b> be {@link
+ * Sign#POSITIVE} but {@link Optional#absent()}.
  * <p/>
  * To dynamically create a {@link NumericalValue} use on of the constructor methods, for example:
  * <pre>
@@ -53,8 +49,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 @Subscribable
 @Description(value = "individual numerical value", broadcasted = REFINED_DECLARATION)
 public final class NumericalValue extends AbstractTerm {
-    private Long integerValue;
-    private Optional<Long> decimalValue = Optional.absent();
+    private String raw;
     private Optional<String> unit = Optional.absent();
     private Optional<Sign> explicitSign = Optional.absent();
 
@@ -73,115 +68,93 @@ public final class NumericalValue extends AbstractTerm {
     }
 
     /**
-     * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a value of 0
-     * should be passed in here.
+     * Constructs a new {@link NumericalValue} instance with the given raw value.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param raw
+     *     The number. Must not include the sign or the unit.
+     */
+    public NumericalValue(int line, int column, String raw) {
+        super(line, column);
+        this.raw = raw;
+    }
+
+    /**
+     * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
+     *
+     * @param value
+     *     The numerical value.
+     */
+    public NumericalValue(int value) {
+        value(value);
+    }
+
+    /**
+     * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
      * <p/>
-     * If dynamically creating a new instance then use {@link #NumericalValue(int)} or {@link #NumericalValue(long)} instead.
+     * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
      *
-     * @param line
-     *     The line number.
-     * @param column
-     *     The column number.
-     * @param integerValue
-     *     The integer value.
+     * @param value
+     *     The numerical value.
      */
-    public NumericalValue(int line, int column, Long integerValue) {
-        super(line, column);
-        this.integerValue = integerValue;
+    public NumericalValue(double value) {
+        value(value);
     }
 
     /**
-     * Constructs a new {@link NumericalValue} instance with the given integer value. If only a decimal point exists, a value of 0
-     * should be passed in here.
+     * Sets the numerical value.
      *
-     * @param line
-     *     The line number.
-     * @param column
-     *     The column number.
-     * @param integerValue
-     *     The integer value.
-     */
-    public NumericalValue(int line, int column, Integer integerValue) {
-        super(line, column);
-        this.integerValue = (long)integerValue;
-    }
-
-    /**
-     * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
-     *
-     * @param integerValue
-     *     The integer value.
-     */
-    public NumericalValue(long integerValue) {
-        this.integerValue = integerValue;
-    }
-
-    /**
-     * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
-     *
-     * @param integerValue
-     *     The integer value.
-     */
-    public NumericalValue(int integerValue) {
-        this.integerValue = (long)integerValue;
-    }
-
-    /**
-     * Sets the integer value.
-     *
-     * @param integerValue
-     *     The integer value.
+     * @param value
+     *     The new numerical value.
      *
      * @return this, for chaining.
      */
-    public NumericalValue integerValue(int integerValue) {
-        return integerValue((long)integerValue);
-    }
-
-    /**
-     * Sets the integer value.
-     *
-     * @param integerValue
-     *     The integer value.
-     *
-     * @return this, for chaining.
-     */
-    public NumericalValue integerValue(long integerValue) {
-        checkArgument(integerValue >= 0, "integerValue must be greater than 0 (use #explicitSign for negative values)");
-        this.integerValue = integerValue;
+    public NumericalValue value(int value) {
+        this.raw = Integer.toString(value);
         return this;
     }
 
     /**
-     * Gets the integer value.
+     * Sets the numerical value with a decimal point.
+     * <p/>
+     * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
      *
-     * @return The integer value.
-     */
-    public Long integerValue() {
-        return integerValue;
-    }
-
-    /**
-     * Sets the decimal value.
-     *
-     * @param decimalValue
-     *     The decimal value.
+     * @param value
+     *     The new numerical value.
      *
      * @return this, for chaining.
      */
-    public NumericalValue decimalValue(long decimalValue) {
-        checkArgument(integerValue >= 0, "decimalValue must be greater than 0");
-        this.decimalValue = Optional.of(decimalValue);
+    public NumericalValue value(double value) {
+        DecimalFormat fmt = new DecimalFormat("#");
+        fmt.setMaximumIntegerDigits(309);
+        fmt.setMaximumFractionDigits(340);
+        this.raw = fmt.format(value);
         return this;
     }
 
     /**
-     * Gets the decimal value.
+     * Gets the numerical value as a string.
+     * <p/>
+     * For math operations, {@link #doubleValue()} is available instead.
      *
-     * @return The decimal value, or {@link Optional#absent()} if not set.
+     * @return The numerical value.
      */
-    public Optional<Long> decimalValue() {
-        return decimalValue;
+    public String value() {
+        return raw;
+    }
+
+    /**
+     * Gets the numerical value as a double.
+     * <p/>
+     * Note that this may result in an exception if the current string value is too large for a double.
+     *
+     * @return The numerical value.
+     */
+    public double doubleValue() {
+        return Double.parseDouble(raw);
     }
 
     /**
@@ -230,16 +203,19 @@ public final class NumericalValue extends AbstractTerm {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        // sign
         if (explicitSign.isPresent()) {
             appendable.append(explicitSign.get().symbol);
         }
-        if (!decimalValue.isPresent() || integerValue.intValue() != 0) {
-            appendable.append(integerValue.toString());
+
+        // number. omit leading 0 integer values when there is only a decimal, e.g., "0.5" => ".5"
+        if (raw.contains(".") && raw.indexOf(".") == 1 && raw.charAt(0) == '0') {
+            appendable.append(raw.substring(1));
+        } else {
+            appendable.append(raw);
         }
-        if (decimalValue.isPresent()) {
-            appendable.append('.');
-            appendable.append(decimalValue.get().toString());
-        }
+
+        // unit
         if (unit.isPresent()) {
             appendable.append(unit.get());
         }
@@ -248,8 +224,7 @@ public final class NumericalValue extends AbstractTerm {
     @Override
     public String toString() {
         return As.string(this)
-            .add("integer", integerValue)
-            .add("decimal", decimalValue)
+            .add("raw", raw)
             .add("unit", unit)
             .add("explicitSign", explicitSign)
             .addUnlessEmpty("comments", comments())
@@ -264,13 +239,51 @@ public final class NumericalValue extends AbstractTerm {
      * <code>NumericalValue.of(10)</code>
      * </pre>
      *
-     * @param integerValue
-     *     The integer value. If only a decimal point exists, a value of 0 should be passed in here.
+     * @param value
+     *     The value.
      *
      * @return The new {@link NumericalValue} instance.
      */
-    public static NumericalValue of(int integerValue) {
-        return new NumericalValue(integerValue);
+    public static NumericalValue of(int value) {
+        return new NumericalValue(value);
+    }
+
+    /**
+     * Creates a new {@link NumericalValue} instance with the given double value.
+     * <p/>
+     * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue.of(10.5)</code>
+     * </pre>
+     *
+     * @param doubleValue
+     *     The floating-point value.
+     *
+     * @return The new {@link NumericalValue} instance.
+     */
+    public static NumericalValue of(double doubleValue) {
+        return new NumericalValue(doubleValue);
+    }
+
+    /**
+     * Creates a new {@link NumericalValue} instance with the given raw value. Generally this should not be preferred unless using
+     * one of the other constructor methods would result in precision errors.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue.of("1000000000.0000000009")</code>
+     * </pre>
+     *
+     * @param value
+     *     The raw numerical value. Must not contain the sign or unit.
+     *
+     * @return The new {@link NumericalValue} instance.
+     */
+    public static NumericalValue of(String value) {
+        checkArgument(!value.contains("-"), "to set the sign, use #explicitSign instead");
+        return new NumericalValue(-1, 1, checkNotNull(value));
     }
 
     /**
@@ -282,13 +295,54 @@ public final class NumericalValue extends AbstractTerm {
      * </pre>
      *
      * @param integerValue
-     *     he integer value. If only a decimal point exists, a value of 0 should be passed in here.
+     *     The integer value.
      * @param unit
      *     The unit, e.g., px or em.
      *
      * @return The new {@link NumericalValue} instance.
      */
     public static NumericalValue of(int integerValue, String unit) {
-        return new NumericalValue(integerValue).unit(unit);
+        return of(integerValue).unit(unit);
+    }
+
+    /**
+     * Creates a new {@link NumericalValue} instance with the given double value and unit.
+     * <p/>
+     * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue.of(10.5, "px")</code>
+     * </pre>
+     *
+     * @param doubleValue
+     *     The floating-point value.
+     * @param unit
+     *     The unit, e.g., px or em.
+     *
+     * @return The new {@link NumericalValue} instance.
+     */
+    public static NumericalValue of(double doubleValue, String unit) {
+        return of(doubleValue).unit(unit);
+    }
+
+    /**
+     * Creates a new {@link NumericalValue} instance with the given raw value. Generally this should not be preferred unless using
+     * one of the other constructor methods would result in precision errors.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>NumericalValue.of("1000000000.0000000009", "px")</code>
+     * </pre>
+     *
+     * @param raw
+     *     The raw numerical value. Must not contain the sign or unit.
+     * @param unit
+     *     The unit, e.g., px or em.
+     *
+     * @return The new {@link NumericalValue} instance.
+     */
+    public static NumericalValue of(String raw, String unit) {
+        return of(raw).unit(unit);
     }
 }

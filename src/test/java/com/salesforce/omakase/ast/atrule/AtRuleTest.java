@@ -213,6 +213,20 @@ public class AtRuleTest {
     }
 
     @Test
+    public void writeUnrefinedNoBlockCharset() {
+        AtRule ar = new AtRule(5, 5, "charset", new RawSyntax(5, 5, "\"UTF8\""), null, refiner);
+        StyleWriter writer = StyleWriter.verbose();
+        assertThat(writer.writeSnippet(ar)).isEqualTo("@charset \"UTF8\";");
+    }
+
+    @Test
+    public void writeUnrefinedNoBlockImport() {
+        AtRule ar = new AtRule(5, 5, "import", new RawSyntax(5, 5, "url(xyz.css)"), null, refiner);
+        StyleWriter writer = StyleWriter.verbose();
+        assertThat(writer.writeSnippet(ar)).isEqualTo("@import url(xyz.css);");
+    }
+
+    @Test
     public void writeCustomExpressionOnly() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), null);
         assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test (custom)");
