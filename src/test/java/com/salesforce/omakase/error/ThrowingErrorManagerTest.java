@@ -16,12 +16,15 @@
 
 package com.salesforce.omakase.error;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.slf4j.LoggerFactory;
 
 /**
  * Unit tests for {@link ThrowingErrorManager}.
@@ -68,7 +71,11 @@ public class ThrowingErrorManagerTest {
 
     @Test
     public void warningNoException() {
+        Logger root = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        Level original = root.getLevel();
+        root.setLevel(Level.ERROR);
         new ThrowingErrorManager().report(ErrorLevel.WARNING, new ParserException(new Source(""), "e"));
+        root.setLevel(original);
         // no exception
     }
 }
