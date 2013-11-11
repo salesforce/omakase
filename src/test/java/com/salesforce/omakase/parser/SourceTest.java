@@ -23,7 +23,7 @@ import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
-import com.salesforce.omakase.util.TemplatesHelper;
+import com.salesforce.omakase.test.util.TemplatesHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

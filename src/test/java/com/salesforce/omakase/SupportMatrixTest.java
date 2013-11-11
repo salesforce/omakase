@@ -18,7 +18,7 @@ package com.salesforce.omakase;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.util.Util;
+import com.salesforce.omakase.test.util.Util;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

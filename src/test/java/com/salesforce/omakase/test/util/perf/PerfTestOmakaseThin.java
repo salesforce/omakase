@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.test.util.perf;
+
+import com.salesforce.omakase.Omakase;
 
 /**
- * Test utils.
+ * Omakase, thin mode.
  *
  * @author nmcwilliams
  */
-public final class Util {
-    private Util() {}
+public final class PerfTestOmakaseThin implements PerfTestParser {
+    @Override
+    public char code() {
+        return 't';
+    }
 
-    /**
-     * Gets the original toString representation of the object.
-     *
-     * @param object
-     *     Get the original toString of this object.
-     *
-     * @return The original toString result.
-     */
-    public static String originalToString(Object object) {
-        return object.getClass().getName() + "@" + Integer.toHexString(object.hashCode());
+    @Override
+    public String name() {
+        return "Omakase Thin";
+    }
+
+    @Override
+    public void parse(String input) {
+        Omakase.source(input).process();
     }
 }

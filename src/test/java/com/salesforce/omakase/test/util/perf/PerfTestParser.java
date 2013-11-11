@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util.tool;
+package com.salesforce.omakase.test.util.perf;
 
-/**
- * Runs all source code generators.
- *
- * @author nmcwilliams
- */
-@SuppressWarnings("JavaDoc")
-public final class GenerateAll {
-    private GenerateAll() {}
+@SuppressWarnings("ALL")
+public interface PerfTestParser {
+    char code();
 
-    public static void main(String[] args) throws Exception {
-        PrefixToEnum.main(new String[]{});
-        KeywordToEnum.main(new String[]{});
-        PropertyToEnum.main(new String[]{});
-        BrowserEnumGenerator.main(new String[]{});
-        PrefixInfoClassGenerator.main(new String[]{});
-    }
+    String name();
+
+    void parse(String input);
 }

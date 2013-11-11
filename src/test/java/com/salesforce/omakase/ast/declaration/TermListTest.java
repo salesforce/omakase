@@ -21,7 +21,7 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
-import com.salesforce.omakase.util.Util;
+import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.fest.util.Iterables;

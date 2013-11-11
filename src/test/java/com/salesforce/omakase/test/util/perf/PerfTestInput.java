@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util.perf;
+package com.salesforce.omakase.test.util.perf;
 
 @SuppressWarnings("ALL")
 public final class PerfTestInput {

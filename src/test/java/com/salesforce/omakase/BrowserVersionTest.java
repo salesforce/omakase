@@ -17,7 +17,7 @@
 package com.salesforce.omakase;
 
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.util.Util;
+import com.salesforce.omakase.test.util.Util;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.*;

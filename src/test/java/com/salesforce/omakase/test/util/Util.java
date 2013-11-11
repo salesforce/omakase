@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util.perf;
-
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+package com.salesforce.omakase.test.util;
 
 /**
- * Omakase, full mode.
+ * Test utils.
  *
  * @author nmcwilliams
  */
-public final class PerfTestOmakaseFull implements PerfTestParser {
-    @Override
-    public char code() {
-        return 'f';
-    }
+public final class Util {
+    private Util() {}
 
-    @Override
-    public String name() {
-        return "Omakase Full";
-    }
-
-    @Override
-    public void parse(String input) {
-        Omakase.source(input).request(new SyntaxTree()).request(new StandardValidation()).process();
+    /**
+     * Gets the original toString representation of the object.
+     *
+     * @param object
+     *     Get the original toString of this object.
+     *
+     * @return The original toString result.
+     */
+    public static String originalToString(Object object) {
+        return object.getClass().getName() + "@" + Integer.toHexString(object.hashCode());
     }
 }

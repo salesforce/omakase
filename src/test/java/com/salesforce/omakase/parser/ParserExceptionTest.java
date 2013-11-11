@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.util.TemplatesHelper;
+import com.salesforce.omakase.test.util.TemplatesHelper;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

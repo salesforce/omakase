@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.test.util;
 
 /**
  * Common CSS source template strings for unit testing.

@@ -21,12 +21,12 @@ import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.util.TemplatesHelper.SourceWithExpectedResult;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.salesforce.omakase.util.TemplatesHelper.withExpectedResult;
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

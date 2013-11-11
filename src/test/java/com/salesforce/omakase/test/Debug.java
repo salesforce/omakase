@@ -21,7 +21,7 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.util.EchoLogger;
+import com.salesforce.omakase.test.util.EchoLogger;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;

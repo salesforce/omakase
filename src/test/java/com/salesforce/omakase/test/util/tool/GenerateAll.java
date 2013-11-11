@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util.perf;
-
-import com.salesforce.omakase.Omakase;
+package com.salesforce.omakase.test.util.tool;
 
 /**
- * Omakase, thin mode.
+ * Runs all source code generators.
  *
  * @author nmcwilliams
  */
-public final class PerfTestOmakaseThin implements PerfTestParser {
-    @Override
-    public char code() {
-        return 't';
-    }
+@SuppressWarnings("JavaDoc")
+public final class GenerateAll {
+    private GenerateAll() {}
 
-    @Override
-    public String name() {
-        return "Omakase Thin";
-    }
-
-    @Override
-    public void parse(String input) {
-        Omakase.source(input).process();
+    public static void main(String[] args) throws Exception {
+        PrefixToEnum.main(new String[]{});
+        KeywordToEnum.main(new String[]{});
+        PropertyToEnum.main(new String[]{});
+        BrowserEnumGenerator.main(new String[]{});
+        PrefixInfoClassGenerator.main(new String[]{});
     }
 }

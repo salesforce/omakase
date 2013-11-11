@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.test.util;
 
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
