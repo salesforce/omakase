@@ -185,7 +185,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public SyntaxCollection<P, T> moveBefore(T index, T unit) throws IllegalArgumentException {
-        // TESTME
         if (!unit.isDetached()) unit.detach();
         return prependBefore(index, unit);
     }
@@ -236,7 +235,6 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public SyntaxCollection<P, T> moveAfter(T index, T unit) throws IllegalArgumentException {
-        // TESTME
         if (!unit.isDetached()) unit.detach();
         return appendAfter(index, unit);
     }

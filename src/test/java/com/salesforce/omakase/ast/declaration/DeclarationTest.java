@@ -21,6 +21,7 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
@@ -191,6 +192,33 @@ public class DeclarationTest {
     public void isPropertyFalse() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         assertThat(d.isProperty(Property.COLOR)).isFalse();
+    }
+
+    @Test
+    public void isPropertyIgnorePrefixTrue() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.MOZ);
+        assertThat(d.isPropertyIgnorePrefix(Property.DISPLAY)).isTrue();
+    }
+
+    @Test
+    public void isPropertyIgnorePrefixFalse() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.MOZ);
+        assertThat(d.isPropertyIgnorePrefix(Property.MARGIN)).isFalse();
+    }
+
+    @Test
+    public void isPrefixedTrue() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.MOZ);
+        assertThat(d.isPrefixed()).isTrue();
+    }
+
+    @Test
+    public void isPrefixedFalse() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        assertThat(d.isPrefixed()).isFalse();
     }
 
     @Test

@@ -49,9 +49,9 @@ public class StandardSyntaxCollectionTest {
     @Before
     public void before() {
         collection = new Parent().collection;
-        child1 = new Child();
-        child2 = new Child();
-        child3 = new Child();
+        child1 = new Child(1);
+        child2 = new Child(2);
+        child3 = new Child(3);
     }
 
     @Test
@@ -395,11 +395,52 @@ public class StandardSyntaxCollectionTest {
         collection.previous(child1);
     }
 
+    @Test
+    public void moveBeforeWhenInCollection() {
+        collection.append(child1).append(child2).append(child3);
+        collection.moveBefore(child1, child3);
+        assertThat(collection).containsExactly(child3, child1, child2);
+    }
+
+    @Test
+    public void moveBeforeNotInCollection() {
+        collection.append(child1).append(child2);
+        collection.moveBefore(child1, child3);
+        assertThat(collection).containsExactly(child3, child1, child2);
+    }
+
+    @Test
+    public void errorsIfMoveBeforeIndexNotInCollection() {
+        collection.append(child1).append(child2);
+        exception.expect(IllegalArgumentException.class);
+        collection.moveBefore(child3, child1);
+    }
+
+    @Test
+    public void moveAfterInCollection() {
+        collection.append(child1).append(child2).append(child3);
+        collection.moveAfter(child3, child1);
+        assertThat(collection).containsExactly(child2, child3, child1);
+    }
+
+    @Test
+    public void moveAfterNotInCollection() {
+        collection.append(child2).append(child3);
+        collection.moveAfter(child3, child1);
+        assertThat(collection).containsExactly(child2, child3, child1);
+    }
+
     private static final class Parent {
         private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> implements Syntax {
+        private final int i;
+
+        public Child(int i) {
+            this.i = i;
+        }
+
         @Override
         protected Child self() {
             return this;
@@ -407,6 +448,11 @@ public class StandardSyntaxCollectionTest {
 
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
+
+        @Override
+        public String toString() {
+            return "child " + i;
         }
     }
 

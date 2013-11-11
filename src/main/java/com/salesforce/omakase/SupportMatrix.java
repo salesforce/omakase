@@ -21,22 +21,30 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.plugin.basic.Prefixer;
 
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
- * TESTME
- * <p/>
- * TODO description
+ * Represents a set of supported browser versions.
  *
  * @author nmcwilliams
+ * @see Browser
+ * @see Prefixer
  */
 public final class SupportMatrix {
-    /* using tree so that getting browser versions are in descending order */
+    /* using tree so that getting browser versions are in ascending order */
     private final Multimap<Browser, Double> supported = TreeMultimap.create();
 
     /**
      * Designate support for the given {@link Browser} and version.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>support.browser(Browser.CHROME, 25);</code>
+     * </pre>
      *
      * @param browser
      *     The {@link Browser}.
@@ -51,6 +59,11 @@ public final class SupportMatrix {
 
     /**
      * Designate support for the given {@link Browser} and version.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>support.browser(Browser.SAFARI, 6.1);</code>
+     * </pre>
      *
      * @param browser
      *     The {@link Browser}.
@@ -60,12 +73,18 @@ public final class SupportMatrix {
      * @return this, for chaining.
      */
     public SupportMatrix browser(Browser browser, double version) {
+        checkArgument(browser.versions().contains(version), "version does not exist for browser");
         supported.put(browser, version);
         return this;
     }
 
     /**
      * Designate support for the latest version of the given {@link Browser}.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>support.browser(Browser.CHROME);</code>
+     * </pre>
      *
      * @param browser
      *     The {@link Browser}.
@@ -79,6 +98,11 @@ public final class SupportMatrix {
 
     /**
      * Designate support for the last N number of versions of the given {@link Browser}, counting back from the current version.
+     * <p/>
+     * Example:
+     * <pre>
+     * <code>support.browser(Browser.CHROME, 2); // last 2 versions</code>
+     * </pre>
      *
      * @param browser
      *     The {@link Browser}.
@@ -88,11 +112,63 @@ public final class SupportMatrix {
      * @return this, for chaining.
      */
     public SupportMatrix last(Browser browser, int numVersions) {
-        int actualNumVersions = Math.min(numVersions, browser.versions().size());
-        for (int i = 0; i < actualNumVersions; i++) {
+        checkArgument(numVersions <= browser.versions().size(), "numVersions out of range");
+        for (int i = 0; i < numVersions; i++) {
             supported.put(browser, browser.versions().get(i));
         }
         return this;
+    }
+
+    /**
+     * Gets whether any version of the given {@link Browser} is supported.
+     *
+     * @param browser
+     *     The {@link Browser}.
+     *
+     * @return True if any version of the browser is supported.
+     */
+    public boolean supportsBrowser(Browser browser) {
+        return supported.containsKey(browser);
+    }
+
+    /**
+     * Gets whether the specified version of the given {@link Browser} is supported.
+     *
+     * @param browser
+     *     The {@link Browser}.
+     * @param version
+     *     The specific version.
+     *
+     * @return True if the specified version of the browser is supported.
+     */
+    public boolean supportsVersion(Browser browser, int version) {
+        return supported.get(browser).contains((double)version);
+    }
+
+    /**
+     * Gets whether the specified version of the given {@link Browser} is supported.
+     *
+     * @param browser
+     *     The {@link Browser}.
+     * @param version
+     *     The specific version.
+     *
+     * @return True if the specified version of the browser is supported.
+     */
+    public boolean supportsVersion(Browser browser, double version) {
+        return supported.get(browser).contains(version);
+    }
+
+    /**
+     * Gets all supported versions of the given {@link Browser}.
+     *
+     * @param browser
+     *     Get all supported versions of this {@link Browser}.
+     *
+     * @return The set of all versions, or an empty set if no versions are supported.
+     */
+    public Set<Double> allSupportedVersions(Browser browser) {
+        return ImmutableSet.copyOf(supported.get(browser));
     }
 
     /**

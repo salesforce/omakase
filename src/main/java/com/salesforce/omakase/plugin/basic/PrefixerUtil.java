@@ -39,6 +39,6 @@ public final class PrefixerUtil {
         // check for special use cases
 
         // default is just to use the same property value reference
-        return new Declaration(PropertyName.from(originalProperty, prefix), original.propertyValue());
+        return new Declaration(originalProperty.cloneWithNewPrefix(prefix), original.propertyValue());
     }
 }

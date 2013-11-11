@@ -271,8 +271,6 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * TESTME
-     * <p/>
      * Same as {@link #isProperty(Property)}, except this ignores the prefix.
      *
      * @param property
@@ -285,8 +283,6 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets whether the {@link PropertyName} is prefixed.
      *
      * @return True if the {@link PropertyName} is prefixed.

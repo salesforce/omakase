@@ -22,8 +22,6 @@ import com.salesforce.omakase.data.Browser;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * TESTME
- * <p/>
  * Represents a specific {@link Browser} version.
  *
  * @author nmcwilliams

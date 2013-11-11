@@ -94,8 +94,6 @@ public final class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets whether this {@link PropertyName} has the given {@link Prefix}.
      *
      * @param prefix
@@ -155,10 +153,8 @@ public final class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * TESTME
-     * <p/>
-     * Gets the matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a prefixed
-     * property).
+     * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a
+     * prefixed property).
      *
      * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or the property name is
      *         unknown.
@@ -230,8 +226,6 @@ public final class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Same as {@link #matches(Property)}, except this ignores the prefix.
      *
      * @param property
@@ -244,8 +238,6 @@ public final class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Same as {@link #matches(PropertyName)}, except this ignores the prefix.
      *
      * @param other
@@ -257,11 +249,22 @@ public final class PropertyName extends AbstractSyntax {
         return unprefixedName().equals(other.unprefixedName());
     }
 
+    /**
+     * Creates a new {@link PropertyName} instance with the same {@link #unprefixedName()} as this one but with a different {@link
+     * Prefix}. This also copies the value of {@link #hasStarHack()}.
+     *
+     * @param prefix
+     *     Apply this {@link Prefix}.
+     *
+     * @return The new {@link PropertyName} instance.
+     */
+    public PropertyName cloneWithNewPrefix(Prefix prefix) {
+        return using(name).prefix(prefix).setStarHack(starHack);
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (starHack) {
-            appendable.append(STAR);
-        }
+        if (starHack) appendable.append(STAR);
         appendable.append(name());
     }
 
@@ -334,20 +337,4 @@ public final class PropertyName extends AbstractSyntax {
         return new PropertyName(line, column, property.toString());
     }
 
-    /**
-     * TESTME
-     * <p/>
-     * Creates a new {@link PropertyName} instance with the same {@link #unprefixedName()} as the given {@link PropertyName} and
-     * the given {@link Prefix}.
-     *
-     * @param originalPropertyName
-     *     Use the unprefixed name from this {@link PropertyName}.
-     * @param prefix
-     *     Apply this {@link Prefix}.
-     *
-     * @return The new {@link PropertyName} instance.
-     */
-    public static PropertyName from(PropertyName originalPropertyName, Prefix prefix) {
-        return using(originalPropertyName.unprefixedName()).prefix(prefix);
-    }
 }

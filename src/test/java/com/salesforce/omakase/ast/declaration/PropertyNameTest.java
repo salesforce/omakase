@@ -16,7 +16,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -119,6 +121,82 @@ public class PropertyNameTest {
     }
 
     @Test
+    public void hasPrefixTrue() {
+        PropertyName pn = PropertyName.using(Property.DISPLAY);
+        pn.prefix(Prefix.MOZ);
+        assertThat(pn.hasPrefix(Prefix.MOZ)).isTrue();
+    }
+
+    @Test
+    public void hasPrefixFalse() {
+        PropertyName pn = PropertyName.using(Property.DISPLAY);
+        pn.prefix(Prefix.MOZ);
+        assertThat(pn.hasPrefix(Prefix.WEBKIT)).isFalse();
+    }
+
+    @Test
+    public void hasPrefixFalseWhenPrefixNotPresent() {
+        assertThat(unprefixed.hasPrefix(Prefix.WEBKIT)).isFalse();
+    }
+
+    @Test
+    public void asPropertyAbsentWhenPrefixed() {
+        assertThat(prefixed.asProperty().isPresent()).isFalse();
+    }
+
+    @Test
+    public void asPropertyUnknownProperty() {
+        assertThat(PropertyName.using("blah").asProperty().isPresent()).isFalse();
+    }
+
+    @Test
+    public void asPropertyKnownProperty() {
+        assertThat(PropertyName.using(Property.DISPLAY).asProperty().get()).isSameAs(Property.DISPLAY);
+    }
+
+    @Test
+    public void matchesIgnorePrefixTrueWhenPrefixed() {
+        assertThat(prefixed.matchesIgnorePrefix(Property.BORDER_RADIUS)).isTrue();
+    }
+
+    @Test
+    public void matchesIgnorePrefixTrueWhenNotPrefixed() {
+        assertThat(unprefixed.matchesIgnorePrefix(Property.BORDER_RADIUS)).isTrue();
+    }
+
+    @Test
+    public void matchesIgnorePrefixFalseWhenPrefixed() {
+        assertThat(prefixed.matchesIgnorePrefix(Property.BORDER)).isFalse();
+    }
+
+    @Test
+    public void matchesIgnorePrefixFalseWhenNotPrefixed() {
+        assertThat(unprefixed.matchesIgnorePrefix(Property.BORDER)).isFalse();
+    }
+
+    @Test
+    public void matchesPropertyNameIgnorePrefix() {
+        PropertyName pn1 = PropertyName.using("-webkit-border-radius");
+        PropertyName pn2 = PropertyName.using("-moz-border-radius");
+        assertThat(pn1.matchesIgnorePrefix(pn2)).isTrue();
+    }
+
+    @Test
+    public void cloneWithNewPrefixCopiesUnprefixedName() {
+        PropertyName pn = PropertyName.using("-webkit-border-radius");
+        PropertyName clone = pn.cloneWithNewPrefix(Prefix.MOZ);
+        assertThat(clone.name()).isEqualTo("-moz-border-radius");
+        assertThat(clone.hasStarHack()).isFalse();
+    }
+
+    @Test
+    public void cloneWithNewPrefixStarHackTrue() {
+        PropertyName pn = PropertyName.using("*-webkit-border-radius");
+        PropertyName clone = pn.cloneWithNewPrefix(Prefix.MOZ);
+        assertThat(clone.hasStarHack()).isTrue();
+    }
+
+    @Test
     public void writeForPropertyWithPrefix() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(prefixed)).isEqualTo(PREFIX + NAME);
@@ -214,4 +292,8 @@ public class PropertyNameTest {
         assertThat(name.hasStarHack()).isFalse();
     }
 
+    @Test
+    public void toStringTest() {
+        assertThat(unprefixed.toString()).isNotEqualTo(Util.originalToString(unprefixed));
+    }
 }
