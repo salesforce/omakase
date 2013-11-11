@@ -31,7 +31,7 @@ import com.salesforce.omakase.data.Prefix;
 public final class PrefixerUtil {
     private PrefixerUtil() {}
 
-    public static Declaration createPrefixed(Declaration original, Prefix prefix, SupportMatrix supportMatrix) {
+    public static Declaration prefixProperty(Declaration original, Prefix prefix, SupportMatrix supportMatrix) {
         assert !original.propertyName().isPrefixed() : "didn't expect the original declaration to be prefixed";
 
         PropertyName originalProperty = original.propertyName();

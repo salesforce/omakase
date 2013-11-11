@@ -37,7 +37,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "unknown function value", broadcasted = REFINED_DECLARATION)
-public final class GenericFunctionValue extends AbstractTerm {
+public final class GenericFunctionValue extends AbstractTerm implements FunctionValue {
     private String name;
     private String args;
 
@@ -93,6 +93,7 @@ public final class GenericFunctionValue extends AbstractTerm {
      *
      * @return The function name.
      */
+    @Override
     public String name() {
         return name;
     }

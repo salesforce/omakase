@@ -19,9 +19,8 @@ package com.salesforce.omakase.plugin.basic;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Browser;
@@ -112,50 +111,81 @@ public final class Prefixer implements Plugin {
             if (lowestSupported <= lastPrefixed) required.add(browser.prefix());
         }
 
-        System.out.println(required);
-
         if (required.isEmpty()) {
             // no required prefixes, so remove unnecessary prefixed declarations if allowed
-            if (remove) removeAllPrefixed(declaration.group().get(), property.get());
+            if (remove) removeAllPrefixed(declaration, property.get());
         } else {
-            // add all applicable prefixed declarations
-            addPrefixes(declaration, property.get(), required);
+            // add all required prefixes
+            prefix(declaration, property.get(), required);
         }
     }
 
     /** removes any prefixed declarations in the same rule that are the same property */
-    private void removeAllPrefixed(SyntaxCollection<Rule, Declaration> declarations, Property property) {
-        for (Declaration d : declarations) {
+    private void removeAllPrefixed(Declaration unprefixed, Property property) {
+        for (Declaration d : unprefixed.group().get()) {
             if (d.isPrefixed() && d.isPropertyIgnorePrefix(property)) d.detach();
         }
     }
 
-    /** prepend prefixes before the declaration */
-    private void addPrefixes(Declaration original, Property property, Iterable<Prefix> prefixes) {
+    /** prepends prefixes before the declaration */
+    private void prefix(Declaration original, Property property, Iterable<Prefix> prefixes) {
         // create a collection of all sibling prefixed declarations
         Set<Declaration> declarations = Sets.newHashSet();
         for (Declaration declaration : original.group().get()) {
             if (declaration.isPrefixed()) declarations.add(declaration);
         }
 
-        for (Prefix prefix : prefixes) {
-            Declaration found = null;
-            for (Declaration declaration : declarations) {
-                PropertyName pn = declaration.propertyName();
-                if (pn.hasPrefix(prefix) && pn.matchesIgnorePrefix(property)) {
-                    found = declaration;
-                    break;
-                }
-            }
+//        Iterables.filter(original.group().get(), new Predicate<Declaration>() {
+//            @Override
+//            public boolean apply(Declaration declaration) {return declaration.isPrefixed();}
+//        });
 
-            if (found == null) {
-                Declaration prefixed = PrefixerUtil.createPrefixed(original, prefix, support);
-                original.prepend(prefixed);
-            } else if (rearrange) {
-                original.group().get().moveBefore(original, found);
+        for (Prefix prefix : prefixes) {
+            Declaration declaration = findPrefixed(prefix, property, declarations);
+            if (declaration != null) {
+                // prefixed version already present, so move it before the unprefixed one if allowed
+                if (rearrange) original.group().get().moveBefore(original, declaration);
+            } else {
+                // prefixed version wasn't found, so create and add it
+                original.prepend(PrefixerUtil.prefixProperty(original, prefix, support));
             }
         }
     }
+
+    /** finds the declaration with the given property and prefix */
+    private Declaration findPrefixed(Prefix prefix, Property property, Iterable<Declaration> declarations) {
+        for (Declaration declaration : declarations) {
+            PropertyName name = declaration.propertyName();
+            if (name.hasPrefix(prefix) && name.matchesIgnorePrefix(property)) return declaration;
+        }
+        return null;
+    }
+
+    @Rework
+    public void function(FunctionValue function) {
+        // check if we have prefix info on the function
+        if (!PrefixInfo.hasFunction(function.name())) return;
+
+        // check supported browsers for a required prefix
+        Set<Prefix> required = Sets.newHashSet();
+        for (Browser browser : support.supportedBrowsers()) {
+            double lowestSupported = support.lowestSupportedVersion(browser);
+            double lastPrefixed = PrefixInfo.lastPrefixedVersion(function.name(), browser);
+            if (lowestSupported <= lastPrefixed) required.add(browser.prefix());
+        }
+//
+//        System.out.println(required);
+//
+//        if (required.isEmpty()) {
+//            // no required prefixes, so remove unnecessary prefixed declarations if allowed
+//            if (remove) removeAllPrefixed(declaration.group().get(), property.get());
+//        } else {
+//            // add all required prefixes
+//            prefix(declaration, property.get(), required);
+//        }
+    }
+
+
 
     /**
      * Creates a new instance of the {@link Prefixer} plugin with default browser version support levels: IE7+, latest versions of

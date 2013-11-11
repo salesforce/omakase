@@ -33,6 +33,7 @@ public final class Debug {
         "    border-radius: 5px;" +
         "    -moz-border-radius: 5px;" +
         "    width: calc(2px - 1px);" +
+        "    width: -webkit-calc(2px - 1px);" +
         "}";
 
     private Debug() {}
