@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.Copyable;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.Groupable;
 
 /**
- * A member of a {@link TermList}.
+ * TODO description
  *
  * @author nmcwilliams
  */
-public interface TermListMember extends Syntax, Copyable<TermListMember>, Groupable<TermList, TermListMember> {
+public final class Actions {
+    private Actions() {}
+
+    /**
+     * TESTME
+     * <p/>
+     * TODO description
+     */
+    public static final Action<Groupable<?, ?>> DETACH = new Action<Groupable<?, ?>>() {
+        @Override
+        public void apply(Groupable<?, ?> instance) {
+            instance.detach();
+        }
+    };
 }

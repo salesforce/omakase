@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;

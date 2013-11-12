@@ -17,17 +17,16 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
-import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixInfo;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.util.Actions;
+import com.salesforce.omakase.util.Declarations;
 
 import java.util.Set;
 
@@ -104,61 +103,28 @@ public final class Prefixer implements Plugin {
         if (!PrefixInfo.hasProperty(property.get())) return;
 
         // check supported browsers for a required prefix
-        Set<Prefix> required = Sets.newHashSet();
-        for (Browser browser : support.supportedBrowsers()) {
-            double lowestSupported = support.lowestSupportedVersion(browser);
-            double lastPrefixed = PrefixInfo.lastPrefixedVersion(property.get(), browser);
-            if (lowestSupported <= lastPrefixed) required.add(browser.prefix());
-        }
-
+        Set<Prefix> required = support.prefixesForProperty(property.get());
         if (required.isEmpty()) {
             // no required prefixes, so remove unnecessary prefixed declarations if allowed
-            if (remove) removeAllPrefixed(declaration, property.get());
+            if (remove) Declarations.apply(Declarations.prefixedEquivalents(declaration), Actions.DETACH);
         } else {
             // add all required prefixes
             prefix(declaration, property.get(), required);
         }
     }
 
-    /** removes any prefixed declarations in the same rule that are the same property */
-    private void removeAllPrefixed(Declaration unprefixed, Property property) {
-        for (Declaration d : unprefixed.group().get()) {
-            if (d.isPrefixed() && d.isPropertyIgnorePrefix(property)) d.detach();
-        }
-    }
-
     /** prepends prefixes before the declaration */
     private void prefix(Declaration original, Property property, Iterable<Prefix> prefixes) {
-        // create a collection of all sibling prefixed declarations
-        Set<Declaration> declarations = Sets.newHashSet();
-        for (Declaration declaration : original.group().get()) {
-            if (declaration.isPrefixed()) declarations.add(declaration);
-        }
-
-//        Iterables.filter(original.group().get(), new Predicate<Declaration>() {
-//            @Override
-//            public boolean apply(Declaration declaration) {return declaration.isPrefixed();}
-//        });
-
         for (Prefix prefix : prefixes) {
-            Declaration declaration = findPrefixed(prefix, property, declarations);
-            if (declaration != null) {
+            Optional<Declaration> declaration = Declarations.prefixedEquivalent(original, prefix);
+            if (declaration.isPresent()) {
                 // prefixed version already present, so move it before the unprefixed one if allowed
-                if (rearrange) original.group().get().moveBefore(original, declaration);
+                if (rearrange) original.group().get().moveBefore(original, declaration.get());
             } else {
                 // prefixed version wasn't found, so create and add it
-                original.prepend(PrefixerUtil.prefixProperty(original, prefix, support));
+                original.prepend(original.copyWithPrefix(prefix, support));
             }
         }
-    }
-
-    /** finds the declaration with the given property and prefix */
-    private Declaration findPrefixed(Prefix prefix, Property property, Iterable<Declaration> declarations) {
-        for (Declaration declaration : declarations) {
-            PropertyName name = declaration.propertyName();
-            if (name.hasPrefix(prefix) && name.matchesIgnorePrefix(property)) return declaration;
-        }
-        return null;
     }
 
     @Rework
@@ -167,25 +133,24 @@ public final class Prefixer implements Plugin {
         if (!PrefixInfo.hasFunction(function.name())) return;
 
         // check supported browsers for a required prefix
-        Set<Prefix> required = Sets.newHashSet();
-        for (Browser browser : support.supportedBrowsers()) {
-            double lowestSupported = support.lowestSupportedVersion(browser);
-            double lastPrefixed = PrefixInfo.lastPrefixedVersion(function.name(), browser);
-            if (lowestSupported <= lastPrefixed) required.add(browser.prefix());
+        Set<Prefix> required = support.prefixesForFunction(function.name());
+        if (required.isEmpty()) {
+            // no required prefixes, so remove unnecessary prefixed declarations if allowed
+            // if (remove) Declarations.apply(Declarations.prefixedEquivalents(declaration), Actions.DETACH);
+        } else {
+            Declaration unprefixed = function.group().get().parent().parentDeclaration().get();
+
+            // add all required prefixes
+            for (Prefix prefix : required) {
+                Optional<Declaration> dd = Declarations.equivalentWithPrefixedFunction(unprefixed, prefix, function.name());
+                if (dd.isPresent()) {
+
+                } else {
+                    unprefixed.prepend(unprefixed.copyWithPrefix(prefix, support));
+                }
+            }
         }
-//
-//        System.out.println(required);
-//
-//        if (required.isEmpty()) {
-//            // no required prefixes, so remove unnecessary prefixed declarations if allowed
-//            if (remove) removeAllPrefixed(declaration.group().get(), property.get());
-//        } else {
-//            // add all required prefixes
-//            prefix(declaration, property.get(), required);
-//        }
     }
-
-
 
     /**
      * Creates a new instance of the {@link Prefixer} plugin with default browser version support levels: IE7+, latest versions of

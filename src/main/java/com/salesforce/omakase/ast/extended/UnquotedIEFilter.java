@@ -16,10 +16,12 @@
 
 package com.salesforce.omakase.ast.extended;
 
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.AbstractPropertyValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -86,5 +88,15 @@ public final class UnquotedIEFilter extends AbstractPropertyValue {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(content);
+    }
+
+    @Override
+    public PropertyValue copy() {
+        return new UnquotedIEFilter(-1, -1, content);
+    }
+
+    @Override
+    public PropertyValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        return copy();
     }
 }

@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;

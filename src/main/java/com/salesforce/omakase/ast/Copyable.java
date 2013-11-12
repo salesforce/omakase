@@ -14,31 +14,18 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.data.Prefix;
 
 /**
- * TESTME
- * <p/>
  * TODO description
  *
  * @author nmcwilliams
  */
-public final class PrefixerUtil {
-    private PrefixerUtil() {}
+public interface Copyable<T> {
+    T copy();
 
-    public static Declaration prefixProperty(Declaration original, Prefix prefix, SupportMatrix supportMatrix) {
-        assert !original.propertyName().isPrefixed() : "didn't expect the original declaration to be prefixed";
-
-        PropertyName originalProperty = original.propertyName();
-
-        // check for special use cases
-
-        // default is just to use the same property value reference
-        return new Declaration(originalProperty.cloneWithNewPrefix(prefix), original.propertyValue());
-    }
+    T copyWithPrefix(Prefix prefix, SupportMatrix support);
 }

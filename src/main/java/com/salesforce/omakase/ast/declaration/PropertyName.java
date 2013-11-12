@@ -17,16 +17,18 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The property name within a {@link Declaration}.
@@ -38,7 +40,7 @@ import static com.google.common.base.Preconditions.*;
  *
  * @author nmcwilliams
  */
-public final class PropertyName extends AbstractSyntax {
+public final class PropertyName extends AbstractSyntax implements Copyable<PropertyName> {
     private static final char STAR = '*';
 
     private final String name;
@@ -115,7 +117,7 @@ public final class PropertyName extends AbstractSyntax {
     }
 
     /**
-     * Sets the prefix for this property name. This will overwrite any currently specified prefix.
+     * TESTME Sets the prefix for this property name. This will overwrite any currently specified prefix.
      *
      * @param prefix
      *     The {@link Prefix}.
@@ -123,22 +125,8 @@ public final class PropertyName extends AbstractSyntax {
      * @return this, for chaining.
      */
     public PropertyName prefix(Prefix prefix) {
-        return prefix(prefix.toString());
-    }
-
-    /**
-     * Sets the prefix for this property name. Prefer to use {@link #prefix(Prefix)} instead.
-     *
-     * @param prefix
-     *     The prefix, including both dashes, e.g., "-webkit-".
-     *
-     * @return this, for chaining.
-     */
-    public PropertyName prefix(String prefix) {
         checkNotNull(prefix, "prefix cannot be null (use #removePrefix instead)");
-        checkArgument(prefix.startsWith("-"), "prefixes must start with a dash");
-        checkArgument(prefix.endsWith("-"), "prefixes must end with a dash");
-        this.prefix = Optional.of(prefix);
+        this.prefix = Optional.of(prefix.toString());
         return this;
     }
 
@@ -249,23 +237,28 @@ public final class PropertyName extends AbstractSyntax {
         return unprefixedName().equals(other.unprefixedName());
     }
 
-    /**
-     * Creates a new {@link PropertyName} instance with the same {@link #unprefixedName()} as this one but with a different {@link
-     * Prefix}. This also copies the value of {@link #hasStarHack()}.
-     *
-     * @param prefix
-     *     Apply this {@link Prefix}.
-     *
-     * @return The new {@link PropertyName} instance.
-     */
-    public PropertyName cloneWithNewPrefix(Prefix prefix) {
-        return using(name).prefix(prefix).setStarHack(starHack);
-    }
-
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (starHack) appendable.append(STAR);
         appendable.append(name());
+    }
+
+    @Override
+    public PropertyName copy() {
+        // TESTME
+        return PropertyName.using(name()).setStarHack(starHack);
+    }
+
+    @Override
+    public PropertyName copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        Optional<Property> property = asProperty();
+
+        if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
+            return PropertyName.using(property.get()).prefix(prefix).setStarHack(starHack);
+        }
+
+        return copy();
     }
 
     @Override
@@ -336,5 +329,4 @@ public final class PropertyName extends AbstractSyntax {
         checkNotNull(property, "property cannot be null");
         return new PropertyName(line, column, property.toString());
     }
-
 }

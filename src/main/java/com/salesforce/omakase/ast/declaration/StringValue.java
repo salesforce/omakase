@@ -16,11 +16,12 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -108,6 +109,12 @@ public final class StringValue extends AbstractTerm {
         } else {
             appendable.append('"').append(content).append('"');
         }
+    }
+
+    @Override
+    public StringValue copy() {
+        // TESTME
+        return Copy.comments(this, new StringValue(mode, content));
     }
 
     @Override

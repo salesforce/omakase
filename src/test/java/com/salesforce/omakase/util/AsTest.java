@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase;
+package com.salesforce.omakase.util;
 
 import org.junit.Test;
 

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.declaration.*;
 
 /**
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.

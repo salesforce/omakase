@@ -16,10 +16,13 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -85,6 +88,18 @@ public final class Operator extends AbstractGroupable<TermList, TermListMember> 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         type.write(writer, appendable);
+    }
+
+    @Override
+    public Operator copy() {
+        // TESTME
+        return Copy.comments(this, new Operator(type));
+    }
+
+    @Override
+    public Operator copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        return copy();
     }
 
     @Override

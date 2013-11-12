@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -30,7 +31,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "interface for all property values", broadcasted = REFINED_DECLARATION)
-public interface PropertyValue extends Syntax {
+public interface PropertyValue extends Syntax, Copyable<PropertyValue> {
     /**
      * Gets whether this {@link PropertyValue} is marked as "!important".
      *

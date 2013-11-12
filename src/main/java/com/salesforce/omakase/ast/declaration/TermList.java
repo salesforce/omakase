@@ -17,14 +17,17 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -168,6 +171,28 @@ public final class TermList extends AbstractPropertyValue {
             appendable.spaceIf(writer.isVerbose());
             appendable.append("!important");
         }
+    }
+
+    @Override
+    public TermList copy() {
+        // TESTME
+        TermList copy = Copy.comments(this, new TermList());
+        copy.important(isImportant());
+        for (TermListMember member : members) {
+            copy.append(member.copy());
+        }
+        return copy;
+    }
+
+    @Override
+    public TermList copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        TermList copy = Copy.comments(this, new TermList());
+        copy.important(isImportant());
+        for (TermListMember member : members) {
+            copy.append(member.copyWithPrefix(prefix, support));
+        }
+        return copy;
     }
 
     @Override

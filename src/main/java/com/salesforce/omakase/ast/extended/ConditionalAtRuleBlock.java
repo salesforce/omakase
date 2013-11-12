@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;

@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;

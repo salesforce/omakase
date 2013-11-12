@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.selector;
+package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.selector.TypeSelector;
 
 /**
  * Utilities for working with {@link Selector}s and {@link SelectorPart}s.

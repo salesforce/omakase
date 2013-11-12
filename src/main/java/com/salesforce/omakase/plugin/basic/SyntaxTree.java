@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;

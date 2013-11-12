@@ -16,10 +16,10 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -110,6 +110,12 @@ public final class HexColorValue extends AbstractTerm {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append('#').append(color);
+    }
+
+    @Override
+    public HexColorValue copy() {
+        // TESTME
+        return new HexColorValue(color);
     }
 
     @Override

@@ -17,7 +17,8 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
@@ -25,10 +26,13 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -50,7 +54,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
+public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration>, Copyable<Declaration> {
     private final Refiner refiner;
 
     /* unrefined */
@@ -216,7 +220,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * Gets the property name.
+     * Gets the property name. This automatically refines the property name if not already done so.
      *
      * @return The property name.
      */
@@ -283,6 +287,18 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
+     * TESTME Same as {@link #isProperty(PropertyName)}, except this ignores the prefix.
+     *
+     * @param propertyName
+     *     The {@link PropertyName}.
+     *
+     * @return True if this {@link Declaration} has the given property name, ignoring the prefix.
+     */
+    public boolean isPropertyIgnorePrefix(PropertyName propertyName) {
+        return propertyName().matchesIgnorePrefix(propertyName);
+    }
+
+    /**
      * Gets whether the {@link PropertyName} is prefixed.
      *
      * @return True if the {@link PropertyName} is prefixed.
@@ -318,7 +334,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * Gets the property value.
+     * Gets the property value. This automatically refines the property value if not already done so.
      *
      * @return The property value.
      */
@@ -393,6 +409,20 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
             // property value
             writer.writeInner(rawPropertyValue, appendable);
         }
+    }
+
+    @Override
+    public Declaration copy() {
+        // TESTME
+        return new Declaration(propertyName.copy(), propertyValue().copy());
+    }
+
+    @Override
+    public Declaration copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        PropertyName pn = propertyName().copyWithPrefix(prefix, support);
+        PropertyValue pv = propertyValue().copyWithPrefix(prefix, support);
+        return Copy.comments(this, new Declaration(pn, pv));
     }
 
     @Override

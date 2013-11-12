@@ -191,6 +191,11 @@ public class TermListTest {
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public TermListMember copy() {
+            return null;
+        }
     }
 
     private static final class NonWritableTerm extends AbstractTerm {
@@ -201,6 +206,11 @@ public class TermListTest {
 
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
+
+        @Override
+        public TermListMember copy() {
+            return null;
         }
     }
 }

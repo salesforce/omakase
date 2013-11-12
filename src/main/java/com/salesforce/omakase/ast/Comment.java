@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;

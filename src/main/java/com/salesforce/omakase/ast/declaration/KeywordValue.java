@@ -16,12 +16,17 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.As;
+import com.google.common.base.Optional;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -117,6 +122,30 @@ public final class KeywordValue extends AbstractTerm {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(keyword);
+    }
+
+    @Override
+    public KeywordValue copy() {
+        // TESTME
+        return Copy.comments(this, new KeywordValue(keyword));
+    }
+
+    @Override
+    public KeywordValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        if (this.isDetached()) return copy();
+
+        Optional<Declaration> declaration = this.group().get().parent().parentDeclaration();
+        if (!declaration.isPresent()) return copy();
+
+        if (!declaration.get().isProperty(Property.TRANSITION)) return copy();
+
+        Property property = Property.lookup(keyword);
+        if (property == null) return copy();
+
+        if (!support.requiresPrefixForProperty(prefix, property)) return copy();
+
+        return Copy.comments(this, new KeywordValue(prefix + keyword));
     }
 
     @Override

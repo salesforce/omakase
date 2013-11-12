@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.broadcast.Broadcaster;
 
 import java.util.ArrayList;

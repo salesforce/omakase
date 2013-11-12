@@ -17,11 +17,12 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -219,6 +220,12 @@ public final class NumericalValue extends AbstractTerm {
         if (unit.isPresent()) {
             appendable.append(unit.get());
         }
+    }
+
+    @Override
+    public NumericalValue copy() {
+        // TESTME
+        return Copy.comments(this, NumericalValue.of(raw).unit(unit.orNull()).explicitSign(explicitSign.orNull()));
     }
 
     @Override

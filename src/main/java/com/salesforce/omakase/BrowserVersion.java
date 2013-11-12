@@ -18,6 +18,7 @@ package com.salesforce.omakase;
 
 import com.google.common.base.Objects;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.util.As;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

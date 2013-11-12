@@ -52,5 +52,10 @@ public class AbstractTermTest {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         }
+
+        @Override
+        public TermListMember copy() {
+            return null;
+        }
     }
 }

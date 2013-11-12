@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;

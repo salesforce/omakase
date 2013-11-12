@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.util;
 
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -126,6 +129,16 @@ public class ValuesTest {
         @Override
         public PropertyValue important(boolean important) {
             return this;
+        }
+
+        @Override
+        public PropertyValue copy() {
+            return null;
+        }
+
+        @Override
+        public PropertyValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
+            return null;
         }
     }
 }

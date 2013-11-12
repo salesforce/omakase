@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.declaration.TermList;
-import com.salesforce.omakase.ast.declaration.Values;
+import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;

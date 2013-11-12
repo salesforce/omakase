@@ -18,7 +18,7 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 
 import java.util.Set;

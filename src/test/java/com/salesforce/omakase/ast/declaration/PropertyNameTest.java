@@ -89,29 +89,8 @@ public class PropertyNameTest {
 
     @Test
     public void setsPrefixWhenPreviouslyUnset() {
-        unprefixed.prefix(PREFIX);
-        assertThat(prefixed.prefix().get()).isEqualTo(PREFIX);
-    }
-
-    @Test
-    public void setsPrefixWhenCurrentlySet() {
-        prefixed.prefix("-moz-");
-        assertThat(prefixed.prefix().get()).isEqualTo("-moz-");
-        assertThat(prefixed.name()).isEqualTo("-moz-" + NAME);
-    }
-
-    @Test
-    public void prefixMustStartWithDash() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("prefixes must start");
-        unprefixed.prefix("moz-");
-    }
-
-    @Test
-    public void prefixMustEndWithDash() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("prefixes must end");
-        unprefixed.prefix("-moz");
+        unprefixed.prefix(Prefix.WEBKIT);
+        assertThat(prefixed.prefix().get()).isSameAs(Prefix.WEBKIT.toString());
     }
 
     @Test
@@ -179,21 +158,6 @@ public class PropertyNameTest {
         PropertyName pn1 = PropertyName.using("-webkit-border-radius");
         PropertyName pn2 = PropertyName.using("-moz-border-radius");
         assertThat(pn1.matchesIgnorePrefix(pn2)).isTrue();
-    }
-
-    @Test
-    public void cloneWithNewPrefixCopiesUnprefixedName() {
-        PropertyName pn = PropertyName.using("-webkit-border-radius");
-        PropertyName clone = pn.cloneWithNewPrefix(Prefix.MOZ);
-        assertThat(clone.name()).isEqualTo("-moz-border-radius");
-        assertThat(clone.hasStarHack()).isFalse();
-    }
-
-    @Test
-    public void cloneWithNewPrefixStarHackTrue() {
-        PropertyName pn = PropertyName.using("*-webkit-border-radius");
-        PropertyName clone = pn.cloneWithNewPrefix(Prefix.MOZ);
-        assertThat(clone.hasStarHack()).isTrue();
     }
 
     @Test

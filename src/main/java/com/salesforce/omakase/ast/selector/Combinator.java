@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.parser.selector.CombinatorParser;

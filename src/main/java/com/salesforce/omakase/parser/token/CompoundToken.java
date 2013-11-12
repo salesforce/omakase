@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.parser.Source;
 
 /**

@@ -16,11 +16,14 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.FunctionValueParser;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -125,6 +128,21 @@ public final class GenericFunctionValue extends AbstractTerm implements Function
         // XXX compression
         // for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
         appendable.append(name).append('(').append(args).append(')');
+    }
+
+    @Override
+    public GenericFunctionValue copy() {
+        // TESTME
+        return Copy.comments(this, new GenericFunctionValue(name, args));
+    }
+
+    @Override
+    public GenericFunctionValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        if (support.requiresPrefixForFunction(prefix, name)) {
+            return Copy.comments(this, new GenericFunctionValue(prefix + name, args));
+        }
+        return copy();
     }
 
     @Override

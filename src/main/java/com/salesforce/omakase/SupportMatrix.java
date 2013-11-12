@@ -19,9 +19,14 @@ package com.salesforce.omakase;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.PrefixInfo;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.basic.Prefixer;
+import com.salesforce.omakase.util.As;
 
 import java.util.Set;
 
@@ -181,6 +186,66 @@ public final class SupportMatrix {
      */
     public Double lowestSupportedVersion(Browser browser) {
         return Iterables.getFirst(supported.get(browser), -1d);
+    }
+
+    /**
+     * TESTME
+     *
+     * @param property
+     *
+     * @return
+     */
+    public Set<Prefix> prefixesForProperty(Property property) {
+        Set<Prefix> required = Sets.newHashSet();
+
+        for (Browser browser : supportedBrowsers()) {
+            double lastPrefixed = PrefixInfo.lastPrefixedVersion(property, browser);
+            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        }
+
+        return required;
+    }
+
+    /**
+     * TESTME
+     *
+     * @param function
+     *
+     * @return
+     */
+    public Set<Prefix> prefixesForFunction(String function) {
+        Set<Prefix> required = Sets.newHashSet();
+
+        for (Browser browser : supportedBrowsers()) {
+            double lastPrefixed = PrefixInfo.lastPrefixedVersion(function, browser);
+            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        }
+
+        return required;
+    }
+
+    /**
+     * TESTME
+     *
+     * @param prefix
+     * @param property
+     *
+     * @return
+     */
+    public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
+        return PrefixInfo.hasProperty(property) && prefixesForProperty(property).contains(prefix);
+    }
+
+    /**
+     * TESTME
+     *
+     * @param prefix
+     * @param function
+     *
+     * @return
+     */
+    public boolean requiresPrefixForFunction(Prefix prefix, String function) {
+        return PrefixInfo.hasFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
     /**

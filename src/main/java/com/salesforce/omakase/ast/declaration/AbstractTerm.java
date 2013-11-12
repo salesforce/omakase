@@ -16,8 +16,10 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
+import com.salesforce.omakase.data.Prefix;
 
 /**
  * Base class for {@link Term}s.
@@ -61,5 +63,10 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
     @Override
     protected TermListMember self() {
         return this;
+    }
+
+    @Override
+    public TermListMember copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        return copy();
     }
 }

@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
@@ -26,6 +27,7 @@ import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -367,6 +369,16 @@ public class DeclarationTest {
 
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
+
+        @Override
+        public PropertyValue copy() {
+            return null;
+        }
+
+        @Override
+        public PropertyValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
+            return null;
         }
     }
 }

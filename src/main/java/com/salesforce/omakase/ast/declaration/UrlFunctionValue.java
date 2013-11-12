@@ -17,10 +17,11 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.As;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -138,6 +139,12 @@ public final class UrlFunctionValue extends AbstractTerm {
         }
 
         appendable.append(')');
+    }
+
+    @Override
+    public TermListMember copy() {
+        // TESTME
+        return Copy.comments(this, new UrlFunctionValue(url).quotationMode(quotationMode.orNull()));
     }
 
     @Override

@@ -979,7 +979,7 @@ public enum Property {
      * @param name
      *     Name of the property.
      *
-     * @return The matching {@link Property}.
+     * @return The matching {@link Property}, or null if not found.
      */
     public static Property lookup(String name) {
         return map.get(name);

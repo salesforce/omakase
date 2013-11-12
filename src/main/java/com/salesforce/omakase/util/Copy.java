@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.Groupable;
 
 /**
- * A member of a {@link TermList}.
+ * TESTME
+ * <p/>
+ * TODO description
  *
  * @author nmcwilliams
  */
-public interface TermListMember extends Syntax, Copyable<TermListMember>, Groupable<TermList, TermListMember> {
+public final class Copy {
+    private Copy() {}
+
+    public static <T extends Syntax> T comments(T original, T copy) {
+        copy.directComments(original.comments());
+        return copy;
+    }
 }

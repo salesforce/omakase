@@ -17,7 +17,7 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.base.Objects;
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.error.ErrorManager;
 
 import java.lang.reflect.InvocationTargetException;

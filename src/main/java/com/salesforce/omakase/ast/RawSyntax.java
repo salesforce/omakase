@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.As;
+import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
