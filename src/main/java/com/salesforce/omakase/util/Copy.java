@@ -29,8 +29,6 @@ public final class Copy {
     private Copy() {}
 
     /**
-     * TESTME
-     * <p/>
      * Copies comments (reference) from the original to the given copy instance.
      *
      * @param original

@@ -68,7 +68,6 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
 
     @Override
     public TermListMember copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        // TESTME
         // subclasses override this behavior if prefixes are applicable
         return copy();
     }
