@@ -24,7 +24,7 @@ import java.util.List;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.util.tool.BrowserEnumGenerator for instructions on updating.
+ * See class com.salesforce.omakase.test.util.tool.GenerateBrowserEnum for instructions on updating.
  */
 public enum Browser {
     /** The 'Internet Explorer' browser */
@@ -34,7 +34,7 @@ public enum Browser {
     OPERA("opera", "Opera", Prefix.O, ImmutableList.of(17.0,16.0,15.0,12.1,12.0,11.6,11.5,11.1,11.0,10.6,10.5,10.1,10.0,9.6,9.5)),
 
     /** The 'Chrome' browser */
-    CHROME("chrome", "Chrome", Prefix.WEBKIT, ImmutableList.of(30.0,29.0,28.0,27.0,26.0,25.0,24.0,23.0,22.0,21.0,20.0,19.0,18.0,17.0,16.0,15.0,14.0,13.0,12.0,11.0,10.0,9.0,8.0,7.0,6.0,5.0,4.0)),
+    CHROME("chrome", "Chrome", Prefix.WEBKIT, ImmutableList.of(31.0,30.0,29.0,28.0,27.0,26.0,25.0,24.0,23.0,22.0,21.0,20.0,19.0,18.0,17.0,16.0,15.0,14.0,13.0,12.0,11.0,10.0,9.0,8.0,7.0,6.0,5.0,4.0)),
 
     /** The 'Safari' browser */
     SAFARI("safari", "Safari", Prefix.WEBKIT, ImmutableList.of(7.0,6.1,6.0,5.1,5.0,4.0,3.2,3.1)),

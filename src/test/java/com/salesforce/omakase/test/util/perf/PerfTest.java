@@ -62,7 +62,7 @@ public final class PerfTest {
     public static void main(String[] args) {
         PerfTestParser parser = Iterables.get(PARSERS, 0);
 
-        if (args.length == 1) {
+        if (args.length == 1 && !args[0].isEmpty()) {
             for (PerfTestParser p : PARSERS) {
                 if (p.code() == args[0].charAt(0)) parser = p;
             }

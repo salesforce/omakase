@@ -28,7 +28,7 @@ import com.salesforce.omakase.util.Values;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.util.tool.KeywordToEnum for instructions on updating.
+ * See class com.salesforce.omakase.test.util.tool.GenerateKeywordEnum for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Keyword {

@@ -23,7 +23,7 @@ package com.salesforce.omakase.data;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.util.tool.PrefixToEnum for instructions on updating.
+ * See class com.salesforce.omakase.test.util.tool.GeneratePrefixEnum for instructions on updating.
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Prefix {

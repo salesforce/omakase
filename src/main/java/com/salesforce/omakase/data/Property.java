@@ -26,7 +26,7 @@ import java.util.Map;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.util.tool.PropertyToEnum for instructions on updating.
+ * See class com.salesforce.omakase.test.util.tool.GeneratePropertyEnum for instructions on updating.
  */
 public enum Property {
     /** CSS property named 'align-content' */
@@ -974,7 +974,7 @@ public enum Property {
     }
 
     /**
-     * Gets the  property associated with the given name
+     * Gets the property associated with the given name.
      *
      * @param name
      *     Name of the property.

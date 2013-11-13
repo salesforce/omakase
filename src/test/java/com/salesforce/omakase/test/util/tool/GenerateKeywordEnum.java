@@ -16,20 +16,33 @@
 
 package com.salesforce.omakase.test.util.tool;
 
+import com.salesforce.omakase.data.Keyword;
+import freemarker.template.TemplateException;
+
+import java.io.IOException;
+
 /**
- * Runs all source code generators.
+ * Code generator for the {@link Keyword} enum.
+ * <p/>
+ * To modify the list of keywords, edit the 'src/test/resources/data/keywords.yaml' file and execute the main method on this class
+ * (also available via script/omakase.sh).
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public final class GenerateAll {
-    private GenerateAll() {}
-
+public class GenerateKeywordEnum {
     public static void main(String[] args) throws Exception {
-        PrefixToEnum.main(new String[]{});
-        KeywordToEnum.main(new String[]{});
-        PropertyToEnum.main(new String[]{});
-        BrowserEnumGenerator.main(new String[]{});
-        PrefixInfoClassGenerator.main(new String[]{});
+        new GenerateKeywordEnum().run();
+    }
+
+    public void run() throws IOException, TemplateException {
+        SourceWriter writer = new SourceWriter();
+
+        writer.generator(GenerateKeywordEnum.class);
+        writer.classToWrite(Keyword.class);
+        writer.source("keywords.yaml");
+        writer.template("keyword-to-enum.ftl");
+
+        writer.write();
     }
 }

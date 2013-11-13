@@ -25,7 +25,7 @@ import com.salesforce.omakase.BrowserVersion;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.util.tool.PrefixInfoClassGenerator for instructions on updating.
+ * See class com.salesforce.omakase.test.util.tool.GeneratePrefixInfoClass for instructions on updating.
  */
 public final class PrefixInfo {
     private static final Multimap<Property, BrowserVersion> PROPERTIES;
@@ -71,13 +71,13 @@ public final class PrefixInfo {
         builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.OPERA, 17.0));
-        builder.put(Property.ANIMATION, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.ANIMATION, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.ANIMATION_FILL_MODE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.ANIMATION_ITERATION_COUNT, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.ANIMATION_PLAY_STATE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.ANIMATION_TIMING_FUNCTION, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.ANIMATION, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.ANIMATION_NAME, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.ANIMATION_DURATION, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -144,10 +144,10 @@ public final class PrefixInfo {
         builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.OPERA, 17.0));
-        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.TRANSFORM, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.BACKFACE_VISIBILITY, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.TRANSFORM, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.TRANSFORM_ORIGIN, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.TRANSFORM_STYLE, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -182,19 +182,19 @@ public final class PrefixInfo {
         builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.OPERA, 17.0));
-        builder.put(Property.COLUMNS, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.CHROME, 30.0));
-        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.COLUMNS, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.BREAK_BEFORE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.BREAK_AFTER, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMNS, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -249,7 +249,7 @@ public final class PrefixInfo {
         builder.put(Property.BREAK_INSIDE, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.IE, 11.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.OPERA, 17.0));
-        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.CHROME, 30.0));
+        builder.put(Property.USER_SELECT, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.USER_SELECT, new BrowserVersion(Browser.ANDROID, 4.3));
@@ -346,10 +346,28 @@ public final class PrefixInfo {
         return -1d;
     }
 
+    /**
+     * Gets whether prefix info exists for the given function name.
+     *
+     * @param function
+     *     Check if prefix info exists for this function name.
+     *
+     * @return True of prefix info exists for the given function name.
+     */
     public static boolean hasFunction(String function) {
         return FUNCTIONS.containsKey(function);
     }
 
+    /**
+     * Gets the last version of the given browser that requires a prefix for the given function name.
+     *
+     * @param function
+     *     The function name.
+     * @param browser
+     *     The browser.
+     *
+     * @return The last version, or -1 if all known versions of the browser supports the function name unprefixed.
+     */
     public static double lastPrefixedVersion(String function, Browser browser) {
         for (BrowserVersion browserVersion : FUNCTIONS.get(function)) {
             if (browserVersion.browser() == browser) return browserVersion.version();

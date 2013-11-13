@@ -30,7 +30,6 @@
 /instance/com.adobe.flexide.mxml.core/mxmlTagItalic=false
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_type_arguments=do not insert
 /instance/ccw.core/ccw.preferences.editor_color.literalSymbol=224,226,228
-/instance/org.eclipse.jdt.ui/spelling_user_dictionary=/Users/nmcwilliams/Dropbox/Dev/eclipse-dictionary/dict.txt
 /instance/de.walware.statet.r.ui/text_R_rString.underline=false
 /instance/org.jboss.ide.eclipse.freemarker/color.comment=125,140,147
 /instance/edu.umd.cs.findbugs.plugin.eclipse/detectorSuspiciousThreadInterrupted=SuspiciousThreadInterrupted|true
@@ -259,7 +258,6 @@
 /instance/de.walware.statet.r.ui/text_R_rNumbers.color=255,205,34
 /instance/de.walware.statet.r.ui/text_Rd_rdDefault.color=224,226,228
 @org.eclipse.mylyn.monitor.ui=3.8.3.v20130107-0100
-/instance/org.eclipse.m2e.core/eclipse.m2.WorkspacelifecycleMappingsLocation=/Users/nakiami/Workspaces/omakase/.metadata/.plugins/org.eclipse.m2e.core/lifecycle-mapping-metadata.xml
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.brace_position_for_enum_declaration=end_of_line
 /instance/org.eclipse.cdt.ui/semanticHighlighting.class.enabled=true
 /instance/org.eclipse.jdt.ui/cleanup.remove_unused_local_variables=false
@@ -799,7 +797,6 @@
 /instance/edu.umd.cs.findbugs.plugin.eclipse/detectorConfusionBetweenInheritedAndOuterMethod=ConfusionBetweenInheritedAndOuterMethod|true
 /instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_types=true
 /instance/org.python.pydev/STRING_STYLE=0
-/instance/org.eclipse.egit.core/GitRepositoriesView.GitDirectories=/Users/nakiami/Dev/omakase/.git\:
 /instance/edu.umd.cs.findbugs.plugin.eclipse/detectorFindUnconditionalWait=FindUnconditionalWait|true
 /instance/org.eclipse.dltk.ruby.ui/variable=224,226,228
 /instance/com.powerflasher.fdt.ui/JAVADOC_KEYWORD_color_underline=false
@@ -1800,7 +1797,6 @@ file_export_version=3.0
 /instance/org.eclipse.cdt.ui/pp_default=224,226,228
 /instance/com.adobe.flexide.mxml.core/mxmlTagBold=false
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_declaration=insert
-/configuration/org.eclipse.ui.ide/RECENT_WORKSPACES=/Users/nmcwilliams/Workspaces/omakase\n/Users/nakiami/Workspaces/omakase\n/Users/nakiami/Workspaces/aura\n/Users/nakiami/Workspaces/zencss-data\n/Users/nakiami/Workspaces/bluebird
 /instance/org.eclipse.cdt.ui/c_operators=232,226,183
 /instance/org.eclipse.wst.css.ui/SELECTOR=\#678CB1 | null | null | null | null | null
 /instance/org.eclipse.php.ui/semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.FunctionHighlighting.enabled=true

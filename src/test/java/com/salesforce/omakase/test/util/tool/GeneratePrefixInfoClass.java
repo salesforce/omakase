@@ -25,8 +25,6 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.PrefixInfo;
 import com.salesforce.omakase.data.Property;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -38,23 +36,24 @@ import java.util.Map;
 /**
  * Handles updating the {@link PrefixInfo} class.
  * <p/>
- * Run the main method or use 'bin/run.sh'.
+ * Run the main method or use 'script/omakase.sh'.
  * <p/>
  * Source of this data is from caniuse.com [https://github.com/Fyrd/caniuse]
  *
  * @author nmcwilliams
  */
 @SuppressWarnings({"JavaDoc", "unchecked", "rawtypes"})
-public final class PrefixInfoClassGenerator {
+public class GeneratePrefixInfoClass {
     private static final String ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/features-json/";
-    private static final Logger logger = LoggerFactory.getLogger(PrefixInfoClassGenerator.class);
     private static final Yaml yaml = new Yaml();
 
-    private PrefixInfoClassGenerator() {}
-
     public static void main(String[] args) throws IOException, TemplateException {
+        new GeneratePrefixInfoClass().run();
+    }
+
+    public void run() throws IOException, TemplateException {
         // read the prefix input data
-        logger.info("reading prefix-info.yaml...");
+        System.out.println("reading prefix-info.yaml...");
         Map types = (Map)yaml.load(Tools.readFile("/data/prefix-info.yaml"));
 
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
@@ -63,7 +62,7 @@ public final class PrefixInfoClassGenerator {
         // write out the new class source
         SourceWriter writer = new SourceWriter();
 
-        writer.generator(PrefixInfoClassGenerator.class);
+        writer.generator(GeneratePrefixInfoClass.class);
         writer.classToWrite(PrefixInfo.class);
         writer.template("prefix-info-class.ftl");
         writer.data("properties", properties);
@@ -73,7 +72,7 @@ public final class PrefixInfoClassGenerator {
     }
 
     /** load information on all the prefixable properties */
-    private static List<PropertyInfo> loadProperties(Map<String, List<String>> categories) throws IOException {
+    private List<PropertyInfo> loadProperties(Map<String, List<String>> categories) throws IOException {
         List<PropertyInfo> info = Lists.newArrayList();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
@@ -91,7 +90,7 @@ public final class PrefixInfoClassGenerator {
     }
 
     /** load information on all the prefixable functions */
-    private static List<FunctionInfo> loadFunctions(Map<String, List<String>> categories) throws IOException {
+    private List<FunctionInfo> loadFunctions(Map<String, List<String>> categories) throws IOException {
         List<FunctionInfo> info = Lists.newArrayList();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
@@ -106,11 +105,11 @@ public final class PrefixInfoClassGenerator {
         return info;
     }
 
-    private static List<BrowserVersion> lastPrefixedBrowserVersions(String category) throws IOException {
+    private List<BrowserVersion> lastPrefixedBrowserVersions(String category) throws IOException {
         List<BrowserVersion> versions = Lists.newArrayList();
 
         // load data for the category
-        logger.info("downloading prefix data for {}...", category);
+        System.out.println(String.format("downloading prefix data for %s...", category));
         URLConnection connection = new URL(ENDPOINT + category + ".json").openConnection();
         connection.setUseCaches(false);
 
@@ -135,11 +134,12 @@ public final class PrefixInfoClassGenerator {
 
             // if we have a prefix requirement, mark it for each property in the category.
             if (latest > 0) {
-                logger.info("- last required with prefix in {} {}", browser, latest);
+                System.out.println(String.format("- last required with prefix in %s %s", browser, latest));
                 versions.add(new BrowserVersion(browser, latest));
             }
         }
 
+        System.out.println();
         return versions;
     }
 

@@ -16,30 +16,32 @@
 
 package com.salesforce.omakase.test.util.tool;
 
-import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.Property;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
 
 /**
- * Code generator for the {@link Prefix} enum.
+ * Code generator for the {@link Property} enum.
  * <p/>
- * To modify the list of prefixes, edit the 'src/test/resources/data/prefixes.txt' file and execute the main method on this class
- * (also available via bin/run.sh).
+ * To modify the list of keywords, edit the 'src/test/resources/data/properties.yaml' file and execute the main method on this
+ * class (also available via script/omakase.sh).
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public final class PrefixToEnum {
-    private PrefixToEnum() {}
+public class GeneratePropertyEnum {
+    public static void main(String[] args) throws IOException, TemplateException {
+        new GeneratePropertyEnum().run();
+    }
 
-    public static void main(String[] args) throws TemplateException, IOException {
+    public void run() throws IOException, TemplateException {
         SourceWriter writer = new SourceWriter();
 
-        writer.generator(PrefixToEnum.class);
-        writer.classToWrite(Prefix.class);
-        writer.source("prefixes.yaml");
-        writer.template("prefix-to-enum.ftl");
+        writer.generator(GeneratePropertyEnum.class);
+        writer.classToWrite(Property.class);
+        writer.source("properties.yaml");
+        writer.template("property-to-enum.ftl");
 
         writer.write();
     }

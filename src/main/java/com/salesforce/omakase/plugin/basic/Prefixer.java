@@ -145,7 +145,7 @@ public final class Prefixer implements Plugin {
 
             // add all required prefixes
             for (Prefix prefix : required) {
-                Optional<Declaration> dd = Declarations.equivalentWithPrefixedFunction(unprefixed, prefix, function.name());
+                Optional<Declaration> dd = Declarations.prefixedFunctionEquivalent(unprefixed, prefix, function.name());
                 if (dd.isPresent()) {
                     // TODO
                 } else {

@@ -21,8 +21,6 @@ import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -42,10 +40,9 @@ import static com.google.common.base.Preconditions.checkState;
  * the map will be available in the template. If the top-level YAML object is a list, the list will be made available to the
  * template under the key "items".
  *
- * @author nmcwilliam
+ * @author nmcwilliams
  */
 final class SourceWriter {
-    private static final Logger logger = LoggerFactory.getLogger(SourceWriter.class);
     private static final Yaml yaml = new Yaml();
 
     private final Map<String, Object> data = Maps.newHashMap();
@@ -90,7 +87,7 @@ final class SourceWriter {
         checkState(templateName != null, "template not set");
         checkState(generator != null, "generator not set");
         checkState(klass != null, "class to write not set");
-        logger.info("regenerating '{}'", klass);
+        System.out.println(String.format("regenerating '%s'", klass));
 
         File file = Tools.getSourceFile(klass);
         StringWriter writer = new StringWriter();
@@ -101,7 +98,7 @@ final class SourceWriter {
 
         // optionally add data from specified source file
         if (source != null) {
-            logger.info("reading '{}'...", source);
+            System.out.println(String.format("reading '%s'...", source));
             Object contents = yaml.load(Tools.readFile("/data/" + this.source));
 
             if (contents instanceof List) {
@@ -115,17 +112,17 @@ final class SourceWriter {
         }
 
         // load the template
-        logger.info("loading template...");
+        System.out.println("loading template...");
         Template template = Tools.getTemplate(templateName);
 
         // process the template with the current data
-        logger.info("processing template...");
+        System.out.println("processing template...");
         template.process(data, writer);
 
         // write it to the source file
-        logger.info("writing output...");
+        System.out.println("writing output...");
         Files.write(writer.toString(), file, Charsets.UTF_8);
 
-        logger.info("done\n");
+        System.out.println("done\n");
     }
 }

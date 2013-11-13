@@ -79,6 +79,13 @@
             <version>2.2.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <!-- for CLI -->
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>2.0.26</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 	<build>

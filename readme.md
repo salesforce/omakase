@@ -26,7 +26,7 @@ Omakase is built 100% solely for parsing CSS, which means that the error message
 
 ### Awesome standard plugins
 
-Omakase comes with some some plugins out of the box, like `Conditionals`.
+Omakase comes with some some plugins out of the box, like `Conditionals` and `Prefixer`.
 
 ### Built-in support for custom syntax
 
@@ -673,24 +673,24 @@ Following is the list of all supported syntax types that you can subscribe to in
 05: Stylesheet                     (no description)                                          Automatic                   class
 06: AtRule                         (no description)                                          Automatic                   class
 07: MediaQueryList                 full media query string                                   AtRule#refine               class
-08: PropertyValue                  interface for all property values                         Declaration#refine          interface
-09: Term                           a single segment of a property value                      Declaration#refine          interface
-10: Declaration                    (no description)                                          Automatic                   class
-11: GenericFunctionValue           unknown function value                                    Declaration#refine          class
-12: HexColorValue                  individual hex color value                                Declaration#refine          class
-13: KeywordValue                   individual keyword value                                  Declaration#refine          class
-14: NumericalValue                 individual numerical value                                Declaration#refine          class
-15: RawFunction                    a raw function before refinement                          Declaration#refine          class
-16: StringValue                    individual string value                                   Declaration#refine          class
-17: TermList                       default, generic property value                           Declaration#refine          class
-18: UrlFunctionValue               url function                                              Declaration#refine          class
-19: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
-20: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
-21: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-22: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-23: AttributeSelector              attribute selector segment                                Selector#refine             class
-24: ClassSelector                  class selector segment                                    Selector#refine             class
-25: Combinator                     combinator segment                                        Selector#refine             class
+08: FunctionValue                  general interface for function terms                      Declaration#refine          interface
+09: PropertyValue                  interface for all property values                         Declaration#refine          interface
+10: Term                           a single segment of a property value                      Declaration#refine          interface
+11: Declaration                    (no description)                                          Automatic                   class
+12: GenericFunctionValue           unknown function value                                    Declaration#refine          class
+13: HexColorValue                  individual hex color value                                Declaration#refine          class
+14: KeywordValue                   individual keyword value                                  Declaration#refine          class
+15: NumericalValue                 individual numerical value                                Declaration#refine          class
+16: RawFunction                    a raw function before refinement                          Declaration#refine          class
+17: StringValue                    individual string value                                   Declaration#refine          class
+18: TermList                       default, generic property value                           Declaration#refine          class
+19: UrlFunctionValue               url function                                              Declaration#refine          class
+20: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
+21: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
+22: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+23: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+24: AttributeSelector              attribute selector segment                                Selector#refine             class
+25: ClassSelector                  class selector segment                                    Selector#refine             class
 26: IdSelector                     id selector segment                                       Selector#refine             class
 27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
 28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
@@ -698,7 +698,7 @@ Following is the list of all supported syntax types that you can subscribe to in
 30: TypeSelector                   type/element selector segment                             Selector#refine             class
 31: UniversalSelector              universal selector segment                                Selector#refine             class
 
-Generated by SubscribableSyntaxTable.java
+Generated by PrintSubscribableSyntaxTable.java
 </pre>
 
 **Notes:**
@@ -747,17 +747,50 @@ The important takeaway is that **all** unit tests must be written using fest ass
 
 ### Updating keywords, properties, etc...
 
-There are several enums such as `Keyword.java` that contain values that will inevitably need to be updated. There are actually some tools under `com.salesforce.omakase.test.util.tool` that should be used to assist with this.
+There are several enums such as `Keyword.java` and `Browser.java` that contain values that will inevitably need to be updated. Most of these are stored in data files under `src/test/resources/data/`.
+
+You can use a script to regenerate the java source files (see below) after updating, or you can directly run the main method on the classes under `src/test/.../omakase/test/util/tool`.
 
 ### Scripts
 
-You can run some utility classes or perf tests by using the scripts under `bin`. For example
+The omakase CLI is a powerful tool for building the project, regenerating enum source files, running performance tests, and more.
 
-    bin/run.sh
+To get started, under the project directory run this command from the shell:
 
-or
+    script/setup.sh
 
-    bin/perf.sh
+This will setup links to the omakase CLI script. Now you can run the `omakase` command from within the project root:
+
+    ~/dev/omakase > omakase
+
+      Usage: omakase [options]
+
+      Options:
+
+        -b (--build)                build the project
+        -d (--deploy)               build and deploy jars (requires additional setup, see deploy.md)
+        -g (--generate, --gen)      regenerate all data enum and class source files
+        -h (--help)                 print this help message
+        -m (--mode) <mode>          specifies perf mode (t/thin, f/full, g/gss, p/phloc)
+        -p (--perf)                 run the performance test
+        -s (--syntax, --sub)        print the subscribable syntax table
+        -u (--update, --prefixes)   update and regenerate the prefix data only
+
+For example, updating the prefix info:
+
+    omakase --update
+
+Printing the subscribable syntax table:
+
+    omakase --syntax
+
+Running the performance test:
+
+    omakase -p
+
+Running the performance test in "omakase full parsing" mode:
+
+    omakase -p -m full
 
 Architecture
 ------------

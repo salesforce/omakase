@@ -22,9 +22,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import freemarker.template.TemplateException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
@@ -34,21 +34,22 @@ import java.util.Map;
 /**
  * Handles updating the {@link Browser} enum.
  * <p/>
- * Run the main method or use 'bin/run.sh'.
+ * Run the main method or use 'script/omakase.sh'.
  * <p/>
  * Source of this data is from caniuse.com [https://github.com/Fyrd/caniuse]
  *
  * @author nmcwilliams
  */
 @SuppressWarnings({"JavaDoc", "rawtypes", "unchecked"})
-public final class BrowserEnumGenerator {
+public class GenerateBrowserEnum {
     private static final String BROWSERS_ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/data.json";
-    private static final Logger logger = LoggerFactory.getLogger(BrowserEnumGenerator.class);
-
-    private BrowserEnumGenerator() {}
 
     public static void main(String[] args) throws Exception {
-        logger.info("downloading browser data...");
+        new GenerateBrowserEnum().run();
+    }
+
+    public void run() throws IOException, TemplateException {
+        System.out.println("downloading browser data from caniuse.com [https://github.com/Fyrd/caniuse]...");
         URLConnection connection = new URL(BROWSERS_ENDPOINT).openConnection();
         connection.setUseCaches(false);
         Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
@@ -78,7 +79,7 @@ public final class BrowserEnumGenerator {
 
         SourceWriter writer = new SourceWriter();
 
-        writer.generator(BrowserEnumGenerator.class);
+        writer.generator(GenerateBrowserEnum.class);
         writer.classToWrite(Browser.class);
         writer.template("browser-enum.ftl");
         writer.data("browsers", browsers);
@@ -86,7 +87,7 @@ public final class BrowserEnumGenerator {
         writer.write();
     }
 
-    private static String versions(Map browser) {
+    private String versions(Map browser) {
         List<String> all = (List<String>)browser.get("versions");
         List<Double> filtered = Lists.newArrayList();
 

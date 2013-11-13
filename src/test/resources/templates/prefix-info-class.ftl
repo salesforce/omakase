@@ -82,10 +82,28 @@ public final class PrefixInfo {
         return -1d;
     }
 
+    /**
+     * Gets whether prefix info exists for the given function name.
+     *
+     * @param function
+     *     Check if prefix info exists for this function name.
+     *
+     * @return True of prefix info exists for the given function name.
+     */
     public static boolean hasFunction(String function) {
         return FUNCTIONS.containsKey(function);
     }
 
+    /**
+     * Gets the last version of the given browser that requires a prefix for the given function name.
+     *
+     * @param function
+     *     The function name.
+     * @param browser
+     *     The browser.
+     *
+     * @return The last version, or -1 if all known versions of the browser supports the function name unprefixed.
+     */
     public static double lastPrefixedVersion(String function, Browser browser) {
         for (BrowserVersion browserVersion : FUNCTIONS.get(function)) {
             if (browserVersion.browser() == browser) return browserVersion.version();
