@@ -95,7 +95,9 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
     public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
         if (declaration.isRefined()) return false;
 
-        SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, broadcaster);
+        // using a queue so that we can link everything together before terms, etc... are emitted
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, queue);
         Source source = new Source(declaration.rawPropertyValue().get());
 
         // parse the contents
@@ -112,8 +114,10 @@ public final class StandardRefinerStrategy implements AtRuleRefinerStrategy, Sel
         // store the parsed value
         Optional<PropertyValue> value = single.broadcasted();
         if (!value.isPresent()) throw new ParserException(source, Message.EXPECTED_VALUE);
-
         declaration.propertyValue(value.get());
+
+        // everything is linked so send the broadcasts out
+        queue.resume();
 
         return true;
     }
