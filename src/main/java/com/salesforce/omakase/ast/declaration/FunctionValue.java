@@ -24,11 +24,12 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 /**
  * General interface for function term values, such as {@link GenericFunctionValue}.
  * <p/>
- * In contrast to {@link RawFunction}, this is the interface that should be implemented by all specific functions. {@link
- * RawFunction}s, on the other hand, represents functions that have yet to be refined into the specific function type.
+ * In contrast to {@link RawFunction}, this interface is implemented by all specific functions. {@link RawFunction}s on the other
+ * hand represent functions that have yet to be refined into the specific function.
  * <p/>
- * In other words, subscribe to {@link FunctionValue} if you would like to receive all function value instances, and subscribe to
- * {@link RawFunction} if you would like to preprocess a function before it gets refined into the specific function value.
+ * In other words, subscribe to {@link FunctionValue} if you would like to receive all specific function value instances, and
+ * subscribe to {@link RawFunction} if you would like to preprocess a raw function before it gets refined into the specific
+ * function.
  *
  * @author nmcwilliams
  */

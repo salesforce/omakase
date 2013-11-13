@@ -23,6 +23,7 @@ import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -117,7 +118,9 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     }
 
     /**
-     * TESTME Sets the prefix for this property name. This will overwrite any currently specified prefix.
+     * TESTME
+     * <p/>
+     * Sets the prefix for this property name. This will overwrite any currently specified prefix.
      *
      * @param prefix
      *     The {@link Prefix}.
@@ -246,7 +249,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     @Override
     public PropertyName copy() {
         // TESTME
-        return PropertyName.using(name()).setStarHack(starHack);
+        return Copy.comments(this, PropertyName.using(name()).setStarHack(starHack));
     }
 
     @Override
@@ -255,7 +258,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
         Optional<Property> property = asProperty();
 
         if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
-            return PropertyName.using(property.get()).prefix(prefix).setStarHack(starHack);
+            return Copy.comments(this, PropertyName.using(property.get()).prefix(prefix).setStarHack(starHack));
         }
 
         return copy();

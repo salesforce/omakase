@@ -49,13 +49,14 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
         // in isolation as it could impact the meaning of the surrounding terms. In any case, the main reason for this is
         // because custom function RefinerStrategy objects may parse args not directly stored in a TermList, and we don't want
         // #isWritable returning false for those terms.
-        String msg = "Detaching terms is not supported. Use SyntaxCollection#replaceExistingWith as an alternative.";
+        String msg = "Detaching terms is not supported. Use SyntaxCollection#replaceExistingWith as an alternative, " +
+            "or better just make a new property value instance";
         throw new UnsupportedOperationException(msg);
     }
 
     @Override
     public boolean isWritable() {
-        // based on the override to #detach as explained above. Other behavior is probably based on this behavior too,
+        // based on the override to #detach as explained above. Other behavior is probably dependent on this override too,
         // like the loose terms in a MediaQueryExpression.
         return true;
     }
@@ -67,6 +68,8 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
 
     @Override
     public TermListMember copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        // subclasses override this behavior if prefixes are applicable
         return copy();
     }
 }

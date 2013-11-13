@@ -263,12 +263,15 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * Gets whether this {@link Declaration} has the given {@link PropertyName}.
+     * Gets whether this {@link Declaration} has a {@link PropertyName} that matches the given one. For the definition of this,
+     * see {@link PropertyName#matches(PropertyName)}.
      *
      * @param propertyName
      *     The {@link PropertyName}.
      *
-     * @return True if this {@link Declaration} has the given property name.
+     * @return True if this {@link Declaration} has a property name that matches the given one.
+     *
+     * @see PropertyName#matches(PropertyName)
      */
     public boolean isProperty(PropertyName propertyName) {
         return propertyName().matches(propertyName);
@@ -281,18 +284,24 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      *     The property.
      *
      * @return True if this {@link Declaration} has the given property, ignoring the prefix.
+     *
+     * @see PropertyName#matchesIgnorePrefix(Property)
      */
     public boolean isPropertyIgnorePrefix(Property property) {
         return propertyName().matchesIgnorePrefix(property);
     }
 
     /**
-     * TESTME Same as {@link #isProperty(PropertyName)}, except this ignores the prefix.
+     * TESTME
+     * <p/>
+     * Same as {@link #isProperty(PropertyName)}, except this ignores the prefix.
      *
      * @param propertyName
      *     The {@link PropertyName}.
      *
      * @return True if this {@link Declaration} has the given property name, ignoring the prefix.
+     *
+     * @see PropertyName#matchesIgnorePrefix(PropertyName)
      */
     public boolean isPropertyIgnorePrefix(PropertyName propertyName) {
         return propertyName().matchesIgnorePrefix(propertyName);
@@ -414,7 +423,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     @Override
     public Declaration copy() {
         // TESTME
-        return new Declaration(propertyName.copy(), propertyValue().copy());
+        return Copy.comments(this, new Declaration(propertyName.copy(), propertyValue().copy()));
     }
 
     @Override

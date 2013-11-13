@@ -32,10 +32,13 @@ import java.util.List;
  * instance not yet added to the tree). Detached items usually should be ignored, except to reattach.
  * <p/>
  * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
- * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want then
- * first call {@link #detach()} on the unit. Multiple calls to detach and append/prepend in mass should be minimized for
- * performance reasons. In some cases it may be better to alternatively consider detaching the parent unit itself and attaching
- * the applicable children straight to a new replacement parent node.
+ * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated (multiple references to the same
+ * object instance). If this is not what you want then first call {@link #detach()} on the unit, or consider using {@link
+ * SyntaxCollection#moveBefore(Syntax, Syntax)} and {@link SyntaxCollection#moveAfter(Syntax, Syntax)}.
+ * <p/>
+ * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be better
+ * to alternatively consider detaching the parent unit itself and attaching the applicable children straight to a new replacement
+ * parent node.
  * <p/>
  * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
  * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
@@ -102,9 +105,11 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * <p/>
      * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
      * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want
-     * then first call {@link #detach()} on the unit. Multiple calls to detach and append/prepend in mass should be minimized for
-     * performance reasons. In some cases it may be better to alternatively consider detaching the parent unit itself and
-     * attaching the applicable children straight to a new replacement parent node.
+     * then first call {@link #detach()} on the unit.
+     * <p/>
+     * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be
+     * better to alternatively consider detaching the parent unit itself and attaching the applicable children straight to a new
+     * replacement parent node.
      * <p/>
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
@@ -127,9 +132,11 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * <p/>
      * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
      * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want
-     * then first call {@link #detach()} on the unit. Multiple calls to detach and append/prepend in mass should be minimized for
-     * performance reasons. In some cases it may be better to alternatively consider detaching the parent unit itself and
-     * attaching the applicable children straight to a new replacement parent node.
+     * then first call {@link #detach()} on the unit.
+     * <p/>
+     * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be
+     * better to alternatively consider detaching the parent unit itself and attaching the applicable children straight to a new
+     * replacement parent node.
      * <p/>
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both

@@ -21,8 +21,8 @@ import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.declaration.TermList;
+import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.data.Prefix;
 
 import java.util.Set;
@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * TESTME
  * <p/>
- * TODO description
+ * Utilities for working with {@link Declaration}s.
  *
  * @author nmcwilliams
  */
@@ -42,10 +42,9 @@ public final class Declarations {
     public static Optional<Declaration> prefixedEquivalent(Declaration unprefixed, Prefix prefix) {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
 
-        for (Declaration declaration : unprefixed.group().get()) {
-            PropertyName name = declaration.propertyName();
-            if (name.hasPrefix(prefix) && name.matchesIgnorePrefix(name)) {
-                return Optional.of(declaration);
+        for (Declaration d : unprefixed.group().get()) {
+            if (d.propertyName().hasPrefix(prefix) && d.isPropertyIgnorePrefix(unprefixed.propertyName())) {
+                return Optional.of(d);
             }
         }
 
@@ -71,18 +70,17 @@ public final class Declarations {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
-        PropertyName name = unprefixed.propertyName();
+        String expectedName = prefix.toString() + functionName;
+
         for (Declaration declaration : unprefixed.group().get()) {
             // property must have the same unprefixed name, and if it is prefixed it must be the expected prefix
-            PropertyName name2 = declaration.propertyName();
-            if (name2.matchesIgnorePrefix(name) && (!name2.isPrefixed() || name2.hasPrefix(prefix))) {
+            PropertyName name = declaration.propertyName();
+            if (name.matchesIgnorePrefix(unprefixed.propertyName()) && (!name.isPrefixed() || name.hasPrefix(prefix))) {
                 Optional<TermList> termList = Values.asTermList(declaration.propertyValue());
                 if (termList.isPresent()) {
-                    for (Term term : termList.get().terms()) {
-                        if (term instanceof FunctionValue) {
-                            if (((FunctionValue)term).name().equals(prefix.toString() + functionName)) {
-                                return Optional.of(declaration);
-                            }
+                    for (TermListMember member : termList.get().members()) {
+                        if (member instanceof FunctionValue) {
+                            if (((FunctionValue)member).name().equals(expectedName)) return Optional.of(declaration);
                         }
                     }
                 }

@@ -16,18 +16,32 @@
 
 package com.salesforce.omakase.util;
 
+import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * TESTME
- * <p/>
- * TODO description
+ * Utilities for creating copies of objects.
  *
  * @author nmcwilliams
+ * @see Copyable
  */
 public final class Copy {
     private Copy() {}
 
+    /**
+     * TESTME
+     * <p/>
+     * Copies comments (reference) from the original to the given copy instance.
+     *
+     * @param original
+     *     Copy comments from this instance.
+     * @param copy
+     *     Copy comments to this instance.
+     * @param <T>
+     *     Type of object being copied from.
+     *
+     * @return The exact same copy instance that was given.
+     */
     public static <T extends Syntax> T comments(T original, T copy) {
         copy.directComments(original.comments());
         return copy;

@@ -65,8 +65,8 @@ public final class Omakase {
      * This object allows you to add plugins in order to specify the validation, rework, etc... performed on the processed code.
      * See {@link Plugin} for more information.
      * <p/>
-     * Use {@link #errorManager(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used
-     * by default.
+     * Use {@link #em(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used by
+     * default.
      */
     public static final class Request {
         private final Context context;
@@ -145,6 +145,19 @@ public final class Omakase {
         }
 
         /**
+         * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default. Equivalent
+         * to {@link #em(ErrorManager)}.
+         *
+         * @param em
+         *     The error manager.
+         *
+         * @return this, for chaining.
+         */
+        public Request request(ErrorManager em) {
+            return em(em);
+        }
+
+        /**
          * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
          *
          * @param em
@@ -152,7 +165,7 @@ public final class Omakase {
          *
          * @return this, for chaining.
          */
-        public Request errorManager(ErrorManager em) {
+        public Request em(ErrorManager em) {
             this.em = checkNotNull(em, "the error manager cannot be null");
             return this;
         }

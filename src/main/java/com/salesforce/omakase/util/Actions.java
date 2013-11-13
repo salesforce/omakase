@@ -19,7 +19,7 @@ package com.salesforce.omakase.util;
 import com.salesforce.omakase.ast.collection.Groupable;
 
 /**
- * TODO description
+ * Collection of common {@link Action}s.
  *
  * @author nmcwilliams
  */
@@ -29,7 +29,7 @@ public final class Actions {
     /**
      * TESTME
      * <p/>
-     * TODO description
+     * Calls {@link Groupable#detach()} on each instance.
      */
     public static final Action<Groupable<?, ?>> DETACH = new Action<Groupable<?, ?>>() {
         @Override

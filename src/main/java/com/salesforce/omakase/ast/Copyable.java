@@ -17,15 +17,60 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.util.Copy;
 
 /**
- * TODO description
+ * Represents something that can be copied (cloned).
+ * <p/>
+ * Note that in many cases copying is not the preferred solution. For example, say you wanted to create a {@link Declaration} that
+ * is the same as an existing one, but with a different property. If you used the same {@link Declaration#propertyValue()}
+ * reference instead of a copy, any changes made to the original property value would then be reflected in the new declaration as
+ * well.
+ * <p/>
+ * As of this writing, copying is only supported on {@link Declaration} and {@link Term} instances. If applicable, it could later
+ * be added to other AST objects as well.
+ *
+ * @param <T>
+ *     Type of object the copy creates.
  *
  * @author nmcwilliams
+ * @see Copy
  */
 public interface Copyable<T> {
+    /**
+     * Performs a deep copy of the instance.
+     *
+     * @return The new instance.
+     */
     T copy();
 
+    /**
+     * Performs a deep copy of the instance.
+     * <p/>
+     * If applicable and required by the supported browser versions (as specified in the given {@link SupportMatrix}), this will
+     * also prefix certain values and members as part of the copy.
+     * <p/>
+     * Take the following for example:
+     * <pre><code>
+     * PropertyName pn = PropertyName.using("border-radius");
+     * PropertyName copy = PropertyName.copyWithPrefix(Prefix.WEBKIT, support);
+     * </code></pre>
+     * <p/>
+     * Assuming that a version of Chrome was added to the {@link SupportMatrix} that requires a prefix for the {@code
+     * border-radius} property, the copy will have the webkit prefix, e.g., {@code -webkit-border-radius}.
+     * <p/>
+     * This should also cascade to any inner or child {@link Copyable} instances. For example, if calling on a {@link Declaration}
+     * instance, both the property name and also any applicable parts of the declaration value should get prefixed.
+     *
+     * @param prefix
+     *     Apply this {@link Prefix} is applicable.
+     * @param support
+     *     Represents the supported browser versions.
+     *
+     * @return The new instance.
+     */
     T copyWithPrefix(Prefix prefix, SupportMatrix support);
 }

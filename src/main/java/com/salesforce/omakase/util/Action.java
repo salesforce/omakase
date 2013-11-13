@@ -17,10 +17,20 @@
 package com.salesforce.omakase.util;
 
 /**
- * TODO description
+ * An action that can be applied to instances of specified type.
+ *
+ * @param <T>
+ *     Type of objects this {@link Action} works on.
  *
  * @author nmcwilliams
+ * @see Declarations#apply(Iterable, Action)
  */
 public interface Action<T> {
+    /**
+     * Applies the action to the given instance.
+     *
+     * @param instance
+     *     Apply the action to this instance.
+     */
     void apply(T instance);
 }

@@ -59,28 +59,29 @@ public final class Prefixer implements Plugin {
     }
 
     /**
-     * Whether we should remove prefixed declarations if they are not required for the supported browser versions. Default is
-     * false.
+     * Whether we should remove prefixed declarations/at-rules if they are not required for the supported browser versions.
+     * Default is false.
      *
      * @param remove
      *     Whether we should remove unnecessary prefixed declarations.
      *
      * @return this, for chaining.
      */
-    public Prefixer removeUnnecessaryDeclarations(boolean remove) {
+    public Prefixer removeUnnecessary(boolean remove) {
         this.remove = remove;
         return this;
     }
 
     /**
-     * Whether this plugin should rearranged the declarations so that the unprefixed version always comes last. Default is false.
+     * Whether this plugin should rearranged the declarations/at-rules so that the unprefixed version always comes last. Default
+     * is false. This only works for at-rules if the at-rules are contiguous.
      *
      * @param rearrange
      *     Whether we should moved the unprefixed version last.
      *
      * @return this, for chaining.
      */
-    public Prefixer rearrangeIfAlreadyPresent(boolean rearrange) {
+    public Prefixer rearrangeIfPresent(boolean rearrange) {
         this.rearrange = rearrange;
         return this;
     }
@@ -109,24 +110,25 @@ public final class Prefixer implements Plugin {
             if (remove) Declarations.apply(Declarations.prefixedEquivalents(declaration), Actions.DETACH);
         } else {
             // add all required prefixes
-            prefix(declaration, property.get(), required);
-        }
-    }
-
-    /** prepends prefixes before the declaration */
-    private void prefix(Declaration original, Property property, Iterable<Prefix> prefixes) {
-        for (Prefix prefix : prefixes) {
-            Optional<Declaration> declaration = Declarations.prefixedEquivalent(original, prefix);
-            if (declaration.isPresent()) {
-                // prefixed version already present, so move it before the unprefixed one if allowed
-                if (rearrange) original.group().get().moveBefore(original, declaration.get());
-            } else {
-                // prefixed version wasn't found, so create and add it
-                original.prepend(original.copyWithPrefix(prefix, support));
+            for (Prefix prefix : required) {
+                Optional<Declaration> prefixed = Declarations.prefixedEquivalent(declaration, prefix);
+                if (prefixed.isPresent()) {
+                    // prefixed version already present, so move it before the unprefixed one if allowed
+                    if (rearrange) declaration.group().get().moveBefore(declaration, prefixed.get());
+                } else {
+                    // prefixed version wasn't found, so create and add it
+                    declaration.prepend(declaration.copyWithPrefix(prefix, support));
+                }
             }
         }
     }
 
+    /**
+     * Subscription method - do not invoke directly.
+     *
+     * @param function
+     *     The function instance.
+     */
     @Rework
     public void function(FunctionValue function) {
         // check if we have prefix info on the function
@@ -135,6 +137,7 @@ public final class Prefixer implements Plugin {
         // check supported browsers for a required prefix
         Set<Prefix> required = support.prefixesForFunction(function.name());
         if (required.isEmpty()) {
+            // TODO
             // no required prefixes, so remove unnecessary prefixed declarations if allowed
             // if (remove) Declarations.apply(Declarations.prefixedEquivalents(declaration), Actions.DETACH);
         } else {
@@ -144,8 +147,9 @@ public final class Prefixer implements Plugin {
             for (Prefix prefix : required) {
                 Optional<Declaration> dd = Declarations.equivalentWithPrefixedFunction(unprefixed, prefix, function.name());
                 if (dd.isPresent()) {
-
+                    // TODO
                 } else {
+                    // prefixed version wasn't found, so create and add it
                     unprefixed.prepend(unprefixed.copyWithPrefix(prefix, support));
                 }
             }
@@ -158,6 +162,9 @@ public final class Prefixer implements Plugin {
      * of Android Browser.
      *
      * @return The new {@link Prefixer} instance.
+     *
+     * @see #rearrangeIfPresent(boolean)
+     * @see #removeUnnecessary(boolean)
      */
     public static Prefixer defaultBrowserSupport() {
         Prefixer prefixer = new Prefixer();
@@ -183,6 +190,9 @@ public final class Prefixer implements Plugin {
      * support via the {@link #support()} method.
      *
      * @return The new {@link Prefixer} instance.
+     *
+     * @see #rearrangeIfPresent(boolean)
+     * @see #removeUnnecessary(boolean)
      */
     public static Prefixer customBrowserSupport() {
         return new Prefixer();

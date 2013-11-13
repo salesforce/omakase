@@ -20,6 +20,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -115,7 +116,7 @@ public final class HexColorValue extends AbstractTerm {
     @Override
     public HexColorValue copy() {
         // TESTME
-        return new HexColorValue(color);
+        return Copy.comments(this, new HexColorValue(color));
     }
 
     @Override

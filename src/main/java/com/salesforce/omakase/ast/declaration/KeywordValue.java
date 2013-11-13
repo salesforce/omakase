@@ -132,19 +132,29 @@ public final class KeywordValue extends AbstractTerm {
 
     @Override
     public KeywordValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
+        // if we are part of a "transition" declaration, we may need to be prefixed if we are a prefixable property-name
+        // keyword. E.g., in "transition: border-radius 1s", the "border-radius" is a keyword value that represents a
+        // property-name that may need to be prefixed.
         // TESTME
+
+        // if detached then nothing further we can check
         if (this.isDetached()) return copy();
 
+        // if we aren't linked to the parent declaration, we can't check if the property is "transition"
         Optional<Declaration> declaration = this.group().get().parent().parentDeclaration();
         if (!declaration.isPresent()) return copy();
 
+        // if this isn't for the "transition" property then a regular copy will suffice
         if (!declaration.get().isProperty(Property.TRANSITION)) return copy();
 
+        // check if this keyword is a recognizable property
         Property property = Property.lookup(keyword);
         if (property == null) return copy();
 
+        // check if the property actually needs to be prefixed
         if (!support.requiresPrefixForProperty(prefix, property)) return copy();
 
+        // add the prefix!
         return Copy.comments(this, new KeywordValue(prefix + keyword));
     }
 

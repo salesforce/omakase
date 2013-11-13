@@ -237,10 +237,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
 
     @Override
     public AtRule refine() {
-        if (!isRefined() && refiner != null) {
-            refiner.refine(this);
-        }
-
+        if (!isRefined() && refiner != null) refiner.refine(this);
         return this;
     }
 

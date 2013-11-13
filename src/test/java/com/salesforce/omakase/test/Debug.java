@@ -34,6 +34,7 @@ public final class Debug {
         "    -moz-border-radius: 5px;" +
         "    width: calc(2px - 1px);" +
         "    width: -webkit-calc(2px - 1px);" +
+        "    transition: border-radius 2s;" +
         "}";
 
     private Debug() {}
@@ -42,10 +43,11 @@ public final class Debug {
         StyleWriter writer = StyleWriter.verbose();
 
         Prefixer prefixer = Prefixer.defaultBrowserSupport();
-        prefixer.removeUnnecessaryDeclarations(true);
-        prefixer.rearrangeIfAlreadyPresent(true);
+        prefixer.removeUnnecessary(true);
+        prefixer.rearrangeIfPresent(true);
         prefixer.support().browser(Browser.SAFARI, 4);
         prefixer.support().browser(Browser.FIREFOX, 3.6);
+        prefixer.support().browser(Browser.CHROME, 24);
 
         Omakase.source(SRC)
             .request(writer)

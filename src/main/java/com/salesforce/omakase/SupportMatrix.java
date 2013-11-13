@@ -189,11 +189,23 @@ public final class SupportMatrix {
     }
 
     /**
+     * Gets the list of all designated supported {@link Browser}s.
+     *
+     * @return this, for chaining.
+     */
+    public Set<Browser> supportedBrowsers() {
+        return ImmutableSet.copyOf(supported.keySet());
+    }
+
+    /**
      * TESTME
+     * <p/>
+     * Gets all prefixes required for the given {@link Property} according to the supported browser versions.
      *
      * @param property
+     *     Get required prefixes for this {@link Property}.
      *
-     * @return
+     * @return The set of required prefixes.
      */
     public Set<Prefix> prefixesForProperty(Property property) {
         Set<Prefix> required = Sets.newHashSet();
@@ -208,10 +220,14 @@ public final class SupportMatrix {
 
     /**
      * TESTME
+     * <p/>
+     * Gets all prefixes required for the given function name (e.g., "calc" or "linear-gradient"), according to the supported
+     * browser versions.
      *
      * @param function
+     *     Get required prefixes for functions with this name.
      *
-     * @return
+     * @return The set of required prefixes.
      */
     public Set<Prefix> prefixesForFunction(String function) {
         Set<Prefix> required = Sets.newHashSet();
@@ -226,11 +242,18 @@ public final class SupportMatrix {
 
     /**
      * TESTME
+     * <p/>
+     * Gets whether the given {@link Prefix} is required for the given {@link Property}, according to the supported browser
+     * versions.
+     * <p/>
+     * To get the set of all prefixes required by the property, use {@link #prefixesForProperty(Property)} instead.
      *
      * @param prefix
+     *     The {@link Prefix}.
      * @param property
+     *     The {@link Property}.
      *
-     * @return
+     * @return True if the property requires the given prefix.
      */
     public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
         return PrefixInfo.hasProperty(property) && prefixesForProperty(property).contains(prefix);
@@ -238,23 +261,19 @@ public final class SupportMatrix {
 
     /**
      * TESTME
+     * <p/>
+     * Gets whether the given {@link Prefix} is required for the given function name, according to the supported browser
+     * versions.
      *
      * @param prefix
+     *     The {@link Prefix}.
      * @param function
+     *     The function name, e.g., "linear-gradient".
      *
-     * @return
+     * @return True if the function name requires the given prefix.
      */
     public boolean requiresPrefixForFunction(Prefix prefix, String function) {
         return PrefixInfo.hasFunction(function) && prefixesForFunction(function).contains(prefix);
-    }
-
-    /**
-     * Gets the list of all designated supported {@link Browser}s.
-     *
-     * @return this, for chaining.
-     */
-    public Set<Browser> supportedBrowsers() {
-        return ImmutableSet.copyOf(supported.keySet());
     }
 
     @Override
