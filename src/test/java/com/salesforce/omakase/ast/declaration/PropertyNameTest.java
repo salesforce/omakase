@@ -90,7 +90,7 @@ public class PropertyNameTest {
     @Test
     public void setsPrefixWhenPreviouslyUnset() {
         unprefixed.prefix(Prefix.WEBKIT);
-        assertThat(prefixed.prefix().get()).isSameAs(Prefix.WEBKIT.toString());
+        assertThat(prefixed.prefix().get()).isEqualTo(Prefix.WEBKIT.toString());
     }
 
     @Test

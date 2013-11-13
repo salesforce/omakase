@@ -237,6 +237,14 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for {@link Syntax} units of type {@link FunctionValue}.
+     *
+     * @param function
+     *     The {@link FunctionValue} instance.
+     */
+    public void functionValue(FunctionValue function) {}
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link GenericFunctionValue}.
      *
      * @param function
