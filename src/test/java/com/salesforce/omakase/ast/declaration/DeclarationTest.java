@@ -16,11 +16,13 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
@@ -211,6 +213,20 @@ public class DeclarationTest {
     }
 
     @Test
+    public void isPropertyIgnorePrefixForPNTrue() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.MOZ);
+        assertThat(d.isPropertyIgnorePrefix(PropertyName.using("display"))).isTrue();
+    }
+
+    @Test
+    public void isPropertyIgnorePrefixForPNFalse() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.MOZ);
+        assertThat(d.isPropertyIgnorePrefix(PropertyName.using("margin"))).isFalse();
+    }
+
+    @Test
     public void isPrefixedTrue() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         d.propertyName().prefix(Prefix.MOZ);
@@ -343,6 +359,39 @@ public class DeclarationTest {
         com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isFalse();
+    }
+
+    @Test
+    public void copy() {
+        Declaration d = new Declaration(Property.MARGIN, NumericalValue.of(5, "px"));
+        d.comments(Lists.newArrayList("test"));
+
+        Declaration copy = d.copy();
+        assertThat(copy.isProperty(Property.MARGIN));
+        assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
+        assertThat(copy.comments()).hasSameSizeAs(d.comments());
+    }
+
+    @Test
+    public void copyUnrefined() {
+        Declaration copy = fromRaw.copy();
+        assertThat(copy.isProperty(Property.DISPLAY));
+        assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
+    }
+
+    @Test
+    public void copyWithPrefix() {
+        Declaration d = new Declaration(Property.BORDER_RADIUS, NumericalValue.of(5, "px"));
+        d.comments(Lists.newArrayList("test"));
+
+        SupportMatrix support = new SupportMatrix();
+        support.browser(Browser.FIREFOX, 3.6);
+
+        Declaration copy = d.copyWithPrefix(Prefix.MOZ, support);
+        assertThat(copy.isProperty(Property.MARGIN));
+        assertThat(copy.isPrefixed()).isTrue();
+        assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
+        assertThat(copy.comments()).hasSameSizeAs(d.comments());
     }
 
     @Test

@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -41,6 +42,18 @@ public class OperatorTest {
     public void testWrite() throws IOException {
         Operator operator = new Operator(OperatorType.COMMA);
         assertThat(StyleWriter.compressed().writeSnippet(operator)).isEqualTo(",");
+    }
+
+    @Test
+    public void copyTest() {
+        Operator operator = new Operator(OperatorType.COMMA);
+        assertThat(operator.copy().type()).isSameAs(operator.type());
+    }
+
+    @Test
+    public void copyWithPrefixTest() {
+        Operator operator = new Operator(OperatorType.COMMA);
+        assertThat(operator.copyWithPrefix(Prefix.MOZ, null).type()).isEqualTo(operator.type());
     }
 
     @Test

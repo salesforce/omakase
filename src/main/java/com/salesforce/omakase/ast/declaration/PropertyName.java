@@ -118,8 +118,6 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     }
 
     /**
-     * TESTME
-     * <p/>
      * Sets the prefix for this property name. This will overwrite any currently specified prefix.
      *
      * @param prefix
@@ -248,13 +246,11 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
 
     @Override
     public PropertyName copy() {
-        // TESTME
         return Copy.comments(this, PropertyName.using(name()).setStarHack(starHack));
     }
 
     @Override
     public PropertyName copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        // TESTME
         Optional<Property> property = asProperty();
 
         if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {

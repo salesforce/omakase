@@ -132,13 +132,11 @@ public final class GenericFunctionValue extends AbstractTerm implements Function
 
     @Override
     public GenericFunctionValue copy() {
-        // TESTME
         return Copy.comments(this, new GenericFunctionValue(name, args));
     }
 
     @Override
     public GenericFunctionValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        // TESTME
         if (support.requiresPrefixForFunction(prefix, name)) {
             return Copy.comments(this, new GenericFunctionValue(prefix + name, args));
         }

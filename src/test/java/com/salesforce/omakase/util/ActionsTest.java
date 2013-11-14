@@ -16,23 +16,30 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.collection.Groupable;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import org.junit.Test;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Collection of common {@link Action}s.
+ * Unit tests for {@link Actions}.
  *
  * @author nmcwilliams
  */
-public final class Actions {
-    private Actions() {}
+@SuppressWarnings("JavaDoc")
+public class ActionsTest {
+    @Test
+    public void detach() {
+        Rule rule = new Rule();
+        Selector selector = new Selector(new ClassSelector("test"));
+        rule.selectors().append(selector);
 
-    /**
-     * Calls {@link Groupable#detach()} on each instance.
-     */
-    public static final Action<Groupable<?, ?>> DETACH = new Action<Groupable<?, ?>>() {
-        @Override
-        public void apply(Groupable<?, ?> instance) {
-            instance.detach();
-        }
-    };
+        assertThat(selector.isDetached()).isFalse();
+
+        Actions.DETACH.apply(selector);
+
+        assertThat(selector.isDetached()).isTrue();
+    }
 }

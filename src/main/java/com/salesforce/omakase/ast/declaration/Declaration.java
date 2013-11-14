@@ -292,8 +292,6 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * TESTME
-     * <p/>
      * Same as {@link #isProperty(PropertyName)}, except this ignores the prefix.
      *
      * @param propertyName
@@ -422,13 +420,11 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     @Override
     public Declaration copy() {
-        // TESTME
-        return Copy.comments(this, new Declaration(propertyName.copy(), propertyValue().copy()));
+        return Copy.comments(this, new Declaration(propertyName().copy(), propertyValue().copy()));
     }
 
     @Override
     public Declaration copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        // TESTME
         PropertyName pn = propertyName().copyWithPrefix(prefix, support);
         PropertyValue pv = propertyValue().copyWithPrefix(prefix, support);
         return Copy.comments(this, new Declaration(pn, pv));

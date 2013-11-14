@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -48,6 +49,12 @@ public class StringValueTest {
     }
 
     @Test
+    public void getMode() {
+        StringValue s = new StringValue(QuotationMode.DOUBLE, "test");
+        assertThat(s.mode()).isSameAs(QuotationMode.DOUBLE);
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.verbose();
@@ -69,6 +76,17 @@ public class StringValueTest {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
+    }
+
+    @Test
+    public void copyTest() {
+        StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
+        s.comments(Lists.newArrayList("test"));
+
+        StringValue copy = s.copy();
+        assertThat(copy.content()).isEqualTo(s.content());
+        assertThat(copy.mode()).isSameAs(s.mode());
+        assertThat(copy.comments()).hasSameSizeAs(s.comments());
     }
 
     @Test

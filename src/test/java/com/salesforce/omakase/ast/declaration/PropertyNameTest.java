@@ -16,6 +16,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.util.Util;
@@ -27,7 +30,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /** Unit tests for {@link PropertyName}. */
 @SuppressWarnings("JavaDoc")
@@ -254,6 +257,53 @@ public class PropertyNameTest {
     public void starHackIsFalse() {
         PropertyName name = PropertyName.using("color");
         assertThat(name.hasStarHack()).isFalse();
+    }
+
+    @Test
+    public void copyTest() {
+        PropertyName name = PropertyName.using("*-webkit-border-radius");
+        assertThat(name.isPrefixed()).isTrue();
+        assertThat(name.hasStarHack()).isTrue();
+        name.comments(Lists.newArrayList("test"));
+
+        PropertyName copy = name.copy();
+        assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
+        assertThat(copy.prefix().get()).isEqualTo(name.prefix().get());
+        assertThat(copy.hasStarHack()).isEqualTo(name.hasStarHack());
+        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+    }
+
+    @Test
+    public void copyWithPrefixRequired() {
+        PropertyName name = PropertyName.using("border-radius");
+        name.comments(Lists.newArrayList("test"));
+        SupportMatrix support = new SupportMatrix();
+        support.browser(Browser.SAFARI, 4);
+
+        PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, support);
+        assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
+        assertThat(copy.prefix().get()).isEqualTo(Prefix.WEBKIT.toString());
+        assertThat(copy.hasStarHack()).isFalse();
+        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+    }
+
+    @Test
+    public void copyWithPrefixNotRequired() {
+        PropertyName name = PropertyName.using("border-radius");
+        name.comments(Lists.newArrayList("test"));
+        SupportMatrix support = new SupportMatrix();
+
+        PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, support);
+        assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
+        assertThat(copy.isPrefixed()).isFalse();
+        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+    }
+
+    @Test
+    public void copyUnknownProperty() {
+        PropertyName name = PropertyName.using("blah");
+        PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, new SupportMatrix());
+        assertThat(copy.name()).isEqualTo(name.name());
     }
 
     @Test

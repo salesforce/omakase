@@ -33,11 +33,17 @@ import java.util.Set;
 import static com.salesforce.omakase.data.Browser.*;
 
 /**
- * TESTME
- * <p/>
  * TODO description
  * <p/>
- * Experimental.
+ * <b>Important:</b> This is an <em>Experimental</em> plugin. Some rare and uncommon usages of prefixed values, property names,
+ * selectors or at-rules may not currently work correctly. Please check the list of what's actually supported in the readme doc ot
+ * {@code prefix-info.yaml} file. However please note, even if a prefix is supported, there may still be a few rare cases where a
+ * particular prefixable value is not automatically handled. If you are using bleeding-edge syntax or prefixable features in a
+ * non-typical way then please double check the CSS output for the proper behavior.
+ * <p/>
+ * Also note that some very old browser versions utilizing non-standard syntax may not currently be handled correctly. For
+ * example, the legacy linear-gradient syntax (which shouldn't matter, because every modern browser has supported modern
+ * linear-gradient syntax for a number of releases).
  *
  * @author nmcwilliams
  */

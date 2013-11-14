@@ -175,7 +175,6 @@ public final class TermList extends AbstractPropertyValue {
 
     @Override
     public TermList copy() {
-        // TESTME
         TermList copy = Copy.comments(this, new TermList());
         copy.important(isImportant());
         for (TermListMember member : members) {
@@ -186,7 +185,6 @@ public final class TermList extends AbstractPropertyValue {
 
     @Override
     public TermList copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        // TESTME
         TermList copy = Copy.comments(this, new TermList());
         copy.important(isImportant());
         for (TermListMember member : members) {

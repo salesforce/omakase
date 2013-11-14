@@ -224,7 +224,6 @@ public final class NumericalValue extends AbstractTerm {
 
     @Override
     public NumericalValue copy() {
-        // TESTME
         return Copy.comments(this, NumericalValue.of(raw).unit(unit.orNull()).explicitSign(explicitSign.orNull()));
     }
 

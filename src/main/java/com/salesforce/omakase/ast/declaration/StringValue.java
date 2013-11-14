@@ -32,6 +32,10 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 
 /**
  * A string value, e.g., "Times New Roman".
+ * <p/>
+ * Note that the reason a setter for quotation mode doesn't exist is that it must not be set independent of the content (which
+ * could contain incompatible), so use {@link #content(QuotationMode, String)}  (and verify the content and quotation mode are
+ * compatible) instead.
  *
  * @author nmcwilliams
  * @see StringValueParser
@@ -102,6 +106,15 @@ public final class StringValue extends AbstractTerm {
         return content;
     }
 
+    /**
+     * Gets the {@link QuotationMode}.
+     *
+     * @return The {@link QuotationMode}.
+     */
+    public QuotationMode mode() {
+        return mode;
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (mode == QuotationMode.SINGLE) {
@@ -113,7 +126,6 @@ public final class StringValue extends AbstractTerm {
 
     @Override
     public StringValue copy() {
-        // TESTME
         return Copy.comments(this, new StringValue(mode, content));
     }
 
@@ -140,5 +152,4 @@ public final class StringValue extends AbstractTerm {
     public static StringValue of(QuotationMode mode, String content) {
         return new StringValue(mode, content);
     }
-
 }

@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -94,6 +95,16 @@ public class HexColorValueTest {
         value = HexColorValue.of("a1f3f2");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(value)).isEqualTo("#a1f3f2");
+    }
+
+    @Test
+    public void copyTest() {
+        value = HexColorValue.of("#123123");
+        value.comments(Lists.newArrayList("test"));
+
+        HexColorValue copy = value.copy();
+        assertThat(copy.color()).isEqualTo(value.color());
+        assertThat(copy.comments()).hasSameSizeAs(value.comments());
     }
 
     @Test

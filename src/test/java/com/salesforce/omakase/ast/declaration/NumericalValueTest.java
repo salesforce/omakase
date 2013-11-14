@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -183,6 +184,20 @@ public class NumericalValueTest {
     public void writeValueWithLeadingZeroInDecimalFromString() {
         numerical = new NumericalValue(1, 1, "1.083");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("1.083");
+    }
+
+    @Test
+    public void copyTest() {
+        numerical = new NumericalValue(5, 5, "100");
+        numerical.unit("px");
+        numerical.explicitSign(NumericalValue.Sign.NEGATIVE);
+        numerical.comments(Lists.newArrayList("test"));
+
+        NumericalValue copy = numerical.copy();
+        assertThat(copy.value()).isEqualTo(numerical.value());
+        assertThat(copy.unit().get()).isEqualTo(numerical.unit().get());
+        assertThat(copy.explicitSign().get()).isSameAs(numerical.explicitSign().get());
+        assertThat(copy.comments()).hasSameSizeAs(numerical.comments());
     }
 
     @Test

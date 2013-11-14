@@ -18,13 +18,15 @@ package com.salesforce.omakase;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.util.Util;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Unit tests for {@link SupportMatrix}.
@@ -128,6 +130,76 @@ public class SupportMatrixTest {
         support.browser(Browser.SAFARI, 5);
         support.browser(Browser.FIREFOX, 13);
         assertThat(support.supportedBrowsers()).containsOnly(Browser.CHROME, Browser.SAFARI, Browser.FIREFOX);
+    }
+
+    @Test
+    public void prefixesForProperty() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 27);
+        support.browser(Browser.SAFARI, 4);
+        support.browser(Browser.FIREFOX, 3.6);
+        support.browser(Browser.OPERA, 15);
+        assertThat(support.prefixesForProperty(Property.BORDER_RADIUS)).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
+    public void requiresPrefixForPropertyTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 27);
+        support.browser(Browser.SAFARI, 4);
+        support.browser(Browser.FIREFOX, 3.6);
+        support.browser(Browser.OPERA, 15);
+        assertThat(support.requiresPrefixForProperty(Prefix.WEBKIT, Property.BORDER_RADIUS)).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForPropertyFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 27);
+        support.browser(Browser.SAFARI, 4);
+        support.browser(Browser.FIREFOX, 3.6);
+        support.browser(Browser.OPERA, 15);
+        assertThat(support.requiresPrefixForProperty(Prefix.MS, Property.BORDER_RADIUS)).isFalse();
+    }
+
+    @Test
+    public void requiresPrefixForUnprefixablePropertyFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 27);
+        support.browser(Browser.SAFARI, 4);
+        support.browser(Browser.FIREFOX, 3.6);
+        support.browser(Browser.OPERA, 15);
+        assertThat(support.requiresPrefixForProperty(Prefix.MS, Property.MARGIN)).isFalse();
+    }
+
+    @Test
+    public void prefixesForFunction() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.SAFARI, 7);
+        support.browser(Browser.FIREFOX, 14);
+        support.browser(Browser.OPERA, 12);
+        assertThat(support.prefixesForFunction("calc")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
+    public void requiresPrefixForFunctionTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.SAFARI, 7);
+        support.browser(Browser.FIREFOX, 14);
+        support.browser(Browser.OPERA, 12);
+        assertThat(support.requiresPrefixForFunction(Prefix.WEBKIT, "calc")).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForFunctionFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.SAFARI, 7);
+        support.browser(Browser.FIREFOX, 14);
+        support.browser(Browser.OPERA, 12);
+        assertThat(support.requiresPrefixForFunction(Prefix.O, "calc")).isFalse();
     }
 
     @Test

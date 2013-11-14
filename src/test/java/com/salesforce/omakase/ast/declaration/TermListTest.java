@@ -16,15 +16,18 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.fest.util.Iterables;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -81,7 +84,7 @@ public class TermListTest {
         tl.append(OperatorType.SPACE);
         tl.append(custom);
 
-        assertThat(tl.terms()).hasSize(1 + Iterables.sizeOf(custom.terms()));
+        assertThat(tl.terms()).hasSize(1 + Iterables.size(custom.terms()));
     }
 
     @Test
@@ -170,6 +173,35 @@ public class TermListTest {
         Declaration d = new Declaration(Property.FONT_SIZE, NumericalValue.of(1, "px"));
         tl.parentDeclaration(d);
         assertThat(tl.parentDeclaration().get()).isSameAs(d);
+    }
+
+    @Test
+    public void testCopy() {
+        TermList tl = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(0), NumericalValue.of(0));
+        tl.important(true);
+        tl.comments(Lists.newArrayList("test"));
+
+        TermList copy = tl.copy();
+        assertThat(copy.isImportant()).isTrue();
+        assertThat(copy.members()).hasSize(3);
+        assertThat(copy.comments()).hasSize(1);
+    }
+
+    @Test
+    public void testCopyWithPrefix() {
+        TermList tl = TermList.singleValue(new GenericFunctionValue("calc", "2px-1px"));
+        tl.important(true);
+        tl.comments(Lists.newArrayList("test"));
+
+        SupportMatrix support = new SupportMatrix();
+        support.browser(Browser.FIREFOX, 15);
+
+        TermList copy = tl.copyWithPrefix(Prefix.MOZ, support);
+        assertThat(copy.isImportant()).isTrue();
+        assertThat(copy.members()).hasSize(1);
+        assertThat(copy.comments()).hasSize(1);
+        TermListMember first = Iterables.get(copy.members(), 0);
+        assertThat(((GenericFunctionValue)first).name()).isEqualTo("-moz-calc");
     }
 
     @Test

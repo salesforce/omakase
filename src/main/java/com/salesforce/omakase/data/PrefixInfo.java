@@ -21,7 +21,7 @@ import com.google.common.collect.Multimap;
 import com.salesforce.omakase.BrowserVersion;
 
 /**
- * TESTME Contains the last version of a browser that requires a prefix for various CSS properties.
+ * Contains the last version of a browser that requires a prefix for various CSS properties.
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>

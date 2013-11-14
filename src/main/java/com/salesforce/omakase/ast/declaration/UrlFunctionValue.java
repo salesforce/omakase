@@ -142,8 +142,7 @@ public final class UrlFunctionValue extends AbstractTerm {
     }
 
     @Override
-    public TermListMember copy() {
-        // TESTME
+    public UrlFunctionValue copy() {
         return Copy.comments(this, new UrlFunctionValue(url).quotationMode(quotationMode.orNull()));
     }
 

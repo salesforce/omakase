@@ -16,6 +16,10 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
@@ -24,7 +28,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /** Unit tests for {@link GenericFunctionValue}. */
 @SuppressWarnings("JavaDoc")
@@ -88,6 +92,42 @@ public class GenericFunctionValueTest {
     public void writeEmptyArgs() throws IOException {
         value = new GenericFunctionValue("xyz", "");
         assertThat(StyleWriter.verbose().writeSnippet(value)).isEqualTo("xyz()");
+    }
+
+    @Test
+    public void copy() {
+        value = new GenericFunctionValue("test", "args");
+        value.comments(Lists.newArrayList("test"));
+
+        GenericFunctionValue copy = value.copy();
+        assertThat(copy.name()).isEqualTo("test");
+        assertThat(copy.args()).isEqualTo("args");
+        assertThat(copy.comments()).hasSameSizeAs(value.comments());
+    }
+
+    @Test
+    public void copyWithPrefixMatch() {
+        SupportMatrix support = new SupportMatrix();
+        support.browser(Browser.CHROME, 19);
+        value = new GenericFunctionValue("calc", "2px-1px");
+        value.comments(Lists.newArrayList("test"));
+
+        GenericFunctionValue copy = value.copyWithPrefix(Prefix.WEBKIT, support);
+        assertThat(copy.name()).isEqualTo("-webkit-calc");
+        assertThat(copy.args()).isEqualTo("2px-1px");
+        assertThat(copy.comments()).hasSameSizeAs(value.comments());
+    }
+
+    @Test
+    public void copyWithPrefixDoesntMatch() {
+        SupportMatrix support = new SupportMatrix();
+        value = new GenericFunctionValue("calc", "2px-1px");
+        value.comments(Lists.newArrayList("test"));
+
+        GenericFunctionValue copy = value.copyWithPrefix(Prefix.WEBKIT, support);
+        assertThat(copy.name()).isEqualTo("calc");
+        assertThat(copy.args()).isEqualTo("2px-1px");
+        assertThat(copy.comments()).hasSameSizeAs(value.comments());
     }
 
     @Test

@@ -115,7 +115,6 @@ public final class HexColorValue extends AbstractTerm {
 
     @Override
     public HexColorValue copy() {
-        // TESTME
         return Copy.comments(this, new HexColorValue(color));
     }
 
