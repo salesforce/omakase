@@ -213,7 +213,7 @@ public final class SupportMatrix {
             if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
         }
 
-        return required;
+        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
     }
 
     /**
@@ -233,7 +233,7 @@ public final class SupportMatrix {
             if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
         }
 
-        return required;
+        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
     }
 
     /**

@@ -17,7 +17,7 @@
 package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.PropertyName;
@@ -25,7 +25,7 @@ import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.data.Prefix;
 
-import java.util.Set;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -100,7 +100,7 @@ public final class Declarations {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
-        Set<Declaration> matches = Sets.newHashSet();
+        List<Declaration> matches = Lists.newArrayList();
 
         for (Declaration d : unprefixed.group().get()) {
             if (d.isPrefixed() && d.isPropertyIgnorePrefix(unprefixed.propertyName())) matches.add(d);

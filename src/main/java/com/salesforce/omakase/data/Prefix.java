@@ -27,14 +27,14 @@ package com.salesforce.omakase.data;
  */
 @SuppressWarnings("UnusedDeclaration")
 public enum Prefix {
+    /** prefix '-webkit-' */
+    WEBKIT("-webkit-"),
+
     /** prefix '-moz-' */
     MOZ("-moz-"),
 
     /** prefix '-ms-' */
     MS("-ms-"),
-
-    /** prefix '-webkit-' */
-    WEBKIT("-webkit-"),
 
     /** prefix '-o-' */
     O("-o-"),

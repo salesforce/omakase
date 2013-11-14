@@ -28,6 +28,7 @@ import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.util.Actions;
 import com.salesforce.omakase.util.Declarations;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import static com.salesforce.omakase.data.Browser.*;
@@ -109,22 +110,41 @@ public final class Prefixer implements Plugin {
         // check if we have prefix info on the property
         if (!PrefixInfo.hasProperty(property.get())) return;
 
-        // check supported browsers for a required prefix
+        // gather all required prefixes
         Set<Prefix> required = support.prefixesForProperty(property.get());
-        if (required.isEmpty()) {
-            // no required prefixes, so remove unnecessary prefixed declarations if allowed
-            if (remove) Declarations.apply(Declarations.prefixedEquivalents(declaration), Actions.DETACH);
-        } else {
-            // add all required prefixes
-            for (Prefix prefix : required) {
-                Optional<Declaration> prefixed = Declarations.prefixedEquivalent(declaration, prefix);
-                if (prefixed.isPresent()) {
-                    // prefixed version already present, so move it before the unprefixed one if allowed
-                    if (rearrange) declaration.group().get().moveBefore(declaration, prefixed.get());
-                } else {
-                    // prefixed version wasn't found, so create and add it
-                    declaration.prepend(declaration.copyWithPrefix(prefix, support));
+
+        // find all prefixed declarations in the rule for the same property
+        Iterable<Declaration> equivalents = Declarations.prefixedEquivalents(declaration);
+
+        for (Prefix prefix : required) {
+            // check if we already have the prefixed version
+
+            boolean present = false;
+
+            Iterator<Declaration> iterator = equivalents.iterator();
+            while (iterator.hasNext()) {
+                Declaration equivalent = iterator.next();
+
+                if (equivalent.propertyName().hasPrefix(prefix)) {
+                    // prefixed version already present
+                    if (rearrange) declaration.group().get().moveBefore(declaration, equivalent);
+                    iterator.remove();
+                    present = true;
                 }
+            }
+
+            // if not present the add it
+            if (!present) {
+                declaration.prepend(declaration.copyWithPrefix(prefix, support));
+            }
+        }
+
+        // any left over equivalents are unnecessary. remove or rearrange them if allowed
+        if (remove) {
+            Declarations.apply(equivalents, Actions.DETACH);
+        } else if (rearrange) {
+            for (Declaration equivalent : equivalents) {
+                declaration.group().get().moveBefore(declaration, equivalent);
             }
         }
     }
