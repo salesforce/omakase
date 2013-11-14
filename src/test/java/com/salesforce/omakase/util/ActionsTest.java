@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.util;
 
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -37,9 +38,7 @@ public class ActionsTest {
         rule.selectors().append(selector);
 
         assertThat(selector.isDetached()).isFalse();
-
-        Actions.DETACH.apply(selector);
-
+        Actions.detach().apply(Lists.newArrayList(selector));
         assertThat(selector.isDetached()).isTrue();
     }
 }

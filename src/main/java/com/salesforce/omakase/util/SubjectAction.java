@@ -23,14 +23,15 @@ package com.salesforce.omakase.util;
  *     Type of objects this {@link Action} works on.
  *
  * @author nmcwilliams
- * @see Actions
  */
-public interface Action<T> {
+public interface SubjectAction<T> {
     /**
-     * Applies the action to the given instances.
+     * Apply this action for the given subject on the given instances.
      *
+     * @param subject
+     *     The main subject of the action.
      * @param instances
-     *     Apply the action to these instances.
+     *     Apply the action on these instances.
      */
-    void apply(Iterable<? extends T> instances);
+    void apply(T subject, Iterable<T> instances);
 }

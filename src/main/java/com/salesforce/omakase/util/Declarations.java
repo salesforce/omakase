@@ -40,38 +40,6 @@ public final class Declarations {
     private Declarations() {}
 
     /**
-     * Finds the first {@link Declaration} within the same rule that has the same property name as the given declaration, but also
-     * has the given {@link Prefix}.
-     * <p/>
-     * For example, if the given declaration has a property name of {@code border-radius} and the given prefix is {@link
-     * Prefix#WEBKIT}, this will find the first declaration with a property name of {@code -webkit-border-radius}. Note that
-     * searching begins at the beginning of the rule.
-     *
-     * @param unprefixed
-     *     Find the first prefixed equivalent of this {@link Declaration}.
-     * @param prefix
-     *     The {@link Prefix} that the equivalent must have.
-     *
-     * @return The first prefixed equivalent {@link Declaration} within the same rule, or {@link Optional#absent()} if none are
-     *         found.
-     *
-     * @throws IllegalArgumentException
-     *     If the given declaration is detached or is prefixed itself.
-     */
-    public static Optional<Declaration> prefixedEquivalent(Declaration unprefixed, Prefix prefix) {
-        checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
-        checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
-
-        for (Declaration d : unprefixed.group().get()) {
-            if (d.propertyName().hasPrefix(prefix) && d.isPropertyIgnorePrefix(unprefixed.propertyName())) {
-                return Optional.of(d);
-            }
-        }
-
-        return Optional.absent();
-    }
-
-    /**
      * Finds all {@link Declaration}s within the same rule that have the same property name as the given declaration and also have
      * a vendor prefix.
      * <p/>
@@ -160,22 +128,5 @@ public final class Declarations {
             }
         }
         return Optional.absent();
-    }
-
-    /**
-     * Applies an {@link Action} on each of the given {@link Declaration} instances.
-     * <p/>
-     * Example:
-     * <pre><code>
-     * Declarations.apply(myDeclarations, Actions.DETACH);
-     * </code></pre>
-     *
-     * @param declarations
-     *     Apply the {@link Action} on each of these declarations.
-     * @param action
-     *     The {@link Action} to apply.
-     */
-    public static void apply(Iterable<Declaration> declarations, Action<? super Declaration> action) {
-        for (Declaration declaration : declarations) action.apply(declaration);
     }
 }

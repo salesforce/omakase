@@ -141,11 +141,9 @@ public final class Prefixer implements Plugin {
 
         // any left over equivalents are unnecessary. remove or rearrange them if allowed
         if (remove) {
-            Declarations.apply(equivalents, Actions.DETACH);
+            Actions.detach().apply(equivalents);
         } else if (rearrange) {
-            for (Declaration equivalent : equivalents) {
-                declaration.group().get().moveBefore(declaration, equivalent);
-            }
+            Actions.<Declaration>moveBefore().apply(declaration, equivalents);
         }
     }
 
