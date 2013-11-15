@@ -99,4 +99,50 @@ public class PrefixerTargetedTest {
         Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    private Prefixer transformSetup() {
+        return Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 15));
+    }
+
+    @Test
+    public void transform() {
+        String original = ".test {transform:translateX(2em)}";
+        String expected = ".test {-moz-transform:translateX(2em); transform:translateX(2em)}";
+        assertThat(process(original, transformSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void transformStyle() {
+        String original = ".test {transform-style:flat}";
+        String expected = ".test {-moz-transform-style:flat; transform-style:flat}";
+        assertThat(process(original, transformSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void transformOrigin() {
+        String original = ".test {transform-origin:100% 100%;}";
+        String expected = ".test {-moz-transform-origin:100% 100%; transform-origin:100% 100%}";
+        assertThat(process(original, transformSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void perspective() {
+        String original = ".test {perspective:none}";
+        String expected = ".test {-moz-perspective:none; perspective:none}";
+        assertThat(process(original, transformSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void perspectiveOrigin() {
+        String original = ".test {perspective-origin:left}";
+        String expected = ".test {-moz-perspective-origin:left; perspective-origin:left}";
+        assertThat(process(original, transformSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void backfaceVisibility() {
+        String original = ".test {backface-visibility:visible}";
+        String expected = ".test {-moz-backface-visibility:visible; backface-visibility:visible}";
+        assertThat(process(original, transformSetup())).isEqualTo(expected);
+    }
 }

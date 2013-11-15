@@ -26,11 +26,15 @@ properties:
 #    - transition-delay
 #    - transition-timing-function
 
-#  transforms2d:
-#    - transform
-#    - transform-origin
-#    - transform-style
-#    - backface-visibility
+  transforms2d:
+    - transform
+    - transform-origin
+    - transform-style
+
+  transforms3d:
+    - perspective
+    - perspective-origin
+    - backface-visibility
 
   css3-boxsizing:
     - box-sizing
