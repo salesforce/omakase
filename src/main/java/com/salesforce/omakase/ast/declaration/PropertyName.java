@@ -24,12 +24,14 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.util.Copy;
+import com.salesforce.omakase.util.Prefixes;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.util.Prefixes.PrefixPair;
 
 /**
  * The property name within a {@link Declaration}.
@@ -45,7 +47,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     private static final char STAR = '*';
 
     private final String name;
-    private Optional<String> prefix;
+    private Optional<Prefix> prefix;
     private boolean starHack;
 
     /** private -- use a constructor method for new instances */
@@ -60,11 +62,11 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
         }
 
         if (name.charAt(0) == '-') {
-            int end = name.indexOf("-", 1);
-            this.prefix = Optional.of(name.substring(0, end + 1));
-            this.name = name.substring(end + 1);
+            PrefixPair pair = Prefixes.splitPrefix(name);
+            this.prefix = pair.prefix();
+            this.name = pair.unprefixed();
         } else {
-            prefix = Optional.absent();
+            this.prefix = Optional.absent();
             this.name = name;
         }
     }
@@ -105,7 +107,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
      * @return True if this {@link PropertyName} has the given {@link Prefix}.
      */
     public boolean hasPrefix(Prefix prefix) {
-        return this.prefix.isPresent() && this.prefix.get().equals(prefix.toString());
+        return this.prefix.isPresent() && this.prefix.get() == prefix;
     }
 
     /**
@@ -113,7 +115,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
      *
      * @return The prefix, or {@link Optional#absent()} if no prefix exists.
      */
-    public Optional<String> prefix() {
+    public Optional<Prefix> prefix() {
         return prefix;
     }
 
@@ -126,8 +128,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
      * @return this, for chaining.
      */
     public PropertyName prefix(Prefix prefix) {
-        checkNotNull(prefix, "prefix cannot be null (use #removePrefix instead)");
-        this.prefix = Optional.of(prefix.toString());
+        this.prefix = Optional.fromNullable(prefix);
         return this;
     }
 

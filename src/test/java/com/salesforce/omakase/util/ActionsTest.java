@@ -22,6 +22,8 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
@@ -40,5 +42,35 @@ public class ActionsTest {
         assertThat(selector.isDetached()).isFalse();
         Actions.detach().apply(Lists.newArrayList(selector));
         assertThat(selector.isDetached()).isTrue();
+    }
+
+    @Test
+    public void moveBefore() {
+        Rule rule = new Rule();
+        Selector s1 = new Selector(new ClassSelector("test1"));
+        Selector s2 = new Selector(new ClassSelector("test2"));
+        Selector s3 = new Selector(new ClassSelector("test3"));
+        Selector s4 = new Selector(new ClassSelector("test4"));
+        rule.selectors().append(s1).append(s2).append(s3).append(s4);
+
+        List<Selector> toMove = Lists.newArrayList(s2, s3);
+        Actions.<Selector>moveBefore().apply(s1, toMove);
+
+        assertThat(rule.selectors()).containsExactly(s2, s3, s1, s4);
+    }
+
+    @Test
+    public void moveAfter() {
+        Rule rule = new Rule();
+        Selector s1 = new Selector(new ClassSelector("test1"));
+        Selector s2 = new Selector(new ClassSelector("test2"));
+        Selector s3 = new Selector(new ClassSelector("test3"));
+        Selector s4 = new Selector(new ClassSelector("test4"));
+        rule.selectors().append(s1).append(s2).append(s3).append(s4);
+
+        List<Selector> toMove = Lists.newArrayList(s1, s2);
+        Actions.<Selector>moveAfter().apply(s4, toMove);
+
+        assertThat(rule.selectors()).containsExactly(s3, s4, s1, s2);
     }
 }

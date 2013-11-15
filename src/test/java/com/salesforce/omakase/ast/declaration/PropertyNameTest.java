@@ -35,7 +35,7 @@ import static org.fest.assertions.api.Assertions.*;
 /** Unit tests for {@link PropertyName}. */
 @SuppressWarnings("JavaDoc")
 public class PropertyNameTest {
-    private static final String PREFIX = "-webkit-";
+    private static final Prefix PREFIX = Prefix.WEBKIT;
     private static final String NAME = "border-radius";
     private static final String STARHACK_NAME = "*color";
 
@@ -82,7 +82,7 @@ public class PropertyNameTest {
 
     @Test
     public void prefixPresent() {
-        assertThat(prefixed.prefix().get()).isEqualTo(PREFIX);
+        assertThat(prefixed.prefix().get()).isSameAs(PREFIX);
     }
 
     @Test
@@ -92,8 +92,8 @@ public class PropertyNameTest {
 
     @Test
     public void setsPrefixWhenPreviouslyUnset() {
-        unprefixed.prefix(Prefix.WEBKIT);
-        assertThat(prefixed.prefix().get()).isEqualTo(Prefix.WEBKIT.toString());
+        unprefixed.prefix(Prefix.MOZ);
+        assertThat(unprefixed.prefix().get()).isSameAs(Prefix.MOZ);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class PropertyNameTest {
 
         PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, support);
         assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
-        assertThat(copy.prefix().get()).isEqualTo(Prefix.WEBKIT.toString());
+        assertThat(copy.prefix().get()).isSameAs(Prefix.WEBKIT);
         assertThat(copy.hasStarHack()).isFalse();
         assertThat(copy.comments()).hasSameSizeAs(name.comments());
     }

@@ -17,15 +17,14 @@
 package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
-import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.data.Prefix;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -59,28 +58,30 @@ public final class Declarations {
      * @param unprefixed
      *     Find other declarations that are prefixed equivalents of this one.
      *
-     * @return All found prefixed equivalents, or an empty collection if none are found.
+     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
      *
      * @throws IllegalArgumentException
      *     If the given declaration is detached or is prefixed itself.
      */
-    public static Iterable<Declaration> prefixedEquivalents(Declaration unprefixed) {
+    public static Multimap<Prefix, Declaration> prefixedEquivalents(Declaration unprefixed) {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
-        List<Declaration> matches = Lists.newArrayList();
+        Multimap<Prefix, Declaration> multimap = null;
 
-        for (Declaration d : unprefixed.group().get()) {
-            if (d.isPrefixed() && d.isPropertyIgnorePrefix(unprefixed.propertyName())) matches.add(d);
+        for (Declaration declaration : unprefixed.group().get()) {
+            if (declaration.isPrefixed() && declaration.isPropertyIgnorePrefix(unprefixed.propertyName())) {
+                if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                multimap.put(declaration.propertyName().prefix().get(), declaration);
+            }
         }
 
-        return matches;
+        return multimap == null ? ImmutableMultimap.<Prefix, Declaration>of() : multimap;
     }
 
     /**
-     * Finds the first {@link Declaration} within the same rule that contains a prefixed function with the given {@link Prefix}
-     * and functionName. The property name of the declaration must be the same, and if it has a prefix it must be the prefix that
-     * is given.
+     * Finds all {@link Declaration}s within the same rule that contains a prefixed version of the given function name. The
+     * property name of the declaration must be the same.
      * <p/>
      * For example, given the following css:
      * <pre><code>
@@ -90,43 +91,46 @@ public final class Declarations {
      *      width: calc(2px - 1px);
      *  }
      * </code></pre>
-     * When given the last declaration in the rule, the {@link Prefix#WEBKIT} prefix, and a functionName of "calc", this will
-     * return the first declaration, which contains the {@code -webkit-calc} function. If the first declaration had a property
-     * name of {@code -webkit-width} it would also match, however if the first declaration had a property name of {@code
-     * -moz-width} or {@code height} it would not match.
+     * When given the last declaration in the rule and a functionName of "calc", this will return the first declaration, which
+     * contains the {@code -webkit-calc} function.
      *
      * @param unprefixed
      *     Match against this {@link Declaration}.
-     * @param prefix
-     *     The prefix the function name must have, and the property name may optionally have.
      * @param functionName
      *     The name of the function, e.g., "linear-gradient".
      *
-     * @return The first found matching {@link Declaration}, or {@link Optional#absent()} if none are found.
+     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
      *
      * @throws IllegalArgumentException
      *     If the given declaration is detached or is prefixed itself.
      */
-    public static Optional<Declaration> prefixedFunctionEquivalent(Declaration unprefixed, Prefix prefix, String functionName) {
+    public static Multimap<Prefix, Declaration> prefixedFunctionEquivalents(Declaration unprefixed, String functionName) {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
-        String expectedName = prefix + functionName;
+        Multimap<Prefix, Declaration> multimap = null;
 
         for (Declaration declaration : unprefixed.group().get()) {
-            // property must have the same unprefixed name, and if it is prefixed it must be the expected prefix
-            PropertyName name = declaration.propertyName();
-            if (name.matchesIgnorePrefix(unprefixed.propertyName()) && (!name.isPrefixed() || name.hasPrefix(prefix))) {
+            // property must have the same name
+            if (declaration.isProperty(unprefixed.propertyName())) {
                 Optional<TermList> termList = Values.asTermList(declaration.propertyValue());
                 if (termList.isPresent()) {
                     for (TermListMember member : termList.get().members()) {
                         if (member instanceof FunctionValue) {
-                            if (((FunctionValue)member).name().equals(expectedName)) return Optional.of(declaration);
+                            String name = ((FunctionValue)member).name();
+                            if (name.startsWith("-") && name.endsWith(functionName)) {
+                                Optional<Prefix> prefix = Prefixes.parsePrefix(name);
+                                if (prefix.isPresent()) {
+                                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                                    multimap.put(prefix.get(), declaration);
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
-        return Optional.absent();
+        } //pyramid of dooooom
+
+        return multimap == null ? ImmutableMultimap.<Prefix, Declaration>of() : multimap;
     }
 }

@@ -29,24 +29,15 @@ import java.util.List;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link Prefixer}.
+ * Functional tests for {@link Prefixer} property replacements.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class PrefixerTest {
-    // BASIC UNIT TESTS
-
-    @Test
-    public void customShouldNotSupportAnythingByDefault() {
-        assertThat(Prefixer.customBrowserSupport().support().supportedBrowsers()).isEmpty();
-    }
-
-    // FUNCTIONAL TESTS
-
+public class PrefixerPropertyTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
-        Omakase.source(original).request(new AutoRefiner()).request(writer).request(prefixer).process();
+        Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
         return writer.write();
     }
 
@@ -82,23 +73,23 @@ public class PrefixerTest {
         assertThat(process(original, setup(Prefix.MOZ, Prefix.WEBKIT))).isEqualTo(expected);
     }
 
-    // required, present, rearrange true (move)
+    // required, some present, rearrange true (move/add)
     @Test
     public void prefixPropertyTest3() {
         String original = ".test { border-radius:2px; -moz-border-radius:3px; color:red }";
         String expected = ".test {-webkit-border-radius:2px; -moz-border-radius:3px; border-radius:2px; color:red}";
 
-        Prefixer prefixer = setup(Prefix.MOZ, Prefix.WEBKIT).rearrangeIfPresent(true);
+        Prefixer prefixer = setup(Prefix.MOZ, Prefix.WEBKIT).rearrange(true);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
-    // required, present, rearrange false (leave)
+    // required, some present, rearrange false (leave/add)
     @Test
     public void prefixPropertyTest4() {
         String original = ".test { border-radius:2px; -moz-border-radius:3px; color:red }";
         String expected = ".test {-webkit-border-radius:2px; border-radius:2px; -moz-border-radius:3px; color:red}";
 
-        Prefixer prefixer = setup(Prefix.MOZ, Prefix.WEBKIT).rearrangeIfPresent(false);
+        Prefixer prefixer = setup(Prefix.MOZ, Prefix.WEBKIT).rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
@@ -116,7 +107,7 @@ public class PrefixerTest {
         String original = ".test {-webkit-border-radius:3px; -moz-border-radius:1px; -o-border-radius:2; border-radius:2px}";
         String expected = ".test {border-radius:2px}";
 
-        Prefixer prefixer = setup().removeUnnecessary(true);
+        Prefixer prefixer = setup().prune(true);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
@@ -126,47 +117,57 @@ public class PrefixerTest {
         String original = ".test {-webkit-border-radius:3px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2px}";
         String expected = ".test {-webkit-border-radius:3px; -moz-border-radius:1px; -o-border-radius:2px; border-radius:2px}";
 
-        Prefixer prefixer = setup().removeUnnecessary(false).rearrangeIfPresent(true);
+        Prefixer prefixer = setup().prune(false).rearrange(true);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
-    // not required, present, remove false, rearrange false (leave)
+    // not required, present, remove false, rearrange false (noop)
     @Test
     public void prefixPropertyTest8() {
-        String original = ".test {-webkit-border-radius:3px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2}";
-        String expected = ".test {-webkit-border-radius:3px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2}";
+        String original = ".test {-webkit-border-radius:3px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2px}";
+        String expected = ".test {-webkit-border-radius:3px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2px}";
 
-        Prefixer prefixer = setup().removeUnnecessary(false).rearrangeIfPresent(false);
+        Prefixer prefixer = setup().prune(false).rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
-    // hodgepodge (add/leave/remove)
+    // some required, some present, remove true, rearrange true (move/remove)
     @Test
     public void prefixPropertyTest9() {
-        String original = ".test {-ms-border-radius: 1px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2}";
+        String original = ".test {-ms-border-radius: 1px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2px}";
         String expected = ".test {-moz-border-radius:1px; border-radius:2px}";
 
-        Prefixer prefixer = setup(Prefix.MOZ).removeUnnecessary(true).rearrangeIfPresent(true);
+        Prefixer prefixer = setup(Prefix.MOZ).prune(true).rearrange(true);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
-    // hodgepodge2 (add/leave/remove)
+    // some required, some present, remove true, rearrange true (add/move/remove)
     @Test
     public void prefixPropertyTest10() {
-        String original = ".test {-ms-border-radius:1px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2}";
+        String original = ".test {-ms-border-radius:1px; border-radius:2px; -moz-border-radius:1px; -o-border-radius:2px}";
         String expected = ".test {-webkit-border-radius:2px; -moz-border-radius:1px; border-radius:2px}";
 
-        Prefixer prefixer = setup(Prefix.MOZ, Prefix.WEBKIT).removeUnnecessary(true).rearrangeIfPresent(true);
+        Prefixer prefixer = setup(Prefix.MOZ, Prefix.WEBKIT).prune(true).rearrange(true);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
-    /** TODO border-top-right-radius */
+    // required, multiple present, rearrange true (move)
+    @Test
+    public void prefixPropertyTest11() {
+        String original = ".test {border-radius:2px; -moz-border-radius:3px; -moz-border-radius: 2px; color:red}";
+        String expected = ".test {-moz-border-radius:3px; -moz-border-radius:2px; border-radius:2px; color:red}";
 
-    /** TODO border-top-left-radius */
+        Prefixer prefixer = setup(Prefix.MOZ).rearrange(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 
-    /** TODO border-bottom-right-radius */
+    // required, multiple present, remove true (remove)
+    @Test
+    public void prefixPropertyTest12() {
+        String original = ".test {border-radius:2px; -moz-border-radius:3px; -moz-border-radius: 2px; color:red}";
+        String expected = ".test {border-radius:2px; color:red}";
 
-    /** TODO border-bottom-left-radius */
-
-    /** TODO calc */
+        Prefixer prefixer = setup().prune(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

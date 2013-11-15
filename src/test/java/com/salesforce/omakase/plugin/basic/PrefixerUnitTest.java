@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.util;
+package com.salesforce.omakase.plugin.basic;
+
+import org.junit.Test;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * An action that can be applied to instances of specified type.
- *
- * @param <T>
- *     Type of objects this {@link Action} works on.
+ * Unit tests for {@link Prefixer}.
  *
  * @author nmcwilliams
  */
-public interface SubjectAction<T> {
-    /**
-     * Apply this action for the given subject on the given instances.
-     *
-     * @param subject
-     *     The main subject of the action.
-     * @param instances
-     *     Apply the action on these instances.
-     */
-    void apply(T subject, Iterable<T> instances);
+@SuppressWarnings("JavaDoc")
+public class PrefixerUnitTest {
+    @Test
+    public void customShouldNotSupportAnythingByDefault() {
+        assertThat(Prefixer.customBrowserSupport().support().supportedBrowsers()).isEmpty();
+    }
 }

@@ -39,6 +39,9 @@ public enum Prefix {
     /** prefix '-o-' */
     O("-o-"),
 
+    /** prefix '-khtml-' */
+    KHTML("-khtml-"),
+
     ;
 
     private final String prefix;

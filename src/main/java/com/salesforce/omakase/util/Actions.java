@@ -17,6 +17,7 @@
 package com.salesforce.omakase.util;
 
 import com.salesforce.omakase.ast.collection.Groupable;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -45,49 +46,51 @@ public final class Actions {
     };
 
     /**
-     * TESTME
-     * <p/>
-     * Gets a {@link SubjectAction} that will move a collection of instances before a given subject.
+     * Gets a {@link ActionWithSubject} that will move a collection of instances before a given subject.
      *
      * @param <T>
      *     The type of the instances.
      *
-     * @return The {@link SubjectAction} instance.
+     * @return The {@link ActionWithSubject} instance.
      */
-    public static <T extends Groupable<?, T>> SubjectAction<T> moveBefore() {
+    public static <T extends Groupable<?, T>> ActionWithSubject<T> moveBefore() {
         return new MoveBefore<T>();
     }
 
-    private static class MoveBefore<T extends Groupable<?, T>> implements SubjectAction<T> {
+    private static class MoveBefore<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
         public void apply(T subject, Iterable<T> instances) {
+            checkArgument(!subject.isDetached(), "subject cannot be detached");
+
+            SyntaxCollection<?, T> collection = subject.group().get();
             for (T instance : instances) {
-                checkArgument(!subject.isDetached(), "subject cannot be detached");
-                subject.group().get().moveBefore(subject, instance);
+                collection.moveBefore(subject, instance);
             }
         }
     }
 
     /**
-     * TESTME
-     * <p/>
-     * Gets a {@link SubjectAction} that will move a collection of instances after a given subject.
+     * Gets a {@link ActionWithSubject} that will move a collection of instances after a given subject.
      *
      * @param <T>
      *     The type of the instances.
      *
-     * @return The {@link SubjectAction} instance.
+     * @return The {@link ActionWithSubject} instance.
      */
-    public static <T extends Groupable<?, T>> SubjectAction<T> moveAfter() {
+    public static <T extends Groupable<?, T>> ActionWithSubject<T> moveAfter() {
         return new MoveAfter<T>();
     }
 
-    private static class MoveAfter<T extends Groupable<?, T>> implements SubjectAction<T> {
+    private static class MoveAfter<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
         public void apply(T subject, Iterable<T> instances) {
+            checkArgument(!subject.isDetached(), "subject cannot be detached");
+
+            SyntaxCollection<?, T> collection = subject.group().get();
+            T index = subject;
             for (T instance : instances) {
-                checkArgument(!subject.isDetached(), "subject cannot be detached");
-                subject.group().get().moveAfter(subject, instance);
+                collection.moveAfter(index, instance);
+                index = instance; // maintain order
             }
         }
     }

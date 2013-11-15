@@ -43,8 +43,8 @@ public final class Debug {
         StyleWriter writer = StyleWriter.verbose();
 
         Prefixer prefixer = Prefixer.defaultBrowserSupport();
-        prefixer.removeUnnecessary(true);
-        prefixer.rearrangeIfPresent(true);
+        prefixer.prune(true);
+        prefixer.rearrange(true);
         prefixer.support().browser(Browser.SAFARI, 4);
         prefixer.support().browser(Browser.FIREFOX, 3.6);
         prefixer.support().browser(Browser.CHROME, 24);
