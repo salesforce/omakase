@@ -19,12 +19,12 @@ properties:
 #    - animation-play-state
 #    - animation-timing-function
 
-#  css-transitions:
-#    - transition
-#    - transition-property
-#    - transition-duration
-#    - transition-delay
-#    - transition-timing-function
+  css-transitions:
+    - transition
+    - transition-property
+    - transition-duration
+    - transition-delay
+    - transition-timing-function
 
   transforms2d:
     - transform

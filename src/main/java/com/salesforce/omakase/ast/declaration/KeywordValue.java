@@ -141,11 +141,12 @@ public final class KeywordValue extends AbstractTerm {
         if (this.isDetached()) return copy();
 
         // if we aren't linked to the parent declaration, we can't check if the property is "transition"
-        Optional<Declaration> declaration = this.group().get().parent().parentDeclaration();
-        if (!declaration.isPresent()) return copy();
+        Optional<Declaration> parent = this.group().get().parent().parentDeclaration();
+        if (!parent.isPresent()) return copy();
+        Declaration declaration = parent.get();
 
-        // if this isn't for the "transition" property then a regular copy will suffice
-        if (!declaration.get().isProperty(Property.TRANSITION)) return copy();
+        // if this isn't for the "transition" or "transition-property" properties then a regular copy will suffice
+        if (!declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) return copy();
 
         // check if this keyword is a recognizable property
         Property property = Property.lookup(keyword);

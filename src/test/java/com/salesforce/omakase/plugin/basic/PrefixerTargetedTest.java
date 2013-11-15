@@ -145,4 +145,59 @@ public class PrefixerTargetedTest {
         String expected = ".test {-moz-backface-visibility:visible; backface-visibility:visible}";
         assertThat(process(original, transformSetup())).isEqualTo(expected);
     }
+
+    private Prefixer transitionSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 15);// for transition and transform
+        prefixer.support().browser(Browser.FIREFOX, 3.6); // for border-radius
+        return prefixer;
+    }
+
+    @Test
+    public void transition() {
+        String original = ".test {transition:width 1s,height 1s}";
+        String expected = ".test {-moz-transition:width 1s,height 1s; transition:width 1s,height 1s}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void transitionWithPrefixableProps() {
+        String original = ".test {transition:width 1s,border-radius 2px,transform 1s}";
+        String expected = ".test {-moz-transition:width 1s,-moz-border-radius 2px,-moz-transform 1s; transition:width 1s,border-radius 2px,transform 1s}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void transitionNotPrefixedButValueIs() {
+        String original = ".test {transition:width 1s,transform 1s}";
+        String expected = ".test {transition:width 1s,-webkit-transform 1s; transition:width 1s,transform 1s}";
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.CHROME, 30); // chrome 30 has transform prefixed but not transition
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void transitionProperty() {
+        fail("unimplemented");
+    }
+
+    @Test
+    public void transitionPropertyWithPrefixibleProps() {
+        fail("unimplemented");
+    }
+
+    @Test
+    public void transitionDuration() {
+        fail("unimplemented");
+    }
+
+    @Test
+    public void transitionDelay() {
+        fail("unimplemented");
+    }
+
+    @Test
+    public void transitionTimingFunction() {
+        fail("unimplemented");
+    }
 }
