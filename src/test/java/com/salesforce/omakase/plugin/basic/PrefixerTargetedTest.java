@@ -76,25 +76,27 @@ public class PrefixerTargetedTest {
         assertThat(process(original, borderRadiusSetup())).isEqualTo(expected);
     }
 
-    private Prefixer calcSetup() {
-        return Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 15));
-    }
-
     @Test
     public void calc() {
         String original = ".test {width:calc(100% - 80px)}";
         String expected = ".test {width:-moz-calc(100% - 80px); width:calc(100% - 80px)}";
-        assertThat(process(original, calcSetup())).isEqualTo(expected);
-    }
-
-    private Prefixer boxShadowSetup() {
-        return Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 3.6));
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 15));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
     @Test
     public void boxShadow() {
         String original = ".test {box-shadow:0 8px 6px -6px black}";
         String expected = ".test {-moz-box-shadow:0 8px 6px -6px black; box-shadow:0 8px 6px -6px black}";
-        assertThat(process(original, boxShadowSetup())).isEqualTo(expected);
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 3.6));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void boxSizing() {
+        String original = ".test {box-sizing:border-box}";
+        String expected = ".test {-moz-box-sizing:border-box; box-sizing:border-box}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 }

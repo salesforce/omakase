@@ -32,8 +32,8 @@ properties:
 #    - transform-style
 #    - backface-visibility
 
-#  css3-boxsizing:
-#    - box-sizing
+  css3-boxsizing:
+    - box-sizing
 
 #  multicolumn:
 #    - columns
