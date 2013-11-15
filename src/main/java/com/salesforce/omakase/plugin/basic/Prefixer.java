@@ -65,9 +65,9 @@ import static com.salesforce.omakase.plugin.basic.PrefixerSteps.*;
  * Also note that some very old browser versions utilizing non-standard syntax may not currently be handled correctly. For
  * example, the legacy linear-gradient syntax is not currently handled because several browser versions have passed since it was
  * last used.
- *
+ * <p/>
  * Example usage:
- *
+ * <p/>
  * <pre><code>
  *     Prefixer prefixing = Prefixer.customBrowserSupport();
  *     prefixing.support().last(Browser.FIREFOX, 3);
@@ -77,9 +77,9 @@ import static com.salesforce.omakase.plugin.basic.PrefixerSteps.*;
  *     prefixing.support().browser(Browser.IE, 10);
  *     prefixing.prune(true);
  *     prefixing.rearrange(true);
- *
+ * <p/>
  *     AutoRefiner refinement = new AutoRefiner().all();
- *
+ * <p/>
  *     Omakase.source(cssSource).request(refinement).request(prefixing).process();
  * </code></pre>
  *
@@ -131,6 +131,17 @@ public final class Prefixer implements Plugin {
     }
 
     /**
+     * TESTME
+     * <p/>
+     * Gets whether prefixed declarations can be rearranged.
+     *
+     * @return True if prefixed declarations can be rearrange.
+     */
+    public boolean rearrange() {
+        return rearrange;
+    }
+
+    /**
      * Whether we should remove prefixed declarations/at-rules if they are not required for the supported browser versions.
      * Default is false.
      * <p/>
@@ -144,6 +155,17 @@ public final class Prefixer implements Plugin {
     public Prefixer prune(boolean prune) {
         this.prune = prune;
         return this;
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Gets whether unnecessary prefixed declarations can be pruned.
+     *
+     * @return If unnecessary prefixed declarations can be pruned.
+     */
+    public boolean prune() {
+        return prune;
     }
 
     /**

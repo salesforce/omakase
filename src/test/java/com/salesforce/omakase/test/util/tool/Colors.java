@@ -25,6 +25,7 @@ package com.salesforce.omakase.test.util.tool;
 public final class Colors {
     public static final String RESET = "\u001B[0m";
     public static final String BLACK = "\u001B[0;30m";
+    public static final String DARK_GREY = "\u001B[1;30m";
     public static final String RED = "\u001B[0;31m";
     public static final String LIGHT_RED = "\u001B[1;31m";
     public static final String GREEN = "\u001B[0;32m";
@@ -37,9 +38,8 @@ public final class Colors {
     public static final String LIGHT_PURPLE = "\u001B[1;35m";
     public static final String CYAN = "\u001B[0;36m";
     public static final String LIGHT_CYAN = "\u001B[1;36m";
+    public static final String GREY = "\u001B[0;37m";
     public static final String WHITE = "\u001B[1;37m";
-    public static final String GRAY = "\u001B[0;30m";
-    public static final String LIGHT_GRAY = "\u001B[0;37m";
 
     private Colors() {}
 
@@ -63,7 +63,7 @@ public final class Colors {
         return LIGHT_PURPLE + (args.length > 0 ? String.format(msg, args) : msg) + RESET;
     }
 
-    public static String lightGray(String msg, Object... args) {
-        return LIGHT_GRAY + (args.length > 0 ? String.format(msg, args) : msg) + RESET;
+    public static String grey(String msg, Object... args) {
+        return DARK_GREY + (args.length > 0 ? String.format(msg, args) : msg) + RESET;
     }
 }

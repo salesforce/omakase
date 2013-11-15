@@ -56,8 +56,13 @@ public class Run {
     @Option(name = "-s", aliases = {"--syntax", "--sub"}, usage = "print the subscribable syntax table")
     private boolean sub;
 
+    @Option(name = "-i", aliases = {"--interactive", "--shell"}, usage = "interactive shell")
+    private boolean interactive;
+
     @Option(name = "-h", aliases = "--help", usage = "print this help message")
     private boolean help;
+
+
 
     public static void main(String[] args) throws Exception {
         new Run().cli(args);
@@ -98,6 +103,8 @@ public class Run {
                 System.out.println(Colors.yellow("prefix info sucessfully updated"));
             } else if (sub) {
                 new PrintSubscribableSyntaxTable().run();
+            } else if (interactive){
+                new InteractiveShell().run();
             } else if (help) {
                 throw new CmdLineException(parser, USAGE);
             }

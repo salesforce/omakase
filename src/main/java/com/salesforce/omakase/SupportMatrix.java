@@ -125,6 +125,23 @@ public final class SupportMatrix {
     }
 
     /**
+     * TESTME
+     * <p/>
+     * Support all versions of the given {@link Browser}. Generally not preferable.
+     *
+     * @param browser
+     *     Support all versions of this {@link Browser}.
+     *
+     * @return this, for chaining.
+     */
+    public SupportMatrix all(Browser browser) {
+        for (Double version : browser.versions()) {
+            supported.put(browser, version);
+        }
+        return this;
+    }
+
+    /**
      * Gets whether any version of the given {@link Browser} is supported.
      *
      * @param browser
