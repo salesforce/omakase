@@ -7,8 +7,8 @@ properties:
     - border-bottom-left-radius
     - border-bottom-right-radius
 
-#  css-boxshadow:
-#    - box-shadow
+  css-boxshadow:
+    - box-shadow
 
 #  css-animation:
 #    - animation
@@ -90,3 +90,11 @@ functions:
 #    - repeating-linear-gradient
 #    - radial-gradient
 #    - repeating-radial-gradient
+
+# prefixed selectors
+#selectors:
+#  css-selection
+
+# prefixed at-rules
+#at-rules:
+#  keyframes

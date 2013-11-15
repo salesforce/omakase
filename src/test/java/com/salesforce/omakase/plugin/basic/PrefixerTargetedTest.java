@@ -86,4 +86,15 @@ public class PrefixerTargetedTest {
         String expected = ".test {width:-moz-calc(100% - 80px); width:calc(100% - 80px)}";
         assertThat(process(original, calcSetup())).isEqualTo(expected);
     }
+
+    private Prefixer boxShadowSetup() {
+        return Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 3.6));
+    }
+
+    @Test
+    public void boxShadow() {
+        String original = ".test {box-shadow:0 8px 6px -6px black}";
+        String expected = ".test {-moz-box-shadow:0 8px 6px -6px black; box-shadow:0 8px 6px -6px black}";
+        assertThat(process(original, boxShadowSetup())).isEqualTo(expected);
+    }
 }

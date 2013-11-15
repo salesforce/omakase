@@ -59,6 +59,11 @@ public final class PrefixInfo {
         builder.put(Property.BORDER_TOP_RIGHT_RADIUS, new BrowserVersion(Browser.IOS_SAFARI, 3.2));
         builder.put(Property.BORDER_BOTTOM_LEFT_RADIUS, new BrowserVersion(Browser.IOS_SAFARI, 3.2));
         builder.put(Property.BORDER_BOTTOM_RIGHT_RADIUS, new BrowserVersion(Browser.IOS_SAFARI, 3.2));
+        builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.CHROME, 9.0));
+        builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.SAFARI, 5.0));
+        builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.FIREFOX, 3.6));
+        builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.ANDROID, 3.0));
+        builder.put(Property.BOX_SHADOW, new BrowserVersion(Browser.IOS_SAFARI, 4.3));
 
         PROPERTIES = builder.build();
     }
