@@ -30,7 +30,7 @@ import static org.fest.assertions.api.Assertions.*;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class PrefixerTargetedTest {
+public class PrefixerUnitTargetedTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
         Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
@@ -178,26 +178,38 @@ public class PrefixerTargetedTest {
 
     @Test
     public void transitionProperty() {
-        fail("unimplemented");
+        String original = ".test {transition-property:width,border-radius,transform}";
+        String expected = ".test {-moz-transition-property:width,-moz-border-radius,-moz-transform; transition-property:width,border-radius,transform}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
 
     @Test
     public void transitionPropertyWithPrefixibleProps() {
-        fail("unimplemented");
+        String original = ".test {transition-property:width,transform}";
+        String expected = ".test {transition-property:width,-webkit-transform; transition-property:width,transform}";
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.CHROME, 30); // chrome 30 has transform prefixed but not transition
+        assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
     @Test
     public void transitionDuration() {
-        fail("unimplemented");
+        String original = ".test {transition-duration:2s}";
+        String expected = ".test {-moz-transition-duration:2s; transition-duration:2s}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
 
     @Test
     public void transitionDelay() {
-        fail("unimplemented");
+        String original = ".test {transition-delay:2s}";
+        String expected = ".test {-moz-transition-delay:2s; transition-delay:2s}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
 
     @Test
     public void transitionTimingFunction() {
-        fail("unimplemented");
+        String original = ".test {transition-timing-function:ease}";
+        String expected = ".test {-moz-transition-timing-function:ease; transition-timing-function:ease}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
 }

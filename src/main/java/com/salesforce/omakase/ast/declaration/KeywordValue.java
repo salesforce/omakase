@@ -146,7 +146,7 @@ public final class KeywordValue extends AbstractTerm {
         Declaration declaration = parent.get();
 
         // if this isn't for the "transition" or "transition-property" properties then a regular copy will suffice
-        if (!declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) return copy();
+        if (!declaration.isProperty(Property.TRANSITION) && !declaration.isProperty(Property.TRANSITION_PROPERTY)) return copy();
 
         // check if this keyword is a recognizable property
         Property property = Property.lookup(keyword);

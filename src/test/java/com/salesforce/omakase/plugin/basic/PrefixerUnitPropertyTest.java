@@ -34,7 +34,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class PrefixerPropertyTest {
+public class PrefixerUnitPropertyTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
         Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
