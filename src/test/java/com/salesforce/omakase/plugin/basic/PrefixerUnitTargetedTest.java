@@ -212,4 +212,73 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {-moz-transition-timing-function:ease; transition-timing-function:ease}";
         assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
+
+    private Prefixer animationSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 15);
+        return prefixer;
+    }
+
+    @Test
+    public void animation() {
+        String original = ".test {animation:anim 3s linear 1s infinite alternate}";
+        String expected = ".test {-moz-animation:anim 3s linear 1s infinite alternate; animation:anim 3s linear 1s infinite alternate}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationDelay() {
+        String original = ".test {animation-delay:3s}";
+        String expected = ".test {-moz-animation-delay:3s; animation-delay:3s}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationDirection() {
+        String original = ".test {animation-direction:reverse}";
+        String expected = ".test {-moz-animation-direction:reverse; animation-direction:reverse}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationDuration() {
+        String original = ".test {animation-duration:3s}";
+        String expected = ".test {-moz-animation-duration:3s; animation-duration:3s}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationFillMode() {
+        String original = ".test {animation-fill-mode:none}";
+        String expected = ".test {-moz-animation-fill-mode:none; animation-fill-mode:none}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationIterationCount() {
+        String original = ".test {animation-iteration-count:2}";
+        String expected = ".test {-moz-animation-iteration-count:2; animation-iteration-count:2}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationName() {
+        String original = ".test {animation-name:test}";
+        String expected = ".test {-moz-animation-name:test; animation-name:test}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationPlayState() {
+        String original = ".test {animation-play-state:running}";
+        String expected = ".test {-moz-animation-play-state:running; animation-play-state:running}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void animationTimingFunction() {
+        String original = ".test {animation-timing-function:ease}";
+        String expected = ".test {-moz-animation-timing-function:ease; animation-timing-function:ease}";
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
 }
