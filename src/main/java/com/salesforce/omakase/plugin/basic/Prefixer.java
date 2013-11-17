@@ -131,8 +131,6 @@ public final class Prefixer implements Plugin {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets whether prefixed declarations can be rearranged.
      *
      * @return True if prefixed declarations can be rearrange.
@@ -158,8 +156,6 @@ public final class Prefixer implements Plugin {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets whether unnecessary prefixed declarations can be pruned.
      *
      * @return If unnecessary prefixed declarations can be pruned.

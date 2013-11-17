@@ -79,6 +79,14 @@ public class SupportMatrixTest {
     }
 
     @Test
+    public void allBrowsers() {
+        support.all(Browser.IE);
+        for (double d : Browser.IE.versions()) {
+            assertThat(support.supportsVersion(Browser.IE, d)).isTrue();
+        }
+    }
+
+    @Test
     public void supportsWhenEmpty() {
         assertThat(support.supportsVersion(Browser.CHROME, 26)).isFalse();
     }

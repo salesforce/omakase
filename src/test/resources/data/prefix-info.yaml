@@ -78,8 +78,13 @@ properties:
 #    - background-origin
 #    - background-size
 
-#  border-image:
-#    - border-image
+  border-image:
+    - border-image
+    - border-image-source
+    - border-image-width
+    - border-image-slice
+    - border-image-repeat
+    - border-image-outset
 
   css-hyphens:
     - hyphens
@@ -102,5 +107,14 @@ functions:
 #  css-selection
 
 # prefixed at-rules
-#at-rules:
+# at-rules:
 #  keyframes
+
+# prefixed keywords
+# keywords:
+#  intrinsic-width:
+#    - fill-available
+#    - max-content
+#    - min-content
+#    - fit-content
+

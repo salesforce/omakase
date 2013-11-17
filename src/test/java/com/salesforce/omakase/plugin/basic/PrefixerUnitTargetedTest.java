@@ -289,6 +289,7 @@ public class PrefixerUnitTargetedTest {
         Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
     @Test
     public void hyphens() {
         String original = ".test {hyphens:auto}";
@@ -296,4 +297,53 @@ public class PrefixerUnitTargetedTest {
         Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    private Prefixer borderImageSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 14);
+        return prefixer;
+    }
+
+    @Test
+    public void borderImage() {
+        String original = ".test {border-image:url(i.png) 30% repeat}";
+        String expected = ".test {-moz-border-image:url(i.png) 30% repeat; border-image:url(i.png) 30% repeat}";
+        assertThat(process(original, borderImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void borderImageSource() {
+        String original = ".test {border-image-source:url(i.png)}";
+        String expected = ".test {-moz-border-image-source:url(i.png); border-image-source:url(i.png)}";
+        assertThat(process(original, borderImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void borderImageWidth() {
+        String original = ".test {border-image-width: 3em 2em}";
+        String expected = ".test {-moz-border-image-width:3em 2em; border-image-width:3em 2em}";
+        assertThat(process(original, borderImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void borderImageSlice() {
+        String original = ".test {border-image-slice: 20%}";
+        String expected = ".test {-moz-border-image-slice:20%; border-image-slice:20%}";
+        assertThat(process(original, borderImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void borderImageRepeat() {
+        String original = ".test {border-image-repeat: stretch}";
+        String expected = ".test {-moz-border-image-repeat:stretch; border-image-repeat:stretch}";
+        assertThat(process(original, borderImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void borderImageOutset() {
+        String original = ".test {border-image-outset:30%}";
+        String expected = ".test {-moz-border-image-outset:30%; border-image-outset:30%}";
+        assertThat(process(original, borderImageSetup())).isEqualTo(expected);
+    }
+
 }

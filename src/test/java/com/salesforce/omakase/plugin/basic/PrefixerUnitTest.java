@@ -31,4 +31,26 @@ public class PrefixerUnitTest {
     public void customShouldNotSupportAnythingByDefault() {
         assertThat(Prefixer.customBrowserSupport().support().supportedBrowsers()).isEmpty();
     }
+
+    @Test
+    public void defaultRearrangedFalse() {
+        assertThat(Prefixer.defaultBrowserSupport().rearrange()).isFalse();
+    }
+
+    @Test
+    public void setRearrange() {
+        Prefixer prefixer = Prefixer.defaultBrowserSupport().rearrange(true);
+        assertThat(prefixer.rearrange()).isTrue();
+    }
+
+    @Test
+    public void defaultPruneFalse() {
+        assertThat(Prefixer.defaultBrowserSupport().prune()).isFalse();
+    }
+
+    @Test
+    public void setPrune() {
+        Prefixer prefixer = Prefixer.defaultBrowserSupport().prune(true);
+        assertThat(prefixer.prune()).isTrue();
+    }
 }

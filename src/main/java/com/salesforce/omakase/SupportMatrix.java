@@ -125,8 +125,6 @@ public final class SupportMatrix {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Support all versions of the given {@link Browser}. Generally not preferable.
      *
      * @param browser
