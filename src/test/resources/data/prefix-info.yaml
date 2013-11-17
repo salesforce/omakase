@@ -81,11 +81,11 @@ properties:
 #  border-image:
 #    - border-image
 
-#  css-hyphens:
-#    - hyphens
+  css-hyphens:
+    - hyphens
 
-#  css3-tabsize:
-#    - tab-size
+  css3-tabsize:
+    - tab-size
 
 # prefixed functions
 functions:

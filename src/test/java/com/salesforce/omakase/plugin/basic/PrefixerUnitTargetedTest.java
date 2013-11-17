@@ -281,4 +281,19 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {-moz-animation-timing-function:ease; animation-timing-function:ease}";
         assertThat(process(original, animationSetup())).isEqualTo(expected);
     }
+
+    @Test
+    public void tabSize() {
+        String original = "pre {tab-size: 4}";
+        String expected = "pre {-moz-tab-size:4; tab-size:4}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+    @Test
+    public void hyphens() {
+        String original = ".test {hyphens:auto}";
+        String expected = ".test {-moz-hyphens:auto; hyphens:auto}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

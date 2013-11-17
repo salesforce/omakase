@@ -192,6 +192,12 @@ public final class PrefixInfo {
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.ANDROID, 3.0));
         builder.put(Property.BOX_SIZING, new BrowserVersion(Browser.IOS_SAFARI, 4.3));
+        builder.put(Property.HYPHENS, new BrowserVersion(Browser.IE, 11.0));
+        builder.put(Property.HYPHENS, new BrowserVersion(Browser.SAFARI, 7.0));
+        builder.put(Property.HYPHENS, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.HYPHENS, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
+        builder.put(Property.TAB_SIZE, new BrowserVersion(Browser.OPERA, 12.1));
+        builder.put(Property.TAB_SIZE, new BrowserVersion(Browser.FIREFOX, 25.0));
 
         PROPERTIES = builder.build();
     }
