@@ -23,6 +23,11 @@ import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.util.Values;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
+import java.util.Map;
+
 /**
  * Enum of all recognized CSS keywords.
  * <p/>
@@ -149,6 +154,9 @@ public enum Keyword {
     /** CSS keyword named 'end' */
     END("end"),
 
+    /** CSS keyword named 'e-resize' */
+    E_RESIZE("e-resize"),
+
     /** CSS keyword named 'expanded' */
     EXPANDED("expanded"),
 
@@ -242,6 +250,9 @@ public enum Keyword {
     /** CSS keyword named 'lower-alpha' */
     LOWER_ALPHA("lower-alpha"),
 
+    /** CSS keyword named 'lowercase' */
+    LOWERCASE("lowercase"),
+
     /** CSS keyword named 'lower-greek' */
     LOWER_GREEK("lower-greek"),
 
@@ -250,9 +261,6 @@ public enum Keyword {
 
     /** CSS keyword named 'lower-roman' */
     LOWER_ROMAN("lower-roman"),
-
-    /** CSS keyword named 'lowercase' */
-    LOWERCASE("lowercase"),
 
     /** CSS keyword named 'ltr' */
     LTR("ltr"),
@@ -281,6 +289,12 @@ public enum Keyword {
     /** CSS keyword named 'navy' */
     NAVY("navy"),
 
+    /** CSS keyword named 'ne-resize' */
+    NE_RESIZE("ne-resize"),
+
+    /** CSS keyword named 'nesw-resize' */
+    NESW_RESIZE("nesw-resize"),
+
     /** CSS keyword named 'none' */
     NONE("none"),
 
@@ -289,6 +303,12 @@ public enum Keyword {
 
     /** CSS keyword named 'nowrap' */
     NOWRAP("nowrap"),
+
+    /** CSS keyword named 'nw-resize' */
+    NW_RESIZE("nw-resize"),
+
+    /** CSS keyword named 'nwse-resize' */
+    NWSE_RESIZE("nwse-resize"),
 
     /** CSS keyword named 'olive' */
     OLIVE("olive"),
@@ -371,6 +391,9 @@ public enum Keyword {
     /** CSS keyword named 'separate' */
     SEPARATE("separate"),
 
+    /** CSS keyword named 'se-resize' */
+    SE_RESIZE("se-resize"),
+
     /** CSS keyword named 'silver' */
     SILVER("silver"),
 
@@ -394,6 +417,9 @@ public enum Keyword {
 
     /** CSS keyword named 'super' */
     SUPER("super"),
+
+    /** CSS keyword named 'sw-resize' */
+    SW_RESIZE("sw-resize"),
 
     /** CSS keyword named 'tab' */
     TAB("tab"),
@@ -461,14 +487,14 @@ public enum Keyword {
     /** CSS keyword named 'upper-alpha' */
     UPPER_ALPHA("upper-alpha"),
 
+    /** CSS keyword named 'uppercase' */
+    UPPERCASE("uppercase"),
+
     /** CSS keyword named 'upper-latin' */
     UPPER_LATIN("upper-latin"),
 
     /** CSS keyword named 'upper-roman' */
     UPPER_ROMAN("upper-roman"),
-
-    /** CSS keyword named 'uppercase' */
-    UPPERCASE("uppercase"),
 
     /** CSS keyword named 'vertical' */
     VERTICAL("vertical"),
@@ -479,10 +505,23 @@ public enum Keyword {
     /** CSS keyword named 'white' */
     WHITE("white"),
 
+    /** CSS keyword named 'w-resize' */
+    W_RESIZE("w-resize"),
+
     /** CSS keyword named 'yellow' */
     YELLOW("yellow"),
 
     ;
+
+    /** reverse lookup map */
+    private static final Map<String, Keyword> map;
+    static {
+        Builder<String, Keyword> builder = ImmutableMap.builder();
+        for (Keyword kw : Keyword.values()) {
+            builder.put(kw.toString(), kw);
+        }
+        map = builder.build();
+    }
 
     private final String keyword;
 
@@ -530,4 +569,17 @@ public enum Keyword {
     public String toString() {
         return keyword;
     }
+
+    /**
+    * Gets the keyword associated with the given name.
+    *
+    * @param name
+    *     Name of the keyword.
+    *
+    * @return The matching {@link Keyword}, or null if not found.
+    */
+    public static Keyword lookup(String name) {
+        return map.get(name);
+    }
+
 }

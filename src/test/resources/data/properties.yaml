@@ -23,6 +23,7 @@ properties:
   - background-image
   - background-origin
   - background-position
+  - background-position-x
   - background-repeat
   - background-size
   - baseline-shift

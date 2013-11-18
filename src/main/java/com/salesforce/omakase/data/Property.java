@@ -101,6 +101,9 @@ public enum Property {
     /** CSS property named 'background-position' */
     BACKGROUND_POSITION("background-position"),
 
+    /** CSS property named 'background-position-x' */
+    BACKGROUND_POSITION_X("background-position-x"),
+
     /** CSS property named 'background-repeat' */
     BACKGROUND_REPEAT("background-repeat"),
 

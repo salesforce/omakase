@@ -116,6 +116,15 @@ public final class KeywordValue extends AbstractTerm {
         return keyword;
     }
 
+    /**
+     * Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown keyword.
+     *
+     * @return The {@link Keyword}.
+     */
+    public Optional<Keyword> asKeyword() {
+        return Optional.fromNullable(Keyword.lookup(keyword));
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(keyword);

@@ -151,6 +151,21 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
     }
 
     /**
+     *
+     * todo - change
+     *
+     * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property.)
+     *
+     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or the property name is
+     *         unknown.
+     */
+    public Optional<Property> asPropertyIgnorePrefix() {
+        return Optional.fromNullable(Property.lookup(name));
+    }
+
+
+
+    /**
      * Gets whether this {@link PropertyName} includes an IE7 star hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack).
      *
      * @return True if this {@link PropertyName} includes the IE7 star hack.

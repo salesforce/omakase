@@ -38,6 +38,7 @@ keywords:
   - dotted
   - double
   - end
+  - e-resize
   - expanded
   - field
   - fill
@@ -69,10 +70,10 @@ keywords:
   - list-menu
   - lower
   - lower-alpha
+  - lowercase
   - lower-greek
   - lower-latin
   - lower-roman
-  - lowercase
   - ltr
   - manual
   - maroon
@@ -82,9 +83,13 @@ keywords:
   - middle
   - multiple
   - navy
+  - ne-resize
+  - nesw-resize
   - none
   - normal
   - nowrap
+  - nw-resize
+  - nwse-resize
   - olive
   - open
   - optimizeLegibility
@@ -112,6 +117,7 @@ keywords:
   - semi-condensed
   - semi-expanded
   - separate
+  - se-resize
   - silver
   - small-caps
   - solid
@@ -120,6 +126,7 @@ keywords:
   - stroke
   - sub
   - super
+  - sw-resize
   - tab
   - table
   - table-caption
@@ -142,10 +149,11 @@ keywords:
   - ultra-condensed
   - ultra-expanded
   - upper-alpha
+  - uppercase
   - upper-latin
   - upper-roman
-  - uppercase
   - vertical
   - visible
   - white
+  - w-resize
   - yellow

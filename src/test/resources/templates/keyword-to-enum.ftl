@@ -23,6 +23,11 @@ import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.util.Values;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
+import java.util.Map;
+
 /**
  * Enum of all recognized CSS keywords.
  * <p/>
@@ -38,6 +43,16 @@ public enum Keyword {
 
     </#list>
     ;
+
+    /** reverse lookup map */
+    private static final Map<String, Keyword> map;
+    static {
+        Builder<String, Keyword> builder = ImmutableMap.builder();
+        for (Keyword kw : Keyword.values()) {
+            builder.put(kw.toString(), kw);
+        }
+        map = builder.build();
+    }
 
     private final String keyword;
 
@@ -85,4 +100,17 @@ public enum Keyword {
     public String toString() {
         return keyword;
     }
+
+    /**
+    * Gets the keyword associated with the given name.
+    *
+    * @param name
+    *     Name of the keyword.
+    *
+    * @return The matching {@link Keyword}, or null if not found.
+    */
+    public static Keyword lookup(String name) {
+        return map.get(name);
+    }
+
 }
