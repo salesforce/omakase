@@ -18,10 +18,11 @@ package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.LinearGradientFunctionValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -34,12 +35,12 @@ import org.junit.rules.ExpectedException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link StandardRefinerStrategy}.
+ * Unit tests for {@link StandardRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class StandardRefinerStrategyTest {
+public class StandardRefinerTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
@@ -101,17 +102,27 @@ public class StandardRefinerStrategyTest {
     public void refinedUrlFunctionValue() {
         RawFunction raw = new RawFunction(5, 2, "url", "one.png");
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        new StandardRefinerStrategy().refine(raw, qb, new Refiner(qb));
+        new StandardRefiner().refine(raw, qb, new Refiner(qb));
 
         assertThat(qb.all()).hasSize(1);
         assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(UrlFunctionValue.class);
     }
 
     @Test
+    public void refinedLinearGradientFunctionValue() {
+        RawFunction raw = new RawFunction(5, 2, "linear-gradient", "red, yellow");
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        new StandardRefiner().refine(raw, qb, new Refiner(qb));
+
+        assertThat(qb.all()).hasSize(1);
+        assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(LinearGradientFunctionValue.class);
+    }
+
+    @Test
     public void refinedMediaQuery() {
         Refiner refiner = new Refiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        new StandardRefinerStrategy().refine(ar, refiner.broadcaster(), refiner);
+        new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
         assertThat(ar.isRefined()).isTrue();
     }

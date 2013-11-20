@@ -19,7 +19,9 @@ package com.salesforce.omakase.ast.declaration;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
@@ -28,6 +30,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /** Unit tests for {@link NumericalValue}. */
 @SuppressWarnings("JavaDoc")
 public class NumericalValueTest {
+    @Rule public final ExpectedException exception = ExpectedException.none();
+
     private NumericalValue numerical;
 
     @Test
@@ -61,7 +65,7 @@ public class NumericalValueTest {
     }
 
     @Test
-    public void setIntegerValue() {
+    public void setValueFromInteger() {
         numerical = new NumericalValue(1);
         numerical.value(100);
         assertThat(numerical.value()).isEqualTo("100");
@@ -69,11 +73,49 @@ public class NumericalValueTest {
     }
 
     @Test
-    public void setDoubleValue() {
+    public void setValueFromDouble() {
         numerical = new NumericalValue(5);
         numerical.value(10.5);
         assertThat(numerical.value()).isEqualTo("10.5");
         assertThat(numerical.doubleValue()).isEqualTo(10.5);
+    }
+
+    @Test
+    public void errorsOnNegativeIntegerValue() {
+        exception.expect(IllegalArgumentException.class);
+        numerical = new NumericalValue(-5);
+    }
+
+    @Test
+    public void errorsOnNegativeDoubleValue() {
+        exception.expect(IllegalArgumentException.class);
+        numerical = new NumericalValue(-5.5);
+    }
+
+    @Test
+    public void getDoubleValue() {
+        numerical = new NumericalValue(5.5);
+        assertThat(numerical.doubleValue()).isEqualTo(5.5);
+    }
+
+    @Test
+    public void getDoubleValueWhenNegative() {
+        numerical = new NumericalValue(5.5);
+        numerical.explicitSign(NumericalValue.Sign.NEGATIVE);
+        assertThat(numerical.doubleValue()).isEqualTo(-5.5);
+    }
+
+    @Test
+    public void getIntegerValue() {
+        numerical = new NumericalValue(5);
+        assertThat(numerical.intValue()).isEqualTo(5);
+    }
+
+    @Test
+    public void getIntegerValueWhenNegative() {
+        numerical = new NumericalValue(5);
+        numerical.explicitSign(NumericalValue.Sign.NEGATIVE);
+        assertThat(numerical.intValue()).isEqualTo(-5);
     }
 
     @Test
@@ -88,6 +130,21 @@ public class NumericalValueTest {
         numerical = new NumericalValue(5);
         numerical.explicitSign(NumericalValue.Sign.NEGATIVE);
         assertThat(numerical.explicitSign().get()).isSameAs(NumericalValue.Sign.NEGATIVE);
+    }
+
+    @Test
+    public void isNegativeTrue() {
+        numerical = new NumericalValue(5);
+        numerical.explicitSign(NumericalValue.Sign.NEGATIVE);
+        assertThat(numerical.isNegative()).isTrue();
+    }
+
+    @Test
+    public void isNegativeFalse() {
+        numerical = new NumericalValue(5);
+        assertThat(numerical.isNegative()).isFalse();
+        numerical.explicitSign(NumericalValue.Sign.POSITIVE);
+        assertThat(numerical.isNegative()).isFalse();
     }
 
     @Test

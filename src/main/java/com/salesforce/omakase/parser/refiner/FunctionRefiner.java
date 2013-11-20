@@ -39,7 +39,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  *
  * @author nmcwilliams
  */
-public interface FunctionRefinerStrategy extends RefinerStrategy {
+public interface FunctionRefiner extends RefinerStrategy {
     /**
      * Refines a {@link RawFunction}.
      * <p/>

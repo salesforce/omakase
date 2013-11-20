@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser.refiner;
+package com.salesforce.omakase.plugin.basic;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -30,9 +30,9 @@ import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.token.Tokens;
-import com.salesforce.omakase.plugin.basic.Conditionals;
-import com.salesforce.omakase.plugin.basic.ConditionalsManager;
 
 /**
  * Parses {@link AtRule} objects that are {@link ConditionalAtRuleBlock}s.
@@ -41,17 +41,17 @@ import com.salesforce.omakase.plugin.basic.ConditionalsManager;
  * @see ConditionalAtRuleBlock
  * @see Conditionals
  */
-public final class ConditionalsRefinerStrategy implements AtRuleRefinerStrategy {
+public final class ConditionalsRefiner implements AtRuleRefiner {
     private static final String IF = "if";
     private final ConditionalsManager manager;
 
     /**
-     * Creates a new {@link ConditionalsRefinerStrategy} instance.
+     * Creates a new {@link ConditionalsRefiner} instance.
      *
      * @param manager
      *     The {@link ConditionalsManager} instance, to be passed all new {@link ConditionalAtRuleBlock} instances.
      */
-    public ConditionalsRefinerStrategy(ConditionalsManager manager) {
+    public ConditionalsRefiner(ConditionalsManager manager) {
         this.manager = manager;
     }
 

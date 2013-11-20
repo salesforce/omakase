@@ -20,9 +20,10 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.writer.StyleWriter;
+import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Targeted functional tests for {@link Prefixer}.
@@ -32,7 +33,11 @@ import static org.fest.assertions.api.Assertions.*;
 @SuppressWarnings("JavaDoc")
 public class PrefixerUnitTargetedTest {
     private String process(String original, Prefixer prefixer) {
-        StyleWriter writer = StyleWriter.inline();
+        return process(original, prefixer, WriterMode.INLINE);
+    }
+
+    private String process(String original, Prefixer prefixer, WriterMode mode) {
+        StyleWriter writer = new StyleWriter(mode);
         Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
         return writer.write();
     }
@@ -346,4 +351,289 @@ public class PrefixerUnitTargetedTest {
         assertThat(process(original, borderImageSetup())).isEqualTo(expected);
     }
 
+    private Prefixer bgdImageSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 3.6);
+        return prefixer;
+    }
+
+    @Test
+    public void backgroundClip() {
+        String original = ".test {background-clip:border-box}";
+        String expected = ".test {-moz-background-clip:border-box; background-clip:border-box}";
+        assertThat(process(original, bgdImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void backgroundOrigin() {
+        String original = ".test {background-origin:border-box}";
+        String expected = ".test {-moz-background-origin:border-box; background-origin:border-box}";
+        assertThat(process(original, bgdImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void backgroundSize() {
+        String original = ".test {background-size:2em}";
+        String expected = ".test {-moz-background-size:2em; background-size:2em}";
+        assertThat(process(original, bgdImageSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void userSelectNone() {
+        String original = ".test {user-select:none}";
+        String expected = ".test {-moz-user-select:none; user-select:none}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    public Prefixer linearGradientSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 15);
+        prefixer.support().browser(Browser.CHROME, 25);
+        prefixer.support().browser(Browser.SAFARI, 6);
+        prefixer.support().browser(Browser.OPERA, 12);
+        return prefixer;
+    }
+
+    @Test
+    public void linearGradient() {
+        String original = ".test {" +
+            "background: red;" +
+            "background: linear-gradient(yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: red;\n" +
+            "  background: -webkit-linear-gradient(yellow, red);\n" +
+            "  background: -moz-linear-gradient(yellow, red);\n" +
+            "  background: -o-linear-gradient(yellow, red);\n" +
+            "  background: linear-gradient(yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientMultiple() {
+        String original = ".test {" +
+            "background: linear-gradient(red, green) no-repeat, linear-gradient(blue, yellow) no-repeat;" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(red, green) no-repeat,-webkit-linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: -moz-linear-gradient(red, green) no-repeat,-moz-linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: -o-linear-gradient(red, green) no-repeat,-o-linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: linear-gradient(red, green) no-repeat,linear-gradient(blue, yellow) no-repeat;\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToTop() {
+        String original = ".test {" +
+            "background: linear-gradient(to top, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(bottom, yellow, red);\n" +
+            "  background: -moz-linear-gradient(bottom, yellow, red);\n" +
+            "  background: -o-linear-gradient(bottom, yellow, red);\n" +
+            "  background: linear-gradient(to top, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToBottom() {
+        String original = ".test {" +
+            "background: linear-gradient(to bottom, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(top, yellow, red);\n" +
+            "  background: -moz-linear-gradient(top, yellow, red);\n" +
+            "  background: -o-linear-gradient(top, yellow, red);\n" +
+            "  background: linear-gradient(to bottom, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToRight() {
+        String original = ".test {" +
+            "background: linear-gradient(to right, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(left, yellow, red);\n" +
+            "  background: -moz-linear-gradient(left, yellow, red);\n" +
+            "  background: -o-linear-gradient(left, yellow, red);\n" +
+            "  background: linear-gradient(to right, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToLeft() {
+        String original = ".test {" +
+            "background: linear-gradient(to left, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(right, yellow, red);\n" +
+            "  background: -moz-linear-gradient(right, yellow, red);\n" +
+            "  background: -o-linear-gradient(right, yellow, red);\n" +
+            "  background: linear-gradient(to left, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToTopRight() {
+        String original = ".test {" +
+            "background: linear-gradient(to top right, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(bottom left, yellow, red);\n" +
+            "  background: -moz-linear-gradient(bottom left, yellow, red);\n" +
+            "  background: -o-linear-gradient(bottom left, yellow, red);\n" +
+            "  background: linear-gradient(to top right, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToTopLeft() {
+        String original = ".test {" +
+            "background: linear-gradient(to top left, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(bottom right, yellow, red);\n" +
+            "  background: -moz-linear-gradient(bottom right, yellow, red);\n" +
+            "  background: -o-linear-gradient(bottom right, yellow, red);\n" +
+            "  background: linear-gradient(to top left, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToBottomRight() {
+        String original = ".test {" +
+            "background: linear-gradient(to bottom right, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(top left, yellow, red);\n" +
+            "  background: -moz-linear-gradient(top left, yellow, red);\n" +
+            "  background: -o-linear-gradient(top left, yellow, red);\n" +
+            "  background: linear-gradient(to bottom right, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientToBottomLeft() {
+        String original = ".test {" +
+            "background: linear-gradient(to bottom left, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(top right, yellow, red);\n" +
+            "  background: -moz-linear-gradient(top right, yellow, red);\n" +
+            "  background: -o-linear-gradient(top right, yellow, red);\n" +
+            "  background: linear-gradient(to bottom left, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientWithAngle() {
+        String original = ".test {" +
+            "background: linear-gradient(60deg, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(30deg, yellow, red);\n" +
+            "  background: -moz-linear-gradient(30deg, yellow, red);\n" +
+            "  background: -o-linear-gradient(30deg, yellow, red);\n" +
+            "  background: linear-gradient(60deg, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void linearGradientWithNegativeAngle() {
+        String original = ".test {" +
+            "background: linear-gradient(-90deg, yellow, red);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-linear-gradient(180deg, yellow, red);\n" +
+            "  background: -moz-linear-gradient(180deg, yellow, red);\n" +
+            "  background: -o-linear-gradient(180deg, yellow, red);\n" +
+            "  background: linear-gradient(-90deg, yellow, red);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void repeatingLinearGradient() {
+        String original = ".test {" +
+            "background: repeating-linear-gradient(green, yellow 5%, red 15%);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
+            "  background: -moz-repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
+            "  background: -o-repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
+            "  background: repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void repeatingLinearGradientWithDirection() {
+        String original = ".test {" +
+            "background: repeating-linear-gradient(to right, green, yellow 5%, red 15%);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-repeating-linear-gradient(left, green, yellow 5%, red 15%);\n" +
+            "  background: -moz-repeating-linear-gradient(left, green, yellow 5%, red 15%);\n" +
+            "  background: -o-repeating-linear-gradient(left, green, yellow 5%, red 15%);\n" +
+            "  background: repeating-linear-gradient(to right, green, yellow 5%, red 15%);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
+
+    @Test
+    public void repeatingLinearGradientWithAngle() {
+        String original = ".test {" +
+            "background: repeating-linear-gradient(75deg, green, yellow 5%, red 15%);" +
+            "}";
+
+        String expected = ".test {\n" +
+            "  background: -webkit-repeating-linear-gradient(15deg, green, yellow 5%, red 15%);\n" +
+            "  background: -moz-repeating-linear-gradient(15deg, green, yellow 5%, red 15%);\n" +
+            "  background: -o-repeating-linear-gradient(15deg, green, yellow 5%, red 15%);\n" +
+            "  background: repeating-linear-gradient(75deg, green, yellow 5%, red 15%);\n" +
+            "}";
+
+        assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
+    }
 }

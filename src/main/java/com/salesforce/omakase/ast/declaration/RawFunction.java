@@ -16,15 +16,15 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.parser.refiner.FunctionRefiner;
+import com.salesforce.omakase.parser.refiner.StandardRefiner;
 import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.refiner.FunctionRefinerStrategy;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.refiner.StandardRefinerStrategy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -40,8 +40,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * specifically-typed function value.
  *
  * @author nmcwilliams
- * @see FunctionRefinerStrategy
- * @see StandardRefinerStrategy#refine(RawFunction, Broadcaster, Refiner)
+ * @see FunctionRefiner
+ * @see StandardRefiner#refine(RawFunction, Broadcaster, Refiner)
  * @see GenericFunctionValue
  */
 @Subscribable

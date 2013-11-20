@@ -31,7 +31,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  *
  * @author nmcwilliams
  */
-public interface AtRuleRefinerStrategy extends RefinerStrategy {
+public interface AtRuleRefiner extends RefinerStrategy {
     /**
      * Refines an {@link AtRule}.
      * <p/>

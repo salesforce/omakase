@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.parser.refiner.DeclarationRefinerStrategy;
+import com.salesforce.omakase.parser.refiner.DeclarationRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
@@ -57,7 +57,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  */
 public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
     /** refiner */
-    protected static final DeclarationRefinerStrategy REFINER = new DeclarationRefinerStrategy() {
+    protected static final DeclarationRefiner REFINER = new DeclarationRefiner() {
         @Override
         public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
             RawSyntax raw = declaration.rawPropertyValue().get();

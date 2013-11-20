@@ -32,6 +32,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * function.
  *
  * @author nmcwilliams
+ * @see GenericFunctionValue
  */
 @Subscribable
 @Description(value = "general interface for function terms", broadcasted = REFINED_DECLARATION)

@@ -17,7 +17,6 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.QuotationMode;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
@@ -27,12 +26,12 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * Refines {@link GenericFunctionValue}s to {@link UrlFunctionValue}s.
+ * Refines {@link RawFunction}s to {@link UrlFunctionValue}s.
  *
  * @author nmcwilliams
  * @see UrlFunctionValue
  */
-public final class UrlFunctionRefinerStrategy implements FunctionRefinerStrategy {
+public final class UrlRefiner implements FunctionRefiner {
     private static final String NAME = "url";
 
     @Override

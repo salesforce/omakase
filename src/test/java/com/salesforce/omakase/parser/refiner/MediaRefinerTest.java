@@ -38,21 +38,21 @@ import java.io.IOException;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
- * Unit tests for {@link MediaRefinerStrategy}.
+ * Unit tests for {@link MediaRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class MediaRefinerStrategyTest {
+public class MediaRefinerTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
-    MediaRefinerStrategy strategy;
+    MediaRefiner strategy;
     QueryableBroadcaster broadcaster;
     Refiner refiner;
 
     @Before
     public void setup() {
-        strategy = new MediaRefinerStrategy();
+        strategy = new MediaRefiner();
         broadcaster = new QueryableBroadcaster();
         refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }

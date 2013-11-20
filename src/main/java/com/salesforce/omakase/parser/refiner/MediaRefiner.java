@@ -38,7 +38,7 @@ import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
  * @see MediaQueryList
  * @see MediaQueryListParser
  */
-public final class MediaRefinerStrategy implements AtRuleRefinerStrategy {
+public final class MediaRefiner implements AtRuleRefiner {
     private static final String MEDIA = "media";
 
     @Override

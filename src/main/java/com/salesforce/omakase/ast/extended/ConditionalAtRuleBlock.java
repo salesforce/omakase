@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.extended;
 
+import com.salesforce.omakase.plugin.basic.ConditionalsRefiner;
 import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
@@ -24,7 +25,6 @@ import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.refiner.ConditionalsRefinerStrategy;
 import com.salesforce.omakase.plugin.basic.Conditionals;
 import com.salesforce.omakase.plugin.basic.ConditionalsManager;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -50,7 +50,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
  *
  * @author nmcwilliams
  * @see Conditionals
- * @see ConditionalsRefinerStrategy
+ * @see ConditionalsRefiner
  */
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)

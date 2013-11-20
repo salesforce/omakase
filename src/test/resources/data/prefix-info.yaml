@@ -7,6 +7,19 @@ properties:
     - border-bottom-left-radius
     - border-bottom-right-radius
 
+  background-img-opts:
+    - background-clip
+    - background-origin
+    - background-size
+
+  border-image:
+    - border-image
+    - border-image-source
+    - border-image-width
+    - border-image-slice
+    - border-image-repeat
+    - border-image-outset
+
   css-boxshadow:
     - box-shadow
 
@@ -56,9 +69,6 @@ properties:
 #    - break-after
 #    - break-inside
 
-#  user-select-none:
-#    - user-select
-
 #  flexbox:
 #    - flex
 #    - flex-grow
@@ -73,18 +83,8 @@ properties:
 #    - align-self
 #    - align-content
 
-#  background-img-opts:
-#    - background-clip
-#    - background-origin
-#    - background-size
-
-  border-image:
-    - border-image
-    - border-image-source
-    - border-image-width
-    - border-image-slice
-    - border-image-repeat
-    - border-image-outset
+  user-select-none:
+    - user-select
 
   css-hyphens:
     - hyphens
@@ -96,9 +96,10 @@ properties:
 functions:
   calc:
     - calc
-#  css-gradients:
-#    - linear-gradient
-#    - repeating-linear-gradient
+
+  css-gradients:
+    - linear-gradient
+    - repeating-linear-gradient
 #    - radial-gradient
 #    - repeating-radial-gradient
 

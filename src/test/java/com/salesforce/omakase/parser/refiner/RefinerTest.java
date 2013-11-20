@@ -135,7 +135,7 @@ public class RefinerTest {
         refiner.refine(new RawFunction(1, 1, "test", "blah")); // no errors
     }
 
-    public static final class AtRuleStrategy implements AtRuleRefinerStrategy {
+    public static final class AtRuleStrategy implements AtRuleRefiner {
         boolean called;
 
         @Override
@@ -145,7 +145,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class AtRuleStrategyFalse implements AtRuleRefinerStrategy {
+    public static final class AtRuleStrategyFalse implements AtRuleRefiner {
         boolean called;
 
         @Override
@@ -155,7 +155,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class SelectorStrategy implements SelectorRefinerStrategy {
+    public static final class SelectorStrategy implements SelectorRefiner {
         boolean called;
 
         @Override
@@ -165,7 +165,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class SelectorStrategyFalse implements SelectorRefinerStrategy {
+    public static final class SelectorStrategyFalse implements SelectorRefiner {
         boolean called;
 
         @Override
@@ -175,7 +175,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class DeclarationStrategy implements DeclarationRefinerStrategy {
+    public static final class DeclarationStrategy implements DeclarationRefiner {
         boolean called;
 
         @Override
@@ -185,7 +185,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class DeclarationStrategyFalse implements DeclarationRefinerStrategy {
+    public static final class DeclarationStrategyFalse implements DeclarationRefiner {
         boolean called;
 
         @Override
@@ -195,7 +195,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class FunctionStrategy implements FunctionRefinerStrategy {
+    public static final class FunctionStrategy implements FunctionRefiner {
         boolean called;
 
         @Override
@@ -205,7 +205,7 @@ public class RefinerTest {
         }
     }
 
-    public static final class FunctionStrategyFalse implements FunctionRefinerStrategy {
+    public static final class FunctionStrategyFalse implements FunctionRefiner {
         boolean called;
 
         @Override

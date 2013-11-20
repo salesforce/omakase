@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles updating the {@link PrefixInfo} class.
@@ -109,13 +110,7 @@ public class GeneratePrefixInfoClass {
         List<BrowserVersion> versions = Lists.newArrayList();
 
         // load data for the category
-        System.out.println(String.format("downloading prefix data for %s...", category));
-        URLConnection connection = new URL(ENDPOINT + category + ".json").openConnection();
-        connection.setUseCaches(false);
-
-        // parse the json and find the "stats" map entry which contains the browser prefix info
-        Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
-        Map<String, Object> stats = (Map)map.get("stats");
+        Map<String, Object> stats = loadUrl(category);
 
         // for each known browser, check if it requires a prefix
         for (Browser browser : Browser.values()) {
@@ -141,6 +136,24 @@ public class GeneratePrefixInfoClass {
 
         System.out.println();
         return versions;
+    }
+
+    private Map<String, Object> loadUrl(String category) throws IOException {
+        System.out.println(String.format("downloading prefix data for %s...", category));
+
+        URLConnection connection = new URL(ENDPOINT + category + ".json").openConnection();
+        connection.setUseCaches(false);
+        connection.setConnectTimeout((int)TimeUnit.SECONDS.toMillis(2));
+        connection.setReadTimeout((int)TimeUnit.SECONDS.toMillis(2));
+
+        try {
+            // parse the json and find the "stats" map entry which contains the browser prefix info
+            Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
+            return (Map)map.get("stats");
+        } catch (IOException e) {
+            System.out.println("retrying...");
+            return loadUrl(category);
+        }
     }
 
     private static class Info {

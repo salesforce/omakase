@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser.refiner;
+package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
@@ -24,7 +24,8 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.plugin.basic.ConditionalsManager;
+import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,12 +34,12 @@ import org.junit.rules.ExpectedException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link ConditionalsRefinerStrategy}.
+ * Unit tests for {@link ConditionalsRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class ConditionalsRefinerStrategyTest {
+public class ConditionalsRefinerTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     public static final String VALID_NAME = "if";
@@ -48,11 +49,11 @@ public class ConditionalsRefinerStrategyTest {
 
     private Refiner refiner;
     private QueryableBroadcaster broadcaster;
-    private ConditionalsRefinerStrategy strategy;
+    private ConditionalsRefiner strategy;
 
     @Before
     public void setup() {
-        strategy = new ConditionalsRefinerStrategy(new ConditionalsManager().addTrueConditions("ie7"));
+        strategy = new ConditionalsRefiner(new ConditionalsManager().addTrueConditions("ie7"));
         broadcaster = new QueryableBroadcaster();
         refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
     }

@@ -31,7 +31,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  *
  * @author nmcwilliams
  */
-public interface DeclarationRefinerStrategy extends RefinerStrategy {
+public interface DeclarationRefiner extends RefinerStrategy {
     /**
      * Refines a {@link Declaration}.
      * <p/>

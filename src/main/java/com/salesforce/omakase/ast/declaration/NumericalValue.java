@@ -114,6 +114,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return this, for chaining.
      */
     public NumericalValue value(int value) {
+        checkArgument(value >= 0, "value must not be negative. Use explicitSign() for negative values");
         this.raw = Integer.toString(value);
         return this;
     }
@@ -129,6 +130,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return this, for chaining.
      */
     public NumericalValue value(double value) {
+        checkArgument(value >= 0, "value must not be negative. Use explicitSign() for negative values");
         DecimalFormat fmt = new DecimalFormat("#");
         fmt.setMaximumIntegerDigits(309);
         fmt.setMaximumFractionDigits(340);
@@ -150,12 +152,25 @@ public final class NumericalValue extends AbstractTerm {
     /**
      * Gets the numerical value as a double.
      * <p/>
-     * Note that this may result in an exception if the current string value is too large for a double.
+     * Note that this may result in an exception if the current string value is too large for a double. This performs a
+     * calculation so cache the result if using more than once.
      *
-     * @return The numerical value.
+     * @return The double value.
      */
     public double doubleValue() {
-        return Double.parseDouble(raw);
+        double d = Double.parseDouble(raw);
+        return isNegative() ? d * -1 : d;
+    }
+
+    /**
+     * Gets the numerical value as an integer. Usually you should use {@link #doubleValue()} instead unless you are ok with
+     * discarding any present floating point value. This performs a calculation so cache the result if using more than once.
+     *
+     * @return The int value.
+     */
+    public int intValue() {
+        int i = Integer.parseInt(raw);
+        return isNegative() ? i * -1 : i;
     }
 
     /**
@@ -200,6 +215,15 @@ public final class NumericalValue extends AbstractTerm {
      */
     public Optional<Sign> explicitSign() {
         return explicitSign;
+    }
+
+    /**
+     * Gets whether a sign is present and if the sign is negative.
+     *
+     * @return True if a sign is present and the sign is negative, false otherwise.
+     */
+    public boolean isNegative() {
+        return explicitSign.isPresent() && explicitSign.get() == Sign.NEGATIVE;
     }
 
     @Override

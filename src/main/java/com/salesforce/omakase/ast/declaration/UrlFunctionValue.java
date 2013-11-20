@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Subscribable
 @Description(value = "url function", broadcasted = BroadcastRequirement.REFINED_DECLARATION)
-public final class UrlFunctionValue extends AbstractTerm {
+public final class UrlFunctionValue extends AbstractTerm implements FunctionValue {
     private Optional<QuotationMode> quotationMode = Optional.absent();
     private String url;
 
@@ -115,6 +115,11 @@ public final class UrlFunctionValue extends AbstractTerm {
      */
     public Optional<QuotationMode> quotationMode() {
         return quotationMode;
+    }
+
+    @Override
+    public String name() {
+        return "url";
     }
 
     @Override

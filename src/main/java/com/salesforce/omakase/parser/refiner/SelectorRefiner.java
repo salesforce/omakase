@@ -30,7 +30,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  *
  * @author nmcwilliams
  */
-public interface SelectorRefinerStrategy extends RefinerStrategy {
+public interface SelectorRefiner extends RefinerStrategy {
     /**
      * Refines a {@link Selector}.
      * <p/>
