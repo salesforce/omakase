@@ -1,11 +1,9 @@
 package com.salesforce.omakase.plugin.other;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -21,11 +19,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * DirectionFlipPlugin changes the direction of CSS property names, keywords, and term lists from left to right, or
+ * from right to left.
  *
+ * @author david.brady
  *
  */
-public class RTLFlipper  implements DependentPlugin {
+public class DirectionFlipPlugin implements DependentPlugin {
 
+    /*
+     * Set of properties that are flipped directly to another property.
+     */
     private static final Map<Property, Property> PROPERTIES_THAT_FLIP = new ImmutableMap.Builder<Property, Property>()
         .put(Property.BORDER_BOTTOM_LEFT_RADIUS, Property.BORDER_BOTTOM_RIGHT_RADIUS)
         .put(Property.BORDER_BOTTOM_RIGHT_RADIUS, Property.BORDER_BOTTOM_LEFT_RADIUS)
@@ -49,6 +53,9 @@ public class RTLFlipper  implements DependentPlugin {
         .put(Property.RIGHT, Property.LEFT)
         .build();
 
+    /*
+     * Set of keywords that are flipped directly to another keyword
+     */
     private static final Map<Keyword, Keyword> KEYWORDS_THAT_FLIP = new ImmutableMap.Builder<Keyword, Keyword>()
         .put(Keyword.E_RESIZE, Keyword.W_RESIZE)
         .put(Keyword.LEFT, Keyword.RIGHT)
@@ -65,7 +72,7 @@ public class RTLFlipper  implements DependentPlugin {
         .build();
 
 
-    /**
+    /*
      * Set of properties that have flippable percentage values.
      */
     private static final Set<Property> PROPERTIES_WITH_FLIPPABLE_PERCENTAGE =
@@ -74,13 +81,7 @@ public class RTLFlipper  implements DependentPlugin {
             Property.BACKGROUND_POSITION,
             Property.BACKGROUND_POSITION_X);
 
-    private static final Set<Keyword> LEFT_RIGHT_CENTER =
-        ImmutableSet.of(
-            Keyword.LEFT,
-            Keyword.RIGHT,
-            Keyword.CENTER);
-
-    /**
+    /*
      * Set of properties whose property values may flip if they match the
      * four-part pattern.
      */
@@ -91,45 +92,68 @@ public class RTLFlipper  implements DependentPlugin {
             Property.BORDER_WIDTH,
             Property.PADDING);
 
+    /*
+     * Set of properties that indicate if a four part property should not
+     * be flipped.
+     */
+    private static final Set<Keyword> LEFT_RIGHT_CENTER =
+        ImmutableSet.of(
+            Keyword.LEFT,
+            Keyword.RIGHT,
+            Keyword.CENTER);
 
-//    private static final Map<String, String> LEGACY_FLIPPABLE_PROPERTIES = new ImmutableMap.Builder<String, String>()
-//        .put("-moz-border-radius-topright", "-moz-border-radius-topleft")
-//        .put("-moz-border-radius-topleft", "-moz-border-radius-topright")
-//        .build();
-//
+
+    @Override
+    public void dependencies(PluginRegistry registry) {
+        registry.require(AutoRefiner.class).declarations();
+    }
+
     /**
-     * RTL flip properties names, and choice property values.
+     * Flips property names and/or property values.
+     *
+     * @param declaration Declaration to be flippped
      */
     @Rework
     public void rework(Declaration declaration) {
         Optional<Property> optionalProperty = declaration.propertyName().asPropertyIgnorePrefix();
 
         if (!optionalProperty.isPresent()) {
-//            Optional<RawSyntax> rawSyntaxOptional = declaration.rawPropertyName();
-//            if (rawSyntaxOptional.isPresent()) {
-//                String propertyName = rawSyntaxOptional.get().content();
-//                if (LEGACY_FLIPPABLE_PROPERTIES.containsKey(propertyName)) {
-//                    // what now? can't set rawsyntax?
-//                }
-//            }
             return;
         }
 
         // flip the property name
         Property property = optionalProperty.get();
-        handleFlippableKeywords(declaration, property);
+        handleFlippablePropertyName(declaration, property);
 
         // flip property values
         Optional<TermList> optionalTermList = Values.asTermList(declaration.propertyValue());
         if (optionalTermList.isPresent()) {
             TermList termList = optionalTermList.get();
+            // Careful!  If a handler depends on the changes a previous handler made,
+            // it won't be able to use the property or termList we've grabbed above.
             if (handleFlippableFourPartProperties(declaration, property, termList)) return;
             if (handleFlippablePercentages(declaration, property, termList)) return;
             handleFlippableBorderRadius(declaration, property, termList);
         }
     }
 
-    private boolean handleFlippableKeywords(Declaration declaration, Property property) {
+    /**
+     * Flips keywords.
+     *
+     * @param keywordValue keywordValue to be flipped
+     */
+    @Rework
+    public void rework(KeywordValue keywordValue) {
+        Optional<Keyword> optionalKeyword = keywordValue.asKeyword();
+        if (optionalKeyword.isPresent()) {
+            Keyword keyword = optionalKeyword.get();
+            if (KEYWORDS_THAT_FLIP.containsKey(keyword)) {
+                keywordValue.keyword(KEYWORDS_THAT_FLIP.get(keyword));
+            }
+        }
+    }
+
+    private boolean handleFlippablePropertyName(Declaration declaration, Property property) {
         if (PROPERTIES_THAT_FLIP.containsKey(property)) {
             declaration.propertyName(PROPERTIES_THAT_FLIP.get(property));
             return true;
@@ -161,15 +185,16 @@ public class RTLFlipper  implements DependentPlugin {
 
     private boolean handleFlippablePercentages(Declaration declaration, Property property, TermList termList) {
         if (PROPERTIES_WITH_FLIPPABLE_PERCENTAGE.contains(property)) {
-            ImmutableList<Term> originalTerms = termList.terms();
+            Iterator<Term> originalTermIter = termList.terms().iterator();
             TermList replacementTermList = new TermList();
-
             boolean flipped = false;
-            for(int i=0; i<originalTerms.size(); i++) {
-                Term term = originalTerms.get(i);
+            while (originalTermIter.hasNext()) {
+                Term term = originalTermIter.next();
+                // we never flip if the term list includes left, right, or center
                 if (isLeftRightCenter(term)) {
                     return false;
                 }
+                // flip the first percentage we see
                 if (!flipped) {
                     Term flippedTerm = flipPercentage(term);
                     if (flippedTerm!=term) {
@@ -178,14 +203,15 @@ public class RTLFlipper  implements DependentPlugin {
                     }
                 }
                 replacementTermList.append(term);
-                if (i<originalTerms.size()-1) {
+                if (originalTermIter.hasNext()) {
                     replacementTermList.append(OperatorType.SPACE);
                 }
             }
+            // only
             if (flipped) {
                 declaration.propertyValue(replacementTermList);
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -199,25 +225,7 @@ public class RTLFlipper  implements DependentPlugin {
         return false;
     }
 
-    @Rework
-    /**
-     * RTL flip property value keywords.
-     */
-    public void rework(KeywordValue keywordValue) {
-        Optional<Keyword> optionalKeyword = keywordValue.asKeyword();
-        if (optionalKeyword.isPresent()) {
-            Keyword keyword = optionalKeyword.get();
-            if (KEYWORDS_THAT_FLIP.containsKey(keyword)) {
-                keywordValue.keyword(KEYWORDS_THAT_FLIP.get(keyword));
-            }
-        }
-    }
-
-    @Override
-    public void dependencies(PluginRegistry registry) {
-        registry.require(AutoRefiner.class).declarations();
-    }
-
+    // @todo Candidate for a utility method?
     private TermList[] splitTermListAtSlash(TermList termList) {
         TermList beforeSlash = new TermList();
         TermList afterSlash = new TermList();
@@ -233,10 +241,17 @@ public class RTLFlipper  implements DependentPlugin {
         return afterSlash.members().size()==0 ? new TermList[] { beforeSlash } : new TermList[] { beforeSlash, afterSlash };
     }
 
-    // a => a
-    // a b => b a
-    // a b c => b a b c
-    // a b c d => b a d c
+    /*
+     * If a border radius has 2, 3, or 4 terms, they'll be flipped using these patterns:
+     *
+     * <ul>
+     *     <li>a b => b a</li>
+     *     <li>a b c => b a b c</li>
+     *     <li>a b c d => b a d c</li>
+     * </ul>
+     *
+     * Otherwise, the terms aren't flipped at all
+     */
     private TermList flipBorderRadiusSet(TermList termList) {
         splitTermListAtSlash(termList);
         List<Term> terms = termList.terms();
@@ -244,23 +259,15 @@ public class RTLFlipper  implements DependentPlugin {
         case 2:
             return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0));
         case 3:
-            return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(1), terms.get(2));
+            // the 2nd term, when flipped, is used in both the first and 3rd positions.  Use a copy of the term for the 3rd.
+            return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0), (Term)terms.get(1).copy(), terms.get(2));
         case 4:
             return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(3), terms.get(2));
         default:
             return termList;
         }
-
-
     }
 
-
-    /**
-     * True if term is the keyword LEFT, RIGHT, or CENTER.
-     *
-     * @param term
-     * @return
-     */
     private boolean isLeftRightCenter(Term term) {
         if (term instanceof KeywordValue) {
             Optional<Keyword> keyword = ((KeywordValue)term).asKeyword();
@@ -270,13 +277,9 @@ public class RTLFlipper  implements DependentPlugin {
         }
     }
 
-    /**
+    /*
      * If the term passed in is a percentage, the value for that term will be subtracted
      * from 100 and returned as a new term.  Otherwise, this returns the passed in term.
-     *
-     *
-     * @param term
-     * @return
      */
     private Term flipPercentage(Term term) {
         if (term instanceof NumericalValue) {
