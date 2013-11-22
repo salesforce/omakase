@@ -20,10 +20,10 @@ import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.test.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class SyntaxTreeTest {
 
     @Test
     public void statements() {
-        SyntaxCollection<Stylesheet, Statement> statements = stylesheet.statements();
+        SyntaxCollection<StatementIterable, Statement> statements = stylesheet.statements();
 
         assertThat(statements).hasSize(7);
         assertThat(Iterables.get(statements, 0)).isInstanceOf(AtRule.class);
@@ -96,10 +96,5 @@ public class SyntaxTreeTest {
     @Test
     public void sheetOrphanedComments() {
         assertThat(stylesheet.orphanedComments()).isNotEmpty();
-    }
-
-    @Test
-    public void toStringTest() {
-        assertThat(tree.toString()).isNotEqualTo(Util.originalToString(tree));
     }
 }

@@ -30,6 +30,7 @@ import com.salesforce.omakase.BrowserVersion;
 public final class PrefixInfo {
     private static final Multimap<Property, BrowserVersion> PROPERTIES;
     private static final Multimap<String, BrowserVersion> FUNCTIONS;
+    private static final Multimap<String, BrowserVersion> AT_RULES;
 
     static {
         ImmutableSetMultimap.Builder<Property, BrowserVersion> builder = ImmutableSetMultimap.builder();
@@ -45,10 +46,20 @@ public final class PrefixInfo {
         ImmutableSetMultimap.Builder<String, BrowserVersion> builder = ImmutableSetMultimap.builder();
 
         <#list functions as f>
-        builder.put("${f.function}", new BrowserVersion(Browser.${f.browser}, ${f.version}));
+        builder.put("${f.name}", new BrowserVersion(Browser.${f.browser}, ${f.version}));
         </#list>
 
         FUNCTIONS = builder.build();
+    }
+
+    static {
+        ImmutableSetMultimap.Builder<String, BrowserVersion> builder = ImmutableSetMultimap.builder();
+
+        <#list atRules as a>
+        builder.put("${a.name}", new BrowserVersion(Browser.${a.browser}, ${a.version}));
+        </#list>
+
+        AT_RULES = builder.build();
     }
 
     private PrefixInfo() {}
@@ -104,8 +115,37 @@ public final class PrefixInfo {
      *
      * @return The last version, or -1 if all known versions of the browser supports the function name unprefixed.
      */
-    public static double lastPrefixedVersion(String function, Browser browser) {
+    public static double functionLastPrefixedVersion(String function, Browser browser) {
         for (BrowserVersion browserVersion : FUNCTIONS.get(function)) {
+            if (browserVersion.browser() == browser) return browserVersion.version();
+        }
+        return -1d;
+    }
+
+    /**
+     * Gets whether prefix info exists for the given at-rule.
+     *
+     * @param name
+     *     Check if prefix info exists for this at-rule.
+     *
+     * @return True of prefix info exists for the given at-rule.
+     */
+    public static boolean hasAtRule(String name) {
+        return AT_RULES.containsKey(name);
+    }
+
+    /**
+     * Gets the last version of the given browser that requires a prefix for the given at-rule.
+     *
+     * @param name
+     *     The at-rule name.
+     * @param browser
+     *     The browser.
+     *
+     * @return The last version, or -1 if all known versions of the browser supports the at-rule unprefixed.
+     */
+    public static double atRuleLastPrefixedVersion(String name, Browser browser) {
+        for (BrowserVersion browserVersion : AT_RULES.get(name)) {
             if (browserVersion.browser() == browser) return browserVersion.version();
         }
         return -1d;

@@ -19,10 +19,7 @@ package com.salesforce.omakase.plugin.basic;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
-import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -98,16 +95,12 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
             }
         }
 
-        // add all parsed statements into a new syntax collection
-        SyntaxCollection<Stylesheet, Statement> statements = StandardSyntaxCollection.create(atRule.parent().orNull());
-        statements.appendAll(queryable.filter(Statement.class));
-
         // once they are in the syntax collection, now we can let them be broadcasted
         queue.resume();
 
         // create the new conditional node
         ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), manager, condition,
-            statements);
+            queryable.filter(Statement.class), broadcaster);
 
         // set and broadcast it
         atRule.block(block);

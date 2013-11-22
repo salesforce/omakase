@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.parser.raw;
 
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -63,9 +62,7 @@ public final class RawRuleParser extends AbstractParser {
         rule.declarations().appendAll(queryable.filter(Declaration.class));
 
         // add orphaned comments e.g., ".class{color:red; /*orphaned*/}"
-        for (String comment : source.collectComments().flushComments()) {
-            rule.orphanedComment(new Comment(comment));
-        }
+        rule.orphanedComments(source.collectComments().flushComments());
 
         // parse the end of the block (must be after orphaned comments parsing)
         source.expect(tokenFactory().declarationBlockEnd());

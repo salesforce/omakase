@@ -19,16 +19,13 @@ package com.salesforce.omakase.ast.atrule;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
-import com.salesforce.omakase.ast.Stylesheet;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +41,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class GenericAtRuleBlockTest {
-    private Stylesheet stylesheet;
     private Statement statement;
 
     @Before
@@ -54,19 +50,18 @@ public class GenericAtRuleBlockTest {
         Declaration d = new Declaration(Property.DISPLAY, TermList.singleValue(KeywordValue.of("none")));
         rule.declarations().append(d);
         statement = rule;
-        stylesheet = new Stylesheet();
     }
 
     @Test
     public void getStatement() {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet);
+        GenericAtRuleBlock block = new GenericAtRuleBlock();
         block.statements().append(statement);
         assertThat(block.statements()).containsExactly(statement);
     }
 
     @Test
     public void propagatesBroadcast() {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
         QueryableBroadcaster qb = new QueryableBroadcaster();
         block.propagateBroadcast(qb);
         assertThat(qb.find(Statement.class).get()).isSameAs(statement);
@@ -74,32 +69,31 @@ public class GenericAtRuleBlockTest {
 
     @Test
     public void isWritableWhenHasStatements() {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
         assertThat(block.isWritable()).isTrue();
     }
 
     @Test
     public void isNotWritableWithoutStatements() {
-        SyntaxCollection<Stylesheet, Statement> collection = StandardSyntaxCollection.create(stylesheet);
-        GenericAtRuleBlock block = new GenericAtRuleBlock(collection);
+        GenericAtRuleBlock block = new GenericAtRuleBlock();
         assertThat(block.isWritable()).isFalse();
     }
 
     @Test
     public void writeVerbose() throws IOException {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
         assertThat(StyleWriter.verbose().writeSnippet(block)).isEqualTo(" {\n  .test {\n    display: none;\n  }\n}");
     }
 
     @Test
     public void writeInline() throws IOException {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
         assertThat(StyleWriter.inline().writeSnippet(block)).isEqualTo(" {\n  .test {display:none}\n}");
     }
 
     @Test
     public void writeCompressed() throws IOException {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(stylesheet, Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
         assertThat(StyleWriter.compressed().writeSnippet(block)).isEqualTo("{.test{display:none}}");
     }
 }

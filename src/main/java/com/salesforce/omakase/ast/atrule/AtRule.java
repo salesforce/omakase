@@ -17,17 +17,18 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
-import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
@@ -50,8 +51,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class AtRule extends AbstractGroupable<Stylesheet, Statement> implements Statement, Refinable<AtRule> {
-    private final Refiner refiner;
+public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule> {
+    private final transient Refiner refiner;
     private final String name;
 
     // unrefined
@@ -252,7 +253,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     @Override
-    protected Statement self() {
+    protected AtRule self() {
         return this;
     }
 
@@ -269,6 +270,7 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
 
     @Override
     public boolean isWritable() {
+        // TESTME
         if (isRefined()) {
             if (shouldWriteName) return true;
             if (expression.isPresent() && expression.get().isWritable()) return true;
@@ -329,15 +331,25 @@ public final class AtRule extends AbstractGroupable<Stylesheet, Statement> imple
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("rawExpression", rawExpression)
-            .add("rawBlock", rawBlock)
-            .add("expression", expression)
-            .add("block", block)
-            .addIf(!shouldWriteName, "shouldWriteName", shouldWriteName)
-            .toString();
+    protected AtRule makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        String newName = name;
+        if (prefix != null && support != null && support.requiresPrefixForAtRule(prefix, name)) {
+            newName = prefix + name;
+        }
+
+        if (isRefined()) {
+            AtRuleExpression expressionCopy = expression.isPresent() ? expression.get().copy(prefix, support) : null;
+            AtRuleBlock blockCopy = block.isPresent() ? (AtRuleBlock)block.get().copy(prefix, support) : null;
+            AtRule copy = new AtRule(newName, expressionCopy, blockCopy);
+            copy.shouldWriteName(shouldWriteName);
+            return copy;
+        } else {
+            RawSyntax expressionCopy = rawExpression.isPresent() ? rawExpression.get().copy(prefix, support) : null;
+            RawSyntax blockCopy = rawBlock.isPresent() ? rawBlock.get().copy(prefix, support) : null;
+            AtRule copy = new AtRule(-1, -1, newName, expressionCopy, blockCopy, refiner);
+            copy.shouldWriteName(shouldWriteName);
+            return copy;
+        }
     }
 }

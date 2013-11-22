@@ -132,13 +132,8 @@ public class ValuesTest {
         }
 
         @Override
-        public PropertyValue copy() {
-            return null;
-        }
-
-        @Override
-        public PropertyValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
-            return null;
+        protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

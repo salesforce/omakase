@@ -25,7 +25,6 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -164,15 +163,15 @@ public class TermListTest {
     @Test
     public void defaultNoParentDeclaration() {
         TermList tl = TermList.singleValue(NumericalValue.of(1));
-        assertThat(tl.parentDeclaration().isPresent()).isFalse();
+        assertThat(tl.declaration().isPresent()).isFalse();
     }
 
     @Test
     public void setParentDeclaration() {
         TermList tl = TermList.singleValue(NumericalValue.of(0));
         Declaration d = new Declaration(Property.FONT_SIZE, NumericalValue.of(1, "px"));
-        tl.parentDeclaration(d);
-        assertThat(tl.parentDeclaration().get()).isSameAs(d);
+        tl.declaration(d);
+        assertThat(tl.declaration().get()).isSameAs(d);
     }
 
     @Test
@@ -181,7 +180,7 @@ public class TermListTest {
         tl.important(true);
         tl.comments(Lists.newArrayList("test"));
 
-        TermList copy = tl.copy();
+        TermList copy = (TermList)tl.copy();
         assertThat(copy.isImportant()).isTrue();
         assertThat(copy.members()).hasSize(3);
         assertThat(copy.comments()).hasSize(1);
@@ -196,18 +195,12 @@ public class TermListTest {
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 15);
 
-        TermList copy = tl.copyWithPrefix(Prefix.MOZ, support);
+        TermList copy = (TermList)tl.copy(Prefix.MOZ, support);
         assertThat(copy.isImportant()).isTrue();
         assertThat(copy.members()).hasSize(1);
         assertThat(copy.comments()).hasSize(1);
         TermListMember first = Iterables.get(copy.members(), 0);
         assertThat(((GenericFunctionValue)first).name()).isEqualTo("-moz-calc");
-    }
-
-    @Test
-    public void toStringTest() {
-        TermList tl = TermList.singleValue(NumericalValue.of(1));
-        assertThat(tl.toString()).isNotEqualTo(Util.originalToString(tl));
     }
 
     private static final class CustomTermView extends AbstractTerm implements TermView {
@@ -225,8 +218,8 @@ public class TermListTest {
         }
 
         @Override
-        public TermListMember copy() {
-            return null;
+        protected TermListMember makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -241,8 +234,8 @@ public class TermListTest {
         }
 
         @Override
-        public TermListMember copy() {
-            return null;
+        protected TermListMember makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

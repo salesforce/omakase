@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
@@ -28,7 +27,6 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -117,6 +115,19 @@ public class DeclarationTest {
     }
 
     @Test
+    public void changedPropertyValueIsBroadcasted() {
+        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.declarations().append(d);
+
+        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
+
+        d.propertyValue(newValue);
+        assertThat(newValue.status()).isSameAs(Status.PROCESSED);
+    }
+
+    @Test
     public void setPropertyValueDoesntBroadcastAlreadyBroadcasted() {
         StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
         Rule rule = new Rule(1, 1, broadcaster);
@@ -136,7 +147,19 @@ public class DeclarationTest {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
-        assertThat(d.propertyValue().parentDeclaration().get()).isSameAs(d);
+        assertThat(d.propertyValue().declaration().get()).isSameAs(d);
+    }
+
+    @Test
+    public void setPropertyValueRemovesParentFromOldPropertyValue() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        PropertyValue oldValue = d.propertyValue();
+
+        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        d.propertyValue(newValue);
+
+        assertThat(oldValue.declaration().isPresent()).isFalse();
+        assertThat(oldValue.status() == Status.NEVER_EMIT);
     }
 
     @Test
@@ -264,18 +287,6 @@ public class DeclarationTest {
     }
 
     @Test
-    public void setOrphanedComments() {
-        Comment c = new Comment("c");
-        fromRaw.orphanedComment(c);
-        assertThat(fromRaw.orphanedComments()).containsExactly(c);
-    }
-
-    @Test
-    public void getOrphanedCommentsWhenAbsent() {
-        assertThat(fromRaw.orphanedComments()).isEmpty();
-    }
-
-    @Test
     public void writeVerboseRefined() throws IOException {
         TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
@@ -387,17 +398,11 @@ public class DeclarationTest {
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 3.6);
 
-        Declaration copy = d.copyWithPrefix(Prefix.MOZ, support);
+        Declaration copy = d.copy(Prefix.MOZ, support);
         assertThat(copy.isProperty(Property.MARGIN));
         assertThat(copy.isPrefixed()).isTrue();
         assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
         assertThat(copy.comments()).hasSameSizeAs(d.comments());
-    }
-
-    @Test
-    public void toStringTest() {
-        Declaration value = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 
     private static final class TestPropertyValue extends AbstractPropertyValue {
@@ -421,13 +426,8 @@ public class DeclarationTest {
         }
 
         @Override
-        public PropertyValue copy() {
-            return null;
-        }
-
-        @Override
-        public PropertyValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
-            return null;
+        protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

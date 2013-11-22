@@ -19,12 +19,17 @@ package com.salesforce.omakase.util;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.data.Prefix;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -35,8 +40,8 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @author nmcwilliams
  */
-public final class Declarations {
-    private Declarations() {}
+public final class Equivalents {
+    private Equivalents() {}
 
     /**
      * Finds all {@link Declaration}s within the same rule that have the same property name as the given declaration and also have
@@ -63,7 +68,7 @@ public final class Declarations {
      * @throws IllegalArgumentException
      *     If the given declaration is detached or is prefixed itself.
      */
-    public static Multimap<Prefix, Declaration> prefixedEquivalents(Declaration unprefixed) {
+    public static Multimap<Prefix, Declaration> prefixedDeclarations(Declaration unprefixed) {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
@@ -104,7 +109,7 @@ public final class Declarations {
      * @throws IllegalArgumentException
      *     If the given declaration is detached or is prefixed itself.
      */
-    public static Multimap<Prefix, Declaration> prefixedFunctionEquivalents(Declaration unprefixed, String functionName) {
+    public static Multimap<Prefix, Declaration> prefixedFunctions(Declaration unprefixed, String functionName) {
         checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
@@ -132,5 +137,49 @@ public final class Declarations {
         } //pyramid of dooooom
 
         return multimap == null ? ImmutableMultimap.<Prefix, Declaration>of() : multimap;
+    }
+
+    public static Multimap<Prefix, AtRule> prefixedAtRules(AtRule unprefixed) {
+        checkArgument(!unprefixed.isDetached(), "at-rule must not be detached");
+        checkArgument(!unprefixed.name().startsWith("-"), "at-rule must not have a prefixed property");
+
+        Multimap<Prefix, AtRule> multimap = null;
+
+        // find all immediate preceding and following at-rules that have the same name
+        List<AtRule> group = Lists.newArrayList();
+
+        Optional<Statement> previous = unprefixed.previous();
+
+        while (previous.isPresent() && previous.get().asAtRule().isPresent()) {
+            AtRule atRule = previous.get().asAtRule().get();
+            if (atRule.name().startsWith("-")) {
+                Prefixes.PrefixPair pair = Prefixes.splitPrefix(atRule.name());
+                if (pair.unprefixed().equals(unprefixed.name()) && pair.prefix().isPresent()) {
+                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                    multimap.put(pair.prefix().get(), atRule);
+                    previous = atRule.previous();
+                    continue;
+                }
+            }
+            previous = Optional.absent();
+        }
+
+        Optional<Statement> next = unprefixed.previous();
+
+        while (next.isPresent() && next.get().asAtRule().isPresent()) {
+            AtRule atRule = next.get().asAtRule().get();
+            if (atRule.name().startsWith("-")) {
+                Prefixes.PrefixPair pair = Prefixes.splitPrefix(atRule.name());
+                if (pair.unprefixed().equals(unprefixed.name()) && pair.prefix().isPresent()) {
+                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                    multimap.put(pair.prefix().get(), atRule);
+                    next = atRule.next();
+                    continue;
+                }
+            }
+            next = Optional.absent();
+        }
+
+        return multimap == null ? ImmutableMultimap.<Prefix, AtRule>of() : multimap;
     }
 }

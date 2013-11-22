@@ -44,12 +44,6 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void syntax(Syntax syntax) {
-        logger.trace("syntax: {}", syntax);
-    }
-
-    @Observe
-    @Override
     public void refinable(Refinable<?> refinable) {
         logger.trace("refinable: {}", refinable);
     }

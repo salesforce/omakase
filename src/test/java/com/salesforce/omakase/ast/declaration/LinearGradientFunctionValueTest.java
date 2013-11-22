@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -88,7 +87,7 @@ public class LinearGradientFunctionValueTest {
     public void testCopy() {
         function = new LinearGradientFunctionValue("red, yellow");
         function.comments(Lists.newArrayList("test"));
-        LinearGradientFunctionValue copy = function.copy();
+        LinearGradientFunctionValue copy = (LinearGradientFunctionValue)function.copy();
         assertThat(copy.args()).isEqualTo(function.args());
         assertThat(copy.comments()).hasSameSizeAs(function.comments());
         assertThat(copy.repeating()).isEqualTo(function.repeating());
@@ -99,7 +98,7 @@ public class LinearGradientFunctionValueTest {
         function = new LinearGradientFunctionValue("red, yellow");
         function.comments(Lists.newArrayList("test"));
         function.repeating(true);
-        LinearGradientFunctionValue copy = function.copy();
+        LinearGradientFunctionValue copy = (LinearGradientFunctionValue)function.copy();
         assertThat(copy.args()).isEqualTo(function.args());
         assertThat(copy.comments()).hasSameSizeAs(function.comments());
         assertThat(copy.repeating()).isEqualTo(function.repeating());
@@ -113,7 +112,7 @@ public class LinearGradientFunctionValueTest {
         function = new LinearGradientFunctionValue("red, yellow");
         function.comments(Lists.newArrayList("test"));
 
-        FunctionValue copy = function.copyWithPrefix(Prefix.MOZ, support);
+        FunctionValue copy = (FunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy).isInstanceOf(GenericFunctionValue.class);
 
         GenericFunctionValue gfv = (GenericFunctionValue)copy;
@@ -132,7 +131,7 @@ public class LinearGradientFunctionValueTest {
         function.repeating(true);
         function.comments(Lists.newArrayList("test"));
 
-        FunctionValue copy = function.copyWithPrefix(Prefix.MOZ, support);
+        FunctionValue copy = (FunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy).isInstanceOf(GenericFunctionValue.class);
 
         GenericFunctionValue gfv = (GenericFunctionValue)copy;
@@ -146,7 +145,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixToBottom() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to bottom, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("top, red, yellow");
     }
 
@@ -154,7 +153,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixToTop() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to top, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("bottom, red, yellow");
     }
 
@@ -162,7 +161,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixToRight() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to right, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("left, red, yellow");
     }
 
@@ -170,7 +169,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixToLeft() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to left, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("right, red, yellow");
     }
 
@@ -178,7 +177,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixToTopRight() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to top right, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("bottom left, red, yellow");
     }
 
@@ -186,7 +185,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixHasAngle() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("50deg, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("40deg, red, yellow");
     }
 
@@ -194,7 +193,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixHasHighAngle() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("355deg, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("95deg, red, yellow");
     }
 
@@ -202,7 +201,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixHasNegativeAngle() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("-45deg, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copyWithPrefix(Prefix.MOZ, support);
+        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
         assertThat(copy.args()).isEqualTo("135deg, red, yellow");
     }
 
@@ -210,13 +209,7 @@ public class LinearGradientFunctionValueTest {
     public void copyWithPrefixNotPrefixable() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("red, yellow");
-        FunctionValue copy = function.copyWithPrefix(Prefix.WEBKIT, support);
+        FunctionValue copy = (FunctionValue)function.copy(Prefix.WEBKIT, support);
         assertThat(copy.name()).isEqualTo("linear-gradient");
-    }
-
-    @Test
-    public void toStringTest() {
-        function = new LinearGradientFunctionValue("red, yellow");
-        assertThat(function.toString()).isNotEqualTo(Util.originalToString(function));
     }
 }

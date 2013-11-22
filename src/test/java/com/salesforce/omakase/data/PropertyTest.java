@@ -27,9 +27,4 @@ public class PropertyTest {
     public void reverseLookup() {
         assertThat(Property.lookup("display")).isSameAs(Property.DISPLAY);
     }
-
-    @Test
-    public void toStringTest() {
-        assertThat(Property.BORDER_BOTTOM.toString()).isEqualTo("border-bottom");
-    }
 }

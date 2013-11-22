@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -31,7 +30,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "interface for all property values", broadcasted = REFINED_DECLARATION)
-public interface PropertyValue extends Syntax, Copyable<PropertyValue> {
+public interface PropertyValue extends Syntax<PropertyValue> {
     /**
      * Gets whether this {@link PropertyValue} is marked as "!important".
      *
@@ -56,7 +55,7 @@ public interface PropertyValue extends Syntax, Copyable<PropertyValue> {
      * @param parent
      *     The {@link Declaration} that contains this property.
      */
-    void parentDeclaration(Declaration parent);
+    void declaration(Declaration parent);
 
     /**
      * Gets the parent {@link Declaration} that owns this property, or absent if not set. This will not be set for dynamically
@@ -64,5 +63,5 @@ public interface PropertyValue extends Syntax, Copyable<PropertyValue> {
      *
      * @return The parent {@link Declaration}, or {@link Optional#absent()} if not set.
      */
-    Optional<Declaration> parentDeclaration();
+    Optional<Declaration> declaration();
 }

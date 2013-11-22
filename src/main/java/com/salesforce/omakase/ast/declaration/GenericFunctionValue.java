@@ -22,8 +22,6 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.FunctionValueParser;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -74,8 +72,7 @@ public final class GenericFunctionValue extends AbstractTerm implements Function
      *     The function arguments.
      */
     public GenericFunctionValue(String name, String args) {
-        name(name);
-        args(args);
+        name(name).args(args);
     }
 
     /**
@@ -131,27 +128,11 @@ public final class GenericFunctionValue extends AbstractTerm implements Function
     }
 
     @Override
-    public GenericFunctionValue copy() {
-        return Copy.comments(this, new GenericFunctionValue(name, args));
-    }
-
-    @Override
-    public GenericFunctionValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        if (support.requiresPrefixForFunction(prefix, name)) {
-            return Copy.comments(this, new GenericFunctionValue(prefix + name, args));
+    protected GenericFunctionValue makeCopy(Prefix prefix, SupportMatrix support) {
+        if (prefix != null && support != null && support.requiresPrefixForFunction(prefix, name)) {
+            return new GenericFunctionValue(prefix + name, args);
         }
-        return copy();
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this)
-            .add("line", line())
-            .add("column", column())
-            .add("name", name)
-            .add("args", args)
-            .addUnlessEmpty("comments", comments())
-            .toString();
+        return new GenericFunctionValue(name, args);
     }
 
     /**

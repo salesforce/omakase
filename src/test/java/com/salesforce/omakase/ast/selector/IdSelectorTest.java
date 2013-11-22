@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -49,11 +48,5 @@ public class IdSelectorTest {
     public void write() throws IOException {
         IdSelector id = new IdSelector(1, 1, "test");
         assertThat(StyleWriter.compressed().writeSnippet(id)).isEqualTo("#test");
-    }
-
-    @Test
-    public void toStringTest() {
-        IdSelector id = new IdSelector(1, 1, "test");
-        assertThat(id.toString()).isNotEqualTo(Util.originalToString(id));
     }
 }

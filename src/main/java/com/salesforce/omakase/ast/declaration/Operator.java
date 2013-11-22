@@ -21,7 +21,6 @@ import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -75,7 +74,7 @@ public final class Operator extends AbstractGroupable<TermList, TermListMember> 
     }
 
     @Override
-    protected TermListMember self() {
+    protected Operator self() {
         return this;
     }
 
@@ -90,17 +89,7 @@ public final class Operator extends AbstractGroupable<TermList, TermListMember> 
     }
 
     @Override
-    public Operator copy() {
+    protected Operator makeCopy(Prefix prefix, SupportMatrix support) {
         return new Operator(type);
-    }
-
-    @Override
-    public Operator copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        return copy();
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this).add("type", type).toString();
     }
 }

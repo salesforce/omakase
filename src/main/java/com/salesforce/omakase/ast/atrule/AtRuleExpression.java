@@ -23,5 +23,4 @@ import com.salesforce.omakase.ast.Syntax;
  *
  * @author nmcwilliams
  */
-public interface AtRuleExpression extends Syntax {
-}
+public interface AtRuleExpression extends Syntax<AtRuleExpression> {}

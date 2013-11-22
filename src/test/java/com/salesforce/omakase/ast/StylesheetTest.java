@@ -18,12 +18,11 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.collect.Iterators;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -49,19 +48,6 @@ public class StylesheetTest {
     }
 
     @Test
-    public void orphanedCommentsAbsent() {
-        Stylesheet sheet = new Stylesheet();
-        assertThat(sheet.orphanedComments()).isEmpty();
-    }
-
-    @Test
-    public void orphanedCommentsPresent() {
-        Stylesheet sheet = new Stylesheet();
-        sheet.orphanedComment(new Comment("s"));
-        assertThat(sheet.orphanedComments()).hasSize(1);
-    }
-
-    @Test
     public void write() throws IOException {
         Stylesheet sheet = new Stylesheet();
         Rule rule = new Rule();
@@ -71,11 +57,5 @@ public class StylesheetTest {
         assertThat(sheet.statements()).hasSize(1);
 
         assertThat(StyleWriter.compressed().writeSnippet(rule)).isEqualTo(".class{display:none}");
-    }
-
-    @Test
-    public void toStringTest() {
-        Stylesheet sheet = new Stylesheet();
-        assertThat(sheet.toString()).isNotEqualTo(Util.originalToString(sheet));
     }
 }

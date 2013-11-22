@@ -16,13 +16,13 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
-import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.Writable;
 
 import java.util.List;
@@ -41,11 +41,12 @@ import java.util.List;
  * CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled with custom validation to
  * ensure correct usage. See {@link Refinable} for more information.
  *
+ * @param <C>
+ *     (C)opiedType. Type of unit created when copied (usually the same type as the implementing class itself).
+ *
  * @author nmcwilliams
  */
-@Subscribable
-@Description(value = "parent interface of all subscribable units", broadcasted = BroadcastRequirement.SPECIAL)
-public interface Syntax extends Writable, Broadcastable {
+public interface Syntax<C> extends Writable, Broadcastable {
     /**
      * The line number within the source where this {@link Syntax} unit was parsed.
      *
@@ -70,19 +71,50 @@ public interface Syntax extends Writable, Broadcastable {
     boolean hasSourcePosition();
 
     /**
-     * Adds the given comments to this unit.
+     * Performs a deep copy of the instance.
      * <p/>
-     * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
-     * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
-     * Declaration} itself instead of the property name or value inside of it.
+     * This includes any inner syntax units, for example the selectors inside of a rule. This also carries over the comments and
+     * orphaned comments.
+     * <p/>
+     * Keep in mind that copying is generally not preferred. Particularly, it is generally better to parse the source again than
+     * to copy a {@link Stylesheet}. Copying a specific syntax unit may be appropriate when duplicating the terms in a declaration
+     * or the selector parts in a selector.
      *
-     *
-     * @param commentsToAdd
-     *     The comments to add.
-     *
-     * @return this, for chaining.
+     * @return The new instance.
      */
-    Syntax comments(List<String> commentsToAdd);
+    C copy();
+
+    /**
+     * Performs a deep copy of the instance.
+     * <p/>
+     * This includes any inner syntax units, for example the selectors inside of a rule. This also carries over the comments and
+     * orphaned comments.
+     * <p/>
+     * If applicable and required by the supported browser versions (as specified in the given {@link SupportMatrix}), this will
+     * also prefix certain values and members as part of the copy.
+     * <p/>
+     * Take the following for example:
+     * <pre><code>
+     * PropertyName pn = PropertyName.using("border-radius");
+     * PropertyName copy = PropertyName.copyWithPrefix(Prefix.WEBKIT, support);
+     * </code></pre>
+     * <p/>
+     * Assuming that a version of Chrome was added to the {@link SupportMatrix} that requires a prefix for the {@code
+     * border-radius} property, the copy will have the webkit prefix, e.g., {@code -webkit-border-radius}.
+     * <p/>
+     * This should also cascade to any inner or child syntax units. For example, if calling on a {@link Declaration} instance,
+     * both the property name and also any applicable parts of the declaration value should get prefixed.
+     * <p/>
+     * For implementations, it should be understood that both the prefix and support properties may be null.
+     *
+     * @param prefix
+     *     Apply this {@link Prefix} is applicable.
+     * @param support
+     *     Represents the supported browser versions.
+     *
+     * @return The new instance.
+     */
+    C copy(Prefix prefix, SupportMatrix support);
 
     /**
      * Adds the given comments to this unit.
@@ -91,13 +123,22 @@ public interface Syntax extends Writable, Broadcastable {
      * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
      * Declaration} itself instead of the property name or value inside of it.
      *
-     *
-     * @param commentsToAdd
+     * @param comments
      *     The comments to add.
      *
      * @return this, for chaining.
      */
-    Syntax directComments(List<Comment> commentsToAdd);
+    Syntax<C> comments(List<String> comments);
+
+    /**
+     * Copies all comments from the given syntax unit.
+     *
+     * @param copyFrom
+     *     Copy comments from this unit.
+     *
+     * @return this, for chaining.
+     */
+    Syntax<C> comments(Syntax<?> copyFrom);
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.
@@ -107,5 +148,35 @@ public interface Syntax extends Writable, Broadcastable {
      *
      * @return The list of comments. Never returns null.
      */
-    List<Comment> comments();
+    ImmutableList<Comment> comments();
+
+    /**
+     * Adds orphaned comments (comments that appears after or at the end of the unit).
+     *
+     * @param comments
+     *     The comments to add.
+     *
+     * @return this, for chaining.
+     */
+    Syntax<C> orphanedComments(List<String> comments);
+
+    /**
+     * Copies all orphaned comments from the given syntax unit.
+     *
+     * @param copyFrom
+     *     Copy orphaned comments from this unit.
+     *
+     * @return this, for chaining.
+     */
+    Syntax<C> orphanedComments(Syntax<?> copyFrom);
+
+    /**
+     * Gets all orphaned comments (comments that appear after or at the end of the unit).
+     * <p/>
+     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
+     * at the end of a stylesheet or declaration block.
+     *
+     * @return The list of comments. Never returns null.
+     */
+    ImmutableList<Comment> orphanedComments();
 }

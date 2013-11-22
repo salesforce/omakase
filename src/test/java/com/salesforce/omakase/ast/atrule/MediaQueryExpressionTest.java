@@ -21,7 +21,6 @@ import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.ast.declaration.TermListMember;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -83,11 +82,5 @@ public class MediaQueryExpressionTest {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
         exp.terms(Lists.<TermListMember>newArrayList(NumericalValue.of(300, "px")));
         assertThat(StyleWriter.compressed().writeSnippet(exp)).isEqualTo("(max-width:300px)");
-    }
-
-    @Test
-    public void toStringTest() {
-        MediaQueryExpression exp = new MediaQueryExpression("max-width");
-        assertThat(exp.toString()).isNotEqualTo(Util.originalToString(exp));
     }
 }

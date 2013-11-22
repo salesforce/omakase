@@ -17,10 +17,11 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.selector.AttributeSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -179,13 +180,12 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("attribute", attribute)
-            .add("matchType", matchType)
-            .add("value", value)
-            .toString();
+    protected AttributeSelector makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        AttributeSelector copy = new AttributeSelector(attribute);
+        if (matchType.isPresent()) {
+            copy.match(matchType.get(), value.get());
+        }
+        return copy;
     }
 }

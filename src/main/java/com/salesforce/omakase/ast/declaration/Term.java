@@ -30,5 +30,4 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "a single segment of a property value", broadcasted = REFINED_DECLARATION)
-public interface Term extends TermListMember {
-}
+public interface Term extends TermListMember {}

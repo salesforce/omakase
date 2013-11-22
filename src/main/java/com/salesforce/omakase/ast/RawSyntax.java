@@ -16,7 +16,8 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
@@ -33,7 +34,7 @@ import java.io.IOException;
  * @see RawSelectorParser
  * @see RawAtRuleParser
  */
-public final class RawSyntax extends AbstractSyntax {
+public final class RawSyntax extends AbstractSyntax<RawSyntax> {
     private final String content;
 
     /**
@@ -58,25 +59,19 @@ public final class RawSyntax extends AbstractSyntax {
      * @return The raw content.
      */
     public String content() {
+        // TESTME
         return content;
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (writer.isCompressed()) {
-            // XXX compression
-            appendable.append(content);
-        } else {
-            appendable.append(content);
-        }
+        // XXX compression
+        appendable.append(content);
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .add("line", line())
-            .add("column", column())
-            .add("content", content)
-            .toString();
+    protected RawSyntax makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        return new RawSyntax(-1, -1, content);
     }
 }

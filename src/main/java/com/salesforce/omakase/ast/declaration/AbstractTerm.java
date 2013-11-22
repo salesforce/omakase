@@ -16,10 +16,8 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.data.Prefix;
 
 /**
  * Base class for {@link Term}s.
@@ -43,6 +41,11 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
     }
 
     @Override
+    protected Term self() {
+        return this;
+    }
+
+    @Override
     public void detach() {
         // not that this can't be supported, but I can't think of any obvious use cases where it wouldn't be better
         // to replace the members of the term list with an explicit list instead. It usually won't make sense to detach a term
@@ -59,16 +62,5 @@ public abstract class AbstractTerm extends AbstractGroupable<TermList, TermListM
         // based on the override to #detach as explained above. Other behavior is probably dependent on this override too,
         // like the loose terms in a MediaQueryExpression.
         return true;
-    }
-
-    @Override
-    protected TermListMember self() {
-        return this;
-    }
-
-    @Override
-    public TermListMember copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        // subclasses override this behavior if prefixes are applicable
-        return copy();
     }
 }

@@ -18,7 +18,9 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -96,11 +98,16 @@ public class AbstractSyntaxTest {
         assertThat(broadcaster.all()).isEmpty();
     }
 
-    public static final class TestClass extends AbstractSyntax {
+    public static final class TestClass extends AbstractSyntax<TestClass> {
         public TestClass() {}
 
         public TestClass(int line, int column) {
             super(line, column);
+        }
+
+        @Override
+        protected TestClass makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException("not copyable");
         }
 
         @Override

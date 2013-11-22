@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -73,11 +72,5 @@ public class CombinatorTest {
     public void writeGeneral() throws IOException {
         Combinator c = Combinator.general();
         assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo("~");
-    }
-
-    @Test
-    public void toStringTest() {
-        Combinator c = Combinator.general();
-        assertThat(c.toString()).isNotEqualTo(Util.originalToString(c));
     }
 }

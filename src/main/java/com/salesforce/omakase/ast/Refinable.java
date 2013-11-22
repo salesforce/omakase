@@ -40,7 +40,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  */
 @Subscribable
 @Description("raw syntax that can be further refined")
-public interface Refinable<T> extends Syntax {
+public interface Refinable<T> {
     /**
      * Gets whether this unit is refined.
      *

@@ -35,7 +35,7 @@ public class AsTest {
 
     @Test
     public void testNamed() {
-        String s = As.stringNamed("test").add("1", "a").add("2", "b").toString();
+        String s = As.string(this).named("test").add("1", "a").add("2", "b").toString();
         assertThat(s).isEqualTo("test{1=a, 2=b}");
     }
 

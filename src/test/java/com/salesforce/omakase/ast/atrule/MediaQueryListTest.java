@@ -20,14 +20,13 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaQueryList}.
@@ -103,10 +102,5 @@ public class MediaQueryListTest {
         list.queries().append(q1).append(q2);
         q2.detach();
         assertThat(StyleWriter.verbose().writeSnippet(list)).isEqualTo("only screen and (min-width: 800px)");
-    }
-
-    @Test
-    public void toStringTest() {
-        assertThat(list.toString()).isNotEqualTo(Util.originalToString(list));
     }
 }

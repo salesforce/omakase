@@ -63,7 +63,7 @@ public final class PseudoSelectorParser extends AbstractParser {
             type = PSEUDO_ELEMENT_SELECTOR;
         }
 
-        Syntax selector;
+        Syntax<?> selector;
 
         if (type == PSEUDO_ELEMENT_SELECTOR) {
             selector = new PseudoElementSelector(line, column, name.get());

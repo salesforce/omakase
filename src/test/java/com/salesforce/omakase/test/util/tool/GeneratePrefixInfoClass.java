@@ -58,7 +58,8 @@ public class GeneratePrefixInfoClass {
         Map types = (Map)yaml.load(Tools.readFile("/data/prefix-info.yaml"));
 
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
-        List<FunctionInfo> functions = loadFunctions((Map)types.get("functions"));
+        List<NameInfo> functions = loadGeneric((Map)types.get("functions"));
+        List<NameInfo> atRules = loadGeneric((Map)types.get("at-rules"));
 
         // write out the new class source
         SourceWriter writer = new SourceWriter();
@@ -68,6 +69,7 @@ public class GeneratePrefixInfoClass {
         writer.template("prefix-info-class.ftl");
         writer.data("properties", properties);
         writer.data("functions", functions);
+        writer.data("atRules", atRules);
 
         writer.write();
     }
@@ -91,14 +93,14 @@ public class GeneratePrefixInfoClass {
     }
 
     /** load information on all the prefixable functions */
-    private List<FunctionInfo> loadFunctions(Map<String, List<String>> categories) throws IOException {
-        List<FunctionInfo> info = Lists.newArrayList();
+    private List<NameInfo> loadGeneric(Map<String, List<String>> categories) throws IOException {
+        List<NameInfo> info = Lists.newArrayList();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
             for (BrowserVersion browserVersion : lastPrefixedBrowserVersions(category.getKey())) {
                 // loop through each property name in the category
                 for (String function : category.getValue()) {
-                    info.add(new FunctionInfo(function, browserVersion.browser(), browserVersion.version()));
+                    info.add(new NameInfo(function, browserVersion.browser(), browserVersion.version()));
                 }
             }
         }
@@ -106,6 +108,7 @@ public class GeneratePrefixInfoClass {
         return info;
     }
 
+    /** last prefixed version for each browser (each browser with at least one prefixed version) */
     private List<BrowserVersion> lastPrefixedBrowserVersions(String category) throws IOException {
         List<BrowserVersion> versions = Lists.newArrayList();
 
@@ -187,16 +190,16 @@ public class GeneratePrefixInfoClass {
         }
     }
 
-    public static final class FunctionInfo extends Info {
-        private final String function;
+    public static final class NameInfo extends Info {
+        private final String name;
 
-        public FunctionInfo(String function, Browser browser, Double version) {
+        public NameInfo(String name, Browser browser, Double version) {
             super(browser, version);
-            this.function = function;
+            this.name = name;
         }
 
-        public String getFunction() {
-            return function;
+        public String getName() {
+            return name;
         }
     }
 }

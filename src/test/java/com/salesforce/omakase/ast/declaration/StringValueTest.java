@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -83,15 +82,9 @@ public class StringValueTest {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         s.comments(Lists.newArrayList("test"));
 
-        StringValue copy = s.copy();
+        StringValue copy = (StringValue)s.copy();
         assertThat(copy.content()).isEqualTo(s.content());
         assertThat(copy.mode()).isSameAs(s.mode());
         assertThat(copy.comments()).hasSameSizeAs(s.comments());
-    }
-
-    @Test
-    public void toStringTest() {
-        StringValue value = StringValue.of(QuotationMode.SINGLE, "xyz");
-        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

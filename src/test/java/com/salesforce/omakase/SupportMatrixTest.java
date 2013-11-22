@@ -20,13 +20,12 @@ import com.google.common.collect.Iterables;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.util.Util;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link SupportMatrix}.
@@ -208,10 +207,5 @@ public class SupportMatrixTest {
         support.browser(Browser.FIREFOX, 14);
         support.browser(Browser.OPERA, 12);
         assertThat(support.requiresPrefixForFunction(Prefix.O, "calc")).isFalse();
-    }
-
-    @Test
-    public void toStringTest() {
-        assertThat(support.toString()).isNotEqualTo(Util.originalToString(support));
     }
 }

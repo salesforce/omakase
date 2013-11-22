@@ -16,9 +16,10 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.selector.CombinatorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -102,8 +103,9 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
     }
 
     @Override
-    public String toString() {
-        return As.string(this).indent().add("abstract", super.toString()).add("type", type).toString();
+    protected Combinator makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        return new Combinator(type);
     }
 
     /**

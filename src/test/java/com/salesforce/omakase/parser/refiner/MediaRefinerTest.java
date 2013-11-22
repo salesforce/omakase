@@ -18,13 +18,17 @@ package com.salesforce.omakase.parser.refiner;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -34,8 +38,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.Iterator;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaRefiner}.
@@ -166,13 +171,28 @@ public class MediaRefinerTest {
         assertThat(broadcaster.find(com.salesforce.omakase.ast.Rule.class).isPresent()).isTrue();
     }
 
-    private static final class TestExpression extends AbstractSyntax implements AtRuleExpression {
+    private static final class TestExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
+
+        @Override
+        protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
+        }
     }
 
-    private static final class TestBlock extends AbstractSyntax implements AtRuleBlock {
+    private static final class TestBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
+
+        @Override
+        public Iterator<Statement> iterator() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected StatementIterable makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

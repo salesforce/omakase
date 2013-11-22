@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -32,7 +31,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class UrlFunctionValueTest {
-
     @Test
     public void getUrl() {
         UrlFunctionValue url = new UrlFunctionValue(2, 2, "/images/one.png");
@@ -85,7 +83,7 @@ public class UrlFunctionValueTest {
         url.quotationMode(QuotationMode.DOUBLE);
         url.comments(Lists.newArrayList("test"));
 
-        UrlFunctionValue copy = url.copy();
+        UrlFunctionValue copy = (UrlFunctionValue)url.copy();
         assertThat(copy.url()).isSameAs(url.url());
         assertThat(copy.quotationMode().get()).isSameAs(url.quotationMode().get());
         assertThat(copy.comments()).hasSameSizeAs(url.comments());
@@ -96,15 +94,9 @@ public class UrlFunctionValueTest {
         UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
         url.comments(Lists.newArrayList("test"));
 
-        UrlFunctionValue copy = url.copy();
+        UrlFunctionValue copy = (UrlFunctionValue)url.copy();
         assertThat(copy.url()).isSameAs(url.url());
         assertThat(copy.quotationMode().isPresent()).isEqualTo(false);
         assertThat(copy.comments()).hasSameSizeAs(url.comments());
-    }
-
-    @Test
-    public void toStringTest() {
-        UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
-        assertThat(url.toString()).isNotEqualTo(Util.originalToString(url));
     }
 }

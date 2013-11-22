@@ -16,16 +16,14 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 
-import java.util.Set;
-
 /**
+ * TODO delete
  * Information for {@link PrefixerStep}s.
  *
  * @author nmcwilliams
@@ -33,19 +31,18 @@ import java.util.Set;
 final class PrefixerCtx {
     final boolean prune;
     final boolean rearrange;
-    final Property property;
-    final Set<Prefix> handled;
     final SupportMatrix support;
-    final FunctionValue function;
-    final Declaration declaration;
 
-    public PrefixerCtx(SupportMatrix sup, boolean prune, boolean rearrange, Declaration decl, Property prop, FunctionValue func) {
+    boolean handled;
+
+    Property property;
+    FunctionValue function;
+    Declaration declaration;
+    AtRule atRule;
+
+    public PrefixerCtx(SupportMatrix sup, boolean prune, boolean rearrange) {
         this.support = sup;
         this.rearrange = rearrange;
         this.prune = prune;
-        this.declaration = decl;
-        this.property = prop;
-        this.function = func;
-        this.handled = Sets.newHashSet();
     }
 }

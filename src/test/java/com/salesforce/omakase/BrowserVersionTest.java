@@ -17,10 +17,9 @@
 package com.salesforce.omakase;
 
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.test.util.Util;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link BrowserVersion}.
@@ -29,7 +28,6 @@ import static org.fest.assertions.api.Assertions.*;
  */
 @SuppressWarnings("JavaDoc")
 public class BrowserVersionTest {
-
     @Test
     public void getBrowser() {
         BrowserVersion bv = new BrowserVersion(Browser.CHROME, 12);
@@ -40,12 +38,6 @@ public class BrowserVersionTest {
     public void getVersion() {
         BrowserVersion bv = new BrowserVersion(Browser.CHROME, 12);
         assertThat(bv.version()).isEqualTo(12);
-    }
-
-    @Test
-    public void toStringTest() {
-        BrowserVersion bv = new BrowserVersion(Browser.CHROME, 12);
-        assertThat(bv.toString()).isNotEqualTo(Util.originalToString(bv));
     }
 
     @Test

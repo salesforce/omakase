@@ -31,7 +31,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(value = "rule or at-rule", broadcasted = AUTOMATIC)
-public interface Statement extends Syntax, Groupable<Stylesheet, Statement> {
+public interface Statement extends Groupable<StatementIterable, Statement> {
     /**
      * Gets this statement as an {@link Rule}, if possible. This is an alternative to using an <pre>instanceof</pre> check.
      *

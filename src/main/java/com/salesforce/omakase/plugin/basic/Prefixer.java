@@ -19,6 +19,7 @@ package com.salesforce.omakase.plugin.basic;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -94,6 +95,9 @@ public final class Prefixer implements Plugin {
 
     private static final List<PrefixerStep> FUNCTION_STEPS = ImmutableList.<PrefixerStep>of(
         new HandleStandardFunction()
+    );
+    private static final List<PrefixerStep> AT_RULE_STEPS = ImmutableList.<PrefixerStep>of(
+        new HandleStandardAtRule()
     );
 
     private final SupportMatrix support;
@@ -179,8 +183,10 @@ public final class Prefixer implements Plugin {
         Optional<Property> property = declaration.propertyName().asProperty();
         if (!property.isPresent() || !PrefixInfo.hasProperty(property.get())) return;
 
-        PrefixerCtx context = new PrefixerCtx(support, prune, rearrange, declaration, property.get(), null);
-        for (PrefixerStep step : PROPERTY_STEPS) step.process(context);
+        PrefixerCtx ctx = new PrefixerCtx(support, prune, rearrange);
+        ctx.declaration = declaration;
+        ctx.property = property.get();
+        for (PrefixerStep step : PROPERTY_STEPS) step.process(ctx);
     }
 
     /**
@@ -195,11 +201,29 @@ public final class Prefixer implements Plugin {
         if (function.isDetached() || function.name().startsWith("-") || !PrefixInfo.hasFunction(function.name())) return;
 
         // function must be attached to a declaration
-        Optional<Declaration> declaration = function.group().get().parent().parentDeclaration();
+        Optional<Declaration> declaration = function.group().get().parent().declaration();
         if (!declaration.isPresent()) return;
 
-        PrefixerCtx context = new PrefixerCtx(support, prune, rearrange, declaration.get(), null, function);
-        for (PrefixerStep step : FUNCTION_STEPS) step.process(context);
+        PrefixerCtx ctx = new PrefixerCtx(support, prune, rearrange);
+        ctx.declaration = declaration.get();
+        ctx.function = function;
+        for (PrefixerStep step : FUNCTION_STEPS) step.process(ctx);
+    }
+
+    /**
+     * Subscription method - do not invoke directly.
+     *
+     * @param rule
+     *     The atRule instance.
+     */
+    @Rework
+    public void atRule(AtRule rule) {
+        // at-rule must be attached to a stylesheet, cannot start with a prefix and must be prefixable
+        if (rule.isDetached() || rule.name().startsWith("-") || !PrefixInfo.hasAtRule(rule.name())) return;
+
+        PrefixerCtx ctx = new PrefixerCtx(support, prune, rearrange);
+        ctx.atRule = rule;
+        for (PrefixerStep step : AT_RULE_STEPS) step.process(ctx);
     }
 
     /**

@@ -91,12 +91,8 @@ public final class UnquotedIEFilter extends AbstractPropertyValue {
     }
 
     @Override
-    public PropertyValue copy() {
+    protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
         return new UnquotedIEFilter(-1, -1, content);
-    }
-
-    @Override
-    public PropertyValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        return copy();
     }
 }

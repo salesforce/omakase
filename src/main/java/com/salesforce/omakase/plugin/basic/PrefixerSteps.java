@@ -20,6 +20,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
@@ -27,13 +29,14 @@ import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Actions;
-import com.salesforce.omakase.util.Declarations;
+import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.Values;
 
 import java.util.Collection;
 import java.util.Set;
 
 /**
+ * TODO move to Prefixer class
  * Collection of {@link PrefixerStep}s.
  *
  * @author nmcwilliams
@@ -52,7 +55,7 @@ final class PrefixerSteps {
             Set<Prefix> required = support.prefixesForProperty(property);
 
             // find all prefixed declarations in the rule for the same property
-            Multimap<Prefix, Declaration> equivalents = Declarations.prefixedEquivalents(declaration);
+            Multimap<Prefix, Declaration> equivalents = Equivalents.prefixedDeclarations(declaration);
 
             for (Prefix prefix : required) {
                 Collection<Declaration> matches = equivalents.get(prefix);
@@ -60,7 +63,7 @@ final class PrefixerSteps {
                     if (ctx.rearrange) Actions.<Declaration>moveBefore().apply(declaration, matches);
                     equivalents.removeAll(prefix);
                 } else {
-                    declaration.prepend(declaration.copyWithPrefix(prefix, support));
+                    declaration.prepend(declaration.copy(prefix, support));
                 }
             }
 
@@ -73,7 +76,7 @@ final class PrefixerSteps {
                 }
             }
 
-            ctx.handled.addAll(required);
+            if (!required.isEmpty()) ctx.handled = true;
         }
     }
 
@@ -89,7 +92,7 @@ final class PrefixerSteps {
             Set<Prefix> required = support.prefixesForFunction(function.name());
 
             // find all prefixed declarations in the rule for the same property
-            Multimap<Prefix, Declaration> equivalents = Declarations.prefixedFunctionEquivalents(declaration, function.name());
+            Multimap<Prefix, Declaration> equivalents = Equivalents.prefixedFunctions(declaration, function.name());
 
             for (Prefix prefix : required) {
                 Collection<Declaration> matches = equivalents.get(prefix);
@@ -97,7 +100,7 @@ final class PrefixerSteps {
                     if (ctx.rearrange) Actions.<Declaration>moveBefore().apply(declaration, matches);
                     equivalents.removeAll(prefix);
                 } else {
-                    declaration.prepend(declaration.copyWithPrefix(prefix, support));
+                    declaration.prepend(declaration.copy(prefix, support));
                 }
             }
 
@@ -110,7 +113,42 @@ final class PrefixerSteps {
                 }
             }
 
-            ctx.handled.addAll(required);
+            if (!required.isEmpty()) ctx.handled = true;
+        }
+    }
+
+    static final class HandleStandardAtRule implements PrefixerStep {
+        @Override
+        public void process(PrefixerCtx ctx) {
+            final SupportMatrix support = ctx.support;
+            final AtRule atRule = ctx.atRule;
+
+            // gather all required prefixes for the at-rule
+            Set<Prefix> required = support.prefixesForFunction(atRule.name());
+
+            // find all prefixed at-rules in the stylesheet for the same name
+            Multimap<Prefix, AtRule> equivalents = Equivalents.prefixedAtRules(atRule);
+
+            for (Prefix prefix : required) {
+                Collection<AtRule> matches = equivalents.get(prefix);
+                if (!matches.isEmpty()) {
+                    if (ctx.rearrange) Actions.<Statement>moveBefore().apply(atRule, matches);
+                    equivalents.removeAll(prefix);
+                } else {
+                    atRule.prepend(atRule.copy(prefix, support));
+                }
+            }
+
+            // any left over equivalents are unnecessary. remove or rearrange them if allowed
+            if (!equivalents.isEmpty()) {
+                if (ctx.prune) {
+                    Actions.detach().apply(equivalents.values());
+                } else if (ctx.rearrange) {
+                    Actions.<Statement>moveBefore().apply(atRule, equivalents.values());
+                }
+            }
+
+            if (!required.isEmpty()) ctx.handled = true;
         }
     }
 
@@ -118,7 +156,7 @@ final class PrefixerSteps {
     static final class HandleTransitionSpecial implements PrefixerStep {
         @Override
         public void process(PrefixerCtx ctx) {
-            if (!ctx.handled.isEmpty()) return;
+            if (ctx.handled) return;
 
             // only care about transition and transition-property
             if (ctx.property != Property.TRANSITION && ctx.property != Property.TRANSITION_PROPERTY) return;
@@ -139,7 +177,7 @@ final class PrefixerSteps {
 
                 // prepend a copy of the declaration for each required prefix
                 for (Prefix prefix : prefixes) {
-                    declaration.prepend(declaration.copyWithPrefix(prefix, ctx.support));
+                    declaration.prepend(declaration.copy(prefix, ctx.support));
                 }
                 return;
             }

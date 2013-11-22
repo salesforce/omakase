@@ -45,5 +45,5 @@ public interface ErrorManager {
      * @param message
      *     The error message.
      */
-    void report(ErrorLevel level, Syntax cause, String message);
+    void report(ErrorLevel level, Syntax<?> cause, String message);
 }

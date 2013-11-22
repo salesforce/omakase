@@ -16,11 +16,11 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -80,7 +80,7 @@ public final class HexColorValue extends AbstractTerm {
         checkNotNull(color, "color cannot be null");
 
         // remove leading '#' if present
-        if (color.startsWith("#")) {
+        if (color.charAt(0) == '#') {
             color = color.substring(1);
         }
 
@@ -114,13 +114,8 @@ public final class HexColorValue extends AbstractTerm {
     }
 
     @Override
-    public HexColorValue copy() {
-        return Copy.comments(this, new HexColorValue(color));
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this).add("color", color).addUnlessEmpty("comments", comments()).toString();
+    protected HexColorValue makeCopy(Prefix prefix, SupportMatrix support) {
+        return new HexColorValue(color);
     }
 
     /**

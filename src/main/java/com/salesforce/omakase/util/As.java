@@ -18,7 +18,12 @@ package com.salesforce.omakase.util;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Syntax;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -30,18 +35,15 @@ import java.util.List;
  */
 public final class As {
     private final List<Entry> entries = Lists.newArrayList();
-    private final String name;
+    private final Object instance;
 
+    private String name;
     private boolean indent;
 
     /** use a constructor method instead */
     private As(Object object) {
-        this(object.getClass().getSimpleName());
-    }
-
-    /** use a constructor method instead */
-    private As(String name) {
-        this.name = name;
+        named(object.getClass().getSimpleName());
+        this.instance = object;
     }
 
     /**
@@ -64,8 +66,9 @@ public final class As {
      *
      * @return The helper instance.
      */
-    public static As stringNamed(String name) {
-        return new As(name);
+    public As named(String name) {
+        this.name = name;
+        return this;
     }
 
     /**
@@ -141,13 +144,57 @@ public final class As {
         return this;
     }
 
-    /** utility method to create an {@link Entry} */
-    private As entry(String name, Object value, boolean isIterable) {
-        Entry entry = new Entry();
-        entry.name = name;
-        entry.value = value;
-        entry.isIterable = isIterable;
-        entries.add(entry);
+    /**
+     * Specifies that all fields should be added.
+     * <p/>
+     * Fields with a value of null will not be output. Iterables will be added with {@link #add(String, Iterable)} and {@link
+     * #indent()} will automatically be turned on upon the first addition of an iterable. If the object being printed is a {@link
+     * Syntax} unit, line, column, and comments information will automatically be added.
+     *
+     * @return this, for chaining.
+     */
+    public As fields() {
+        if (instance instanceof Syntax) {
+            Syntax<?> syntax = (Syntax<?>)instance;
+            addIf(syntax.line() > -1, "line", syntax.line());
+            addIf(syntax.column() > -1, "column", syntax.line());
+            addUnlessEmpty("comments", syntax.comments());
+            addUnlessEmpty("orphaned comments", syntax.orphanedComments());
+        }
+
+        List<Field> fields = Lists.newArrayList();
+
+        for (Field field : instance.getClass().getDeclaredFields()) {
+            if (!Modifier.isTransient(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
+                field.setAccessible(true);
+                fields.add(field);
+            }
+        }
+
+        Collections.sort(fields, new Comparator<Field>() {
+            @Override
+            public int compare(Field o1, Field o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        try {
+            for (Field field : fields) {
+                Object value = null;
+                value = field.get(instance);
+                if (value instanceof Iterable) {
+                    indent();
+                    Iterable<?> iterable = (Iterable<?>)value;
+                    if (!Iterables.isEmpty(iterable)) {
+                        add(field.getName(), iterable);
+                    }
+                } else if (value != null) {
+                    add(field.getName(), value);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 
@@ -189,6 +236,16 @@ public final class As {
         builder.append("}");
 
         return builder.toString();
+    }
+
+    /** utility method to create an {@link Entry} */
+    private As entry(String name, Object value, boolean isIterable) {
+        Entry entry = new Entry();
+        entry.name = name;
+        entry.value = value;
+        entry.isIterable = isIterable;
+        entries.add(entry);
+        return this;
     }
 
     /** information on an item to include in toString */

@@ -108,8 +108,9 @@ functions:
 #  css-selection
 
 # prefixed at-rules
-# at-rules:
-#  keyframes
+at-rules:
+  css-animation:
+    - keyframes
 
 # prefixed keywords
 # keywords:

@@ -23,7 +23,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Targeted functional tests for {@link Prefixer}.
@@ -168,7 +168,8 @@ public class PrefixerUnitTargetedTest {
     @Test
     public void transitionWithPrefixableProps() {
         String original = ".test {transition:width 1s,border-radius 2px,transform 1s}";
-        String expected = ".test {-moz-transition:width 1s,-moz-border-radius 2px,-moz-transform 1s; transition:width 1s,border-radius 2px,transform 1s}";
+        String expected = ".test {-moz-transition:width 1s,-moz-border-radius 2px,-moz-transform 1s; transition:width 1s," +
+            "border-radius 2px,transform 1s}";
         assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
 
@@ -184,7 +185,8 @@ public class PrefixerUnitTargetedTest {
     @Test
     public void transitionProperty() {
         String original = ".test {transition-property:width,border-radius,transform}";
-        String expected = ".test {-moz-transition-property:width,-moz-border-radius,-moz-transform; transition-property:width,border-radius,transform}";
+        String expected = ".test {-moz-transition-property:width,-moz-border-radius,-moz-transform; transition-property:width," +
+            "border-radius,transform}";
         assertThat(process(original, transitionSetup())).isEqualTo(expected);
     }
 
@@ -227,7 +229,8 @@ public class PrefixerUnitTargetedTest {
     @Test
     public void animation() {
         String original = ".test {animation:anim 3s linear 1s infinite alternate}";
-        String expected = ".test {-moz-animation:anim 3s linear 1s infinite alternate; animation:anim 3s linear 1s infinite alternate}";
+        String expected = ".test {-moz-animation:anim 3s linear 1s infinite alternate; animation:anim 3s linear 1s infinite " +
+            "alternate}";
         assertThat(process(original, animationSetup())).isEqualTo(expected);
     }
 
@@ -285,6 +288,34 @@ public class PrefixerUnitTargetedTest {
         String original = ".test {animation-timing-function:ease}";
         String expected = ".test {-moz-animation-timing-function:ease; animation-timing-function:ease}";
         assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+//    @Test
+    public void keyframes() {
+        String original = "@keyframes test {\n" +
+            "  from {top: 30px}\n" +
+            "  50% {top: 50px}\n" +
+            "  to {top: 100px}\n" +
+            "}\n";
+
+        String expected = "@keyframes test {\n" +
+            "  from {top: 30px}\n" +
+            "  50% {top: 50px}\n" +
+            "  to {top: 100px}\n" +
+            "}\n" +
+            "\n" +
+            "@-moz-keyframes test {\n" +
+            "  from {top: 30px}\n" +
+            "  50% {top: 50px}\n" +
+            "  to {top: 100px}\n" +
+            "}";
+
+        assertThat(process(original, animationSetup())).isEqualTo(expected);
+    }
+
+//    @Test
+    public void keyframesWithInnerPrefixable() {
+        fail("unimplemented");
     }
 
     @Test

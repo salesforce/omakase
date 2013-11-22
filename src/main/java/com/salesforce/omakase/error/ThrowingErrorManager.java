@@ -61,7 +61,7 @@ public final class ThrowingErrorManager implements ErrorManager {
     }
 
     @Override
-    public void report(ErrorLevel level, Syntax cause, String message) {
+    public void report(ErrorLevel level, Syntax<?> cause, String message) {
         switch (level) {
         case FATAL:
             throw new FatalException(ErrorUtils.format(sourceName, message, cause));

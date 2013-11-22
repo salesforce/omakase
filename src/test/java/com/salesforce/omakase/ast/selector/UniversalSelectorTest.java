@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -41,11 +40,5 @@ public class UniversalSelectorTest {
     @Test
     public void write() throws IOException {
         assertThat(StyleWriter.compressed().writeSnippet(new UniversalSelector())).isEqualTo("*");
-    }
-
-    @Test
-    public void toStringTest() {
-        UniversalSelector selector = new UniversalSelector();
-        assertThat(selector.toString()).isNotEqualTo(Util.originalToString(selector));
     }
 }

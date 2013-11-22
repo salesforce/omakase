@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -58,11 +57,5 @@ public class TypeSelectorTest {
     public void write() throws IOException {
         TypeSelector ts = new TypeSelector(1, 1, "p");
         assertThat(StyleWriter.compressed().writeSnippet(ts)).isEqualTo("p");
-    }
-
-    @Test
-    public void toStringTest() {
-        TypeSelector ts = new TypeSelector(1, 1, "p");
-        assertThat(ts.toString()).isNotEqualTo(Util.originalToString(ts));
     }
 }

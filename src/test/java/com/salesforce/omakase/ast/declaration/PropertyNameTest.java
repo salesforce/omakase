@@ -21,7 +21,6 @@ import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,7 +29,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link PropertyName}. */
 @SuppressWarnings("JavaDoc")
@@ -280,7 +279,7 @@ public class PropertyNameTest {
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.SAFARI, 4);
 
-        PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, support);
+        PropertyName copy = name.copy(Prefix.WEBKIT, support);
         assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
         assertThat(copy.prefix().get()).isSameAs(Prefix.WEBKIT);
         assertThat(copy.hasStarHack()).isFalse();
@@ -293,7 +292,7 @@ public class PropertyNameTest {
         name.comments(Lists.newArrayList("test"));
         SupportMatrix support = new SupportMatrix();
 
-        PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, support);
+        PropertyName copy = name.copy(Prefix.WEBKIT, support);
         assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
         assertThat(copy.isPrefixed()).isFalse();
         assertThat(copy.comments()).hasSameSizeAs(name.comments());
@@ -302,12 +301,7 @@ public class PropertyNameTest {
     @Test
     public void copyUnknownProperty() {
         PropertyName name = PropertyName.using("blah");
-        PropertyName copy = name.copyWithPrefix(Prefix.WEBKIT, new SupportMatrix());
+        PropertyName copy = name.copy(Prefix.WEBKIT, new SupportMatrix());
         assertThat(copy.name()).isEqualTo(name.name());
-    }
-
-    @Test
-    public void toStringTest() {
-        assertThat(unprefixed.toString()).isNotEqualTo(Util.originalToString(unprefixed));
     }
 }

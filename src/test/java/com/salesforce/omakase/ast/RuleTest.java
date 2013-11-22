@@ -17,14 +17,13 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.test.util.Util;
+import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -53,19 +52,6 @@ public class RuleTest {
         assertThat(rule.declarations()).isEmpty();
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         assertThat(rule.declarations()).hasSize(1);
-    }
-
-    @Test
-    public void orphanedCommentsAbsent() {
-        Rule rule = new Rule();
-        assertThat(rule.orphanedComments()).isEmpty();
-    }
-
-    @Test
-    public void orphanedCommentsPresent() {
-        Rule rule = new Rule();
-        rule.orphanedComment(new Comment("test"));
-        assertThat(rule.orphanedComments()).hasSize(1);
     }
 
     @Test
@@ -115,7 +101,7 @@ public class RuleTest {
 
     @Test
     public void writeWhenDetached() throws IOException {
-        Stylesheet stylesheet = new Stylesheet();
+        Stylesheet stylesheet = new Stylesheet(null);
 
         Rule rule = new Rule();
         rule.selectors().append(new Selector(new ClassSelector("class")));
@@ -271,14 +257,5 @@ public class RuleTest {
         declaration.detach();
 
         assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
-    }
-
-    @Test
-    public void toStringTest() {
-        Rule rule = new Rule();
-        rule.selectors().append(new Selector(new ClassSelector("class")));
-        Declaration declaration = new Declaration(Property.MARGIN, NumericalValue.of(5, "px"));
-        rule.declarations().append(declaration);
-        assertThat(rule.toString()).isNotEqualTo(Util.originalToString(rule));
     }
 }

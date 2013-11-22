@@ -16,17 +16,19 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
-import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * A generic wrapper containing a list of statements. This is used for refined {@link AtRule}s (standard or custom) that contain a
@@ -34,43 +36,25 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-public final class GenericAtRuleBlock extends AbstractSyntax implements AtRuleBlock {
-    private final SyntaxCollection<Stylesheet, Statement> statements;
+public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+    private final SyntaxCollection<StatementIterable, Statement> statements;
 
-    /**
-     * Creates a new {@link GenericAtRuleBlock} instance. Be sure to call {@link #propagateBroadcast(Broadcaster)} as soon as a
-     * broadcaster is available.
-     *
-     * @param parent
-     *     The parent stylesheet.
-     */
-    public GenericAtRuleBlock(Stylesheet parent) {
-        this(parent, ImmutableList.<Statement>of(), null);
+    /** Creates a new {@link GenericAtRuleBlock} instance with no statements or {@link Broadcaster} specified. */
+    public GenericAtRuleBlock() {
+        this.statements = new StandardSyntaxCollection<StatementIterable, Statement>(this);
     }
 
     /**
      * Creates a new {@link GenericAtRuleBlock} instance.
      *
-     * @param parent
-     *     The {@link Stylesheet} that contains the {@link AtRule} that owns this block.
      * @param statements
      *     The inner {@link Statement} objects.
      * @param broadcaster
      *     Used for broadcasting new units.
      */
-    public GenericAtRuleBlock(Stylesheet parent, Iterable<Statement> statements, Broadcaster broadcaster) {
-        this.statements = StandardSyntaxCollection.create(parent, broadcaster);
+    public GenericAtRuleBlock(Iterable<Statement> statements, Broadcaster broadcaster) {
+        this.statements = new StandardSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
         this.statements.appendAll(statements);
-    }
-
-    /**
-     * Creates a new {@link GenericAtRuleBlock} instance.
-     *
-     * @param statements
-     *     The collection of inner statements.
-     */
-    public GenericAtRuleBlock(SyntaxCollection<Stylesheet, Statement> statements) {
-        this.statements = statements;
     }
 
     /**
@@ -78,8 +62,13 @@ public final class GenericAtRuleBlock extends AbstractSyntax implements AtRuleBl
      *
      * @return The collection of statements within this block.
      */
-    public SyntaxCollection<Stylesheet, Statement> statements() {
+    public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
+    }
+
+    @Override
+    public Iterator<Statement> iterator() {
+        return statements.iterator();
     }
 
     @Override
@@ -105,5 +94,15 @@ public final class GenericAtRuleBlock extends AbstractSyntax implements AtRuleBl
         appendable.unindentIf(!writer.isCompressed());
         appendable.newlineIf(!writer.isCompressed());
         appendable.append('}');
+    }
+
+    @Override
+    protected GenericAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        GenericAtRuleBlock copy = new GenericAtRuleBlock();
+        for (Statement statement : statements) {
+            copy.statements().append(statement.copy(prefix, support));
+        }
+        return copy;
     }
 }

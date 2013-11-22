@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -31,7 +30,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "group interface for all selector segments", broadcasted = REFINED_SELECTOR)
-public interface SelectorPart extends Syntax, Groupable<Selector, SelectorPart> {
+public interface SelectorPart extends Groupable<Selector, SelectorPart> {
     /**
      * Gets the parent {@link Selector} instance. This is equivalent to {@link #parent()}.
      * <p/>

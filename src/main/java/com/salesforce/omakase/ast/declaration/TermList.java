@@ -26,8 +26,6 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.TermListParser;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -73,7 +71,7 @@ public final class TermList extends AbstractPropertyValue {
      */
     public TermList(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        members = StandardSyntaxCollection.create(this, broadcaster);
+        members = new StandardSyntaxCollection<TermList, TermListMember>(this, broadcaster);
     }
 
     /**
@@ -174,32 +172,13 @@ public final class TermList extends AbstractPropertyValue {
     }
 
     @Override
-    public TermList copy() {
-        TermList copy = Copy.comments(this, new TermList());
-        copy.important(isImportant());
+    protected TermList makeCopy(Prefix prefix, SupportMatrix support) {
+        TermList copy = new TermList();
+        copy.important(important);
         for (TermListMember member : members) {
-            copy.append(member.copy());
+            copy.append(member.copy(prefix, support));
         }
         return copy;
-    }
-
-    @Override
-    public TermList copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        TermList copy = Copy.comments(this, new TermList());
-        copy.important(isImportant());
-        for (TermListMember member : members) {
-            copy.append(member.copyWithPrefix(prefix, support));
-        }
-        return copy;
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this)
-            .add("abstract", super.toString())
-            .add("members", members)
-            .addIf(important, "important", important)
-            .toString();
     }
 
     /**

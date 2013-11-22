@@ -17,9 +17,10 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -143,7 +144,8 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
     }
 
     @Override
-    public String toString() {
-        return As.string(this).add("feature", feature).add("terms", terms).toString();
+    protected MediaQueryExpression makeCopy(Prefix prefix, SupportMatrix support) {
+        // TODO copy
+        throw new UnsupportedOperationException("TODO: copy not supported yet");
     }
 }

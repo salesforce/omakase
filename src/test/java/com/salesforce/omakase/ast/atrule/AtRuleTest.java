@@ -16,10 +16,13 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -29,6 +32,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -257,18 +261,32 @@ public class AtRuleTest {
         assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("(custom){custom}");
     }
 
-    public static final class CustomExpression extends AbstractSyntax implements AtRuleExpression {
+    public static final class CustomExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("(custom)");
         }
+
+        @Override
+        protected CustomExpression makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
+        }
     }
 
-    public static final class CustomBlock extends AbstractSyntax implements AtRuleBlock {
+    public static final class CustomBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("{custom}");
         }
-    }
 
+        @Override
+        public Iterator<Statement> iterator() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
+        }
+    }
 }

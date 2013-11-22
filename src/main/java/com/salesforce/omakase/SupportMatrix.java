@@ -244,7 +244,28 @@ public final class SupportMatrix {
         Set<Prefix> required = Sets.newHashSet();
 
         for (Browser browser : supportedBrowsers()) {
-            double lastPrefixed = PrefixInfo.lastPrefixedVersion(function, browser);
+            double lastPrefixed = PrefixInfo.functionLastPrefixedVersion(function, browser);
+            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        }
+
+        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Gets all prefixes required for the given at-rule (e.g., "keyframes"), according to the supported browser versions.
+     *
+     * @param name
+     *     Get required prefixes for at-rules with this name.
+     *
+     * @return The set of required prefixes.
+     */
+    public Set<Prefix> prefixesForAtRules(String name) {
+        Set<Prefix> required = Sets.newHashSet();
+
+        for (Browser browser : supportedBrowsers()) {
+            double lastPrefixed = PrefixInfo.atRuleLastPrefixedVersion(name, browser);
             if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
         }
 
@@ -283,8 +304,24 @@ public final class SupportMatrix {
         return PrefixInfo.hasFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
+    /**
+     * TESTME
+     * <p/>
+     * Gets whether the given {@link Prefix} is required for the given at-rule, according to the supported browser versions.
+     *
+     * @param prefix
+     *     The {@link Prefix}.
+     * @param name
+     *     The at-rule name, e.g., "keyframes".
+     *
+     * @return True if the at-rule requires the given prefix.
+     */
+    public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
+        return PrefixInfo.hasAtRule(name) && prefixesForAtRules(name).contains(prefix);
+    }
+
     @Override
     public String toString() {
-        return As.string(this).indent().add("supported", supported).toString();
+        return As.string(this).fields().toString();
     }
 }

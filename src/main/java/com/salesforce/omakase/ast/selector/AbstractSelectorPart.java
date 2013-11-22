@@ -26,7 +26,6 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 
 /** Base class for {@link SelectorPart}s. */
 public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, SelectorPart> implements SelectorPart {
@@ -77,7 +76,7 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
     }
 
     @Override
-    public List<Comment> comments() {
+    public ImmutableList<Comment> comments() {
         if (!isFirst() || isDetached()) return super.comments();
 
         // the first selector part should also include the comments included on the selector

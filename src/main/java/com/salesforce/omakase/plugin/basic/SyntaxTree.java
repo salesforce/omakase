@@ -53,6 +53,6 @@ public final class SyntaxTree implements Plugin {
 
     @Override
     public String toString() {
-        return As.string(this).indent().add("stylesheet", stylesheet).toString();
+        return As.string(this).fields().toString();
     }
 }

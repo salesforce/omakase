@@ -17,7 +17,6 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
@@ -61,7 +60,6 @@ public class EmitterTest {
 
         assertThat(plugin.calledClassSelector).isTrue();
         assertThat(plugin.calledSimpleSelector).isTrue();
-        assertThat(plugin.calledSyntax).isTrue();
     }
 
     @Test
@@ -96,14 +94,8 @@ public class EmitterTest {
     }
 
     public static final class EmitterPlugin implements Plugin {
-        boolean calledSyntax;
         boolean calledSimpleSelector;
         boolean calledClassSelector;
-
-        @Observe
-        public void syntax(Syntax s) {
-            this.calledSyntax = true;
-        }
 
         @Observe
         public void simpleSelector(SimpleSelector s) {
@@ -126,7 +118,7 @@ public class EmitterTest {
     }
 
     public static final class TestOrder1 implements Plugin {
-        private List<Plugin> list;
+        private final List<Plugin> list;
 
         public TestOrder1(List<Plugin> list) { this.list = list; }
 
@@ -137,7 +129,7 @@ public class EmitterTest {
     }
 
     public static final class TestOrder2 implements Plugin {
-        private List<Plugin> list;
+        private final List<Plugin> list;
 
         public TestOrder2(List<Plugin> list) { this.list = list; }
 
@@ -148,7 +140,7 @@ public class EmitterTest {
     }
 
     public static final class TestOrder3 implements Plugin {
-        private List<Plugin> list;
+        private final List<Plugin> list;
 
         public TestOrder3(List<Plugin> list) { this.list = list; }
 
@@ -159,7 +151,7 @@ public class EmitterTest {
     }
 
     public static final class TestOrder4 implements Plugin {
-        private List<Plugin> list;
+        private final List<Plugin> list;
 
         public TestOrder4(List<Plugin> list) { this.list = list; }
 
@@ -170,7 +162,7 @@ public class EmitterTest {
     }
 
     public static final class TestOrder5 implements Plugin {
-        private List<Plugin> list;
+        private final List<Plugin> list;
 
         public TestOrder5(List<Plugin> list) { this.list = list; }
 

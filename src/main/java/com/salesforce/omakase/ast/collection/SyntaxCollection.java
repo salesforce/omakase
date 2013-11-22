@@ -27,13 +27,13 @@ import com.salesforce.omakase.writer.Writable;
  * A collection of related {@link Syntax} units.
  *
  * @param <P>
- *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
+ *     Type of the (P)arent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
  * @param <T>
- *     The type of {@link Syntax} contained within the collection.
+ *     The (T)ype of units to be grouped with.
  *
  * @author nmcwilliams
  */
-public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends Iterable<T> {
+public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable<T> {
     /**
      * Gets the number of units in the collection.
      *
@@ -147,7 +147,7 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
      * <p/>
      * The index unit must be present within this collection. If the unit to prepend already exists in this collection it will be
      * duplicated (by reference), not moved. If you would like to move the unit (e.g., remove from current position then prepend)
-     * then use {@link #moveBefore(Syntax, Syntax)} instead.
+     * then use {@link #moveBefore} instead.
      *
      * @param index
      *     Prepend before this unit.
@@ -168,7 +168,7 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
      * currently exist in this collection it will just be prepended.
      * <p/>
      * The index unit must exist in this collection or an exception will be thrown. If you would like to duplicate the unit
-     * instead of moving it, use {@link #prependBefore(Syntax, Syntax)} instead.
+     * instead of moving it, use #prependBefore() instead.
      *
      * @param index
      *     Prepend before this unit.
@@ -207,7 +207,7 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
      * <p/>
      * The index unit must be present within this collection. If the unit to append already exists in this collection it will be
      * duplicated (by reference), not moved. If you would like to move the unit (e.g., remove from current position then append)
-     * then use {@link #moveAfter(Syntax, Syntax)} instead.
+     * then use #moveAfter instead.
      *
      * @param index
      *     Append after this unit.
@@ -228,7 +228,7 @@ public interface SyntaxCollection<P, T extends Syntax & Groupable<P, T>> extends
      * currently exist in this collection it will just be appended.
      * <p/>
      * The index unit must exist in this collection or an exception will be thrown. If you would like to duplicate the unit
-     * instead of moving it, use {@link #appendAfter(Syntax, Syntax)} instead.
+     * instead of moving it, use #appendAfter instead.
      *
      * @param index
      *     Append after this unit.

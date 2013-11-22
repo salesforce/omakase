@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.util;
+package com.salesforce.omakase.ast;
 
 /**
- * Test utils.
+ * Contains a list of {@link Statement}s.
  *
  * @author nmcwilliams
+ * @see Stylesheet
  */
-public final class Util {
-    private Util() {}
-
-    /**
-     * Gets the original toString representation of the object.
-     *
-     * @param object
-     *     Get the original toString of this object.
-     *
-     * @return The original toString result.
-     */
-    public static String originalToString(Object object) {
-        return object.getClass().getName() + "@" + Integer.toHexString(object.hashCode());
-    }
-}
+public interface StatementIterable extends Iterable<Statement>, Syntax<StatementIterable> {}

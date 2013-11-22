@@ -19,7 +19,6 @@ package com.salesforce.omakase.parser.refiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
@@ -76,9 +75,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         ParserFactory.complexSelectorParser().parse(source, queryable, refiner);
 
         // grab orphaned comments
-        for (String comment : source.collectComments().flushComments()) {
-            selector.orphanedComment(new Comment(comment));
-        }
+        selector.orphanedComments(source.collectComments().flushComments());
 
         // there should be nothing left
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_SELECTOR);
@@ -105,9 +102,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         ParserFactory.termListParser().parse(source, single, refiner);
 
         // grab orphaned comments
-        for (String comment : source.collectComments().flushComments()) {
-            declaration.orphanedComment(new Comment(comment));
-        }
+        declaration.orphanedComments(source.collectComments().flushComments());
 
         // there should be nothing left in the source
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE, source.remaining());
@@ -130,7 +125,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         }
 
         GenericFunctionValue generic = new GenericFunctionValue(raw.line(), raw.column(), raw.name(), raw.args());
-        generic.directComments(raw.comments());
+        generic.comments(raw);
         broadcaster.broadcast(generic);
 
         return true;

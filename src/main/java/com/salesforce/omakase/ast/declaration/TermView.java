@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.declaration;
 
 /**
+ * TODO delete
  * Represents a special custom {@link Term} that is a wrapper or container of {@link TermListMember}s.
  * <p/>
  * This interface should be implemented whenever your custom {@link Term} will output inner or child {@link Term}s.

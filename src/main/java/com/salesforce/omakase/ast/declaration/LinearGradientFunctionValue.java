@@ -25,8 +25,6 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.util.Parsers;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -136,44 +134,36 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
     }
 
     @Override
-    public LinearGradientFunctionValue copy() {
-        return Copy.comments(this, new LinearGradientFunctionValue(args).repeating(repeating));
-    }
-
-    @Override
-    public FunctionValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        if (!support.requiresPrefixForFunction(prefix, name())) return copy();
-
-        String newArgs = args;
-
-        char first = args.charAt(0);
-        if (first == 't') {
-            // "to" syntax -> "from" syntax
-            List<String> split = Lists.newArrayList(Splitter.on(",").limit(2).split(args));
-            String from = DIR_FLIP.get(split.get(0));
-            if (from != null) {
-                newArgs = from + "," + split.get(1);
-            }
-        } else if (Tokens.DIGIT.matches(first) || first == '-') {
-            // convert angle http://www.sitepoint.com/using-unprefixed-css3-gradients-in-modern-browsers/
-            Source source = new Source(args);
-            Optional<NumericalValue> numerical = Parsers.parseNumerical(source);
-            if (numerical.isPresent() && numerical.get().unit().isPresent()) {
-                int angle = Math.abs(numerical.get().intValue() - 450) % 360;
-                newArgs = angle + numerical.get().unit().get() + source.remaining();
-            }
-        }
-
-        return Copy.comments(this, new GenericFunctionValue(prefix + name(), newArgs));
-    }
-
-    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(name()).append('(').append(args).append(')');
     }
 
     @Override
-    public String toString() {
-        return As.string(this).add("name", name()).add("args", args).toString();
+    protected FunctionValue makeCopy(Prefix prefix, SupportMatrix support) {
+        if (prefix != null && support != null && support.requiresPrefixForFunction(prefix, name())) {
+            String newArgs = args;
+
+            char first = args.charAt(0);
+            if (first == 't') {
+                // "to" syntax -> "from" syntax
+                List<String> split = Lists.newArrayList(Splitter.on(",").limit(2).split(args));
+                String from = DIR_FLIP.get(split.get(0));
+                if (from != null) {
+                    newArgs = from + "," + split.get(1);
+                }
+            } else if (Tokens.DIGIT.matches(first) || first == '-') {
+                // convert angle http://www.sitepoint.com/using-unprefixed-css3-gradients-in-modern-browsers/
+                Source source = new Source(args);
+                Optional<NumericalValue> numerical = Parsers.parseNumerical(source);
+                if (numerical.isPresent() && numerical.get().unit().isPresent()) {
+                    int angle = Math.abs(numerical.get().intValue() - 450) % 360;
+                    newArgs = angle + numerical.get().unit().get() + source.remaining();
+                }
+            }
+
+            return new GenericFunctionValue(prefix + name(), newArgs);
+        }
+
+        return new LinearGradientFunctionValue(args).repeating(repeating);
     }
 }

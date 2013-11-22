@@ -20,12 +20,11 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.util.As;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -36,17 +35,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Standard (default) implementation of the {@link SyntaxCollection}.
  *
- * @param <T>
- *     Type of items in the {@link SyntaxCollection}.
  * @param <P>
- *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
+ *     Type of the (P)arent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
+ * @param <T>
+ *     The (T)ype of units to be grouped with.
  *
  * @author nmcwilliams
  */
-public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T>> implements SyntaxCollection<P, T> {
-    private final P parent;
+public final class StandardSyntaxCollection<P, T extends Groupable<P, T>> implements SyntaxCollection<P, T> {
+    private final transient P parent;
     private final LinkedList<T> list;
-    private Broadcaster broadcaster;
+    private transient Broadcaster broadcaster;
 
     /**
      * Creates a new {@link StandardSyntaxCollection} with no available {@link Broadcaster}.
@@ -290,7 +289,7 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
 
     @Override
     public String toString() {
-        return As.string(this).indent().add("items", list).toString();
+        return As.string(this).fields().toString();
     }
 
     /**
@@ -308,43 +307,5 @@ public final class StandardSyntaxCollection<P, T extends Syntax & Groupable<P, T
         if (broadcaster != null && unit.status() == Status.UNBROADCASTED) {
             broadcaster.broadcast(unit, true);
         }
-    }
-
-    /**
-     * Creates a new {@link SyntaxCollection} instance.
-     * <p/>
-     * Example:
-     * <p/>
-     * {@code StandardSyntaxCollection.create(theParentInstance)}
-     *
-     * @param <E>
-     *     Type of items the collection contains.
-     * @param parent
-     *     The parent that owns this collection.
-     *
-     * @return The new {@link SyntaxCollection} instance.
-     */
-    public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent) {
-        return new StandardSyntaxCollection<P, E>(parent);
-    }
-
-    /**
-     * Creates a new {@link SyntaxCollection} instance with the given {@link Broadcaster} to broadcast new units.
-     * <p/>
-     * Example:
-     * <p/>
-     * {@code StandardSyntaxCollection.create(theParentInstance, theBroadcasterInstance)}
-     *
-     * @param <E>
-     *     Type of items the collection contains.
-     * @param parent
-     *     The parent that owns this collection.
-     * @param broadcaster
-     *     Used to broadcast new units.
-     *
-     * @return The new {@link SyntaxCollection} instance.
-     */
-    public static <P, E extends Syntax & Groupable<P, E>> SyntaxCollection<P, E> create(P parent, Broadcaster broadcaster) {
-        return new StandardSyntaxCollection<P, E>(parent, broadcaster);
     }
 }

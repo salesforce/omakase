@@ -38,7 +38,7 @@ import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
  * <p/>
  * It is <em>not</em> recommended that you override each one of these methods. Note that some methods are more generic
  * subscriptions that will also be covered by their more specific counterparts. For example, a {@link ClassSelector} will be sent
- * to {@link #classSelector(ClassSelector)}, {@link #selectorPart(SelectorPart)} and {@link #syntax(Syntax)}.
+ * to {@link #classSelector(ClassSelector)} and {@link #selectorPart(SelectorPart)}.
  * <p/>
  * See the notes on {@link Plugin} about invocation order for subscription methods.
  *
@@ -46,15 +46,6 @@ import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
  */
 @SuppressWarnings("UnusedParameters")
 public class BasePlugin implements Plugin {
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link Syntax}.
-     *
-     * @param syntax
-     *     The {@link Syntax} instance.
-     */
-    public void syntax(Syntax syntax) {}
-
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link Refinable}.

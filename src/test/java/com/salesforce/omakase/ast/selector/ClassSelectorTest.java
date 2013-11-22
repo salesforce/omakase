@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -51,11 +50,5 @@ public class ClassSelectorTest {
         ClassSelector cs = new ClassSelector("test");
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(cs)).isEqualTo(".test");
-    }
-
-    @Test
-    public void toStringTest() {
-        ClassSelector cs = new ClassSelector("test");
-        assertThat(cs.toString()).isNotEqualTo(Util.originalToString(cs));
     }
 }

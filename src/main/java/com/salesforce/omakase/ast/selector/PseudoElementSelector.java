@@ -17,10 +17,11 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -106,7 +107,8 @@ public final class PseudoElementSelector extends AbstractSelectorPart implements
     }
 
     @Override
-    public String toString() {
-        return As.string(this).indent().add("abstract", super.toString()).add("name", name).toString();
+    protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        return new PseudoElementSelector(name);
     }
 }

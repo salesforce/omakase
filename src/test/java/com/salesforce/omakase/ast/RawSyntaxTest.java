@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -42,11 +41,5 @@ public class RawSyntaxTest {
         RawSyntax r = new RawSyntax(5, 5, ".class > #id");
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(r)).isEqualTo(".class > #id");
-    }
-
-    @Test
-    public void toStringTest() {
-        RawSyntax r = new RawSyntax(5, 5, ".class > #id");
-        assertThat(r.toString()).isNotEqualTo(Util.originalToString(r));
     }
 }

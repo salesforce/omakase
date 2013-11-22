@@ -31,5 +31,4 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "parent interface for simple selectors", broadcasted = REFINED_SELECTOR)
-public interface SimpleSelector extends SelectorPart {
-}
+public interface SimpleSelector extends SelectorPart {}

@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
@@ -28,12 +28,14 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
@@ -66,7 +68,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 public final class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
     private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax rawContent;
-    private final Refiner refiner;
+    private final transient Refiner refiner;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
@@ -84,7 +86,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
         this.refiner = refiner;
         this.rawContent = rawContent;
-        this.parts = StandardSyntaxCollection.create(this, refiner.broadcaster());
+        this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this, refiner.broadcaster());
     }
 
     /**
@@ -106,7 +108,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     public Selector(Iterable<SelectorPart> parts) {
         this.refiner = null;
         this.rawContent = null;
-        this.parts = StandardSyntaxCollection.create(this);
+        this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this);
         this.parts.appendAll(parts);
     }
 
@@ -178,13 +180,14 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("raw", rawContent)
-            .add("parts", parts)
-            .addUnlessEmpty("orphaned", orphanedComments())
-            .toString();
+    protected Selector makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        List<SelectorPart> copiedParts = Lists.newArrayList();
+
+        for (SelectorPart part : parts) {
+            copiedParts.add(part.copy(prefix, support));
+        }
+
+        return new Selector(copiedParts);
     }
 }

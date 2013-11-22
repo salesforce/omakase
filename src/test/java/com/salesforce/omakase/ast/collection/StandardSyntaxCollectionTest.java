@@ -18,12 +18,13 @@ package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -101,7 +102,7 @@ public class StandardSyntaxCollectionTest {
 
     @Test
     public void isEmptyOrNoneWritableTrue() {
-        SyntaxCollection<Parent, ChildNotWritable> c = StandardSyntaxCollection.create(new Parent());
+        SyntaxCollection<Parent, ChildNotWritable> c = new StandardSyntaxCollection<Parent, ChildNotWritable>(new Parent());
         c.append(new ChildNotWritable());
         assertThat(collection.isEmptyOrNoneWritable()).isTrue();
     }
@@ -431,10 +432,10 @@ public class StandardSyntaxCollectionTest {
     }
 
     private static final class Parent {
-        private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
+        private final SyntaxCollection<Parent, Child> collection = new StandardSyntaxCollection<Parent, Child>(this);
     }
 
-    private static final class Child extends AbstractGroupable<Parent, Child> implements Syntax {
+    private static final class Child extends AbstractGroupable<Parent, Child> {
         private final int i;
 
         public Child(int i) {
@@ -451,12 +452,12 @@ public class StandardSyntaxCollectionTest {
         }
 
         @Override
-        public String toString() {
-            return "child " + i;
+        protected Child makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 
-    private static final class ChildNotWritable extends AbstractGroupable<Parent, ChildNotWritable> implements Syntax {
+    private static final class ChildNotWritable extends AbstractGroupable<Parent, ChildNotWritable> {
         @Override
         protected ChildNotWritable self() {
             return this;
@@ -469,6 +470,11 @@ public class StandardSyntaxCollectionTest {
 
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
+
+        @Override
+        protected ChildNotWritable makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

@@ -92,7 +92,7 @@ public final class MediaRefiner implements AtRuleRefiner {
             }
 
             // create and add the block
-            rule.block(new GenericAtRuleBlock(rule.parent().orNull(), queryable.filter(Statement.class), broadcaster));
+            rule.block(new GenericAtRuleBlock(queryable.filter(Statement.class), broadcaster));
 
             // once they are in the syntax collection, now we can let them be broadcasted
             queue.resume();

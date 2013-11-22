@@ -32,7 +32,7 @@ public final class BrowserVersion {
     private final double version;
 
     /**
-     * Constructs a new instance with the given browser and version.
+     * Constructs a new instance with the given {@link Browser} and version.
      *
      * @param browser
      *     The {@link Browser}.
@@ -91,6 +91,6 @@ public final class BrowserVersion {
 
     @Override
     public String toString() {
-        return As.string(this).add("browser", browser).add("version", version).toString();
+        return As.string(this).fields().toString();
     }
 }

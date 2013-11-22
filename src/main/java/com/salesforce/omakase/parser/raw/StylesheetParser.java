@@ -62,9 +62,7 @@ public final class StylesheetParser extends AbstractParser {
         stylesheet.statements().appendAll(queryable.filter(Statement.class));
 
         // orphaned at end of the stylesheet comments, e.g., ".class{color:red} /*orphaned*/"
-        for (String comment : source.collectComments().flushComments()) {
-            stylesheet.orphanedComment(new Comment(comment));
-        }
+        stylesheet.orphanedComments(source.collectComments().flushComments());
 
         // now that we have all the rules added resume the queue
         queue.resume();

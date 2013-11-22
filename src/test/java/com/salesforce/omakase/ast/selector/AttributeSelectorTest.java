@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -136,11 +135,5 @@ public class AttributeSelectorTest {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.PREFIXMATCH, "%^&$");
         assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=\"%^&$\"]");
-    }
-
-    @Test
-    public void toStringTest() {
-        selector = new AttributeSelector("class");
-        assertThat(selector.toString()).isNotEqualTo(Util.originalToString(selector));
     }
 }

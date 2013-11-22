@@ -17,11 +17,12 @@
 package com.salesforce.omakase.plugin.basic;
 
 /**
+ * TODO delete
  * A step as part of the automatic vendor prefixing process.
  *
  * @author nmcwilliams
  * @see Prefixer
  */
 interface PrefixerStep {
-    public void process(PrefixerCtx context);
+    void process(PrefixerCtx context);
 }

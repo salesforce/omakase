@@ -17,6 +17,8 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -128,6 +130,11 @@ public class AbstractSelectorPartTest {
 
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
+
+        @Override
+        protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

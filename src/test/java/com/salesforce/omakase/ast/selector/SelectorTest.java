@@ -17,12 +17,10 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +28,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Selector}. */
 @SuppressWarnings("JavaDoc")
@@ -108,20 +106,6 @@ public class SelectorTest {
     }
 
     @Test
-    public void addOrphanedComment() {
-        selector = new Selector(new ClassSelector("test"));
-        Comment c = new Comment("test");
-        selector.orphanedComment(c);
-        assertThat(selector.orphanedComments()).containsExactly(c);
-    }
-
-    @Test
-    public void getOrphanedCommentsWhenAbsent() {
-        selector = new Selector(new ClassSelector("test"));
-        assertThat(selector.orphanedComments()).isEmpty();
-    }
-
-    @Test
     public void writeVerboseRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.refine();
@@ -176,11 +160,5 @@ public class SelectorTest {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.detach();
         assertThat(selector.isWritable()).isFalse();
-    }
-
-    @Test
-    public void toStringTest() {
-        selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        assertThat(selector.toString()).isNotEqualTo(Util.originalToString(selector));
     }
 }

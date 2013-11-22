@@ -16,21 +16,27 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.plugin.basic.ConditionalsRefiner;
-import com.salesforce.omakase.util.As;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
-import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
+import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.basic.Conditionals;
 import com.salesforce.omakase.plugin.basic.ConditionalsManager;
+import com.salesforce.omakase.plugin.basic.ConditionalsRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
@@ -54,28 +60,10 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
  */
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
-public final class ConditionalAtRuleBlock extends AbstractSyntax implements AtRuleBlock {
-    private final SyntaxCollection<Stylesheet, Statement> statements;
+public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+    private final SyntaxCollection<StatementIterable, Statement> statements;
     private final ConditionalsManager manager;
     private final String condition;
-
-    /**
-     * See the notes on the {@link #ConditionalAtRuleBlock(int, int, ConditionalsManager, String, SyntaxCollection)} constructor.
-     * This is the same except that it defaults to no line and column numbers. This should be used for dynamically created
-     * conditional at-rule blocks.
-     *
-     * @param manager
-     *     The {@link ConditionalsManager} instance.
-     * @param condition
-     *     The condition for this particular conditional at-rule block.
-     * @param statements
-     *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
-     *     set.
-     */
-    public ConditionalAtRuleBlock(ConditionalsManager manager, String condition, SyntaxCollection<Stylesheet,
-        Statement> statements) {
-        this(-1, -1, manager, condition, statements);
-    }
 
     /**
      * Creates a new {@link ConditionalAtRuleBlock} instance with the given true conditions, condition, and set of statements.
@@ -101,13 +89,16 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax implements AtRu
      * @param statements
      *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
      *     set.
+     * @param broadcaster
+     *     The {@link Broadcaster} to use for broadcasting new units.
      */
     public ConditionalAtRuleBlock(int line, int column, ConditionalsManager manager, String condition,
-        SyntaxCollection<Stylesheet, Statement> statements) {
+        Iterable<Statement> statements, Broadcaster broadcaster) {
         super(line, column);
         this.condition = checkNotNull(condition, "condition cannot be null");
         this.manager = checkNotNull(manager, "manager cannot be null");
-        this.statements = checkNotNull(statements, "statements cannot be null");
+        this.statements = new StandardSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+        this.statements.appendAll(statements);
     }
 
     /**
@@ -124,8 +115,13 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax implements AtRu
      *
      * @return The collection of statements within this conditional at-rule block.
      */
-    public SyntaxCollection<Stylesheet, Statement> statements() {
+    public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
+    }
+
+    @Override
+    public Iterator<Statement> iterator() {
+        return statements.iterator();
     }
 
     @Override
@@ -153,12 +149,19 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax implements AtRu
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("condition", condition)
-            .add("manager", manager)
-            .add("statements", statements)
-            .toString();
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        //TESTME
+        super.propagateBroadcast(broadcaster);
+        statements.propagateBroadcast(broadcaster);
+    }
+
+    @Override
+    protected ConditionalAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        List<Statement> copiedStatements = Lists.newArrayList();
+        for (Statement statement : statements) {
+            copiedStatements.add(statement.copy(prefix, support));
+        }
+        return new ConditionalAtRuleBlock(-1, -1, manager, condition, copiedStatements, null);
     }
 }

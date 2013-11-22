@@ -18,10 +18,10 @@ package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -31,8 +31,6 @@ import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.TermListParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -46,7 +44,6 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  * <p/>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
  * grammar validation. See the notes on {@link Refinable} and in the readme.
- * <p/>
  *
  * @author nmcwilliams
  * @see RawDeclarationParser
@@ -54,8 +51,9 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration>, Copyable<Declaration> {
-    private final Refiner refiner;
+public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
+    private final transient Refiner refiner;
+    private transient Broadcaster broadcaster;
 
     /* unrefined */
     private final RawSyntax rawPropertyName;
@@ -169,8 +167,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
         this.refiner = null;
         this.rawPropertyName = null;
         this.rawPropertyValue = null;
-        propertyName(propertyName);
-        propertyValue(propertyValue);
+        propertyName(propertyName).propertyValue(propertyValue);
     }
 
     /**
@@ -335,8 +332,17 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * @return this, for chaining.
      */
     public Declaration propertyValue(PropertyValue propertyValue) {
+        if (this.propertyValue != null) {
+            this.propertyValue.declaration(null);
+            this.propertyValue.status(Status.NEVER_EMIT); //  don't emit detached property values
+        }
+
         this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
-        propertyValue.parentDeclaration(this);
+        propertyValue.declaration(this);
+
+        if (broadcaster != null && propertyValue.status() == Status.UNBROADCASTED) {
+            propertyValue.propagateBroadcast(broadcaster);
+        }
         return this;
     }
 
@@ -366,7 +372,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /** Refines just the property name */
     private PropertyName refinePropertyName() {
-        if (!isRefined() && propertyName == null) {
+        if (propertyName == null && !isRefined()) {
             propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
         }
         return propertyName;
@@ -378,6 +384,8 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
         if (propertyValue != null) {
             propertyValue.propagateBroadcast(broadcaster);
         }
+        // necessary for cases when we are already attached but a new property value hasn't  been broadcasted.
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -387,59 +395,24 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     @Override
     public boolean isWritable() {
-        if (isRefined()) {
-            return super.isWritable() && propertyName.isWritable() && propertyValue.isWritable();
-        }
-        return super.isWritable();
+        return super.isWritable() && (!isRefined() || (propertyName.isWritable() && propertyValue.isWritable()));
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (isRefined()) {
-            // property name
             writer.writeInner(propertyName, appendable);
-
-            // colon
-            appendable.append(':');
-            appendable.spaceIf(writer.isVerbose());
-
-            // property value
+            appendable.append(':').spaceIf(writer.isVerbose());
             writer.writeInner(propertyValue, appendable);
         } else {
-            // property name
             writer.writeInner(rawPropertyName, appendable);
-
-            // colon
-            appendable.append(':');
-            appendable.spaceIf(writer.isVerbose());
-
-            // property value
+            appendable.append(':').spaceIf(writer.isVerbose());
             writer.writeInner(rawPropertyValue, appendable);
         }
     }
 
     @Override
-    public Declaration copy() {
-        return Copy.comments(this, new Declaration(propertyName().copy(), propertyValue().copy()));
-    }
-
-    @Override
-    public Declaration copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        PropertyName pn = propertyName().copyWithPrefix(prefix, support);
-        PropertyValue pv = propertyValue().copyWithPrefix(prefix, support);
-        return Copy.comments(this, new Declaration(pn, pv));
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("rawProperty", rawPropertyName)
-            .add("rawValue", rawPropertyValue)
-            .add("refinedProperty", propertyName)
-            .add("refinedValue", propertyValue)
-            .addUnlessEmpty("orphaned", orphanedComments())
-            .toString();
+    protected Declaration makeCopy(Prefix prefix, SupportMatrix support) {
+        return new Declaration(propertyName().copy(prefix, support), propertyValue().copy(prefix, support));
     }
 }

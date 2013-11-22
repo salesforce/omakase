@@ -49,7 +49,7 @@ public final class ErrorUtils {
      *
      * @return The formatted message.
      */
-    public static String format(String message, Syntax cause) {
+    public static String format(String message, Syntax<?> cause) {
         return format(null, message, cause);
     }
 
@@ -65,7 +65,7 @@ public final class ErrorUtils {
      *
      * @return The formatted message.
      */
-    public static String format(String sourceName, String message, Syntax cause) {
+    public static String format(String sourceName, String message, Syntax<?> cause) {
         if (sourceName != null) {
             return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s in source %s, " +
                 "caused by\n%s",

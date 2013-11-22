@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -99,11 +98,5 @@ public class PseudoClassSelectorTest {
     public void writeWithArgs() throws IOException {
         PseudoClassSelector s = new PseudoClassSelector("nth-child", "2n+1");
         assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":nth-child(2n+1)");
-    }
-
-    @Test
-    public void toStringTest() {
-        PseudoClassSelector s = new PseudoClassSelector("nth-child", "2n+1");
-        assertThat(s.toString()).isNotEqualTo(Util.originalToString(s));
     }
 }

@@ -17,24 +17,18 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 
-import java.util.List;
-
 /**
  * Represents an item that appears in a group or chain of other related units, for usage with {@link SyntaxCollection}.
- * <p/>
- * In many cases you may need to check if this item is <em>detached</em> first (true if explicitly detached or if it's a new
- * instance not yet added to the tree). Detached items usually should be ignored, except to reattach.
  * <p/>
  * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
  * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated (multiple references to the same
  * object instance). If this is not what you want then first call {@link #detach()} on the unit, or consider using {@link
- * SyntaxCollection#moveBefore(Syntax, Syntax)} and {@link SyntaxCollection#moveAfter(Syntax, Syntax)}.
+ * SyntaxCollection#moveBefore(Groupable, Groupable)} and {@link SyntaxCollection#moveAfter(Groupable, Groupable)}.
  * <p/>
  * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be better
  * to alternatively consider detaching the parent unit itself and attaching the applicable children straight to a new replacement
@@ -43,17 +37,18 @@ import java.util.List;
  * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
  * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
  * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
- * #detach()} before appending or prepending the unit to the new parent.
+ * #detach()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
+ * Groupable)} / {@link SyntaxCollection#moveAfter(Groupable, Groupable)}).
  *
- * @param <T>
- *     The type of units to be grouped with.
  * @param <P>
- *     Type of the parent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
+ *     Type of the (P)arent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
+ * @param <T>
+ *     The (T)ype of units to be grouped with.
  *
  * @author nmcwilliams
  * @see SyntaxCollection
  */
-public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax {
+public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
     /**
      * Gets whether this unit is the first within its group.
      * <p/>
@@ -113,9 +108,9 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * <p/>
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
-     * collections. However all of the units group or parent methods will behave according to the new group. This may or may not
-     * be the desired behavior depending on the use-case. If this is not desired then call {@link #detach()} before appending or
-     * prepending the unit to the new parent.
+     * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
+     * #detach()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
+     * Groupable)} / {@link SyntaxCollection#moveAfter(Groupable, Groupable)}).
      *
      * @param unit
      *     The unit to prepend.
@@ -140,9 +135,9 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * <p/>
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
-     * collections. However all of the units group or parent methods will behave according to the new group. This may or may not
-     * be the desired behavior depending on the use-case. If this is not desired then call {@link #detach()} before appending or
-     * prepending the unit to the new parent.
+     * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
+     * #detach()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
+     * Groupable)} / {@link SyntaxCollection#moveAfter(Groupable, Groupable)}).
      *
      * @param unit
      *     The unit to append.
@@ -189,22 +184,4 @@ public interface Groupable<P, T extends Syntax & Groupable<P, T>> extends Syntax
      * @return The parent, or {@link Optional#absent()} if the parent is not specified.
      */
     Optional<P> parent();
-
-    /**
-     * Adds an orphaned {@link Comment}.
-     *
-     * @param comment
-     *     The comment.
-     */
-    void orphanedComment(Comment comment);
-
-    /**
-     * Gets all orphaned {@link Comment}s.
-     * <p/>
-     * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
-     * at the end of a stylesheet or declaration block.
-     *
-     * @return The list of comments, or an empty list if none are specified.
-     */
-    List<Comment> orphanedComments();
 }

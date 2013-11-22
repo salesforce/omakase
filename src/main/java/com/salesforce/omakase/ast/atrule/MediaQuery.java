@@ -17,11 +17,12 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.atrule.MediaQueryParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -71,7 +72,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
      */
     public MediaQuery(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        this.expressions = StandardSyntaxCollection.create(this, broadcaster);
+        this.expressions = new StandardSyntaxCollection<MediaQuery, MediaQueryExpression>(this, broadcaster);
     }
 
     /**
@@ -175,12 +176,8 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("restriction", restriction)
-            .add("type", type)
-            .add("expressions", expressions)
-            .toString();
+    protected MediaQuery makeCopy(Prefix prefix, SupportMatrix support) {
+        // TODO copy
+        throw new UnsupportedOperationException("TODO: copy not supported yet");
     }
 }

@@ -16,6 +16,8 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
@@ -54,8 +56,8 @@ public class AbstractTermTest {
         }
 
         @Override
-        public TermListMember copy() {
-            return null;
+        protected TermListMember makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

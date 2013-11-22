@@ -18,7 +18,6 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.test.util.Util;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -85,11 +84,5 @@ public class ConditionalsManagerTest {
     public void passthroughModeTrue() {
         ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
         assertThat(manager.isPassthroughMode()).isTrue();
-    }
-
-    @Test
-    public void toStringTest() {
-        ConditionalsManager manager = new ConditionalsManager();
-        assertThat(manager.toString()).isNotEqualTo(Util.originalToString(manager));
     }
 }

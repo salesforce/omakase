@@ -59,7 +59,7 @@ public final class Actions {
 
     private static class MoveBefore<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
-        public void apply(T subject, Iterable<T> instances) {
+        public void apply(T subject, Iterable<? extends T> instances) {
             checkArgument(!subject.isDetached(), "subject cannot be detached");
 
             SyntaxCollection<?, T> collection = subject.group().get();
@@ -83,7 +83,7 @@ public final class Actions {
 
     private static class MoveAfter<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
-        public void apply(T subject, Iterable<T> instances) {
+        public void apply(T subject, Iterable<? extends T> instances) {
             checkArgument(!subject.isDetached(), "subject cannot be detached");
 
             SyntaxCollection<?, T> collection = subject.group().get();

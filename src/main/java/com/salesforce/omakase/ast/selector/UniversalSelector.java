@@ -16,10 +16,11 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -63,7 +64,8 @@ public final class UniversalSelector extends AbstractSelectorPart implements Sim
     }
 
     @Override
-    public String toString() {
-        return As.string(this).indent().add("abstract", super.toString()).toString();
+    protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        return new UniversalSelector();
     }
 }

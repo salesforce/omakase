@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +28,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaQuery}.
@@ -179,10 +178,5 @@ public class MediaQueryTest {
         mq.type("screen").expressions().append(exp1).append(exp2);
         exp2.detach();
         assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (min-width:800px)");
-    }
-
-    @Test
-    public void toStringTest() {
-        assertThat(mq.toString()).isNotEqualTo(Util.originalToString(mq));
     }
 }

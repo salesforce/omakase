@@ -16,12 +16,12 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.StringValueParser;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -125,13 +125,8 @@ public final class StringValue extends AbstractTerm {
     }
 
     @Override
-    public StringValue copy() {
-        return Copy.comments(this, new StringValue(mode, content));
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this).add("content", content).addUnlessEmpty("comments", comments()).toString();
+    protected StringValue makeCopy(Prefix prefix, SupportMatrix support) {
+        return new StringValue(mode, content);
     }
 
     /**

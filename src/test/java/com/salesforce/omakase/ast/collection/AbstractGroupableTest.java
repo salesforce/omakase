@@ -16,7 +16,8 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -26,7 +27,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link AbstractGroupable}. */
 @SuppressWarnings("JavaDoc")
@@ -243,10 +244,10 @@ public class AbstractGroupableTest {
     }
 
     private static final class Parent {
-        private final SyntaxCollection<Parent, Child> collection = StandardSyntaxCollection.create(this);
+        private final SyntaxCollection<Parent, Child> collection = new StandardSyntaxCollection<Parent, Child>(this);
     }
 
-    private static final class Child extends AbstractGroupable<Parent, Child> implements Syntax {
+    private static final class Child extends AbstractGroupable<Parent, Child> {
         @Override
         protected Child self() {
             return this;
@@ -255,6 +256,11 @@ public class AbstractGroupableTest {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             //noop
+        }
+
+        @Override
+        protected Child makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
         }
     }
 }

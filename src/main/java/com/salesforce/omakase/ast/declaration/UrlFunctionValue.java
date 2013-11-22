@@ -17,11 +17,11 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -126,36 +126,20 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append("url(");
         if (quotationMode.isPresent()) {
-            if (quotationMode.get() == QuotationMode.DOUBLE) {
-                appendable.append('"');
-            } else {
-                appendable.append('\'');
-            }
+            appendable.append(quotationMode.get() == QuotationMode.DOUBLE ? '"' : '\'');
         }
 
         appendable.append(url);
 
         if (quotationMode.isPresent()) {
-            if (quotationMode.get() == QuotationMode.DOUBLE) {
-                appendable.append('"');
-            } else {
-                appendable.append('\'');
-            }
+            appendable.append(quotationMode.get() == QuotationMode.DOUBLE ? '"' : '\'');
         }
 
         appendable.append(')');
     }
 
     @Override
-    public UrlFunctionValue copy() {
-        return Copy.comments(this, new UrlFunctionValue(url).quotationMode(quotationMode.orNull()));
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this)
-            .add("url", url)
-            .addIf(quotationMode.isPresent(), "quotes", quotationMode)
-            .toString();
+    protected UrlFunctionValue makeCopy(Prefix prefix, SupportMatrix support) {
+        return new UrlFunctionValue(url).quotationMode(quotationMode.orNull());
     }
 }

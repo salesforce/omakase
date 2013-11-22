@@ -16,7 +16,10 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.writer.StyleWriter;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -27,6 +30,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class RawFunctionTest {
+    @Rule public final ExpectedException exception = ExpectedException.none();
+
     @Test
     public void testName() {
         RawFunction raw = new RawFunction(1, 1, "name", "args args");
@@ -43,5 +48,17 @@ public class RawFunctionTest {
 
         raw.args("changed");
         assertThat(raw.args()).isEqualTo("changed");
+    }
+
+    @Test
+    public void writeNotSupported() {
+        exception.expect(UnsupportedOperationException.class);
+        StyleWriter.writeSingle(new RawFunction(1, 1, "name", "args args"));
+    }
+
+    @Test
+    public void copyNotSupported() {
+        exception.expect(UnsupportedOperationException.class);
+        new RawFunction(1, 1, "name", "args args").copy();
     }
 }

@@ -16,24 +16,20 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
@@ -48,14 +44,9 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Stylesheet extends AbstractSyntax implements Iterable<Statement> {
-    private final SyntaxCollection<Stylesheet, Statement> statements;
-    private List<Comment> orphanedComments;
-
-    /** Creates a new instance with no {@link Broadcaster} specified. Usually only used for dynamically created stylesheets. */
-    public Stylesheet() {
-        this(null);
-    }
+public final class Stylesheet extends AbstractSyntax<StatementIterable> implements StatementIterable {
+    private final SyntaxCollection<StatementIterable, Statement> statements;
+    private final transient Broadcaster broadcaster;
 
     /**
      * Constructs a new {@link Stylesheet} instance.
@@ -65,7 +56,16 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
      */
     public Stylesheet(Broadcaster broadcaster) {
         super(1, 1);
-        statements = StandardSyntaxCollection.create(this, broadcaster);
+        statements = new StandardSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+        this.broadcaster = broadcaster;
+    }
+
+    /**
+     * Creates a new {@link Stylesheet} <em>with no {@link Broadcaster}</em>. This is only appropriate for dynamically created
+     * stylesheets (no plugins will run).
+     */
+    public Stylesheet() {
+        this(null);
     }
 
     /**
@@ -73,7 +73,7 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
      *
      * @return All statements.
      */
-    public SyntaxCollection<Stylesheet, Statement> statements() {
+    public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
     }
 
@@ -92,30 +92,7 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
 
     @Override
     public Iterator<Statement> iterator() {
-        return statements().iterator();
-    }
-
-    /**
-     * Adds an orphaned {@link Comment}. Orphaned comments appear after the last statement in the stylesheet.
-     *
-     * @param comment
-     *     The comment.
-     */
-    public void orphanedComment(Comment comment) {
-        checkNotNull(comment, "comment cannot be null");
-        orphanedComments = (orphanedComments == null) ? new ArrayList<Comment>() : orphanedComments;
-        orphanedComments.add(comment);
-    }
-
-    /**
-     * Gets all orphaned {@link Comment}s.
-     * <p/>
-     * A comment is considered <em>orphaned</em> if there are no statements that follow the comment within the stylesheet.
-     *
-     * @return The list of comments, or an empty list if none exist.
-     */
-    public List<Comment> orphanedComments() {
-        return orphanedComments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(orphanedComments);
+        return statements.iterator();
     }
 
     @Override
@@ -126,11 +103,12 @@ public final class Stylesheet extends AbstractSyntax implements Iterable<Stateme
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("statements", Lists.newArrayList(statements()))
-            .addUnlessEmpty("orphaned", orphanedComments())
-            .toString();
+    protected Stylesheet makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        Stylesheet copy = new Stylesheet(broadcaster);
+        for (Statement statement : statements) {
+            copy.append(statement.copy(prefix, support));
+        }
+        return copy;
     }
 }

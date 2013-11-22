@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.test.util.Util;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -53,11 +52,5 @@ public class CompoundTokenTest {
     public void doesntMatchNull() {
         CompoundToken compound = new CompoundToken(Tokens.ALPHA, Tokens.DIGIT);
         assertThat(compound.matches('\u0000')).isFalse();
-    }
-
-    @Test
-    public void testToString() {
-        CompoundToken compound = new CompoundToken(Tokens.ALPHA, Tokens.DIGIT);
-        assertThat(compound.toString()).isNotEqualTo(Util.originalToString(compound));
     }
 }

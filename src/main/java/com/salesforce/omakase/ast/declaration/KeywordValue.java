@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -25,8 +24,6 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -125,43 +122,25 @@ public final class KeywordValue extends AbstractTerm {
     }
 
     @Override
-    public KeywordValue copy() {
+    protected KeywordValue makeCopy(Prefix prefix, SupportMatrix support) {
         // TESTME
-        return Copy.comments(this, new KeywordValue(keyword));
-    }
+        String copied = keyword;
 
-    @Override
-    public KeywordValue copyWithPrefix(Prefix prefix, SupportMatrix support) {
         // if we are part of a "transition" declaration, we may need to be prefixed if we are a prefixable property-name
         // keyword. E.g., in "transition: border-radius 1s", the "border-radius" is a keyword value that represents a
         // property-name that may need to be prefixed.
-        // TESTME
+        if (prefix != null && support != null && !this.isDetached() && this.group().get().parent().declaration().isPresent()) {
+            Declaration declaration = group().get().parent().declaration().get();
+            if (declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) {
+                // check if this keyword is a recognizable property
+                Property property = Property.lookup(keyword);
+                if (property != null && support.requiresPrefixForProperty(prefix, property)) {
+                    copied = prefix + keyword;
+                }
+            }
+        }
 
-        // if detached then nothing further we can check
-        if (this.isDetached()) return copy();
-
-        // if we aren't linked to the parent declaration, we can't check if the property is "transition"
-        Optional<Declaration> parent = this.group().get().parent().parentDeclaration();
-        if (!parent.isPresent()) return copy();
-        Declaration declaration = parent.get();
-
-        // if this isn't for the "transition" or "transition-property" properties then a regular copy will suffice
-        if (!declaration.isProperty(Property.TRANSITION) && !declaration.isProperty(Property.TRANSITION_PROPERTY)) return copy();
-
-        // check if this keyword is a recognizable property
-        Property property = Property.lookup(keyword);
-        if (property == null) return copy();
-
-        // check if the property actually needs to be prefixed
-        if (!support.requiresPrefixForProperty(prefix, property)) return copy();
-
-        // add the prefix!
-        return Copy.comments(this, new KeywordValue(prefix + keyword));
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this).add("keyword", keyword).addUnlessEmpty("comments", comments()).toString();
+        return new KeywordValue(copied);
     }
 
     /**

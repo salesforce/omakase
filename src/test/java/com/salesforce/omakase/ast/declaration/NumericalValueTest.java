@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -250,7 +249,7 @@ public class NumericalValueTest {
         numerical.explicitSign(NumericalValue.Sign.NEGATIVE);
         numerical.comments(Lists.newArrayList("test"));
 
-        NumericalValue copy = numerical.copy();
+        NumericalValue copy = (NumericalValue)numerical.copy();
         assertThat(copy.value()).isEqualTo(numerical.value());
         assertThat(copy.unit().get()).isEqualTo(numerical.unit().get());
         assertThat(copy.explicitSign().get()).isSameAs(numerical.explicitSign().get());
@@ -258,8 +257,12 @@ public class NumericalValueTest {
     }
 
     @Test
-    public void toStringTest() {
-        numerical = NumericalValue.of(0.4).unit("rem");
-        assertThat(numerical.toString()).isNotEqualTo(Util.originalToString(numerical));
+    public void copyTestWithAbsentValues() {
+        numerical = new NumericalValue(5, 5, "100");
+
+        NumericalValue copy = (NumericalValue)numerical.copy();
+        assertThat(copy.value()).isEqualTo(numerical.value());
+        assertThat(copy.unit().isPresent()).isFalse();
+        assertThat(copy.explicitSign().isPresent()).isFalse();
     }
 }

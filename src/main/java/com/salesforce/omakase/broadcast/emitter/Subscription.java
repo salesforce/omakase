@@ -17,8 +17,8 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.base.Objects;
-import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.util.As;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -100,11 +100,6 @@ final class Subscription {
 
     @Override
     public String toString() {
-        return As.string(this)
-            .indent()
-            .add("method", method.getName())
-            .add("subscriber", subscriber)
-            .add("phase", phase)
-            .toString();
+        return As.string(this).fields().toString();
     }
 }

@@ -64,16 +64,16 @@ public class PrefixInfoTest {
 
     @Test
     public void lastPrefixedVersionFunction() {
-        assertThat(PrefixInfo.lastPrefixedVersion("calc", Browser.CHROME)).isEqualTo(25);
+        assertThat(PrefixInfo.functionLastPrefixedVersion("calc", Browser.CHROME)).isEqualTo(25);
     }
 
     @Test
     public void lastPrefixedVersionFunctionNotPresent() {
-        assertThat(PrefixInfo.lastPrefixedVersion("calc", Browser.IE)).isEqualTo(-1);
+        assertThat(PrefixInfo.functionLastPrefixedVersion("calc", Browser.IE)).isEqualTo(-1);
     }
 
     @Test
     public void lastPrefixedVersionFunctionForNotPrefixedFunction() {
-        assertThat(PrefixInfo.lastPrefixedVersion("blah", Browser.IE)).isEqualTo(-1);
+        assertThat(PrefixInfo.functionLastPrefixedVersion("blah", Browser.IE)).isEqualTo(-1);
     }
 }

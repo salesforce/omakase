@@ -16,8 +16,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.ast.Copyable;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.Groupable;
 
 /**
@@ -25,5 +23,4 @@ import com.salesforce.omakase.ast.collection.Groupable;
  *
  * @author nmcwilliams
  */
-public interface TermListMember extends Syntax, Copyable<TermListMember>, Groupable<TermList, TermListMember> {
-}
+public interface TermListMember extends Groupable<TermList, TermListMember> {}

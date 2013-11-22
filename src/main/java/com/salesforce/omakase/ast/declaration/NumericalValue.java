@@ -17,12 +17,12 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -63,9 +63,7 @@ public final class NumericalValue extends AbstractTerm {
 
         final char symbol;
 
-        Sign(char symbol) {
-            this.symbol = symbol;
-        }
+        Sign(char symbol) { this.symbol = symbol; }
     }
 
     /**
@@ -229,16 +227,13 @@ public final class NumericalValue extends AbstractTerm {
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // sign
-        if (explicitSign.isPresent()) {
+        if (explicitSign().isPresent()) {
             appendable.append(explicitSign.get().symbol);
         }
 
         // number. omit leading 0 integer values when there is only a decimal, e.g., "0.5" => ".5"
-        if (raw.contains(".") && raw.indexOf(".") == 1 && raw.charAt(0) == '0') {
-            appendable.append(raw.substring(1));
-        } else {
-            appendable.append(raw);
-        }
+        boolean leadingZero = raw.length() > 2 && raw.charAt(0) == '0' && raw.charAt(1) == '.';
+        appendable.append(leadingZero ? raw.substring(1) : raw);
 
         // unit
         if (unit.isPresent()) {
@@ -247,18 +242,8 @@ public final class NumericalValue extends AbstractTerm {
     }
 
     @Override
-    public NumericalValue copy() {
-        return Copy.comments(this, NumericalValue.of(raw).unit(unit.orNull()).explicitSign(explicitSign.orNull()));
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this)
-            .add("raw", raw)
-            .add("unit", unit)
-            .add("explicitSign", explicitSign)
-            .addUnlessEmpty("comments", comments())
-            .toString();
+    protected NumericalValue makeCopy(Prefix prefix, SupportMatrix support) {
+        return NumericalValue.of(raw).unit(unit.orNull()).explicitSign(explicitSign.orNull());
     }
 
     /**

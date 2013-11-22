@@ -19,11 +19,8 @@ package com.salesforce.omakase.ast.declaration;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
-import com.salesforce.omakase.ast.Copyable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.util.As;
-import com.salesforce.omakase.util.Copy;
 import com.salesforce.omakase.util.Prefixes;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -43,7 +40,7 @@ import static com.salesforce.omakase.util.Prefixes.PrefixPair;
  *
  * @author nmcwilliams
  */
-public final class PropertyName extends AbstractSyntax implements Copyable<PropertyName> {
+public final class PropertyName extends AbstractSyntax<PropertyName> {
     private static final char STAR = '*';
 
     private final String name;
@@ -154,8 +151,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     }
 
     /**
-     * Gets whether this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
-     * hack.</a>
+     * Gets whether this {@link PropertyName} includes an IE7 star hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack).
      *
      * @return True if this {@link PropertyName} includes the IE7 star hack.
      */
@@ -164,8 +160,7 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     }
 
     /**
-     * Sets if this {@link PropertyName} includes an IE7 <a href="http://en.wikipedia.org/wiki/CSS_filter#Star_hack">star
-     * hack.</a>
+     * Sets if this {@link PropertyName} includes an IE7 star hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack).
      *
      * @param starHack
      *     True if this property name includes the star hack
@@ -246,24 +241,14 @@ public final class PropertyName extends AbstractSyntax implements Copyable<Prope
     }
 
     @Override
-    public PropertyName copy() {
-        return Copy.comments(this, PropertyName.using(name()).setStarHack(starHack));
-    }
-
-    @Override
-    public PropertyName copyWithPrefix(Prefix prefix, SupportMatrix support) {
-        Optional<Property> property = asProperty();
-
-        if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
-            return Copy.comments(this, PropertyName.using(property.get()).prefix(prefix).setStarHack(starHack));
+    protected PropertyName makeCopy(Prefix prefix, SupportMatrix support) {
+        if (prefix != null && support != null) {
+            Optional<Property> property = asProperty();
+            if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
+                return PropertyName.using(property.get()).prefix(prefix).setStarHack(starHack);
+            }
         }
-
-        return copy();
-    }
-
-    @Override
-    public String toString() {
-        return As.string(this).add("name", name()).toString();
+        return PropertyName.using(name()).setStarHack(starHack);
     }
 
     /**

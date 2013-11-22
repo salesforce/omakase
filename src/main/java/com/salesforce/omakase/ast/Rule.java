@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
@@ -27,6 +27,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -51,20 +52,20 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  * are attributed as orphaned comments on the {@link Declaration} instead.
  * <p/>
  * Example of a dynamically created rule:
- * <pre>
+ * <pre><code>
  * Rule rule = new Rule();
  * rule.selectors().append(new Selector(new ClassSelector("class")));
  * rule.selectors().append(new Selector(new IdSelector("id")));
  * rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
  * rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
- * </pre>
+ * </code></pre>
  *
  * @author nmcwilliams
  */
 
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Rule extends AbstractGroupable<Stylesheet, Statement> implements Statement {
+public final class Rule extends AbstractGroupable<StatementIterable, Statement> implements Statement {
     private final SyntaxCollection<Rule, Selector> selectors;
     private final SyntaxCollection<Rule, Declaration> declarations;
 
@@ -85,8 +86,8 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
      */
     public Rule(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        selectors = StandardSyntaxCollection.create(this, broadcaster);
-        declarations = StandardSyntaxCollection.create(this, broadcaster);
+        selectors = new StandardSyntaxCollection<Rule, Selector>(this, broadcaster);
+        declarations = new StandardSyntaxCollection<Rule, Declaration>(this, broadcaster);
     }
 
     /**
@@ -110,13 +111,6 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
-        selectors.propagateBroadcast(broadcaster);
-        declarations.propagateBroadcast(broadcaster);
-    }
-
-    @Override
     public Optional<Rule> asRule() {
         return Optional.of(this);
     }
@@ -127,14 +121,22 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
     }
 
     @Override
-    protected Statement self() {
+    protected Rule self() {
         return this;
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        // TESTME
+        super.propagateBroadcast(broadcaster);
+        selectors.propagateBroadcast(broadcaster);
+        declarations.propagateBroadcast(broadcaster);
     }
 
     @Override
     public boolean isWritable() {
         // don't write out rules with no selectors or all detached selectors
-        return !isDetached() && !selectors.isEmptyOrAllDetached() && !declarations().isEmptyOrAllDetached();
+        return !isDetached() && !selectors.isEmptyOrAllDetached() && !declarations.isEmptyOrAllDetached();
     }
 
     @Override
@@ -184,7 +186,7 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
             }
         }
 
-        if(wroteFirst && writer.isVerbose()) appendable.append(';');
+        if (wroteFirst && writer.isVerbose()) appendable.append(';');
 
         // close declaration block
         appendable.unindentIf(writer.isVerbose());
@@ -193,13 +195,15 @@ public final class Rule extends AbstractGroupable<Stylesheet, Statement> impleme
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("selectors", selectors)
-            .add("declarations", declarations)
-            .addUnlessEmpty("orphaned", orphanedComments())
-            .toString();
+    protected Rule makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        Rule copy = new Rule();
+        for (Selector selector : selectors) {
+            copy.selectors().append(selector.copy(prefix, support));
+        }
+        for (Declaration declaration : declarations) {
+            copy.declarations().append(declaration.copy(prefix, support));
+        }
+        return copy;
     }
 }

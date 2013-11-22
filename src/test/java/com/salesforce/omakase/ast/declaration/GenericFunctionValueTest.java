@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.test.util.Util;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +27,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link GenericFunctionValue}. */
 @SuppressWarnings("JavaDoc")
@@ -99,7 +98,7 @@ public class GenericFunctionValueTest {
         value = new GenericFunctionValue("test", "args");
         value.comments(Lists.newArrayList("test"));
 
-        GenericFunctionValue copy = value.copy();
+        GenericFunctionValue copy = (GenericFunctionValue)value.copy();
         assertThat(copy.name()).isEqualTo("test");
         assertThat(copy.args()).isEqualTo("args");
         assertThat(copy.comments()).hasSameSizeAs(value.comments());
@@ -112,7 +111,7 @@ public class GenericFunctionValueTest {
         value = new GenericFunctionValue("calc", "2px-1px");
         value.comments(Lists.newArrayList("test"));
 
-        GenericFunctionValue copy = value.copyWithPrefix(Prefix.WEBKIT, support);
+        GenericFunctionValue copy = (GenericFunctionValue)value.copy(Prefix.WEBKIT, support);
         assertThat(copy.name()).isEqualTo("-webkit-calc");
         assertThat(copy.args()).isEqualTo("2px-1px");
         assertThat(copy.comments()).hasSameSizeAs(value.comments());
@@ -124,15 +123,9 @@ public class GenericFunctionValueTest {
         value = new GenericFunctionValue("calc", "2px-1px");
         value.comments(Lists.newArrayList("test"));
 
-        GenericFunctionValue copy = value.copyWithPrefix(Prefix.WEBKIT, support);
+        GenericFunctionValue copy = (GenericFunctionValue)value.copy(Prefix.WEBKIT, support);
         assertThat(copy.name()).isEqualTo("calc");
         assertThat(copy.args()).isEqualTo("2px-1px");
         assertThat(copy.comments()).hasSameSizeAs(value.comments());
-    }
-
-    @Test
-    public void toStringTest() {
-        value = new GenericFunctionValue("xyz", "home.png");
-        assertThat(value.toString()).isNotEqualTo(Util.originalToString(value));
     }
 }

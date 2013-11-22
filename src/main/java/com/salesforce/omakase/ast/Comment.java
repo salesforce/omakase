@@ -66,6 +66,6 @@ public final class Comment implements Writable {
 
     @Override
     public String toString() {
-        return As.string(this).add("content", content).toString();
+        return As.string(this).fields().toString();
     }
 }

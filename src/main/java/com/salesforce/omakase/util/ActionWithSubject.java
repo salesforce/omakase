@@ -33,5 +33,5 @@ public interface ActionWithSubject<T> {
      * @param instances
      *     Apply the action on these instances.
      */
-    void apply(T subject, Iterable<T> instances);
+    void apply(T subject, Iterable<? extends T> instances);
 }

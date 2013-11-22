@@ -17,10 +17,11 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -85,8 +86,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
      *     The arguments (not including the parenthesis).
      */
     public PseudoClassSelector(String name, String args) {
-        name(name);
-        args(args);
+        name(name).args(args);
     }
 
     /**
@@ -153,12 +153,8 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
     }
 
     @Override
-    public String toString() {
-        return As.string(this)
-            .indent()
-            .add("abstract", super.toString())
-            .add("name", name)
-            .addIf(args.isPresent(), "args", args)
-            .toString();
+    protected PseudoClassSelector makeCopy(Prefix prefix, SupportMatrix support) {
+        // TESTME
+        return new PseudoClassSelector(name, args.orNull());
     }
 }

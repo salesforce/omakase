@@ -162,9 +162,6 @@ public final class ConditionalsManager {
 
     @Override
     public String toString() {
-        return As.string(this)
-            .add("trueConditions", trueConditions)
-            .add("passthroughMode", passthroughMode)
-            .toString();
+        return As.string(this).fields().toString();
     }
 }

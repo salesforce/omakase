@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -24,6 +24,7 @@ import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -41,7 +42,7 @@ import java.io.IOException;
  */
 @Subscribable
 @Description(value = "full media query string", broadcasted = BroadcastRequirement.REFINED_AT_RULE)
-public final class MediaQueryList extends AbstractSyntax implements AtRuleExpression {
+public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
     private final SyntaxCollection<MediaQueryList, MediaQuery> queries;
 
     /**
@@ -65,7 +66,7 @@ public final class MediaQueryList extends AbstractSyntax implements AtRuleExpres
      */
     public MediaQueryList(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        queries = StandardSyntaxCollection.create(this, broadcaster);
+        queries = new StandardSyntaxCollection<MediaQueryList, MediaQuery>(this, broadcaster);
     }
 
     /**
@@ -101,7 +102,8 @@ public final class MediaQueryList extends AbstractSyntax implements AtRuleExpres
     }
 
     @Override
-    public String toString() {
-        return As.string(this).indent().add("abstract", super.toString()).add("queries", queries).toString();
+    protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
+        // TODO copy
+        throw new UnsupportedOperationException("TODO: copy not supported yet");
     }
 }

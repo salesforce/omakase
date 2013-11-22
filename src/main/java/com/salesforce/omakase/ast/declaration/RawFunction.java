@@ -16,15 +16,16 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.parser.refiner.FunctionRefiner;
-import com.salesforce.omakase.parser.refiner.StandardRefiner;
-import com.salesforce.omakase.util.As;
+import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.StandardRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -46,7 +47,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Subscribable
 @Description(value = "a raw function before refinement", broadcasted = BroadcastRequirement.REFINED_DECLARATION)
-public final class RawFunction extends AbstractSyntax {
+public final class RawFunction extends AbstractSyntax<RawFunction> {
     private String name;
     private String args;
 
@@ -114,11 +115,11 @@ public final class RawFunction extends AbstractSyntax {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("write not supported for " + RawFunction.class);
     }
 
     @Override
-    public String toString() {
-        return As.string(this).add("name", name).add("args", args).toString();
+    protected RawFunction makeCopy(Prefix prefix, SupportMatrix support) {
+        throw new UnsupportedOperationException("copy not supported for " + RawFunction.class);
     }
 }

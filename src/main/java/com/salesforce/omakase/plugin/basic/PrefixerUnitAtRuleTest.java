@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.ast.atrule;
-
-import com.salesforce.omakase.ast.StatementIterable;
+package com.salesforce.omakase.plugin.basic;
 
 /**
- * The block of an {@link AtRule}.
+ * TODO description
  *
  * @author nmcwilliams
  */
-public interface AtRuleBlock extends StatementIterable {}
+public class PrefixerUnitAtRuleTest {
+}
