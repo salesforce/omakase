@@ -6,12 +6,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.ast.Comment;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
@@ -30,7 +27,10 @@ import java.util.Set;
  *
  * @author david.brady
  */
-public final class DirectionFlipPlugin implements DependentPlugin {
+public class DirectionFlipPlugin implements DependentPlugin {
+
+    private static final String NOPARSE = "@noparse";
+
     /*
      * Set of properties that are flipped directly to another property.
      */
@@ -118,6 +118,10 @@ public final class DirectionFlipPlugin implements DependentPlugin {
      */
     @Rework
     public void rework(Declaration declaration) {
+        if (hasNoParseDirective(declaration)) {
+            return;
+        }
+
         Optional<Property> optionalProperty = declaration.propertyName().asPropertyIgnorePrefix();
 
         if (!optionalProperty.isPresent()) {
@@ -136,6 +140,15 @@ public final class DirectionFlipPlugin implements DependentPlugin {
         handleFlippableBorderRadius(declaration, property);
     }
 
+    private boolean hasNoParseDirective(Declaration declaration) {
+        for (Comment comment : declaration.comments()) {
+            if (comment.content().contains(NOPARSE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Flips keywords.
      *
@@ -144,6 +157,9 @@ public final class DirectionFlipPlugin implements DependentPlugin {
      */
     @Rework
     public void rework(KeywordValue keywordValue) {
+        if (hasNoParseDirective(keywordValue.parent().get().parentDeclaration().get())) {
+            return;
+        }
         Optional<Keyword> optionalKeyword = keywordValue.asKeyword();
         if (optionalKeyword.isPresent()) {
             Keyword keyword = optionalKeyword.get();
