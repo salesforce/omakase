@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -117,7 +118,7 @@ public final class KeywordValue extends AbstractTerm {
     }
 
     /**
-     * Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown keyword.
+     * Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown keyword).
      *
      * @return The {@link Keyword}.
      */
