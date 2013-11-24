@@ -152,12 +152,6 @@ public final class EchoLogger extends BasePlugin {
 
     @Observe
     @Override
-    public void termList(TermList termList) {
-        logger.debug("termList: {}", termList);
-    }
-
-    @Observe
-    @Override
     public void genericFunction(GenericFunctionValue function) {
         logger.trace("genericFunction: {}", function);
     }

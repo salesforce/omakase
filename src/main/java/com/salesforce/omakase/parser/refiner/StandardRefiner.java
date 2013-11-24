@@ -99,7 +99,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         Source source = new Source(declaration.rawPropertyValue().get());
 
         // parse the contents
-        ParserFactory.termListParser().parse(source, single, refiner);
+        ParserFactory.propertyValueParser().parse(source, single, refiner);
 
         // grab orphaned comments
         declaration.orphanedComments(source.collectComments().flushComments());

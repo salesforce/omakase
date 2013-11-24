@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
@@ -34,22 +33,22 @@ import java.io.IOException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link TermList}.
+ * Unit tests for {@link PropertyValue}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class TermListTest {
+public class PropertyValueTest {
     @Test
     public void position() {
-        TermList tl = new TermList(5, 2, new StatusChangingBroadcaster());
-        assertThat(tl.line()).isEqualTo(5);
-        assertThat(tl.column()).isEqualTo(2);
+        PropertyValue val = new PropertyValue(5, 2, new StatusChangingBroadcaster());
+        assertThat(val.line()).isEqualTo(5);
+        assertThat(val.column()).isEqualTo(2);
     }
 
     @Test
     public void membersWhenEmpty() {
-        assertThat(new TermList().members()).isEmpty();
+        assertThat(new PropertyValue().members()).isEmpty();
     }
 
     @Test
@@ -58,46 +57,34 @@ public class TermListTest {
         HexColorValue hex = HexColorValue.of("#333");
         Operator operator = new Operator(OperatorType.SPACE);
 
-        TermList tl = TermList.singleValue(number);
-        tl.append(operator).append(hex);
+        PropertyValue value = PropertyValue.of(number);
+        value.append(operator).append(hex);
 
-        assertThat(tl.members()).containsExactly(number, operator, hex);
+        assertThat(value.members()).containsExactly(number, operator, hex);
     }
 
     @Test
     public void terms() {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        TermList tl = TermList.ofValues(OperatorType.SPACE, n1, n2);
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
 
-        assertThat(tl.members()).hasSize(3);
-        assertThat(tl.terms()).containsExactly(n1, n2);
-    }
-
-    @Test
-    public void termsIncludesTermViewTerms() {
-        CustomTermView custom = new CustomTermView();
-        TermList tl = new TermList();
-
-        tl.append(NumericalValue.of(0));
-        tl.append(OperatorType.SPACE);
-        tl.append(custom);
-
-        assertThat(tl.terms()).hasSize(1 + Iterables.size(custom.terms()));
+        assertThat(val.members()).hasSize(3);
+        assertThat(val.terms()).containsExactly(n1, n2);
     }
 
     @Test
     public void defaultNotImportant() {
-        assertThat(TermList.singleValue(KeywordValue.of("test")).isImportant()).isFalse();
+        assertThat(PropertyValue.of(KeywordValue.of("test")).isImportant()).isFalse();
     }
 
     @Test
     public void setImportant() {
-        TermList tl = TermList.singleValue(NumericalValue.of(1));
-        tl.important(true);
-        assertThat(tl.isImportant()).isTrue();
-        tl.important(false);
-        assertThat(tl.isImportant()).isFalse();
+        PropertyValue val = PropertyValue.of(NumericalValue.of(1));
+        val.important(true);
+        assertThat(val.isImportant()).isTrue();
+        val.important(false);
+        assertThat(val.isImportant()).isFalse();
     }
 
     @Test
@@ -106,81 +93,81 @@ public class TermListTest {
         NumericalValue number = NumericalValue.of(1);
         KeywordValue keyword = KeywordValue.of("noen");
 
-        TermList tl = TermList.ofValues(OperatorType.SPACE, number, keyword);
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, number, keyword);
 
-        tl.propagateBroadcast(qb);
+        val.propagateBroadcast(qb);
 
-        assertThat(qb.all()).containsExactly(tl, number, keyword);
+        assertThat(qb.all()).containsExactly(val, number, keyword);
     }
 
     @Test
     public void isWritableIfHasNonDetachedTerm() {
-        TermList tl = TermList.singleValue(NumericalValue.of(1));
-        assertThat(tl.isWritable()).isTrue();
+        PropertyValue val = PropertyValue.of(NumericalValue.of(1));
+        assertThat(val.isWritable()).isTrue();
     }
 
     @Test
     public void isNotWritableWhenNoTermsAreWritable() {
-        TermList tl = TermList.singleValue(new NonWritableTerm());
-        assertThat(tl.isWritable()).isFalse();
+        PropertyValue val = PropertyValue.of(new NonWritableTerm());
+        assertThat(val.isWritable()).isFalse();
     }
 
     @Test
     public void isNotWritableWhenNoTerms() {
-        TermList tl = new TermList();
-        assertThat(tl.isWritable()).isFalse();
+        PropertyValue val = new PropertyValue();
+        assertThat(val.isWritable()).isFalse();
     }
 
     @Test
     public void writeWhenNotImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        TermList tl = TermList.ofValues(OperatorType.SPACE, n1, n2);
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
 
-        assertThat(StyleWriter.compressed().writeSnippet(tl)).isEqualTo("1 2");
+        assertThat(StyleWriter.compressed().writeSnippet(val)).isEqualTo("1 2");
     }
 
     @Test
     public void writeVerboseWhenImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        TermList tl = TermList.ofValues(OperatorType.SPACE, n1, n2);
-        tl.important(true);
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        val.important(true);
 
-        assertThat(StyleWriter.verbose().writeSnippet(tl)).isEqualTo("1 2 !important");
+        assertThat(StyleWriter.verbose().writeSnippet(val)).isEqualTo("1 2 !important");
     }
 
     @Test
     public void writeCompressedWhenImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        TermList tl = TermList.ofValues(OperatorType.SPACE, n1, n2);
-        tl.important(true);
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        val.important(true);
 
-        assertThat(StyleWriter.compressed().writeSnippet(tl)).isEqualTo("1 2!important");
+        assertThat(StyleWriter.compressed().writeSnippet(val)).isEqualTo("1 2!important");
     }
 
     @Test
     public void defaultNoParentDeclaration() {
-        TermList tl = TermList.singleValue(NumericalValue.of(1));
-        assertThat(tl.declaration().isPresent()).isFalse();
+        PropertyValue val = PropertyValue.of(NumericalValue.of(1));
+        assertThat(val.declaration().isPresent()).isFalse();
     }
 
     @Test
     public void setParentDeclaration() {
-        TermList tl = TermList.singleValue(NumericalValue.of(0));
+        PropertyValue val = PropertyValue.of(NumericalValue.of(0));
         Declaration d = new Declaration(Property.FONT_SIZE, NumericalValue.of(1, "px"));
-        tl.declaration(d);
-        assertThat(tl.declaration().get()).isSameAs(d);
+        val.declaration(d);
+        assertThat(val.declaration().get()).isSameAs(d);
     }
 
     @Test
     public void testCopy() {
-        TermList tl = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(0), NumericalValue.of(0));
-        tl.important(true);
-        tl.comments(Lists.newArrayList("test"));
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(0), NumericalValue.of(0));
+        val.important(true);
+        val.comments(Lists.newArrayList("test"));
 
-        TermList copy = (TermList)tl.copy();
+        PropertyValue copy = val.copy();
         assertThat(copy.isImportant()).isTrue();
         assertThat(copy.members()).hasSize(3);
         assertThat(copy.comments()).hasSize(1);
@@ -188,39 +175,19 @@ public class TermListTest {
 
     @Test
     public void testCopyWithPrefix() {
-        TermList tl = TermList.singleValue(new GenericFunctionValue("calc", "2px-1px"));
-        tl.important(true);
-        tl.comments(Lists.newArrayList("test"));
+        PropertyValue val = PropertyValue.of(new GenericFunctionValue("calc", "2px-1px"));
+        val.important(true);
+        val.comments(Lists.newArrayList("test"));
 
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 15);
 
-        TermList copy = (TermList)tl.copy(Prefix.MOZ, support);
+        PropertyValue copy = val.copy(Prefix.MOZ, support);
         assertThat(copy.isImportant()).isTrue();
         assertThat(copy.members()).hasSize(1);
         assertThat(copy.comments()).hasSize(1);
-        TermListMember first = Iterables.get(copy.members(), 0);
+        PropertyValueMember first = Iterables.get(copy.members(), 0);
         assertThat(((GenericFunctionValue)first).name()).isEqualTo("-moz-calc");
-    }
-
-    private static final class CustomTermView extends AbstractTerm implements TermView {
-        @Override
-        public Iterable<Term> terms() {
-            return Lists.<Term>newArrayList(
-                NumericalValue.of(1, "px"),
-                KeywordValue.of(Keyword.SOLID),
-                KeywordValue.of(Keyword.BLACK));
-        }
-
-        @Override
-        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        protected TermListMember makeCopy(Prefix prefix, SupportMatrix support) {
-            throw new UnsupportedOperationException();
-        }
     }
 
     private static final class NonWritableTerm extends AbstractTerm {
@@ -234,7 +201,7 @@ public class TermListTest {
         }
 
         @Override
-        protected TermListMember makeCopy(Prefix prefix, SupportMatrix support) {
+        protected PropertyValueMember makeCopy(Prefix prefix, SupportMatrix support) {
             throw new UnsupportedOperationException();
         }
     }

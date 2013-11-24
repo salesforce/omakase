@@ -25,8 +25,6 @@ import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
-import com.salesforce.omakase.ast.declaration.TermList;
-import com.salesforce.omakase.ast.declaration.TermListMember;
 import com.salesforce.omakase.data.Prefix;
 
 import java.util.List;
@@ -118,18 +116,13 @@ public final class Equivalents {
         for (Declaration declaration : unprefixed.group().get()) {
             // property must have the same name
             if (declaration.isProperty(unprefixed.propertyName())) {
-                Optional<TermList> termList = Values.asTermList(declaration.propertyValue());
-                if (termList.isPresent()) {
-                    for (TermListMember member : termList.get().members()) {
-                        if (member instanceof FunctionValue) {
-                            String name = ((FunctionValue)member).name();
-                            if (name.startsWith("-") && name.endsWith(functionName)) {
-                                Optional<Prefix> prefix = Prefixes.parsePrefix(name);
-                                if (prefix.isPresent()) {
-                                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                                    multimap.put(prefix.get(), declaration);
-                                }
-                            }
+                for (FunctionValue function : Values.filter(FunctionValue.class, declaration.propertyValue())) {
+                    String name = function.name();
+                    if (name.startsWith("-") && name.endsWith(functionName)) {
+                        Optional<Prefix> prefix = Prefixes.parsePrefix(name);
+                        if (prefix.isPresent()) {
+                            if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                            multimap.put(prefix.get(), declaration);
                         }
                     }
                 }

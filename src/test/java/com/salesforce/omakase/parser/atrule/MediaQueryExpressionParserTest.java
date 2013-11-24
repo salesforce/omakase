@@ -22,7 +22,7 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQueryExpression;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import org.junit.Rule;
@@ -130,7 +130,7 @@ public class MediaQueryExpressionParserTest extends AbstractParserTest<MediaQuer
     public void matchesExpectedTerms() {
         GenericParseResult result = parse("(min-aspect-ratio: 1/1)").get(0);
         MediaQueryExpression exp = result.broadcaster.find(MediaQueryExpression.class).get();
-        List<TermListMember> terms = exp.terms();
+        List<PropertyValueMember> terms = exp.terms();
         assertThat(terms).hasSize(3);
         assertThat(terms.get(0)).isInstanceOf(NumericalValue.class);
         assertThat(terms.get(1)).isInstanceOf(Operator.class);

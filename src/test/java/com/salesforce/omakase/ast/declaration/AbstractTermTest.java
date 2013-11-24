@@ -56,7 +56,7 @@ public class AbstractTermTest {
         }
 
         @Override
-        protected TermListMember makeCopy(Prefix prefix, SupportMatrix support) {
+        protected PropertyValueMember makeCopy(Prefix prefix, SupportMatrix support) {
             throw new UnsupportedOperationException();
         }
     }

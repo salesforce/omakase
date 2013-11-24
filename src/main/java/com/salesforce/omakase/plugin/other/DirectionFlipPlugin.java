@@ -1,6 +1,7 @@
 package com.salesforce.omakase.plugin.other;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
@@ -11,7 +12,6 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.util.Values;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,11 +19,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * DirectionFlipPlugin changes the direction of CSS property names, keywords, and term lists from left to right, or
- * from right to left.
+ * DirectionFlipPlugin changes the direction of CSS property names, keywords, and term lists from left to right, or from right to
+ * left.
  *
  * @author david.brady
- *
  */
 public class DirectionFlipPlugin implements DependentPlugin {
 
@@ -71,7 +70,6 @@ public class DirectionFlipPlugin implements DependentPlugin {
         .put(Keyword.W_RESIZE, Keyword.E_RESIZE)
         .build();
 
-
     /*
      * Set of properties that have flippable percentage values.
      */
@@ -102,7 +100,6 @@ public class DirectionFlipPlugin implements DependentPlugin {
             Keyword.RIGHT,
             Keyword.CENTER);
 
-
     @Override
     public void dependencies(PluginRegistry registry) {
         registry.require(AutoRefiner.class).declarations();
@@ -111,7 +108,8 @@ public class DirectionFlipPlugin implements DependentPlugin {
     /**
      * Flips property names and/or property values.
      *
-     * @param declaration Declaration to be flippped
+     * @param declaration
+     *     Declaration to be flippped
      */
     @Rework
     public void rework(Declaration declaration) {
@@ -126,21 +124,18 @@ public class DirectionFlipPlugin implements DependentPlugin {
         handleFlippablePropertyName(declaration, property);
 
         // flip property values
-        Optional<TermList> optionalTermList = Values.asTermList(declaration.propertyValue());
-        if (optionalTermList.isPresent()) {
-            TermList termList = optionalTermList.get();
-            // Careful!  If a handler depends on the changes a previous handler made,
-            // it won't be able to use the property or termList we've grabbed above.
-            if (handleFlippableFourPartProperties(declaration, property, termList)) return;
-            if (handleFlippablePercentages(declaration, property, termList)) return;
-            handleFlippableBorderRadius(declaration, property, termList);
-        }
+        // Careful!  If a handler depends on the changes a previous handler made,
+        // it won't be able to use the property or property value we've grabbed above.
+        if (handleFlippableFourPartProperties(declaration, property)) return;
+        if (handleFlippablePercentages(declaration, property)) return;
+        handleFlippableBorderRadius(declaration, property);
     }
 
     /**
      * Flips keywords.
      *
-     * @param keywordValue keywordValue to be flipped
+     * @param keywordValue
+     *     keywordValue to be flipped
      */
     @Rework
     public void rework(KeywordValue keywordValue) {
@@ -161,32 +156,31 @@ public class DirectionFlipPlugin implements DependentPlugin {
         return false;
     }
 
-    private boolean handleFlippableBorderRadius(Declaration declaration, Property property,
-        TermList termList) {
-        if (Property.BORDER_RADIUS==property) {
-            TermList[] termLists = splitTermListAtSlash(termList);
-            switch (termLists.length) {
+    private boolean handleFlippableBorderRadius(Declaration declaration, Property property) {
+        if (Property.BORDER_RADIUS == property) {
+            PropertyValue[] values = splitPropertyValueAtSlash(declaration.propertyValue());
+            switch (values.length) {
             case 1:
-                declaration.propertyValue(flipBorderRadiusSet(termList));
+                declaration.propertyValue(flipBorderRadiusSet(declaration.propertyValue()));
                 return true;
             case 2:
-                termLists[0] = flipBorderRadiusSet(termLists[0]);
-                termLists[1] = flipBorderRadiusSet(termLists[1]);
-                termLists[0].append(OperatorType.SLASH);
-                for (TermListMember member : termLists[1].members()) {
-                    termLists[0].append(member);
+                values[0] = flipBorderRadiusSet(values[0]);
+                values[1] = flipBorderRadiusSet(values[1]);
+                values[0].append(OperatorType.SLASH);
+                for (PropertyValueMember member : values[1].members()) {
+                    values[0].append(member);
                 }
-                declaration.propertyValue(termLists[0]);
+                declaration.propertyValue(values[0]);
                 return true;
             }
         }
         return false;
     }
 
-    private boolean handleFlippablePercentages(Declaration declaration, Property property, TermList termList) {
+    private boolean handleFlippablePercentages(Declaration declaration, Property property) {
         if (PROPERTIES_WITH_FLIPPABLE_PERCENTAGE.contains(property)) {
-            Iterator<Term> originalTermIter = termList.terms().iterator();
-            TermList replacementTermList = new TermList();
+            Iterator<Term> originalTermIter = declaration.propertyValue().terms().iterator();
+            PropertyValue replacement = new PropertyValue();
             boolean flipped = false;
             while (originalTermIter.hasNext()) {
                 Term term = originalTermIter.next();
@@ -197,48 +191,48 @@ public class DirectionFlipPlugin implements DependentPlugin {
                 // flip the first percentage we see
                 if (!flipped) {
                     Term flippedTerm = flipPercentage(term);
-                    if (flippedTerm!=term) {
+                    if (flippedTerm != term) {
                         term = flippedTerm;
                         flipped = true;
                     }
                 }
-                replacementTermList.append(term);
+                replacement.append(term);
                 if (originalTermIter.hasNext()) {
-                    replacementTermList.append(OperatorType.SPACE);
+                    replacement.append(OperatorType.SPACE);
                 }
             }
             // only
             if (flipped) {
-                declaration.propertyValue(replacementTermList);
+                declaration.propertyValue(replacement);
                 return true;
             }
         }
         return false;
     }
 
-    private boolean handleFlippableFourPartProperties(Declaration declaration, Property property, TermList termList) {
-        if (FOUR_PART_PROPERTIES_THAT_SHOULD_FLIP.contains(property)&&termList.terms().size()==4) {
-            List<Term> terms = termList.terms();
-            declaration.propertyValue(TermList.ofValues(OperatorType.SPACE, terms.get(0), terms.get(3), terms.get(2), terms.get(1)));
+    private boolean handleFlippableFourPartProperties(Declaration declaration, Property property) {
+        ImmutableList<Term> terms = declaration.propertyValue().terms();
+        if (FOUR_PART_PROPERTIES_THAT_SHOULD_FLIP.contains(property) && terms.size() == 4) {
+            declaration.propertyValue(PropertyValue.ofTerms(OperatorType.SPACE, terms.get(0), terms.get(3), terms.get(2), terms.get(1)));
             return true;
         }
         return false;
     }
 
     // @todo Candidate for a utility method?
-    private TermList[] splitTermListAtSlash(TermList termList) {
-        TermList beforeSlash = new TermList();
-        TermList afterSlash = new TermList();
-        TermList currentTermList = beforeSlash;
-        SyntaxCollection<TermList,TermListMember> members = termList.members();
-        for (TermListMember member : members) {
+    private PropertyValue[] splitPropertyValueAtSlash(PropertyValue value) {
+        PropertyValue beforeSlash = new PropertyValue();
+        PropertyValue afterSlash = new PropertyValue();
+        PropertyValue currentPropertyValue = beforeSlash;
+        SyntaxCollection<PropertyValue, PropertyValueMember> members = value.members();
+        for (PropertyValueMember member : members) {
             if (member instanceof Operator && ((Operator)member).type() == OperatorType.SLASH) {
-                currentTermList = afterSlash;
+                currentPropertyValue = afterSlash;
                 continue;
             }
-            currentTermList.append(member);
+            currentPropertyValue.append(member);
         }
-        return afterSlash.members().size()==0 ? new TermList[] { beforeSlash } : new TermList[] { beforeSlash, afterSlash };
+        return afterSlash.members().size() == 0 ? new PropertyValue[]{beforeSlash} : new PropertyValue[]{beforeSlash, afterSlash};
     }
 
     /*
@@ -252,26 +246,26 @@ public class DirectionFlipPlugin implements DependentPlugin {
      *
      * Otherwise, the terms aren't flipped at all
      */
-    private TermList flipBorderRadiusSet(TermList termList) {
-        splitTermListAtSlash(termList);
-        List<Term> terms = termList.terms();
-        switch(terms.size()) {
+    private PropertyValue flipBorderRadiusSet(PropertyValue value) {
+        splitPropertyValueAtSlash(value);
+        List<Term> terms = value.terms();
+        switch (terms.size()) {
         case 2:
-            return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0));
+            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0));
         case 3:
             // the 2nd term, when flipped, is used in both the first and 3rd positions.  Use a copy of the term for the 3rd.
-            return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0), (Term)terms.get(1).copy(), terms.get(2));
+            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), (Term)terms.get(1).copy(), terms.get(2));
         case 4:
-            return TermList.ofValues(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(3), terms.get(2));
+            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(3), terms.get(2));
         default:
-            return termList;
+            return value;
         }
     }
 
     private boolean isLeftRightCenter(Term term) {
         if (term instanceof KeywordValue) {
             Optional<Keyword> keyword = ((KeywordValue)term).asKeyword();
-            return keyword.isPresent()&&LEFT_RIGHT_CENTER.contains(keyword.get());
+            return keyword.isPresent() && LEFT_RIGHT_CENTER.contains(keyword.get());
         } else {
             return false;
         }
@@ -284,8 +278,8 @@ public class DirectionFlipPlugin implements DependentPlugin {
     private Term flipPercentage(Term term) {
         if (term instanceof NumericalValue) {
             NumericalValue numericalValue = (NumericalValue)term;
-             if (numericalValue.unit().isPresent()&&numericalValue.unit().get().equals("%")) {
-                NumericalValue newValue = new NumericalValue(100-numericalValue.doubleValue());
+            if (numericalValue.unit().isPresent() && numericalValue.unit().get().equals("%")) {
+                NumericalValue newValue = new NumericalValue(100 - numericalValue.doubleValue());
                 newValue.unit("%");
                 return newValue;
             }

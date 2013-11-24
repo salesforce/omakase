@@ -210,15 +210,6 @@ public class BasePlugin implements Plugin {
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link TermList}.
-     *
-     * @param termList
-     *     The {@link TermList} instance.
-     */
-    public void termList(TermList termList) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link RawFunction}.
      *
      * @param raw
@@ -234,6 +225,7 @@ public class BasePlugin implements Plugin {
      *     The {@link FunctionValue} instance.
      */
     public void functionValue(FunctionValue function) {}
+
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link GenericFunctionValue}.

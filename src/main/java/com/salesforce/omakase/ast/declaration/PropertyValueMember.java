@@ -19,8 +19,8 @@ package com.salesforce.omakase.ast.declaration;
 import com.salesforce.omakase.ast.collection.Groupable;
 
 /**
- * A member of a {@link TermList}.
+ * A member of a {@link PropertyValue}.
  *
  * @author nmcwilliams
  */
-public interface TermListMember extends Groupable<TermList, TermListMember> {}
+public interface PropertyValueMember extends Groupable<PropertyValue, PropertyValueMember> {}

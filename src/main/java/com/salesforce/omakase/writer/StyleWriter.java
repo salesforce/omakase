@@ -191,8 +191,8 @@ public final class StyleWriter implements DependentPlugin {
      * Note that the unit will only be written if {@link Writable#isWritable()} returns true. This may be false if the unit is
      * detached, for example.
      * <p/>
-     * This is usually used within implementations of {@link Writable#write(StyleWriter, StyleAppendable)} to write inner units .
-     * To write a single, isolated object then use {@link #writeSnippet (Writable)} instead.
+     * This is usually used within implementations of {@link Writable#write(StyleWriter, StyleAppendable)} to write inner units.
+     * To write a single, isolated object use {@link #writeSnippet(Writable)} instead.
      *
      * @param <T>
      *     Type of the unit to write.
@@ -222,11 +222,11 @@ public final class StyleWriter implements DependentPlugin {
      * <p/>
      * <b>Important:</b> This method is for writing disjoint units only. Examples would be for usage in test classes or in cases
      * where you are operating on a single CSS snippet as opposed to a whole CSS source. If you are implementing a syntax unit's
-     * write method then most of the time the method you want to use is {@link #writeInner(Writable, StyleAppendable)}, passing in the
-     * same {@link StyleAppendable} that you were given.
-     *
-     * The difference between this and {@link #writeSingle(Writable)} is that this is a non-static method that takes into
-     * account any given {@link CustomWriter} overrides.
+     * write method then most of the time the method you want to use is {@link #writeInner(Writable, StyleAppendable)}, passing in
+     * the same {@link StyleAppendable} that you were given.
+     * <p/>
+     * The difference between this and {@link #writeSingle(Writable)} is that this is a non-static method that takes into account
+     * any given {@link CustomWriter} overrides.
      * <p/>
      * As this is for writing individual units, it bypasses the {@link Writable#isWritable()} check.
      *

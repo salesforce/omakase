@@ -16,15 +16,15 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.ast.declaration.HexColorValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.QuotationMode;
+import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.data.Keyword;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -34,106 +34,74 @@ public class ValuesTest {
     PropertyValue value;
 
     @Test
-    public void asTermListPresent() {
-        value = TermList.singleValue(NumericalValue.of(1));
-        assertThat(Values.asTermList(value).isPresent()).isTrue();
-    }
-
-    @Test
-    public void asTermListAbsent() {
-        assertThat(Values.asTermList(new OtherPropertyValue()).isPresent()).isFalse();
-    }
-
-    @Test
-    public void asHexColorPresentInTermList() {
-        value = TermList.singleValue(new HexColorValue("fff"));
+    public void asHexColorPresentInPropertyValue() {
+        value = PropertyValue.of(new HexColorValue("fff"));
         assertThat(Values.asHexColor(value).isPresent()).isTrue();
     }
 
     @Test
-    public void asHexColorNotPresentInTermList() {
-        value = TermList.singleValue(new KeywordValue("none"));
+    public void asHexColorNotPresentInPropertyValue() {
+        value = PropertyValue.of(new KeywordValue("none"));
         assertThat(Values.asHexColor(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asHexColorNotOnlyOneInTermList() {
-        value = TermList.ofValues(OperatorType.SPACE, HexColorValue.of("fff"), NumericalValue.of(1));
+    public void asHexColorNotOnlyOneInPropertyValue() {
+        value = PropertyValue.ofTerms(OperatorType.SPACE, HexColorValue.of("fff"), NumericalValue.of(1));
         assertThat(Values.asHexColor(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asKeywordPresentInTermList() {
-        value = TermList.singleValue(KeywordValue.of(Keyword.NONE));
+    public void asKeywordPresentInPropertyValue() {
+        value = PropertyValue.of(KeywordValue.of(Keyword.NONE));
         assertThat(Values.asKeyword(value).isPresent()).isTrue();
     }
 
     @Test
-    public void asKeywordNotPresentInTermList() {
-        value = TermList.singleValue(new HexColorValue("fff"));
+    public void asKeywordNotPresentInPropertyValue() {
+        value = PropertyValue.of(new HexColorValue("fff"));
         assertThat(Values.asKeyword(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asKeywordNotOnlyOneInTermList() {
-        value = TermList.ofValues(OperatorType.SPACE, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
+    public void asKeywordNotOnlyOneInPropertyValue() {
+        value = PropertyValue.ofTerms(OperatorType.SPACE, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
         assertThat(Values.asKeyword(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asNumericalPresentInTermList() {
-        value = TermList.singleValue(NumericalValue.of(1, "px"));
+    public void asNumericalPresentInPropertyValue() {
+        value = PropertyValue.of(NumericalValue.of(1, "px"));
         assertThat(Values.asNumerical(value).isPresent()).isTrue();
     }
 
     @Test
-    public void asNumericalNotPresentInTermList() {
-        value = TermList.singleValue(KeywordValue.of(Keyword.NONE));
+    public void asNumericalNotPresentInPropertyValue() {
+        value = PropertyValue.of(KeywordValue.of(Keyword.NONE));
         assertThat(Values.asNumerical(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asNumericalNotOnlyOneInTermList() {
-        value = TermList.ofValues(OperatorType.SLASH, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
+    public void asNumericalNotOnlyOneInPropertyValue() {
+        value = PropertyValue.ofTerms(OperatorType.SLASH, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
         assertThat(Values.asNumerical(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asStringPresentInTermList() {
-        value = TermList.singleValue(StringValue.of(QuotationMode.DOUBLE, "helloworld"));
+    public void asStringPresentInPropertyValue() {
+        value = PropertyValue.of(StringValue.of(QuotationMode.DOUBLE, "helloworld"));
         assertThat(Values.asString(value).isPresent()).isTrue();
     }
 
     @Test
-    public void asStringNotPresentInTermList() {
-        value = TermList.singleValue(KeywordValue.of(Keyword.NONE));
+    public void asStringNotPresentInPropertyValue() {
+        value = PropertyValue.of(KeywordValue.of(Keyword.NONE));
         assertThat(Values.asString(value).isPresent()).isFalse();
     }
 
     @Test
-    public void asStringNotOnlyOneInTermList() {
-        value = TermList.ofValues(OperatorType.SPACE, StringValue.of(QuotationMode.DOUBLE, "h"), NumericalValue.of(1));
+    public void asStringNotOnlyOneInPropertyValue() {
+        value = PropertyValue.ofTerms(OperatorType.SPACE, StringValue.of(QuotationMode.DOUBLE, "h"), NumericalValue.of(1));
         assertThat(Values.asString(value).isPresent()).isFalse();
-    }
-
-    private static final class OtherPropertyValue extends AbstractPropertyValue implements PropertyValue {
-        @Override
-        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        }
-
-        @Override
-        public boolean isImportant() {
-            return false;
-        }
-
-        @Override
-        public PropertyValue important(boolean important) {
-            return this;
-        }
-
-        @Override
-        protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
-            throw new UnsupportedOperationException();
-        }
     }
 }

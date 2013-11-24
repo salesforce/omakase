@@ -41,22 +41,8 @@ public class UnquotedIEFilterTest {
     }
 
     @Test
-    public void errorsOnSetImportant() {
-        UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        exception.expect(UnsupportedOperationException.class);
-        ief.important(true);
-    }
-
-    @Test
-    public void isImportantAlwaysFalse() {
-        UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER + " !important");
-        Assertions.assertThat(ief.isImportant()).isFalse();
-    }
-
-    @Test
     public void write() throws IOException {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
         Assertions.assertThat(StyleWriter.compressed().writeSnippet(ief)).isEqualTo(FILTER);
     }
-
 }

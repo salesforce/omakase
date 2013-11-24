@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQueryExpression;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
@@ -70,7 +70,7 @@ public final class MediaQueryExpressionParser extends AbstractParser {
             QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
             ParserFactory.termSequenceParser().parse(source, qb, refiner);
 
-            Iterable<TermListMember> terms = qb.filter(TermListMember.class);
+            Iterable<PropertyValueMember> terms = qb.filter(PropertyValueMember.class);
             if (Iterables.isEmpty(terms)) throw new ParserException(source, Message.MISSING_MEDIA_TERMS);
 
             expression.terms(terms);

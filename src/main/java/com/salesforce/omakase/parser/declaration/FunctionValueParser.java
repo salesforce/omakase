@@ -61,7 +61,7 @@ public final class FunctionValueParser extends AbstractParser {
         raw.comments(source.flushComments());
 
         // we are broadcasting this to allow for plugins to modify the raw args before it gets to the refiners. However
-        // RawFunction is NOT an instance of Term and will not be stored or maintained by the TermList itself. It's
+        // RawFunction is NOT an instance of Term and will not be stored or maintained by the PropertyValue itself. It's
         // essentially discarded after the refiners deal with it.
         broadcaster.broadcast(raw);
 

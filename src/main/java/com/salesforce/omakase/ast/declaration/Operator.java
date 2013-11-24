@@ -27,11 +27,11 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * An {@link OperatorType} in between a {@link Term}, as property of the {@link TermList} {@link PropertyValue}.
+ * An {@link OperatorType} in between a {@link Term}, as property of the {@link PropertyValue} {@link PropertyValue}.
  *
  * @author nmcwilliams
  */
-public final class Operator extends AbstractGroupable<TermList, TermListMember> implements TermListMember {
+public final class Operator extends AbstractGroupable<PropertyValue, PropertyValueMember> implements PropertyValueMember {
     private final OperatorType type;
 
     /**

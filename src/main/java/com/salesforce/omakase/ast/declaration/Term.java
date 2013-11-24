@@ -22,7 +22,7 @@ import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
- * A {@link TermListMember} within a {@link TermList} representing a single segment of the {@link Declaration} value.
+ * A {@link PropertyValueMember} within a {@link PropertyValue} representing a single segment of the {@link Declaration} value.
  * <p/>
  * For example, in <code>margin: 3px 5px</code>, there are two terms, <code>3px</code> and <code>5px</code>.
  *
@@ -30,4 +30,4 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "a single segment of a property value", broadcasted = REFINED_DECLARATION)
-public interface Term extends TermListMember {}
+public interface Term extends PropertyValueMember {}

@@ -19,7 +19,7 @@ package com.salesforce.omakase.data;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.TermList;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -41,13 +41,13 @@ public class KeywordTest {
 
     @Test
     public void isOnlyValueInPropertyValueTrue() {
-        PropertyValue pv = TermList.singleValue(KeywordValue.of(Keyword.NONE));
+        PropertyValue pv = PropertyValue.of(KeywordValue.of(Keyword.NONE));
         assertThat(Keyword.NONE.isOnlyValueIn(pv)).isTrue();
     }
 
     @Test
     public void isOnlyValueInPropertyValueFalse() {
-        PropertyValue pv = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue pv = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         assertThat(Keyword.NONE.isOnlyValueIn(pv)).isFalse();
     }
 }

@@ -19,7 +19,7 @@ package com.salesforce.omakase.ast.atrule;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see MediaQueryExpressionParser
  */
 public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, MediaQueryExpression> {
-    private List<TermListMember> terms;
+    private List<PropertyValueMember> terms;
     private String feature;
 
     /**
@@ -80,7 +80,7 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
      *
      * @return this, for chaining.
      */
-    public MediaQueryExpression terms(Iterable<TermListMember> terms) {
+    public MediaQueryExpression terms(Iterable<PropertyValueMember> terms) {
         this.terms = Lists.newArrayList(checkNotNull(terms, "terms cannot be null"));
         return this;
     }
@@ -90,8 +90,8 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
      *
      * @return The list of  terms and operators.
      */
-    public List<TermListMember> terms() {
-        return terms != null ? terms : Lists.<TermListMember>newArrayList();
+    public List<PropertyValueMember> terms() {
+        return terms != null ? terms : Lists.<PropertyValueMember>newArrayList();
     }
 
     /**
@@ -134,7 +134,7 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
             appendable.append(':');
             appendable.spaceIf(!writer.isCompressed());
 
-            for (TermListMember term : terms) {
+            for (PropertyValueMember term : terms) {
                 writer.writeInner(term, appendable);
             }
         }

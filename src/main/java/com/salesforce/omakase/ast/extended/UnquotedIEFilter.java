@@ -17,8 +17,7 @@
 package com.salesforce.omakase.ast.extended;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.declaration.AbstractPropertyValue;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.AbstractTerm;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
@@ -41,14 +40,12 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * <pre>
  * {@code -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#444444', EndColorStr='#999999')";}
  * </pre>
- * <p/>
- * {@link #isImportant()} will always be false so it should not be used or consulted on this object.
  *
  * @author nmcwilliams
  */
 @Subscribable
 @Description(value = "proprietary microsoft filter", broadcasted = REFINED_DECLARATION)
-public final class UnquotedIEFilter extends AbstractPropertyValue {
+public final class UnquotedIEFilter extends AbstractTerm {
     private final String content;
 
     /**
@@ -76,22 +73,12 @@ public final class UnquotedIEFilter extends AbstractPropertyValue {
     }
 
     @Override
-    public boolean isImportant() {
-        return false;
-    }
-
-    @Override
-    public PropertyValue important(boolean important) {
-        throw new UnsupportedOperationException("UnquotedIEFilter does not check for the presence of !important");
-    }
-
-    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(content);
     }
 
     @Override
-    protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
+    protected UnquotedIEFilter makeCopy(Prefix prefix, SupportMatrix support) {
         // TESTME
         return new UnquotedIEFilter(-1, -1, content);
     }

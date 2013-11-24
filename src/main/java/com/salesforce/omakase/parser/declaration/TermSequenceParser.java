@@ -19,9 +19,9 @@ package com.salesforce.omakase.parser.declaration;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
@@ -34,10 +34,10 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 /**
  * Parses a sequence of both {@link Term}s <em>and</em> {@link Operator}s.
  * <p/>
- * This does not parts importants or broadcast a {@link TermList}.
+ * This does not parts importants or broadcast a {@link PropertyValue}.
  *
  * @author nmcwilliams
- * @see TermListParser
+ * @see PropertyValueParser
  */
 public final class TermSequenceParser extends AbstractParser {
 

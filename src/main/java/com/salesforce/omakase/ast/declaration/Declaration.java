@@ -28,7 +28,7 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.parser.declaration.TermListParser;
+import com.salesforce.omakase.parser.declaration.PropertyValueParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -47,7 +47,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  *
  * @author nmcwilliams
  * @see RawDeclarationParser
- * @see TermListParser
+ * @see PropertyValueParser
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
@@ -93,7 +93,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * <pre>
      * {@code NumericalValue px10 = NumericalValue.of(10, "px");
      *   NumericalValue em5 = NumericalValue.of(5, "em");
-     *   PropertyValue value = TermList.ofValues(OperatorType.SPACE, px10, em5);
+     *   PropertyValue value = PropertyValue.ofTerms(OperatorType.SPACE, px10, em5);
      *   new Declaration(Property.BORDER_RADIUS, value)}
      * </pre>
      * <p/>
@@ -124,7 +124,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      *     The single {@link Term}.
      */
     public Declaration(Property propertyName, Term singleValue) {
-        this(PropertyName.using(propertyName), TermList.singleValue(singleValue));
+        this(PropertyName.using(propertyName), PropertyValue.of(singleValue));
     }
 
     /**
@@ -144,7 +144,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      *     The single {@link Term}.
      */
     public Declaration(PropertyName propertyName, Term singleValue) {
-        this(propertyName, TermList.singleValue(singleValue));
+        this(propertyName, PropertyValue.of(singleValue));
     }
 
     /**
@@ -320,7 +320,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * @return this, for chaining.
      */
     public Declaration propertyValue(Term singleTerm) {
-        return propertyValue(TermList.singleValue(singleTerm));
+        return propertyValue(PropertyValue.of(singleTerm));
     }
 
     /**

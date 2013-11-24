@@ -30,7 +30,7 @@ import com.salesforce.omakase.writer.Writable;
 import java.io.IOException;
 
 /**
- * An operator, or separator, between {@link Term}s in a {@link TermList}.
+ * An operator, or separator, between {@link Term}s in a {@link PropertyValue}.
  *
  * @author nmcwilliams
  */

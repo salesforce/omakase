@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -54,7 +54,7 @@ public class MediaQueryExpressionTest {
         NumericalValue t1 = NumericalValue.of(1, "px");
         Operator o = new Operator(OperatorType.SPACE);
         NumericalValue t2 = NumericalValue.of(1, "px");
-        exp.terms(Lists.<TermListMember>newArrayList(t1, o, t2));
+        exp.terms(Lists.<PropertyValueMember>newArrayList(t1, o, t2));
         assertThat(exp.terms()).containsExactly(t1, o, t2);
     }
 
@@ -67,7 +67,7 @@ public class MediaQueryExpressionTest {
     @Test
     public void writeVerboseTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("min-resolution");
-        exp.terms(Lists.<TermListMember>newArrayList(NumericalValue.of(300, "dpi")));
+        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "dpi")));
         assertThat(StyleWriter.verbose().writeSnippet(exp)).isEqualTo("(min-resolution: 300dpi)");
     }
 
@@ -80,7 +80,7 @@ public class MediaQueryExpressionTest {
     @Test
     public void writeCompressedTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
-        exp.terms(Lists.<TermListMember>newArrayList(NumericalValue.of(300, "px")));
+        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
         assertThat(StyleWriter.compressed().writeSnippet(exp)).isEqualTo("(max-width:300px)");
     }
 }

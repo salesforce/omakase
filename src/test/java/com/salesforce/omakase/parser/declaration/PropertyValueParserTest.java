@@ -19,13 +19,7 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.RawFunction;
-import com.salesforce.omakase.ast.declaration.TermList;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -38,12 +32,12 @@ import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResul
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link TermListParser}.
+ * Unit tests for {@link PropertyValueParser}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class TermListParserTest extends AbstractParserTest<TermListParser> {
+public class PropertyValueParserTest extends AbstractParserTest<PropertyValueParser> {
     @Override
     public List<String> invalidSources() {
         return ImmutableList.of("$$$", "    ", "\n\n\n", "");
@@ -169,7 +163,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         assertThat(broadcasted.get(16)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(17)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(18)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(19)).isInstanceOf(TermList.class);
+        assertThat(broadcasted.get(19)).isInstanceOf(PropertyValue.class);
     }
 
     @Test
@@ -184,7 +178,7 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         assertThat(broadcasted.get(2)).isInstanceOf(KeywordValue.class);
         assertThat(broadcasted.get(3)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(4)).isInstanceOf(KeywordValue.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(TermList.class);
+        assertThat(broadcasted.get(5)).isInstanceOf(PropertyValue.class);
     }
 
     @Test
@@ -192,8 +186,8 @@ public class TermListParserTest extends AbstractParserTest<TermListParser> {
         GenericParseResult result = Iterables
             .getOnlyElement(parse("0 1px\n3px /1em   rgba(0, 0, 0, 0.7),0 1px , 0 rgba(0, 0, 0, 0.3) "));
 
-        TermList tl = result.broadcaster.find(TermList.class).get();
-        List<TermListMember> members = Lists.newArrayList(tl.members());
+        PropertyValue val = result.broadcaster.find(PropertyValue.class).get();
+        List<PropertyValueMember> members = Lists.newArrayList(val.members());
 
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
         assertThat(members).hasSize(17);

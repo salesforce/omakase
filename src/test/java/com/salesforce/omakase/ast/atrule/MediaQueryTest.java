@@ -18,7 +18,7 @@ package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class MediaQueryTest {
     public void setup() {
         mq = new MediaQuery();
         exp1 = new MediaQueryExpression("min-width");
-        exp1.terms(Lists.<TermListMember>newArrayList(NumericalValue.of(800, "px")));
+        exp1.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(800, "px")));
         exp2 = new MediaQueryExpression("color");
     }
 

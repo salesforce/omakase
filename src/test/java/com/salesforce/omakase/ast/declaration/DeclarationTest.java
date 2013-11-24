@@ -28,7 +28,6 @@ import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.util.Values;
-import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,7 +89,7 @@ public class DeclarationTest {
     @Test
     public void setPropertyValue() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
         assertThat(d.propertyValue()).isSameAs(newValue);
     }
@@ -106,7 +105,7 @@ public class DeclarationTest {
     public void newPropertyValueIsBroadcasted() {
         Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
 
         assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
@@ -120,7 +119,7 @@ public class DeclarationTest {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         rule.declarations().append(d);
 
-        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
 
         d.propertyValue(newValue);
@@ -134,7 +133,7 @@ public class DeclarationTest {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         d.status(Status.PROCESSED);
 
-        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         newValue.status(Status.PROCESSED);
         d.propertyValue(newValue);
 
@@ -145,7 +144,7 @@ public class DeclarationTest {
     @Test
     public void setPropertyValueAssignsParent() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
         assertThat(d.propertyValue().declaration().get()).isSameAs(d);
     }
@@ -155,7 +154,7 @@ public class DeclarationTest {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         PropertyValue oldValue = d.propertyValue();
 
-        TermList newValue = TermList.singleValue(KeywordValue.of(Keyword.BLOCK));
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
 
         assertThat(oldValue.declaration().isPresent()).isFalse();
@@ -164,7 +163,7 @@ public class DeclarationTest {
 
     @Test
     public void propagatebroadcastBroadcastsPropertyValue() {
-        PropertyValue pv = TermList.singleValue(KeywordValue.of(Keyword.NONE));
+        PropertyValue pv = PropertyValue.of(KeywordValue.of(Keyword.NONE));
         Declaration d = new Declaration(Property.DISPLAY, pv);
 
         assertThat(pv.status()).isSameAs(Status.UNBROADCASTED);
@@ -211,7 +210,7 @@ public class DeclarationTest {
 
     @Test
     public void isPropertyTrue() {
-        Declaration d = new Declaration(Property.DISPLAY, TermList.singleValue(KeywordValue.of(Keyword.NONE)));
+        Declaration d = new Declaration(Property.DISPLAY, PropertyValue.of(KeywordValue.of(Keyword.NONE)));
         assertThat(d.isProperty(PropertyName.using(Property.DISPLAY))).isTrue();
     }
 
@@ -288,7 +287,7 @@ public class DeclarationTest {
 
     @Test
     public void writeVerboseRefined() throws IOException {
-        TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(d)).isEqualTo("margin: 1px 2px");
@@ -296,7 +295,7 @@ public class DeclarationTest {
 
     @Test
     public void writeInlineRefined() throws IOException {
-        TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         StyleWriter writer = StyleWriter.inline();
         assertThat(writer.writeSnippet(d)).isEqualTo("margin:1px 2px");
@@ -304,7 +303,7 @@ public class DeclarationTest {
 
     @Test
     public void writeCompressedRefined() throws IOException {
-        TermList terms = TermList.ofValues(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(d)).isEqualTo("margin:1px 2px");
@@ -366,7 +365,7 @@ public class DeclarationTest {
 
     @Test
     public void isNotWritableWhenPropertyValueNotWritable() {
-        Declaration d = new Declaration(Property.DISPLAY, new TestPropertyValue());
+        Declaration d = new Declaration(Property.DISPLAY, new PropertyValue());
         com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isFalse();
@@ -379,7 +378,7 @@ public class DeclarationTest {
 
         Declaration copy = d.copy();
         assertThat(copy.isProperty(Property.MARGIN));
-        assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
+        assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
         assertThat(copy.comments()).hasSameSizeAs(d.comments());
     }
 
@@ -387,7 +386,7 @@ public class DeclarationTest {
     public void copyUnrefined() {
         Declaration copy = fromRaw.copy();
         assertThat(copy.isProperty(Property.DISPLAY));
-        assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
+        assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
     }
 
     @Test
@@ -401,33 +400,7 @@ public class DeclarationTest {
         Declaration copy = d.copy(Prefix.MOZ, support);
         assertThat(copy.isProperty(Property.MARGIN));
         assertThat(copy.isPrefixed()).isTrue();
-        assertThat(copy.propertyValue()).isInstanceOf(TermList.class);
+        assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
         assertThat(copy.comments()).hasSameSizeAs(d.comments());
-    }
-
-    private static final class TestPropertyValue extends AbstractPropertyValue {
-        @Override
-        public boolean isWritable() {
-            return false;
-        }
-
-        @Override
-        public boolean isImportant() {
-            return false;
-        }
-
-        @Override
-        public PropertyValue important(boolean important) {
-            return this;
-        }
-
-        @Override
-        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        }
-
-        @Override
-        protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
-            throw new UnsupportedOperationException();
-        }
     }
 }

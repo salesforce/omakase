@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.salesforce.omakase.ast.declaration.TermList;
-import com.salesforce.omakase.ast.declaration.TermListMember;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
@@ -26,12 +26,12 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * Parses a {@link TermList}.
+ * Parses a {@link PropertyValue}.
  *
  * @author nmcwilliams
- * @see TermList
+ * @see PropertyValue
  */
-public final class TermListParser extends AbstractParser {
+public final class PropertyValueParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.skipWhitepace();
@@ -48,16 +48,16 @@ public final class TermListParser extends AbstractParser {
         if (qb.count() == 0) return false;
 
         // create the term list and add the members
-        TermList termList = new TermList(line, column, broadcaster);
-        termList.members().appendAll(qb.filter(TermListMember.class));
+        PropertyValue value = new PropertyValue(line, column, broadcaster);
+        value.members().appendAll(qb.filter(PropertyValueMember.class));
 
         // check for !important
-        termList.important(ParserFactory.importantParser().parse(source, broadcaster, refiner));
+        value.important(ParserFactory.importantParser().parse(source, broadcaster, refiner));
 
         // broadcast the new term list. we set propagate as true to allow for custom functions that did not broadcast
         // their terms during refinement (because it is not desired for the parsed terms to be directly added to this term list)
         // to have their inner terms broadcasted now.
-        broadcaster.broadcast(termList, true);
+        broadcaster.broadcast(value, true);
 
         return true;
     }

@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.TermList;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -47,7 +47,7 @@ public class GenericAtRuleBlockTest {
     public void setup() {
         Rule rule = new Rule();
         rule.selectors().append(new Selector(new ClassSelector("test")));
-        Declaration d = new Declaration(Property.DISPLAY, TermList.singleValue(KeywordValue.of("none")));
+        Declaration d = new Declaration(Property.DISPLAY, PropertyValue.of(KeywordValue.of("none")));
         rule.declarations().append(d);
         statement = rule;
     }

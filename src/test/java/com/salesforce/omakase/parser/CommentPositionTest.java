@@ -22,8 +22,6 @@ import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.ast.declaration.TermList;
-import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
@@ -200,15 +198,13 @@ public class CommentPositionTest {
     @Test
     public void declaration1HasExpectedNumTermMembers() {
         Declaration declaration = Iterables.get(rule.declarations(), 0);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        assertThat(termList.terms()).hasSize(3);
+        assertThat(declaration.propertyValue().terms()).hasSize(3);
     }
 
     @Test
     public void declaration1FirstTermHasExpectedComments() {
         Declaration declaration = Iterables.get(rule.declarations(), 0);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        Term term = Iterables.get(termList.terms(), 0);
+        Term term = Iterables.get(declaration.propertyValue().terms(), 0);
 
         assertThat(term.comments()).hasSize(1);
         assertThat(Iterables.get(term.comments(), 0).content()).isEqualTo("10");
@@ -217,8 +213,7 @@ public class CommentPositionTest {
     @Test
     public void declaration1SecondTermHasExpectedComments() {
         Declaration declaration = Iterables.get(rule.declarations(), 0);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        Term term = Iterables.get(termList.terms(), 1);
+        Term term = Iterables.get(declaration.propertyValue().terms(), 1);
 
         assertThat(term.comments()).hasSize(1);
         assertThat(Iterables.get(term.comments(), 0).content()).isEqualTo("11");
@@ -227,8 +222,7 @@ public class CommentPositionTest {
     @Test
     public void declaration1ThirdTermHasExpectedComments() {
         Declaration declaration = Iterables.get(rule.declarations(), 0);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        Term term = Iterables.get(termList.terms(), 2);
+        Term term = Iterables.get(declaration.propertyValue().terms(), 2);
 
         assertThat(term.comments()).isEmpty();
     }
@@ -251,15 +245,13 @@ public class CommentPositionTest {
     @Test
     public void declaration2HasExpectedNumTermMembers() {
         Declaration declaration = Iterables.get(rule.declarations(), 1);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        assertThat(termList.terms()).hasSize(1);
+        assertThat(declaration.propertyValue().terms()).hasSize(1);
     }
 
     @Test
     public void declaration2FirstTermHasExpectedComments() {
         Declaration declaration = Iterables.get(rule.declarations(), 1);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        Term term = Iterables.get(termList.terms(), 0);
+        Term term = Iterables.get(declaration.propertyValue().terms(), 0);
 
         assertThat(term.comments()).isEmpty();
     }
@@ -279,15 +271,13 @@ public class CommentPositionTest {
     @Test
     public void declaration3HasExpectedNumTermMembers() {
         Declaration declaration = Iterables.get(rule.declarations(), 2);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        assertThat(termList.terms()).hasSize(2);
+        assertThat(declaration.propertyValue().terms()).hasSize(2);
     }
 
     @Test
     public void declaration3FirstTermHasExpectedComments() {
         Declaration declaration = Iterables.get(rule.declarations(), 2);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        Term term = Iterables.get(termList.terms(), 0);
+        Term term = Iterables.get(declaration.propertyValue().terms(), 0);
 
         assertThat(term.comments()).isEmpty();
     }
@@ -295,8 +285,7 @@ public class CommentPositionTest {
     @Test
     public void declaration3SecondTermHasExpectedComments() {
         Declaration declaration = Iterables.get(rule.declarations(), 2);
-        TermList termList = Values.asTermList(declaration.propertyValue()).get();
-        Term term = Iterables.get(termList.terms(), 1);
+        Term term = Iterables.get(declaration.propertyValue().terms(), 1);
 
         assertThat(term.comments()).hasSize(1);
         assertThat(Iterables.get(term.comments(), 0).content()).isEqualTo("16");

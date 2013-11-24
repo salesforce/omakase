@@ -16,8 +16,6 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Statement;
@@ -25,7 +23,6 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Actions;
@@ -162,11 +159,10 @@ final class PrefixerSteps {
             if (ctx.property != Property.TRANSITION && ctx.property != Property.TRANSITION_PROPERTY) return;
 
             Declaration declaration = ctx.declaration;
-            Optional<TermList> termList = Values.asTermList(declaration.propertyValue());
-            if (!termList.isPresent()) return;
+
 
             // try to find the first prefixed property name
-            for (KeywordValue keyword : Iterables.filter(termList.get().members(), KeywordValue.class)) {
+            for (KeywordValue keyword : Values.filter(KeywordValue.class, declaration.propertyValue())) {
                 // check if the keyword is a property
                 Property keywordAsProperty = Property.lookup(keyword.keyword());
                 if (keywordAsProperty == null) continue;

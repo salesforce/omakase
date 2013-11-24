@@ -17,8 +17,8 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.ast.declaration.Operator;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.ast.declaration.TermList;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
@@ -92,7 +92,7 @@ public final class ParserFactory {
     private static final Parser termSequence = new TermSequenceParser();
     private static final Parser operator = new OperatorParser();
     private static final Parser important = new ImportantParser();
-    private static final Parser termList = new TermListParser();
+    private static final Parser propertyValue = new PropertyValueParser();
 
     /* refined at rules */
     private static final Parser mediaQueryList = new MediaQueryListParser();
@@ -331,7 +331,7 @@ public final class ParserFactory {
      * Gets the {@link TermSequenceParser}.
      * <p/>
      * This differs from the other term parsers in that it parses a list of both {@link Term}s AND {@link Operator}s, but it does
-     * not parse importants or broadcast a {@link TermList}.
+     * not parse importants or broadcast a {@link PropertyValue}.
      *
      * @return The parser instance.
      */
@@ -340,15 +340,15 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link TermListParser}.
+     * Gets the {@link PropertyValueParser}.
      * <p/>
      * This differs from the other term parsers in that it parses a list of both {@link Term}s AND {@link Operator}s, plus it
-     * parses importants and broadcasts a {@link TermList}.
+     * parses importants and broadcasts a {@link PropertyValue}.
      *
      * @return The parser instance.
      */
-    public static Parser termListParser() {
-        return termList;
+    public static Parser propertyValueParser() {
+        return propertyValue;
     }
 
     /**

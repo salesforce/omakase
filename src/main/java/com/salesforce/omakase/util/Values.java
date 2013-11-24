@@ -18,21 +18,22 @@ package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.*;
+
+import java.util.List;
 
 /**
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.
  * <p/>
  * This allows you to extract specific {@link Term} instances from a given {@link PropertyValue} if that {@link Term} is the only
- * member within the list. It also provides utilities for casting a generic {@link PropertyValue} to a more specific one, such as
- * {@link #asTermList(PropertyValue)}.
+ * member within the list.
  * <p/>
  * Examples:
  * <pre>
- * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.getPropertyValue())}
- * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.getPropertyValue())}
- * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.getPropertyValue())}
- * {@code Optional<TermList> termList = Value.asTermList(declaration.getPropertyValue())}
+ * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.propertyValue())}
+ * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue())}
+ * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue())}
  * </pre>
  * <p/>
  * The returned {@link Optional} instances are wrappers around the actual object instance. If the {@link PropertyValue} matches
@@ -48,20 +49,6 @@ import com.salesforce.omakase.ast.declaration.*;
 public final class Values {
     /** do not construct */
     private Values() {}
-
-    /**
-     * Gets the given value as {@link TermList}.
-     * <p/>
-     * This checks if the given {@link PropertyValue} is an instance of a {@link TermList}.
-     *
-     * @param value
-     *     The {@link TermList} if the value is an instance of {@link TermList}, otherwise {@link Optional#absent()}.
-     *
-     * @return The {@link TermList}, or {@link Optional#absent()} if the value is not a {@link TermList}.
-     */
-    public static Optional<TermList> asTermList(PropertyValue value) {
-        return value instanceof TermList ? Optional.of((TermList)value) : Optional.<TermList>absent();
-    }
 
     /**
      * Gets the single {@link HexColorValue} within the given {@link PropertyValue}. The returned {@link Optional} will only be
@@ -160,34 +147,19 @@ public final class Values {
      * @return the properly-typed instance, or {@link Optional#absent()} if it doesn't match.
      */
     public static <T extends Term> Optional<T> as(Class<T> klass, PropertyValue value) {
-        if (klass.isInstance(value)) {
-            return Optional.of(klass.cast(value));
-        } else if (value instanceof TermList) {
-            return checkTermList(klass, (TermList)value);
-        } else {
-            return Optional.absent();
-        }
-    }
-
-    /**
-     * Helper method to extract a {@link Term} instance from a {@link TermList} if and only if it is the only {@link Term} in the
-     * list.
-     *
-     * @param <T>
-     *     Type of the {@link Term} to extract.
-     * @param klass
-     *     Class of the {@link Term} to extract.
-     * @param termList
-     *     Extract the {@link Term} from this {@link TermList}.
-     *
-     * @return The extracted {@link Term}, or {@link Optional#absent()} if it doesn't match the conditions stated above.
-     */
-    private static <T extends Term> Optional<T> checkTermList(Class<T> klass, TermList termList) {
-        final ImmutableList<Term> terms = termList.terms();
+        ImmutableList<Term> terms = value.terms();
         if (terms.size() == 1) {
             Term term = terms.get(0);
             if (klass.isAssignableFrom(term.getClass())) return Optional.of(klass.cast(term));
         }
         return Optional.absent();
+    }
+
+    public static <T extends Term> Iterable<T> filter(Class<T> klass, PropertyValue value) {
+        List<T> filtered = Lists.newArrayList();
+        for (PropertyValueMember member : value.members()) {
+            if (klass.isAssignableFrom(member.getClass())) filtered.add(klass.cast(member));
+        }
+        return filtered;
     }
 }

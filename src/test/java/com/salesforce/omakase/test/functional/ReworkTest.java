@@ -29,7 +29,7 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.TermList;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -251,7 +251,7 @@ public class ReworkTest {
             // declaration
             NumericalValue px10 = NumericalValue.of(10, "px");
             NumericalValue em5 = NumericalValue.of(5, "em");
-            PropertyValue value = TermList.ofValues(OperatorType.SPACE, px10, em5);
+            PropertyValue value = PropertyValue.ofTerms(OperatorType.SPACE, px10, em5);
             Declaration declaration = new Declaration(Property.BORDER_RADIUS, value);
             rule.declarations().append(declaration);
 

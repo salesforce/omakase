@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.plugin.other;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
@@ -23,6 +24,7 @@ import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.util.Values;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,12 +60,12 @@ public class UnquotedIEFilterPluginTest {
             "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)"), refiner);
 
         assertThat(REFINER.refine(d, broadcaster, refiner)).isTrue();
-        assertThat(d.propertyValue()).isInstanceOf(UnquotedIEFilter.class);
+        Optional<UnquotedIEFilter> ief = Values.as(UnquotedIEFilter.class, d.propertyValue());
+        assertThat(ief.isPresent()).isTrue();
 
-        UnquotedIEFilter ief = (UnquotedIEFilter)d.propertyValue();
-        assertThat(ief.line()).isEqualTo(2);
-        assertThat(ief.column()).isEqualTo(5);
-        assertThat(ief.content()).isEqualTo("progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, " +
+        assertThat(ief.get().line()).isEqualTo(2);
+        assertThat(ief.get().column()).isEqualTo(5);
+        assertThat(ief.get().content()).isEqualTo("progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, " +
             "Strength=3)");
     }
 }
