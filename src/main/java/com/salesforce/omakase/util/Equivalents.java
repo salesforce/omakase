@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * TESTME
  * <p/>
- * Utilities for working with {@link Declaration}s.
+ * Utilities for finding prefixed equivalents.
  *
  * @author nmcwilliams
  */

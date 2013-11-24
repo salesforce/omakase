@@ -17,11 +17,16 @@
 package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.ast.selector.TypeSelector;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Utilities for working with {@link Selector}s and {@link SelectorPart}s.
@@ -45,7 +50,7 @@ public final class Selectors {
     }
 
     /**
-     * Gets the given part as an instance of a {@link IdSelector}, if it is one.
+     * Gets the given part as an instance of an {@link IdSelector}, if it is one.
      *
      * @param part
      *     Check if this part is a {@link IdSelector}.
@@ -280,5 +285,52 @@ public final class Selectors {
      */
     public static boolean hasTypeSelector(Iterable<SelectorPart> parts, String name) {
         return findTypeSelector(parts, name).isPresent();
+    }
+
+    /**
+     * Gets the non-combinator {@link SelectorPart}s contiguous to this one.
+     * <p/>
+     * If this part is a {@link Combinator} then this method will return a collection of one, containing only this {@link
+     * Combinator} instance itself.
+     * <p/>
+     * If this part is <em>not</em> a {@link Combinator} then this method will return all preceding and subsequent {@link
+     * SelectorPart}s up until the first encountered {@link Combinator}. In other words, this will return all parts matching a
+     * single element, such as multiple class selectors.
+     * <p/>
+     * For example, in this selector:
+     * <pre><code>
+     * .test1.test2#test3 .testA.testB#testC
+     * </code></pre>
+     * <p/>
+     * If <code>this</code> is ".test2", this method will return the ".test1", ".test2", and "#test3" parts.
+     *
+     * @param part
+     *     Get the selector parts adjoining this one.
+     *
+     * @return The adjoining {@link SelectorPart}s.
+     */
+    public static Iterable<SelectorPart> adjoining(SelectorPart part) {
+        if (part.isDetached() || part.type().isCombinator()) return Sets.newHashSet(part);
+
+        Deque<SelectorPart> deque = new ArrayDeque<SelectorPart>();
+
+        // add previous parts until we hit a combinator
+        Optional<SelectorPart> previous = part.previous();
+        while (previous.isPresent() && !previous.get().type().isCombinator()) {
+            deque.addFirst(previous.get());
+            previous = previous.get().previous();
+        }
+
+        // add self
+        deque.addLast(part);
+
+        // add all subsequent parts until we hit a combinator
+        Optional<SelectorPart> next = part.next();
+        while (next.isPresent() && !next.get().type().isCombinator()) {
+            deque.addLast(next.get());
+            next = next.get().next();
+        }
+
+        return deque;
     }
 }

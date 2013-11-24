@@ -17,20 +17,26 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.broadcast.annotation.Rework;
+import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixInfo;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.util.Actions;
+import com.salesforce.omakase.util.Equivalents;
+import com.salesforce.omakase.util.Values;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 import static com.salesforce.omakase.data.Browser.*;
-import static com.salesforce.omakase.plugin.basic.PrefixerSteps.*;
 
 /**
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
@@ -85,21 +91,8 @@ import static com.salesforce.omakase.plugin.basic.PrefixerSteps.*;
  * </code></pre>
  *
  * @author nmcwilliams
- * @see PrefixerSteps
  */
 public final class Prefixer implements Plugin {
-    private static final List<PrefixerStep> PROPERTY_STEPS = ImmutableList.of(
-        new HandleStandardProperty(),
-        new HandleTransitionSpecial()
-    );
-
-    private static final List<PrefixerStep> FUNCTION_STEPS = ImmutableList.<PrefixerStep>of(
-        new HandleStandardFunction()
-    );
-    private static final List<PrefixerStep> AT_RULE_STEPS = ImmutableList.<PrefixerStep>of(
-        new HandleStandardAtRule()
-    );
-
     private final SupportMatrix support;
     private boolean rearrange;
     private boolean prune;
@@ -183,10 +176,50 @@ public final class Prefixer implements Plugin {
         Optional<Property> property = declaration.propertyName().asProperty();
         if (!property.isPresent() || !PrefixInfo.hasProperty(property.get())) return;
 
-        PrefixerCtx ctx = new PrefixerCtx(support, prune, rearrange);
-        ctx.declaration = declaration;
-        ctx.property = property.get();
-        for (PrefixerStep step : PROPERTY_STEPS) step.process(ctx);
+        // gather all required prefixes for the property name
+        Set<Prefix> required = support.prefixesForProperty(property.get());
+
+        // find all prefixed declarations in the rule for the same property
+        Multimap<Prefix, Declaration> equivalents = Equivalents.prefixedDeclarations(declaration);
+
+        for (Prefix prefix : required) {
+            Collection<Declaration> matches = equivalents.get(prefix);
+            if (!matches.isEmpty()) {
+                if (rearrange) Actions.<Declaration>moveBefore().apply(declaration, matches);
+                equivalents.removeAll(prefix);
+            } else {
+                declaration.prepend(declaration.copy(prefix, support));
+            }
+        }
+
+        // any left over equivalents are unnecessary. remove or rearrange them if allowed
+        if (!equivalents.isEmpty()) {
+            if (prune) {
+                Actions.detach().apply(equivalents.values());
+            } else if (rearrange) {
+                Actions.<Declaration>moveBefore().apply(declaration, equivalents.values());
+            }
+        }
+
+        // special handling for transition
+        if (required.isEmpty() && (property.get() == Property.TRANSITION || property.get() == Property.TRANSITION_PROPERTY)) {
+            // try to find the first prefixed property name
+            for (KeywordValue keyword : Values.filter(KeywordValue.class, declaration.propertyValue())) {
+                // check if the keyword is a property
+                Property keywordAsProperty = Property.lookup(keyword.keyword());
+                if (keywordAsProperty == null) continue;
+
+                // check if this property needs a prefix
+                Set<Prefix> prefixes = support.prefixesForProperty(keywordAsProperty);
+                if (prefixes.isEmpty()) continue;
+
+                // prepend a copy of the declaration for each required prefix
+                for (Prefix prefix : prefixes) {
+                    declaration.prepend(declaration.copy(prefix, support));
+                }
+                break;
+            }
+        }
     }
 
     /**
@@ -204,26 +237,67 @@ public final class Prefixer implements Plugin {
         Optional<Declaration> declaration = function.group().get().parent().declaration();
         if (!declaration.isPresent()) return;
 
-        PrefixerCtx ctx = new PrefixerCtx(support, prune, rearrange);
-        ctx.declaration = declaration.get();
-        ctx.function = function;
-        for (PrefixerStep step : FUNCTION_STEPS) step.process(ctx);
+        // gather all required prefixes for the function name
+        Set<Prefix> required = support.prefixesForFunction(function.name());
+
+        // find all prefixed declarations in the rule for the same property
+        Multimap<Prefix, Declaration> equivalents = Equivalents.prefixedFunctions(declaration.get(), function.name());
+
+        for (Prefix prefix : required) {
+            Collection<Declaration> matches = equivalents.get(prefix);
+            if (!matches.isEmpty()) {
+                if (rearrange) Actions.<Declaration>moveBefore().apply(declaration.get(), matches);
+                equivalents.removeAll(prefix);
+            } else {
+                declaration.get().prepend(declaration.get().copy(prefix, support));
+            }
+        }
+
+        // any left over equivalents are unnecessary. remove or rearrange them if allowed
+        if (!equivalents.isEmpty()) {
+            if (prune) {
+                Actions.detach().apply(equivalents.values());
+            } else if (rearrange) {
+                Actions.<Declaration>moveBefore().apply(declaration.get(), equivalents.values());
+            }
+        }
     }
 
     /**
      * Subscription method - do not invoke directly.
      *
-     * @param rule
+     * @param atRule
      *     The atRule instance.
      */
     @Rework
-    public void atRule(AtRule rule) {
+    public void atRule(AtRule atRule) {
         // at-rule must be attached to a stylesheet, cannot start with a prefix and must be prefixable
-        if (rule.isDetached() || rule.name().startsWith("-") || !PrefixInfo.hasAtRule(rule.name())) return;
+        if (atRule.isDetached() || atRule.name().startsWith("-") || !PrefixInfo.hasAtRule(atRule.name())) return;
 
-        PrefixerCtx ctx = new PrefixerCtx(support, prune, rearrange);
-        ctx.atRule = rule;
-        for (PrefixerStep step : AT_RULE_STEPS) step.process(ctx);
+        // gather all required prefixes for the at-rule
+        Set<Prefix> required = support.prefixesForFunction(atRule.name());
+
+        // find all prefixed at-rules in the stylesheet for the same name
+        Multimap<Prefix, AtRule> equivalents = Equivalents.prefixedAtRules(atRule);
+
+        for (Prefix prefix : required) {
+            Collection<AtRule> matches = equivalents.get(prefix);
+            if (!matches.isEmpty()) {
+                if (rearrange) Actions.<Statement>moveBefore().apply(atRule, matches);
+                equivalents.removeAll(prefix);
+            } else {
+                atRule.prepend(atRule.copy(prefix, support));
+            }
+        }
+
+        // any left over equivalents are unnecessary. remove or rearrange them if allowed
+        if (!equivalents.isEmpty()) {
+            if (prune) {
+                Actions.detach().apply(equivalents.values());
+            } else if (rearrange) {
+                Actions.<Statement>moveBefore().apply(atRule, equivalents.values());
+            }
+        }
     }
 
     /**

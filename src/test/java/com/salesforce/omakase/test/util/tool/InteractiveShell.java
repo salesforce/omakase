@@ -20,6 +20,7 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.error.FatalException;
 import com.salesforce.omakase.plugin.basic.Prefixer;
+import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
@@ -143,6 +144,7 @@ public class InteractiveShell {
         try {
             Omakase.Request request = Omakase.source(input);
             request.add(new StandardValidation());
+            request.add(new UnquotedIEFilterPlugin());
             request.add(writer);
             if (prefixer != null) request.add(prefixer);
             request.process();

@@ -60,5 +60,4 @@ public final class StandardValidation implements DependentPlugin {
 
         registry.require(PseudoElementValidator.class);
     }
-
 }

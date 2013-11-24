@@ -56,7 +56,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 @Description(value = "interface for all property values", broadcasted = REFINED_DECLARATION)
 public final class PropertyValue extends AbstractSyntax<PropertyValue> {
     private final SyntaxCollection<PropertyValue, PropertyValueMember> members;
-    private Optional<Declaration> declaration = Optional.absent();
+    private transient Optional<Declaration> declaration = Optional.absent();
     private boolean important;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
@@ -192,8 +192,7 @@ public final class PropertyValue extends AbstractSyntax<PropertyValue> {
         }
 
         if (important) {
-            appendable.spaceIf(writer.isVerbose());
-            appendable.append("!important");
+            appendable.spaceIf(writer.isVerbose()).append("!important");
         }
     }
 

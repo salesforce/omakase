@@ -17,124 +17,54 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link AbstractSelectorPart}. */
 @SuppressWarnings("JavaDoc")
 public class AbstractSelectorPartTest {
-    private TestSelectorPart obj1;
-    private TestSelectorPart obj2;
-    private TestSelectorPart obj3;
-    private TestSelectorPart obj4;
-    private TestSelectorPart obj5;
-    private TestSelectorPart obj6;
-    private Combinator combinator;
+    private SelectorPart part;
     private Selector selector;
-    private Selector full;
 
     @Before
     public void setup() {
-        obj1 = new TestSelectorPart();
-        selector = new Selector(obj1);
-    }
-
-    private void fill() {
-        obj2 = new TestSelectorPart();
-        obj3 = new TestSelectorPart();
-        obj4 = new TestSelectorPart();
-        obj5 = new TestSelectorPart();
-        obj6 = new TestSelectorPart();
-        combinator = new Combinator(CombinatorType.DESCENDANT);
-        full = selector = new Selector(obj1, obj2, obj3, combinator, obj4, obj5, obj6);
+        part = new IdSelector("test");
+        selector = new Selector(part);
     }
 
     @Test
     public void parentSelector() {
-        assertThat(obj1.parentSelector().get()).isSameAs(selector);
+        assertThat(part.parentSelector().get()).isSameAs(selector);
     }
 
     @Test
     public void parentSelectorWhenDetached() {
-        assertThat(new TestSelectorPart().parentSelector().isPresent()).isFalse();
+        assertThat(new IdSelector("test").parentSelector().isPresent()).isFalse();
     }
 
     @Test
     public void commentsWhenDetached() {
-        TestSelectorPart tsp = new TestSelectorPart();
-        tsp.comments(Lists.newArrayList("test"));
-        assertThat(tsp.comments()).isNotEmpty();
+        IdSelector id = new IdSelector("2");
+        id.comments(Lists.newArrayList("test"));
+        assertThat(id.comments()).isNotEmpty();
     }
 
     @Test
     public void commentsWhenAttached() {
         selector.comments(Lists.newArrayList("test"));
-        obj1.comments(Lists.newArrayList("test"));
-        assertThat(obj1.comments()).hasSize(2);
+        part.comments(Lists.newArrayList("test"));
+        assertThat(part.comments()).hasSize(2);
     }
 
     @Test
     public void writableWhenAttached() {
-        assertThat(obj1.isWritable()).isTrue();
+        assertThat(part.isWritable()).isTrue();
     }
 
     @Test
     public void notWritableWhenDetached() {
-        assertThat(new TestSelectorPart().isWritable()).isFalse();
-    }
-
-    @Test
-    public void adjoiningWhenFirst() {
-        fill();
-        assertThat(obj1.adjoining()).containsExactly(obj1, obj2, obj3);
-    }
-
-    @Test
-    public void adjoiningWhenMiddle() {
-        fill();
-        assertThat(obj2.adjoining()).containsExactly(obj1, obj2, obj3);
-    }
-
-    @Test
-    public void adjoiningWhenEnd() {
-        fill();
-        assertThat(obj3.adjoining()).containsExactly(obj1, obj2, obj3);
-    }
-
-    @Test
-    public void adjoiningWhenCombinator() {
-        fill();
-        assertThat(combinator.adjoining()).containsExactly(combinator);
-    }
-
-    @Test
-    public void adjoiningWhenDetached() {
-        fill();
-        obj2.detach();
-        assertThat(obj2.adjoining()).containsExactly(obj2);
-    }
-
-    public static final class TestSelectorPart extends AbstractSelectorPart {
-        @Override
-        public SelectorPartType type() {
-            return SelectorPartType.CLASS_SELECTOR;
-        }
-
-        @Override
-        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        }
-
-        @Override
-        protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
-            throw new UnsupportedOperationException();
-        }
+        assertThat(new IdSelector("test").isWritable()).isFalse();
     }
 }

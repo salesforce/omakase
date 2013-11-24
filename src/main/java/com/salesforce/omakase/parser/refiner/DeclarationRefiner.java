@@ -16,13 +16,11 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 /**
@@ -42,10 +40,8 @@ public interface DeclarationRefiner extends RefinerStrategy {
      * expected for you to refine the property name, although you can do that if you check the {@link
      * Declaration#rawPropertyName()} method and set the {@link Declaration#propertyName(PropertyName)} as appropriate.
      * <p/>
-     * Parse the information into your own {@link PropertyValue} object and then optionally broadcast it using the given {@link
-     * Broadcaster} (if you intend to broadcast your custom AST objects they must be annotated with the {@link Subscribable}
-     * annotation and implement {@link Syntax}). Be sure to actually apply the new object using the {@link Declaration
-     * #propertyValue(PropertyValue)} method.
+     * Parse the information into a new {@link PropertyValue} object, adding all applicable terms and operators. Be sure to
+     * actually apply the new object using the {@link Declaration #propertyValue(PropertyValue)} method.
      *
      * @param declaration
      *     The {@link Declaration} to refine.

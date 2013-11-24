@@ -4,14 +4,20 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.util.Values;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,8 +30,7 @@ import java.util.Set;
  *
  * @author david.brady
  */
-public class DirectionFlipPlugin implements DependentPlugin {
-
+public final class DirectionFlipPlugin implements DependentPlugin {
     /*
      * Set of properties that are flipped directly to another property.
      */
@@ -109,7 +114,7 @@ public class DirectionFlipPlugin implements DependentPlugin {
      * Flips property names and/or property values.
      *
      * @param declaration
-     *     Declaration to be flippped
+     *     Declaration to be flipped.
      */
     @Rework
     public void rework(Declaration declaration) {
@@ -135,7 +140,7 @@ public class DirectionFlipPlugin implements DependentPlugin {
      * Flips keywords.
      *
      * @param keywordValue
-     *     keywordValue to be flipped
+     *     keywordValue to be flipped.
      */
     @Rework
     public void rework(KeywordValue keywordValue) {
@@ -158,19 +163,13 @@ public class DirectionFlipPlugin implements DependentPlugin {
 
     private boolean handleFlippableBorderRadius(Declaration declaration, Property property) {
         if (Property.BORDER_RADIUS == property) {
-            PropertyValue[] values = splitPropertyValueAtSlash(declaration.propertyValue());
-            switch (values.length) {
-            case 1:
-                declaration.propertyValue(flipBorderRadiusSet(declaration.propertyValue()));
-                return true;
-            case 2:
-                values[0] = flipBorderRadiusSet(values[0]);
-                values[1] = flipBorderRadiusSet(values[1]);
-                values[0].append(OperatorType.SLASH);
-                for (PropertyValueMember member : values[1].members()) {
-                    values[0].append(member);
+            List<PropertyValue> split = Values.split(OperatorType.SLASH, declaration.propertyValue());
+            List<PropertyValue> join = Lists.newArrayList();
+            if (split.size() == 1 || split.size() == 2) {
+                for (PropertyValue val : split) {
+                    join.add(flipBorderRadiusSet(val));
                 }
-                declaration.propertyValue(values[0]);
+                declaration.propertyValue(Values.join(OperatorType.SLASH, join));
                 return true;
             }
         }
@@ -219,22 +218,6 @@ public class DirectionFlipPlugin implements DependentPlugin {
         return false;
     }
 
-    // @todo Candidate for a utility method?
-    private PropertyValue[] splitPropertyValueAtSlash(PropertyValue value) {
-        PropertyValue beforeSlash = new PropertyValue();
-        PropertyValue afterSlash = new PropertyValue();
-        PropertyValue currentPropertyValue = beforeSlash;
-        SyntaxCollection<PropertyValue, PropertyValueMember> members = value.members();
-        for (PropertyValueMember member : members) {
-            if (member instanceof Operator && ((Operator)member).type() == OperatorType.SLASH) {
-                currentPropertyValue = afterSlash;
-                continue;
-            }
-            currentPropertyValue.append(member);
-        }
-        return afterSlash.members().size() == 0 ? new PropertyValue[]{beforeSlash} : new PropertyValue[]{beforeSlash, afterSlash};
-    }
-
     /*
      * If a border radius has 2, 3, or 4 terms, they'll be flipped using these patterns:
      *
@@ -247,14 +230,14 @@ public class DirectionFlipPlugin implements DependentPlugin {
      * Otherwise, the terms aren't flipped at all
      */
     private PropertyValue flipBorderRadiusSet(PropertyValue value) {
-        splitPropertyValueAtSlash(value);
         List<Term> terms = value.terms();
         switch (terms.size()) {
         case 2:
             return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0));
         case 3:
             // the 2nd term, when flipped, is used in both the first and 3rd positions.  Use a copy of the term for the 3rd.
-            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), (Term)terms.get(1).copy(), terms.get(2));
+            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), (Term)terms.get(1).copy(),
+                terms.get(2));
         case 4:
             return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(3), terms.get(2));
         default:

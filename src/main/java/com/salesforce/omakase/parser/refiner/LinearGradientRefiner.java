@@ -35,7 +35,8 @@ public final class LinearGradientRefiner implements FunctionRefiner {
         if (raw.name().equals(NORMAL)) {
             broadcaster.broadcast(new LinearGradientFunctionValue(raw.line(), raw.column(), raw.args()));
             return true;
-        } else if (raw.name().equals(REPEATING)) {
+        }
+        if (raw.name().equals(REPEATING)) {
             broadcaster.broadcast(new LinearGradientFunctionValue(raw.line(), raw.column(), raw.args()).repeating(true));
             return true;
         }

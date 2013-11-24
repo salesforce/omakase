@@ -17,6 +17,8 @@
 package com.salesforce.omakase.util;
 
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Combinator;
+import com.salesforce.omakase.ast.selector.CombinatorType;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
@@ -32,7 +34,27 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class SelectorsTest {
-    SelectorPart part;
+    private SelectorPart part;
+    private SelectorPart obj1;
+    private SelectorPart obj2;
+    private SelectorPart obj3;
+    private SelectorPart obj4;
+    private SelectorPart obj5;
+    private SelectorPart obj6;
+    private Combinator combinator;
+    private Selector full;
+
+    private void fill() {
+        obj1 = new IdSelector("test");
+        obj2 = new IdSelector("test");
+        obj3 = new IdSelector("test");
+        obj4 = new IdSelector("test");
+        obj5 = new IdSelector("test");
+        obj6 = new IdSelector("test");
+
+        combinator = new Combinator(CombinatorType.DESCENDANT);
+        full = new Selector(obj1, obj2, obj3, combinator, obj4, obj5, obj6);
+    }
 
     @Test
     public void asClassSelectorPresent() {
@@ -128,5 +150,36 @@ public class SelectorsTest {
         TypeSelector s2 = new TypeSelector("findme");
         Selector selector = new Selector(s1, s2);
         assertThat(Selectors.findTypeSelector(selector, "findme").get()).isSameAs(s2);
+    }
+
+    @Test
+    public void adjoiningWhenFirst() {
+        fill();
+        assertThat(Selectors.adjoining(obj1)).containsExactly(obj1, obj2, obj3);
+    }
+
+    @Test
+    public void adjoiningWhenMiddle() {
+        fill();
+        assertThat(Selectors.adjoining(obj2)).containsExactly(obj1, obj2, obj3);
+    }
+
+    @Test
+    public void adjoiningWhenEnd() {
+        fill();
+        assertThat(Selectors.adjoining(obj3)).containsExactly(obj1, obj2, obj3);
+    }
+
+    @Test
+    public void adjoiningWhenCombinator() {
+        fill();
+        assertThat(Selectors.adjoining(combinator)).containsExactly(combinator);
+    }
+
+    @Test
+    public void adjoiningWhenDetached() {
+        fill();
+        obj2.detach();
+        assertThat(Selectors.adjoining(obj2)).containsExactly(obj2);
     }
 }

@@ -62,7 +62,7 @@ public final class Parsers {
      * <p/>
      * The parser must find and broadcast an instance of the given type, and it must be at the beginning of the source.
      * <p/>
-     * Example
+     * Example:
      * <pre><code>
      * Parsers.parseSimple("10px solid red", ParserFactory.numericalValueParser(), NumericalValue.class);
      * </code></pre>
@@ -87,7 +87,7 @@ public final class Parsers {
      * <p/>
      * The parser must find and broadcast an instance of the given type, and it must be at the beginning of the source.
      * <p/>
-     * Example
+     * Example:
      * <pre><code>
      * Parsers.parseSimple(source, ParserFactory.numericalValueParser(), NumericalValue.class);
      * </code></pre>
