@@ -27,8 +27,6 @@ import java.io.IOException;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TESTME
- * <p/>
  * Represents a single keyframe selector part. For example, "from", "to", "0%', "50%", etc...
  *
  * @author nmcwilliams

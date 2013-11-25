@@ -77,4 +77,19 @@ public class PrefixesTest {
         exception.expect(IllegalArgumentException.class);
         Prefixes.splitPrefix("-blah-border-radius");
     }
+
+    @Test
+    public void unprefixedPresent() {
+        assertThat(Prefixes.unprefixed("-webkit-test")).isEqualTo("test");
+    }
+
+    @Test
+    public void unprefixedAbsent() {
+        assertThat(Prefixes.unprefixed("test")).isEqualTo("test");
+    }
+
+    @Test
+    public void fakedOutUnprefixed() {
+        assertThat(Prefixes.unprefixed("-test")).isEqualTo("-test");
+    }
 }

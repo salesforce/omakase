@@ -34,8 +34,6 @@ import com.salesforce.omakase.parser.atrule.KeyframeSelectorSequenceParser;
 import com.salesforce.omakase.util.Prefixes;
 
 /**
- * TESTME
- * <p/>
  * Refines keyframes at-rules (@keyframes).
  *
  * @author nmcwilliams

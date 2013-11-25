@@ -16,16 +16,17 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.token.Tokens;
 
 /**
- * TESTME
- * <p/>
  * Parses a sequence of comma-separated {@link KeyframeSelector}s.
  *
  * @author nmcwilliams
@@ -41,10 +42,9 @@ public final class KeyframeSelectorSequenceParser extends AbstractParser {
         if (!found) return false;
 
         // check for a comma
-        boolean foundDelimiter = source.skipWhitepace().optionallyPresent(tokenFactory().selectorDelimiter());
-        while (foundDelimiter) {
+        while (source.collectComments().optionallyPresent(tokenFactory().selectorDelimiter())) {
             if (!ParserFactory.keyframeSelectorParser().parse(source, broadcaster, refiner)) {
-                throw new RuntimeException("trailing delimiter");
+                throw new ParserException(source, Message.TRAILING, Tokens.COMMA.description());
             }
         }
 

@@ -14,60 +14,64 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser.raw;
+package com.salesforce.omakase.parser.atrule;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static com.salesforce.omakase.test.util.TemplatesHelper.*;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
- * Unit tests for {@link RawSelectorSequenceParser}.
+ * TODO description
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class RawSelectorSequenceParserTest extends AbstractParserTest<RawSelectorSequenceParser> {
+public class KeyframeSelectorSequenceParserTest extends AbstractParserTest<KeyframeSelectorSequenceParser> {
     @Override
     public List<String> invalidSources() {
         return ImmutableList.of(
-            "1,2",
-            "$class",
-            "",
-            "\n");
+            "  ",
+            "\n",
+            "$",
+            "blah",
+            "#id#id",
+            "%50"
+        );
     }
 
     @Override
     public List<String> validSources() {
         return ImmutableList.of(
-            "#abc, #abc",
-            ".class, .class",
-            "*:hover, ::before",
-            "p div, .classname",
-            ".-anc",
-            "a, :before",
-            "/*comment*/ .abc, .abc",
-            ".abc,/*comment*/.abc",
-            ".abc, .abc /*comment*/");
+            "50%, 50%",
+            "from",
+            "to",
+            "50%",
+            "100%,20%",
+            "100%,    20%",
+            "20%    ,    50%",
+            "20%    ,50%",
+            "10%,20%, 30%",
+            "/*comment*/50%",
+            "50%/*comment*/"
+        );
     }
 
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult(".class { color : red", 7),
-            withExpectedResult(".class, #id { color:red", 12),
-            withExpectedResult(".class,#id {color:red", 11),
-            withExpectedResult(".class.class.class {\n\n", 19),
-            withExpectedResult("*{color: \n red", 1),
-            withExpectedResult(".class,\n.class2, \n.class3 {   ", 26));
+            withExpectedResult("50%, 50%{", 8),
+            withExpectedResult("from {", 5),
+            withExpectedResult("100% {", 5),
+            withExpectedResult("100%%", 4));
     }
 
     @Override
@@ -84,12 +88,10 @@ public class RawSelectorSequenceParserTest extends AbstractParserTest<RawSelecto
     @Override
     public void matchesExpectedBroadcastCount() {
         List<ParseResult<Integer>> results = parseWithExpected(
-            withExpectedResult("#abc, #abc", 2),
-            withExpectedResult(".class, .class", 2),
-            withExpectedResult("*:hover, ::before", 2),
-            withExpectedResult(".class.class.class, \n  .class.class.class  ", 2),
-            withExpectedResult("p div, .classname", 2),
-            withExpectedResult(".class,\n.class2, \n.class3 ", 3));
+            withExpectedResult("50%, 50%", 4),
+            withExpectedResult("from", 2),
+            withExpectedResult("10%,20%, 30%", 6),
+            withExpectedResult("to", 2));
 
         for (ParseResult<Integer> result : results) {
             assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(result.expected);
@@ -99,16 +101,22 @@ public class RawSelectorSequenceParserTest extends AbstractParserTest<RawSelecto
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        GenericParseResult result = parse("   .class.class.class, \n  .class.class.class  ").get(0);
-        assertThat(result.broadcasted).hasSize(2);
+        GenericParseResult result = parse("   from, 20%, 30%, \n70%").get(0);
+        assertThat(result.broadcasted).hasSize(8);
         assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(Selector.class);
-        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 4)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 5)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 6)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 7)).isInstanceOf(KeyframeSelector.class);
     }
 
     @Test
     public void errorsOnTrailingComma() {
         exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find a selector");
-        parse("#abc,#abc, ");
+        exception.expectMessage("Unexpected trailing");
+        parse("50%, 60%, , 70% ");
     }
 }

@@ -81,13 +81,11 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public final C copy() {
-        // TESTME
         return copy(null, null);
     }
 
     @Override
     public final C copy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         C copy = makeCopy(prefix, support);
         if (comments != null) copy.comments(this);
         if (orphanedComments != null) copy.orphanedComments(this);
@@ -152,7 +150,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public Syntax<C> orphanedComments(List<String> comments) {
-        // TESTME
         if (comments == null || comments.isEmpty()) return this;
 
         // delayed creation of comments list
@@ -170,7 +167,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public Syntax<C> orphanedComments(Syntax<?> copyFrom) {
-        // TESTME
         ImmutableList<Comment> toCopy = copyFrom.orphanedComments();
         if (toCopy.isEmpty()) return this;
 
@@ -185,7 +181,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public ImmutableList<Comment> orphanedComments() {
-        // TESTME
         return orphanedComments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(orphanedComments);
     }
 

@@ -29,8 +29,6 @@ import com.salesforce.omakase.parser.raw.RawRuleParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * TESTME
- * <p/>
  * Similar to {@link RawRuleParser}, except this only parses {@link KeyframeSelector}s.
  *
  * @author nmcwilliams

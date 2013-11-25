@@ -66,8 +66,6 @@ public final class Prefixes {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets the unprefixed portion of the given name.
      * <p/>
      * If the name is not prefixed, it will be returned unchanged. If the name is prefixed, the unprefixed part of the name will

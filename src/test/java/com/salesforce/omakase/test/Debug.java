@@ -22,6 +22,7 @@ import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.test.util.EchoLogger;
+import com.salesforce.omakase.test.util.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
@@ -29,12 +30,10 @@ import java.io.IOException;
 /** Temp test for debugging. */
 @SuppressWarnings("JavaDoc")
 public final class Debug {
-    public static final String SRC = ".test {\n" +
-        "    border-radius: 5px;" +
-        "    -moz-border-radius: 5px;" +
-        "    width: calc(2px - 1px);" +
-        "    width: -webkit-calc(2px - 1px);" +
-        "    transition: border-radius 2s;" +
+    public static final String SRC = "@keyframes test {\n" +
+        "  from {top: 0%}\n" +
+        "  50% {top: 50%}\n" +
+        "  to {top: 100%}\n" +
         "}";
 
     private Debug() {}
@@ -53,15 +52,15 @@ public final class Debug {
             .request(writer)
             .request(new EchoLogger())
             .request(new StandardValidation())
-            .request(prefixer)
+            // .request(prefixer)
             .request(new Plugin() {
 
             })
             .process();
 
         System.out.println();
-        writer.writeTo(System.out);
+//        writer.writeTo(System.out);
 
-        // QuickWriter.writeAllModes(SRC);
+        QuickWriter.writeAllModes(SRC);
     }
 }

@@ -126,4 +126,13 @@ public class StandardRefinerTest {
 
         assertThat(ar.isRefined()).isTrue();
     }
+
+    @Test
+    public void refinesKeyframes() {
+        Refiner refiner = new Refiner(new StatusChangingBroadcaster());
+        AtRule ar = new AtRule(1, 1, "keyframes", new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "from{top:0%} to{top:100%}"), refiner);
+        new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+
+        assertThat(ar.isRefined()).isTrue();
+    }
 }

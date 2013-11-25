@@ -90,7 +90,8 @@ public enum Message {
     MISSING_MEDIA_TERMS("Expected to find one or more terms"),
     MISSING_COLON("Expected to find ':' after the property name"),
     UNEXPECTED_KEYFRAME_NAME("Unexpected content after the keyframes name: %s"),
-    MISSING_KEYFRAMES_BLOCK("Missing block containing the keyframes");
+    MISSING_KEYFRAMES_BLOCK("Missing keyframes block"),
+    MISSING_PERCENTAGE("Missing '%' in keyframe selector");
 
     private final String message;
 

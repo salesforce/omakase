@@ -46,7 +46,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
 
     private static final Set<AtRuleRefiner> STANDARD_AT_RULES = ImmutableSet.of(
         new MediaRefiner(),
-        new KeyframesRefiner() // TESTME
+        new KeyframesRefiner()
     );
 
     private static final Set<FunctionRefiner> STANDARD_FUNCTIONS = ImmutableSet.of(

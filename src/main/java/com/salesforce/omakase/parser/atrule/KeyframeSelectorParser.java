@@ -16,20 +16,23 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * TESTME
+ * Parses a single {@link KeyframeSelector} part.
  * <p/>
- * TODO description
+ * Note: this parsers a single {@link Selector} as well, which contains the {@link KeyframeSelector} {@link SelectorPart}.
  *
  * @author nmcwilliams
  * @see KeyframeSelector
@@ -45,14 +48,14 @@ public final class KeyframeSelectorParser extends AbstractParser {
         KeyframeSelector keyframeSelector = null;
 
         // first try a percentage
-        SingleInterestBroadcaster<NumericalValue> num = SingleInterestBroadcaster.of(NumericalValue.class);
-        ParserFactory.numericalValueParser().parse(source, num, refiner);
+        SingleInterestBroadcaster<NumericalValue> b = SingleInterestBroadcaster.of(NumericalValue.class);
+        ParserFactory.numericalValueParser().parse(source, b, refiner);
 
-        if (num.broadcasted().isPresent()) {
+        if (b.broadcasted().isPresent()) {
             // must have the percentage sign
-            NumericalValue numerical = num.broadcasted().get();
+            NumericalValue numerical = b.broadcasted().get();
             if (!numerical.unit().isPresent() || !numerical.unit().get().equals("%")) {
-                throw new RuntimeException("missing percentage");
+                throw new ParserException(source, Message.MISSING_PERCENTAGE);
             }
 
             keyframeSelector = new KeyframeSelector(line, column, numerical.value() + numerical.unit().get());

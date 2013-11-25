@@ -26,15 +26,13 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * TESTME
- * <p/>
  * A generic {@link AtRuleExpression} value.
  * <p/>
  * This is used for refined {@link AtRule}s (standard or custom) that contain a simple expression.
  *
  * @author nmcwilliams
  */
-public class GenericAtRuleExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+public final class GenericAtRuleExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
     private String expression;
 
     /**
