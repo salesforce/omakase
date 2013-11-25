@@ -19,18 +19,23 @@ package com.salesforce.omakase.parser;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.ast.selector.TypeSelector;
+import com.salesforce.omakase.parser.atrule.KeyframeRuleParser;
+import com.salesforce.omakase.parser.atrule.KeyframeSelectorParser;
+import com.salesforce.omakase.parser.atrule.KeyframeSelectorSequenceParser;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
 import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
 import com.salesforce.omakase.parser.atrule.MediaQueryParser;
 import com.salesforce.omakase.parser.declaration.*;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
+import com.salesforce.omakase.parser.raw.RawDeclarationSequenceParser;
 import com.salesforce.omakase.parser.raw.RawRuleParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
-import com.salesforce.omakase.parser.raw.SelectorGroupParser;
+import com.salesforce.omakase.parser.raw.RawSelectorSequenceParser;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.parser.selector.*;
 
@@ -54,9 +59,10 @@ public final class ParserFactory {
     private static final Parser statement = rule.or(atRule);
 
     private static final Parser selector = new RawSelectorParser();
-    private static final Parser selectorGroup = new SelectorGroupParser();
+    private static final Parser selectorSequence = new RawSelectorSequenceParser();
 
     private static final Parser declaration = new RawDeclarationParser();
+    private static final Parser declarationSequence = new RawDeclarationSequenceParser();
 
     /* refined selectors */
     private static final Parser complexSelector = new ComplexSelectorParser();
@@ -68,13 +74,12 @@ public final class ParserFactory {
     private static final Parser typeSelector = new TypeSelectorParser();
     private static final Parser universalSelector = new UniversalSelectorParser();
     private static final Parser pseudoSelector = new PseudoSelectorParser();
+    private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
     private static final Parser repeatableSelector = classSelector
         .or(idSelector)
         .or(attributeSelector)
         .or(pseudoSelector);
-
-    private static final Parser typeOrUniversal = typeSelector.or(universalSelector);
 
     /* refined declaration values */
     private static final Parser numericalValue = new NumericalValueParser();
@@ -94,10 +99,15 @@ public final class ParserFactory {
     private static final Parser important = new ImportantParser();
     private static final Parser propertyValue = new PropertyValueParser();
 
-    /* refined at rules */
+    /* media queries */
     private static final Parser mediaQueryList = new MediaQueryListParser();
     private static final Parser mediaQuery = new MediaQueryParser();
     private static final Parser mediaQueryExpression = new MediaQueryExpressionParser();
+
+    /* keyframes */
+    private static final Parser keyframeSelector = new KeyframeSelectorParser();
+    private static final Parser keyframeSelectorSequence = new KeyframeSelectorSequenceParser();
+    private static final Parser keyframeRule = new KeyframeRuleParser();
 
     /**
      * Gets the {@link StylesheetParser}.
@@ -145,12 +155,12 @@ public final class ParserFactory {
     }
 
     /**
-     * Gets the {@link SelectorGroupParser}.
+     * Gets the {@link RawSelectorSequenceParser}.
      *
      * @return The parser instance.
      */
-    public static Parser selectorGroupParser() {
-        return selectorGroup;
+    public static Parser rawSelectorSequenceParser() {
+        return selectorSequence;
     }
 
     /**
@@ -160,6 +170,15 @@ public final class ParserFactory {
      */
     public static Parser rawDeclarationParser() {
         return declaration;
+    }
+
+    /**
+     * Gets the {@link RawDeclarationSequenceParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser rawDeclarationSequenceParser() {
+        return declarationSequence;
     }
 
     /**
@@ -376,5 +395,32 @@ public final class ParserFactory {
      */
     public static Parser mediaExpressionParser() {
         return mediaQueryExpression;
+    }
+
+    /**
+     * Gets the parser to parse a {@link KeyframeSelector}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser keyframeSelectorParser() {
+        return keyframeSelector;
+    }
+
+    /**
+     * Gets the {@link KeyframeSelectorSequenceParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser keyframeSelectorSequenceParser() {
+        return keyframeSelectorSequence;
+    }
+
+    /**
+     * Gets the {@link KeyframeRuleParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser keyframeRuleParser() {
+        return keyframeRule;
     }
 }

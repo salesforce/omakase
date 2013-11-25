@@ -83,7 +83,6 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
      */
     public Selector(RawSyntax rawContent, Refiner refiner) {
         super(rawContent.line(), rawContent.column());
-
         this.refiner = refiner;
         this.rawContent = rawContent;
         this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this, refiner.broadcaster());
@@ -106,10 +105,42 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
      *     The parts within the selector.
      */
     public Selector(Iterable<SelectorPart> parts) {
+        this(-1, -1, parts);
+    }
+
+    /**
+     * Creates a new instance with the given line, number, and parts.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param parts
+     *     The selector parts to add.
+     */
+    public Selector(int line, int column, SelectorPart... parts) {
+        this(line, column, Lists.newArrayList(parts));
+    }
+
+    /**
+     * Creates a new instance with the given line, number, and parts.
+     * <p/>
+     * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
+     *
+     * @param line
+     *     The line number.
+     * @param column
+     *     The column number.
+     * @param parts
+     *     The selector parts to add.
+     */
+    public Selector(int line, int column, Iterable<SelectorPart> parts) {
+        super(line, column);
         this.refiner = null;
         this.rawContent = null;
-        this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this);
-        this.parts.appendAll(parts);
+        this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this).appendAll(parts);
     }
 
     /**

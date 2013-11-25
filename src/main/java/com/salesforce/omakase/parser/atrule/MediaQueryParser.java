@@ -36,7 +36,7 @@ import com.salesforce.omakase.ast.atrule.MediaRestriction;
  * Parsers a {@link MediaQuery}.
  * <p/>
  * In the following example:
- * <pre>    {@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
+ * <pre>{@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
  * <p/>
  * There are two media queries,
  * <p/>

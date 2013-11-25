@@ -44,6 +44,9 @@ public enum SelectorPartType {
     /** a pseudo element selector */
     PSEUDO_ELEMENT_SELECTOR,
 
+    /** keyframes selector */
+    KEYFRAMES_SELECTOR,
+
     /** a descendant combinator */
     DESCENDANT_COMBINATOR(true),
 

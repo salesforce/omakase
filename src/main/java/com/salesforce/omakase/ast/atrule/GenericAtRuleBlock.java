@@ -31,8 +31,9 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * A generic wrapper containing a list of statements. This is used for refined {@link AtRule}s (standard or custom) that contain a
- * simple list of statements inside the block.
+ * A generic wrapper containing a list of statements.
+ * <p/>
+ * This is used for refined {@link AtRule}s (standard or custom) that contain a simple list of statements inside the block.
  *
  * @author nmcwilliams
  */

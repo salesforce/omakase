@@ -31,8 +31,10 @@ import com.salesforce.omakase.parser.token.Tokens;
 /**
  * Parsers a {@link MediaQueryList}.
  * <p/>
- * In the following example the media query list is everything until the opening curly brace:
- * <pre>    {@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
+ * In the following example:
+ * <pre>{@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
+ * <p/>
+ * The media query list comprises of the content {@code all and (min-width: 800px), projection and (color)}.
  *
  * @author nmcwilliams
  */

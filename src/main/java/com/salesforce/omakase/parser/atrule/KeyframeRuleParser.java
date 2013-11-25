@@ -14,30 +14,32 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser.raw;
+package com.salesforce.omakase.parser.atrule;
 
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.raw.RawRuleParser;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * Parses a {@link Rule}.
+ * TESTME
+ * <p/>
+ * Similar to {@link RawRuleParser}, except this only parses {@link KeyframeSelector}s.
  *
  * @author nmcwilliams
- * @see Rule
  */
-public final class RawRuleParser extends AbstractParser {
+public final class KeyframeRuleParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.collectComments();
 
-        // save off current line and column
         int line = source.originalLine();
         int column = source.originalColumn();
 
@@ -45,7 +47,7 @@ public final class RawRuleParser extends AbstractParser {
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // if there isn't a selector then we aren't a rule
-        if (!ParserFactory.rawSelectorSequenceParser().parse(source, queryable, refiner)) return false;
+        if (!ParserFactory.keyframeSelectorSequenceParser().parse(source, queryable, refiner)) return false;
 
         // parse the declaration block
         source.skipWhitepace().expect(tokenFactory().declarationBlockBegin());

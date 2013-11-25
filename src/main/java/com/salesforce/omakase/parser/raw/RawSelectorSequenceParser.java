@@ -25,11 +25,11 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * Parses a group of comma-separated selectors.
+ * Parses a sequence of comma-separated selectors.
  *
  * @author nmcwilliams
  */
-public final class SelectorGroupParser extends AbstractParser {
+public final class RawSelectorSequenceParser extends AbstractParser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
         source.collectComments();

@@ -16,64 +16,69 @@
 
 package com.salesforce.omakase.parser.refiner;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
+import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
+import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.atrule.KeyframeSelectorParser;
+import com.salesforce.omakase.parser.atrule.KeyframeSelectorSequenceParser;
 import com.salesforce.omakase.util.Prefixes;
-
-import static com.salesforce.omakase.util.Prefixes.PrefixPair;
 
 /**
  * TESTME
  * <p/>
- * TODO description
+ * Refines keyframes at-rules (@keyframes).
  *
  * @author nmcwilliams
+ * @see KeyframeSelector
+ * @see KeyframeSelectorParser
+ * @see KeyframeSelectorSequenceParser
  */
-public class KeyframesRefiner implements AtRuleRefiner {
+public final class KeyframesRefiner implements AtRuleRefiner {
     private static final String KEYFRAMES = "keyframes";
 
     @Override
     public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
-        String name = atRule.name();
-
-        if (name.charAt(0) == '-') {
-            PrefixPair pair = Prefixes.splitPrefix(name);
-            if (pair.prefix().isPresent()) {
-                name = pair.unprefixed();
-            }
-        }
-
+        // @keyframes might be prefixed
+        String name = Prefixes.unprefixed(atRule.name());
         if (!name.equals(KEYFRAMES)) return false;
 
         // must have a keyframes name
         if (!atRule.rawExpression().isPresent()) {
-            throw new RuntimeException("e");
-            //throw new ParserException(atRule.line(), atRule.column(), Message.KEYFRAMES_NAME);
+            throw new ParserException(atRule.line(), atRule.column(), Message.KEYFRAME_NAME);
         }
 
         // parse the keyframes name
         Source source = new Source(atRule.rawExpression().get());
 
         // name should be a proper ident
-        if (!source.readIdent().isPresent()) throw new RuntimeException("TODO: contains an invalid name");
+        Optional<String> ident = source.readIdent();
+        if (!ident.isPresent()) {
+            throw new ParserException(atRule.line(), atRule.column(), Message.KEYFRAME_NAME);
+        }
 
         // nothing should be left in the expression content
-        if (!source.skipWhitepace().eof()) throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+        if (!source.skipWhitepace().eof()) {
+            throw new ParserException(source, Message.UNEXPECTED_KEYFRAME_NAME, source.remaining());
+        }
+
+        atRule.expression(new GenericAtRuleExpression(ident.get()));
 
         // must have a block
         if (!atRule.rawBlock().isPresent()) {
-            throw new RuntimeException("e2");
-            //throw new ParserException(rule.line(), rule.column(), Message.MEDIA_BLOCK);
+            throw new ParserException(atRule.line(), atRule.column(), Message.MISSING_KEYFRAMES_BLOCK);
         }
 
+        // parse the block
         source = new Source(atRule.rawBlock().get());
 
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
@@ -81,14 +86,11 @@ public class KeyframesRefiner implements AtRuleRefiner {
 
         // parse the inner statements
         while (!source.eof()) {
-            boolean matched = ParserFactory.ruleParser().parse(source, queryable, refiner);
+            boolean matched = ParserFactory.keyframeRuleParser().parse(source, queryable, refiner);
             source.skipWhitepace();
 
             // after parsing there should be nothing left in the source
-            if (!matched && !source.eof()) {
-                throw new RuntimeException("e");
-                // throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
-            }
+            if (!matched && !source.eof()) throw new ParserException(source, Message.UNPARSABLE_KEYFRAMES, source.remaining());
         }
 
         // create and add the block

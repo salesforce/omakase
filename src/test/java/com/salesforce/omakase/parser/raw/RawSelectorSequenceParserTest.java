@@ -30,12 +30,12 @@ import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResul
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link SelectorGroupParser}.
+ * Unit tests for {@link RawSelectorSequenceParser}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class SelectorGroupParserTest extends AbstractParserTest<SelectorGroupParser> {
+public class RawSelectorSequenceParserTest extends AbstractParserTest<RawSelectorSequenceParser> {
     @Override
     public List<String> invalidSources() {
         return ImmutableList.of(

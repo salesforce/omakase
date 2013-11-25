@@ -65,6 +65,24 @@ public final class Prefixes {
         return new PrefixPair(null, name);
     }
 
+    /**
+     * TESTME
+     * <p/>
+     * Gets the unprefixed portion of the given name.
+     * <p/>
+     * If the name is not prefixed, it will be returned unchanged. If the name is prefixed, the unprefixed part of the name will
+     * be returned.
+     *
+     * @param name
+     *     Find the unprefixed part of this string.
+     *
+     * @return The unprefixed part of the string, or the string itself if it is not prefixed.
+     */
+    public static String unprefixed(String name) {
+        if (name.charAt(0) != '-') return name;
+        return splitPrefix(name).unprefixed();
+    }
+
     /** Represents a name with an optional vendor {@link Prefix}. */
     public static final class PrefixPair {
         private final Optional<Prefix> prefix;
