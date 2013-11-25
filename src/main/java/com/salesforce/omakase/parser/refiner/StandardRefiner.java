@@ -44,8 +44,9 @@ import java.util.Set;
 public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     DeclarationRefiner, FunctionRefiner {
 
-    private static final Set<AtRuleRefiner> STANDARD_AT_RULES = ImmutableSet.<AtRuleRefiner>of(
-        new MediaRefiner()
+    private static final Set<AtRuleRefiner> STANDARD_AT_RULES = ImmutableSet.of(
+        new MediaRefiner(),
+        new KeyframesRefiner() // TESTME
     );
 
     private static final Set<FunctionRefiner> STANDARD_FUNCTIONS = ImmutableSet.of(

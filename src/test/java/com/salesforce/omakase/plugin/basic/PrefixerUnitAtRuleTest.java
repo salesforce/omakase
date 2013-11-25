@@ -58,20 +58,24 @@ public class PrefixerUnitAtRuleTest {
     // required, not present (add)
     @Test
     public void atRuleTest1() {
-        String original = "@keyframes {\n" +
+        String original = "@keyframes test {\n" +
             "  from {top: 0%}\n" +
+            "  50% {top: 50%}\n" +
             "  to {top: 100%}\n" +
             "}";
-        String expected = "@-webkit-keyframes {\n" +
+        String expected = "@-webkit-keyframes test {\n" +
             "  from {top: 0%}\n" +
+            "  50% {top: 50%}\n" +
             "  to {top: 100%}\n" +
             "}\n" +
-            "@-moz-keyframes {\n" +
+            "@-moz-keyframes test {\n" +
             "  from {top: 0%}\n" +
+            "  50% {top: 50%}\n" +
             "  to {top: 100%}\n" +
             "}\n" +
-            "@keyframes {\n" +
+            "@keyframes test {\n" +
             "  from {top: 0%}\n" +
+            "  50% {top: 50%}\n" +
             "  to {top: 100%}\n" +
             "}";
         assertThat(process(original, setup(Prefix.MOZ, Prefix.WEBKIT))).isEqualTo(expected);
