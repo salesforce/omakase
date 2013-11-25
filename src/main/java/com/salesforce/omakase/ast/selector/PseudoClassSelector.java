@@ -154,7 +154,6 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
 
     @Override
     protected PseudoClassSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new PseudoClassSelector(name, args.orNull());
     }
 }

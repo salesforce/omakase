@@ -104,7 +104,6 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
 
     @Override
     protected Combinator makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new Combinator(type);
     }
 

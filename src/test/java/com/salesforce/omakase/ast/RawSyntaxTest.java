@@ -37,6 +37,18 @@ public class RawSyntaxTest {
     }
 
     @Test
+    public void getContent() {
+        RawSyntax raw = new RawSyntax(1, 1, "test");
+        assertThat(raw.content()).isEqualTo("test");
+    }
+
+    @Test
+    public void testCopy() {
+        RawSyntax raw = new RawSyntax(1, 1, "test");
+        assertThat(raw.copy().content()).isEqualTo(raw.content());
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         RawSyntax r = new RawSyntax(5, 5, ".class > #id");
         StyleWriter writer = StyleWriter.verbose();

@@ -73,4 +73,10 @@ public class PseudoElementSelectorTest {
         PseudoElementSelector s = new PseudoElementSelector("first-letter");
         assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":first-letter");
     }
+
+    @Test
+    public void copy() {
+        PseudoElementSelector s = new PseudoElementSelector("first-letter");
+        assertThat(((PseudoElementSelector)s.copy()).name()).isEqualTo("first-letter");
+    }
 }

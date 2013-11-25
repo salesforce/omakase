@@ -19,15 +19,12 @@ package com.salesforce.omakase.util;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.data.Prefix;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -132,15 +129,44 @@ public final class Equivalents {
         return multimap == null ? ImmutableMultimap.<Prefix, Declaration>of() : multimap;
     }
 
+    /**
+     * Finds all {@link AtRule}s within the same sheet/group that have the same at-rule name as the given at-rule and also have a
+     * vendor prefix.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     * &#64;-webkit-keyframes {
+     *   from { top: 0%}
+     *   to { top: 100%}
+     * }
+     * <p/>
+     * &#64;keyframes {
+     *   from { top: 0%}
+     *   to { top: 100%}
+     * }
+     * <p/>
+     * &#64;-moz-keyframes {
+     *   from { top: 0%}
+     *   to { top: 100%}
+     * }
+     * </code></pre>
+     * When given the middle, unprefixed at-rule, the at-rules before and after it will be returned.
+     *
+     * @param unprefixed
+     *     Match against this {@link AtRule}.
+     *
+     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
+     *
+     * @throws IllegalArgumentException
+     *     If the given at-rule is detached or is prefixed itself.
+     */
     public static Multimap<Prefix, AtRule> prefixedAtRules(AtRule unprefixed) {
         checkArgument(!unprefixed.isDetached(), "at-rule must not be detached");
         checkArgument(!unprefixed.name().startsWith("-"), "at-rule must not have a prefixed property");
 
         Multimap<Prefix, AtRule> multimap = null;
 
-        // find all immediate preceding and following at-rules that have the same name
-        List<AtRule> group = Lists.newArrayList();
-
+        // look for prefixed versions appearing before the unprefixed one
         Optional<Statement> previous = unprefixed.previous();
 
         while (previous.isPresent() && previous.get().asAtRule().isPresent()) {
@@ -151,12 +177,13 @@ public final class Equivalents {
                     if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                     multimap.put(pair.prefix().get(), atRule);
                     previous = atRule.previous();
-                    continue;
                 }
+            } else {
+                previous = Optional.absent();
             }
-            previous = Optional.absent();
         }
 
+        // look for prefixed versions appearing after the unprefixed one
         Optional<Statement> next = unprefixed.previous();
 
         while (next.isPresent() && next.get().asAtRule().isPresent()) {

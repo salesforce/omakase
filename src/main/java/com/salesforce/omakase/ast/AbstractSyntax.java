@@ -76,7 +76,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public boolean isWritable() {
-        // TESTME
         return true;
     }
 
@@ -117,7 +116,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public Syntax<C> comments(List<String> comments) {
-        // TESTME
         if (comments == null || comments.isEmpty()) return this;
 
         // delayed creation of comments list
@@ -135,7 +133,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public Syntax<C> comments(Syntax<?> copyFrom) {
-        // TESTME
         ImmutableList<Comment> toCopy = copyFrom.comments();
         if (toCopy.isEmpty()) return this;
 
@@ -150,7 +147,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public ImmutableList<Comment> comments() {
-        // TESTME
         return comments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(comments);
     }
 
@@ -212,12 +208,6 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     }
 
     @Override
-    public final String toString() {
-        // this doesn't have to be final...it's just final as a reminder that usually it shouldn't be added
-        return As.string(this).fields().toString();
-    }
-
-    @Override
     public final int hashCode() {
         // final because the basic broadcasting behavior assumes identity-based equality. In addition,
         // there is no universally logical non-identity-based implementation of hashCode and equals that applies to all of the
@@ -233,5 +223,12 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
         // different usages of AST objects. The definition can vary from one plugin to the next. Thus,
         // when equality must take on a different meaning it must be dealt with at the container level.
         return super.equals(obj);
+    }
+
+    @Override
+    public final String toString() {
+        // this doesn't have to be final...it's just final as a reminder that usually it shouldn't be added because this
+        // default implementation is good enough.
+        return As.string(this).fields().toString();
     }
 }

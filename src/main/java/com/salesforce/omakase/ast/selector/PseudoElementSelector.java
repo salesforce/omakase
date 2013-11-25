@@ -108,7 +108,6 @@ public final class PseudoElementSelector extends AbstractSelectorPart implements
 
     @Override
     protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new PseudoElementSelector(name);
     }
 }

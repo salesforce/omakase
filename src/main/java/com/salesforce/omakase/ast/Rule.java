@@ -127,7 +127,6 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        // TESTME
         super.propagateBroadcast(broadcaster);
         selectors.propagateBroadcast(broadcaster);
         declarations.propagateBroadcast(broadcaster);
@@ -196,7 +195,6 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
 
     @Override
     protected Rule makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         Rule copy = new Rule();
         for (Selector selector : selectors) {
             copy.selectors().append(selector.copy(prefix, support));

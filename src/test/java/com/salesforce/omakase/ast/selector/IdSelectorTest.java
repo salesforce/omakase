@@ -49,4 +49,10 @@ public class IdSelectorTest {
         IdSelector id = new IdSelector(1, 1, "test");
         assertThat(StyleWriter.compressed().writeSnippet(id)).isEqualTo("#test");
     }
+
+    @Test
+    public void copy() {
+        IdSelector id = new IdSelector("test");
+        assertThat(((IdSelector)id.copy()).name()).isEqualTo("test");
+    }
 }

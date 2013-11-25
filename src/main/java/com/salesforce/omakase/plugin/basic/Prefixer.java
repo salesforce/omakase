@@ -39,6 +39,8 @@ import java.util.Set;
 import static com.salesforce.omakase.data.Browser.*;
 
 /**
+ * TODO only work on stuff already refined.
+ *
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
  * selectors.
  * <p/>
@@ -275,7 +277,7 @@ public final class Prefixer implements Plugin {
         if (atRule.isDetached() || atRule.name().startsWith("-") || !PrefixInfo.hasAtRule(atRule.name())) return;
 
         // gather all required prefixes for the at-rule
-        Set<Prefix> required = support.prefixesForFunction(atRule.name());
+        Set<Prefix> required = support.prefixesForAtRule(atRule.name());
 
         // find all prefixed at-rules in the stylesheet for the same name
         Multimap<Prefix, AtRule> equivalents = Equivalents.prefixedAtRules(atRule);

@@ -24,6 +24,7 @@ import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -64,6 +65,37 @@ public class RuleTest {
     public void asAtRuleAlwaysAbsent() {
         Rule rule = new Rule();
         assertThat(rule.asAtRule().isPresent()).isFalse();
+    }
+
+    @Test
+    public void propagatesBroadcast() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+
+        rule.selectors().append(s);
+        rule.declarations().append(d);
+
+        assertThat(s.status() == Status.UNBROADCASTED);
+        assertThat(d.status() == Status.UNBROADCASTED);
+
+        rule.propagateBroadcast(new StatusChangingBroadcaster());
+
+        assertThat(s.status() != Status.UNBROADCASTED);
+        assertThat(d.status() != Status.UNBROADCASTED);
+    }
+
+    @Test
+    public void copy() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.selectors().append(s);
+        rule.declarations().append(d);
+
+        Rule copy = (Rule)rule.copy();
+        assertThat(copy.selectors()).hasSize(1);
+        assertThat(copy.declarations()).hasSize(1);
     }
 
     @Test

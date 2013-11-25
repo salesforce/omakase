@@ -252,8 +252,6 @@ public final class SupportMatrix {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets all prefixes required for the given at-rule (e.g., "keyframes"), according to the supported browser versions.
      *
      * @param name
@@ -261,7 +259,7 @@ public final class SupportMatrix {
      *
      * @return The set of required prefixes.
      */
-    public Set<Prefix> prefixesForAtRules(String name) {
+    public Set<Prefix> prefixesForAtRule(String name) {
         Set<Prefix> required = Sets.newHashSet();
 
         for (Browser browser : supportedBrowsers()) {
@@ -305,8 +303,6 @@ public final class SupportMatrix {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets whether the given {@link Prefix} is required for the given at-rule, according to the supported browser versions.
      *
      * @param prefix
@@ -317,7 +313,7 @@ public final class SupportMatrix {
      * @return True if the at-rule requires the given prefix.
      */
     public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
-        return PrefixInfo.hasAtRule(name) && prefixesForAtRules(name).contains(prefix);
+        return PrefixInfo.hasAtRule(name) && prefixesForAtRule(name).contains(prefix);
     }
 
     @Override

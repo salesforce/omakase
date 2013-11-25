@@ -17,12 +17,13 @@
 package com.salesforce.omakase.ast.extended;
 
 import com.salesforce.omakase.writer.StyleWriter;
-import org.fest.assertions.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link UnquotedIEFilter}.
@@ -37,12 +38,18 @@ public class UnquotedIEFilterTest {
     @Test
     public void testGetContent() {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        Assertions.assertThat(ief.content()).isEqualTo(FILTER);
+        assertThat(ief.content()).isEqualTo(FILTER);
     }
 
     @Test
     public void write() throws IOException {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        Assertions.assertThat(StyleWriter.compressed().writeSnippet(ief)).isEqualTo(FILTER);
+        assertThat(StyleWriter.compressed().writeSnippet(ief)).isEqualTo(FILTER);
+    }
+
+    @Test
+    public void copy() {
+        UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
+        assertThat(((UnquotedIEFilter)ief.copy()).content()).isEqualTo(ief.content());
     }
 }

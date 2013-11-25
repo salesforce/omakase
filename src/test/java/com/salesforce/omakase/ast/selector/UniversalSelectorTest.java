@@ -41,4 +41,9 @@ public class UniversalSelectorTest {
     public void write() throws IOException {
         assertThat(StyleWriter.compressed().writeSnippet(new UniversalSelector())).isEqualTo("*");
     }
+
+    @Test
+    public void copy() {
+        assertThat(new UniversalSelector().copy()).isInstanceOf(UniversalSelector.class);
+    }
 }

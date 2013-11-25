@@ -59,7 +59,6 @@ public final class RawSyntax extends AbstractSyntax<RawSyntax> {
      * @return The raw content.
      */
     public String content() {
-        // TESTME
         return content;
     }
 
@@ -71,7 +70,6 @@ public final class RawSyntax extends AbstractSyntax<RawSyntax> {
 
     @Override
     protected RawSyntax makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new RawSyntax(-1, -1, content);
     }
 }

@@ -149,8 +149,6 @@ public final class Values {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Filters the terms in the given {@link PropertyValue} to only the ones of the given class type.
      * <p/>
      * Example:
@@ -176,8 +174,6 @@ public final class Values {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Splits the {@link PropertyValue} at the given operator.
      * <p/>
      * For example, given a {@link PropertyValue} with the following:
@@ -204,17 +200,15 @@ public final class Values {
             if (member instanceof Operator && ((Operator)member).type() == operatorType) {
                 current = new PropertyValue();
                 split.add(current);
-            } else {
-                current.append(member);
+                continue;
             }
+            current.append(member);
         }
 
         return split;
     }
 
     /**
-     * TESTME
-     * <p/>
      * Joins multiple {@link PropertyValue}s together with the given {@link OperatorType}.
      *
      * @param operatorType

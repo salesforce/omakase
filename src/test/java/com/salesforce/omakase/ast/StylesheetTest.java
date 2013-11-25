@@ -58,4 +58,12 @@ public class StylesheetTest {
 
         assertThat(StyleWriter.compressed().writeSnippet(rule)).isEqualTo(".class{display:none}");
     }
+
+    @Test
+    public void copy() {
+        Stylesheet sheet = new Stylesheet();
+        sheet.append(new Rule());
+        sheet.append(new Rule());
+        assertThat(((Stylesheet)sheet.copy()).statements()).hasSameSizeAs(sheet.statements());
+    }
 }

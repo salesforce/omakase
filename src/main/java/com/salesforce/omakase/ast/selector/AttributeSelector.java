@@ -181,7 +181,6 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
 
     @Override
     protected AttributeSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         AttributeSelector copy = new AttributeSelector(attribute);
         if (matchType.isPresent()) {
             copy.match(matchType.get(), value.get());

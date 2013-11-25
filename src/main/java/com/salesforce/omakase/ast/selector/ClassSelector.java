@@ -102,7 +102,6 @@ public final class ClassSelector extends AbstractSelectorPart implements SimpleS
 
     @Override
     protected ClassSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new ClassSelector(name);
     }
 }

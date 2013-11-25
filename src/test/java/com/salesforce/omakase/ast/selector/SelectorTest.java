@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
@@ -160,5 +161,19 @@ public class SelectorTest {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.detach();
         assertThat(selector.isWritable()).isFalse();
+    }
+
+    @Test
+    public void copy() {
+        ClassSelector cs = new ClassSelector("test");
+        Combinator combinator = Combinator.descendant();
+        IdSelector id = new IdSelector("id");
+        selector = new Selector(cs, combinator, id);
+
+        Selector copy = selector.copy();
+        assertThat(copy.parts()).hasSize(3);
+        assertThat(Iterables.get(copy.parts(), 0)).isInstanceOf(ClassSelector.class);
+        assertThat(Iterables.get(copy.parts(), 1)).isInstanceOf(Combinator.class);
+        assertThat(Iterables.get(copy.parts(), 2)).isInstanceOf(IdSelector.class);
     }
 }

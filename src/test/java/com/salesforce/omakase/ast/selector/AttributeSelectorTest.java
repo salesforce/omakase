@@ -136,4 +136,24 @@ public class AttributeSelectorTest {
         selector.match(AttributeMatchType.PREFIXMATCH, "%^&$");
         assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=\"%^&$\"]");
     }
+
+    @Test
+    public void copyNoMatchTypeorMatchValue() {
+        selector = new AttributeSelector("class");
+        AttributeSelector copy = (AttributeSelector)selector.copy();
+        assertThat(copy.attribute()).isEqualTo("class");
+        assertThat(copy.matchType().isPresent()).isFalse();
+        assertThat(copy.value().isPresent()).isFalse();
+    }
+
+    @Test
+    public void copyMatchTypeAndValue() {
+        selector = new AttributeSelector("class");
+        selector.match(AttributeMatchType.EQUALS, "test");
+
+        AttributeSelector copy = (AttributeSelector)selector.copy();
+        assertThat(copy.attribute()).isEqualTo("class");
+        assertThat(copy.matchType().get()).isSameAs(AttributeMatchType.EQUALS);
+        assertThat(copy.value().get()).isEqualTo("test");
+    }
 }

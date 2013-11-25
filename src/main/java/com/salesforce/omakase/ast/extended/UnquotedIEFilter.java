@@ -79,7 +79,6 @@ public final class UnquotedIEFilter extends AbstractTerm {
 
     @Override
     protected UnquotedIEFilter makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new UnquotedIEFilter(-1, -1, content);
     }
 }

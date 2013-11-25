@@ -102,7 +102,6 @@ public final class IdSelector extends AbstractSelectorPart implements SimpleSele
 
     @Override
     protected IdSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new IdSelector(name);
     }
 }

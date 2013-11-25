@@ -16,15 +16,13 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.declaration.HexColorValue;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.QuotationMode;
-import com.salesforce.omakase.ast.declaration.StringValue;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.data.Keyword;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -103,5 +101,102 @@ public class ValuesTest {
     public void asStringNotOnlyOneInPropertyValue() {
         value = PropertyValue.ofTerms(OperatorType.SPACE, StringValue.of(QuotationMode.DOUBLE, "h"), NumericalValue.of(1));
         assertThat(Values.asString(value).isPresent()).isFalse();
+    }
+
+    @Test
+    public void filter() {
+        NumericalValue t1 = NumericalValue.of(1, "px");
+        KeywordValue t2 = KeywordValue.of("solid");
+        KeywordValue t3 = KeywordValue.of("red");
+
+        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, t1, t2, t3);
+
+        Iterable<KeywordValue> filtered = Values.filter(KeywordValue.class, pv);
+        assertThat(filtered).containsExactly(t2, t3);
+    }
+
+    @Test
+    public void filterWhenNoneMatching() {
+        NumericalValue t1 = NumericalValue.of(1, "px");
+        KeywordValue t2 = KeywordValue.of("solid");
+        KeywordValue t3 = KeywordValue.of("red");
+
+        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, t1, t2, t3);
+
+        Iterable<FunctionValue> filtered = Values.filter(FunctionValue.class, pv);
+        assertThat(filtered).isEmpty();
+    }
+
+    @Test
+    public void splitNotPresent() {
+        PropertyValue pv = new PropertyValue();
+        pv.append(NumericalValue.of(1));
+        List<PropertyValue> split = Values.split(OperatorType.SLASH, pv);
+        assertThat(split).hasSize(1);
+        assertThat(split.get(0)).isNotSameAs(pv);
+    }
+
+    @Test
+    public void splitOnePresent() {
+        PropertyValue pv = new PropertyValue();
+        pv.append(NumericalValue.of(1));
+        pv.append(NumericalValue.of(1));
+        pv.append(OperatorType.SLASH);
+        pv.append(NumericalValue.of(2));
+        pv.append(NumericalValue.of(2));
+        pv.append(NumericalValue.of(2));
+
+        List<PropertyValue> split = Values.split(OperatorType.SLASH, pv);
+        assertThat(split).hasSize(2);
+        assertThat(split.get(0).members()).hasSize(2);
+        assertThat(split.get(1).members()).hasSize(3);
+    }
+
+    @Test
+    public void splitTwoPresent() {
+        PropertyValue pv = new PropertyValue();
+        pv.append(NumericalValue.of(1));
+        pv.append(OperatorType.SPACE);
+        pv.append(NumericalValue.of(2));
+        pv.append(OperatorType.SPACE);
+        pv.append(NumericalValue.of(3));
+        pv.append(NumericalValue.of(3));
+        pv.append(OperatorType.COMMA);
+        pv.append(NumericalValue.of(4));
+        pv.append(OperatorType.COMMA);
+        pv.append(NumericalValue.of(5));
+        pv.append(NumericalValue.of(5));
+
+        List<PropertyValue> split = Values.split(OperatorType.COMMA, pv);
+        assertThat(split).hasSize(3);
+        assertThat(split.get(0).members()).hasSize(6);
+        assertThat(split.get(1).members()).hasSize(1);
+        assertThat(split.get(2).members()).hasSize(2);
+    }
+
+    @Test
+    public void joinOne() {
+        PropertyValue pv = PropertyValue.of(new NumericalValue(1));
+        PropertyValue join = Values.join(OperatorType.SLASH, Lists.newArrayList(pv));
+        assertThat(join).isNotSameAs(pv);
+        assertThat(join.members()).hasSize(1);
+        assertThat(Iterables.get(join.members(), 0)).isInstanceOf(NumericalValue.class);
+    }
+
+    @Test
+    public void joinSeveral() {
+        PropertyValue pv1 = PropertyValue.of(new NumericalValue(1));
+        PropertyValue pv2 = PropertyValue.of(new NumericalValue(2));
+        PropertyValue pv3 = PropertyValue.ofTerms(OperatorType.COMMA, new NumericalValue(3), new NumericalValue(3));
+
+        PropertyValue join = Values.join(OperatorType.SLASH, Lists.newArrayList(pv1, pv2, pv3));
+        assertThat(join.members()).hasSize(7);
+        assertThat(Iterables.get(join.members(), 0)).isInstanceOf(NumericalValue.class);
+        assertThat(Iterables.get(join.members(), 1)).isInstanceOf(Operator.class);
+        assertThat(Iterables.get(join.members(), 2)).isInstanceOf(NumericalValue.class);
+        assertThat(Iterables.get(join.members(), 3)).isInstanceOf(Operator.class);
+        assertThat(Iterables.get(join.members(), 4)).isInstanceOf(NumericalValue.class);
+        assertThat(Iterables.get(join.members(), 5)).isInstanceOf(Operator.class);
+        assertThat(Iterables.get(join.members(), 6)).isInstanceOf(NumericalValue.class);
     }
 }

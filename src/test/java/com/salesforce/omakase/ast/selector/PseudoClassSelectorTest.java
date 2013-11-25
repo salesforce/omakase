@@ -99,4 +99,20 @@ public class PseudoClassSelectorTest {
         PseudoClassSelector s = new PseudoClassSelector("nth-child", "2n+1");
         assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":nth-child(2n+1)");
     }
+
+    @Test
+    public void copyWithArgs() {
+        PseudoClassSelector s = new PseudoClassSelector("nth-child", "-2n+1");
+        PseudoClassSelector copy = (PseudoClassSelector)s.copy();
+        assertThat(copy.name()).isEqualTo(s.name());
+        assertThat(copy.args().get()).isEqualTo(s.args().get());
+    }
+
+    @Test
+    public void copyNoArgs() {
+        PseudoClassSelector s = new PseudoClassSelector("hover");
+        PseudoClassSelector copy = (PseudoClassSelector)s.copy();
+        assertThat(copy.name()).isEqualTo(s.name());
+        assertThat(copy.args().isPresent()).isFalse();
+    }
 }

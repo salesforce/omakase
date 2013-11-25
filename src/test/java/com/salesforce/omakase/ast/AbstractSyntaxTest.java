@@ -34,30 +34,49 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class AbstractSyntaxTest {
     @Test
     public void testLine() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         assertThat(t.line()).isEqualTo(10);
     }
 
     @Test
     public void testColumn() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         assertThat(t.column()).isEqualTo(15);
     }
 
     @Test
     public void testHasSourcePositionTrue() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         assertThat(t.hasSourcePosition()).isTrue();
     }
 
     @Test
     public void testHasSourcePositionFalse() throws Exception {
-        assertThat(new TestClass().hasSourcePosition()).isFalse();
+        assertThat(new TestSyntax().hasSourcePosition()).isFalse();
+    }
+
+    @Test
+    public void defaultIsWritable() {
+        assertThat(new TestSyntax().isWritable()).isTrue();
+    }
+
+    @Test
+    public void testCopy() {
+        TestSyntax t = new TestSyntax("name");
+        t.comments(Lists.newArrayList("comment"));
+        t.orphanedComments(Lists.newArrayList("orphaned comment"));
+        TestSyntax copy = t.copy();
+
+        assertThat(copy.name).isEqualTo("name");
+        assertThat(copy.comments()).hasSize(1);
+        assertThat(copy.comments().get(0).content()).isEqualTo("comment");
+        assertThat(copy.orphanedComments()).hasSize(1);
+        assertThat(copy.orphanedComments().get(0).content()).isEqualTo("orphaned comment");
     }
 
     @Test
     public void testComments() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         t.comments(Lists.newArrayList("my comment"));
         assertThat(t.comments()).hasSize(1);
         assertThat(Iterables.get(t.comments(), 0).content()).isEqualTo("my comment");
@@ -65,25 +84,59 @@ public class AbstractSyntaxTest {
 
     @Test
     public void testCommentsEmpty() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         assertThat(t.comments()).isEmpty();
     }
 
     @Test
+    public void testCommentsFromOtherSyntax() {
+        TestSyntax t = new TestSyntax();
+        t.comments(Lists.newArrayList("test"));
+
+        TestSyntax t2 = new TestSyntax();
+        t2.comments(t);
+        assertThat(t.comments().get(0).content()).isEqualTo("test");
+    }
+
+    @Test
+    public void testOrphanedComments() throws Exception {
+        TestSyntax t = new TestSyntax(10, 15);
+        t.orphanedComments(Lists.newArrayList("my comment"));
+        assertThat(t.orphanedComments()).hasSize(1);
+        assertThat(Iterables.get(t.orphanedComments(), 0).content()).isEqualTo("my comment");
+    }
+
+    @Test
+    public void testOrphanedCommentsEmpty() throws Exception {
+        TestSyntax t = new TestSyntax(10, 15);
+        assertThat(t.orphanedComments()).isEmpty();
+    }
+
+    @Test
+    public void testOrphanedCommentsFromOtherSyntax() {
+        TestSyntax t = new TestSyntax();
+        t.orphanedComments(Lists.newArrayList("test"));
+
+        TestSyntax t2 = new TestSyntax();
+        t2.orphanedComments(t);
+        assertThat(t.orphanedComments().get(0).content()).isEqualTo("test");
+    }
+
+    @Test
     public void defaultStatusIsUnbroadcasted() {
-        assertThat(new TestClass(10, 10).status()).isSameAs(Status.UNBROADCASTED);
+        assertThat(new TestSyntax(10, 10).status()).isSameAs(Status.UNBROADCASTED);
     }
 
     @Test
     public void testStatus() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         t.status(Status.PROCESSED);
         assertThat(t.status()).isSameAs(Status.PROCESSED);
     }
 
     @Test
     public void testPropagateBroadcastUnbroadcasted() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         t.propagateBroadcast(broadcaster);
         assertThat(broadcaster.all()).hasSize(1);
@@ -91,23 +144,30 @@ public class AbstractSyntaxTest {
 
     @Test
     public void testPropagateBroadcastAlreadyBroadcasted() throws Exception {
-        TestClass t = new TestClass(10, 15);
+        TestSyntax t = new TestSyntax(10, 15);
         t.status(Status.PROCESSED);
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         t.propagateBroadcast(broadcaster);
         assertThat(broadcaster.all()).isEmpty();
     }
 
-    public static final class TestClass extends AbstractSyntax<TestClass> {
-        public TestClass() {}
+    public static final class TestSyntax extends AbstractSyntax<TestSyntax> {
+        private String name;
 
-        public TestClass(int line, int column) {
+        public TestSyntax() {
+        }
+
+        public TestSyntax(String name) {
+            this.name = name;
+        }
+
+        public TestSyntax(int line, int column) {
             super(line, column);
         }
 
         @Override
-        protected TestClass makeCopy(Prefix prefix, SupportMatrix support) {
-            throw new UnsupportedOperationException("not copyable");
+        protected TestSyntax makeCopy(Prefix prefix, SupportMatrix support) {
+            return new TestSyntax(name);
         }
 
         @Override

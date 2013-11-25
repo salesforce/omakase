@@ -73,4 +73,10 @@ public class CombinatorTest {
         Combinator c = Combinator.general();
         assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo("~");
     }
+
+    @Test
+    public void copy() {
+        Combinator c = Combinator.general();
+        assertThat(c.copy().type()).isSameAs(c.type());
+    }
 }

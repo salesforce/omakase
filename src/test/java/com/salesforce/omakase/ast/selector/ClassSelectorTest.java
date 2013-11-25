@@ -51,4 +51,10 @@ public class ClassSelectorTest {
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(cs)).isEqualTo(".test");
     }
+
+    @Test
+    public void copy() {
+        ClassSelector cs = new ClassSelector("test");
+        assertThat(((ClassSelector)cs.copy()).name()).isEqualTo("test");
+    }
 }

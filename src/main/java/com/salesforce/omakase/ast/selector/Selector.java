@@ -181,7 +181,6 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     @Override
     protected Selector makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         List<SelectorPart> copiedParts = Lists.newArrayList();
 
         for (SelectorPart part : parts) {

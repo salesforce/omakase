@@ -290,7 +290,7 @@ public class PrefixerUnitTargetedTest {
         assertThat(process(original, animationSetup())).isEqualTo(expected);
     }
 
-//    @Test
+    @Test
     public void keyframes() {
         String original = "@keyframes test {\n" +
             "  from {top: 30px}\n" +

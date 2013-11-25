@@ -312,11 +312,11 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             // expression
             if (rawExpression.isPresent()) {
                 writer.writeInner(rawExpression.get(), appendable);
+                appendable.spaceIf(rawBlock.isPresent() && !writer.isCompressed());
             }
 
             // block
             if (rawBlock.isPresent()) {
-                appendable.spaceIf(!writer.isCompressed());
                 appendable.append('{');
                 appendable.indentIf(writer.isVerbose());
                 appendable.newlineIf(writer.isVerbose());

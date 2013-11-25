@@ -65,7 +65,6 @@ public final class UniversalSelector extends AbstractSelectorPart implements Sim
 
     @Override
     protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new UniversalSelector();
     }
 }

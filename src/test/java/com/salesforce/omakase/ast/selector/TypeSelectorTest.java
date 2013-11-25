@@ -58,4 +58,10 @@ public class TypeSelectorTest {
         TypeSelector ts = new TypeSelector(1, 1, "p");
         assertThat(StyleWriter.compressed().writeSnippet(ts)).isEqualTo("p");
     }
+
+    @Test
+    public void copy() {
+        TypeSelector ts = new TypeSelector(1, 1, "p");
+        assertThat(((TypeSelector)ts.copy()).name()).isEqualTo(ts.name());
+    }
 }

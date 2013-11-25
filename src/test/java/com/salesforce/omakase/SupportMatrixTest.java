@@ -208,4 +208,28 @@ public class SupportMatrixTest {
         support.browser(Browser.OPERA, 12);
         assertThat(support.requiresPrefixForFunction(Prefix.O, "calc")).isFalse();
     }
+
+    @Test
+    public void prefixesForAtRule() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
+    public void requiresPrefixForAtRuleTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "keyframes")).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForAtRuleFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "bop")).isFalse();
+    }
 }

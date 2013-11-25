@@ -103,7 +103,6 @@ public final class TypeSelector extends AbstractSelectorPart implements SimpleSe
 
     @Override
     protected TypeSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         return new TypeSelector(name);
     }
 }

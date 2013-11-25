@@ -96,4 +96,11 @@ public class GenericAtRuleBlockTest {
         GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
         assertThat(StyleWriter.compressed().writeSnippet(block)).isEqualTo("{.test{display:none}}");
     }
+
+    @Test
+    public void copy() {
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock copy = (GenericAtRuleBlock)block.copy();
+        assertThat(copy.statements()).hasSameSizeAs(block.statements());
+    }
 }
