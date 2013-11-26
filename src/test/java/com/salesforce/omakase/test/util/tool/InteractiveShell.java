@@ -16,6 +16,9 @@
 
 package com.salesforce.omakase.test.util.tool;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.error.FatalException;
@@ -25,142 +28,306 @@ import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * Interactive shell for css parsing.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "ConstantConditions"})
 public class InteractiveShell {
-    private final Scanner console = new Scanner(System.in);
-    private final StyleWriter writer = StyleWriter.inline();
 
-    private StringBuilder builder = new StringBuilder(512);
-    private Prefixer prefixer;
-    private boolean continuous;
-
-    public void run() throws IOException {
+    /**
+     * Starts the shell.
+     *
+     * @throws Exception
+     *     if something bad happens.
+     */
+    public void run() throws Exception {
         System.out.println(Colors.yellow("Omakase Interactive Shell"));
-        System.out.println("enter " + Colors.red("!") + " on a new line to finish");
-        System.out.println("enter " + Colors.red("!c") + " for continuous mode (ctrl+c to exit)");
-        System.out.println("enter " + Colors.red("!verbose") + " for verbose output");
-        System.out.println("enter " + Colors.red("!inline") + " for inline output");
-        System.out.println("enter " + Colors.red("!compressed") + " for compressed output");
-        System.out.println("enter " + Colors.red("!prefix-current") + " for default prefixing");
-        System.out.println("enter " + Colors.red("!prefix-all") + " for all prefixing");
-        System.out.println("enter " + Colors.red("!prefix-prune") + " to enable prefix pruning");
-        System.out.println("enter " + Colors.red("!prefix-rearrange") + " to enable prefix rearranging");
-        System.out.println("enter " + Colors.red("!prefix-off") + " to remove prefixing support");
 
+        // print out options
+        for (Command command : Command.values()) {
+            System.out.println("enter " + Colors.red(command.key) + " " + command.description);
+        }
         System.out.println();
 
-        do {
-            loop();
-            output();
-            if (continuous) System.out.println("---------------------------\n");
-        } while (continuous);
+        // start the loop
+        new Context().start();
     }
 
-    private void loop() {
-        builder = new StringBuilder(512);
+    /** Options for css processing */
+    @SuppressWarnings({"NonFinalFieldInEnum", "FieldMayBeFinal"})
+    private enum Command {
 
-        while (true) {
-            String next = console.nextLine();
-
-            if (next.startsWith("!")) {
-                if (next.equals("!")) {
-                    break;
-                } else if (next.equals("!c")) {
-                    continuous = !continuous;
-                    System.out.print(Colors.grey("continous mode is ") + Colors.red(continuous ? "on" : "off"));
-                    if (continuous) {
-                        System.out.print(Colors.grey(" (ctrl+c or !c again to stop)"));
-                    }
+        PROCESS("!", "on a new line to finish") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                try {
+                    System.out.println("\n----------result----------\n");
+                    String output = ctx.process();
+                    System.out.println(output);
+                    System.out.println();
+                } catch (FatalException e) {
+                    System.out.print(Colors.red(e.getMessage()));
                     System.out.println("\n");
-                } else if (next.equals("!verbose")) {
-                    writer.mode(WriterMode.VERBOSE);
-                    System.out.println(Colors.grey("switched to verbose output\n"));
-                } else if (next.equals("!inline")) {
-                    writer.mode(WriterMode.INLINE);
-                    System.out.println(Colors.grey("switched to inline output\n"));
-                } else if (next.equals("!compressed")) {
-                    writer.mode(WriterMode.COMPRESSED);
-                    System.out.println(Colors.grey("switched to compressed output\n"));
-                } else if (next.equals("!prefix-current")) {
-                    prefixer = Prefixer.defaultBrowserSupport();
-                    System.out.println(Colors.grey("added prefixing support\n"));
-                } else if (next.equals("!prefix-all")) {
-                    prefixer = Prefixer.customBrowserSupport();
-                    prefixer.support().all(Browser.CHROME);
-                    prefixer.support().all(Browser.FIREFOX);
-                    prefixer.support().all(Browser.SAFARI);
-                    prefixer.support().all(Browser.OPERA);
-                    System.out.println(Colors.grey("added prefixing support\n"));
-                } else if (next.equals("!prefix-prune") && prefixer != null) {
-                    prefixer.prune(!prefixer.prune());
-                    System.out.print(Colors.grey("prefix pruning is ") + Colors.red(prefixer.prune() ? "on" : "off"));
-                    if (prefixer.prune()) {
-                        System.out.print(Colors.grey(" (!prefix-prune again to turn off)"));
-                    }
-                    System.out.println("\n");
-                } else if (next.equals("!prefix-rearrange")) {
-                    prefixer.rearrange(!prefixer.rearrange());
-                    System.out.print(Colors.grey("prefix rearranging is ") + Colors.red(prefixer.rearrange() ? "on" : "off"));
-                    if (prefixer.rearrange()) {
-                        System.out.print(Colors.grey(" (!prefix-rearrange again to turn off)"));
-                    }
-                    System.out.println("\n");
-                } else if (next.equals("!prefix-off")) {
-                    prefixer = null;
-                    System.out.println(Colors.grey("automatic prefixing turned off\n"));
-                }
-            } else {
-                boolean quickExit = false;
-
-                if (next.endsWith("!")) {
-                    next = next.substring(0, next.length() - 1);
-                    quickExit = true;
                 }
 
-                builder.append(next).append("\n");
-
-                if (quickExit) {
-                    break;
+                ctx.terminate = true;
+                if (Command.CONTINUOUS.on) {
+                    System.out.println(Colors.grey("-----------new------------\n"));
+                    ctx.start();
                 }
             }
+        },
+
+        CONTINUOUS("!c", "for continuous mode (ctrl+c to exit)") {
+            @Override
+            void execute(Context ctx) {
+                on = !on;
+                System.out.print(Colors.grey("continous mode is ") + Colors.red(on ? "on" : "off"));
+                if (on) System.out.print(Colors.grey(" (ctrl+c or !c again to stop)"));
+                System.out.println("\n");
+            }
+        },
+
+        VERBOSE("!verbose", "for verbose output") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                ctx.writer.mode(WriterMode.VERBOSE);
+                System.out.println(Colors.grey("switched to verbose output\n"));
+            }
+        },
+        INLINE("!inline", "for inline output") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                ctx.writer.mode(WriterMode.INLINE);
+                System.out.println(Colors.grey("switched to inline output\n"));
+            }
+        },
+
+        COMPRESSED("!compressed", "for compressed output") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                ctx.writer.mode(WriterMode.COMPRESSED);
+                System.out.println(Colors.grey("switched to compressed output\n"));
+            }
+        },
+
+        PREFIX_CURRENT("!prefix-current", "for default prefixing") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                ctx.prefixer = Prefixer.defaultBrowserSupport();
+                System.out.println(Colors.grey("added prefixing support\n"));
+            }
+        },
+
+        PREFIX_ALL("!prefix-all", "for all prefixing") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                ctx.prefixer = Prefixer.customBrowserSupport();
+                ctx.prefixer.support().all(Browser.CHROME);
+                ctx.prefixer.support().all(Browser.FIREFOX);
+                ctx.prefixer.support().all(Browser.SAFARI);
+                ctx.prefixer.support().all(Browser.OPERA);
+                System.out.println(Colors.grey("added prefixing support\n"));
+            }
+        },
+        PREFIX_PRUNE("!prefix-prune", "to enable prefix pruning") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                if (ctx.prefixer == null) return;
+                ctx.prefixer.prune(!ctx.prefixer.prune());
+                System.out.print(Colors.grey("prefix pruning is ") + Colors.red(ctx.prefixer.prune() ? "on" : "off"));
+                if (ctx.prefixer.prune()) {
+                    System.out.print(Colors.grey(" (!prefix-prune again to turn off)"));
+                }
+                System.out.println("\n");
+            }
+        },
+
+        PREFIX_REARRANGE("!prefix-rearrange", "to enable prefix rearranging") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                if (ctx.prefixer == null) return;
+                ctx.prefixer.rearrange(!ctx.prefixer.rearrange());
+                System.out.print(Colors.grey("prefix rearranging is ") + Colors.red(ctx.prefixer.rearrange() ? "on" : "off"));
+                if (ctx.prefixer.rearrange()) {
+                    System.out.print(Colors.grey(" (!prefix-rearrange again to turn off)"));
+                }
+                System.out.println("\n");
+            }
+        },
+
+        PREFIX_OFF("!prefix-off", "to remove prefixing support") {
+            @Override
+            void execute(Context ctx) throws Exception {
+                ctx.prefixer = null;
+            }
+        },
+
+        SUBLIME("!subl", "to use the sublime text editor (subl)") {
+            @Override
+            void execute(final Context ctx) throws IOException, InterruptedException {
+                System.out.println("Sublime Text edit mode. File will be refreshed with results on save.\n");
+
+                FileWatcher watcher = new FileWatcher(ctx);
+                Timer timer = new Timer(true);
+                timer.schedule(watcher, 0, 50);
+
+                Runtime.getRuntime().exec("subl " + watcher.file() + ":2");
+            }
+        },
+
+        MATE("!mate", "to use the textmate editor (mate)") {
+            @Override
+            void execute(final Context ctx) throws IOException, InterruptedException {
+                System.out.println("Textmate edit mode. File will be refreshed with results on save.\n");
+
+                FileWatcher watcher = new FileWatcher(ctx);
+                Timer timer = new Timer(true);
+                timer.schedule(watcher, 0, 50);
+
+                Runtime.getRuntime().exec("mate " + watcher.file() + " --line 2");
+            }
+        };
+
+        /** reverse lookup map */
+        static final Map<String, Command> map;
+
+        static {
+            Builder<String, Command> builder = ImmutableMap.builder();
+            for (Command c : Command.values()) builder.put(c.key, c);
+            map = builder.build();
+        }
+
+        final String key;
+        final String description;
+        boolean on;
+
+        Command(String key, String description) {
+            this.key = key;
+            this.description = description;
+        }
+
+        abstract void execute(Context ctx) throws Exception;
+
+        public static Optional<Command> get(String command) {
+            return Optional.fromNullable(map.get(command));
         }
     }
 
-    private void output() throws IOException {
-        String input = builder.toString().trim();
-        if (input.isEmpty()) return;
+    /** handles event loop and css processing */
+    private static final class Context {
+        private final Scanner console = new Scanner(System.in);
 
-        System.out.println("\n---------------------------");
-        if (!continuous) System.out.println();
+        protected StringBuilder buffer = new StringBuilder(512);
+        protected StyleWriter writer = StyleWriter.inline();
+        protected Prefixer prefixer;
+        protected boolean terminate;
 
-        try {
+        public void start() throws Exception {
+            buffer = new StringBuilder(512);
+            terminate = false;
+
+            while (true) {
+                String next = console.nextLine();
+
+                if (next.startsWith("!")) {
+                    Optional<Command> command = Command.get(next);
+                    if (command.isPresent()) {
+                        command.get().execute(this);
+                        if (terminate) break;
+                    } else {
+                        System.out.println(Colors.grey("Unknown command '" + next + "'\n"));
+                    }
+                } else {
+                    buffer.append(next).append("\n");
+                }
+            }
+        }
+
+        public String process() {
+            String input = buffer.toString().trim();
+            if (input.isEmpty()) return "";
+
             Omakase.Request request = Omakase.source(input);
             request.add(new StandardValidation());
             request.add(new UnquotedIEFilterPlugin());
             request.add(writer);
             if (prefixer != null) request.add(prefixer);
             request.process();
-        } catch (FatalException e) {
-            System.out.print(Colors.red(e.getMessage()));
-            System.out.println("\n");
-            System.exit(1);
+
+            return writer.write();
+        }
+    }
+
+    /** used by file editor commands */
+    private static final class FileWatcher extends TimerTask {
+        private static final String INPUT = "/*------------input------------*/";
+        private static final String RESULT = "/*------------result-----------*/";
+
+        private final File file;
+        private final Context ctx;
+        private long lastMod;
+
+        public FileWatcher(Context ctx) throws IOException {
+            this.ctx = ctx;
+
+            file = File.createTempFile("omakase-", ".css");
+            file.deleteOnExit();
+
+            String initial = INPUT + "\n" + ctx.buffer + "\n\n" + RESULT;
+            Files.write(initial, file, UTF_8);
+
+            lastMod = file.lastModified();
         }
 
-        if (continuous) System.out.println(Colors.BLUE);
-        writer.writeTo(System.out);
-        if (continuous) {
-            System.out.println(Colors.RESET + "\n");
-        } else {
-            System.out.println("\n");
+        public File file() {
+            return file;
         }
 
+        @Override
+        public void run() {
+            long newLastMod = file.lastModified();
+            if (lastMod != newLastMod) {
+                lastMod = newLastMod;
+                try {
+                    // grab and format the input from the editor
+                    String input = Files.toString(file, UTF_8);
+                    int index = input.indexOf(RESULT);
+                    if (index > -1) {
+                        input = input.substring(0, input.indexOf(RESULT, index));
+                    }
+                    input = input.trim();
+                    ctx.buffer = new StringBuilder(input);
+
+                    // process the css and place output into the editor
+                    String output = "";
+                    try {
+                        output = ctx.process();
+                    } catch (FatalException e) {
+                        output = e.getMessage();
+                    }
+
+                    output = input + "\n\n" + RESULT + "\n" + output;
+                    Files.write(output, file, UTF_8);
+                    System.out.println(Colors.grey("File updated\n"));
+
+                    // reset the buffer
+                    ctx.buffer = new StringBuilder(512);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }
