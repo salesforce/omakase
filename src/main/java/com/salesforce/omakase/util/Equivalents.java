@@ -184,7 +184,7 @@ public final class Equivalents {
         }
 
         // look for prefixed versions appearing after the unprefixed one
-        Optional<Statement> next = unprefixed.previous();
+        Optional<Statement> next = unprefixed.next();
 
         while (next.isPresent() && next.get().asAtRule().isPresent()) {
             AtRule atRule = next.get().asAtRule().get();

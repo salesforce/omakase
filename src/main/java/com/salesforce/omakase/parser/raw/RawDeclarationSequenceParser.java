@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.parser.raw;
 
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
@@ -25,7 +26,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 /**
  * TESTME
  * <p/>
- * TODO description
+ * Parses a sequence of semi-colon delimited {@link Declaration}s.
  *
  * @author nmcwilliams
  */

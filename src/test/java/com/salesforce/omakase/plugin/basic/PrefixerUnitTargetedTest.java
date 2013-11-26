@@ -293,27 +293,23 @@ public class PrefixerUnitTargetedTest {
     @Test
     public void keyframes() {
         String original = "@keyframes test {\n" +
-            "  from {top: 30px}\n" +
-            "  50% {top: 50px}\n" +
-            "  to {top: 100px}\n" +
+            "  from {top:30px}\n" +
+            "  to {top:100px}\n" +
             "}\n";
 
-        String expected = "@keyframes test {\n" +
-            "  from {top: 30px}\n" +
-            "  50% {top: 50px}\n" +
-            "  to {top: 100px}\n" +
+        String expected = "@-moz-keyframes test {\n" +
+            "  from {top:30px}\n" +
+            "  to {top:100px}\n" +
             "}\n" +
-            "\n" +
-            "@-moz-keyframes test {\n" +
-            "  from {top: 30px}\n" +
-            "  50% {top: 50px}\n" +
-            "  to {top: 100px}\n" +
+            "@keyframes test {\n" +
+            "  from {top:30px}\n" +
+            "  to {top:100px}\n" +
             "}";
 
         assertThat(process(original, animationSetup())).isEqualTo(expected);
     }
 
-//    @Test
+    //    @Test
     public void keyframesWithInnerPrefixable() {
         fail("unimplemented");
     }
