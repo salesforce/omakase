@@ -28,15 +28,19 @@ import java.lang.reflect.Method;
  *
  * @author nmcwilliams
  */
-final class Subscription {
+final class Subscription implements Comparable<Subscription> {
+    @SuppressWarnings("StaticNonFinalField") private static int counter;
+
     private final SubscriptionPhase phase;
     private final Object subscriber;
     private final Method method;
+    private final Integer number;
 
     Subscription(SubscriptionPhase phase, Object subscriber, Method method) {
         this.phase = phase;
         this.subscriber = subscriber;
         this.method = method;
+        this.number = ++counter;
     }
 
     /**
@@ -101,5 +105,10 @@ final class Subscription {
     @Override
     public String toString() {
         return As.string(this).fields().toString();
+    }
+
+    @Override
+    public int compareTo(Subscription o) {
+        return number.compareTo(o.number);
     }
 }
