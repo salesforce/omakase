@@ -151,9 +151,10 @@ final class PrefixerHandlers {
     static final PrefixerHandler<Declaration> TRANSITION = new PrefixerHandler<Declaration>() {
         @Override
         public boolean handle(Declaration instance, boolean rearrange, boolean prune, SupportMatrix support) {
-            Property property = instance.propertyName().asProperty().get();
+            Optional<Property> property = instance.propertyName().asProperty();
+            if (!property.isPresent()) return false;
 
-            if (property == Property.TRANSITION || property == Property.TRANSITION_PROPERTY) {
+            if (property.get() == Property.TRANSITION || property.get() == Property.TRANSITION_PROPERTY) {
                 // try to find the first prefixed property name
                 for (KeywordValue keyword : Values.filter(KeywordValue.class, instance.propertyValue())) {
                     // check if the keyword is a property
