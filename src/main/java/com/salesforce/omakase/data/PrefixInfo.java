@@ -31,6 +31,7 @@ public final class PrefixInfo {
     private static final Multimap<Property, BrowserVersion> PROPERTIES;
     private static final Multimap<String, BrowserVersion> FUNCTIONS;
     private static final Multimap<String, BrowserVersion> AT_RULES;
+    private static final Multimap<String, BrowserVersion> SELECTORS;
 
     static {
         ImmutableSetMultimap.Builder<Property, BrowserVersion> builder = ImmutableSetMultimap.builder();
@@ -292,6 +293,14 @@ public final class PrefixInfo {
         AT_RULES = builder.build();
     }
 
+    static {
+        ImmutableSetMultimap.Builder<String, BrowserVersion> builder = ImmutableSetMultimap.builder();
+
+        builder.put("selection", new BrowserVersion(Browser.FIREFOX, 25.0));
+
+        SELECTORS = builder.build();
+    }
+
     private PrefixInfo() {}
 
     /**
@@ -376,6 +385,35 @@ public final class PrefixInfo {
      */
     public static double atRuleLastPrefixedVersion(String name, Browser browser) {
         for (BrowserVersion browserVersion : AT_RULES.get(name)) {
+            if (browserVersion.browser() == browser) return browserVersion.version();
+        }
+        return -1d;
+    }
+
+    /**
+     * Gets whether prefix info exists for the given selector name.
+     *
+     * @param name
+     *     Check if prefix info exists for this selector name.
+     *
+     * @return True of prefix info exists for the given selector name.
+     */
+    public static boolean hasSelector(String name) {
+        return SELECTORS.containsKey(name);
+    }
+
+    /**
+     * Gets the last version of the given browser that requires a prefix for the given selector name.
+     *
+     * @param name
+     *     The selector name.
+     * @param browser
+     *     The browser.
+     *
+     * @return The last version, or -1 if all known versions of the browser supports the selector unprefixed.
+     */
+    public static double selectorLastPrefixedVersion(String name, Browser browser) {
+        for (BrowserVersion browserVersion : SELECTORS.get(name)) {
             if (browserVersion.browser() == browser) return browserVersion.version();
         }
         return -1d;

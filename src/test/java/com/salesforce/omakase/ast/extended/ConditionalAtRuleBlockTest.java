@@ -21,6 +21,7 @@ import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -127,5 +128,35 @@ public class ConditionalAtRuleBlockTest {
         ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
         assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo("@if(ie7){.test{display:none}}");
+    }
+
+    @Test
+    public void propagatesBroadcast() {
+        Rule rule = new Rule();
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        Declaration d = new Declaration(Property.DISPLAY, PropertyValue.of(KeywordValue.of("none")));
+        rule.declarations().append(d);
+        statements.add(rule);
+
+        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
+
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        b.propagateBroadcast(qb);
+        assertThat(qb.find(Statement.class).get()).isSameAs(rule);
+    }
+
+    @Test
+    public void testCopy() {
+        Rule rule = new Rule(5, 5, new QueryableBroadcaster());
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
+        statements.add(rule);
+        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
+
+        ConditionalAtRuleBlock copy = (ConditionalAtRuleBlock)b.copy();
+        assertThat(copy.condition()).isEqualTo("ie7");
+        assertThat(copy.statements()).hasSize(1);
     }
 }

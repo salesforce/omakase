@@ -21,6 +21,7 @@ import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.ast.selector.TypeSelector;
@@ -71,6 +72,20 @@ public final class Selectors {
      */
     public static Optional<TypeSelector> asTypeSelector(SelectorPart part) {
         return as(TypeSelector.class, part);
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Gets the given part as an instance of a {@link PseudoElementSelector} if it is one.
+     *
+     * @param part
+     *     Check if this part is a {@link PseudoElementSelector}.
+     *
+     * @return The pseudo element selector, or {@link Optional#absent()} if the part is a different type.
+     */
+    public static Optional<PseudoElementSelector> asPseudoElementSelector(SelectorPart part) {
+        return as(PseudoElementSelector.class, part);
     }
 
     /**
@@ -192,6 +207,52 @@ public final class Selectors {
     }
 
     /**
+     * TESTME
+     * <p/>
+     * Checks the given {@link Selector} for the <em>first</em> {@link PseudoElementSelector} that matches the given name. If you
+     * don't actually need the instance itself then you can use {@link #hasPseudoElementSelector(Selector, String, boolean)}
+     * instead.
+     *
+     * @param selector
+     *     The selector to check.
+     * @param name
+     *     Check for a {@link PseudoElementSelector} with this name.
+     * @param ignorePrefix
+     *     Whether to ignore the vendor prefix when checking, if present.
+     *
+     * @return The class selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<PseudoElementSelector> findPseudoElementSelector(Selector selector, String name, boolean ignorePrefix) {
+        return findPseudoElementSelector(selector.parts(), name, ignorePrefix);
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Checks the given parts for the <em>first</em> {@link PseudoElementSelector} that matches the given name. If you don't
+     * actually need the instance itself then you can use {@link #hasPseudoElementSelector(Iterable, String, boolean)} instead.
+     *
+     * @param parts
+     *     The parts to check.
+     * @param name
+     *     Check for a {@link PseudoElementSelector} with this name.
+     * @param ignorePrefix
+     *     Whether to ignore the vendor prefix when checking, if present.
+     *
+     * @return The type selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<PseudoElementSelector> findPseudoElementSelector(Iterable<SelectorPart> parts, String name, boolean ignorePrefix) {
+        for (SelectorPart part : parts) {
+            Optional<PseudoElementSelector> pseudo = asPseudoElementSelector(part);
+            if (pseudo.isPresent()) {
+                if ((!ignorePrefix || pseudo.get().name().charAt(0) != '-') && pseudo.get().name().equals(name)) return pseudo;
+                if (Prefixes.unprefixed(pseudo.get().name()).equals(name)) return pseudo;
+            }
+        }
+        return Optional.absent();
+    }
+
+    /**
      * Checks the given parts for a {@link ClassSelector} that matches the given name.
      * <p/>
      * If you would like access to the found instance itself then use {@link #findClassSelector(Selector, String)} instead.
@@ -285,6 +346,48 @@ public final class Selectors {
      */
     public static boolean hasTypeSelector(Iterable<SelectorPart> parts, String name) {
         return findTypeSelector(parts, name).isPresent();
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Checks the given parts for a {@link PseudoElementSelector} that matches the given name.
+     * <p/>
+     * If you would like access to the found instance itself then use {@link #findPseudoElementSelector(Selector, String,
+     * boolean)} instead.
+     *
+     * @param selector
+     *     The {@link Selector} to check.
+     * @param name
+     *     Check for a {@link TypeSelector} with this name.
+     * @param ignorePrefix
+     *     Whether to ignore the vendor prefix when checking, if present.
+     *
+     * @return True if one of the parts is a {@link PseudoElementSelector} with the given name.
+     */
+    public static boolean hasPseudoElementSelector(Selector selector, String name, boolean ignorePrefix) {
+        return hasPseudoElementSelector(selector.parts(), name, ignorePrefix);
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Checks the given parts for a {@link PseudoElementSelector} that matches the given name.
+     * <p/>
+     * If you would like access to the found instance itself then use {@link #findPseudoElementSelector(Iterable, String,
+     * boolean)} instead.
+     *
+     * @param parts
+     *     The parts to check.
+     * @param name
+     *     Check for a {@link PseudoElementSelector} with this name.
+     * @param ignorePrefix
+     *     Whether to ignore the vendor prefix when checking, if present.
+     *
+     * @return True if one of the parts is a {@link PseudoElementSelector} with the given name.
+     */
+    public static boolean hasPseudoElementSelector(Iterable<SelectorPart> parts, String name, boolean ignorePrefix) {
+        return findPseudoElementSelector(parts, name, ignorePrefix).isPresent();
     }
 
     /**

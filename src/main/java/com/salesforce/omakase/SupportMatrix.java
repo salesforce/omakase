@@ -271,6 +271,27 @@ public final class SupportMatrix {
     }
 
     /**
+     * TESTME
+     * <p/>
+     * Gets all prefixes required for the given selector (e.g., "selection"), according to the supported browser versions.
+     *
+     * @param name
+     *     Get required prefixes for selectors with this name.
+     *
+     * @return The set of required prefixes.
+     */
+    public Set<Prefix> prefixesForSelector(String name) {
+        Set<Prefix> required = Sets.newHashSet();
+
+        for (Browser browser : supportedBrowsers()) {
+            double lastPrefixed = PrefixInfo.selectorLastPrefixedVersion(name, browser);
+            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        }
+
+        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+    }
+
+    /**
      * Gets whether the given {@link Prefix} is required for the given {@link Property}, according to the supported browser
      * versions.
      * <p/>
@@ -314,6 +335,23 @@ public final class SupportMatrix {
      */
     public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
         return PrefixInfo.hasAtRule(name) && prefixesForAtRule(name).contains(prefix);
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Gets whether the given {@link Prefix} is required for the given selector name, according to the supported browser
+     * versions.
+     *
+     * @param prefix
+     *     The {@link Prefix}.
+     * @param name
+     *     The selector name, e.g., "selection".
+     *
+     * @return True if the selector requires the given prefix.
+     */
+    public boolean requiresPrefixForSelector(Prefix prefix, String name) {
+        return PrefixInfo.hasSelector(name) && prefixesForSelector(name).contains(prefix);
     }
 
     @Override

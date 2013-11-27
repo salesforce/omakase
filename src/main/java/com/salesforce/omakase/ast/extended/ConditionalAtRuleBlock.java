@@ -150,14 +150,12 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterab
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        //TESTME
         super.propagateBroadcast(broadcaster);
         statements.propagateBroadcast(broadcaster);
     }
 
     @Override
     protected ConditionalAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         List<Statement> copiedStatements = Lists.newArrayList();
         for (Statement statement : statements) {
             copiedStatements.add(statement.copy(prefix, support));

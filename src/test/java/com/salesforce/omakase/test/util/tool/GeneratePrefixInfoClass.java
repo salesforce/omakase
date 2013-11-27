@@ -60,6 +60,7 @@ public class GeneratePrefixInfoClass {
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
         List<NameInfo> functions = loadGeneric((Map)types.get("functions"));
         List<NameInfo> atRules = loadGeneric((Map)types.get("at-rules"));
+        List<NameInfo> selectors = loadGeneric((Map)types.get("selectors"));
 
         // write out the new class source
         SourceWriter writer = new SourceWriter();
@@ -70,6 +71,7 @@ public class GeneratePrefixInfoClass {
         writer.data("properties", properties);
         writer.data("functions", functions);
         writer.data("atRules", atRules);
+        writer.data("selectors", selectors);
 
         writer.write();
     }

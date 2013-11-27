@@ -76,4 +76,54 @@ public class PrefixInfoTest {
     public void lastPrefixedVersionFunctionForNotPrefixedFunction() {
         assertThat(PrefixInfo.functionLastPrefixedVersion("blah", Browser.IE)).isEqualTo(-1);
     }
+
+    @Test
+    public void hasAtRule() {
+        assertThat(PrefixInfo.hasAtRule("keyframes")).isTrue();
+    }
+
+    @Test
+    public void hasAtRuleFalse() {
+        assertThat(PrefixInfo.hasAtRule("blah")).isFalse();
+    }
+
+    @Test
+    public void lastPrefixedVersionAtRule() {
+        assertThat(PrefixInfo.atRuleLastPrefixedVersion("keyframes", Browser.CHROME)).isGreaterThan(30);
+    }
+
+    @Test
+    public void lastPrefixedVersionAtRuleNotPresent() {
+        assertThat(PrefixInfo.atRuleLastPrefixedVersion("keyframes", Browser.IE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void lastPrefixedVersionAtRuleForNotPrefixedAtRule() {
+        assertThat(PrefixInfo.atRuleLastPrefixedVersion("media", Browser.IE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void hasSelector() {
+        assertThat(PrefixInfo.hasSelector("selection")).isTrue();
+    }
+
+    @Test
+    public void hasSelectorFalse() {
+        assertThat(PrefixInfo.hasSelector("blah")).isFalse();
+    }
+
+    @Test
+    public void lastPrefixedVersionSelector() {
+        assertThat(PrefixInfo.selectorLastPrefixedVersion("selection", Browser.FIREFOX)).isGreaterThan(24);
+    }
+
+    @Test
+    public void lastPrefixedVersionSelectorNotPresent() {
+        assertThat(PrefixInfo.selectorLastPrefixedVersion("selection", Browser.IE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void lastPrefixedVersionSelectorForNotPrefixedSelector() {
+        assertThat(PrefixInfo.selectorLastPrefixedVersion("before", Browser.IE)).isEqualTo(-1);
+    }
 }

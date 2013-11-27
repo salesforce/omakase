@@ -104,8 +104,9 @@ functions:
 #    - repeating-radial-gradient
 
 # prefixed selectors
-#selectors:
-#  css-selection
+selectors:
+  css-selection:
+    - selection
 
 # prefixed at-rules
 at-rules:

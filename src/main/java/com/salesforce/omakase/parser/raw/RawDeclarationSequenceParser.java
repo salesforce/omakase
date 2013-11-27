@@ -24,8 +24,6 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
- * TESTME
- * <p/>
  * Parses a sequence of semi-colon delimited {@link Declaration}s.
  *
  * @author nmcwilliams

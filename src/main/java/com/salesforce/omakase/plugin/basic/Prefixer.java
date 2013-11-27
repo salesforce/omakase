@@ -19,11 +19,13 @@ package com.salesforce.omakase.plugin.basic;
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixInfo;
@@ -40,7 +42,7 @@ import static com.salesforce.omakase.data.Browser.*;
 
 /**
  * TODO only work on stuff already refined.
- *
+ * <p/>
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
  * selectors.
  * <p/>
@@ -273,7 +275,7 @@ public final class Prefixer implements Plugin {
      */
     @Rework
     public void atRule(AtRule atRule) {
-        // at-rule must be attached to a stylesheet, cannot start with a prefix and must be prefixable
+        // must be attached to a stylesheet, cannot start with a prefix and must be prefixable
         if (atRule.isDetached() || atRule.name().startsWith("-") || !PrefixInfo.hasAtRule(atRule.name())) return;
 
         // gather all required prefixes for the at-rule
@@ -298,6 +300,48 @@ public final class Prefixer implements Plugin {
                 Actions.detach().apply(equivalents.values());
             } else if (rearrange) {
                 Actions.<Statement>moveBefore().apply(atRule, equivalents.values());
+            }
+        }
+    }
+
+    /**
+     * Subscription method - do not invoke directly.
+     *
+     * @param selector
+     *     The selector instance.
+     */
+    @Rework
+    public void pseudoElementSelector(PseudoElementSelector selector) {
+        // must be attached to a stylesheet, cannot start with a prefix and must be prefixable
+        if (selector.isDetached() || selector.name().startsWith("-") || !PrefixInfo.hasSelector(selector.name())) return;
+        if (selector.parent().get().isDetached()) return;
+
+        Rule parentRule = selector.parent().get().parent().get();
+
+        // gather all required prefixes for the at-rule
+        Set<Prefix> required = support.prefixesForSelector(selector.name());
+
+        // find rules containing prefixed-equivalents of the selector
+        Multimap<Prefix, Rule> equivalents = Equivalents.prefixedPseudoSelectors(selector);
+
+        for (Prefix prefix : required) {
+            Collection<Rule> matches = equivalents.get(prefix);
+            if (!matches.isEmpty()) {
+                if (rearrange) {
+                    Actions.<Statement>moveBefore().apply(parentRule, matches);
+                }
+                equivalents.removeAll(prefix);
+            } else {
+                parentRule.prepend(parentRule.copy(prefix, support));
+            }
+        }
+
+        // any left over equivalents are unnecessary. remove or rearrange them if allowed
+        if (!equivalents.isEmpty()) {
+            if (prune) {
+                Actions.detach().apply(equivalents.values());
+            } else if (rearrange) {
+                Actions.<Statement>moveBefore().apply(parentRule, equivalents.values());
             }
         }
     }

@@ -663,4 +663,12 @@ public class PrefixerUnitTargetedTest {
 
         assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
     }
+
+    @Test
+    public void selection() {
+        String original = "::selection {color:red}";
+        String expected = "::-moz-selection {color:red}\n::selection {color:red}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

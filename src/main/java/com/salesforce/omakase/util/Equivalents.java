@@ -20,17 +20,18 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Prefix;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * TESTME
- * <p/>
  * Utilities for finding prefixed equivalents.
  *
  * @author nmcwilliams
@@ -39,6 +40,8 @@ public final class Equivalents {
     private Equivalents() {}
 
     /**
+     * TESTME
+     * <p/>
      * Finds all {@link Declaration}s within the same rule that have the same property name as the given declaration and also have
      * a vendor prefix.
      * <p/>
@@ -80,6 +83,8 @@ public final class Equivalents {
     }
 
     /**
+     * TESTME
+     * <p/>
      * Finds all {@link Declaration}s within the same rule that contains a prefixed version of the given function name. The
      * property name of the declaration must be the same.
      * <p/>
@@ -130,8 +135,12 @@ public final class Equivalents {
     }
 
     /**
+     * TESTME
+     * <p/>
      * Finds all {@link AtRule}s within the same sheet/group that have the same at-rule name as the given at-rule and also have a
      * vendor prefix.
+     * <p/>
+     * Only at-rules contiguous to the one given will be considered.
      * <p/>
      * For example, given the following css:
      * <pre><code>
@@ -201,5 +210,91 @@ public final class Equivalents {
         }
 
         return multimap == null ? ImmutableMultimap.<Prefix, AtRule>of() : multimap;
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Finds all {@link Rule}s within the same sheet/group that have the same selector name as the one given and also have a
+     * vendor prefix.
+     * <p/>
+     * Only rules contiguous to the one that contains the given selector will be considered.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     * &#64;::-moz-selection {
+     *   color: red;
+     * }
+     * &#64;::selection {
+     *   color: red;
+     * }
+     * </code></pre>
+     * When given the second, unprefixed rule, the one before it will be returned.
+     *
+     * @param unprefixed
+     *     Match against this {@link PseudoElementSelector}.
+     *
+     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
+     *
+     * @throws IllegalArgumentException
+     *     If the given selector is detached or is prefixed itself, or if the selector's rule is detached.
+     */
+    public static Multimap<Prefix, Rule> prefixedPseudoSelectors(PseudoElementSelector unprefixed) {
+        checkArgument(!unprefixed.isDetached(), "selector part must not be detached");
+        checkArgument(!unprefixed.parent().get().isDetached(), "selector must not be detached");
+        checkArgument(!unprefixed.name().startsWith("-"), "selector must not have a prefixed property");
+
+        Multimap<Prefix, Rule> multimap = null;
+
+        String expectedName = unprefixed.name();
+        Rule parentRule = unprefixed.parentSelector().get().parent().get();
+
+        // look for prefixed versions appearing before the unprefixed one
+        Optional<Statement> previous = parentRule.previous();
+
+        while (previous.isPresent() && previous.get().asRule().isPresent()) {
+            Rule rule = previous.get().asRule().get();
+            boolean found = false;
+
+            for (Selector selector : rule.selectors()) {
+                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, true);
+                if (pseudo.isPresent() && pseudo.get().name().charAt(0) == '-') {
+                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                    multimap.put(Prefixes.parsePrefix(pseudo.get().name()).get(), rule);
+                    previous = rule.previous();
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                previous = Optional.absent();
+            }
+        }
+
+        // look for prefixed versions appearing after the unprefixed one
+        Optional<Statement> next = parentRule.next();
+
+        while (next.isPresent() && next.get().asRule().isPresent()) {
+            Rule rule = next.get().asRule().get();
+            boolean found = false;
+
+            for (Selector selector : rule.selectors()) {
+                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, true);
+                if (pseudo.isPresent() && pseudo.get().name().charAt(0) == '-') {
+                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                    multimap.put(Prefixes.parsePrefix(pseudo.get().name()).get(), rule);
+                    next = rule.next();
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                next = Optional.absent();
+            }
+        }
+
+        return multimap == null ? ImmutableMultimap.<Prefix, Rule>of() : multimap;
     }
 }
