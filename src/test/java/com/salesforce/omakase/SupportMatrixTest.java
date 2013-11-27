@@ -232,4 +232,28 @@ public class SupportMatrixTest {
         support.browser(Browser.FIREFOX, 14);
         assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "bop")).isFalse();
     }
+
+    @Test
+    public void prefixesForSelector() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
+    }
+
+    @Test
+    public void requiresPrefixForSelectorTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForSelector(Prefix.MOZ, "selection")).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForSelectorFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForSelector(Prefix.O, "baaahd")).isFalse();
+    }
 }

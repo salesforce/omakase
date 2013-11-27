@@ -257,7 +257,7 @@ public final class Equivalents {
             boolean found = false;
 
             for (Selector selector : rule.selectors()) {
-                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, true);
+                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, false);
                 if (pseudo.isPresent() && pseudo.get().name().charAt(0) == '-') {
                     if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                     multimap.put(Prefixes.parsePrefix(pseudo.get().name()).get(), rule);
@@ -280,7 +280,7 @@ public final class Equivalents {
             boolean found = false;
 
             for (Selector selector : rule.selectors()) {
-                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, true);
+                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, false);
                 if (pseudo.isPresent() && pseudo.get().name().charAt(0) == '-') {
                     if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                     multimap.put(Prefixes.parsePrefix(pseudo.get().name()).get(), rule);

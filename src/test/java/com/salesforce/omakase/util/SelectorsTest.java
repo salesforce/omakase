@@ -16,13 +16,7 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.Combinator;
-import com.salesforce.omakase.ast.selector.CombinatorType;
-import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.ast.selector.TypeSelector;
+import com.salesforce.omakase.ast.selector.*;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -93,6 +87,18 @@ public class SelectorsTest {
     }
 
     @Test
+    public void asPseudoSelectorPresent() {
+        part = new PseudoElementSelector("selection");
+        assertThat(Selectors.asPseudoElementSelector(part).isPresent()).isTrue();
+    }
+
+    @Test
+    public void asPseudoSelectorAbsent() {
+        part = new ClassSelector("test");
+        assertThat(Selectors.asPseudoElementSelector(part).isPresent()).isFalse();
+    }
+
+    @Test
     public void hasClassSelectorTrue() {
         Selector selector = new Selector(new ClassSelector("test"));
         assertThat(Selectors.hasClassSelector(selector, "test")).isTrue();
@@ -129,6 +135,54 @@ public class SelectorsTest {
     }
 
     @Test
+    public void hasPseudoSelectorTrueExactFalseIsPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("-webkit-selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "selection", false)).isTrue();
+    }
+
+    @Test
+    public void hasPseudoSelectorTrueExactFalseIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "selection", false)).isTrue();
+    }
+
+    @Test
+    public void hasPseudoSelectorFalseExactFalseIsPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("-webkit-selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "bud", false)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoSelectorFalseExactFalseIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "bud", false)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoSelectorTrueExactTrueIsPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("-webkit-selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "selection", true)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoSelectorTrueExactTrueIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "selection", true)).isTrue();
+    }
+
+    @Test
+    public void hasPseudoSelectorFalseExactTrueIsPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("-webkit-selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "bud", true)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoSelectorFalseExactTrueIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoElementSelector("selection"));
+        assertThat(Selectors.hasPseudoElementSelector(selector, "bud", true)).isFalse();
+    }
+
+    @Test
     public void findClassSelector() {
         ClassSelector s1 = new ClassSelector("test");
         ClassSelector s2 = new ClassSelector("findme");
@@ -150,6 +204,22 @@ public class SelectorsTest {
         TypeSelector s2 = new TypeSelector("findme");
         Selector selector = new Selector(s1, s2);
         assertThat(Selectors.findTypeSelector(selector, "findme").get()).isSameAs(s2);
+    }
+
+    @Test
+    public void findPseudoSelectorExact() {
+        PseudoElementSelector s1 = new PseudoElementSelector("-moz-findme");
+        PseudoElementSelector s2 = new PseudoElementSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findPseudoElementSelector(selector, "findme", true).get()).isSameAs(s2);
+    }
+
+    @Test
+    public void findPseudoSelectorNotExact() {
+        PseudoElementSelector s1 = new PseudoElementSelector("-moz-findme");
+        PseudoElementSelector s2 = new PseudoElementSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findPseudoElementSelector(selector, "findme", false).get()).isSameAs(s1);
     }
 
     @Test

@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * Standard implementations for {@link PrefixerHandler}.
  * <p/>
- * Some of the applicable methods check for isRefined because we don't want to trigger refinement on everything just to check if a
+ * Some of the applicable methods check for isRefined because we don't want to trigger refinement on everything just to see if a
  * prefix is needed (in production / pinpointed refinement, we may want to just prefix dynamically inserted or replaced units).
  * This is fine as usually the {@link Prefixer} plugin is only enabled when full validation or auto refinement is turned on as
  * well.
@@ -78,8 +78,8 @@ final class PrefixerHandlers {
     static final PrefixerHandler<FunctionValue> FUNCTION = new PrefixerHandlerStandard<FunctionValue, Declaration>() {
         @Override
         boolean applicable(FunctionValue instance, SupportMatrix support) {
-            return !instance.isDetached() && !instance.name().startsWith("-")
-                && PrefixInfo.hasFunction(instance.name()) && instance.group().get().parent().declaration().isPresent();
+            return !instance.isDetached() && instance.group().get().parent().declaration().isPresent()
+                && !instance.name().startsWith("-") && PrefixInfo.hasFunction(instance.name());
         }
 
         @Override
@@ -102,7 +102,7 @@ final class PrefixerHandlers {
     static final PrefixerHandler<AtRule> AT_RULE = new PrefixerHandlerStandard<AtRule, Statement>() {
         @Override
         boolean applicable(AtRule instance, SupportMatrix support) {
-            return !instance.isDetached() && instance.isRefined() && !(instance.name().charAt(0) == '-')
+            return !instance.isDetached() && instance.isRefined() && !instance.name().startsWith("-")
                 && PrefixInfo.hasAtRule(instance.name());
         }
 

@@ -271,8 +271,6 @@ public final class SupportMatrix {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets all prefixes required for the given selector (e.g., "selection"), according to the supported browser versions.
      *
      * @param name
@@ -338,8 +336,6 @@ public final class SupportMatrix {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets whether the given {@link Prefix} is required for the given selector name, according to the supported browser
      * versions.
      *

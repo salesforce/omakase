@@ -19,10 +19,27 @@ package com.salesforce.omakase.plugin.basic;
 import com.salesforce.omakase.SupportMatrix;
 
 /**
- * TODO description
+ * Handles prefixing a type of AST object.
+ *
+ * @param <T>
+ *     (Type) of AST object to prefix.
  *
  * @author nmcwilliams
  */
 interface PrefixerHandler<T> {
+    /**
+     * Handle prefixing for the AST object.
+     *
+     * @param instance
+     *     The instance that might need prefixing.
+     * @param rearrange
+     *     If true, existing prefixes may be rearranged.
+     * @param prune
+     *     If true, existing prefixes may be removed.
+     * @param support
+     *     Browser support data.
+     *
+     * @return True if the object was "handled" and should not be passed on to another handler.
+     */
     boolean handle(T instance, boolean rearrange, boolean prune, SupportMatrix support);
 }
