@@ -16,33 +16,19 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.PrefixInfo;
-import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.util.Actions;
-import com.salesforce.omakase.util.Equivalents;
-import com.salesforce.omakase.util.Values;
-
-import java.util.Collection;
-import java.util.Set;
+import com.salesforce.omakase.plugin.validator.StandardValidation;
 
 import static com.salesforce.omakase.data.Browser.*;
+import static com.salesforce.omakase.plugin.basic.PrefixerHandlers.*;
 
 /**
- * TODO only work on stuff already refined.
- * <p/>
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
  * selectors.
  * <p/>
@@ -59,11 +45,13 @@ import static com.salesforce.omakase.data.Browser.*;
  * This plugin integrates well with existing CSS. If all required prefixes are already present then nothing will be changed by
  * default. You can optionally have unnecessary prefixes removed via the {@link #prune(boolean)} method. You can also optionally
  * have all existing vendor-prefixed declarations rearranged to be <em>before</em> the unprefixed version via the {@link
- * #rearrange (boolean)} method.
+ * #rearrange(boolean)} method.
  * <p/>
- * This doesn't automatically refine declarations or other refinables to check if they might need prefixes. Particularly, this
- * will only process prefixed functions if the declaration has been refined. If you want to ensure that every thing gets checked
- * then register an {@link AutoRefiner}, and call {@link AutoRefiner#all()}. See the main readme doc for more information.
+ * This doesn't automatically refine declarations or other refinables to check if they might need prefixes. This will only handle
+ * prefixes if declarations, at-rules, and selectors have already been refined. If you want to ensure that every thing gets
+ * checked then register an {@link AutoRefiner}, and call {@link AutoRefiner#all()}, or ensure that a {@link StandardValidation}
+ * plugin instance is registered. Both of these must be registered before this plugin. See the main readme doc for more
+ * information.
  * <p/>
  * <b>Important:</b> This is an <em>Experimental</em> plugin. Some rare and uncommon usages of prefixed values, property names,
  * selectors or at-rules may not currently work correctly. Please check the list of what's actually supported in the readme or
@@ -73,9 +61,8 @@ import static com.salesforce.omakase.data.Browser.*;
  * handled. If you are using bleeding-edge syntax or prefixable features in a non-typical way then please double check the CSS
  * output for the proper behavior.
  * <p/>
- * Also note that some very old browser versions utilizing non-standard syntax may not currently be handled correctly. For
- * example, the legacy linear-gradient syntax is not currently handled because several browser versions have passed since it was
- * last used.
+ * Also note that some very old browser versions utilizing non-standard syntax may not currently be handled. For example, the
+ * legacy linear-gradient syntax is not currently handled because several browser versions have passed since it was last used.
  * <p/>
  * Example usage:
  * <p/>
@@ -173,56 +160,8 @@ public final class Prefixer implements Plugin {
      */
     @Rework
     public void declaration(Declaration declaration) {
-        // declaration must be attached to a rule and not prefixed
-        if (declaration.isDetached() || declaration.isPrefixed()) return;
-
-        // must be a known property name and a prefixable property
-        Optional<Property> property = declaration.propertyName().asProperty();
-        if (!property.isPresent() || !PrefixInfo.hasProperty(property.get())) return;
-
-        // gather all required prefixes for the property name
-        Set<Prefix> required = support.prefixesForProperty(property.get());
-
-        // find all prefixed declarations in the rule for the same property
-        Multimap<Prefix, Declaration> equivalents = Equivalents.prefixedDeclarations(declaration);
-
-        for (Prefix prefix : required) {
-            Collection<Declaration> matches = equivalents.get(prefix);
-            if (!matches.isEmpty()) {
-                if (rearrange) Actions.<Declaration>moveBefore().apply(declaration, matches);
-                equivalents.removeAll(prefix);
-            } else {
-                declaration.prepend(declaration.copy(prefix, support));
-            }
-        }
-
-        // any left over equivalents are unnecessary. remove or rearrange them if allowed
-        if (!equivalents.isEmpty()) {
-            if (prune) {
-                Actions.detach().apply(equivalents.values());
-            } else if (rearrange) {
-                Actions.<Declaration>moveBefore().apply(declaration, equivalents.values());
-            }
-        }
-
-        // special handling for transition
-        if (required.isEmpty() && (property.get() == Property.TRANSITION || property.get() == Property.TRANSITION_PROPERTY)) {
-            // try to find the first prefixed property name
-            for (KeywordValue keyword : Values.filter(KeywordValue.class, declaration.propertyValue())) {
-                // check if the keyword is a property
-                Property keywordAsProperty = Property.lookup(keyword.keyword());
-                if (keywordAsProperty == null) continue;
-
-                // check if this property needs a prefix
-                Set<Prefix> prefixes = support.prefixesForProperty(keywordAsProperty);
-                if (prefixes.isEmpty()) continue;
-
-                // prepend a copy of the declaration for each required prefix
-                for (Prefix prefix : prefixes) {
-                    declaration.prepend(declaration.copy(prefix, support));
-                }
-                break;
-            }
+        if (!PROPERTY.handle(declaration, rearrange, prune, support)) {
+            TRANSITION.handle(declaration, rearrange, prune, support);
         }
     }
 
@@ -234,37 +173,7 @@ public final class Prefixer implements Plugin {
      */
     @Rework
     public void function(FunctionValue function) {
-        // function must be attached to a property value, cannot start with a prefix and must be prefixable
-        if (function.isDetached() || function.name().startsWith("-") || !PrefixInfo.hasFunction(function.name())) return;
-
-        // function must be attached to a declaration
-        Optional<Declaration> declaration = function.group().get().parent().declaration();
-        if (!declaration.isPresent()) return;
-
-        // gather all required prefixes for the function name
-        Set<Prefix> required = support.prefixesForFunction(function.name());
-
-        // find all prefixed declarations in the rule for the same property
-        Multimap<Prefix, Declaration> equivalents = Equivalents.prefixedFunctions(declaration.get(), function.name());
-
-        for (Prefix prefix : required) {
-            Collection<Declaration> matches = equivalents.get(prefix);
-            if (!matches.isEmpty()) {
-                if (rearrange) Actions.<Declaration>moveBefore().apply(declaration.get(), matches);
-                equivalents.removeAll(prefix);
-            } else {
-                declaration.get().prepend(declaration.get().copy(prefix, support));
-            }
-        }
-
-        // any left over equivalents are unnecessary. remove or rearrange them if allowed
-        if (!equivalents.isEmpty()) {
-            if (prune) {
-                Actions.detach().apply(equivalents.values());
-            } else if (rearrange) {
-                Actions.<Declaration>moveBefore().apply(declaration.get(), equivalents.values());
-            }
-        }
+        FUNCTION.handle(function, rearrange, prune(), support);
     }
 
     /**
@@ -275,33 +184,7 @@ public final class Prefixer implements Plugin {
      */
     @Rework
     public void atRule(AtRule atRule) {
-        // must be attached to a stylesheet, cannot start with a prefix and must be prefixable
-        if (atRule.isDetached() || atRule.name().startsWith("-") || !PrefixInfo.hasAtRule(atRule.name())) return;
-
-        // gather all required prefixes for the at-rule
-        Set<Prefix> required = support.prefixesForAtRule(atRule.name());
-
-        // find all prefixed at-rules in the stylesheet for the same name
-        Multimap<Prefix, AtRule> equivalents = Equivalents.prefixedAtRules(atRule);
-
-        for (Prefix prefix : required) {
-            Collection<AtRule> matches = equivalents.get(prefix);
-            if (!matches.isEmpty()) {
-                if (rearrange) Actions.<Statement>moveBefore().apply(atRule, matches);
-                equivalents.removeAll(prefix);
-            } else {
-                atRule.prepend(atRule.copy(prefix, support));
-            }
-        }
-
-        // any left over equivalents are unnecessary. remove or rearrange them if allowed
-        if (!equivalents.isEmpty()) {
-            if (prune) {
-                Actions.detach().apply(equivalents.values());
-            } else if (rearrange) {
-                Actions.<Statement>moveBefore().apply(atRule, equivalents.values());
-            }
-        }
+        AT_RULE.handle(atRule, rearrange, prune, support);
     }
 
     /**
@@ -312,38 +195,7 @@ public final class Prefixer implements Plugin {
      */
     @Rework
     public void pseudoElementSelector(PseudoElementSelector selector) {
-        // must be attached to a stylesheet, cannot start with a prefix and must be prefixable
-        if (selector.isDetached() || selector.name().startsWith("-") || !PrefixInfo.hasSelector(selector.name())) return;
-        if (selector.parent().get().isDetached()) return;
-
-        Rule parentRule = selector.parent().get().parent().get();
-
-        // gather all required prefixes for the at-rule
-        Set<Prefix> required = support.prefixesForSelector(selector.name());
-
-        // find rules containing prefixed-equivalents of the selector
-        Multimap<Prefix, Rule> equivalents = Equivalents.prefixedPseudoSelectors(selector);
-
-        for (Prefix prefix : required) {
-            Collection<Rule> matches = equivalents.get(prefix);
-            if (!matches.isEmpty()) {
-                if (rearrange) {
-                    Actions.<Statement>moveBefore().apply(parentRule, matches);
-                }
-                equivalents.removeAll(prefix);
-            } else {
-                parentRule.prepend(parentRule.copy(prefix, support));
-            }
-        }
-
-        // any left over equivalents are unnecessary. remove or rearrange them if allowed
-        if (!equivalents.isEmpty()) {
-            if (prune) {
-                Actions.detach().apply(equivalents.values());
-            } else if (rearrange) {
-                Actions.<Statement>moveBefore().apply(parentRule, equivalents.values());
-            }
-        }
+        PSEUDO.handle(selector, rearrange, prune, support);
     }
 
     /**

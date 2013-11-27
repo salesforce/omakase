@@ -239,7 +239,7 @@ public final class Equivalents {
      * @throws IllegalArgumentException
      *     If the given selector is detached or is prefixed itself, or if the selector's rule is detached.
      */
-    public static Multimap<Prefix, Rule> prefixedPseudoSelectors(PseudoElementSelector unprefixed) {
+    public static Multimap<Prefix, Rule> prefixedPseudoElementSelectors(PseudoElementSelector unprefixed) {
         checkArgument(!unprefixed.isDetached(), "selector part must not be detached");
         checkArgument(!unprefixed.parent().get().isDetached(), "selector must not be detached");
         checkArgument(!unprefixed.name().startsWith("-"), "selector must not have a prefixed property");

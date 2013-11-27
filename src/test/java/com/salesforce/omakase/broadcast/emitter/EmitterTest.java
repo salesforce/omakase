@@ -93,6 +93,20 @@ public class EmitterTest {
         assertThat(list).containsExactly(t1, t2, t3, t4, t5);
     }
 
+    @Test
+    public void maintainsRegistrationOrderInterface() {
+        List<Plugin> list = Lists.newArrayList();
+        TestIntfOrder1 t1 = new TestIntfOrder1(list);
+        TestIntfOrder2 t2 = new TestIntfOrder2(list);
+
+        Emitter emitter = new Emitter();
+        emitter.register(t1);
+        emitter.register(t2);
+
+        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        assertThat(list).containsExactly(t1, t1, t2, t2);
+    }
+
     public static final class EmitterPlugin implements Plugin {
         boolean calledSimpleSelector;
         boolean calledClassSelector;
@@ -165,6 +179,38 @@ public class EmitterTest {
         private final List<Plugin> list;
 
         public TestOrder5(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
+        }
+    }
+
+    public static final class TestIntfOrder1 implements Plugin {
+        private final List<Plugin> list;
+
+        public TestIntfOrder1(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void simpleSelector(SimpleSelector s) {
+            list.add(this);
+        }
+
+        @Observe
+        public void observe(ClassSelector cs) {
+            list.add(this);
+        }
+    }
+
+    public static final class TestIntfOrder2 implements Plugin {
+        private final List<Plugin> list;
+
+        public TestIntfOrder2(List<Plugin> list) { this.list = list; }
+
+        @Observe
+        public void simpleSelector(SimpleSelector s) {
+            list.add(this);
+        }
 
         @Observe
         public void observe(ClassSelector cs) {
