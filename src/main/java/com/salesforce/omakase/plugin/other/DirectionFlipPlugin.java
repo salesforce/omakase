@@ -7,8 +7,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Comment;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
@@ -157,7 +161,7 @@ public class DirectionFlipPlugin implements DependentPlugin {
      */
     @Rework
     public void rework(KeywordValue keywordValue) {
-        if (hasNoParseDirective(keywordValue.parent().get().parentDeclaration().get())) {
+        if (hasNoParseDirective(keywordValue.parent().get().declaration().get())) {
             return;
         }
         Optional<Keyword> optionalKeyword = keywordValue.asKeyword();
