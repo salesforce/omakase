@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -34,7 +35,7 @@ import org.junit.rules.ExpectedException;
 import java.io.IOException;
 import java.util.Iterator;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.*;
 
 /** Unit tests for {@link AtRule}. */
 @SuppressWarnings("JavaDoc")
@@ -210,6 +211,40 @@ public class AtRuleTest {
     }
 
     @Test
+    public void isWritableAlwaysTrueWhenNotRefined() {
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        assertThat(ar.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableTrueIfWriteName() {
+        AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlockNotWritable());
+        ar.shouldWriteName(true);
+        assertThat(ar.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableTrueIfWriteExpression() {
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlockNotWritable());
+        ar.shouldWriteName(false);
+        assertThat(ar.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableTrueIfWriteBlock() {
+        AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlock());
+        ar.shouldWriteName(false);
+        assertThat(ar.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableFalseIfRefinedAndNoneWritable() {
+        AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlockNotWritable());
+        ar.shouldWriteName(false);
+        assertThat(ar.isWritable()).isFalse();
+    }
+
+    @Test
     public void writeUnrefined() throws IOException {
         AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
         StyleWriter writer = StyleWriter.verbose();
@@ -261,6 +296,50 @@ public class AtRuleTest {
         assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("(custom){custom}");
     }
 
+    @Test
+    public void copyRefined() {
+        CustomExpression expression = new CustomExpression();
+        CustomBlock block = new CustomBlock();
+        AtRule ar = new AtRule("test", expression, block);
+
+        AtRule copy = (AtRule)ar.copy();
+        assertThat(copy.name()).isEqualTo("test");
+        assertThat(copy.expression().get()).isInstanceOf(CustomExpression.class);
+        assertThat(copy.block().get()).isInstanceOf(CustomBlock.class);
+    }
+
+    @Test
+    public void copyNotRefined() {
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule copy = (AtRule)ar.copy();
+
+        assertThat(copy.name()).isEqualTo("media-x");
+        assertThat(copy.rawExpression().isPresent()).isTrue();
+        assertThat(copy.rawBlock().isPresent()).isTrue();
+    }
+
+    @Test
+    public void copyWithPrefix() {
+        CustomExpression expression = new CustomExpression();
+        CustomBlock block = new CustomBlock();
+        AtRule ar = new AtRule("keyframes", expression, block);
+
+        SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
+        AtRule copy = (AtRule)ar.copy(Prefix.WEBKIT, support);
+        assertThat(copy.name()).isEqualTo("-webkit-keyframes");
+    }
+
+    @Test
+    public void copyWithPrefixNotNeeded() {
+        CustomExpression expression = new CustomExpression();
+        CustomBlock block = new CustomBlock();
+        AtRule ar = new AtRule("keyframes", expression, block);
+
+        SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
+        AtRule copy = (AtRule)ar.copy(Prefix.MOZ, support);
+        assertThat(copy.name()).isEqualTo("keyframes");
+    }
+
     public static final class CustomExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
@@ -269,7 +348,24 @@ public class AtRuleTest {
 
         @Override
         protected CustomExpression makeCopy(Prefix prefix, SupportMatrix support) {
-            throw new UnsupportedOperationException();
+            return new CustomExpression();
+        }
+    }
+
+    public static final class CustomExpressionNotWritable extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+        @Override
+        public boolean isWritable() {
+            return false;
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+            appendable.append("(custom)");
+        }
+
+        @Override
+        protected CustomExpression makeCopy(Prefix prefix, SupportMatrix support) {
+            return new CustomExpression();
         }
     }
 
@@ -286,7 +382,29 @@ public class AtRuleTest {
 
         @Override
         protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
+            return new CustomBlock();
+        }
+    }
+
+    public static final class CustomBlockNotWritable extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+        @Override
+        public boolean isWritable() {
+            return false;
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+            appendable.append("{custom}");
+        }
+
+        @Override
+        public Iterator<Statement> iterator() {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
+            return new CustomBlock();
         }
     }
 }

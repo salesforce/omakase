@@ -270,7 +270,6 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     @Override
     public boolean isWritable() {
-        // TESTME
         if (isRefined()) {
             if (shouldWriteName) return true;
             if (expression.isPresent() && expression.get().isWritable()) return true;
@@ -332,7 +331,6 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     @Override
     protected AtRule makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         String newName = name;
         if (prefix != null && support != null && support.requiresPrefixForAtRule(prefix, name)) {
             newName = prefix + name;

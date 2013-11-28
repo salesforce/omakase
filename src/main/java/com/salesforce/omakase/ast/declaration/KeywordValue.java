@@ -133,7 +133,6 @@ public final class KeywordValue extends AbstractTerm {
 
     @Override
     protected KeywordValue makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         String copied = keyword;
 
         // if we are part of a "transition" declaration, we may need to be prefixed if we are a prefixable property-name
@@ -141,8 +140,9 @@ public final class KeywordValue extends AbstractTerm {
         // property-name that may need to be prefixed.
         if (prefix != null && support != null && !this.isDetached() && this.group().get().parent().declaration().isPresent()) {
             Declaration declaration = group().get().parent().declaration().get();
+
+            // transition
             if (declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) {
-                // check if this keyword is a recognizable property
                 Property property = Property.lookup(keyword);
                 if (property != null && support.requiresPrefixForProperty(prefix, property)) {
                     copied = prefix + keyword;
