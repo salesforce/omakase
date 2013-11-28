@@ -671,4 +671,78 @@ public class PrefixerUnitTargetedTest {
         Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    private Prefixer columnsSetup() {
+        return Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+    }
+
+    @Test
+    public void columns() {
+        String original = ".test {columns: 3}";
+        String expected = ".test {-moz-columns:3; columns:3}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnWidth() {
+        String original = ".test {column-width:6px}";
+        String expected = ".test {-moz-column-width:6px; column-width:6px}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnCount() {
+        String original = ".test {column-count:2}";
+        String expected = ".test {-moz-column-count:2; column-count:2}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnGap() {
+        String original = ".test {column-gap:15px}";
+        String expected = ".test {-moz-column-gap:15px; column-gap:15px}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnRule() {
+        String original = ".test {column-rule:solid}";
+        String expected = ".test {-moz-column-rule:solid; column-rule:solid}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnRuleWidth() {
+        String original = ".test {column-rule-width:5px}";
+        String expected = ".test {-moz-column-rule-width:5px; column-rule-width:5px}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnRuleStyle() {
+        String original = ".test {column-rule-style:groove}";
+        String expected = ".test {-moz-column-rule-style:groove; column-rule-style:groove}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnRuleColor() {
+        String original = ".test {column-rule-color:red}";
+        String expected = ".test {-moz-column-rule-color:red; column-rule-color:red}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnSpan() {
+        String original = ".test {column-span:all}";
+        String expected = ".test {-moz-column-span:all; column-span:all}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void columnFill() {
+        String original = ".test {column-fill:balance}";
+        String expected = ".test {-moz-column-fill:balance; column-fill:balance}";
+        assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
 }

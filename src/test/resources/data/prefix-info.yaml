@@ -54,17 +54,17 @@ properties:
   css3-boxsizing:
     - box-sizing
 
-#  multicolumn:
-#    - columns
-#    - column-width
-#    - column-gap
-#    - column-rule
-#    - column-rule-color
-#    - column-rule-width
-#    - column-count
-#    - column-rule-style
-#    - column-span
-#    - column-fill
+  multicolumn:
+    - columns
+    - column-width
+    - column-gap
+    - column-rule
+    - column-count
+    - column-rule-color
+    - column-rule-width
+    - column-rule-style
+    - column-span
+    - column-fill
 #    - break-before
 #    - break-after
 #    - break-inside
