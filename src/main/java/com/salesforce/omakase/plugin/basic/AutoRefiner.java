@@ -17,6 +17,7 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.Sets;
+import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -25,6 +26,7 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
+import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.Set;
@@ -32,10 +34,10 @@ import java.util.Set;
 /**
  * Automatically refines all explicitly requested {@link Refinable} types.
  * <p/>
- * Generally this is used when your {@link Plugin} has a subscription to a lower-level {@link Syntax} unit not exposed during the
- * high-level parsing phase. The {@link Refinable} responsible for parsing that syntax unit must be refined before the syntax unit
- * will be exposed. Examples of lower-level {@link Syntax} units include {@link ClassSelector} and {@link IdSelector}. For more
- * information on auto-refinement see the readme file.
+ * Generally this is used as a dependency in a {@link DependentPlugin}, when the {@link DependentPlugin} has a subscription to a
+ * lower-level {@link Syntax} unit not exposed during the high-level parsing phase. The {@link Refinable} responsible for parsing
+ * that syntax unit must be refined before the syntax unit will be exposed. Examples of lower-level {@link Syntax} units include
+ * {@link ClassSelector} and {@link IdSelector}. For more information on auto-refinement see the readme file.
  * <p/>
  * Example:
  * <pre><code> public class MyPlugin implements DependentPlugin {
@@ -45,6 +47,9 @@ import java.util.Set;
  * <p/>
  *   ...(subscription methods)...
  * }<code></pre>
+ * <p/>
+ * If you are manually including this with {@link Omakase.Request#request(Plugin...)} then you almost always want to ensure that
+ * it is registered  first before any other plugins.
  *
  * @author nmcwilliams
  */

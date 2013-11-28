@@ -103,9 +103,9 @@ public class VaryingConditionalsTest {
         // parsing
         Omakase
             .source(INPUT)
+            .request(refiner)
             .request(conditionals)
             .request(validation)
-            .request(refiner)
             .request(inline)
             .process();
 
@@ -144,9 +144,9 @@ public class VaryingConditionalsTest {
         // parsing
         Omakase
             .source("@if (ie7) { .test {border: 1px solid red} }")
+            .request(refiner)
             .request(conditionals)
             .request(validation)
-            .request(refiner)
             .request(counter)
             .process();
 

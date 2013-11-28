@@ -123,14 +123,12 @@ public class ContextTest {
     public void beforeMethodInvokesDependencies() {
         TestDependentPlugin plugin = new TestDependentPlugin();
         c.register(plugin);
-        c.before();
         assertThat(plugin.dependenciesCalled).isTrue();
     }
 
     @Test
     public void dependenciesThatLeadToMoreDependencies() {
         c.register(new TestDependentPlugin2());
-        c.before();
         assertThat(c.retrieve(TestDependentPlugin2.class).isPresent()).isTrue();
         assertThat(c.retrieve(TestDependentPlugin.class).isPresent()).isTrue();
         assertThat(c.retrieve(TestDependentPlugin.class).get().dependenciesCalled).isTrue();
@@ -226,7 +224,7 @@ public class ContextTest {
         }
 
         @Override
-        public void report(ErrorLevel level, Syntax cause, String message) {
+        public void report(ErrorLevel level, Syntax<?> cause, String message) {
             reported = true;
         }
     }

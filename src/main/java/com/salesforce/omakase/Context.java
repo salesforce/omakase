@@ -19,11 +19,9 @@ package com.salesforce.omakase;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.EmittingBroadcaster;
@@ -43,7 +41,6 @@ import com.salesforce.omakase.plugin.PostProcessingPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
@@ -85,6 +82,11 @@ final class Context implements Broadcaster, PluginRegistry {
 
         // only one instance allowed per plugin type
         if (registry.containsKey(klass)) throw new IllegalArgumentException(Message.DUPLICATE_PLUGIN.message(klass));
+
+        // handle plugin dependencies
+        if (plugin instanceof DependentPlugin) {
+            ((DependentPlugin)plugin).dependencies(this);
+        }
 
         // add the plugin to the registry
         registry.put(klass, plugin);
@@ -179,21 +181,6 @@ final class Context implements Broadcaster, PluginRegistry {
      * interested in such information, usually as a hook to add in their own dependencies on other {@link Plugin}s.
      */
     protected void before() {
-        // let plugins register their dependencies. dependencies can result in their own new dependencies, so this gets
-        // a little hairy... guava to the rescue.
-        final Set<DependentPlugin> processed = Sets.newHashSet();
-        Set<DependentPlugin> unprocessed = ImmutableSet.copyOf(filter(DependentPlugin.class));
-        Set<DependentPlugin> updated;
-
-        while (!unprocessed.isEmpty()) {
-            for (DependentPlugin plugin : unprocessed) {
-                plugin.dependencies(this);
-            }
-            processed.addAll(unprocessed);
-            updated = ImmutableSet.copyOf(filter(DependentPlugin.class));
-            unprocessed = Sets.difference(updated, processed);
-        }
-
         // distribute the broadcaster to plugins that need it
         for (BroadcastingPlugin plugin : filter(BroadcastingPlugin.class)) {
             plugin.broadcaster(this);
