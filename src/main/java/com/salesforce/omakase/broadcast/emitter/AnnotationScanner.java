@@ -19,6 +19,7 @@ package com.salesforce.omakase.broadcast.emitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -39,6 +40,9 @@ import java.util.Set;
  * @author nmcwilliams
  */
 final class AnnotationScanner {
+    private static final Set<String> SKIP = ImmutableSet.of("wait", "equals", "hashCode", "getClass", "notify", "notifyAll",
+        "toString", "dependencies");
+
     /** cache of which methods on a {@link Plugin} are {@link Subscription} methods */
     private static final LoadingCache<Class<?>, Set<SubscriptionMetadata>> cache = CacheBuilder.newBuilder()
         .weakKeys()
@@ -72,6 +76,8 @@ final class AnnotationScanner {
         Set<SubscriptionMetadata> set = Sets.newHashSet();
 
         for (Method method : klass.getMethods()) {
+            if (SKIP.contains(method.getName())) continue;
+
             boolean annotated = false;
 
             // the observe annotation

@@ -86,8 +86,8 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
      * @return this, for chaining.
      */
     public QueuingBroadcaster resume() {
-        flush();
         state = State.READY;
+        flush();
         return this;
     }
 

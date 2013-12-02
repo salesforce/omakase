@@ -56,6 +56,8 @@ public final class PerfTest {
     /** print all inputs to average */
     private static final boolean SHOW_ALL = true;
 
+    private static final String INPUT = PerfTestInput.PREFIX;
+
     // END OPTIONS
 
     /** main method with setup */
@@ -69,7 +71,7 @@ public final class PerfTest {
         }
 
         System.out.println("\nRunning tests for " + parser.name() + " " + env() + ":");
-        test(parser, PerfTestInput.NORMAL);
+        test(parser, INPUT);
         System.out.println("\ndone " + env());
     }
 

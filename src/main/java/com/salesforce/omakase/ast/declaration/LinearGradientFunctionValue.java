@@ -43,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 public final class LinearGradientFunctionValue extends AbstractTerm implements FunctionValue {
-    private final Map<String, String> DIR_FLIP = ImmutableMap.<String, String>builder()
+    private static final Map<String, String> DIR_FLIP = ImmutableMap.<String, String>builder()
         .put("to bottom", "top")
         .put("to top", "bottom")
         .put("to right", "left")
