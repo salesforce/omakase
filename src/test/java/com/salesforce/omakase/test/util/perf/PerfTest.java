@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.test.util.perf;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -32,15 +33,18 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("ALL")
 public final class PerfTest {
+
+    // MODES
+
+    /** set of possible parsers configurations to test */
+    private static final Set<PerfTestParser> PARSERS = ImmutableSet.of(
+        new OmakaseThin(),
+        new OmakaseFull(),
+        new OmakaseFullPrefixer()
+    );
     // OPTIONS
 
-    /** parsers that can be tests */
-    private static final Set<PerfTestParser> PARSERS = ImmutableSet.of(
-        new PerfTestOmakaseThin(),
-        new PerfTestOmakaseFull()
-    );
-
-    /** prime the code before measuring performance */
+    /** whether to prime the code before measuring performance */
     private static final boolean PRIME = true;
 
     /** run tests for multiple LOC variations */
@@ -53,25 +57,44 @@ public final class PerfTest {
     /** Single LOC variation (multiplication) */
     private static final List<Integer> SINGLE_FACTOR = ImmutableList.of(200);
 
-    /** print all inputs to average */
-    private static final boolean SHOW_ALL = true;
+    /** prints individual parse times next to the average */
+    private static final boolean SHOW_INDIVIDUAL = true;
 
-    private static final String INPUT = PerfTestInput.PREFIX;
+    /** default input string to use if none specified */
+    private static final String DEFAULT_INPUT = "simple";
 
     // END OPTIONS
 
     /** main method with setup */
     public static void main(String[] args) {
         PerfTestParser parser = Iterables.get(PARSERS, 0);
+        String inputKey = DEFAULT_INPUT;
+        boolean useFactors = USE_FACTORS;
 
-        if (args.length == 1 && !args[0].isEmpty()) {
+        // check for args specifying the mode and input to use
+        if (args.length == 1) {
+            // "-" separated, mode then input. input is optional
+            Iterable<String> split = Splitter.on("-").trimResults().split(args[0]);
+
+            // mode
             for (PerfTestParser p : PARSERS) {
-                if (p.code() == args[0].charAt(0)) parser = p;
+                if (p.code().startsWith(Iterables.get(split, 0, null))) {
+                    parser = p;
+                    break;
+                }
+            }
+
+            // input
+            inputKey = Iterables.get(split, 1, inputKey);
+
+            // disable factors
+            if ("single".equals(Iterables.get(split, 2, null))) {
+                useFactors = false;
             }
         }
 
-        System.out.println("\nRunning tests for " + parser.name() + " " + env() + ":");
-        test(parser, INPUT);
+        System.out.printf("\nRunning tests for %s - %s %s:\n", parser.name(), inputKey, env());
+        test(parser, PerfTestInput.MAP.get(inputKey), useFactors);
         System.out.println("\ndone " + env());
     }
 
@@ -89,12 +112,12 @@ public final class PerfTest {
     }
 
     /** prime the parser then test it with each specified factor */
-    private static void test(PerfTestParser parser, String input) {
-        final List<Integer> factors = USE_FACTORS ? MULTI_FACTORS : SINGLE_FACTOR;
+    private static void test(PerfTestParser parser, String input, boolean useFactors) {
+        final List<Integer> factors = useFactors ? MULTI_FACTORS : SINGLE_FACTOR;
 
         // prime
         if (PRIME) {
-            System.out.println("\nPriming...\n");
+            if (useFactors) System.out.println("\nPriming...\n");
             for (int i = 0; i < 200; i++) parser.parse(input);
         }
 
@@ -127,6 +150,6 @@ public final class PerfTest {
 
         // output
         long avg = total / parseTimes.size();
-        System.out.println(String.format("%-12s %-15s %s", avg + "ms", "(" + loc + " loc)", (SHOW_ALL ? parseTimes : "")));
+        System.out.println(String.format("%-12s %-15s %s", avg + "ms", "(" + loc + " loc)", (SHOW_INDIVIDUAL ? parseTimes : "")));
     }
 }

@@ -19,23 +19,24 @@ package com.salesforce.omakase.test.util.perf;
 import com.salesforce.omakase.Omakase;
 
 /**
- * Omakase, thin mode.
+ * Omakase, full mode.
  *
  * @author nmcwilliams
  */
-public final class PerfTestOmakaseThin implements PerfTestParser {
+@SuppressWarnings("UnusedParameters")
+public final class OmakaseFull implements PerfTestParser {
     @Override
-    public char code() {
-        return 't';
+    public String code() {
+        return "full";
     }
 
     @Override
     public String name() {
-        return "Omakase Thin";
+        return "omakase[full]";
     }
 
     @Override
     public void parse(String input) {
-        Omakase.source(input).process();
+        Omakase.source(input).request(PluginSet.normal()).process();
     }
 }

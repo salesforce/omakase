@@ -38,11 +38,8 @@ public class Run {
     @Option(name = "-b", aliases = "--build", usage = "build the project")
     private boolean build;
 
-    @Option(name = "-p", aliases = "--perf", usage = "run the performance test")
-    private boolean perf;
-
-    @Option(name = "-m", aliases = "--mode", usage = "specifies perf mode (t/thin, f/full, g/gss, p/phloc)", metaVar = "<mode>")
-    private String perfMode = "";
+    @Option(name = "-p", aliases = "--perf", usage = "performance test (ex. \"-p full\", \"-p full-heavy\")", metaVar = "<mode-input>")
+    private String perf;
 
     @Option(name = "-d", aliases = "--deploy", usage = "build and deploy jars (requires additional setup, see deploy.md)")
     private boolean deploy;
@@ -62,8 +59,6 @@ public class Run {
     @Option(name = "-h", aliases = "--help", usage = "print this help message")
     private boolean help;
 
-
-
     public static void main(String[] args) throws Exception {
         new Run().cli(args);
     }
@@ -81,8 +76,8 @@ public class Run {
                 if (!exec("mvn clean install")) {
                     System.out.println("\n" + Colors.red("build was not successful!"));
                 }
-            } else if (perf) {
-                PerfTest.main(new String[]{perfMode});
+            } else if (perf != null) {
+                PerfTest.main(new String[]{perf});
             } else if (deploy) {
                 if (!exec("mvn deploy")) {
                     System.out.println("\n" + Colors.red("could not deploy to the interal aura maven repo"));
@@ -103,7 +98,7 @@ public class Run {
                 System.out.println(Colors.yellow("prefix info sucessfully updated"));
             } else if (sub) {
                 new PrintSubscribableSyntaxTable().run();
-            } else if (interactive){
+            } else if (interactive) {
                 new InteractiveShell().run();
             } else if (help) {
                 throw new CmdLineException(parser, USAGE);

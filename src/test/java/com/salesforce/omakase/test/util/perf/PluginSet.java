@@ -16,9 +16,13 @@
 
 package com.salesforce.omakase.test.util.perf;
 
-import com.salesforce.omakase.Omakase;
+import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.HexColorValue;
+import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Validate;
@@ -26,63 +30,67 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.test.util.EchoLogger;
 
 /**
- * Omakase, full mode.
+ * Sets of plugins for perf tests.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("UnusedParameters")
-public final class PerfTestOmakaseFull implements PerfTestParser {
-    @Override
-    public char code() {
-        return 'f';
-    }
-
-    @Override
-    public String name() {
-        return "Omakase Full";
-    }
-
-    @Override
-    public void parse(String input) {
-        Omakase.source(input)
-            .request(new SyntaxTree())
-            .request(new StandardValidation())
-            .request(new EchoLogger())
-            .request(new Plugin() {
+@SuppressWarnings("ALL")
+public final class PluginSet {
+    /**
+     * common set of plugins simulating real world usage.
+     *
+     * @return the plugins.
+     */
+    public static Iterable<Plugin> normal() {
+        return ImmutableList.<Plugin>builder()
+            .add(new SyntaxTree())
+            .add(new StandardValidation())
+            .add(new Plugin() {
                 @Observe
                 public void observe(Declaration d) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
                 @Observe
                 public void observe(Declaration d) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
                 @Observe
                 public void observe(Declaration d) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
                 @Observe
                 public void observe(Declaration d) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
+                @Observe
+                public void observe(RawFunction r) {}
+            })
+            .add(new Plugin() {
+                @Observe
+                public void observe(HexColorValue h) {}
+            })
+            .add(new Plugin() {
+                @Observe
+                public void observe(Rule r) {}
+            })
+            .add(new Plugin() {
                 @Validate
                 public void observe(Declaration d, ErrorManager em) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
                 @Validate
                 public void observe(PseudoClassSelector s, ErrorManager em) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
                 @Validate
-                public void observe(PseudoClassSelector s, ErrorManager em) {}
+                public void observe(IdSelector s, ErrorManager em) {}
             })
-            .request(new Plugin() {
+            .add(new Plugin() {
                 @Validate
                 public void observe(AtRule a, ErrorManager em) {}
             })
-            .process();
+            .build();
     }
 }

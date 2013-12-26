@@ -243,9 +243,9 @@ public final class PrefixInfo {
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.OPERA, 17.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.OPERA, 17.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.OPERA, 17.0));
         builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.OPERA, 17.0));
@@ -253,9 +253,9 @@ public final class PrefixInfo {
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.CHROME, 31.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.CHROME, 31.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.CHROME, 31.0));
         builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.CHROME, 31.0));
@@ -263,9 +263,9 @@ public final class PrefixInfo {
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.SAFARI, 7.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.SAFARI, 7.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.SAFARI, 7.0));
         builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.SAFARI, 7.0));
@@ -273,9 +273,9 @@ public final class PrefixInfo {
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.FIREFOX, 25.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.FIREFOX, 25.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.FIREFOX, 25.0));
         builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.FIREFOX, 25.0));
@@ -283,9 +283,9 @@ public final class PrefixInfo {
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.ANDROID, 4.3));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.ANDROID, 4.3));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.ANDROID, 4.3));
         builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.ANDROID, 4.3));
@@ -293,9 +293,9 @@ public final class PrefixInfo {
         builder.put(Property.COLUMN_WIDTH, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_GAP, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
+        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE_COLOR, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE_WIDTH, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
-        builder.put(Property.COLUMN_COUNT, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_RULE_STYLE, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_SPAN, new BrowserVersion(Browser.IOS_SAFARI, 7.0));
         builder.put(Property.COLUMN_FILL, new BrowserVersion(Browser.IOS_SAFARI, 7.0));

@@ -16,11 +16,26 @@
 
 package com.salesforce.omakase.test.util.perf;
 
-@SuppressWarnings("ALL")
-public interface PerfTestParser {
-    String code();
+import com.salesforce.omakase.Omakase;
 
-    String name();
+/**
+ * Omakase, thin mode (no plugins or refinement, just high-level parsing).
+ *
+ * @author nmcwilliams
+ */
+public final class OmakaseThin implements PerfTestParser {
+    @Override
+    public String code() {
+        return "thin";
+    }
 
-    void parse(String input);
+    @Override
+    public String name() {
+        return "omakase[thin]";
+    }
+
+    @Override
+    public void parse(String input) {
+        Omakase.source(input).process();
+    }
 }
