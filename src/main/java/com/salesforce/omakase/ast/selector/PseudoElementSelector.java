@@ -74,6 +74,22 @@ public final class PseudoElementSelector extends AbstractSelectorPart implements
     }
 
     /**
+     * Constructor to use when you know for certain that the given name is already lower-cased.
+     *
+     * @param name
+     *     Name of the pseudo element.
+     * @param knownLowerCase
+     *     Specify true to indicate the name is already lower-cased.
+     */
+    public PseudoElementSelector(String name, boolean knownLowerCase) {
+        if (knownLowerCase) {
+            this.name = name;
+        } else {
+            name(name);
+        }
+    }
+
+    /**
      * Sets the name of the selector.
      *
      * @param name
@@ -110,9 +126,9 @@ public final class PseudoElementSelector extends AbstractSelectorPart implements
     protected SelectorPart makeCopy(Prefix prefix, SupportMatrix support) {
         if (prefix != null && support != null) {
             if (support.requiresPrefixForSelector(prefix, name)) {
-                return new PseudoElementSelector(prefix + name);
+                return new PseudoElementSelector(prefix + name, true);
             }
         }
-        return new PseudoElementSelector(name);
+        return new PseudoElementSelector(name, true);
     }
 }

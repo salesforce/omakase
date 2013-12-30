@@ -23,11 +23,13 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.PrefixInfo;
+import com.salesforce.omakase.data.PrefixUtil;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.util.As;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -42,6 +44,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class SupportMatrix {
     /* using tree so that getting browser versions are in ascending order */
     private final Multimap<Browser, Double> supported = TreeMultimap.create();
+
+    private final Map<Property, Set<Prefix>> propertyCache = new HashMap<Property, Set<Prefix>>();
+    private final Map<String, Set<Prefix>> functionCache = new HashMap<String, Set<Prefix>>(8);
+    private final Map<String, Set<Prefix>> atRuleCache = new HashMap<String, Set<Prefix>>(2);
+    private final Map<String, Set<Prefix>> selectorCache = new HashMap<String, Set<Prefix>>(2);
 
     /**
      * Designate support for the given {@link Browser} and version.
@@ -162,7 +169,7 @@ public final class SupportMatrix {
      * @return True if the specified version of the browser is supported.
      */
     public boolean supportsVersion(Browser browser, int version) {
-        return supported.get(browser).contains((double)version);
+        return supportsVersion(browser, (double)version);
     }
 
     /**
@@ -197,7 +204,7 @@ public final class SupportMatrix {
      * @param browser
      *     Get the lowest version supported of this {@link Browser}.
      *
-     * @return this, for chaining.
+     * @return The lowest supported version, or -1 if no versions are supported.
      */
     public Double lowestSupportedVersion(Browser browser) {
         return Iterables.getFirst(supported.get(browser), -1d);
@@ -221,34 +228,48 @@ public final class SupportMatrix {
      * @return The set of required prefixes.
      */
     public Set<Prefix> prefixesForProperty(Property property) {
-        Set<Prefix> required = Sets.newHashSet();
+        Set<Prefix> cached = propertyCache.get(property);
 
-        for (Browser browser : supportedBrowsers()) {
-            double lastPrefixed = PrefixInfo.lastPrefixedVersion(property, browser);
-            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        if (cached == null) {
+            Set<Prefix> required = Sets.newHashSet();
+
+            for (Browser browser : supportedBrowsers()) {
+                Double lastPrefixed = PrefixUtil.lastVersionPropertyIsPrefixed(property, browser);
+                if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+            }
+
+            cached = immutable(required);
+            propertyCache.put(property, cached);
         }
 
-        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+        return cached;
     }
 
     /**
      * Gets all prefixes required for the given function name (e.g., "calc" or "linear-gradient"), according to the supported
      * browser versions.
      *
-     * @param function
+     * @param name
      *     Get required prefixes for functions with this name.
      *
      * @return The set of required prefixes.
      */
-    public Set<Prefix> prefixesForFunction(String function) {
-        Set<Prefix> required = Sets.newHashSet();
+    public Set<Prefix> prefixesForFunction(String name) {
+        Set<Prefix> cached = functionCache.get(name);
 
-        for (Browser browser : supportedBrowsers()) {
-            double lastPrefixed = PrefixInfo.functionLastPrefixedVersion(function, browser);
-            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        if (cached == null) {
+            Set<Prefix> required = Sets.newHashSet();
+
+            for (Browser browser : supportedBrowsers()) {
+                Double lastPrefixed = PrefixUtil.lastVersionFunctionIsPrefixed(name, browser);
+                if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+            }
+
+            cached = immutable(required);
+            functionCache.put(name, cached);
         }
 
-        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+        return cached;
     }
 
     /**
@@ -260,14 +281,21 @@ public final class SupportMatrix {
      * @return The set of required prefixes.
      */
     public Set<Prefix> prefixesForAtRule(String name) {
-        Set<Prefix> required = Sets.newHashSet();
+        Set<Prefix> cached = atRuleCache.get(name);
 
-        for (Browser browser : supportedBrowsers()) {
-            double lastPrefixed = PrefixInfo.atRuleLastPrefixedVersion(name, browser);
-            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        if (cached == null) {
+            Set<Prefix> required = Sets.newHashSet();
+
+            for (Browser browser : supportedBrowsers()) {
+                Double lastPrefixed = PrefixUtil.lastVersionAtRuleIsPrefixed(name, browser);
+                if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+            }
+
+            cached = immutable(required);
+            atRuleCache.put(name, cached);
         }
 
-        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+        return cached;
     }
 
     /**
@@ -279,14 +307,21 @@ public final class SupportMatrix {
      * @return The set of required prefixes.
      */
     public Set<Prefix> prefixesForSelector(String name) {
-        Set<Prefix> required = Sets.newHashSet();
+        Set<Prefix> cached = selectorCache.get(name);
 
-        for (Browser browser : supportedBrowsers()) {
-            double lastPrefixed = PrefixInfo.selectorLastPrefixedVersion(name, browser);
-            if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+        if (cached == null) {
+            Set<Prefix> required = Sets.newHashSet();
+
+            for (Browser browser : supportedBrowsers()) {
+                Double lastPrefixed = PrefixUtil.lastVersionSelectorIsPrefixed(name, browser);
+                if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+            }
+
+            cached = immutable(required);
+            selectorCache.put(name, cached);
         }
 
-        return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+        return cached;
     }
 
     /**
@@ -302,8 +337,9 @@ public final class SupportMatrix {
      *
      * @return True if the property requires the given prefix.
      */
+
     public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
-        return PrefixInfo.hasProperty(property) && prefixesForProperty(property).contains(prefix);
+        return PrefixUtil.hasProperty(property) && prefixesForProperty(property).contains(prefix);
     }
 
     /**
@@ -318,7 +354,7 @@ public final class SupportMatrix {
      * @return True if the function name requires the given prefix.
      */
     public boolean requiresPrefixForFunction(Prefix prefix, String function) {
-        return PrefixInfo.hasFunction(function) && prefixesForFunction(function).contains(prefix);
+        return PrefixUtil.hasFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
     /**
@@ -332,7 +368,7 @@ public final class SupportMatrix {
      * @return True if the at-rule requires the given prefix.
      */
     public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
-        return PrefixInfo.hasAtRule(name) && prefixesForAtRule(name).contains(prefix);
+        return PrefixUtil.hasAtRule(name) && prefixesForAtRule(name).contains(prefix);
     }
 
     /**
@@ -347,11 +383,22 @@ public final class SupportMatrix {
      * @return True if the selector requires the given prefix.
      */
     public boolean requiresPrefixForSelector(Prefix prefix, String name) {
-        return PrefixInfo.hasSelector(name) && prefixesForSelector(name).contains(prefix);
+        return PrefixUtil.hasSelector(name) && prefixesForSelector(name).contains(prefix);
     }
 
     @Override
     public String toString() {
         return As.string(this).fields().toString();
+    }
+
+    private static Set<Prefix> immutable(Set<Prefix> required) {
+        switch (required.size()) {
+        case 0:
+            return ImmutableSet.of();
+        case 1:
+            return ImmutableSet.of(required.iterator().next());
+        default:
+            return Sets.newEnumSet(required, Prefix.class); // enum set maintains consistent ordinal-based iteration order
+        }
     }
 }

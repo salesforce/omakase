@@ -243,7 +243,10 @@ public final class NumericalValue extends AbstractTerm {
 
     @Override
     protected NumericalValue makeCopy(Prefix prefix, SupportMatrix support) {
-        return NumericalValue.of(raw).unit(unit.orNull()).explicitSign(explicitSign.orNull());
+        NumericalValue copy = new NumericalValue(-1, -1, raw);
+        if (unit.isPresent()) copy.unit(unit.get());
+        if (explicitSign.isPresent()) copy.explicitSign(explicitSign.get());
+        return copy;
     }
 
     /**
@@ -297,8 +300,8 @@ public final class NumericalValue extends AbstractTerm {
      * @return The new {@link NumericalValue} instance.
      */
     public static NumericalValue of(String value) {
-        checkArgument(!value.contains("-"), "to set the sign, use #explicitSign instead");
-        return new NumericalValue(-1, 1, checkNotNull(value));
+        checkArgument(!value.startsWith("-"), "to set the sign, use #explicitSign instead");
+        return new NumericalValue(-1, -1, checkNotNull(value));
     }
 
     /**

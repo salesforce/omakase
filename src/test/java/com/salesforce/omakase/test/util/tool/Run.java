@@ -91,10 +91,10 @@ public class Run {
                 new GenerateKeywordEnum().run();
                 new GeneratePropertyEnum().run();
                 new GenerateBrowserEnum().run();
-                new GeneratePrefixInfoClass().run();
+                new GeneratePrefixTablesClass().run();
                 System.out.println(Colors.yellow("all data generated successfully"));
             } else if (update) {
-                new GeneratePrefixInfoClass().run();
+                new GeneratePrefixTablesClass().run();
                 System.out.println(Colors.yellow("prefix info sucessfully updated"));
             } else if (sub) {
                 new PrintSubscribableSyntaxTable().run();

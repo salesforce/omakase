@@ -27,7 +27,7 @@ import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.PrefixInfo;
+import com.salesforce.omakase.data.PrefixUtil;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.Values;
@@ -55,7 +55,7 @@ final class PrefixerHandlers {
         boolean applicable(Declaration instance, SupportMatrix support) {
             if (instance.isDetached() || !instance.isRefined() || instance.isPrefixed()) return false;
             Optional<Property> property = instance.propertyName().asProperty();
-            return property.isPresent() && PrefixInfo.hasProperty(property.get());
+            return property.isPresent() && PrefixUtil.hasProperty(property.get());
         }
 
         @Override
@@ -79,7 +79,7 @@ final class PrefixerHandlers {
         @Override
         boolean applicable(FunctionValue instance, SupportMatrix support) {
             return !instance.isDetached() && instance.group().get().parent().declaration().isPresent()
-                && !instance.name().startsWith("-") && PrefixInfo.hasFunction(instance.name());
+                && !instance.name().startsWith("-") && PrefixUtil.hasFunction(instance.name());
         }
 
         @Override
@@ -103,7 +103,7 @@ final class PrefixerHandlers {
         @Override
         boolean applicable(AtRule instance, SupportMatrix support) {
             return !instance.isDetached() && instance.isRefined() && !instance.name().startsWith("-")
-                && PrefixInfo.hasAtRule(instance.name());
+                && PrefixUtil.hasAtRule(instance.name());
         }
 
         @Override
@@ -128,7 +128,7 @@ final class PrefixerHandlers {
         @Override
         boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
             return !instance.isDetached() && !instance.parent().get().isDetached() && !instance.name().startsWith("-") &&
-                PrefixInfo.hasSelector(instance.name());
+                PrefixUtil.hasSelector(instance.name());
         }
 
         @Override

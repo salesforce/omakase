@@ -150,6 +150,17 @@ public class SupportMatrixTest {
     }
 
     @Test
+    public void prefixesForPropertyCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 27);
+        support.browser(Browser.SAFARI, 4);
+        support.browser(Browser.FIREFOX, 3.6);
+        support.browser(Browser.OPERA, 15);
+        assertThat(support.prefixesForProperty(Property.BORDER_RADIUS)).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+        assertThat(support.prefixesForProperty(Property.BORDER_RADIUS)).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
     public void requiresPrefixForPropertyTrue() {
         support.browser(Browser.IE, 10);
         support.browser(Browser.CHROME, 27);
@@ -190,6 +201,17 @@ public class SupportMatrixTest {
     }
 
     @Test
+    public void prefixesForFunctionCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.SAFARI, 7);
+        support.browser(Browser.FIREFOX, 14);
+        support.browser(Browser.OPERA, 12);
+        assertThat(support.prefixesForFunction("calc")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+        assertThat(support.prefixesForFunction("calc")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
     public void requiresPrefixForFunctionTrue() {
         support.browser(Browser.IE, 10);
         support.browser(Browser.CHROME, 20);
@@ -218,6 +240,14 @@ public class SupportMatrixTest {
     }
 
     @Test
+    public void prefixesForAtRuleCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+    @Test
     public void requiresPrefixForAtRuleTrue() {
         support.browser(Browser.IE, 10);
         support.browser(Browser.CHROME, 20);
@@ -241,6 +271,14 @@ public class SupportMatrixTest {
         assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
     }
 
+    @Test
+    public void prefixesForSelectorCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
+        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
+    }
     @Test
     public void requiresPrefixForSelectorTrue() {
         support.browser(Browser.IE, 10);

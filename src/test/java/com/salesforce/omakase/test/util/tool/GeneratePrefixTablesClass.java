@@ -20,9 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.BrowserVersion;
+import com.google.common.collect.Maps;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.PrefixInfo;
+import com.salesforce.omakase.data.PrefixTables;
 import com.salesforce.omakase.data.Property;
 import freemarker.template.TemplateException;
 import org.yaml.snakeyaml.Yaml;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Handles updating the {@link PrefixInfo} class.
+ * Handles updating the {@link PrefixTables} class.
  * <p/>
  * Run the main method or use 'script/omakase.sh'.
  * <p/>
@@ -44,18 +44,18 @@ import java.util.concurrent.TimeUnit;
  * @author nmcwilliams
  */
 @SuppressWarnings({"JavaDoc", "unchecked", "rawtypes"})
-public class GeneratePrefixInfoClass {
+public class GeneratePrefixTablesClass {
     private static final String ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/features-json/";
     private static final Yaml yaml = new Yaml();
 
     public static void main(String[] args) throws IOException, TemplateException {
-        new GeneratePrefixInfoClass().run();
+        new GeneratePrefixTablesClass().run();
     }
 
     public void run() throws IOException, TemplateException {
         // read the prefix input data
-        System.out.println("reading prefix-info.yaml...");
-        Map types = (Map)yaml.load(Tools.readFile("/data/prefix-info.yaml"));
+        System.out.println("reading prefixible.yaml...");
+        Map types = (Map)yaml.load(Tools.readFile("/data/prefixible.yaml"));
 
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
         List<NameInfo> functions = loadGeneric((Map)types.get("functions"));
@@ -65,9 +65,9 @@ public class GeneratePrefixInfoClass {
         // write out the new class source
         SourceWriter writer = new SourceWriter();
 
-        writer.generator(GeneratePrefixInfoClass.class);
-        writer.classToWrite(PrefixInfo.class);
-        writer.template("prefix-info-class.ftl");
+        writer.generator(GeneratePrefixTablesClass.class);
+        writer.classToWrite(PrefixTables.class);
+        writer.template("prefix-tables-class.ftl");
         writer.data("properties", properties);
         writer.data("functions", functions);
         writer.data("atRules", atRules);
@@ -81,12 +81,12 @@ public class GeneratePrefixInfoClass {
         List<PropertyInfo> info = Lists.newArrayList();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
-            for (BrowserVersion browserVersion : lastPrefixedBrowserVersions(category.getKey())) {
+            for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
                 // loop through each property name in the category
                 for (String property : category.getValue()) {
                     Property prop = Property.lookup(property);
                     assert prop != null : String.format("property '%s' not found in the Property enum", property);
-                    info.add(new PropertyInfo(prop, browserVersion.browser(), browserVersion.version()));
+                    info.add(new PropertyInfo(prop, entry.getKey(), entry.getValue()));
                 }
             }
         }
@@ -99,10 +99,10 @@ public class GeneratePrefixInfoClass {
         List<NameInfo> info = Lists.newArrayList();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
-            for (BrowserVersion browserVersion : lastPrefixedBrowserVersions(category.getKey())) {
+            for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
                 // loop through each property name in the category
                 for (String function : category.getValue()) {
-                    info.add(new NameInfo(function, browserVersion.browser(), browserVersion.version()));
+                    info.add(new NameInfo(function, entry.getKey(), entry.getValue()));
                 }
             }
         }
@@ -111,8 +111,8 @@ public class GeneratePrefixInfoClass {
     }
 
     /** last prefixed version for each browser (each browser with at least one prefixed version) */
-    private List<BrowserVersion> lastPrefixedBrowserVersions(String category) throws IOException {
-        List<BrowserVersion> versions = Lists.newArrayList();
+    private Map<Browser, Double> lastPrefixedBrowserVersions(String category) throws IOException {
+        Map<Browser, Double> allVersions = Maps.newLinkedHashMap();
 
         // load data for the category
         Map<String, Object> stats = loadUrl(category);
@@ -123,24 +123,27 @@ public class GeneratePrefixInfoClass {
             assert browserSpecific != null : String.format("browser %s not found in downloaded stats", browser);
 
             // find the last browser version that requires a prefix (presence of "x" indicates prefix is required)
-            Double latest = 0d;
+            double lastPrefixed = 0d;
             for (Map.Entry<String, String> browserVersionPrefixInfo : browserSpecific.entrySet()) {
                 if (browserVersionPrefixInfo.getValue().contains("x")) {
                     String last = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
-                    latest = Math.max(latest, Double.valueOf(last));
+                    lastPrefixed = Math.max(lastPrefixed, Double.parseDouble(last));
                 }
             }
-            latest = Math.min(latest, browser.versions().get(0)); // don't go past the current browser version
+            // caniuse contains data for future browser releases, however we don't want to keep track of anything
+            // past the currently released browser version.
+            double currentVersion = browser.versions().get(0);
+            lastPrefixed = Math.min(lastPrefixed, currentVersion);
 
             // if we have a prefix requirement, mark it for each property in the category.
-            if (latest > 0) {
-                System.out.println(String.format("- last required with prefix in %s %s", browser, latest));
-                versions.add(new BrowserVersion(browser, latest));
+            if (lastPrefixed > 0) {
+                System.out.println(String.format("- last required with prefix in %s %s", browser, lastPrefixed));
+                allVersions.put(browser, lastPrefixed);
             }
         }
 
         System.out.println();
-        return versions;
+        return allVersions;
     }
 
     private Map<String, Object> loadUrl(String category) throws IOException {
