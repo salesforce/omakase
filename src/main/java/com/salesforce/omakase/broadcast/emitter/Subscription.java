@@ -110,6 +110,6 @@ final class Subscription implements Comparable<Subscription> {
 
     @Override
     public int compareTo(Subscription o) {
-        return Integer.compare(number, o.number);
+        return (number < o.number) ? -1 : ((number == o.number) ? 0 : 1);
     }
 }

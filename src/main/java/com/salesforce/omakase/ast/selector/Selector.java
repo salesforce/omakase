@@ -174,6 +174,20 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         return this;
     }
 
+    /**
+     * Gets whether this selector is used for @keyframes.
+     * <p/>
+     * XXX consider making keyframe selectors disjoint from regular selectors.
+     *
+     * @return Whether this selector is used for keyframes.
+     */
+    public boolean isKeyframe() {
+        for (SelectorPart part : parts) {
+            if (part instanceof KeyframeSelector) return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean isRefined() {
         return !parts.isEmpty();

@@ -36,7 +36,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class RegistrationAndDependencyOrder {
+public class RegistrationAndDependencyOrderTest {
     @Test
     public void registrationOrder() {
         List<Class<?>> list = Lists.newArrayList();

@@ -176,4 +176,16 @@ public class SelectorTest {
         assertThat(Iterables.get(copy.parts(), 1)).isInstanceOf(Combinator.class);
         assertThat(Iterables.get(copy.parts(), 2)).isInstanceOf(IdSelector.class);
     }
+
+    @Test
+    public void keyframeSelectorTrue() {
+        selector = new Selector(new KeyframeSelector("from"));
+        assertThat(selector.isKeyframe()).isTrue();
+    }
+
+    @Test
+    public void keyframeSelectorFalse() {
+        selector = new Selector(new ClassSelector("test"));
+        assertThat(selector.isKeyframe()).isFalse();
+    }
 }
