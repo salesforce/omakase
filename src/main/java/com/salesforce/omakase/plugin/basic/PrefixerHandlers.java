@@ -53,9 +53,11 @@ final class PrefixerHandlers {
     static final PrefixerHandler<Declaration> PROPERTY = new PrefixerHandlerStandard<Declaration, Declaration>() {
         @Override
         boolean applicable(Declaration instance, SupportMatrix support) {
-            if (instance.destroyed() || !instance.isRefined() || instance.isPrefixed()) return false;
+            // don't want to automatically trigger refinement on every declaration just to check
+            // if a prefix is needed.
+            if (!instance.isRefined() || instance.isPrefixed()) return false;
             Optional<Property> property = instance.propertyName().asProperty();
-            return property.isPresent() && PrefixUtil.hasProperty(property.get());
+            return property.isPresent() && PrefixUtil.isPrefixibleProperty(property.get());
         }
 
         @Override
@@ -78,8 +80,8 @@ final class PrefixerHandlers {
     static final PrefixerHandler<FunctionValue> FUNCTION = new PrefixerHandlerStandard<FunctionValue, Declaration>() {
         @Override
         boolean applicable(FunctionValue instance, SupportMatrix support) {
-            return !instance.destroyed() && instance.group().get().parent().declaration().isPresent()
-                && !instance.name().startsWith("-") && PrefixUtil.hasFunction(instance.name());
+            return instance.parent().get().declaration().isPresent()
+                && instance.name().charAt(0) != '-' && PrefixUtil.isPrefixibleFunction(instance.name());
         }
 
         @Override
@@ -102,8 +104,8 @@ final class PrefixerHandlers {
     static final PrefixerHandler<AtRule> AT_RULE = new PrefixerHandlerStandard<AtRule, Statement>() {
         @Override
         boolean applicable(AtRule instance, SupportMatrix support) {
-            return !instance.destroyed() && instance.isRefined() && !instance.name().startsWith("-")
-                && PrefixUtil.hasAtRule(instance.name());
+            return instance.isRefined() && instance.name().charAt(0) != '-'
+                && PrefixUtil.isPrefixibleAtRule(instance.name());
         }
 
         @Override
@@ -128,7 +130,7 @@ final class PrefixerHandlers {
         @Override
         boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
             return !instance.destroyed() && !instance.parent().get().destroyed() && !instance.name().startsWith("-") &&
-                PrefixUtil.hasSelector(instance.name());
+                PrefixUtil.isPrefixibleSelector(instance.name());
         }
 
         @Override

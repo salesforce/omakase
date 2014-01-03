@@ -54,7 +54,7 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
 
         // the IE7 "star hack" is not part of the CSS syntax, but it still needs to be handled
         if (name.charAt(0) == STAR) {
-            setStarHack(true);
+            starHack(true);
             name = name.substring(1);
         }
 
@@ -182,7 +182,7 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
      *
      * @return this, for chaining.
      */
-    public PropertyName setStarHack(boolean starHack) {
+    public PropertyName starHack(boolean starHack) {
         this.starHack = starHack;
         return this;
     }
@@ -260,10 +260,10 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
         if (prefix != null && support != null) {
             Optional<Property> property = asProperty();
             if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
-                return PropertyName.using(property.get()).prefix(prefix).setStarHack(starHack);
+                return PropertyName.using(property.get()).prefix(prefix).starHack(starHack);
             }
         }
-        return PropertyName.using(name()).setStarHack(starHack);
+        return PropertyName.using(name()).starHack(starHack);
     }
 
     /**

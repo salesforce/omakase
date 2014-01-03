@@ -41,7 +41,7 @@ public final class PrefixUtil {
      *
      * @return True of prefix info exists for the given property.
      */
-    public static boolean hasProperty(Property property) {
+    public static boolean isPrefixibleProperty(Property property) {
         return PrefixTables.PROPERTIES.containsRow(property);
     }
 
@@ -53,7 +53,7 @@ public final class PrefixUtil {
      *
      * @return True of prefix info exists for the given function name.
      */
-    public static boolean hasFunction(String function) {
+    public static boolean isPrefixibleFunction(String function) {
         return PrefixTables.FUNCTIONS.containsRow(function);
     }
 
@@ -65,7 +65,7 @@ public final class PrefixUtil {
      *
      * @return True of prefix info exists for the given at-rule.
      */
-    public static boolean hasAtRule(String name) {
+    public static boolean isPrefixibleAtRule(String name) {
         return PrefixTables.AT_RULES.containsRow(name);
     }
 
@@ -77,7 +77,7 @@ public final class PrefixUtil {
      *
      * @return True of prefix info exists for the given selector name.
      */
-    public static boolean hasSelector(String name) {
+    public static boolean isPrefixibleSelector(String name) {
         return PrefixTables.SELECTORS.containsRow(name);
     }
 

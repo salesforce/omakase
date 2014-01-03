@@ -233,7 +233,7 @@ public final class SupportMatrix {
         if (cached == null) {
             Set<Prefix> required = Sets.newHashSet();
 
-            for (Browser browser : supportedBrowsers()) {
+            for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixUtil.lastVersionPropertyIsPrefixed(property, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
@@ -260,7 +260,7 @@ public final class SupportMatrix {
         if (cached == null) {
             Set<Prefix> required = Sets.newHashSet();
 
-            for (Browser browser : supportedBrowsers()) {
+            for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixUtil.lastVersionFunctionIsPrefixed(name, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
@@ -286,7 +286,7 @@ public final class SupportMatrix {
         if (cached == null) {
             Set<Prefix> required = Sets.newHashSet();
 
-            for (Browser browser : supportedBrowsers()) {
+            for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixUtil.lastVersionAtRuleIsPrefixed(name, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
@@ -312,7 +312,7 @@ public final class SupportMatrix {
         if (cached == null) {
             Set<Prefix> required = Sets.newHashSet();
 
-            for (Browser browser : supportedBrowsers()) {
+            for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixUtil.lastVersionSelectorIsPrefixed(name, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
@@ -339,7 +339,7 @@ public final class SupportMatrix {
      */
 
     public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
-        return PrefixUtil.hasProperty(property) && prefixesForProperty(property).contains(prefix);
+        return PrefixUtil.isPrefixibleProperty(property) && prefixesForProperty(property).contains(prefix);
     }
 
     /**
@@ -354,7 +354,7 @@ public final class SupportMatrix {
      * @return True if the function name requires the given prefix.
      */
     public boolean requiresPrefixForFunction(Prefix prefix, String function) {
-        return PrefixUtil.hasFunction(function) && prefixesForFunction(function).contains(prefix);
+        return PrefixUtil.isPrefixibleFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
     /**
@@ -368,7 +368,7 @@ public final class SupportMatrix {
      * @return True if the at-rule requires the given prefix.
      */
     public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
-        return PrefixUtil.hasAtRule(name) && prefixesForAtRule(name).contains(prefix);
+        return PrefixUtil.isPrefixibleAtRule(name) && prefixesForAtRule(name).contains(prefix);
     }
 
     /**
@@ -383,7 +383,7 @@ public final class SupportMatrix {
      * @return True if the selector requires the given prefix.
      */
     public boolean requiresPrefixForSelector(Prefix prefix, String name) {
-        return PrefixUtil.hasSelector(name) && prefixesForSelector(name).contains(prefix);
+        return PrefixUtil.isPrefixibleSelector(name) && prefixesForSelector(name).contains(prefix);
     }
 
     @Override

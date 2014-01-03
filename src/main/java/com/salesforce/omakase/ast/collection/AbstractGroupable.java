@@ -61,25 +61,21 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
 
     @Override
     public boolean isFirst() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return group == null || group.first().get().equals(this);
     }
 
     @Override
     public boolean isLast() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return group == null || group.last().get().equals(this);
     }
 
     @Override
     public Optional<T> previous() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return group == null ? Optional.<T>absent() : group.previous(self());
     }
 
     @Override
     public Optional<T> next() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return group == null ? Optional.<T>absent() : group.next(self());
     }
 
@@ -103,8 +99,6 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
 
     @Override
     public Groupable<P, T> unlink() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
-
         if (group != null) group.remove(self());
         group = null;
         return this;
@@ -124,20 +118,17 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
 
     @Override
     public Groupable<P, T> group(SyntaxCollection<P, T> group) {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         this.group = group;
         return this;
     }
 
     @Override
     public Optional<SyntaxCollection<P, T>> group() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return Optional.fromNullable(group);
     }
 
     @Override
     public Optional<P> parent() {
-        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return group == null ? Optional.<P>absent() : Optional.of(group().get().parent());
     }
 

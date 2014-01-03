@@ -322,7 +322,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         }
     }
 
-    private static final class Lookup<E extends Syntax> {
+    private static final class Lookup<E extends Syntax<?>> {
         private List<Node<E>> sparse = new ArrayList<Node<E>>();
         private Map<Integer, Node<E>> dense;
         private int count = 0;
