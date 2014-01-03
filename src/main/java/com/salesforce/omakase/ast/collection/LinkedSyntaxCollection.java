@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -141,13 +142,6 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <S extends T> Optional<S> find(Class<S> klass) {
-        // cast is safe because we ensure S extends T, and the predicate only returns true for types of S.
-        return (Optional<S>)Iterators.tryFind(iterator(), Predicates.instanceOf(klass));
-    }
-
-    @Override
     public Optional<T> next(T unit) {
         Node<T> node = lookup.get(unit.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
@@ -164,10 +158,16 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <S extends T> Optional<S> find(Class<S> klass) {
+        // cast is safe because we ensure S extends T, and the predicate only returns true for types of S.
+        return (Optional<S>)Iterators.tryFind(iterator(), Predicates.instanceOf(klass));
+    }
+
+    @Override
     public SyntaxCollection<P, T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
-
-        //if (lookup.get(unit.id()) == first) return this;
+        checkArgument(!unit.destroyed(), "cannot prepend a destroyed unit!");
 
         // perform associative actions on the unit
         associate(unit);
@@ -190,6 +190,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     public SyntaxCollection<P, T> prependBefore(T index, T unit) throws IllegalArgumentException {
         checkNotNull(index, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
+        checkArgument(!unit.destroyed(), "cannot prepend a destroyed unit!");
 
         // find the node for the index unit
         Node<T> node = lookup.get(index.id());
@@ -199,7 +200,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         associate(unit);
 
         // if the index unit is the first unit then delegate to #prepend
-        if (node == first || (node.previous == null && node.next == null)) return prepend(unit);
+        if (node == first || isEmpty()) return prepend(unit);
 
         // create a new node
         lookup.put(unit.id(), new Node<T>(node.previous, node, unit));
@@ -210,8 +211,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     @Override
     public SyntaxCollection<P, T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
-
-        // (lookup.get(unit.id()) == last) return this;
+        checkArgument(!unit.destroyed(), "cannot append a destroyed unit!");
 
         // perform associative actions on the unit
         associate(unit);
@@ -234,6 +234,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     public SyntaxCollection<P, T> appendAfter(T index, T unit) throws IllegalArgumentException {
         checkNotNull(index, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
+        checkArgument(!unit.destroyed(), "cannot append a destroyed unit!");
 
         // find the node for the index unit
         Node<T> node = lookup.get(index.id());
@@ -271,13 +272,6 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         return this;
     }
 
-    private void unlink(Node<T> node) {
-        if (node == first) first = node.next;
-        if (node == last) last = node.previous;
-        if (node.previous != null) node.previous.next = node.next;
-        if (node.next != null) node.next.previous = node.previous;
-    }
-
     @Override
     public SyntaxCollection<P, T> clear() {
         for (T unit : this) remove(unit);
@@ -307,10 +301,17 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         if (broadcaster != null && unit.status() == Status.UNBROADCASTED) broadcaster.broadcast(unit, true);
     }
 
+    private void unlink(Node<T> node) {
+        if (node == first) first = node.next;
+        if (node == last) last = node.previous;
+        if (node.previous != null) node.previous.next = node.next;
+        if (node.next != null) node.next.previous = node.previous;
+    }
+
     private static final class Node<E> {
         Node<E> previous;
         Node<E> next;
-        E unit;
+        final E unit;
 
         Node(Node<E> previous, Node<E> next, E unit) {
             this.unit = unit;

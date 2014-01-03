@@ -104,8 +104,7 @@ final class PrefixerHandlers {
     static final PrefixerHandler<AtRule> AT_RULE = new PrefixerHandlerStandard<AtRule, Statement>() {
         @Override
         boolean applicable(AtRule instance, SupportMatrix support) {
-            return instance.isRefined() && instance.name().charAt(0) != '-'
-                && PrefixUtil.isPrefixibleAtRule(instance.name());
+            return instance.isRefined() && instance.name().charAt(0) != '-' && PrefixUtil.isPrefixibleAtRule(instance.name());
         }
 
         @Override
@@ -129,8 +128,7 @@ final class PrefixerHandlers {
 
         @Override
         boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
-            return !instance.destroyed() && !instance.parent().get().destroyed() && !instance.name().startsWith("-") &&
-                PrefixUtil.isPrefixibleSelector(instance.name());
+            return !instance.name().startsWith("-") && PrefixUtil.isPrefixibleSelector(instance.name());
         }
 
         @Override

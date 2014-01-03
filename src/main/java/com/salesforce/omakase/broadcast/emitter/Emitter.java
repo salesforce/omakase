@@ -21,7 +21,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
-import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.broadcast.annotation.Validate;
@@ -39,7 +40,7 @@ import java.util.TreeSet;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Responsible for sending an event (object) to registered listeners.
+ * Responsible for sending an event ({@link Broadcastable}) to registered listeners.
  *
  * @author nmcwilliams
  */
@@ -129,26 +130,26 @@ public final class Emitter {
     }
 
     /**
-     * Sends an event to registered subscribers of the given event type (or any type within the given event type's parent
-     * hierarchy).
+     * Sends an event to registered subscribers of the given event type (i.e., class), including any subscribers to types within
+     * the event's class hierarchy.
      * <p/>
-     * "event" here usually refers to an instance of a {@link Syntax} unit (but this class is built generically to emit anything
-     * really).
+     * "Event" here refers to an instance of a {@link Broadcastable}.
      *
      * @param event
-     *     The event instance. "event" here usually is an instance of an object (e.g., one of the {@link Syntax} objects).
+     *     The event instance.
      * @param em
      *     The {@link ErrorManager} instance.
      */
-    public void emit(Object event, ErrorManager em) {
+    public void emit(Broadcastable event, ErrorManager em) {
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Subscription subscription : subscriptions(event)) {
+            if (event.status() == Status.NEVER_EMIT) return;
             subscription.deliver(event, em);
         }
     }
 
     /** gets all subscriptions (including hierarchy) for the given event's class (see notes above for more details). */
-    private Iterable<Subscription> subscriptions(Object event) {
+    private Iterable<Subscription> subscriptions(Broadcastable event) {
         Map<Class<?>, Iterable<Subscription>> cache = (phase == SubscriptionPhase.PROCESS) ? processorsCache : validatorsCache;
         Iterable<Subscription> subscriptions = cache.get(event.getClass());
 

@@ -60,6 +60,8 @@ public class LinkedSyntaxCollectionTest {
         assertThat(collection.size()).isEqualTo(0);
         collection.append(child1);
         assertThat(collection.size()).isEqualTo(1);
+        collection.append(child2);
+        assertThat(collection.size()).isEqualTo(2);
     }
 
     @Test
@@ -71,6 +73,13 @@ public class LinkedSyntaxCollectionTest {
     public void isEmptyFalse() {
         collection.append(child1);
         assertThat(collection.isEmpty()).isFalse();
+    }
+
+    @Test
+    public void isEmptyAfterRemove() {
+        collection.append(child1);
+        collection.remove(child1);
+        assertThat(collection.isEmpty()).isTrue();
     }
 
     @Test
@@ -125,6 +134,46 @@ public class LinkedSyntaxCollectionTest {
     @Test
     public void getLastWhenEmpty() {
         assertThat(collection.last().isPresent()).isFalse();
+    }
+
+    @Test
+    public void nextPresent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.next(child1).get()).isSameAs(child2);
+    }
+
+    @Test
+    public void nextAbsent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.next(child2).isPresent()).isFalse();
+    }
+
+    @Test
+    public void errorsIfNextNotPresent() {
+        exception.expect(IllegalArgumentException.class);
+        collection.next(child1);
+    }
+
+    @Test
+    public void previousPresent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.previous(child2).get()).isSameAs(child1);
+    }
+
+    @Test
+    public void previousAbsent() {
+        collection.append(child1);
+        collection.append(child2);
+        assertThat(collection.previous(child1).isPresent()).isFalse();
+    }
+
+    @Test
+    public void errorsIfPreviousNotPresent() {
+        exception.expect(IllegalArgumentException.class);
+        collection.previous(child1);
     }
 
     @Test
@@ -192,6 +241,23 @@ public class LinkedSyntaxCollectionTest {
     }
 
     @Test
+    public void prependExistingMultiple() {
+        collection.append(child1).append(child2).append(child3);
+        collection.prepend(child3);
+        assertThat(collection).containsExactly(child3, child1, child2);
+    }
+
+    @Test
+    public void prependFromAnotherGroup() {
+        SyntaxCollection<Parent, Child> collection2 = new Parent().collection;
+        collection2.prepend(child1);
+        collection.prepend(child1);
+        assertThat(collection).containsExactly(child1);
+        assertThat(child1.group().get()).isSameAs(collection);
+        assertThat(collection2).isEmpty();
+    }
+
+    @Test
     public void prependBefore() {
         collection.append(child1).append(child2);
         collection.prependBefore(child2, child3);
@@ -217,6 +283,27 @@ public class LinkedSyntaxCollectionTest {
     public void prependBeforeNotInCollection() {
         exception.expect(IllegalArgumentException.class);
         collection.prependBefore(child3, child1);
+    }
+
+    @Test
+    public void prependBeforeItself() {
+        collection.append(child1);
+        collection.prependBefore(child1, child1);
+        assertThat(collection).containsExactly(child1);
+    }
+
+    @Test
+    public void prependBeforeIsFirst() {
+        collection.append(child1).append(child2);
+        collection.prependBefore(child2, child1);
+        assertThat(collection).containsExactly(child1, child2);
+    }
+
+    @Test
+    public void prependBeforeIsLast() {
+        collection.append(child1).append(child2);
+        collection.prependBefore(child1, child2);
+        assertThat(collection).containsExactly(child2, child1);
     }
 
     @Test
@@ -254,6 +341,31 @@ public class LinkedSyntaxCollectionTest {
     }
 
     @Test
+    public void appendExisting() {
+        collection.append(child1);
+        collection.append(child1);
+        assertThat(collection).containsExactly(child1);
+        assertThat(child1.group().get()).isSameAs(collection);
+    }
+
+    @Test
+    public void appendExistingMultiple() {
+        collection.append(child1).append(child2).append(child3);
+        collection.append(child1);
+        assertThat(collection).containsExactly(child2, child3, child1);
+    }
+
+    @Test
+    public void appendFromAnotherGroup() {
+        SyntaxCollection<Parent, Child> collection2 = new Parent().collection;
+        collection2.append(child1);
+        collection.append(child1);
+        assertThat(collection).containsExactly(child1);
+        assertThat(child1.group().get()).isSameAs(collection);
+        assertThat(collection2).isEmpty();
+    }
+
+    @Test
     public void appendAfter() {
         collection.append(child1).append(child2);
         collection.appendAfter(child1, child3);
@@ -279,6 +391,57 @@ public class LinkedSyntaxCollectionTest {
     public void appendAfterNotInCollection() {
         exception.expect(IllegalArgumentException.class);
         collection.appendAfter(child3, child1);
+    }
+
+    @Test
+    public void appendAfterItself() {
+        collection.append(child1);
+        collection.appendAfter(child1, child1);
+        assertThat(collection).containsExactly(child1);
+    }
+
+    @Test
+    public void appendAfterIsFirst() {
+        collection.append(child1).append(child2);
+        collection.appendAfter(child1, child2);
+        assertThat(collection).containsExactly(child1, child2);
+    }
+
+    @Test
+    public void appendAfterIsLast() {
+        collection.append(child1).append(child2);
+        collection.appendAfter(child2, child1);
+        assertThat(collection).containsExactly(child2, child1);
+    }
+
+    @Test
+    public void prependDestroyed() {
+        child1.destroy();
+        exception.expect(IllegalArgumentException.class);
+        collection.prepend(child1);
+    }
+
+    @Test
+    public void appendDestroyed() {
+        child1.destroy();
+        exception.expect(IllegalArgumentException.class);
+        collection.append(child1);
+    }
+
+    @Test
+    public void prependBeforeDestroyed() {
+        collection.append(child1);
+        child2.destroy();
+        exception.expect(IllegalArgumentException.class);
+        collection.prependBefore(child1, child2);
+    }
+
+    @Test
+    public void appendAfterDestroyed() {
+        collection.append(child1);
+        child2.destroy();
+        exception.expect(IllegalArgumentException.class);
+        collection.appendAfter(child1, child2);
     }
 
     @Test
@@ -347,81 +510,6 @@ public class LinkedSyntaxCollectionTest {
         collection.append(child1);
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
     }
-
-    @Test
-    public void testNextPresent() {
-        collection.append(child1);
-        collection.append(child2);
-        assertThat(collection.next(child1).get()).isSameAs(child2);
-    }
-
-    @Test
-    public void testNextAbsent() {
-        collection.append(child1);
-        collection.append(child2);
-        assertThat(collection.next(child2).isPresent()).isFalse();
-    }
-
-    @Test
-    public void errorsIfNextNotPresent() {
-        exception.expect(IllegalArgumentException.class);
-        collection.next(child1);
-    }
-
-    @Test
-    public void textPreviousPresent() {
-        collection.append(child1);
-        collection.append(child2);
-        assertThat(collection.previous(child2).get()).isSameAs(child1);
-    }
-
-    @Test
-    public void testPreviousAbsent() {
-        collection.append(child1);
-        collection.append(child2);
-        assertThat(collection.previous(child1).isPresent()).isFalse();
-    }
-
-    @Test
-    public void errorsIfPreviousNotPresent() {
-        exception.expect(IllegalArgumentException.class);
-        collection.previous(child1);
-    }
-
-//    @Test
-//    public void moveBeforeWhenInCollection() {
-//        collection.append(child1).append(child2).append(child3);
-//        collection.moveBefore(child1, child3);
-//        assertThat(collection).containsExactly(child3, child1, child2);
-//    }
-//
-//    @Test
-//    public void moveBeforeNotInCollection() {
-//        collection.append(child1).append(child2);
-//        collection.moveBefore(child1, child3);
-//        assertThat(collection).containsExactly(child3, child1, child2);
-//    }
-//
-//    @Test
-//    public void errorsIfMoveBeforeIndexNotInCollection() {
-//        collection.append(child1).append(child2);
-//        exception.expect(IllegalArgumentException.class);
-//        collection.moveBefore(child3, child1);
-//    }
-//
-//    @Test
-//    public void moveAfterInCollection() {
-//        collection.append(child1).append(child2).append(child3);
-//        collection.moveAfter(child3, child1);
-//        assertThat(collection).containsExactly(child2, child3, child1);
-//    }
-//
-//    @Test
-//    public void moveAfterNotInCollection() {
-//        collection.append(child2).append(child3);
-//        collection.moveAfter(child3, child1);
-//        assertThat(collection).containsExactly(child2, child3, child1);
-//    }
 
     private static final class Parent {
         private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<Parent, Child>(this);

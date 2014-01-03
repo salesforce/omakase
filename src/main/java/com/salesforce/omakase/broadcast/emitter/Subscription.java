@@ -17,6 +17,7 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.base.Objects;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.util.As;
 
@@ -34,7 +35,7 @@ final class Subscription implements Comparable<Subscription> {
     private final SubscriptionPhase phase;
     private final Object subscriber;
     private final Method method;
-    private final Integer number;
+    private final int number;
 
     Subscription(SubscriptionPhase phase, Object subscriber, Method method) {
         this.phase = phase;
@@ -69,7 +70,7 @@ final class Subscription implements Comparable<Subscription> {
      * @param em
      *     The {@link ErrorManager} instance to use for validation methods.
      */
-    public void deliver(Object event, ErrorManager em) {
+    public void deliver(Broadcastable event, ErrorManager em) {
         try {
             if (phase == SubscriptionPhase.VALIDATE) {
                 method.invoke(subscriber, event, em);
@@ -109,6 +110,6 @@ final class Subscription implements Comparable<Subscription> {
 
     @Override
     public int compareTo(Subscription o) {
-        return number.compareTo(o.number);
+        return Integer.compare(number, o.number);
     }
 }

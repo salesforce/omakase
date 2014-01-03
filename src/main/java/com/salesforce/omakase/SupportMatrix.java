@@ -28,6 +28,7 @@ import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.util.As;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +46,7 @@ public final class SupportMatrix {
     /* using tree so that getting browser versions are in ascending order */
     private final Multimap<Browser, Double> supported = TreeMultimap.create();
 
-    private final Map<Property, Set<Prefix>> propertyCache = new HashMap<Property, Set<Prefix>>();
+    private final Map<Property, Set<Prefix>> propertyCache = new EnumMap<Property, Set<Prefix>>(Property.class);
     private final Map<String, Set<Prefix>> functionCache = new HashMap<String, Set<Prefix>>(8);
     private final Map<String, Set<Prefix>> atRuleCache = new HashMap<String, Set<Prefix>>(2);
     private final Map<String, Set<Prefix>> selectorCache = new HashMap<String, Set<Prefix>>(2);

@@ -135,7 +135,7 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
     @Override
     public boolean isWritable() {
         // don't write out rules with no selectors or all detached selectors
-        return !destroyed() && !selectors.isEmpty() && !declarations.isEmpty();
+        return !selectors.isEmpty() && !declarations.isEmpty();
     }
 
     @Override

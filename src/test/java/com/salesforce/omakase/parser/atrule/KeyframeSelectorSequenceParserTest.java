@@ -30,7 +30,7 @@ import static com.salesforce.omakase.test.util.TemplatesHelper.*;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
- * TODO description
+ * Unit tests for {@link KeyframeSelectorSequenceParserTest}.
  *
  * @author nmcwilliams
  */

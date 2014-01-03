@@ -34,7 +34,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * A string value, e.g., "Times New Roman".
  * <p/>
  * Note that the reason a setter for quotation mode doesn't exist is that it must not be set independent of the content (which
- * could contain incompatible), so use {@link #content(QuotationMode, String)}  (and verify the content and quotation mode are
+ * could contain incompatible), so use {@link #content(QuotationMode, String)} (and verify the content and quotation mode are
  * compatible) instead.
  *
  * @author nmcwilliams

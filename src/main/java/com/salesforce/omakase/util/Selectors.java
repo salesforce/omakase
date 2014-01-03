@@ -406,7 +406,7 @@ public final class Selectors {
      * @return The adjoining {@link SelectorPart}s.
      */
     public static Iterable<SelectorPart> adjoining(SelectorPart part) {
-        if (part.destroyed() || part.type().isCombinator()) return Sets.newHashSet(part);
+        if (part.type().isCombinator()) return Sets.newHashSet(part);
 
         Deque<SelectorPart> deque = new ArrayDeque<SelectorPart>();
 

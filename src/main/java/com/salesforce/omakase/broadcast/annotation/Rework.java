@@ -17,6 +17,7 @@
 package com.salesforce.omakase.broadcast.annotation;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.collection.Groupable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -33,6 +34,11 @@ import java.lang.annotation.Target;
  * The one an only parameter for methods with this annotation should be one of the {@link Syntax} types.
  * <p/>
  * If the method does not intend to change the content or object, use {@link Observe} instead.
+ * <p/>
+ * Inside of a rework method, you can remove a unit from the syntax tree by calling {@link Groupable#destroy()}. Once a unit is
+ * destroyed it is no longer broadcasted to any subsequent plugins, including validation. Destroyed units cannot be added to the
+ * tree again, however they can still be copied. If you are storing the units in a cache then you will probably want to check
+ * {@link Groupable#destroyed()} upon later access as the unit may have been destroyed by another plugin.
  * <p/>
  * See SimpleReworkTest.java for same rework method implementations.
  *

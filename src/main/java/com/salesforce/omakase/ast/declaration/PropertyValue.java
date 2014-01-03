@@ -40,7 +40,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * <p/>
  * This contains a list of {@link Term}s, for example numbers, keywords, functions, hex colors, etc...
  * <p/>
- * You can add new members to this term list via {@link #append(PropertyValueMember)}, or by utilizing the {@link
+ * You can add new members to this via {@link #append(PropertyValueMember)}, or by utilizing the {@link
  * SyntaxCollection} returned by the {@link #members()} method.
  * <p/>
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is name now

@@ -67,6 +67,15 @@ public final class HexColorValue extends AbstractTerm {
         color(color);
     }
 
+    /**
+     * Constructs a new instance of a {@link HexColorValue} (used for dynamically created {@link Syntax} units). Only use this
+     * when you already know the string is lower-cased and doesn't start with a '#'.
+     *
+     * @param color
+     *     The hex color (do not include the #).
+     * @param lowerCaseAndNoHex
+     *     Specifies whether the string is already lower-cased and doesn't start with a '#'.
+     */
     public HexColorValue(String color, boolean lowerCaseAndNoHex) {
         if (lowerCaseAndNoHex) {
             this.color = color;
@@ -99,7 +108,7 @@ public final class HexColorValue extends AbstractTerm {
     }
 
     /**
-     * Gets the color value (do not include the #).
+     * Gets the color value (does not include the #).
      *
      * @return The color value.
      */

@@ -26,6 +26,7 @@ import java.util.List;
  * <p/>
  * See class com.salesforce.omakase.test.util.tool.GenerateBrowserEnum for instructions on updating.
  */
+@SuppressWarnings("AutoBoxing")
 public enum Browser {
     /** The 'Internet Explorer' browser */
     IE("ie", "Internet Explorer", Prefix.MS, ImmutableList.of(11.0,10.0,9.0,8.0,7.0,6.0,5.5)),
@@ -40,7 +41,7 @@ public enum Browser {
     SAFARI("safari", "Safari", Prefix.WEBKIT, ImmutableList.of(7.0,6.1,6.0,5.1,5.0,4.0,3.2,3.1)),
 
     /** The 'Firefox' browser */
-    FIREFOX("firefox", "Firefox", Prefix.MOZ, ImmutableList.of(25.0,24.0,23.0,22.0,21.0,20.0,19.0,18.0,17.0,16.0,15.0,14.0,13.0,12.0,11.0,10.0,9.0,8.0,7.0,6.0,5.0,4.0,3.6,3.5,3.0,2.0)),
+    FIREFOX("firefox", "Firefox", Prefix.MOZ, ImmutableList.of(26.0,25.0,24.0,23.0,22.0,21.0,20.0,19.0,18.0,17.0,16.0,15.0,14.0,13.0,12.0,11.0,10.0,9.0,8.0,7.0,6.0,5.0,4.0,3.6,3.5,3.0,2.0)),
 
     /** The 'Android Browser' browser */
     ANDROID("android", "Android Browser", Prefix.WEBKIT, ImmutableList.of(4.3,4.2,4.1,4.0,3.0,2.3,2.2,2.1)),

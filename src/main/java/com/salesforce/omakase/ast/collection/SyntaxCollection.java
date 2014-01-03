@@ -88,6 +88,9 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      *     Get the next unit after this one.
      *
      * @return The next unit, or {@link Optional#absent()} if not present.
+     *
+     * @throws IllegalArgumentException
+     *     if the given unit is not contained within this collection.
      */
     Optional<T> next(T unit);
 
@@ -98,6 +101,9 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      *     Get the unit before this one.
      *
      * @return The previous unit, or {@link Optional#absent()} if not present.
+     *
+     * @throws IllegalArgumentException
+     *     if the given unit is not contained within this collection.
      */
     Optional<T> previous(T unit);
 
@@ -137,8 +143,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * Prepends the specified unit before the given index unit.
      * <p/>
      * The index unit must be present within this collection. If the unit to prepend already exists in this collection it will be
-     * duplicated (by reference), not moved. If you would like to move the unit (e.g., remove from current position then prepend)
-     * then use {@link #moveBefore} instead.
+     * moved.
      *
      * @param index
      *     Prepend before this unit.
@@ -176,8 +181,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * Appends the specified unit after the given index unit.
      * <p/>
      * The index unit must be present within this collection. If the unit to append already exists in this collection it will be
-     * duplicated (by reference), not moved. If you would like to move the unit (e.g., remove from current position then append)
-     * then use #moveAfter instead.
+     * moved.
      *
      * @param index
      *     Append after this unit.
@@ -192,21 +196,17 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     SyntaxCollection<P, T> appendAfter(T index, T unit) throws IllegalArgumentException;
 
     /**
-     * Removes a unit from this collection. If this collection does not contain the given unit an exception will be thrown. It's
-     * preferable to call {@link Groupable#destroy()} over this.
+     * Removes a unit from this collection.  It's preferable to call {@link Groupable#destroy()} over this.
      *
      * @param unit
      *     The unit to remove.
      *
      * @return this, for chaining.
-     *
-     * @throws IllegalArgumentException
-     *     if the unit is not contained within this collection.
      */
     SyntaxCollection<P, T> remove(T unit);
 
     /**
-     * Detaches <b>all</b> units from this collection.
+     * Removes <b>all</b> units from this collection.
      *
      * @return this, for chaining.
      */

@@ -143,27 +143,21 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
      * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a
      * prefixed property).
      *
-     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or the property name is
-     *         unknown.
+     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or it's unknown.
      */
     public Optional<Property> asProperty() {
         return isPrefixed() ? Optional.<Property>absent() : Optional.fromNullable(Property.lookup(name));
     }
 
     /**
+     * Gets matching {@link Property} instance, if one exists (it may not exist if this is an unknown property.) This ignores the
+     * prefix.
      *
-     * todo - change
-     *
-     * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property.)
-     *
-     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or the property name is
-     *         unknown.
+     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is unknown.
      */
     public Optional<Property> asPropertyIgnorePrefix() {
         return Optional.fromNullable(Property.lookup(name));
     }
-
-
 
     /**
      * Gets whether this {@link PropertyName} includes an IE7 star hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack).
@@ -326,7 +320,6 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
      * @return The new {@link PropertyName} instance.
      */
     public static PropertyName using(int line, int column, Property property) {
-        checkNotNull(property, "property cannot be null");
         return new PropertyName(line, column, property.toString());
     }
 }

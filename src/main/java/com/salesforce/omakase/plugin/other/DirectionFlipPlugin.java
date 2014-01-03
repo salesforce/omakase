@@ -216,7 +216,7 @@ public class DirectionFlipPlugin implements DependentPlugin {
                     }
                 }
 
-                replacement.append(term.copy()); // todo - copy might not be needed here, look at this code again
+                replacement.append(term.copy());
                 if (originalTermIter.hasNext()) {
                     replacement.append(OperatorType.SPACE);
                 }

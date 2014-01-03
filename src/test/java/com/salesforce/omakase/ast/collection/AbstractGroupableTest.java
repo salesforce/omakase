@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.collection;
 
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -85,6 +86,28 @@ public class AbstractGroupableTest {
         assertThat(child1.isLast()).isTrue();
         assertThat(child2.isLast()).isTrue();
         assertThat(child3.isLast()).isTrue();
+    }
+
+    @Test
+    public void getPrevious() {
+        parent.collection.append(child1).append(child2);
+        assertThat(child2.previous().get()).isSameAs(child1);
+    }
+
+    @Test
+    public void previousWhenNotGrouped() {
+        assertThat(child1.previous().isPresent()).isFalse();
+    }
+
+    @Test
+    public void getNext() {
+        parent.collection.append(child1).append(child2);
+        assertThat(child1.next().get()).isSameAs(child2);
+    }
+
+    @Test
+    public void nextWhenNotGrouped() {
+        assertThat(child1.next().isPresent()).isFalse();
     }
 
     @Test
@@ -173,22 +196,15 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void destroyed() {
+    public void appendToItself() {
         parent.collection.append(child1);
-        assertThat(child1.destroyed()).isFalse();
-        child1.destroy();
-        assertThat(child1.destroyed()).isTrue();
+        child1.append(child1);
+        assertThat(parent.collection).containsExactly(child1);
     }
 
     @Test
-    public void destroyAlreadyDestroyed() {
-        child1.destroy();
-        assertThat(child1.destroyed()).isTrue();
-    }
-
-    @Test
-    public void dynamicallyCreatedNoyInitiallyDestroyed() {
-        assertThat(new Child("c").destroyed()).isFalse();
+    public void groupNotPresent() {
+        assertThat(child1.group().isPresent()).isFalse();
     }
 
     @Test
@@ -203,19 +219,54 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void groupNotPresent() {
-        assertThat(child1.group().isPresent()).isFalse();
-    }
-
-    @Test
     public void parentWhenGrouped() {
         parent.collection.append(child1).append(child2);
         assertThat(child1.parent().get()).isSameAs(parent);
     }
 
     @Test
+    public void unlink() {
+        parent.collection.append(child1);
+        child1.unlink();
+        assertThat(parent.collection).doesNotContain(child1);
+        assertThat(child1.group().isPresent()).isFalse();
+        assertThat(child1.destroyed()).isFalse();
+    }
+
+    @Test
+    public void destroyed() {
+        parent.collection.append(child1);
+        assertThat(child1.destroyed()).isFalse();
+        child1.destroy();
+        assertThat(child1.destroyed()).isTrue();
+        assertThat(child1.group().isPresent()).isFalse();
+    }
+
+    @Test
+    public void destroyAlreadyDestroyed() {
+        child1.destroy();
+        assertThat(child1.destroyed()).isTrue();
+    }
+
+    @Test
+    public void dynamicallyCreatedNotInitiallyDestroyed() {
+        assertThat(new Child("c").destroyed()).isFalse();
+    }
+
+    @Test
+    public void destroyedStatusChanged() {
+        child1.destroy();
+        assertThat(child1.status()).isSameAs(Status.NEVER_EMIT);
+    }
+
+    @Test
     public void writableByDefault() {
         parent.collection.append(child1);
+        assertThat(child1.isWritable()).isTrue();
+    }
+
+    @Test
+    public void writableWhenNotGrouped() {
         assertThat(child1.isWritable()).isTrue();
     }
 
@@ -228,28 +279,6 @@ public class AbstractGroupableTest {
     @Test
     public void parentWhenNotGrouped() {
         assertThat(child1.parent().isPresent()).isFalse();
-    }
-
-    @Test
-    public void previousWhenNotGrouped() {
-        assertThat(child1.previous().isPresent()).isFalse();
-    }
-
-    @Test
-    public void getPrevious() {
-        parent.collection.append(child1).append(child2);
-        assertThat(child2.previous().get()).isSameAs(child1);
-    }
-
-    @Test
-    public void nextWhenNotGrouped() {
-        assertThat(child1.next().isPresent()).isFalse();
-    }
-
-    @Test
-    public void getNext() {
-        parent.collection.append(child1).append(child2);
-        assertThat(child1.next().get()).isSameAs(child2);
     }
 
     private static final class Parent {

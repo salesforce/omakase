@@ -97,7 +97,9 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
             emitter.emit(broadcastable, em);
 
             // update the status
-            broadcastable.status(Status.nextStatusAfterPhase(phase));
+            if (broadcastable.status() != Status.NEVER_EMIT) {
+                broadcastable.status(Status.nextStatusAfterPhase(phase));
+            }
 
             // pass to relays
             if (relay != null) {

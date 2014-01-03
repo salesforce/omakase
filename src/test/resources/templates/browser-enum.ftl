@@ -26,6 +26,7 @@ import java.util.List;
  * <p/>
  * See ${generator} for instructions on updating.
  */
+@SuppressWarnings("AutoBoxing")
 public enum Browser {
     <#list browsers as browser>
     /** The '${browser.displayName}' browser */

@@ -17,7 +17,7 @@
 package com.salesforce.omakase.util;
 
 /**
- * An action that can be applied to instances of specified type.
+ * An action that can be applied to instances of specified type with respect to a subject instance.
  *
  * @param <T>
  *     Type of objects this {@link Action} works on.

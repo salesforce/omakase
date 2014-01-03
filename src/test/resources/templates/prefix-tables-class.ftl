@@ -26,6 +26,7 @@ import com.google.common.collect.Table;
  * <p/>
  * See ${generator} for instructions on updating.
  */
+@SuppressWarnings("AutoBoxing")
 public final class PrefixTables {
     static final Table<Property, Browser, Double> PROPERTIES;
     static final Table<String, Browser, Double> FUNCTIONS;
