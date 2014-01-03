@@ -67,7 +67,7 @@ public final class Equivalents {
      *     If the given declaration is detached or is prefixed itself.
      */
     public static Multimap<Prefix, Declaration> prefixedDeclarations(Declaration unprefixed) {
-        checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
+        checkArgument(!unprefixed.destroyed(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
         Multimap<Prefix, Declaration> multimap = null;
@@ -110,7 +110,7 @@ public final class Equivalents {
      *     If the given declaration is detached or is prefixed itself.
      */
     public static Multimap<Prefix, Declaration> prefixedFunctions(Declaration unprefixed, String functionName) {
-        checkArgument(!unprefixed.isDetached(), "declaration must not be detached");
+        checkArgument(!unprefixed.destroyed(), "declaration must not be detached");
         checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
 
         Multimap<Prefix, Declaration> multimap = null;
@@ -170,7 +170,7 @@ public final class Equivalents {
      *     If the given at-rule is detached or is prefixed itself.
      */
     public static Multimap<Prefix, AtRule> prefixedAtRules(AtRule unprefixed) {
-        checkArgument(!unprefixed.isDetached(), "at-rule must not be detached");
+        checkArgument(!unprefixed.destroyed(), "at-rule must not be detached");
         checkArgument(!unprefixed.name().startsWith("-"), "at-rule must not have a prefixed property");
 
         Multimap<Prefix, AtRule> multimap = null;
@@ -240,8 +240,8 @@ public final class Equivalents {
      *     If the given selector is detached or is prefixed itself, or if the selector's rule is detached.
      */
     public static Multimap<Prefix, Rule> prefixedPseudoElementSelectors(PseudoElementSelector unprefixed) {
-        checkArgument(!unprefixed.isDetached(), "selector part must not be detached");
-        checkArgument(!unprefixed.parent().get().isDetached(), "selector must not be detached");
+        checkArgument(!unprefixed.destroyed(), "selector part must not be detached");
+        checkArgument(!unprefixed.parent().get().destroyed(), "selector must not be detached");
         checkArgument(!unprefixed.name().startsWith("-"), "selector must not have a prefixed property");
 
         Multimap<Prefix, Rule> multimap = null;

@@ -42,9 +42,9 @@ public class AbstractGroupableTest {
     @Before
     public void before() {
         parent = new Parent();
-        child1 = new Child();
-        child2 = new Child();
-        child3 = new Child();
+        child1 = new Child("1");
+        child2 = new Child("2");
+        child3 = new Child("3");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void isFirstTrueIfDetached() {
+    public void isFirstTrueWhenNoGroup() {
         assertThat(child1.isFirst()).isTrue();
         assertThat(child2.isFirst()).isTrue();
         assertThat(child3.isFirst()).isTrue();
@@ -81,7 +81,7 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void isLastTrueIfDetached() {
+    public void isLastTrueWhenNoGroup() {
         assertThat(child1.isLast()).isTrue();
         assertThat(child2.isLast()).isTrue();
         assertThat(child3.isLast()).isTrue();
@@ -95,7 +95,15 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void prependToDetached() {
+    public void prependToUngrouped() {
+        exception.expect(IllegalStateException.class);
+        child1.prepend(child3);
+    }
+
+    @Test
+    public void prependToDestroyed() {
+        parent.collection.append(child1);
+        child1.destroy();
         exception.expect(IllegalStateException.class);
         child1.prepend(child3);
     }
@@ -104,7 +112,7 @@ public class AbstractGroupableTest {
     public void prependExistingInSameCollection() {
         parent.collection.append(child1).append(child2).append(child3);
         child1.prepend(child3);
-        assertThat(parent.collection).containsExactly(child3, child1, child2, child3);
+        assertThat(parent.collection).containsExactly(child3, child1, child2);
     }
 
     @Test
@@ -113,7 +121,7 @@ public class AbstractGroupableTest {
         Parent parent2 = new Parent();
         parent2.collection.append(child2).append(child3);
         child2.prepend(child1);
-        assertThat(parent.collection).containsExactly(child1);
+        assertThat(parent.collection).isEmpty();
         assertThat(parent2.collection).containsExactly(child1, child2, child3);
     }
 
@@ -121,7 +129,7 @@ public class AbstractGroupableTest {
     public void prependToItself() {
         parent.collection.append(child1);
         child1.prepend(child1);
-        assertThat(parent.collection).containsExactly(child1, child1);
+        assertThat(parent.collection).containsExactly(child1);
     }
 
     @Test
@@ -132,7 +140,15 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void appendToDetached() {
+    public void appendToUngrouped() {
+        exception.expect(IllegalStateException.class);
+        child1.append(child3);
+    }
+
+    @Test
+    public void appendToDestroyed() {
+        parent.collection.append(child1);
+        child1.destroy();
         exception.expect(IllegalStateException.class);
         child1.append(child3);
     }
@@ -141,7 +157,7 @@ public class AbstractGroupableTest {
     public void appendExistingInSameCollection() {
         parent.collection.append(child1).append(child2).append(child3);
         child1.prepend(child3);
-        assertThat(parent.collection).containsExactly(child3, child1, child2, child3);
+        assertThat(parent.collection).containsExactly(child3, child1, child2);
     }
 
     @Test
@@ -152,64 +168,70 @@ public class AbstractGroupableTest {
 
         child2.append(child1);
 
-        assertThat(parent.collection).containsExactly(child1);
+        assertThat(parent.collection).isEmpty();
         assertThat(parent2.collection).containsExactly(child2, child1, child3);
     }
 
     @Test
-    public void detachedAttached() {
+    public void destroyed() {
         parent.collection.append(child1);
-        assertThat(child1.isDetached()).isFalse();
-        child1.detach();
-        assertThat(child1.isDetached()).isTrue();
+        assertThat(child1.destroyed()).isFalse();
+        child1.destroy();
+        assertThat(child1.destroyed()).isTrue();
     }
 
     @Test
-    public void detachedAlreadyDetached() {
-        child1.detach();
-        assertThat(child1.isDetached()).isTrue();
+    public void destroyAlreadyDestroyed() {
+        child1.destroy();
+        assertThat(child1.destroyed()).isTrue();
     }
 
     @Test
-    public void dynamicallyCreatedInitiallyDetached() {
-        assertThat(new Child().isDetached()).isTrue();
+    public void dynamicallyCreatedNoyInitiallyDestroyed() {
+        assertThat(new Child("c").destroyed()).isFalse();
     }
 
     @Test
-    public void groupWhenAttached() {
+    public void dynamicallyCreatedInitiallyNoGroup() {
+        assertThat(new Child("c").group().isPresent()).isFalse();
+    }
+
+    @Test
+    public void group() {
         parent.collection.append(child1).append(child2).append(child3);
         assertThat(child2.group().get()).isSameAs(parent.collection);
     }
 
     @Test
-    public void groupWhenDetached() {
+    public void groupNotPresent() {
         assertThat(child1.group().isPresent()).isFalse();
     }
 
     @Test
-    public void parentWhenAttached() {
+    public void parentWhenGrouped() {
         parent.collection.append(child1).append(child2);
         assertThat(child1.parent().get()).isSameAs(parent);
     }
 
     @Test
-    public void writableWhenAttached() {
+    public void writableByDefault() {
         parent.collection.append(child1);
         assertThat(child1.isWritable()).isTrue();
     }
 
     @Test
-    public void notWritableWhenDetached() {
+    public void notWritableWhenDestroyed() {
+        child1.destroy();
         assertThat(child1.isWritable()).isFalse();
     }
 
     @Test
-    public void parentWhenDetached() {
+    public void parentWhenNotGrouped() {
         assertThat(child1.parent().isPresent()).isFalse();
     }
 
     @Test
-    public void previousWhenDetached() {
+    public void previousWhenNotGrouped() {
         assertThat(child1.previous().isPresent()).isFalse();
     }
 
@@ -220,7 +242,7 @@ public class AbstractGroupableTest {
     }
 
     @Test
-    public void nextWhenDetached() {
+    public void nextWhenNotGrouped() {
         assertThat(child1.next().isPresent()).isFalse();
     }
 
@@ -230,24 +252,17 @@ public class AbstractGroupableTest {
         assertThat(child1.next().get()).isSameAs(child2);
     }
 
-    @Test
-    public void hasNextAndNextNotDetachedTrue() {
-        parent.collection.append(child1).append(child2);
-        assertThat(child1.haxNextAndNextNotDetached()).isTrue();
-    }
-
-    @Test
-    public void hasNextAndNextNotDetachedFalse() {
-        parent.collection.append(child1).append(child2);
-        child2.detach();
-        assertThat(child1.haxNextAndNextNotDetached()).isFalse();
-    }
-
     private static final class Parent {
-        private final SyntaxCollection<Parent, Child> collection = new StandardSyntaxCollection<Parent, Child>(this);
+        private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<Parent, Child>(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {
+        private final String name;
+
+        public Child(String name) {
+            this.name = name;
+        }
+
         @Override
         protected Child self() {
             return this;

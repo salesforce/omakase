@@ -19,7 +19,7 @@ package com.salesforce.omakase.ast.atrule;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.data.Prefix;
@@ -72,7 +72,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
      */
     public MediaQuery(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        this.expressions = new StandardSyntaxCollection<MediaQuery, MediaQueryExpression>(this, broadcaster);
+        this.expressions = new LinkedSyntaxCollection<MediaQuery, MediaQueryExpression>(this, broadcaster);
     }
 
     /**

@@ -19,8 +19,6 @@ package com.salesforce.omakase.util;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 /**
  * Collection of common {@link Action}s.
  *
@@ -30,18 +28,18 @@ public final class Actions {
     private Actions() {}
 
     /**
-     * Gets an {@link Action} that will call {@link Groupable#detach()} on all instances.
+     * Gets an {@link Action} that will call {@link Groupable#destroy()} on all instances.
      *
      * @return The {@link Action} instance.
      */
-    public static Action<Groupable<?, ?>> detach() {
-        return DETACH;
+    public static Action<Groupable<?, ?>> destroy() {
+        return DESTROY;
     }
 
-    private static final Action<Groupable<?, ?>> DETACH = new Action<Groupable<?, ?>>() {
+    private static final Action<Groupable<?, ?>> DESTROY = new Action<Groupable<?, ?>>() {
         @Override
         public void apply(Iterable<? extends Groupable<?, ?>> instances) {
-            for (Groupable<?, ?> instance : instances) instance.detach();
+            for (Groupable<?, ?> instance : instances) instance.destroy();
         }
     };
 
@@ -60,11 +58,9 @@ public final class Actions {
     private static class MoveBefore<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
         public void apply(T subject, Iterable<? extends T> instances) {
-            checkArgument(!subject.isDetached(), "subject cannot be detached");
-
             SyntaxCollection<?, T> collection = subject.group().get();
             for (T instance : instances) {
-                collection.moveBefore(subject, instance);
+                collection.prependBefore(subject, instance);
             }
         }
     }
@@ -84,12 +80,10 @@ public final class Actions {
     private static class MoveAfter<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
         public void apply(T subject, Iterable<? extends T> instances) {
-            checkArgument(!subject.isDetached(), "subject cannot be detached");
-
             SyntaxCollection<?, T> collection = subject.group().get();
             T index = subject;
             for (T instance : instances) {
-                collection.moveAfter(index, instance);
+                collection.appendAfter(index, instance);
                 index = instance; // maintain order
             }
         }

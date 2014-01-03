@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -86,8 +86,8 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
      */
     public Rule(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        selectors = new StandardSyntaxCollection<Rule, Selector>(this, broadcaster);
-        declarations = new StandardSyntaxCollection<Rule, Declaration>(this, broadcaster);
+        selectors = new LinkedSyntaxCollection<Rule, Selector>(this, broadcaster);
+        declarations = new LinkedSyntaxCollection<Rule, Declaration>(this, broadcaster);
     }
 
     /**
@@ -135,7 +135,7 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
     @Override
     public boolean isWritable() {
         // don't write out rules with no selectors or all detached selectors
-        return !isDetached() && !selectors.isEmptyOrAllDetached() && !declarations.isEmptyOrAllDetached();
+        return !destroyed() && !selectors.isEmpty() && !declarations.isEmpty();
     }
 
     @Override

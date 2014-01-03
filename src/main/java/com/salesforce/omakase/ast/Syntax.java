@@ -48,6 +48,14 @@ import java.util.List;
  */
 public interface Syntax<C> extends Writable, Broadcastable {
     /**
+     * Gets the unique identifier for this unit. This can be used as a key in maps or in any other case where storing a short
+     * identifier is preferable.
+     *
+     * @return The unique identifier.
+     */
+    int id();
+
+    /**
      * The line number within the source where this {@link Syntax} unit was parsed.
      *
      * @return The line number.

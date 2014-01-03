@@ -53,7 +53,7 @@ final class PrefixerHandlers {
     static final PrefixerHandler<Declaration> PROPERTY = new PrefixerHandlerStandard<Declaration, Declaration>() {
         @Override
         boolean applicable(Declaration instance, SupportMatrix support) {
-            if (instance.isDetached() || !instance.isRefined() || instance.isPrefixed()) return false;
+            if (instance.destroyed() || !instance.isRefined() || instance.isPrefixed()) return false;
             Optional<Property> property = instance.propertyName().asProperty();
             return property.isPresent() && PrefixUtil.hasProperty(property.get());
         }
@@ -78,7 +78,7 @@ final class PrefixerHandlers {
     static final PrefixerHandler<FunctionValue> FUNCTION = new PrefixerHandlerStandard<FunctionValue, Declaration>() {
         @Override
         boolean applicable(FunctionValue instance, SupportMatrix support) {
-            return !instance.isDetached() && instance.group().get().parent().declaration().isPresent()
+            return !instance.destroyed() && instance.group().get().parent().declaration().isPresent()
                 && !instance.name().startsWith("-") && PrefixUtil.hasFunction(instance.name());
         }
 
@@ -102,7 +102,7 @@ final class PrefixerHandlers {
     static final PrefixerHandler<AtRule> AT_RULE = new PrefixerHandlerStandard<AtRule, Statement>() {
         @Override
         boolean applicable(AtRule instance, SupportMatrix support) {
-            return !instance.isDetached() && instance.isRefined() && !instance.name().startsWith("-")
+            return !instance.destroyed() && instance.isRefined() && !instance.name().startsWith("-")
                 && PrefixUtil.hasAtRule(instance.name());
         }
 
@@ -127,7 +127,7 @@ final class PrefixerHandlers {
 
         @Override
         boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
-            return !instance.isDetached() && !instance.parent().get().isDetached() && !instance.name().startsWith("-") &&
+            return !instance.destroyed() && !instance.parent().get().destroyed() && !instance.name().startsWith("-") &&
                 PrefixUtil.hasSelector(instance.name());
         }
 

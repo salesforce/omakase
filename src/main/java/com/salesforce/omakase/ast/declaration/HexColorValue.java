@@ -67,6 +67,14 @@ public final class HexColorValue extends AbstractTerm {
         color(color);
     }
 
+    public HexColorValue(String color, boolean lowerCaseAndNoHex) {
+        if (lowerCaseAndNoHex) {
+            this.color = color;
+        } else {
+            color(color);
+        }
+    }
+
     /**
      * Sets the value of the color (converted to lower-case).
      *
@@ -115,7 +123,7 @@ public final class HexColorValue extends AbstractTerm {
 
     @Override
     protected HexColorValue makeCopy(Prefix prefix, SupportMatrix support) {
-        return new HexColorValue(color);
+        return new HexColorValue(color, true);
     }
 
     /**

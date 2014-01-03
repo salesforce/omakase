@@ -49,15 +49,6 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     boolean isEmpty();
 
     /**
-     * Gets whether this collection is empty, or all contained elements are detached.
-     *
-     * @return True if there are no units in this collection or all units are detached.
-     *
-     * @see Groupable#isDetached()
-     */
-    boolean isEmptyOrAllDetached();
-
-    /**
      * Gets whether this collection is empty, or all contained elements are not writable.
      *
      * @return True if there are no units in this collection or all units are not writable.
@@ -91,18 +82,6 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     Optional<T> last();
 
     /**
-     * Finds the <em>first</em> item in this collection that is a type of a the given class.
-     *
-     * @param klass
-     *     Find the first instance of this class.
-     * @param <S>
-     *     Type of the instance to find.
-     *
-     * @return The first instance, or {@link Optional#absent()} if none match.
-     */
-    <S extends T> Optional<S> find(Class<S> klass);
-
-    /**
      * Gets the next unit after the given one, if there is one.
      *
      * @param unit
@@ -121,6 +100,18 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * @return The previous unit, or {@link Optional#absent()} if not present.
      */
     Optional<T> previous(T unit);
+
+    /**
+     * Finds the <em>first</em> item in this collection that is a type of a the given class.
+     *
+     * @param klass
+     *     Find the first instance of this class.
+     * @param <S>
+     *     Type of the instance to find.
+     *
+     * @return The first instance, or {@link Optional#absent()} if none match.
+     */
+    <S extends T> Optional<S> find(Class<S> klass);
 
     /**
      * Prepends the specified unit to the beginning of this collection.
@@ -162,27 +153,6 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     SyntaxCollection<P, T> prependBefore(T index, T unit) throws IllegalArgumentException;
 
     /**
-     * Moves the specified unit before the given index unit.
-     * <p/>
-     * If the specified unit already exists in this collection it will first be removed and then prepended. If it does not
-     * currently exist in this collection it will just be prepended.
-     * <p/>
-     * The index unit must exist in this collection or an exception will be thrown. If you would like to duplicate the unit
-     * instead of moving it, use #prependBefore() instead.
-     *
-     * @param index
-     *     Prepend before this unit.
-     * @param unit
-     *     Move this unit.
-     *
-     * @return this, for chaining.
-     *
-     * @throws IllegalArgumentException
-     *     If the index unit does not exist in this collection.
-     */
-    SyntaxCollection<P, T> moveBefore(T index, T unit) throws IllegalArgumentException;
-
-    /**
      * Appends the specified unit to the end of this collection.
      *
      * @param unit
@@ -222,25 +192,25 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     SyntaxCollection<P, T> appendAfter(T index, T unit) throws IllegalArgumentException;
 
     /**
-     * Moves the specified unit after the given index unit.
-     * <p/>
-     * If the specified unit already exists in this collection it will first be removed and then appended. If it does not
-     * currently exist in this collection it will just be appended.
-     * <p/>
-     * The index unit must exist in this collection or an exception will be thrown. If you would like to duplicate the unit
-     * instead of moving it, use #appendAfter instead.
+     * Removes a unit from this collection. If this collection does not contain the given unit an exception will be thrown. It's
+     * preferable to call {@link Groupable#destroy()} over this.
      *
-     * @param index
-     *     Append after this unit.
      * @param unit
-     *     Append this unit.
+     *     The unit to remove.
      *
      * @return this, for chaining.
      *
      * @throws IllegalArgumentException
-     *     If the index unit does not exist in this collection.
+     *     if the unit is not contained within this collection.
      */
-    SyntaxCollection<P, T> moveAfter(T index, T unit) throws IllegalArgumentException;
+    SyntaxCollection<P, T> remove(T unit);
+
+    /**
+     * Detaches <b>all</b> units from this collection.
+     *
+     * @return this, for chaining.
+     */
+    SyntaxCollection<P, T> clear();
 
     /**
      * Replaces <b>all</b> existing units with the given units.
@@ -251,27 +221,6 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * @return this, for chaining.
      */
     SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units);
-
-    /**
-     * Removes a unit from this collection. If this collection does not contain the given unit an exception will be thrown. It's
-     * preferable to call {@link Groupable#detach()} over this.
-     *
-     * @param unit
-     *     The unit to remove.
-     *
-     * @return this, for chaining.
-     *
-     * @throws IllegalArgumentException
-     *     if the unit is not contained within this collection.
-     */
-    SyntaxCollection<P, T> detach(T unit);
-
-    /**
-     * Detaches <b>all</b> units from this collection.
-     *
-     * @return The detached units.
-     */
-    Iterable<T> clear();
 
     /**
      * Gets the parent {@link Syntax} unit that owns this collection.

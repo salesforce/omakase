@@ -59,7 +59,7 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
             Collection<? extends G> matches = equivalents.get(prefix);
             if (!matches.isEmpty()) {
                 if (rearrange) {
-                    Actions.<G>moveBefore().apply(subject, matches);
+                   Actions.<G>moveBefore().apply(subject, matches);
                 }
                 equivalents.removeAll(prefix);
             } else {
@@ -70,7 +70,7 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
         // any left over equivalents are unnecessary. remove or rearrange them if allowed
         if (!equivalents.isEmpty()) {
             if (prune) {
-                Actions.detach().apply(equivalents.values());
+                Actions.destroy().apply(equivalents.values());
             } else if (rearrange) {
                 Actions.<G>moveBefore().apply(subject, equivalents.values());
             }

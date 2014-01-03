@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 salesforce.com, inc.
+ * Copyright (C) 2014 salesforce.com, inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Unit tests for {@link StandardSyntaxCollection}. */
+/** Unit tests for {@link LinkedSyntaxCollection}. */
 @SuppressWarnings("JavaDoc")
-public class StandardSyntaxCollectionTest {
+public class LinkedSyntaxCollectionTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private SyntaxCollection<Parent, Child> collection;
@@ -74,20 +74,6 @@ public class StandardSyntaxCollectionTest {
     }
 
     @Test
-    public void isEmptyOrAllDetachedTrue() {
-        assertThat(collection.isEmptyOrAllDetached()).isTrue();
-        collection.append(child1);
-        child1.detach();
-        assertThat(collection.isEmptyOrAllDetached()).isTrue();
-    }
-
-    @Test
-    public void isEmptyOrAllDetachedFalse() {
-        collection.append(child1);
-        assertThat(collection.isEmptyOrAllDetached()).isFalse();
-    }
-
-    @Test
     public void isEmptyOrNoneWritableTrueWhenEmpty() {
         assertThat(collection.isEmpty()).isTrue();
         assertThat(collection.isEmptyOrNoneWritable()).isTrue();
@@ -102,7 +88,7 @@ public class StandardSyntaxCollectionTest {
 
     @Test
     public void isEmptyOrNoneWritableTrue() {
-        SyntaxCollection<Parent, ChildNotWritable> c = new StandardSyntaxCollection<Parent, ChildNotWritable>(new Parent());
+        SyntaxCollection<Parent, ChildNotWritable> c = new LinkedSyntaxCollection<Parent, ChildNotWritable>(new Parent());
         c.append(new ChildNotWritable());
         assertThat(collection.isEmptyOrNoneWritable()).isTrue();
     }
@@ -195,6 +181,14 @@ public class StandardSyntaxCollectionTest {
 
         assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
         assertThat(child2.status()).isNotSameAs(Status.UNBROADCASTED);
+    }
+
+    @Test
+    public void prependExisting() {
+        collection.prepend(child1);
+        collection.prepend(child1);
+        assertThat(collection).containsExactly(child1);
+        assertThat(child1.group().get()).isSameAs(collection);
     }
 
     @Test
@@ -301,36 +295,34 @@ public class StandardSyntaxCollectionTest {
     }
 
     @Test
-    public void detachUnitInCollection() {
+    public void removeUnitInCollection() {
         collection.append(child1);
-        collection.detach(child1);
+        collection.remove(child1);
         assertThat(collection).isEmpty();
         assertThat(child1.group().isPresent()).isFalse();
         assertThat(child1.parent().isPresent()).isFalse();
     }
 
     @Test
-    public void detachUnitNotInAnyCollection() {
-        exception.expect(IllegalArgumentException.class);
-        collection.detach(child1);
+    public void removeUnitNotInAnyCollection() {
+        collection.append(child2);
+        collection.remove(child1);
+        assertThat(collection).containsExactly(child2);
     }
 
     @Test
-    public void detachUnitInAnotherCollection() {
+    public void removeUnitInAnotherCollection() {
         Parent parent2 = new Parent();
         parent2.collection.append(child1);
 
-        exception.expect(IllegalArgumentException.class);
-        collection.detach(child1);
-        assertThat(child1.isDetached()).isFalse();
+        collection.remove(child1);
+        assertThat(parent2.collection).containsExactly(child1);
     }
 
     @Test
     public void clear() {
         collection.append(child1).append(child2);
-        Iterable<Child> cleared = collection.clear();
-        assertThat(cleared).containsExactly(child1, child2);
-        assertThat(collection).isEmpty();
+        assertThat(collection.clear()).isEmpty();
     }
 
     @Test
@@ -396,43 +388,43 @@ public class StandardSyntaxCollectionTest {
         collection.previous(child1);
     }
 
-    @Test
-    public void moveBeforeWhenInCollection() {
-        collection.append(child1).append(child2).append(child3);
-        collection.moveBefore(child1, child3);
-        assertThat(collection).containsExactly(child3, child1, child2);
-    }
-
-    @Test
-    public void moveBeforeNotInCollection() {
-        collection.append(child1).append(child2);
-        collection.moveBefore(child1, child3);
-        assertThat(collection).containsExactly(child3, child1, child2);
-    }
-
-    @Test
-    public void errorsIfMoveBeforeIndexNotInCollection() {
-        collection.append(child1).append(child2);
-        exception.expect(IllegalArgumentException.class);
-        collection.moveBefore(child3, child1);
-    }
-
-    @Test
-    public void moveAfterInCollection() {
-        collection.append(child1).append(child2).append(child3);
-        collection.moveAfter(child3, child1);
-        assertThat(collection).containsExactly(child2, child3, child1);
-    }
-
-    @Test
-    public void moveAfterNotInCollection() {
-        collection.append(child2).append(child3);
-        collection.moveAfter(child3, child1);
-        assertThat(collection).containsExactly(child2, child3, child1);
-    }
+//    @Test
+//    public void moveBeforeWhenInCollection() {
+//        collection.append(child1).append(child2).append(child3);
+//        collection.moveBefore(child1, child3);
+//        assertThat(collection).containsExactly(child3, child1, child2);
+//    }
+//
+//    @Test
+//    public void moveBeforeNotInCollection() {
+//        collection.append(child1).append(child2);
+//        collection.moveBefore(child1, child3);
+//        assertThat(collection).containsExactly(child3, child1, child2);
+//    }
+//
+//    @Test
+//    public void errorsIfMoveBeforeIndexNotInCollection() {
+//        collection.append(child1).append(child2);
+//        exception.expect(IllegalArgumentException.class);
+//        collection.moveBefore(child3, child1);
+//    }
+//
+//    @Test
+//    public void moveAfterInCollection() {
+//        collection.append(child1).append(child2).append(child3);
+//        collection.moveAfter(child3, child1);
+//        assertThat(collection).containsExactly(child2, child3, child1);
+//    }
+//
+//    @Test
+//    public void moveAfterNotInCollection() {
+//        collection.append(child2).append(child3);
+//        collection.moveAfter(child3, child1);
+//        assertThat(collection).containsExactly(child2, child3, child1);
+//    }
 
     private static final class Parent {
-        private final SyntaxCollection<Parent, Child> collection = new StandardSyntaxCollection<Parent, Child>(this);
+        private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<Parent, Child>(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {

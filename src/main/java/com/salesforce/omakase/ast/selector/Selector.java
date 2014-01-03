@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -85,7 +85,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         super(rawContent.line(), rawContent.column());
         this.refiner = refiner;
         this.rawContent = rawContent;
-        this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this, refiner.broadcaster());
+        this.parts = new LinkedSyntaxCollection<Selector, SelectorPart>(this, refiner.broadcaster());
     }
 
     /**
@@ -140,7 +140,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         super(line, column);
         this.refiner = null;
         this.rawContent = null;
-        this.parts = new StandardSyntaxCollection<Selector, SelectorPart>(this).appendAll(parts);
+        this.parts = new LinkedSyntaxCollection<Selector, SelectorPart>(this).appendAll(parts);
     }
 
     /**

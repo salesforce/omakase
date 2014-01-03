@@ -159,7 +159,7 @@ public class SelectorTest {
     @Test
     public void notWritableWhenDetached() {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        selector.detach();
+        selector.destroy();
         assertThat(selector.isWritable()).isFalse();
     }
 

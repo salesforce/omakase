@@ -17,7 +17,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -56,7 +56,7 @@ public final class Stylesheet extends AbstractSyntax<StatementIterable> implemen
      */
     public Stylesheet(Broadcaster broadcaster) {
         super(1, 1);
-        statements = new StandardSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+        statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
         this.broadcaster = broadcaster;
     }
 

@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -118,7 +119,7 @@ public final class PerfTest {
         // prime
         if (PRIME) {
             if (useFactors) System.out.println("\nPriming...\n");
-            for (int i = 0; i < 200; i++) parser.parse(input);
+            for (int i = 0; i < 500; i++) parser.parse(input);
         }
 
         // compound the source according to each factor and time it
@@ -131,7 +132,7 @@ public final class PerfTest {
         }
     }
 
-    /** prints out the average parse time with the given source */
+    /** prints out the parse time for the given source */
     public static void time(int loc, PerfTestParser parser, String input) {
         // do the parsing
         List<Long> parseTimes = Lists.newArrayList();
@@ -148,8 +149,13 @@ public final class PerfTest {
             total += time;
         }
 
-        // output
-        long avg = total / parseTimes.size();
-        System.out.println(String.format("%-12s %-15s %s", avg + "ms", "(" + loc + " loc)", (SHOW_INDIVIDUAL ? parseTimes : "")));
+        // why min? while it's true that the average real world time is going to be higher than the minimum run,
+        // when it comes to measuring performance it's more efficient to check the fastest measured time. Various
+        // system variances can skew the average and thus it won't always reflect when code changes cause a small but
+        // measurable performance impact. Checking the fastest time that the code can run is going to give a more accurate
+        // reflection of the impact of a code change, which is the main purpose of this perf test.
+        long min = Collections.min(parseTimes);
+
+        System.out.println(String.format("%-12s %-15s %s", min + "ms", "(" + loc + " loc)", (SHOW_INDIVIDUAL ? parseTimes : "")));
     }
 }

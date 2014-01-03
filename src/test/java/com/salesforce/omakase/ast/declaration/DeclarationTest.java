@@ -348,12 +348,6 @@ public class DeclarationTest {
     }
 
     @Test
-    public void isNotWritableWhenDetached() {
-        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        assertThat(d.isWritable()).isFalse();
-    }
-
-    @Test
     public void isWritableWhenUnrefinedAndAttached() {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");

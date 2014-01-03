@@ -44,23 +44,4 @@ public abstract class AbstractTerm extends AbstractGroupable<PropertyValue, Prop
     protected Term self() {
         return this;
     }
-
-    @Override
-    public void detach() {
-        // not that this can't be supported, but I can't think of any obvious use cases where it wouldn't be better
-        // to replace the members of the term list with an explicit list instead. It usually won't make sense to detach a term
-        // in isolation as it could impact the meaning of the surrounding terms. In any case, the main reason for this is
-        // because custom function RefinerStrategy objects may parse args not directly stored in a PropertyValue, and we don't want
-        // #isWritable returning false for those terms.
-        String msg = "Detaching terms is not supported. Use SyntaxCollection#replaceExistingWith as an alternative, " +
-            "or better just make a new property value instance";
-        throw new UnsupportedOperationException(msg);
-    }
-
-    @Override
-    public boolean isWritable() {
-        // based on the override to #detach as explained above. Other behavior is probably dependent on this override too,
-        // like the loose terms in a MediaQueryExpression.
-        return true;
-    }
 }

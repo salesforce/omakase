@@ -27,7 +27,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
  * <p/>
  * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
  * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated (multiple references to the same
- * object instance). If this is not what you want then first call {@link #detach()} on the unit, or consider using {@link
+ * object instance). If this is not what you want then first call {@link #destroy()} on the unit, or consider using {@link
  * SyntaxCollection#moveBefore(Groupable, Groupable)} and {@link SyntaxCollection#moveAfter(Groupable, Groupable)}.
  * <p/>
  * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be better
@@ -37,7 +37,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
  * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
  * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
  * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
- * #detach()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
+ * #destroy()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
  * Groupable)} / {@link SyntaxCollection#moveAfter(Groupable, Groupable)}).
  *
  * @param <P>
@@ -88,19 +88,11 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
     Optional<T> previous();
 
     /**
-     * Gets whether there is a subsequent unit in this collection, and if the subsequent unit is not detached. This will always
-     * return {@link Optional#absent()} if detached.
-     *
-     * @return True if the there is a next unit and the next unit is not detached.
-     */
-    boolean haxNextAndNextNotDetached();
-
-    /**
      * Prepends the given unit before this one.
      * <p/>
      * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
      * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want
-     * then first call {@link #detach()} on the unit.
+     * then first call {@link #destroy()} on the unit.
      * <p/>
      * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be
      * better to alternatively consider detaching the parent unit itself and attaching the applicable children straight to a new
@@ -109,7 +101,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
      * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
-     * #detach()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
+     * #destroy()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
      * Groupable)} / {@link SyntaxCollection#moveAfter(Groupable, Groupable)}).
      *
      * @param unit
@@ -127,7 +119,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
      * <p/>
      * Note that uniqueness within the same {@link SyntaxCollection} is <em>not</em> enforced, which means that if you prepend or
      * append an instance that already exists in the {@link SyntaxCollection} it will be duplicated. If this is not what you want
-     * then first call {@link #detach()} on the unit.
+     * then first call {@link #destroy()} on the unit.
      * <p/>
      * Multiple calls to detach and append/prepend in mass should be minimized for performance reasons. In some cases it may be
      * better to alternatively consider detaching the parent unit itself and attaching the applicable children straight to a new
@@ -136,7 +128,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
      * Also note that appending or prepending a unit that already exists in one {@link SyntaxCollection} to another {@link
      * SyntaxCollection} will <em>not</em> remove the unit from the first {@link SyntaxCollection}. The unit will exist in both
      * collections. This may or may not be the desired behavior depending on the use-case. If this is not desired then call {@link
-     * #detach()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
+     * #destroy()} before appending or prepending the unit to the new parent (or use {@link SyntaxCollection#moveBefore(Groupable,
      * Groupable)} / {@link SyntaxCollection#moveAfter(Groupable, Groupable)}).
      *
      * @param unit
@@ -149,19 +141,16 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
      */
     Groupable<P, T> append(T unit);
 
-    /** Detaches (removes) this unit from the group {@link SyntaxCollection}. */
-    void detach();
+    /** TODO */
+    void destroy();
+
+    /** TODO */
+    boolean destroyed();
+
+    Groupable<P, T> unlink();
 
     /**
-     * Gets whether this unit is detached. This is true if either this unit was explicitly detached, or it is yet to be added to a
-     * unit within the tree.
-     *
-     * @return True if this unit is detached.
-     */
-    boolean isDetached();
-
-    /**
-     * Sets the group. This should only be called internally... calling it yourself may result in expected behavior.
+     * Sets the group. Internal method only! Do not call directly or behavior will be unexpected.
      *
      * @param group
      *     The group group.

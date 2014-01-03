@@ -24,6 +24,7 @@ import com.salesforce.omakase.util.As;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Base class for {@link Syntax} units.
@@ -34,6 +35,9 @@ import java.util.List;
  * @author nmcwilliams
  */
 public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
+    private static final AtomicInteger sequence = new AtomicInteger();
+    private final int id = sequence.incrementAndGet();
+
     private final int line;
     private final int column;
 
@@ -57,6 +61,11 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     public AbstractSyntax(int line, int column) {
         this.line = line;
         this.column = column;
+    }
+
+    @Override
+    public int id() {
+        return id;
     }
 
     @Override

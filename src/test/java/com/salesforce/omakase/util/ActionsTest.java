@@ -39,9 +39,9 @@ public class ActionsTest {
         Selector selector = new Selector(new ClassSelector("test"));
         rule.selectors().append(selector);
 
-        assertThat(selector.isDetached()).isFalse();
-        Actions.detach().apply(Lists.newArrayList(selector));
-        assertThat(selector.isDetached()).isTrue();
+        assertThat(selector.destroyed()).isFalse();
+        Actions.destroy().apply(Lists.newArrayList(selector));
+        assertThat(selector.destroyed()).isTrue();
     }
 
     @Test

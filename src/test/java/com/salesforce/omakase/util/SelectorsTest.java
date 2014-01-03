@@ -249,7 +249,7 @@ public class SelectorsTest {
     @Test
     public void adjoiningWhenDetached() {
         fill();
-        obj2.detach();
+        obj2.destroy();
         assertThat(Selectors.adjoining(obj2)).containsExactly(obj2);
     }
 }

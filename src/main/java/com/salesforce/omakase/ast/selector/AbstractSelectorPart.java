@@ -47,10 +47,11 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
 
     @Override
     public ImmutableList<Comment> comments() {
-        if (!isFirst() || isDetached()) return super.comments();
-
-        // the first selector part should also include the comments included on the selector
-        return ImmutableList.copyOf(Iterables.concat(parentSelector().get().comments(), super.comments()));
+        if (isFirst() && parentSelector().isPresent()) {
+            // the first selector part should also include the comments included on the selector
+            return ImmutableList.copyOf(Iterables.concat(parentSelector().get().comments(), super.comments()));
+        }
+        return super.comments();
     }
 
     @Override

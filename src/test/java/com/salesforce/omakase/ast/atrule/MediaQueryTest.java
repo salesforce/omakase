@@ -169,14 +169,14 @@ public class MediaQueryTest {
     @Test
     public void properHandlingWhenFirstExpressionIsDetached() throws IOException {
         mq.type("screen").expressions().append(exp1).append(exp2);
-        exp1.detach();
+        exp1.destroy();
         assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (color)");
     }
 
     @Test
     public void properHandlingWhenLastExpressionIsDetached() throws IOException {
         mq.type("screen").expressions().append(exp1).append(exp2);
-        exp2.detach();
+        exp2.destroy();
         assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (min-width:800px)");
     }
 }

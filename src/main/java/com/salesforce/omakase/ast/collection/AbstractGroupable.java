@@ -18,6 +18,7 @@ package com.salesforce.omakase.ast.collection;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 
 import static com.google.common.base.Preconditions.*;
@@ -34,6 +35,7 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends AbstractSyntax<T> implements Groupable<P, T> {
     private SyntaxCollection<P, T> group;
+    private boolean destroyed;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractGroupable() {}
@@ -59,34 +61,33 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
 
     @Override
     public boolean isFirst() {
-        return isDetached() || group.first().get().equals(this);
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        return group == null || group.first().get().equals(this);
     }
 
     @Override
     public boolean isLast() {
-        return isDetached() || group.last().get().equals(this);
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        return group == null || group.last().get().equals(this);
     }
 
     @Override
     public Optional<T> previous() {
-        return isDetached() ? Optional.<T>absent() : group.previous(self());
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        return group == null ? Optional.<T>absent() : group.previous(self());
     }
 
     @Override
     public Optional<T> next() {
-        return isDetached() ? Optional.<T>absent() : group.next(self());
-    }
-
-    @Override
-    public boolean haxNextAndNextNotDetached() {
-        Optional<T> next = next();
-        return next.isPresent() && !next.get().isDetached();
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        return group == null ? Optional.<T>absent() : group.next(self());
     }
 
     @Override
     public Groupable<P, T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
-        checkState(!isDetached(), "currently not part of any group!");
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        checkState(group != null, "cannot prepend to an isolated unit");
         group.prependBefore(self(), unit);
         return this;
     }
@@ -94,41 +95,54 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
     @Override
     public Groupable<P, T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
-        checkState(!isDetached(), "currently not part of any group!");
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        checkState(group != null, "cannot append to an isolated unit");
         group.appendAfter(self(), unit);
         return this;
     }
 
     @Override
-    public void detach() {
-        if (isDetached()) return;
-        group.detach(self());
-        this.group = null;
+    public Groupable<P, T> unlink() {
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+
+        if (group != null) group.remove(self());
+        group = null;
+        return this;
     }
 
     @Override
-    public boolean isDetached() {
-        return group == null;
+    public void destroy() {
+        unlink();
+        this.destroyed = true;
+        status(Status.NEVER_EMIT); // stop further broadcasting
+    }
+
+    @Override
+    public boolean destroyed() {
+        return destroyed;
     }
 
     @Override
     public Groupable<P, T> group(SyntaxCollection<P, T> group) {
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
         this.group = group;
         return this;
     }
 
     @Override
     public Optional<SyntaxCollection<P, T>> group() {
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
         return Optional.fromNullable(group);
     }
 
     @Override
     public Optional<P> parent() {
-        return isDetached() ? Optional.<P>absent() : Optional.of(group().get().parent());
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        return group == null ? Optional.<P>absent() : Optional.of(group().get().parent());
     }
 
     @Override
     public boolean isWritable() {
-        return !isDetached();
+        return !destroyed;
     }
 }

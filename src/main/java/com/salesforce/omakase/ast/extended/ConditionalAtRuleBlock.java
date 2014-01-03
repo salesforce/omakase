@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -97,7 +97,7 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterab
         super(line, column);
         this.condition = checkNotNull(condition, "condition cannot be null");
         this.manager = checkNotNull(manager, "manager cannot be null");
-        this.statements = new StandardSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+        this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
         this.statements.appendAll(statements);
     }
 

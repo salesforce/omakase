@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -76,7 +76,7 @@ public final class PropertyValue extends AbstractSyntax<PropertyValue> {
      */
     public PropertyValue(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        members = new StandardSyntaxCollection<PropertyValue, PropertyValueMember>(this, broadcaster);
+        members = new LinkedSyntaxCollection<PropertyValue, PropertyValueMember>(this, broadcaster);
     }
 
     /**

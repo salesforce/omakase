@@ -18,7 +18,7 @@ package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -66,7 +66,7 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
      */
     public MediaQueryList(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        queries = new StandardSyntaxCollection<MediaQueryList, MediaQuery>(this, broadcaster);
+        queries = new LinkedSyntaxCollection<MediaQueryList, MediaQuery>(this, broadcaster);
     }
 
     /**
@@ -94,7 +94,7 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (MediaQuery query : queries) {
             writer.writeInner(query, appendable);
-            if (query.haxNextAndNextNotDetached()) {
+            if (query.next().isPresent()) {
                 appendable.append(',');
                 appendable.spaceIf(!writer.isCompressed());
             }

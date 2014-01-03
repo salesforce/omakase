@@ -100,7 +100,7 @@ public class MediaQueryListTest {
     @Test
     public void handlesDetachedQueriesCorrectly() throws IOException {
         list.queries().append(q1).append(q2);
-        q2.detach();
+        q2.destroy();
         assertThat(StyleWriter.verbose().writeSnippet(list)).isEqualTo("only screen and (min-width: 800px)");
     }
 }

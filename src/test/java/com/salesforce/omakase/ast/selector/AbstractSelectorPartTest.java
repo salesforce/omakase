@@ -63,8 +63,4 @@ public class AbstractSelectorPartTest {
         assertThat(part.isWritable()).isTrue();
     }
 
-    @Test
-    public void notWritableWhenDetached() {
-        assertThat(new IdSelector("test").isWritable()).isFalse();
-    }
 }

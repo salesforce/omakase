@@ -20,7 +20,7 @@ import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
-import com.salesforce.omakase.ast.collection.StandardSyntaxCollection;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.data.Prefix;
@@ -42,7 +42,7 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
 
     /** Creates a new {@link GenericAtRuleBlock} instance with no statements or {@link Broadcaster} specified. */
     public GenericAtRuleBlock() {
-        this.statements = new StandardSyntaxCollection<StatementIterable, Statement>(this);
+        this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this);
     }
 
     /**
@@ -54,7 +54,7 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
      *     Used for broadcasting new units.
      */
     public GenericAtRuleBlock(Iterable<Statement> statements, Broadcaster broadcaster) {
-        this.statements = new StandardSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+        this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
         this.statements.appendAll(statements);
     }
 
