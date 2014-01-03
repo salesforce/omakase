@@ -95,7 +95,8 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         if (declaration.isRefined()) return false;
 
         // using a queue so that we can link everything together before terms, etc... are emitted
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause().alwaysFlush(RawFunction.class);
+
         SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, queue);
         Source source = new Source(declaration.rawPropertyValue().get());
 
