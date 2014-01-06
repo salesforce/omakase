@@ -44,14 +44,20 @@ public class Run {
     @Option(name = "-d", aliases = "--deploy", usage = "build and deploy jars (requires additional setup, see deploy.md)")
     private boolean deploy;
 
-    @Option(name = "-g", aliases = {"--generate", "--gen"}, usage = "regenerate all data enum and class source files")
+    @Option(name = "-g", aliases = {"--generate", "--gen"}, usage = "regenerate all data enum and data class source files")
     private boolean generate;
 
-    @Option(name = "-u", aliases = {"--update", "--prefixes"}, usage = "update and regenerate the prefix data only")
+    @Option(name = "-u", aliases = "--update", usage = "update and regenerate the prefix data only")
     private boolean update;
 
     @Option(name = "-s", aliases = {"--syntax", "--sub"}, usage = "print the subscribable syntax table")
     private boolean sub;
+
+    @Option(name = "-v", aliases = "--prefixed-def", usage = "print what is auto-prefixed by Prefixer.defaultBrowserSupport()")
+    private boolean prefixedDef;
+
+    @Option(name = "-w", aliases = "--prefixed-all", usage = "print all properties, at-rules, etc...that are supported by Prefixer")
+    private boolean prefixedAll;
 
     @Option(name = "-i", aliases = {"--interactive", "--shell"}, usage = "interactive shell")
     private boolean interactive;
@@ -80,7 +86,7 @@ public class Run {
                 PerfTest.main(new String[]{perf});
             } else if (deploy) {
                 if (!exec("mvn deploy")) {
-                    System.out.println("\n" + Colors.red("could not deploy to the interal aura maven repo"));
+                    System.out.println("\n" + Colors.red("could not deploy to the internal aura maven repo"));
                 } else if (!exec("mvn deploy -P external")) {
                     System.out.println("\n" + Colors.red("could not deploy to the external aura maven repo"));
                 } else if (!exec("mvn deploy -P sfdc")) {
@@ -98,6 +104,10 @@ public class Run {
                 System.out.println(Colors.yellow("prefix info sucessfully updated"));
             } else if (sub) {
                 new PrintSubscribableSyntaxTable().run();
+            } else if (prefixedDef) {
+                new PrintDefaultPrefixed().run();
+            } else if (prefixedAll) {
+                new PrintAllPrefixed().run();
             } else if (interactive) {
                 new InteractiveShell().run();
             } else if (help) {
