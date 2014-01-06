@@ -1,5 +1,6 @@
 package com.salesforce.omakase.test.util.tool;
 
+import com.google.common.collect.Sets;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import org.yaml.snakeyaml.Yaml;
@@ -7,6 +8,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Prints everything supported by {@link Prefixer}.
@@ -31,11 +33,13 @@ public class PrintAllPrefixed {
         System.out.printf(header, "Property");
         System.out.printf(header, dash(28));
         Map<String, List<String>> properties = (Map)types.get("properties");
+        Set<String> props = Sets.newTreeSet();
         for (Map.Entry<String, List<String>> entry : properties.entrySet()) {
-            for (String p : entry.getValue()) {
-                Property prop = Property.lookup(p);
-                System.out.println(String.format("%-28s", prop));
-            }
+            props.addAll(entry.getValue());
+        }
+        for (String p : props) {
+            Property prop = Property.lookup(p);
+            System.out.println(String.format("%-28s", prop));
         }
         System.out.println();
 
@@ -43,10 +47,12 @@ public class PrintAllPrefixed {
         System.out.printf(header, "Function");
         System.out.printf(header, dash(28));
         Map<String, List<String>> functions = (Map)types.get("functions");
+        Set<String> funcs = Sets.newTreeSet();
         for (Map.Entry<String, List<String>> entry : functions.entrySet()) {
-            for (String f : entry.getValue()) {
-                System.out.println(String.format("%-28s", f));
-            }
+            funcs.addAll(entry.getValue());
+        }
+        for (String f : funcs) {
+            System.out.println(String.format("%-28s", f));
         }
         System.out.println();
 
@@ -54,24 +60,27 @@ public class PrintAllPrefixed {
         System.out.printf(header, "At Rule");
         System.out.printf(header, dash(28));
         Map<String, List<String>> atRules = (Map)types.get("at-rules");
+        Set<String> ars = Sets.newTreeSet();
         for (Map.Entry<String, List<String>> entry : atRules.entrySet()) {
-            for (String ar : entry.getValue()) {
-                System.out.println(String.format("%-28s", ar));
-            }
+            ars.addAll(entry.getValue());
         }
+        for (String ar : ars) {
+            System.out.println(String.format("%-28s", ar));
+        }
+
         System.out.println();
 
         // selectors
         System.out.printf(header, "Selector");
         System.out.printf(header, dash(28));
-
         Map<String, List<String>> selectors = (Map)types.get("selectors");
+        Set<String> sels = Sets.newTreeSet();
         for (Map.Entry<String, List<String>> entry : selectors.entrySet()) {
-            for (String s : entry.getValue()) {
-                System.out.println(String.format("%-28s", s));
-            }
+            sels.addAll(entry.getValue());
         }
-
+        for (String s : sels) {
+            System.out.println(String.format("%-28s", s));
+        }
         System.out.println();
     }
 
