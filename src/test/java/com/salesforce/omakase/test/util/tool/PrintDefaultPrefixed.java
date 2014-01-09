@@ -31,7 +31,7 @@ public class PrintDefaultPrefixed {
 
         SupportMatrix support = Prefixer.defaultBrowserSupport().support();
 
-        Map types = (Map)yaml.load(Tools.readFile("/data/prefixible.yaml"));
+        Map types = (Map)yaml.load(Tools.readFile("/data/prefixable.yaml"));
         String header = "%-28s   %s%n";
 
         // props

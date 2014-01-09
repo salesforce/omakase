@@ -340,7 +340,7 @@ public final class SupportMatrix {
      */
 
     public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
-        return PrefixUtil.isPrefixibleProperty(property) && prefixesForProperty(property).contains(prefix);
+        return PrefixUtil.isPrefixableProperty(property) && prefixesForProperty(property).contains(prefix);
     }
 
     /**
@@ -355,7 +355,7 @@ public final class SupportMatrix {
      * @return True if the function name requires the given prefix.
      */
     public boolean requiresPrefixForFunction(Prefix prefix, String function) {
-        return PrefixUtil.isPrefixibleFunction(function) && prefixesForFunction(function).contains(prefix);
+        return PrefixUtil.isPrefixableFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
     /**
@@ -369,7 +369,7 @@ public final class SupportMatrix {
      * @return True if the at-rule requires the given prefix.
      */
     public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
-        return PrefixUtil.isPrefixibleAtRule(name) && prefixesForAtRule(name).contains(prefix);
+        return PrefixUtil.isPrefixableAtRule(name) && prefixesForAtRule(name).contains(prefix);
     }
 
     /**
@@ -384,7 +384,7 @@ public final class SupportMatrix {
      * @return True if the selector requires the given prefix.
      */
     public boolean requiresPrefixForSelector(Prefix prefix, String name) {
-        return PrefixUtil.isPrefixibleSelector(name) && prefixesForSelector(name).contains(prefix);
+        return PrefixUtil.isPrefixableSelector(name) && prefixesForSelector(name).contains(prefix);
     }
 
     @Override

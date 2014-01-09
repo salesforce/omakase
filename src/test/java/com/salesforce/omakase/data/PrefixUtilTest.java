@@ -29,42 +29,42 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class PrefixUtilTest {
     @Test
     public void hasPropertyTrue() {
-        assertThat(PrefixUtil.isPrefixibleProperty(Property.BORDER_RADIUS)).isTrue();
+        assertThat(PrefixUtil.isPrefixableProperty(Property.BORDER_RADIUS)).isTrue();
     }
 
     @Test
     public void hasPropertyFalse() {
-        assertThat(PrefixUtil.isPrefixibleProperty(Property.BORDER)).isFalse();
+        assertThat(PrefixUtil.isPrefixableProperty(Property.BORDER)).isFalse();
     }
 
     @Test
     public void hasFunctionTrue() {
-        assertThat(PrefixUtil.isPrefixibleFunction("calc")).isTrue();
+        assertThat(PrefixUtil.isPrefixableFunction("calc")).isTrue();
     }
 
     @Test
     public void hasFunctionFalse() {
-        assertThat(PrefixUtil.isPrefixibleFunction("blah")).isFalse();
+        assertThat(PrefixUtil.isPrefixableFunction("blah")).isFalse();
     }
 
     @Test
     public void hasAtRule() {
-        assertThat(PrefixUtil.isPrefixibleAtRule("keyframes")).isTrue();
+        assertThat(PrefixUtil.isPrefixableAtRule("keyframes")).isTrue();
     }
 
     @Test
     public void hasAtRuleFalse() {
-        assertThat(PrefixUtil.isPrefixibleAtRule("blah")).isFalse();
+        assertThat(PrefixUtil.isPrefixableAtRule("blah")).isFalse();
     }
 
     @Test
     public void hasSelector() {
-        assertThat(PrefixUtil.isPrefixibleSelector("selection")).isTrue();
+        assertThat(PrefixUtil.isPrefixableSelector("selection")).isTrue();
     }
 
     @Test
     public void hasSelectorFalse() {
-        assertThat(PrefixUtil.isPrefixibleSelector("blah")).isFalse();
+        assertThat(PrefixUtil.isPrefixableSelector("blah")).isFalse();
     }
 
     @Test

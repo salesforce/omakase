@@ -54,8 +54,8 @@ public class GeneratePrefixTablesClass {
 
     public void run() throws IOException, TemplateException {
         // read the prefix input data
-        System.out.println("reading prefixible.yaml...");
-        Map types = (Map)yaml.load(Tools.readFile("/data/prefixible.yaml"));
+        System.out.println("reading prefixable.yaml...");
+        Map types = (Map)yaml.load(Tools.readFile("/data/prefixable.yaml"));
 
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
         List<NameInfo> functions = loadGeneric((Map)types.get("functions"));

@@ -26,7 +26,7 @@ public class PrintAllPrefixed {
     @SuppressWarnings("unchecked")
     public void run() throws IOException {
 
-        Map types = (Map)yaml.load(Tools.readFile("/data/prefixible.yaml"));
+        Map types = (Map)yaml.load(Tools.readFile("/data/prefixable.yaml"));
         String header = "%-28s%n";
 
         // props

@@ -57,7 +57,7 @@ final class PrefixerHandlers {
             // if a prefix is needed.
             if (!instance.isRefined() || instance.isPrefixed()) return false;
             Optional<Property> property = instance.propertyName().asProperty();
-            return property.isPresent() && PrefixUtil.isPrefixibleProperty(property.get());
+            return property.isPresent() && PrefixUtil.isPrefixableProperty(property.get());
         }
 
         @Override
@@ -81,7 +81,7 @@ final class PrefixerHandlers {
         @Override
         boolean applicable(FunctionValue instance, SupportMatrix support) {
             return instance.parent().get().declaration().isPresent()
-                && instance.name().charAt(0) != '-' && PrefixUtil.isPrefixibleFunction(instance.name());
+                && instance.name().charAt(0) != '-' && PrefixUtil.isPrefixableFunction(instance.name());
         }
 
         @Override
@@ -104,7 +104,7 @@ final class PrefixerHandlers {
     static final PrefixerHandler<AtRule> AT_RULE = new PrefixerHandlerStandard<AtRule, Statement>() {
         @Override
         boolean applicable(AtRule instance, SupportMatrix support) {
-            return instance.isRefined() && instance.name().charAt(0) != '-' && PrefixUtil.isPrefixibleAtRule(instance.name());
+            return instance.isRefined() && instance.name().charAt(0) != '-' && PrefixUtil.isPrefixableAtRule(instance.name());
         }
 
         @Override
@@ -128,7 +128,7 @@ final class PrefixerHandlers {
 
         @Override
         boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
-            return !instance.name().startsWith("-") && PrefixUtil.isPrefixibleSelector(instance.name());
+            return !instance.name().startsWith("-") && PrefixUtil.isPrefixableSelector(instance.name());
         }
 
         @Override

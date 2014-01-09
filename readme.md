@@ -26,7 +26,7 @@ Omakase is built 100% solely for parsing CSS, which means that the error message
 
 ### Awesome standard plugins
 
-Omakase comes with some some plugins out of the box, like `Conditionals` and `Prefixer`.
+Omakase comes with some plugins out of the box, like `Conditionals` and `Prefixer`. These are described below.
 
 ### Built-in support for custom syntax
 
@@ -49,7 +49,7 @@ However this is not very useful in and of itself. Usually you will register vari
 
 The most basic principle to understand when using Omakase is that nearly everything is organized into a set of _plugins_. Need to output the processed code in compressed or dev mode format? Register a `StyleWriter` plugin. Want to enable built-in validations? Register a `StandardValidation` plugin. Want to add your own custom rework, validation and linting? Create and register the applicable plugins.
 
-This loosely coupled architecture allows us to achieve better performance and caters to the pattern of parsing a CSS source over and over with different configurations as opposed to parsing just once (which other libraries might necessitate for performance cost reasons).
+This loosely-coupled architecture allows us to achieve better performance and caters to the pattern of parsing a CSS source over and over with different configurations as opposed to parsing just once (which other libraries might necessitate for performance cost reasons).
 
 Note that only one instance of a plugin can be registered and that plugins will be executed in the order that they are registered. Thus, order can be extremely important for rework operations.
 
@@ -87,7 +87,7 @@ Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyw
 String output = StyleWriter.writeSingle(declaration);
 ```
 
-If you need to honor any specified *CustomWriter* overrides (explained below) then use the alternative instance method instead:
+If you need to honor any specified *CustomWriter* overrides (explained below) then use the alternative instance-method instead:
 
 ```java
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
@@ -116,7 +116,7 @@ You can also add your own custom validators. For examples see the "Custom valida
 
 When registering plugins there are important details to keep in mind:
 
-- Only one instance of a plugin can be registered to a single parse operation.
+- Only one instance of a plugin can be registered.
 - Subscription methods will be executed in the order that its plugin class was registered.
 - All `@Rework` subscription methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
 
@@ -276,6 +276,174 @@ compared to quoted:
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)";
 ```
 
+#### Prefixer
+
+_experimental!_
+
+The `Prefixer` plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules and function names and automatically prepend prefixed-equivalents based on the specified level of browser support. For example:
+
+```css
+.class {
+  border-radius: 3px;
+}
+```
+
+gets transformed into:
+
+```css
+.class {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+```
+
+The `Prefixer` plugin determines which prefixes to actually use based on whether the browsers you'd like to support actually need them. It maintains a list of every browser version and which properties they require prefixed to accomplish this. The data is retrieved from the famous [caniuse.com](http://caniuse.com) website [database](https://github.com/fyrd/caniuse).
+
+Here is how you would register the `Prefixer` plugin using the default browser level support:
+
+```java
+Prefixer prefixer = Prefixer.defaultBrowserSupport();
+Omakase.source(input).add(prefixer).process();
+```
+
+The default browser version support includes the last four versions of iOS Safari, last two versions of Chrome and Firefox, last three of Android, IE 7+, and the latest versions of Safari, IE Mobile and Opera Mini.
+
+You can specify an alternative set of browsers to support as well:
+
+```java
+Prefixer prefixer = Prefixer.customBrowserSupport();
+prefixer.support().all(Browser.IE);
+prefixer.support().latest(Browser.FIREFOX);
+prefixer.support().browser(Browser.SAFARI, 6.1);
+prefixer.support().last(Browser.SAFARI, 2);
+Omakase.source(input).add(prefixer).process();
+```
+
+This is cumulative, so you can also add extra support to the defaults instead.
+
+To manually update the prefix data, see the "Scripts" section below. Updating is a one-line shell command, and after an update the processed CSS automatically reflects any changes right away. This can be more efficient than using a mixin to handle vendor prefixes, as you would have to constantly check each prefixable property, selector, etc... to see if a prefix is still required.
+
+Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register an `AutoRefiner` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the "AutoRefiner" section above for more information.
+
+##### Pruning
+
+The `Prefixer` plugin works well with existing CSS that is already littered with various vendor prefixes. By default, if a prefix is already present then it will be preserved as-is. That is, a duplicate prefix will not be added. This allows you to turn on and use the plugin right away without having to clean up your CSS file. It can even be a way for you to specify a value for the prefixed declaration that differs from the unprefixed one.
+
+On the other hand, in many cases it will be more performant to actually have all unecessary prefixes removed. You can do this with the `prune` method. 
+
+For example, take the following:
+
+```css
+.class {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+}
+```
+
+Many people still have CSS that looks like this, without realizing that border-radius has not required a prefix for `webkit` or `moz` for a very long time, and the `ms` and `o` prefixes were never actually needed at all.
+
+Turn on pruning to have these prefixes automatically removed:
+
+```java
+Prefixer prefixer = Prefixer.defaultBrowserSupport().prune(true);
+```
+
+Then go back and update your CSS files to remove them as well at your leisure.
+
+##### Rearranging
+
+Similarly, sometimes people end up with CSS that looks like this:
+
+```css
+.class {
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+```
+
+It's always best practice for the unprefixed version to be *last*, that way if the browser supports the property unprefixed that is the one it uses. You can turn on rearranging to ensure that any prefixes that exist in the source file are moved around to make this true:
+
+```java
+Prefixer prefixer = Prefixer.defaultBrowserSupport().rearrange(true);
+```
+
+##### Prefixer Support List
+
+Here's a list of what's currently supported:
+
+    Property                    
+    ----------------------------
+    animation                   
+    animation-delay             
+    animation-direction         
+    animation-duration          
+    animation-fill-mode         
+    animation-iteration-count   
+    animation-name              
+    animation-play-state        
+    animation-timing-function   
+    backface-visibility         
+    background-clip             
+    background-origin           
+    background-size             
+    border-bottom-left-radius   
+    border-bottom-right-radius  
+    border-image                
+    border-image-outset         
+    border-image-repeat         
+    border-image-slice          
+    border-image-source         
+    border-image-width          
+    border-radius               
+    border-top-left-radius      
+    border-top-right-radius     
+    box-shadow                  
+    box-sizing                  
+    column-count                
+    column-fill                 
+    column-gap                  
+    column-rule                 
+    column-rule-color           
+    column-rule-style           
+    column-rule-width           
+    column-span                 
+    column-width                
+    columns                     
+    hyphens                     
+    perspective                 
+    perspective-origin          
+    tab-size                    
+    transform                   
+    transform-origin            
+    transform-style             
+    transition                  
+    transition-delay            
+    transition-duration         
+    transition-property         
+    transition-timing-function  
+    user-select                 
+
+    Function                    
+    ----------------------------
+    calc                        
+    linear-gradient             
+    repeating-linear-gradient   
+
+    At Rule                     
+    ----------------------------
+    keyframes                   
+
+    Selector                    
+    ----------------------------
+    selection    
+
+You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the "Scripts" section below.
+
 ### Creating custom plugins
 
 In addition to the standard library plugins, you can create and register your own custom plugins as well. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules.
@@ -365,8 +533,8 @@ if (button.isPresent()) {
     System.out.println(button.get());
 }
 
-// check if a 'div' type selector is adjoined to a class selector (e.g., "div.three")
-if(Selectors.hasTypeSelector(myClassSelector.adjoining(), "div")) {...}
+// check if a 'div' type selector is adjoined to a class selector (e.g., "div.selector1")
+if(Selectors.hasTypeSelector(Selectors.adjoining(selector1), "div")) {...}
 
 // create a new declaration
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
@@ -423,7 +591,16 @@ someRule.detach();
 // for more examples see the many unit tests
 ```
 
-Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins.
+Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins. You can remove any unit from the tree by calling `detach`. Note that doing this will prevent that unit from being delivered to any subsequent subscription methods.
+
+There are other utilities for working with units in the following utility classes:
+
+- Selectors.java
+- Values.java
+- Actions.java
+- Parsers.java
+
+See the `omakase.util` package for more.
 
 #### Custom validation
 
@@ -435,7 +612,6 @@ Here is an example of a class with two validation subscription methods:
 public class Validations implements Plugin {
     @Validate
     public void validateRelativeFonts(Declaration declaration, ErrorManager em) {
-        if (declaration.isDetached()) return; // ignore removed declarations
         if (!declaration.isProperty(Property.FONT_SIZE)) return; // only process font-size properties
 
         Optional<NumericalValue> number = Values.asNumerical(declaration.propertyValue());
@@ -449,8 +625,6 @@ public class Validations implements Plugin {
     public void validateIncludesUnprefixed(Declaration declaration, ErrorManager em) {
         // check that all prefixed declarations include an unprefixed declaration as well.
 
-        if (declaration.isDetached()) return; // ignore removed declarations
-
         PropertyName propertyName = declaration.propertyName();
 
         if (propertyName.isPrefixed()) {
@@ -461,6 +635,7 @@ public class Validations implements Plugin {
             for (Declaration d : declaration.group().get()) {
                 if (d.isProperty(expected)) {
                     found = true;
+                    break;
                 }
             }
 
@@ -503,7 +678,27 @@ There is another, more performant alternative to using `AutoRefiner`. You can in
 
 Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation does not need to be separated out in to multiple classes.
 
-You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework, validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order.
+You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework or validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order.
+
+You can also register anonymous inner classes as plugins too:
+
+```java
+Omakase.source(input)
+    .add(new StandardValidation())
+    .add(new Plugin() {
+        @Rework
+        public void rework(Declaration d) {
+            ...
+        }
+    })
+    .add(new Plugin() {
+        @Validate
+        public void validate(Declaration d, ErrorManager em) {
+            ...
+        }
+    })
+    .process();
+```
 
 #### Subscribing to interfaces
 
@@ -541,7 +736,7 @@ The `RefinerStrategy` you return must implement one or more of these interfaces.
 
 See the various *RefinerStrategy interfaces for more instructions on implementing their methods. The general idea is that these custom refiners work in a chain. Whenever an `AtRule`, `Selector`, `Declaration` or `RawFunction` is refined, it gets passed through the chain of registered custom `RefinerStrategy` objects. If the first custom `RefinerStrategy` determines that the given object is not applicable, it returns false and the object is passed on to the next refiner. Finally, if no custom refiners handle the object then the `StandardRefiner` will be used.
 
-For any non-trivial custom syntax you will most likely be required to parse the raw content. You can utilize the `Source` class as a parsing utility. More importantly, nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on `ParserFactory`. For example, here is how you would parse a raw string into a list of terms and operators:
+For any non-trivial custom syntax you will most likely be required to parse the raw content. You can utilize the `Source` class as a parsing utility. More importantly, nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on `ParserFactory` and `Parsers`. For example, here is how you would parse a raw string into a list of terms and operators:
 
 ```java
 Source source = new Source(rawContent, xyz.line(), xyz.column());
@@ -552,9 +747,11 @@ Iterable<TermListMember> members = queryable.filter(TermListMember.class);
 
 For a full example of a `FunctionRefinerStrategy` see `UrlFunctionRefinerStrategy` and related classes. For a full example of a `AtRuleRefinerStrategy` see `ConditionalsRefinerStrategy` and related classes.
 
+Note that generally speaking, by simply utilizing a parser from parser factory, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser, and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
+
 #### Base plugin
 
-You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin.
+You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin because you can use your IDE to easily see and override the AST objects that you need.
 
 ### Custom error handling
 
@@ -563,7 +760,7 @@ The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily 
 You can alternatively specify your own `ErrorManager` implementation, for example to store all errors and present them in full at once at the end of parsing. To do so, create a class that implements the `ErrorManager` interface and provide it during parser setup:
 
 ```java
-Omakase.source(input).errorManager(myCustomErrorManager).process();
+Omakase.source(input).add(myCustomErrorManager).process();
 ```
 
 ### Custom writers
@@ -576,7 +773,7 @@ Omakase allows you to hook into the writing process and override the output of a
 
 However, it is not recommended to change the actual content of the unit using a custom writer, as this will bypass all rework and validation rules.
 
-The first step is to create a new class that implements the `CustomWriter` interface. This interface is parameterized with the type if unit that it is overriding:
+The first step is to create a new class that implements the `CustomWriter` interface. This interface is parameterized with the type of unit that it is overriding:
 
 ```java
 public class MyCustomWriter implements CustomWriter<Selector> {
@@ -661,42 +858,40 @@ Use the `#orphanedComments` method on a `Selector`, `Declaration`, `Rule` or `St
 Subscribable Syntax Units
 -------------------------
 
-Following is the list of all supported syntax types that you can subscribe to in `@Rework`, `@Validate` and `@PreProcess` annotated methods. Keep in mind that many syntax units require _refinement_ or the `SyntaxTree` plugin before they will be delivered. More information on this is available in the Usage section above.
+Following is the list of all supported syntax types that you can subscribe to in `@Rework`, `@Validate` and `@Observe` annotated methods. Keep in mind that many syntax units require _refinement_ before they will be delivered. More information on this is available in the Usage section above.
 
 <pre>
     Name                           Description                                               Enablement / Dependency     Type
     ----------------------------   -------------------------------------------------------   -------------------------   ---------------
 01: Refinable                      raw syntax that can be further refined                    Automatic                   interface
 02: Statement                      rule or at-rule                                           Automatic                   interface
-03: Syntax                         parent interface of all subscribable units                Under certain conditions*   interface
-04: Rule                           (no description)                                          Automatic                   class
-05: Stylesheet                     (no description)                                          Automatic                   class
-06: AtRule                         (no description)                                          Automatic                   class
-07: MediaQueryList                 full media query string                                   AtRule#refine               class
-08: FunctionValue                  general interface for function terms                      Declaration#refine          interface
-09: PropertyValue                  interface for all property values                         Declaration#refine          interface
-10: Term                           a single segment of a property value                      Declaration#refine          interface
-11: Declaration                    (no description)                                          Automatic                   class
-12: GenericFunctionValue           unknown function value                                    Declaration#refine          class
-13: HexColorValue                  individual hex color value                                Declaration#refine          class
-14: KeywordValue                   individual keyword value                                  Declaration#refine          class
-15: NumericalValue                 individual numerical value                                Declaration#refine          class
-16: RawFunction                    a raw function before refinement                          Declaration#refine          class
-17: StringValue                    individual string value                                   Declaration#refine          class
-18: TermList                       default, generic property value                           Declaration#refine          class
-19: UrlFunctionValue               url function                                              Declaration#refine          class
-20: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
-21: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
-22: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-23: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-24: AttributeSelector              attribute selector segment                                Selector#refine             class
-25: ClassSelector                  class selector segment                                    Selector#refine             class
-26: IdSelector                     id selector segment                                       Selector#refine             class
-27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
-28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
-29: Selector                       (no description)                                          Automatic                   class
-30: TypeSelector                   type/element selector segment                             Selector#refine             class
-31: UniversalSelector              universal selector segment                                Selector#refine             class
+03: Rule                           (no description)                                          Automatic                   class
+04: Stylesheet                     (no description)                                          Automatic                   class
+05: AtRule                         (no description)                                          Automatic                   class
+06: MediaQueryList                 full media query string                                   AtRule#refine               class
+07: FunctionValue                  general interface for function terms                      Declaration#refine          interface
+08: Term                           a single segment of a property value                      Declaration#refine          interface
+09: Declaration                    (no description)                                          Automatic                   class
+10: GenericFunctionValue           unknown function value                                    Declaration#refine          class
+11: HexColorValue                  individual hex color value                                Declaration#refine          class
+12: KeywordValue                   individual keyword value                                  Declaration#refine          class
+13: NumericalValue                 individual numerical value                                Declaration#refine          class
+14: PropertyValue                  interface for all property values                         Declaration#refine          class
+15: RawFunction                    a raw function before refinement                          Declaration#refine          class
+16: StringValue                    individual string value                                   Declaration#refine          class
+17: UrlFunctionValue               url function                                              Declaration#refine          class
+18: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
+19: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
+20: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+21: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+22: AttributeSelector              attribute selector segment                                Selector#refine             class
+23: ClassSelector                  class selector segment                                    Selector#refine             class
+24: IdSelector                     id selector segment                                       Selector#refine             class
+25: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
+26: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
+27: Selector                       (no description)                                          Automatic                   class
+28: TypeSelector                   type/element selector segment                             Selector#refine             class
+29: UniversalSelector              universal selector segment                                Selector#refine             class
 
 Generated by PrintSubscribableSyntaxTable.java
 </pre>
@@ -723,7 +918,7 @@ The project relies on the following technologies:
 2. java 7 (make sure both the IDE and maven are setup to use it)
 3. maven 3+
 
-run `mvn clean install` to get things going from the command line. It should build and run tests successfully. Afterwards you can import the maven project into your IDE and go from there.
+run `mvn clean install` to get things going from the command line. It should build and run tests successfully. Afterwards you can import the maven project into your IDE (as an existing maven project) and go from there.
 
 ### Dependencies
 
@@ -767,14 +962,16 @@ This will setup links to the omakase CLI script. Now you can run the `omakase` c
 
       Options:
 
-        -b (--build)                build the project
-        -d (--deploy)               build and deploy jars (requires additional setup, see deploy.md)
-        -g (--generate, --gen)      regenerate all data enum and class source files
-        -h (--help)                 print this help message
-        -m (--mode) <mode>          specifies perf mode (t/thin, f/full, g/gss, p/phloc)
-        -p (--perf)                 run the performance test
-        -s (--syntax, --sub)        print the subscribable syntax table
-        -u (--update, --prefixes)   update and regenerate the prefix data only
+        -b (--build)                  build the project
+        -d (--deploy)                 build and deploy jars (requires additional setup, see deploy.md)
+        -g (--generate, --gen)        regenerate all data enum and data class source files
+        -h (--help)                   print this help message
+        -i (--interactive, --shell)   interactive shell
+        -p (--perf) <mode-input>      performance test (ex. "-p full", "-p full-heavy")
+        -s (--syntax, --sub)          print the subscribable syntax table
+        -u (--update)                 update and regenerate the prefix data only
+        -v (--prefixed-def)           print what is auto-prefixed by Prefixer.defaultBrowserSupport()
+        -w (--prefixed-all)           print all properties, at-rules, etc...that are supported by Prefixer
 
 For example, updating the prefix info:
 
@@ -786,11 +983,11 @@ Printing the subscribable syntax table:
 
 Running the performance test:
 
-    omakase -p
+    omakase -p full
+    omakase -p thin
+    omakase -p full-button
+    omakase -p prefixer-heavy
 
-Running the performance test in "omakase full parsing" mode:
-
-    omakase -p -m full
 
 Architecture
 ------------

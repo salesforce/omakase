@@ -191,7 +191,7 @@ public class PrefixerUnitTargetedTest {
     }
 
     @Test
-    public void transitionPropertyWithPrefixibleProps() {
+    public void transitionPropertyWithPrefixableProps() {
         String original = ".test {transition-property:width,transform}";
         String expected = ".test {transition-property:width,-webkit-transform; transition-property:width,transform}";
         Prefixer prefixer = Prefixer.customBrowserSupport();

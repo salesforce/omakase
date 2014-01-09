@@ -236,7 +236,7 @@ public final class PrefixTables {
         builder.put(Property.BACKFACE_VISIBILITY, Browser.IOS_SAFARI, 7.0);
         builder.put(Property.BOX_SIZING, Browser.CHROME, 9.0);
         builder.put(Property.BOX_SIZING, Browser.SAFARI, 5.0);
-        builder.put(Property.BOX_SIZING, Browser.FIREFOX, 25.0);
+        builder.put(Property.BOX_SIZING, Browser.FIREFOX, 26.0);
         builder.put(Property.BOX_SIZING, Browser.ANDROID, 3.0);
         builder.put(Property.BOX_SIZING, Browser.IOS_SAFARI, 4.3);
         builder.put(Property.COLUMNS, Browser.OPERA, 17.0);
@@ -269,16 +269,16 @@ public final class PrefixTables {
         builder.put(Property.COLUMN_RULE_STYLE, Browser.SAFARI, 7.0);
         builder.put(Property.COLUMN_SPAN, Browser.SAFARI, 7.0);
         builder.put(Property.COLUMN_FILL, Browser.SAFARI, 7.0);
-        builder.put(Property.COLUMNS, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_WIDTH, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_GAP, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_RULE, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_COUNT, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_RULE_COLOR, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_RULE_WIDTH, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_RULE_STYLE, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_SPAN, Browser.FIREFOX, 25.0);
-        builder.put(Property.COLUMN_FILL, Browser.FIREFOX, 25.0);
+        builder.put(Property.COLUMNS, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_WIDTH, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_GAP, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_RULE, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_COUNT, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_RULE_COLOR, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_RULE_WIDTH, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_RULE_STYLE, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_SPAN, Browser.FIREFOX, 26.0);
+        builder.put(Property.COLUMN_FILL, Browser.FIREFOX, 26.0);
         builder.put(Property.COLUMNS, Browser.ANDROID, 4.3);
         builder.put(Property.COLUMN_WIDTH, Browser.ANDROID, 4.3);
         builder.put(Property.COLUMN_GAP, Browser.ANDROID, 4.3);
@@ -303,16 +303,16 @@ public final class PrefixTables {
         builder.put(Property.USER_SELECT, Browser.OPERA, 17.0);
         builder.put(Property.USER_SELECT, Browser.CHROME, 31.0);
         builder.put(Property.USER_SELECT, Browser.SAFARI, 7.0);
-        builder.put(Property.USER_SELECT, Browser.FIREFOX, 25.0);
+        builder.put(Property.USER_SELECT, Browser.FIREFOX, 26.0);
         builder.put(Property.USER_SELECT, Browser.ANDROID, 4.3);
         builder.put(Property.USER_SELECT, Browser.IE_MOBILE, 10.0);
         builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 7.0);
         builder.put(Property.HYPHENS, Browser.IE, 11.0);
         builder.put(Property.HYPHENS, Browser.SAFARI, 7.0);
-        builder.put(Property.HYPHENS, Browser.FIREFOX, 25.0);
+        builder.put(Property.HYPHENS, Browser.FIREFOX, 26.0);
         builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 7.0);
         builder.put(Property.TAB_SIZE, Browser.OPERA, 12.1);
-        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 25.0);
+        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 26.0);
 
         PROPERTIES = builder.build();
     }
@@ -356,7 +356,7 @@ public final class PrefixTables {
     static {
         ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
 
-        builder.put("selection", Browser.FIREFOX, 25.0);
+        builder.put("selection", Browser.FIREFOX, 26.0);
 
         SELECTORS = builder.build();
     }
