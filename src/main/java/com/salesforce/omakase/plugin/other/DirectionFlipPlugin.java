@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
@@ -18,6 +17,7 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.util.CssAnnotations;
 import com.salesforce.omakase.util.Values;
 
 import java.util.Iterator;
@@ -31,10 +31,7 @@ import java.util.Set;
  *
  * @author david.brady
  */
-public class DirectionFlipPlugin implements DependentPlugin {
-
-    private static final String NOPARSE = "@noparse";
-
+public final class DirectionFlipPlugin implements DependentPlugin {
     /*
      * Set of properties that are flipped directly to another property.
      */
@@ -122,7 +119,7 @@ public class DirectionFlipPlugin implements DependentPlugin {
      */
     @Rework
     public void rework(Declaration declaration) {
-        if (hasNoParseDirective(declaration)) {
+        if (hasNoFlip(declaration)) {
             return;
         }
 
@@ -144,13 +141,8 @@ public class DirectionFlipPlugin implements DependentPlugin {
         handleFlippableBorderRadius(declaration, property);
     }
 
-    private boolean hasNoParseDirective(Declaration declaration) {
-        for (Comment comment : declaration.comments()) {
-            if (comment.content().contains(NOPARSE)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean hasNoFlip(Declaration declaration) {
+        return declaration.hasAnnotation(CssAnnotations.NOFLIP);
     }
 
     /**
@@ -161,7 +153,7 @@ public class DirectionFlipPlugin implements DependentPlugin {
      */
     @Rework
     public void rework(KeywordValue keywordValue) {
-        if (hasNoParseDirective(keywordValue.parent().get().declaration().get())) {
+        if (hasNoFlip(keywordValue.parent().get().declaration().get())) {
             return;
         }
         Optional<Keyword> optionalKeyword = keywordValue.asKeyword();

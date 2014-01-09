@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
@@ -187,4 +188,58 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * @return The list of comments. Never returns null.
      */
     ImmutableList<Comment> orphanedComments();
+
+    /**
+     * Checks if this unit has a CSS comment annotation with the given name.
+     * <p/>
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * example "@noparse", "@browser ie7", etc...
+     * <p/>
+     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
+     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * <p/>
+     * Any comments that precede this unit in the source code will be checked for the annotation. For more information see the
+     * main readme file.
+     *
+     * @param name
+     *     Check for an annotation with this name.
+     *
+     * @return True if a {@link CssAnnotation} was found with the given name in {@link Comment}s associated with this unit.
+     */
+    boolean hasAnnotation(String name);
+
+    /**
+     * Gets the {@link CssAnnotation} with the given name from the comments associated with this unit, if there is one.
+     * <p/>
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * example "@noparse", "@browser ie7", etc...
+     * <p/>
+     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
+     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * <p/>
+     * Any comments that precede this unit in the source code will be checked for the annotation. For more information see the
+     * main readme file.
+     *
+     * @param name
+     *     Get the annotation with this name.
+     *
+     * @return The {@link CssAnnotation}, or {@link Optional#absent()} if not found.
+     */
+    Optional<CssAnnotation> annotation(String name);
+
+    /**
+     * Gets all {@link CssAnnotation}s from the comments associated with this unit.
+     * <p/>
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * example "@noparse", "@browser ie7", etc...
+     * <p/>
+     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
+     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * <p/>
+     * Any comments that precede this unit in the source code will be checked for the annotation. For more information see the
+     * main readme file.
+     *
+     * @return All found {@link CssAnnotation}s.
+     */
+    List<CssAnnotation> annotations();
 }

@@ -151,6 +151,66 @@ public class AbstractSyntaxTest {
         assertThat(broadcaster.all()).isEmpty();
     }
 
+    @Test
+    public void hasAnnotationTrue() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.comments(Lists.newArrayList("@test"));
+        assertThat(t.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationFalseNoComments() {
+        TestSyntax t = new TestSyntax(1, 1);
+        assertThat(t.hasAnnotation("test")).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationFalseDifferentComments() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.comments(Lists.newArrayList("@test2"));
+        assertThat(t.hasAnnotation("test")).isFalse();
+    }
+
+    @Test
+    public void getAnnotationPresent() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.comments(Lists.newArrayList("@test"));
+        assertThat(t.annotation("test").isPresent()).isTrue();
+    }
+
+    @Test
+    public void getAnnotationAbsentNoComments() {
+        TestSyntax t = new TestSyntax(1, 1);
+        assertThat(t.annotation("test").isPresent()).isFalse();
+    }
+
+    @Test
+    public void getAnnotationAbsentDifferentComments() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.comments(Lists.newArrayList("@test2"));
+        assertThat(t.annotation("test").isPresent()).isFalse();
+    }
+
+    @Test
+    public void allAnnotations() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.comments(Lists.newArrayList("@test", "blah", "@test2", "aaaa @", "@test3 one"));
+        assertThat(t.annotations()).hasSize(3);
+    }
+
+    @Test
+    public void allAnnotationsWhenEmpty() {
+        TestSyntax t = new TestSyntax(1, 1);
+        assertThat(t.annotations()).isEmpty();
+    }
+
+    @Test
+    public void hasId() {
+        TestSyntax t1 = new TestSyntax();
+        TestSyntax t2 = new TestSyntax();
+        assertThat(t1.id()).isNotEqualTo(t2.id());
+    }
+
     public static final class TestSyntax extends AbstractSyntax<TestSyntax> {
         private String name;
 
@@ -173,4 +233,5 @@ public class AbstractSyntaxTest {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
     }
+
 }

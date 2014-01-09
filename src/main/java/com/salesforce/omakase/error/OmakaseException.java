@@ -30,7 +30,7 @@ public class OmakaseException extends RuntimeException {
      * @param message
      *     The description of the exception.
      */
-    protected OmakaseException(String message) {
+    public OmakaseException(String message) {
         super(message);
     }
 

@@ -797,7 +797,7 @@ Omakase.source(".class{color:red}").request(writer).process();
 
 You can only register one override per AST object type.
 
-### Comments and annotations
+### Comments and CSS annotations
 
 AST objects are automatically associated with all comments that logically precede them. You can access the list of comments by calling the `Syntax#comments` method on the syntax unit. In other words, comments are linked to the AST object that directly follows them (with the exception of orphaned comments, as explained below). Take this example:
 
@@ -829,11 +829,63 @@ AST objects are automatically associated with all comments that logically preced
 
 Note that without refinement, the comments on the inner segments of the `Selector`s and `Declaration`s will not be known.
 
-#### Annotations
+#### CSS Annotations
 
-Comments can be used for _annotation directives_...
+Comments can be used for _annotation directives_. For example:
 
-TODO
+```css
+.class {
+  width: 20px;
+  margin-left: 20px;
+  /* @noflip */ float: left;
+}
+```
+
+In this example, the `@noflip` annotation is used to provide information to the `DirectionFlip` plugin regarding not flipping that particular declaration value.
+
+CSS comment annotations start with `@` + the name of the annotation. Annotations can take optional space-delimited arguments, up to a maximum of five. There can be at most one annotation per CSS comment block. For example:
+
+```css
+.class {
+  /* @markerAnnotation */ color: red;
+  /* @lang-switch ja eng */ font-family: Arial, sans-serif;
+  /* @custom1 */ /* @custom2 */ display: block;
+}
+```
+
+Any number of custom annotations can be utilized by your plugins. To check for an annotation, there are convenience methods available on every syntax unit:
+
+```java
+public class MyPlugin implements Plugin {
+    @Rework
+    public void rework(Declaration declaration) {
+        // check for the presence of a marker annotation
+        if (declaration.hasAnnotation("myAnnotation")) {
+            // do something
+        }
+
+        // check for an annotation with arguments
+        Optional<CssAnnotation> annotation = declaration.annotation("myAnnotation");
+        if (annotation.isPresent()) {
+            // check for a required argument
+            Optional<String> arg = annotation.get().argument();
+            if (!arg.isPresent()) {
+                throw new RuntimeException("missing required argument");
+            }
+
+            // do something
+        }
+
+        // check for any annotation
+        for (CssAnnotation annotation : declaration.annotations()) {
+            System.out.println(annotation.name());
+            System.out.println(annotation.arguments());
+        }
+    }
+}
+```
+
+If you happen to have your hands on a specific `Comment` instance, it has similar convenience methods as well.
 
 #### Orphaned comments
 

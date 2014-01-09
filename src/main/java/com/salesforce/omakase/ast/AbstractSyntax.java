@@ -16,7 +16,9 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.data.Prefix;
@@ -191,6 +193,43 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     @Override
     public ImmutableList<Comment> orphanedComments() {
         return orphanedComments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(orphanedComments);
+    }
+
+    @Override
+    public boolean hasAnnotation(String name) {
+        if (comments == null) return false;
+
+        for (Comment comment : comments) {
+            if (comment.hasAnnotation(name)) return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public Optional<CssAnnotation> annotation(String name) {
+        if (comments == null) return Optional.absent();
+
+        for (Comment comment : comments) {
+            Optional<CssAnnotation> annotation = comment.annotation(name);
+            if (annotation.isPresent()) return annotation;
+        }
+
+        return Optional.absent();
+    }
+
+    @Override
+    public List<CssAnnotation> annotations() {
+        List<CssAnnotation> found = Lists.newArrayList();
+
+        if (comments != null) {
+            for (Comment comment : comments) {
+                Optional<CssAnnotation> annotation = comment.annotation();
+                if (annotation.isPresent()) found.add(annotation.get());
+            }
+        }
+
+        return found;
     }
 
     @Override
