@@ -16,9 +16,8 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.collect.ImmutableSet;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.QuotationMode;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
@@ -40,13 +39,14 @@ public class UrlRefinerTest {
 
     private UrlRefiner urlRefiner;
     private QueryableBroadcaster broadcaster;
-    private Refiner refiner;
+    private GenericRefiner refiner;
 
     @Before
     public void setup() {
         urlRefiner = new UrlRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, ImmutableSet.<RefinerStrategy>of(urlRefiner));
+        refiner = new GenericRefiner(broadcaster).register(urlRefiner);
+
     }
 
     @Test

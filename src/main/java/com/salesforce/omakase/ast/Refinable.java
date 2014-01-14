@@ -18,7 +18,7 @@ package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Designates that an {@link Syntax} unit is <em>refinable</em> to a more specified or detailed representation.
@@ -36,7 +36,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  *
  * @author nmcwilliams
  * @see Syntax
- * @see Refiner
+ * @see GenericRefiner
  */
 @Subscribable
 @Description("raw syntax that can be further refined")

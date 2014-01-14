@@ -16,11 +16,10 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -29,16 +28,16 @@ import org.junit.Test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link Refiner}.
+ * Unit tests for {@link GenericRefiner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class RefinerTest {
+public class GenericRefinerTest {
     @Test
     public void customAtRuleRefinement() {
         AtRuleStrategy strategy = new AtRuleStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
         assertThat(strategy.called).isTrue();
     }
@@ -47,7 +46,7 @@ public class RefinerTest {
     public void testMultipleCustomAtRule() {
         AtRuleStrategyFalse strategy1 = new AtRuleStrategyFalse();
         AtRuleStrategy strategy2 = new AtRuleStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -55,7 +54,7 @@ public class RefinerTest {
 
     @Test
     public void standardAtRuleRefinement() {
-        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster());
         AtRule ar = new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner);
         refiner.refine(ar); // no errors
     }
@@ -63,7 +62,7 @@ public class RefinerTest {
     @Test
     public void customSelectorRefinement() {
         SelectorStrategy strategy = new SelectorStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
         assertThat(strategy.called).isTrue();
     }
@@ -72,7 +71,7 @@ public class RefinerTest {
     public void testMultipleCustomSelector() {
         SelectorStrategyFalse strategy1 = new SelectorStrategyFalse();
         SelectorStrategy strategy2 = new SelectorStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -80,7 +79,7 @@ public class RefinerTest {
 
     @Test
     public void standardSelectorRefinement() {
-        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster());
         Selector selector = new Selector(new RawSyntax(1, 1, "p"), refiner);
         refiner.refine(selector);
         assertThat(selector.isRefined()).isTrue();
@@ -89,7 +88,7 @@ public class RefinerTest {
     @Test
     public void customDeclarationRefinement() {
         DeclarationStrategy strategy = new DeclarationStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
         assertThat(strategy.called).isTrue();
     }
@@ -98,7 +97,7 @@ public class RefinerTest {
     public void testMultipleCustomDeclaration() {
         DeclarationStrategyFalse strategy1 = new DeclarationStrategyFalse();
         DeclarationStrategy strategy2 = new DeclarationStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -106,7 +105,7 @@ public class RefinerTest {
 
     @Test
     public void standardDeclarationRefinement() {
-        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster());
         Declaration declaration = new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner);
         refiner.refine(declaration);
     }
@@ -114,7 +113,7 @@ public class RefinerTest {
     @Test
     public void functionValueRefinement() {
         FunctionStrategy strategy = new FunctionStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new RawFunction(1, 1, "test", "blah"));
         assertThat(strategy.called).isTrue();
     }
@@ -123,7 +122,7 @@ public class RefinerTest {
     public void testMultipleFunctionValue() {
         FunctionStrategyFalse strategy1 = new FunctionStrategyFalse();
         FunctionStrategy strategy2 = new FunctionStrategy();
-        Refiner refiner = new Refiner(new QueryableBroadcaster(), ImmutableList.<RefinerStrategy>of(strategy1, strategy2));
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new RawFunction(1, 1, "test", "blah"));
         assertThat(strategy1.called).isTrue();
         assertThat(strategy2.called).isTrue();
@@ -131,7 +130,7 @@ public class RefinerTest {
 
     @Test
     public void standardFunctionValueRefinement() {
-        Refiner refiner = new Refiner(new QueryableBroadcaster());
+        GenericRefiner refiner = new GenericRefiner(new QueryableBroadcaster());
         refiner.refine(new RawFunction(1, 1, "test", "blah")); // no errors
     }
 
@@ -139,7 +138,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return true;
         }
@@ -149,7 +148,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return false;
         }
@@ -159,7 +158,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(Selector selector, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return true;
         }
@@ -169,7 +168,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(Selector selector, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return false;
         }
@@ -179,7 +178,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(Declaration declaration, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return true;
         }
@@ -189,7 +188,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(Declaration declaration, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return false;
         }
@@ -199,7 +198,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return true;
         }
@@ -209,7 +208,7 @@ public class RefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
+        public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
             called = true;
             return false;
         }

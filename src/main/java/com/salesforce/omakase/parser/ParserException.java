@@ -17,9 +17,10 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.error.ErrorUtils;
 import com.salesforce.omakase.error.OmakaseException;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
  * An error encountered while parsing.
@@ -72,6 +73,10 @@ public class ParserException extends OmakaseException {
         this(line, column, args == null || args.length == 0 ? message.message() : message.message(args));
     }
 
+    public ParserException(Syntax<?> cause, String message) {
+        this(cause.line(), cause.column(), message);
+    }
+
     /**
      * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
      * a {@link Source} if possible instead.
@@ -89,7 +94,7 @@ public class ParserException extends OmakaseException {
 
     /**
      * Constructs a new instance of a {@link ParserException} from the given cause. This is usually used to wrap around external
-     * (to Omakase) checked exceptions from custom {@link RefinerStrategy} objects.
+     * (to Omakase) checked exceptions from custom {@link Refiner} objects.
      *
      * @param cause The cause of the exception.
      */

@@ -29,7 +29,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -68,7 +68,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 public final class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
     private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax rawContent;
-    private final transient Refiner refiner;
+    private final transient GenericRefiner refiner;
 
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
@@ -79,9 +79,9 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
      * @param rawContent
      *     The selector content.
      * @param refiner
-     *     The {@link Refiner} to be used later during refinement of this object.
+     *     The {@link GenericRefiner} to be used later during refinement of this object.
      */
-    public Selector(RawSyntax rawContent, Refiner refiner) {
+    public Selector(RawSyntax rawContent, GenericRefiner refiner) {
         super(rawContent.line(), rawContent.column());
         this.refiner = refiner;
         this.rawContent = rawContent;

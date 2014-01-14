@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Parses {@link TypeSelector}s.
@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 public final class TypeSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 

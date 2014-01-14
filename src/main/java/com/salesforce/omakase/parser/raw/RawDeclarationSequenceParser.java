@@ -21,7 +21,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Parses a sequence of semi-colon delimited {@link Declaration}s.
@@ -30,7 +30,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  */
 public class RawDeclarationSequenceParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
         boolean parsed = false;
 
         do {

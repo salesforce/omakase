@@ -16,21 +16,17 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 
 /**
- * A {@link Plugin} that registers a custom {@link RefinerStrategy}.
+ * A {@link Plugin} that registers a custom {@link Refiner}.
  * <p/>
- * The {@link RefinerStrategy} can be used to customize and extends the standard CSS syntax. See the readme file for more
- * details and examples.
+ * The {@link Refiner} can be used to customize and extends the standard CSS syntax. See the readme file for more details
+ * and examples.
  *
  * @author nmcwilliams
  */
 public interface SyntaxPlugin extends Plugin {
-    /**
-     * Gets the {@link RefinerStrategy} instance.
-     *
-     * @return The {@link RefinerStrategy} instance.
-     */
-    RefinerStrategy getRefinerStrategy();
+    void registerRefiners(RefinerRegistry registry);
 }

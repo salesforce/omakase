@@ -30,8 +30,8 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -52,7 +52,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule> {
-    private final transient Refiner refiner;
+    private final transient GenericRefiner refiner;
     private final String name;
 
     // unrefined
@@ -79,9 +79,9 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      * @param rawBlock
      *     The raw at-rule block. If no block is present pass in null.
      * @param refiner
-     *     The {@link Refiner} to be used later during refinement of this object.
+     *     The {@link GenericRefiner} to be used later during refinement of this object.
      */
-    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, Refiner refiner) {
+    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, GenericRefiner refiner) {
         super(line, column);
         this.name = name;
         this.rawExpression = Optional.fromNullable(rawExpression);
@@ -125,7 +125,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     /**
-     * Specifies whether the name should be written out. This might be specified as false by custom {@link RefinerStrategy}
+     * Specifies whether the name should be written out. This might be specified as false by custom {@link Refiner}
      * objects where the name of the custom at-rule is not applicable in the final CSS source.
      *
      * @param shouldWriteName

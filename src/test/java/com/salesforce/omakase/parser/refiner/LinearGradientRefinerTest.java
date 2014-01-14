@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.ast.declaration.LinearGradientFunctionValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -34,13 +33,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class LinearGradientRefinerTest {
     private LinearGradientRefiner linearRefiner;
     private QueryableBroadcaster broadcaster;
-    private Refiner refiner;
+    private GenericRefiner refiner;
 
     @Before
     public void setup() {
         linearRefiner = new LinearGradientRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, ImmutableSet.<RefinerStrategy>of(linearRefiner));
+         refiner = new GenericRefiner(broadcaster).register(linearRefiner);
     }
 
     @Test

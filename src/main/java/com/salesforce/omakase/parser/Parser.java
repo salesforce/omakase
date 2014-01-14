@@ -18,7 +18,7 @@ package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Used to parse an aspect of CSS source code.
@@ -35,8 +35,8 @@ public interface Parser {
      * <p/>
      * <b>Important:</b> This method should only be used in limited circumstances. For example, doing partial content parsing.
      * <p/>
-     * Generally speaking, if you have a {@link Refiner} instance given to you then you should use {@link #parse(Source,
-     * Broadcaster, Refiner)} almost always, as it will perform a lot better.
+     * Generally speaking, if you have a {@link GenericRefiner} instance given to you then you should use {@link #parse(Source,
+     * Broadcaster, GenericRefiner)} almost always, as it will perform a lot better.
      *
      * @param source
      *     The source to parse.
@@ -49,7 +49,7 @@ public interface Parser {
     boolean parse(Source source, Broadcaster broadcaster);
 
     /**
-     * Same as {@link #parse(Source, Broadcaster)}, except a {@link Refiner} instance to pass along to any created {@link
+     * Same as {@link #parse(Source, Broadcaster)}, except a {@link GenericRefiner} instance to pass along to any created {@link
      * Refinable} AST objects is given.
      *
      * @param source
@@ -57,12 +57,12 @@ public interface Parser {
      * @param broadcaster
      *     The {@link Broadcaster} to receive any events from the parser.
      * @param refiner
-     *     The {@link Refiner} to give to created AST objects.
+     *     The {@link GenericRefiner} to give to created AST objects.
      *
      * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
      *         of true does not indicate that the parsed content was actually valid syntax.
      */
-    boolean parse(Source source, Broadcaster broadcaster, Refiner refiner);
+    boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner);
 
     /**
      * Utility for creating a {@link CombinationParser}.

@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -24,8 +23,7 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +45,7 @@ public class ConditionalsRefinerTest {
     private static final RawSyntax VALID_BLOCK = new RawSyntax(1, 1, "  .class{color:red;\n  margin:10px;}\n\n #id1, " +
         "#id2 { padding: 0}  \n");
 
-    private Refiner refiner;
+    private GenericRefiner refiner;
     private QueryableBroadcaster broadcaster;
     private ConditionalsRefiner strategy;
 
@@ -55,7 +53,7 @@ public class ConditionalsRefinerTest {
     public void setup() {
         strategy = new ConditionalsRefiner(new ConditionalsManager().addTrueConditions("ie7"));
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
+        refiner = new GenericRefiner(broadcaster).register(strategy);
     }
 
     @Test

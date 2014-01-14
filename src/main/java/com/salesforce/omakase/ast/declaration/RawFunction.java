@@ -24,7 +24,7 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.FunctionRefiner;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.refiner.StandardRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -36,13 +36,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Raw syntax representing a function.
  * <p/>
- * This is usually just an intermediary object passed to {@link Refiner#refine(RawFunction)}. You can subscribe to this method if
+ * This is usually just an intermediary object passed to {@link GenericRefiner#refine(RawFunction)}. You can subscribe to this method if
  * you would like to check ALL function-like values (e.g., to modify the raw args) before they are refined into the more
  * specifically-typed function value.
  *
  * @author nmcwilliams
  * @see FunctionRefiner
- * @see StandardRefiner#refine(RawFunction, Broadcaster, Refiner)
+ * @see StandardRefiner#refine(RawFunction, Broadcaster, GenericRefiner)
  * @see GenericFunctionValue
  */
 @Subscribable

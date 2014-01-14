@@ -17,7 +17,7 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.token.StandardTokenFactory;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenFactory;
@@ -30,7 +30,7 @@ import com.salesforce.omakase.parser.token.TokenFactory;
 public abstract class AbstractParser implements Parser {
     @Override
     public boolean parse(Source source, Broadcaster broadcaster) {
-        return parse(source, broadcaster, new Refiner(broadcaster));
+        return parse(source, broadcaster, new GenericRefiner(broadcaster));
     }
 
     @Override

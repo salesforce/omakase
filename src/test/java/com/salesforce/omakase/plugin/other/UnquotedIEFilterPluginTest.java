@@ -17,13 +17,11 @@
 package com.salesforce.omakase.plugin.other;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.util.Values;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,13 +36,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class UnquotedIEFilterPluginTest {
-    private Refiner refiner;
+    private GenericRefiner refiner;
     private QueryableBroadcaster broadcaster;
 
     @Before
     public void setup() {
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(REFINER));
+        refiner = new GenericRefiner(broadcaster).register(REFINER);
     }
 
     @Test

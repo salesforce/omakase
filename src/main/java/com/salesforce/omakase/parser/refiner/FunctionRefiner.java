@@ -41,7 +41,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  *
  * @author nmcwilliams
  */
-public interface FunctionRefiner extends RefinerStrategy {
+public interface FunctionRefiner extends Refiner {
     /**
      * Refines a {@link RawFunction}.
      * <p/>
@@ -74,8 +74,8 @@ public interface FunctionRefiner extends RefinerStrategy {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link RefinerStrategy} objects
+     * @return True if refinement was performed, otherwise false. If true, no other registered {@link Refiner} objects
      *         will be executed for the given {@link RawFunction} instance.
      */
-    boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner);
+    boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner);
 }

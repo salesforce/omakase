@@ -30,7 +30,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  *
  * @author nmcwilliams
  */
-public interface SelectorRefiner extends RefinerStrategy {
+public interface SelectorRefiner extends Refiner {
     /**
      * Refines a {@link Selector}.
      * <p/>
@@ -53,8 +53,8 @@ public interface SelectorRefiner extends RefinerStrategy {
      *     Pass this refiner to any parser methods that require one.
      *
      * @return True if <em>complete</em> refinement was performed, otherwise false. If true, no other registered {@link
-     *         RefinerStrategy} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
+     *         Refiner} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
      *         segment of the object and still return false.
      */
-    boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner);
+    boolean refine(Selector selector, Broadcaster broadcaster, GenericRefiner refiner);
 }

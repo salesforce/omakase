@@ -28,7 +28,7 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -53,7 +53,7 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
     }
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
         // must be named  "if"
         if (!atRule.name().equals(IF)) return false;
 

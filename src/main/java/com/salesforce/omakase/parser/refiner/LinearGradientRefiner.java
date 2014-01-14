@@ -31,7 +31,7 @@ public final class LinearGradientRefiner implements FunctionRefiner {
     private static final String REPEATING = "repeating-linear-gradient";
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
         if (raw.name().equals(NORMAL)) {
             broadcaster.broadcast(new LinearGradientFunctionValue(raw.line(), raw.column(), raw.args()));
             return true;

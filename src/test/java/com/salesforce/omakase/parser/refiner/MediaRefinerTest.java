@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
@@ -53,13 +52,13 @@ public class MediaRefinerTest {
 
     MediaRefiner strategy;
     QueryableBroadcaster broadcaster;
-    Refiner refiner;
+    GenericRefiner refiner;
 
     @Before
     public void setup() {
         strategy = new MediaRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new Refiner(broadcaster, Lists.<RefinerStrategy>newArrayList(strategy));
+        refiner = new GenericRefiner(broadcaster).register(strategy);
     }
 
     @Test

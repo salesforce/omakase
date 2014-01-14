@@ -24,7 +24,6 @@ import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.plugin.Plugin;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -194,13 +193,10 @@ public final class Omakase {
          *         for further processing or information retrieval.
          */
         public PluginRegistry process() {
-            context.errorManager(em);
-            context.before();
-
-            Refiner refiner = context.createRefiner();
-
             try {
-                ParserFactory.stylesheetParser().parse(source, context, refiner);
+                context.errorManager(em);
+                context.before();
+                ParserFactory.stylesheetParser().parse(source, context, context.createRefiner());
                 context.after();
             } catch (ParserException e) {
                 em.report(ErrorLevel.FATAL, e);

@@ -20,7 +20,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -32,15 +31,13 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.broadcast.emitter.Emitter;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
-import com.salesforce.omakase.parser.refiner.RefinerStrategy;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
-
-import java.util.List;
 
 /**
  * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
@@ -146,21 +143,21 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     /**
-     * Creates a new refiner instance with the {@link Broadcaster} currently set on this {@link Context} and the list of {@link
-     * RefinerStrategy}s from all registered {@link SyntaxPlugin}s.
+     * Creates a new {@link GenericRefiner} instance with the {@link Broadcaster} currently set on this {@link Context} and with
+     * the {@link Refiner}s from all registered {@link SyntaxPlugin}s.
      * <p/>
      * This should be called <em>after</em> any calls to {@link #broadcaster (Broadcaster)}.
      *
-     * @return The {@link Refiner} instance.
+     * @return The {@link GenericRefiner} instance.
      */
-    public Refiner createRefiner() {
-        List<RefinerStrategy> customRefiners = Lists.newArrayList();
+    public GenericRefiner createRefiner() {
+        GenericRefiner refiner = new GenericRefiner(broadcaster);
 
         for (SyntaxPlugin plugin : filter(SyntaxPlugin.class)) {
-            customRefiners.add(plugin.getRefinerStrategy());
+            plugin.registerRefiners(refiner);
         }
 
-        return new Refiner(broadcaster, customRefiners);
+        return refiner;
     }
 
     /**

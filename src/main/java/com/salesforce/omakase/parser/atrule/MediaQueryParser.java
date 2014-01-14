@@ -27,7 +27,7 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 import com.salesforce.omakase.ast.atrule.MediaRestriction;
@@ -51,7 +51,7 @@ public final class MediaQueryParser extends AbstractParser {
     private static final String AND = "and";
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
         source.skipWhitepace();
 
         // save off position before parsing anything

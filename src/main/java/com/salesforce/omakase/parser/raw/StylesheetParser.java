@@ -17,7 +17,6 @@
 package com.salesforce.omakase.parser.raw;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -27,7 +26,7 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Parses a top-level {@link Stylesheet}.
@@ -38,7 +37,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 public final class StylesheetParser extends AbstractParser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
         // use a queue so that we can group all statements together before sending them out. This makes some plugins that
         // depend on order (isFirst(), etc...) work more smoothly.
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();

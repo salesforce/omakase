@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Parses a {@link Selector}.
@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
 public final class RawSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
         source.collectComments();
 
         if (!tokenFactory().selectorBegin().matches(source.current())) return false;

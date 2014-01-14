@@ -26,7 +26,7 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.raw.RawRuleParser;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 
 /**
  * Similar to {@link RawRuleParser}, except this only parses {@link KeyframeSelector}s.
@@ -35,7 +35,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  */
 public final class KeyframeRuleParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, Refiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
         source.collectComments();
 
         int line = source.originalLine();

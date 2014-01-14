@@ -37,7 +37,7 @@ import com.salesforce.omakase.parser.Source;
 import java.util.Set;
 
 /**
- * Standard {@link RefinerStrategy} implementation.
+ * Standard {@link Refiner} implementation.
  *
  * @author nmcwilliams
  */
@@ -55,7 +55,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     );
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
         for (AtRuleRefiner strategy : STANDARD_AT_RULES) {
             if (strategy.refine(atRule, broadcaster, refiner)) return true;
         }
@@ -63,7 +63,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     }
 
     @Override
-    public boolean refine(Selector selector, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(Selector selector, Broadcaster broadcaster, GenericRefiner refiner) {
         if (selector.isRefined()) return false;
 
         // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
@@ -91,7 +91,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     }
 
     @Override
-    public boolean refine(Declaration declaration, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(Declaration declaration, Broadcaster broadcaster, GenericRefiner refiner) {
         if (declaration.isRefined()) return false;
 
         // using a queue so that we can link everything together before terms, etc... are emitted
@@ -121,7 +121,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     }
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, Refiner refiner) {
+    public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
         for (FunctionRefiner strategy : STANDARD_FUNCTIONS) {
             if (strategy.refine(raw, broadcaster, refiner)) return true;
         }
