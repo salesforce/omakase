@@ -24,6 +24,7 @@ import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 import java.util.List;
@@ -48,6 +49,15 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
     private final List<SelectorRefiner> selectorRefiners = Lists.newArrayList();
     private final List<DeclarationRefiner> declarationRefiners = Lists.newArrayList();
     private final List<FunctionRefiner> functionRefiners = Lists.newArrayList();
+
+    /**
+     * Creates a new {@link GenericRefiner} instance without a specific {@link Broadcaster} specified.
+     * <p/>
+     * Generally not the constructor to use.
+     */
+    public GenericRefiner() {
+        this(new QueryableBroadcaster());
+    }
 
     /**
      * Creates a new {@link GenericRefiner} instance with the given {@link Broadcaster} to use for new refined AST objects.

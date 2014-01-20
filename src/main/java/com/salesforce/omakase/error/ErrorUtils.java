@@ -17,7 +17,10 @@
 package com.salesforce.omakase.error;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
  * Utils for working with errors.
@@ -28,7 +31,8 @@ public final class ErrorUtils {
     private ErrorUtils() {}
 
     /**
-     * Formats an error message.
+     * Formats a high-level error message. Usually the message is from a {@link ParserException}, formatted using {@link
+     * #format(Source, String)}
      *
      * @param message
      *     The error message.
@@ -40,39 +44,61 @@ public final class ErrorUtils {
     }
 
     /**
-     * formats an error message.
+     * Formats a parsing error message.
      *
+     * @param source
+     *     The source where the error occurred.
      * @param message
      *     The error message.
-     * @param cause
-     *     The {@link Syntax} that has the problem.
      *
      * @return The formatted message.
      */
-    public static String format(String message, Syntax<?> cause) {
-        return format(null, message, cause);
+    @SuppressWarnings("AutoBoxing")
+    public static String format(Source source, String message) {
+        String fmt = source.isSubSource() ? "%s:\nat line %s, column %s near\n'%s'" : "%s:\nat line %s, column %s in\n'%s'";
+        return String.format(fmt,
+            message,
+            source.originalLine(),
+            source.originalColumn(),
+            source.toStringContextual()
+        );
     }
 
     /**
-     * Formats an error message.
+     * Formats a validation error message, usually called by a {@link Refiner} or a {@link Validate} method.
      *
-     * @param sourceName
-     *     Name of the resource (e.g., file name) that has the problem.
-     * @param message
-     *     The error message.
      * @param cause
      *     The {@link Syntax} that has the problem.
+     * @param message
+     *     The error message.
      *
      * @return The formatted message.
      */
-    public static String format(String sourceName, String message, Syntax<?> cause) {
-        if (sourceName != null) {
+    public static String format(Syntax<?> cause, String message) {
+        return format(cause, null, message);
+    }
+
+    /**
+     * Formats a validation error message, usually called by a {@link Refiner} or a {@link Validate} method.
+     *
+     * @param cause
+     *     The {@link Syntax} that has the problem.
+     * @param resourceName
+     *     Name of the resource (e.g., file name) that has the problem.
+     * @param message
+     *     The error message.
+     *
+     * @return The formatted message.
+     */
+    @SuppressWarnings("AutoBoxing")
+    public static String format(Syntax<?> cause, String resourceName, String message) {
+        if (resourceName != null) {
             return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s in source %s, " +
                 "caused by\n%s",
                 message,
                 cause.line(),
                 cause.column(),
-                sourceName,
+                resourceName,
                 cause.toString()
             );
         } else {
@@ -83,53 +109,5 @@ public final class ErrorUtils {
                 cause.toString()
             );
         }
-    }
-
-    /**
-     * Formats an parsing error message.
-     *
-     * @param source
-     *     The source where the error occurred.
-     * @param message
-     *     The error message.
-     *
-     * @return The formatted message.
-     */
-    public static String format(Source source, String message) {
-        if (!source.isSubSource()) {
-            return String.format("%s:\nat line %s, column %s in\n'%s'",
-                message,
-                source.originalLine(),
-                source.originalColumn(),
-                source.toStringContextual()
-            );
-        } else {
-            return String.format("%s:\nat line %s, column %s near\n'%s'",
-                message,
-                source.originalLine(),
-                source.originalColumn(),
-                source.toStringContextual()
-            );
-        }
-    }
-
-    /**
-     * Formats a parsing error message. Prefer {@link #format(Source, String)} over this one.
-     *
-     * @param line
-     *     The line where the error occurred.
-     * @param column
-     *     The column where the error occurred.
-     * @param message
-     *     The error message.
-     *
-     * @return The formatted message.
-     */
-    public static String format(int line, int column, String message) {
-        return String.format("%s:\nat line %s, column %s.",
-            message,
-            line,
-            column
-        );
     }
 }

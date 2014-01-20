@@ -22,11 +22,17 @@ import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 /**
  * A {@link Plugin} that registers a custom {@link Refiner}.
  * <p/>
- * The {@link Refiner} can be used to customize and extends the standard CSS syntax. See the readme file for more details
- * and examples.
+ * The {@link Refiner} can be used to customize and extends the standard CSS syntax. See the readme file for more details and
+ * examples.
  *
  * @author nmcwilliams
  */
 public interface SyntaxPlugin extends Plugin {
+    /**
+     * Register all custom {@link Refiner} instances with the given {@link RefinerRegistry}.
+     *
+     * @param registry
+     *     Add refiners to this registry.
+     */
     void registerRefiners(RefinerRegistry registry);
 }

@@ -51,7 +51,7 @@ public final class MediaRefiner implements AtRuleRefiner {
         // refine the expression (unless it was already done)
         if (!rule.hasRefinedExpression()) {
             // must have an expression
-            if (!rule.rawExpression().isPresent()) throw new ParserException(rule.line(), rule.column(), Message.MEDIA_EXPR);
+            if (!rule.rawExpression().isPresent()) throw new ParserException(rule, Message.MEDIA_EXPR);
 
             // parse the media query expression
             Source source = new Source(rule.rawExpression().get());
@@ -73,7 +73,7 @@ public final class MediaRefiner implements AtRuleRefiner {
         // refine the block (unless it was already done
         if (!rule.hasRefinedBlock()) {
             // must have a block
-            if (!rule.rawBlock().isPresent()) throw new ParserException(rule.line(), rule.column(), Message.MEDIA_BLOCK);
+            if (!rule.rawBlock().isPresent()) throw new ParserException(rule, Message.MEDIA_BLOCK);
 
             Source source = new Source(rule.rawBlock().get());
 

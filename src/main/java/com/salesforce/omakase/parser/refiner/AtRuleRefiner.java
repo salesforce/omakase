@@ -48,7 +48,8 @@ public interface AtRuleRefiner extends Refiner {
      * object does not have both).
      * <p/>
      * If the actual at-rule name (e.g., "@media") should be discarded then call {@link AtRule#shouldWriteName(boolean)} with
-     * false.
+     * false. If the at-rule itself is just for metadata purposes and does not have any associated content to write out then use
+     * {@link AtRule#markAsMetadataRule()}.
      *
      * @param atRule
      *     The {@link AtRule} to refine.
@@ -57,9 +58,9 @@ public interface AtRuleRefiner extends Refiner {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if <em>complete</em> refinement was performed, otherwise false. If true, no other registered {@link
-     *         Refiner} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
-     *         segment of the object and still return false.
+     * @return True if <em>complete</em> refinement was performed, otherwise false. If true, no other registered {@link Refiner}
+     *         objects will be executed for the given instance. It is acceptable for a refiner to refine only a segment of the
+     *         object and still return false.
      */
     boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner);
 }

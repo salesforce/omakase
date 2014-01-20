@@ -64,10 +64,10 @@ public final class ThrowingErrorManager implements ErrorManager {
     public void report(ErrorLevel level, Syntax<?> cause, String message) {
         switch (level) {
         case FATAL:
-            throw new FatalException(ErrorUtils.format(sourceName, message, cause));
+            throw new FatalException(ErrorUtils.format(cause, sourceName, message));
         case WARNING:
             if (logger == null) logger = LoggerFactory.getLogger(ErrorManager.class);
-            logger.warn(ErrorUtils.format(sourceName, message, cause));
+            logger.warn(ErrorUtils.format(cause, sourceName, message));
         }
     }
 }

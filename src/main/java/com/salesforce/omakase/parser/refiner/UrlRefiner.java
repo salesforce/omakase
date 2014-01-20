@@ -53,7 +53,7 @@ public final class UrlRefiner implements FunctionRefiner {
 
         // there shouldn't be any content after a closing quote
         if (mode != null && !source.eof()) {
-            throw new ParserException(raw.line(), raw.column(), Message.UNEXPECTED_AFTER_QUOTE, source.toString());
+            throw new ParserException(raw, Message.UNEXPECTED_AFTER_QUOTE, source.toString());
         }
 
         // create the value object and broadcast it

@@ -27,7 +27,7 @@ import com.salesforce.omakase.parser.refiner.Refiner;
  *
  * @author nmcwilliams
  */
-public class ParserException extends OmakaseException {
+public final class ParserException extends OmakaseException {
     private static final long serialVersionUID = -8952238331167900360L;
 
     /**
@@ -41,7 +41,7 @@ public class ParserException extends OmakaseException {
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
     public ParserException(Source source, Message message, Object... args) {
-        this(source, args == null || args.length == 0 ? message.message() : message.message(args));
+        this(source, message.message(args));
     }
 
     /**
@@ -57,46 +57,41 @@ public class ParserException extends OmakaseException {
     }
 
     /**
-     * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
-     * a {@link Source} if possible instead.
+     * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
+     * <p/>
+     * This is normally used by {@link Refiner}s.
      *
-     * @param line
-     *     The line where the error occurred.
-     * @param column
-     *     The column where the error occurred.
+     * @param cause
+     *     The syntax unit that caused the problem.
      * @param message
      *     The error message.
      * @param args
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
-    public ParserException(int line, int column, Message message, Object... args) {
-        this(line, column, args == null || args.length == 0 ? message.message() : message.message(args));
-    }
-
-    public ParserException(Syntax<?> cause, String message) {
-        this(cause.line(), cause.column(), message);
+    public ParserException(Syntax<?> cause, Message message, Object... args) {
+        this(cause, message.message(args));
     }
 
     /**
-     * Constructs a new instance of a {@link ParserException} at the given line and column. Prefer to use the constructors taking
-     * a {@link Source} if possible instead.
+     * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
+     * <p/>
+     * This is normally used by {@link Refiner}s.
      *
-     * @param line
-     *     The line where the error occurred.
-     * @param column
-     *     The column where the error occurred.
+     * @param cause
+     *     The syntax unit that caused the problem.
      * @param message
      *     The error message.
      */
-    public ParserException(int line, int column, String message) {
-        super(ErrorUtils.format(line, column, message));
+    public ParserException(Syntax<?> cause, String message) {
+        super(ErrorUtils.format(cause, message));
     }
 
     /**
      * Constructs a new instance of a {@link ParserException} from the given cause. This is usually used to wrap around external
      * (to Omakase) checked exceptions from custom {@link Refiner} objects.
      *
-     * @param cause The cause of the exception.
+     * @param cause
+     *     The cause of the exception.
      */
     public ParserException(Throwable cause) {
         super(cause);

@@ -100,22 +100,14 @@ public enum Message {
     }
 
     /**
-     * Gets the error message. If the message contains parameters for {@link String#format(String, Object...)} , use {@link
-     * #message(Object...)} instead.
-     */
-    public String message() {
-        return message;
-    }
-
-    /**
      * Gets the error message, passing in the given arguments to {@link String#format(String, Object...)}.
      *
-     * @param parameters
+     * @param args
      *     Arguments to {@link String#format(String, Object...)}.
      *
      * @return The formatted message.
      */
-    public String message(Object... parameters) {
-        return String.format(message, parameters);
+    public String message(Object... args) {
+        return (args == null || args.length == 0) ? message : String.format(message, args);
     }
 }

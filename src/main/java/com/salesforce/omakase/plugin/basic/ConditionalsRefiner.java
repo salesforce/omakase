@@ -59,12 +59,12 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
 
         // the at-rule must have an expression
         if (!atRule.rawExpression().isPresent()) {
-            throw new ParserException(atRule.line(), atRule.column(), Message.MISSING_CONDITIONAL_EXPRESSION);
+            throw new ParserException(atRule, Message.MISSING_CONDITIONAL_EXPRESSION);
         }
 
         // the at-rule must have a block
         if (!atRule.rawBlock().isPresent()) {
-            throw new ParserException(atRule.line(), atRule.column(), Message.MISSING_CONDITIONAL_BLOCK);
+            throw new ParserException(atRule, Message.MISSING_CONDITIONAL_BLOCK);
         }
 
         // parse the condition, lower-case for comparison purposes

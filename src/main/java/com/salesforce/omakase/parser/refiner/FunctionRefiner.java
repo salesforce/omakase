@@ -28,6 +28,7 @@ import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
+import com.salesforce.omakase.util.Args;
 
 /**
  * Represents a strategy for refining an {@link RawFunction} object.
@@ -47,7 +48,8 @@ public interface FunctionRefiner extends Refiner {
      * <p/>
      * The information in the given {@link RawFunction} can be used to determine if the function value is applicable to your
      * custom syntax. Most often you determine this based on the value from {@link RawFunction#name()}. Utilize the {@link
-     * RawFunction#args()} method to get the raw, unrefined arguments.
+     * RawFunction#args()} method to get the raw, unrefined arguments. Note that there are utilities in the {@link Args} helper to
+     * assist with common argument string operations.
      * <p/>
      * <b>Important:</b> There are two main ways to handle custom functions:
      * <p/>
@@ -74,8 +76,8 @@ public interface FunctionRefiner extends Refiner {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link Refiner} objects
-     *         will be executed for the given {@link RawFunction} instance.
+     * @return True if refinement was performed, otherwise false. If true, no other registered {@link Refiner} objects will be
+     *         executed for the given {@link RawFunction} instance.
      */
     boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner);
 }

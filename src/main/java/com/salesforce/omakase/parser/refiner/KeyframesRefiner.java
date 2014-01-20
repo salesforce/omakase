@@ -52,7 +52,7 @@ public final class KeyframesRefiner implements AtRuleRefiner {
 
         // must have a keyframes name
         if (!atRule.rawExpression().isPresent()) {
-            throw new ParserException(atRule.line(), atRule.column(), Message.KEYFRAME_NAME);
+            throw new ParserException(atRule, Message.KEYFRAME_NAME);
         }
 
         // parse the keyframes name
@@ -61,7 +61,7 @@ public final class KeyframesRefiner implements AtRuleRefiner {
         // name should be a proper ident
         Optional<String> ident = source.readIdent();
         if (!ident.isPresent()) {
-            throw new ParserException(atRule.line(), atRule.column(), Message.KEYFRAME_NAME);
+            throw new ParserException(atRule, Message.KEYFRAME_NAME);
         }
 
         // nothing should be left in the expression content
@@ -73,7 +73,7 @@ public final class KeyframesRefiner implements AtRuleRefiner {
 
         // must have a block
         if (!atRule.rawBlock().isPresent()) {
-            throw new ParserException(atRule.line(), atRule.column(), Message.MISSING_KEYFRAMES_BLOCK);
+            throw new ParserException(atRule, Message.MISSING_KEYFRAMES_BLOCK);
         }
 
         // parse the block

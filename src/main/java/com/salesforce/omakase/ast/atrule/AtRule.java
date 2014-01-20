@@ -30,6 +30,7 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
+import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
 import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -125,8 +126,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     /**
-     * Specifies whether the name should be written out. This might be specified as false by custom {@link Refiner}
-     * objects where the name of the custom at-rule is not applicable in the final CSS source.
+     * Specifies whether the name should be written out. This might be specified as false by custom {@link Refiner} objects where
+     * the name of the custom at-rule is not applicable in the final CSS source.
      *
      * @param shouldWriteName
      *     Whether the at-rule name (and @ symbol) should be written out.
@@ -229,6 +230,21 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      */
     public boolean hasRefinedBlock() {
         return block.isPresent();
+    }
+
+    /**
+     * TESTME
+     * <p/>
+     * Used to indicate this at-rule is for metadata purposes only and should not be written out in the output CSS.
+     * <p/>
+     * This is mainly used for custom syntax that is refined by an {@link AtRuleRefiner}.
+     *
+     * @return this, for chaining.
+     */
+    public AtRule markAsMetadataRule() {
+        shouldWriteName(false);
+        expression(MetadataExpression.instance());
+        return this;
     }
 
     @Override

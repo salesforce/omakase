@@ -16,6 +16,10 @@
 
 package com.salesforce.omakase.parser;
 
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.test.util.TemplatesHelper;
 import org.junit.Test;
 
@@ -29,7 +33,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class ParserExceptionTest {
     @Test
-    public void exceptionMessage() {
+    public void exceptionWithSource() {
         Source source = new Source(TemplatesHelper.GENERIC_CSS_SOURCE);
         source.forward(32);
 
@@ -59,7 +63,7 @@ public class ParserExceptionTest {
     }
 
     @Test
-    public void exceptionMessageForLongStream() {
+    public void exceptionForLongSource() {
         Source source = new Source(TemplatesHelper.longSource());
         source.forward(4003);
         String msg = new ParserException(source, "test exception").getMessage();
@@ -86,7 +90,7 @@ public class ParserExceptionTest {
     }
 
     @Test
-    public void exceptionMessageForNestedStream() {
+    public void exceptionForNestedSource() {
         Source source = new Source(TemplatesHelper.GENERIC_CSS_SOURCE, 22, 3);
         source.forward(32);
 
@@ -116,9 +120,22 @@ public class ParserExceptionTest {
     }
 
     @Test
-    public void exceptionMessageWithLineAndColumnOnly() {
-        String msg = new ParserException(5, 12, "test exception").getMessage();
-        assertThat(msg).isEqualTo("test exception:\n" +
-            "at line 5, column 12.");
+    public void exceptionForSource() {
+        Syntax<?> syntax = new Selector(new RawSyntax(5, 2, "#id"), new GenericRefiner());
+
+        String msg = new ParserException(syntax, "test exception").getMessage();
+        assertThat(msg).isEqualTo("Omakase CSS Parser Validation Problem - test exception:\n" +
+            "at line 5, column 2, caused by\n" +
+            "Selector {\n" +
+            "  line: 5\n" +
+            "  col: 5\n" +
+            "  rawContent: RawSyntax{line=5, col=5, content=#id}\n" +
+            "}");
+    }
+
+    @Test
+    public void exceptionForThrowable() {
+        ParserException e = new ParserException(new RuntimeException("test"));
+        assertThat(e.getCause()).isInstanceOf(RuntimeException.class);
     }
 }
