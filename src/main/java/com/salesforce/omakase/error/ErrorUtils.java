@@ -93,21 +93,21 @@ public final class ErrorUtils {
     @SuppressWarnings("AutoBoxing")
     public static String format(Syntax<?> cause, String resourceName, String message) {
         if (resourceName != null) {
-            return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s in source %s, " +
+            return format(String.format("%s:\nat line %s, column %s in source %s, " +
                 "caused by\n%s",
                 message,
                 cause.line(),
                 cause.column(),
                 resourceName,
                 cause.toString()
-            );
+            ));
         } else {
-            return String.format("Omakase CSS Parser Validation Problem - %s:\nat line %s, column %s, caused by\n%s",
+            return format(String.format("%s:\nat line %s, column %s, caused by\n%s",
                 message,
                 cause.line(),
                 cause.column(),
                 cause.toString()
-            );
+            ));
         }
     }
 }

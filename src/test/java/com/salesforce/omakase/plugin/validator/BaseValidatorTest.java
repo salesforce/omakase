@@ -163,7 +163,7 @@ public class BaseValidatorTest<T extends Plugin> {
         }
 
         @Override
-        public void report(ErrorLevel level, Syntax cause, String message) {
+        public void report(ErrorLevel level, Syntax<?> cause, String message) {
             this.level = level;
             this.message = message;
         }
