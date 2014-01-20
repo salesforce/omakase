@@ -9,8 +9,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * TESTME
- * <p/>
  * Represents an expression that should never be written out.
  * <p/>
  * This is usually used by custom metadata at-rules, see {@link AtRule#markAsMetadataRule()}.

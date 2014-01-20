@@ -64,7 +64,6 @@ public final class RawSyntax extends AbstractSyntax<RawSyntax> {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // XXX compression
         appendable.append(content);
     }
 

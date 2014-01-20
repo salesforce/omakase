@@ -35,7 +35,7 @@ import org.junit.rules.ExpectedException;
 import java.io.IOException;
 import java.util.Iterator;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link AtRule}. */
 @SuppressWarnings("JavaDoc")
@@ -338,6 +338,16 @@ public class AtRuleTest {
         SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
         AtRule copy = (AtRule)ar.copy(Prefix.MOZ, support);
         assertThat(copy.name()).isEqualTo("keyframes");
+    }
+
+    @Test
+    public void markAsMetadataRule() {
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null, refiner);
+        ar.markAsMetadataRule();
+        assertThat(ar.shouldWriteName()).isFalse();
+        assertThat(ar.isRefined()).isTrue();
+        assertThat(ar.expression().get()).isInstanceOf(MetadataExpression.class);
+        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
     }
 
     public static final class CustomExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {

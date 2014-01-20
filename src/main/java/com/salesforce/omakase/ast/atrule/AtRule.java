@@ -233,8 +233,6 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     /**
-     * TESTME
-     * <p/>
      * Used to indicate this at-rule is for metadata purposes only and should not be written out in the output CSS.
      * <p/>
      * This is mainly used for custom syntax that is refined by an {@link AtRuleRefiner}.
@@ -319,8 +317,6 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             }
 
         } else {
-            // XXX compression
-
             // symbol and name
             appendable.append('@').append(name).space();
 

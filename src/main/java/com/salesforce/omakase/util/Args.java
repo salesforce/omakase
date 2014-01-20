@@ -15,11 +15,23 @@ public final class Args {
     private Args() {}
 
     /**
-     * TESTME
-     * <p/>
      * Gets the list of comma-separated arguments in the given string.
      * <p/>
-     * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>.
+     * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>. This does not distinguish
+     * between commas inside of quotes or handle escaped commas.
+     * <p/>
+     * <p/>
+     * For example given the following:
+     * <pre>
+     *     (arg1, arg2)
+     * </pre>
+     * <p/>
+     * This will return:
+     * <pre>
+     *     List[arg1, arg2]
+     * </pre>
+     * <p/>
+     * If only iterating over the args, use {@link #iterate(String)} instead.
      *
      * @param raw
      *     Get the args from this string.
@@ -31,12 +43,11 @@ public final class Args {
     }
 
     /**
-     * TESTME
-     * <p/>
      * Gets the list of comma-separated arguments in the given string. This should be used when you are only iterating over the
      * args, i.e., not accessing by index.
      * <p/>
-     * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>.
+     * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>. This does not distinguish
+     * between commas inside of quotes or handle escaped commas.
      *
      * @param raw
      *     Get the args from this string.
@@ -44,14 +55,22 @@ public final class Args {
      * @return An iterable containing the individual (trimmed) arguments).
      */
     public static Iterable<String> iterate(String raw) {
-        return Splitter.on(',').trimResults().omitEmptyStrings().split(trimParens(raw.trim()));
+        return Splitter.on(',').trimResults().omitEmptyStrings().split(trimParens(raw));
     }
 
     /**
-     * TESTME
-     * <p/>
      * Removes the opening and closing parens, only if the first character is a '(' and last character is a ')' (whitespace is
      * trimmed before doing this check). If parens are trimmed then whitespace inside of the parens is trimmed as well.
+     * <p/>
+     * For example given the following:
+     * <pre>
+     *    (arg1, arg2 )
+     * </pre>
+     * <p/>
+     * This will return:
+     * <pre>
+     *     "arg1, arg2"
+     * </pre>
      *
      * @param raw
      *     Trim opening and closing parens from this string.
@@ -60,6 +79,7 @@ public final class Args {
      */
     public static String trimParens(String raw) {
         String trimmed = raw.trim();
+        if (trimmed.isEmpty()) return raw;
         if (trimmed.charAt(0) == '(' && trimmed.charAt(trimmed.length() - 1) == ')') {
             return trimmed.substring(1, trimmed.length() - 1).trim();
         }
@@ -67,8 +87,31 @@ public final class Args {
     }
 
     /**
-     * TESTME
+     * Extracts the args inside of a function literal.
      * <p/>
+     * For example given the following:
+     * <pre>
+     *     customFunction(arg1, arg2)
+     * </pre>
+     * <p/>
+     * This will return:
+     * <pre>
+     *     "arg1, arg2"
+     * </pre>
+     *
+     * @param raw
+     *     Extract the args from this function literal.
+     *
+     * @return The extracted args.
+     *
+     * @throws IndexOutOfBoundsException
+     *     If encasing parenthesis are not present in the given string.
+     */
+    public static String extract(String raw) {
+        return raw.substring(raw.indexOf('(') + 1, raw.lastIndexOf(')'));
+    }
+
+    /**
      * Strips matching, encasing quotes (" or ') from the given string.
      * <p/>
      * Note that this does not support quote escaping, and it will only strip the quotes if the opening quote is not closed before
@@ -95,29 +138,5 @@ public final class Args {
 
         boolean entirelyQuoted = raw.indexOf(first, 1) == raw.length() - 1;
         return entirelyQuoted ? raw.substring(1, raw.length() - 1).trim() : raw;
-    }
-
-    /**
-     * TESTME
-     * <p/>
-     * Extracts the args inside of a function literal.
-     * <p/>
-     * For example given the following:
-     * <pre>
-     *     customFunction(arg1, arg2)
-     * </pre>
-     * <p/>
-     * This will return:
-     * <pre>
-     *     arg1, arg2
-     * </pre>
-     *
-     * @param raw
-     *     Extract the args from this function literal.
-     *
-     * @return The extracted args.
-     */
-    public static String extract(String raw) {
-        return raw.substring(raw.indexOf('(') + 1, raw.lastIndexOf(')'));
     }
 }
