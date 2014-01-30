@@ -114,32 +114,57 @@ public class ArgsTest {
     }
 
     @Test
-    public void trimQuotesSingleQuote() {
+    public void trimQuotesSimpleSingleQuote() {
         assertThat(Args.trimQuotesSimple("'one, two'")).isEqualTo("one, two");
     }
 
     @Test
-    public void trimQuotesDoubleQuote() {
+    public void trimQuotesSimpleDoubleQuote() {
         assertThat(Args.trimQuotesSimple("\"one, two\"")).isEqualTo("one, two");
     }
 
     @Test
-    public void trimQuotesMismatchedQuote() {
+    public void trimQuotesSimpleMismatchedQuote() {
         assertThat(Args.trimQuotesSimple("'one, two\"")).isEqualTo("'one, two\"");
     }
 
     @Test
-    public void trimQuotesClosedBeforeEnd() {
+    public void trimQuotesSimpleClosedBeforeEnd() {
         assertThat(Args.trimQuotesSimple("'one' + 'two'")).isEqualTo("'one' + 'two'");
     }
 
     @Test
-    public void trimQuotesStartsAndEndsWithSameNonQuoteChar() {
+    public void trimQuotesSimpleStartsAndEndsWithSameNonQuoteChar() {
         assertThat(Args.trimQuotesSimple("1one, two1")).isEqualTo("1one, two1");
     }
 
     @Test
-    public void trimQuotesTrimmed() {
+    public void trimQuotesSimpleTrimmed() {
         assertThat(Args.trimQuotesSimple("'  one, two  '")).isEqualTo("one, two");
+    }
+
+    @Test
+    public void trimDoubleQuotes() {
+        assertThat(Args.trimDoubleQuotes("\"one, two\"")).isEqualTo("one, two");
+    }
+
+    @Test
+    public void trimDoubleQuotesMismatchedQuote() {
+        assertThat(Args.trimDoubleQuotes("\"one, two'")).isEqualTo("\"one, two'");
+    }
+
+    @Test
+    public void trimDoubleQuotesClosedBeforeEnd() {
+        assertThat(Args.trimDoubleQuotes("\"one\" + \"two\"")).isEqualTo("\"one\" + \"two\"");
+    }
+
+    @Test
+    public void trimDoubleQuotesStartsAndEndsWithSameNonQuoteChar() {
+        assertThat(Args.trimDoubleQuotes("1one, two1")).isEqualTo("1one, two1");
+    }
+
+    @Test
+    public void trimDoubleQuotesTrimmed() {
+        assertThat(Args.trimDoubleQuotes("\"  one, two  \"")).isEqualTo("one, two");
     }
 }

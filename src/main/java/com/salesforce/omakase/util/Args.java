@@ -115,9 +115,10 @@ public final class Args {
      * Strips matching, encasing quotes (" or ') from the given string.
      * <p/>
      * Note that this does not support quote escaping, and it will only strip the quotes if the opening quote is not closed before
-     * the end of the string. For example, this will be trimmed:
+     * the end of the string. For example, these will be trimmed:
      * <pre>
      *     "abc def"
+     *     'abc def'
      * </pre>
      * <p/>
      * however this will not:
@@ -137,6 +138,31 @@ public final class Args {
         if (first != last || (first != '\'' && first != '"')) return raw;
 
         boolean entirelyQuoted = raw.indexOf(first, 1) == raw.length() - 1;
+        return entirelyQuoted ? raw.substring(1, raw.length() - 1).trim() : raw;
+    }
+
+    /**
+     * Strips matching double quotes from the given string.
+     * <p/>
+     * Note that this does not support quote escaping, and it will only strip the quotes if the opening quote is not closed before
+     * the end of the string. For example, this will be trimmed:
+     * <pre>
+     *     "abc def"
+     * </pre>
+     * <p/>
+     * however this will not:
+     * <pre>
+     *     "abc" + 123 + "abc"
+     * </pre>
+     *
+     * @param raw
+     *     Trim the quotes around this string.
+     *
+     * @return The string with the quotes trimmed, or the same string as given if it does not meet the criteria described above.
+     */
+    public static String trimDoubleQuotes(String raw) {
+        if (raw.charAt(0) != '"' || raw.charAt(raw.length() - 1) != '"') return raw;
+        boolean entirelyQuoted = raw.indexOf('"', 1) == raw.length() - 1;
         return entirelyQuoted ? raw.substring(1, raw.length() - 1).trim() : raw;
     }
 }
