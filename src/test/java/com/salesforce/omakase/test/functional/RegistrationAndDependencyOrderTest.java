@@ -49,8 +49,6 @@ public class RegistrationAndDependencyOrderTest {
             RegistrationOrder4.class,
             RegistrationOrder5.class
         );
-
-        System.out.println(list);
     }
 
     static class RegistrationOrderBase implements Plugin {
