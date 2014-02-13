@@ -81,15 +81,21 @@ final class SourceWriter {
         return this;
     }
 
-    /** performs the actual writing */
+    /**
+     * performs the actual writing
+     *
+     * @return True if the file contents have changed.
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void write() throws IOException, TemplateException {
+    public boolean write() throws IOException, TemplateException {
         checkState(templateName != null, "template not set");
         checkState(generator != null, "generator not set");
         checkState(klass != null, "class to write not set");
         System.out.println(String.format("regenerating '%s'", klass));
 
         File file = Tools.getSourceFile(klass);
+        final String original = Files.toString(file, Charsets.UTF_8);
+
         StringWriter writer = new StringWriter();
 
         // add common data
@@ -123,6 +129,10 @@ final class SourceWriter {
         System.out.println("writing output...");
         Files.write(writer.toString(), file, Charsets.UTF_8);
 
+        final String updated = Files.toString(file, Charsets.UTF_8);
+
         System.out.println("done\n");
+
+        return !original.equals(updated);
     }
 }

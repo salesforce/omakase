@@ -51,7 +51,7 @@ public class GenerateBrowserEnum {
         new GenerateBrowserEnum().run();
     }
 
-    public void run() throws IOException, TemplateException {
+    public boolean run() throws IOException, TemplateException {
         System.out.println("downloading browser data from caniuse.com [https://github.com/Fyrd/caniuse]...");
         URLConnection connection = new URL(BROWSERS_ENDPOINT).openConnection();
         connection.setUseCaches(false);
@@ -93,7 +93,8 @@ public class GenerateBrowserEnum {
         writer.template("browser-enum.ftl");
         writer.data("browsers", browsers);
 
-        writer.write();
+        boolean changed = writer.write();
+        return changed;
     }
 
     private String versions(Map browser, int indexOfCurrent) {

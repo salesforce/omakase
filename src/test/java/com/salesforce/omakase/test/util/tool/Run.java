@@ -44,10 +44,7 @@ public class Run {
     @Option(name = "-d", aliases = "--deploy", usage = "build and deploy jars (requires additional setup, see deploy.md)")
     private boolean deploy;
 
-    @Option(name = "-g", aliases = {"--generate", "--gen"}, usage = "regenerate all data enum and data class source files")
-    private boolean generate;
-
-    @Option(name = "-u", aliases = "--update", usage = "update and regenerate the prefix data only")
+    @Option(name = "-u", aliases = "--update", usage = "regenerate data enum, data class and prefixes source files")
     private boolean update;
 
     @Option(name = "-s", aliases = {"--syntax", "--sub"}, usage = "print the subscribable syntax table")
@@ -92,16 +89,25 @@ public class Run {
                 } else if (!exec("mvn deploy -P sfdc")) {
                     System.out.println("\n" + Colors.red("could not deploy to the sfdc nexus repo"));
                 }
-            } else if (generate) {
+            } else if (update) {
                 new GeneratePrefixEnum().run();
                 new GenerateKeywordEnum().run();
                 new GeneratePropertyEnum().run();
-                new GenerateBrowserEnum().run();
+                boolean updated = new GenerateBrowserEnum().run();
+
+                if (updated) {
+                    System.out.println("Browser.java was updated. Forcing recompilation of sources...");
+                    if (!exec("mvn compile test-compile")) {
+                        System.out.println("\n" + Colors.red("error regenerating java sources"));
+                    }
+                    System.out.println(Colors.yellow("Browser.java was updated and recompiled. \n" +
+                        "Please run this command again to ensure changes are picked up. \n" +
+                        "(Updated prefix data will not occur unless you do this!)"));
+                    System.exit(0);
+                }
+
                 new GeneratePrefixTablesClass().run();
                 System.out.println(Colors.yellow("all data generated successfully"));
-            } else if (update) {
-                new GeneratePrefixTablesClass().run();
-                System.out.println(Colors.yellow("prefix info sucessfully updated"));
             } else if (sub) {
                 new PrintSubscribableSyntaxTable().run();
             } else if (prefixedDef) {
