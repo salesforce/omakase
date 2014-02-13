@@ -97,7 +97,7 @@ public class PropertyValueTest {
 
         val.propagateBroadcast(qb);
 
-        assertThat(qb.all()).containsExactly(val, number, keyword);
+        assertThat(qb.all()).containsExactly(number, keyword, val);
     }
 
     @Test

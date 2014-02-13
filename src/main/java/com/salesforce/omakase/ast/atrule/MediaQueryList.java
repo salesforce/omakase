@@ -81,13 +81,13 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         queries.propagateBroadcast(broadcaster);
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override
     public boolean isWritable() {
-        return !queries.isEmptyOrNoneWritable();
+        return super.isWritable() && !queries.isEmptyOrNoneWritable();
     }
 
     @Override
@@ -103,7 +103,11 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
 
     @Override
     protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        // TODO copy
-        throw new UnsupportedOperationException("TODO: copy not supported yet");
+        // TESTME
+        MediaQueryList copy = new MediaQueryList();
+        for (MediaQuery query : queries) {
+            copy.queries().append(query.copy());
+        }
+        return copy;
     }
 }

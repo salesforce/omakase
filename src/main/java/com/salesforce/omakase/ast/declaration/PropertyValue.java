@@ -176,13 +176,13 @@ public final class PropertyValue extends AbstractSyntax<PropertyValue> {
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         members.propagateBroadcast(broadcaster);
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override
     public boolean isWritable() {
-        return !members.isEmptyOrNoneWritable();
+        return super.isWritable() && !members.isEmptyOrNoneWritable();
     }
 
     @Override

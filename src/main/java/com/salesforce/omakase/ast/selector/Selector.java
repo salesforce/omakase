@@ -204,8 +204,8 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         parts.propagateBroadcast(broadcaster);
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override

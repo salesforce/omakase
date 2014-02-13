@@ -273,17 +273,19 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         if (expression.isPresent()) {
             expression.get().propagateBroadcast(broadcaster);
         }
         if (block.isPresent()) {
             block.get().propagateBroadcast(broadcaster);
         }
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override
     public boolean isWritable() {
+        if (!super.isWritable()) return false;
+
         if (isRefined()) {
             if (shouldWriteName) return true;
             if (expression.isPresent() && expression.get().isWritable()) return true;
@@ -349,14 +351,14 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         }
 
         if (isRefined()) {
-            AtRuleExpression expressionCopy = expression.isPresent() ? expression.get().copy(prefix, support) : null;
-            AtRuleBlock blockCopy = block.isPresent() ? (AtRuleBlock)block.get().copy(prefix, support) : null;
+            AtRuleExpression expressionCopy = expression.isPresent() ? expression.get().copy() : null;
+            AtRuleBlock blockCopy = block.isPresent() ? (AtRuleBlock)block.get().copy() : null;
             AtRule copy = new AtRule(newName, expressionCopy, blockCopy);
             copy.shouldWriteName(shouldWriteName);
             return copy;
         } else {
-            RawSyntax expressionCopy = rawExpression.isPresent() ? rawExpression.get().copy(prefix, support) : null;
-            RawSyntax blockCopy = rawBlock.isPresent() ? rawBlock.get().copy(prefix, support) : null;
+            RawSyntax expressionCopy = rawExpression.isPresent() ? rawExpression.get().copy() : null;
+            RawSyntax blockCopy = rawBlock.isPresent() ? rawBlock.get().copy() : null;
             AtRule copy = new AtRule(-1, -1, newName, expressionCopy, blockCopy, refiner);
             copy.shouldWriteName(shouldWriteName);
             return copy;

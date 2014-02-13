@@ -51,8 +51,10 @@ public interface Broadcastable {
      * Broadcasts all unbroadcasted child units using the given {@link Broadcaster}.
      * <p/>
      * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
-     * itself is broadcasted, this method should be called on the parent unit in order to propagate the broadcast event to the
-     * children, ensuring that each child unit is properly broadcasted as well.
+     * itself is broadcasted, this method should be called on the parent unit in o
+     * <p/>
+     * Implementors, generally speaking, should call {@link #propagateBroadcast(Broadcaster)} on child units before propagating
+     * itself, to match the broadcasting order of parsed units.
      *
      * @param broadcaster
      *     Use this {@link Broadcaster} to broadcast all unbroadcasted child units.

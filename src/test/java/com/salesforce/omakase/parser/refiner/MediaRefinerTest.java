@@ -26,6 +26,7 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.ParserException;
@@ -191,6 +192,11 @@ public class MediaRefinerTest {
 
         @Override
         protected StatementIterable makeCopy(Prefix prefix, SupportMatrix support) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public SyntaxCollection<StatementIterable, Statement> statements() {
             throw new UnsupportedOperationException();
         }
     }

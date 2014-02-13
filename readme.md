@@ -917,33 +917,35 @@ Following is the list of all supported syntax types that you can subscribe to in
     ----------------------------   -------------------------------------------------------   -------------------------   ---------------
 01: Refinable                      raw syntax that can be further refined                    Automatic                   interface
 02: Statement                      rule or at-rule                                           Automatic                   interface
-03: Rule                           (no description)                                          Automatic                   class
-04: Stylesheet                     (no description)                                          Automatic                   class
-05: AtRule                         (no description)                                          Automatic                   class
-06: MediaQueryList                 full media query string                                   AtRule#refine               class
-07: FunctionValue                  general interface for function terms                      Declaration#refine          interface
-08: Term                           a single segment of a property value                      Declaration#refine          interface
-09: Declaration                    (no description)                                          Automatic                   class
-10: GenericFunctionValue           unknown function value                                    Declaration#refine          class
-11: HexColorValue                  individual hex color value                                Declaration#refine          class
-12: KeywordValue                   individual keyword value                                  Declaration#refine          class
-13: NumericalValue                 individual numerical value                                Declaration#refine          class
-14: PropertyValue                  interface for all property values                         Declaration#refine          class
-15: RawFunction                    a raw function before refinement                          Declaration#refine          class
-16: StringValue                    individual string value                                   Declaration#refine          class
-17: UrlFunctionValue               url function                                              Declaration#refine          class
-18: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
-19: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
-20: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-21: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-22: AttributeSelector              attribute selector segment                                Selector#refine             class
-23: ClassSelector                  class selector segment                                    Selector#refine             class
-24: IdSelector                     id selector segment                                       Selector#refine             class
-25: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
-26: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
-27: Selector                       (no description)                                          Automatic                   class
-28: TypeSelector                   type/element selector segment                             Selector#refine             class
-29: UniversalSelector              universal selector segment                                Selector#refine             class
+03: Syntax                         top level interface for all units                         Under certain conditions*   interface
+04: Rule                           (no description)                                          Automatic                   class
+05: Stylesheet                     (no description)                                          Automatic                   class
+06: AtRule                         (no description)                                          Automatic                   class
+07: MediaQueryList                 full media query string                                   AtRule#refine               class
+08: FunctionValue                  general interface for function terms                      Declaration#refine          interface
+09: Term                           a single segment of a property value                      Declaration#refine          interface
+10: Declaration                    (no description)                                          Automatic                   class
+11: GenericFunctionValue           unknown function value                                    Declaration#refine          class
+12: HexColorValue                  individual hex color value                                Declaration#refine          class
+13: KeywordValue                   individual keyword value                                  Declaration#refine          class
+14: LinearGradientFunctionValue    linear gradient function                                  Declaration#refine          class
+15: NumericalValue                 individual numerical value                                Declaration#refine          class
+16: PropertyValue                  interface for all property values                         Declaration#refine          class
+17: RawFunction                    a raw function before refinement                          Declaration#refine          class
+18: StringValue                    individual string value                                   Declaration#refine          class
+19: UrlFunctionValue               url function                                              Declaration#refine          class
+20: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
+21: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
+22: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
+23: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
+24: AttributeSelector              attribute selector segment                                Selector#refine             class
+25: ClassSelector                  class selector segment                                    Selector#refine             class
+26: IdSelector                     id selector segment                                       Selector#refine             class
+27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
+28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
+29: Selector                       (no description)                                          Automatic                   class
+30: TypeSelector                   type/element selector segment                             Selector#refine             class
+31: UniversalSelector              universal selector segment                                Selector#refine             class
 
 Generated by PrintSubscribableSyntaxTable.java
 </pre>

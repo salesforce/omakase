@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.basic.PrefixPruner;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.Conditionals;
@@ -55,6 +56,12 @@ final class Suppliers {
             @Override
             public Prefixer get() {
                 return Prefixer.defaultBrowserSupport();
+            }
+        })
+        .put(PrefixPruner.class, new Supplier<PrefixPruner>() {
+            @Override
+            public PrefixPruner get() {
+                return new PrefixPruner();
             }
         })
         .put(Conditionals.class, new Supplier<Conditionals>() {

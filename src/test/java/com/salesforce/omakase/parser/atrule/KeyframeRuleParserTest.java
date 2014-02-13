@@ -96,8 +96,8 @@ public class KeyframeRuleParserTest extends AbstractParserTest<KeyframeRuleParse
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = parse("from { top: 100% } from { top: 100% }").get(0);
         assertThat(result.broadcasted).hasSize(4);
-        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(Selector.class);
-        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(Selector.class);
         assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(Declaration.class);
         assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(Rule.class);
     }

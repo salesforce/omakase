@@ -135,8 +135,8 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         expressions().propagateBroadcast(broadcaster);
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override
@@ -146,7 +146,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
 
     @Override
     public boolean isWritable() {
-        return type.isPresent() || !expressions.isEmptyOrNoneWritable();
+        return super.isWritable() && (type.isPresent() || !expressions.isEmptyOrNoneWritable());
     }
 
     @Override
@@ -177,7 +177,21 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
 
     @Override
     protected MediaQuery makeCopy(Prefix prefix, SupportMatrix support) {
-        // TODO copy
-        throw new UnsupportedOperationException("TODO: copy not supported yet");
+        // TESTME
+        MediaQuery copy = new MediaQuery();
+
+        if (restriction.isPresent()) {
+            copy.restriction(restriction.get());
+        }
+
+        if (type.isPresent()) {
+            copy.type(type.get());
+        }
+
+        for (MediaQueryExpression expression : expressions) {
+            copy.expressions().append(expression.copy());
+        }
+
+        return copy;
     }
 }

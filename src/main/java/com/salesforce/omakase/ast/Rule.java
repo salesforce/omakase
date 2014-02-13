@@ -127,15 +127,15 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         selectors.propagateBroadcast(broadcaster);
         declarations.propagateBroadcast(broadcaster);
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override
     public boolean isWritable() {
         // don't write out rules with no selectors or all detached selectors
-        return !selectors.isEmpty() && !declarations.isEmpty();
+        return super.isWritable() && !selectors.isEmpty() && !declarations.isEmpty();
     }
 
     @Override

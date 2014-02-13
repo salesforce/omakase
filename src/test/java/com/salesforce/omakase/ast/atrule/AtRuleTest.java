@@ -21,6 +21,7 @@ import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
@@ -394,6 +395,11 @@ public class AtRuleTest {
         protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
             return new CustomBlock();
         }
+
+        @Override
+        public SyntaxCollection<StatementIterable, Statement> statements() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     public static final class CustomBlockNotWritable extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
@@ -415,6 +421,11 @@ public class AtRuleTest {
         @Override
         protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
             return new CustomBlock();
+        }
+
+        @Override
+        public SyntaxCollection<StatementIterable, Statement> statements() {
+            throw new UnsupportedOperationException();
         }
     }
 }

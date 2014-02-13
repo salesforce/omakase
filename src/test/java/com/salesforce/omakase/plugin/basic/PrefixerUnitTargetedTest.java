@@ -38,7 +38,12 @@ public class PrefixerUnitTargetedTest {
 
     private String process(String original, Prefixer prefixer, WriterMode mode) {
         StyleWriter writer = new StyleWriter(mode);
-        Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
+        Omakase.source(original)
+            .request(AutoRefiner.refineEverything())
+            .request(prefixer)
+            .request(PrefixPruner.prefixedAtRules())
+            .request(writer)
+            .process();
         return writer.write();
     }
 
@@ -307,11 +312,6 @@ public class PrefixerUnitTargetedTest {
             "}";
 
         assertThat(process(original, animationSetup())).isEqualTo(expected);
-    }
-
-    //    @Test
-    public void keyframesWithInnerPrefixable() {
-        fail("unimplemented");
     }
 
     @Test

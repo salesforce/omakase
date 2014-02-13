@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -117,6 +118,14 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
     }
 
     @Override
+    public void propagateBroadcast(Broadcaster broadcaster) {
+        for (PropertyValueMember term : terms) {
+            term.propagateBroadcast(broadcaster);
+        }
+        super.propagateBroadcast(broadcaster);
+    }
+
+    @Override
     protected MediaQueryExpression self() {
         return this;
     }
@@ -145,7 +154,15 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
 
     @Override
     protected MediaQueryExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        // TODO copy
-        throw new UnsupportedOperationException("TODO: copy not supported yet");
+        // TESTME
+        MediaQueryExpression copy = new MediaQueryExpression(feature);
+
+        List<PropertyValueMember> termsCopy = Lists.newArrayList();
+        for (PropertyValueMember term : terms) {
+            termsCopy.add(term.copy());
+        }
+
+        copy.terms(termsCopy);
+        return copy;
     }
 }

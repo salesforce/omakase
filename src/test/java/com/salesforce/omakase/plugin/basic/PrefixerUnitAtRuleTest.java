@@ -37,7 +37,12 @@ import static org.fest.assertions.api.Assertions.*;
 public class PrefixerUnitAtRuleTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
-        Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
+        Omakase.source(original)
+            .request(AutoRefiner.refineEverything())
+            .request(prefixer)
+            .request(PrefixPruner.prefixedAtRules())
+            .request(writer)
+            .process();
         return writer.write();
     }
 
@@ -453,6 +458,29 @@ public class PrefixerUnitAtRuleTest {
             ".test {color:red}";
 
         Prefixer prefixer = setup().prune(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void atRuleWithInnerPrefixable() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().all(Browser.IE);
+        prefixer.support().all(Browser.CHROME);
+
+        String original = "@keyframes test {\n" +
+            "    from { transform: rotate(0deg)}\n" +
+            "    to { transform: rotate(360deg)}\n" +
+            "}";
+
+        String expected = "@-webkit-keyframes test {\n" +
+            "  from {-webkit-transform:rotate(0deg); transform:rotate(0deg)}\n" +
+            "  to {-webkit-transform:rotate(360deg); transform:rotate(360deg)}\n" +
+            "}\n" +
+            "@keyframes test {\n" +
+            "  from {-webkit-transform:rotate(0deg); -ms-transform:rotate(0deg); transform:rotate(0deg)}\n" +
+            "  to {-webkit-transform:rotate(360deg); -ms-transform:rotate(360deg); transform:rotate(360deg)}\n" +
+            "}";
+
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 }

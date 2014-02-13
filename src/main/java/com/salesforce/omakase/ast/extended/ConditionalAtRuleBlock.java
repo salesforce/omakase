@@ -115,6 +115,7 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterab
      *
      * @return The collection of statements within this conditional at-rule block.
      */
+    @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
     }
@@ -126,7 +127,7 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterab
 
     @Override
     public boolean isWritable() {
-        return manager.isPassthroughMode() || manager.hasCondition(condition);
+        return super.isWritable() && (manager.isPassthroughMode() || manager.hasCondition(condition));
     }
 
     @Override
@@ -158,7 +159,7 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterab
     protected ConditionalAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
         List<Statement> copiedStatements = Lists.newArrayList();
         for (Statement statement : statements) {
-            copiedStatements.add(statement.copy(prefix, support));
+            copiedStatements.add(statement.copy());
         }
         return new ConditionalAtRuleBlock(-1, -1, manager, condition, copiedStatements, null);
     }

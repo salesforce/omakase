@@ -380,11 +380,12 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         if (propertyValue != null) {
             propertyValue.propagateBroadcast(broadcaster);
         }
-        // necessary for cases when we are already attached but a new property value hasn't  been broadcasted.
+        super.propagateBroadcast(broadcaster);
+
+        // necessary for cases when we are already attached but a new property value hasn't been broadcasted.
         this.broadcaster = broadcaster;
     }
 

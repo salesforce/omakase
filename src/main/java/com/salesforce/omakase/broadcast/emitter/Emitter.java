@@ -176,13 +176,18 @@ public final class Emitter {
         List<Class<?>> hierarchy = hierarchyCache.get(klass);
 
         if (hierarchy == null) {
-            ImmutableList.Builder<Class<?>> builder = ImmutableList.builder();
-            for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
-                if (type.isAnnotationPresent(Subscribable.class)) {
-                    builder.add(type);
+            if (!klass.isAnnotationPresent(Subscribable.class)) {
+                hierarchy = ImmutableList.of();
+            } else {
+                ImmutableList.Builder<Class<?>> builder = ImmutableList.builder();
+                for (Class<?> type : TypeToken.of(klass).getTypes().rawTypes()) {
+                    if (type.isAnnotationPresent(Subscribable.class)) {
+                        builder.add(type);
+                    }
                 }
+                hierarchy = builder.build();
             }
-            hierarchy = builder.build();
+
             hierarchyCache.put(klass, hierarchy);
         }
 

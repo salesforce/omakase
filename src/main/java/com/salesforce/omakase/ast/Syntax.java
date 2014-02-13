@@ -22,7 +22,10 @@ import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.Writable;
 
@@ -47,6 +50,8 @@ import java.util.List;
  *
  * @author nmcwilliams
  */
+@Subscribable
+@Description(broadcasted = BroadcastRequirement.SPECIAL,value = "top level interface for all units")
 public interface Syntax<C> extends Writable, Broadcastable {
     /**
      * Gets the unique identifier for this unit. This can be used as a key in maps or in any other case where storing a short

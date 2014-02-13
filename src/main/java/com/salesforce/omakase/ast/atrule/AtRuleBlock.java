@@ -16,11 +16,15 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 
 /**
  * The block of an {@link AtRule}.
  *
  * @author nmcwilliams
  */
-public interface AtRuleBlock extends StatementIterable {}
+public interface AtRuleBlock extends StatementIterable {
+    SyntaxCollection<StatementIterable, Statement> statements();
+}

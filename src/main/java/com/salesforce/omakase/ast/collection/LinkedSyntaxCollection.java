@@ -169,13 +169,13 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         checkNotNull(unit, "unit cannot be null");
         checkArgument(!unit.destroyed(), "cannot prepend a destroyed unit!");
 
-        // perform associative actions on the unit
-        associate(unit);
-
         // create a new node
         first = new Node<T>(null, first, unit);
         lookup.put(unit.id(), first);
         if (last == null) last = first;
+
+        // perform associative actions on the unit
+        associate(unit);
 
         return this;
     }
@@ -196,14 +196,14 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         Node<T> node = lookup.get(index.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
-        // perform associative actions on the unit
-        associate(unit);
-
         // if the index unit is the first unit then delegate to #prepend
         if (node == first || isEmpty()) return prepend(unit);
 
         // create a new node
         lookup.put(unit.id(), new Node<T>(node.previous, node, unit));
+
+        // perform associative actions on the unit
+        associate(unit);
 
         return this;
     }
@@ -213,13 +213,13 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         checkNotNull(unit, "unit cannot be null");
         checkArgument(!unit.destroyed(), "cannot append a destroyed unit!");
 
-        // perform associative actions on the unit
-        associate(unit);
-
         // create a new node
         last = new Node<T>(last, null, unit);
         lookup.put(unit.id(), last);
         if (first == null) first = last;
+
+        // perform associative actions on the unit
+        associate(unit);
 
         return this;
     }
@@ -240,14 +240,14 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         Node<T> node = lookup.get(index.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
-        // perform associative actions on the unit
-        associate(unit);
-
         // if the index unit is the last unit then delegate to #append
         if (node == last || (node.previous == null && node.next == null)) return append(unit);
 
         // create a new node
         lookup.put(unit.id(), new Node<T>(node, node.next, unit));
+
+        // perform associative actions on the unit
+        associate(unit);
 
         return this;
     }
@@ -298,7 +298,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         unit.unlink().group(this);
 
         // broadcast the unit if it hasn't been broadcasted yet.
-        if (broadcaster != null && unit.status() == Status.UNBROADCASTED) broadcaster.broadcast(unit, true);
+        if (broadcaster != null && unit.status() == Status.UNBROADCASTED) unit.propagateBroadcast(broadcaster);
     }
 
     private void unlink(Node<T> node) {

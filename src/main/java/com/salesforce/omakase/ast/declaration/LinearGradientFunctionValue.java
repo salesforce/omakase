@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * Represents a linear-gradient (or repeating-linear-gradient) function.
@@ -42,6 +45,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author nmcwilliams
  */
+@Subscribable
+@Description(value = "linear gradient function", broadcasted = REFINED_DECLARATION)
 public final class LinearGradientFunctionValue extends AbstractTerm implements FunctionValue {
     private static final Map<String, String> DIR_FLIP = ImmutableMap.<String, String>builder()
         .put("to bottom", "top")

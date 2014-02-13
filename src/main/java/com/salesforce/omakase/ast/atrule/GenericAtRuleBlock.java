@@ -63,6 +63,7 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
      *
      * @return The collection of statements within this block.
      */
+    @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
     }
@@ -74,13 +75,13 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
         statements.propagateBroadcast(broadcaster);
+        super.propagateBroadcast(broadcaster);
     }
 
     @Override
     public boolean isWritable() {
-        return !statements.isEmptyOrNoneWritable();
+        return super.isWritable() && !statements.isEmptyOrNoneWritable();
     }
 
     @Override
@@ -101,7 +102,7 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
     protected GenericAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
         GenericAtRuleBlock copy = new GenericAtRuleBlock();
         for (Statement statement : statements) {
-            copy.statements().append(statement.copy(prefix, support));
+            copy.statements().append(statement.copy());
         }
         return copy;
     }

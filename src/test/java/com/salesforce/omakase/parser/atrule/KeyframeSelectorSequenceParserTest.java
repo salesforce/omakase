@@ -103,14 +103,14 @@ public class KeyframeSelectorSequenceParserTest extends AbstractParserTest<Keyfr
     public void matchesExpectedBroadcastContent() {
         GenericParseResult result = parse("   from, 20%, 30%, \n70%").get(0);
         assertThat(result.broadcasted).hasSize(8);
-        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(Selector.class);
-        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(KeyframeSelector.class);
-        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(Selector.class);
-        assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(KeyframeSelector.class);
-        assertThat(Iterables.get(result.broadcasted, 4)).isInstanceOf(Selector.class);
-        assertThat(Iterables.get(result.broadcasted, 5)).isInstanceOf(KeyframeSelector.class);
-        assertThat(Iterables.get(result.broadcasted, 6)).isInstanceOf(Selector.class);
-        assertThat(Iterables.get(result.broadcasted, 7)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 0)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 1)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 2)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 3)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 4)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 5)).isInstanceOf(Selector.class);
+        assertThat(Iterables.get(result.broadcasted, 6)).isInstanceOf(KeyframeSelector.class);
+        assertThat(Iterables.get(result.broadcasted, 7)).isInstanceOf(Selector.class);
     }
 
     @Test

@@ -106,7 +106,7 @@ public final class Stylesheet extends AbstractSyntax<StatementIterable> implemen
     protected Stylesheet makeCopy(Prefix prefix, SupportMatrix support) {
         Stylesheet copy = new Stylesheet(broadcaster);
         for (Statement statement : statements) {
-            copy.append(statement.copy(prefix, support));
+            copy.append(statement.copy());
         }
         return copy;
     }

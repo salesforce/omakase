@@ -118,4 +118,8 @@ public final class AutoRefiner implements Plugin {
     public void refine(Refinable<?> refinable) {
         if (all || refinables.contains(refinable.getClass())) refinable.refine();
     }
+
+    public static AutoRefiner refineEverything() {
+        return new AutoRefiner().all();
+    }
 }

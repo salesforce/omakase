@@ -48,6 +48,15 @@ import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
 public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for ALL Syntax units.
+     *
+     * @param syntax
+     *     The {@link Syntax} instance.
+     */
+    public void syntax(Syntax<?> syntax) {}
+
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
      * for {@link Syntax} units of type {@link Refinable}.
      *
      * @param refinable
@@ -243,6 +252,15 @@ public class BasePlugin implements Plugin {
      *     The {@link UrlFunctionValue} instance.
      */
     public void urlValue(UrlFunctionValue url) {}
+
+    /**
+     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
+     * for {@link Syntax} units of type {@link LinearGradientFunctionValue}.
+     *
+     * @param linearGradient
+     *     The {@link LinearGradientFunctionValue} instance.
+     */
+    public void linearGradientValue(LinearGradientFunctionValue linearGradient) {}
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
