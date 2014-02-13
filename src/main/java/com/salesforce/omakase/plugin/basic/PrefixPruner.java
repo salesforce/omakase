@@ -17,14 +17,12 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.Rule;
-import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.util.Declarations;
 import com.salesforce.omakase.util.Prefixes;
 
 /**
@@ -57,19 +55,12 @@ public final class PrefixPruner implements Plugin {
     @Rework
     public void atRule(AtRule atRule) {
         if (prefixedAtRules && atRule.name() != null && atRule.block().isPresent()) {
-            String name = atRule.name();
-            Optional<Prefix> prefix = Prefixes.parsePrefix(name);
+            Optional<Prefix> prefix = Prefixes.parsePrefix(atRule.name());
             if (prefix.isPresent()) {
-                AtRuleBlock block = atRule.block().get();
-                for (Statement statement : block.statements()) {
-                    Optional<Rule> rule = statement.asRule();
-                    if (rule.isPresent()) {
-                        for (Declaration declaration : rule.get().declarations()) {
-                            Optional<Prefix> declarationPrefix = declaration.propertyName().prefix();
-                            if (declarationPrefix.isPresent() && declarationPrefix.get() != prefix.get()) {
-                                declaration.destroy();
-                            }
-                        }
+                for (Declaration declaration : Declarations.within(atRule.block().get())) {
+                    Optional<Prefix> declarationPrefix = declaration.propertyName().prefix();
+                    if (declarationPrefix.isPresent() && declarationPrefix.get() != prefix.get()) {
+                        declaration.destroy();
                     }
                 }
             }

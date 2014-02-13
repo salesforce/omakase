@@ -16,10 +16,14 @@
 
 package com.salesforce.omakase.ast;
 
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
+
 /**
  * Contains a list of {@link Statement}s.
  *
  * @author nmcwilliams
  * @see Stylesheet
  */
-public interface StatementIterable extends Iterable<Statement>, Syntax<StatementIterable> {}
+public interface StatementIterable extends Iterable<Statement>, Syntax<StatementIterable> {
+    SyntaxCollection<StatementIterable, Statement> statements();
+}

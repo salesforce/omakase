@@ -73,6 +73,7 @@ public final class Stylesheet extends AbstractSyntax<StatementIterable> implemen
      *
      * @return All statements.
      */
+    @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
     }

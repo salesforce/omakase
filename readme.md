@@ -133,19 +133,6 @@ Stylesheet stylesheet = tree.stylesheet();
 System.out.println("#statements = " + stylesheet.statements().size());
 ```
 
-When working with the `Statement` objects within the `Stylesheet`, there are a few helper methods available:
-
-```java
-Stylesheet stylesheet = tree.stylesheet();
-for (Statement statement : stylesheet.statements()) {
-    if (statement.asRule().isPresent()) {
-        Rule rule = statement.asRule().get();
-    } else if (statement.asAtRule().isPresent()) {
-        AtRule atRule = statement.asAtRule().get();
-    }
-}
-```
-
 #### AutoRefiner
 
 The `AutoRefiner` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`).
@@ -597,10 +584,11 @@ There are other utilities for working with units in the following utility classe
 
 - Selectors.java
 - Values.java
+- Declarations.java
 - Actions.java
 - Parsers.java
 
-See the `omakase.util` package for more.
+See the `com.salesforce.omakase.util` package for more.
 
 #### Custom validation
 
