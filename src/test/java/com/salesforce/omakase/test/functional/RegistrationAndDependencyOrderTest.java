@@ -52,13 +52,14 @@ public class RegistrationAndDependencyOrderTest {
     }
 
     static class RegistrationOrderBase implements Plugin {
-        List<Class<?>> list;
+        final List<Class<?>> list;
 
         RegistrationOrderBase(List<Class<?>> list) {
             this.list = list;
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder1 extends RegistrationOrderBase {
         RegistrationOrder1(List<Class<?>> list) {
             super(list);
@@ -70,6 +71,7 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder2 extends RegistrationOrderBase {
         RegistrationOrder2(List<Class<?>> list) {
             super(list);
@@ -81,6 +83,7 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder3 extends RegistrationOrderBase implements DependentPlugin {
         RegistrationOrder3(List<Class<?>> list) {
             super(list);
@@ -108,6 +111,7 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder4 extends RegistrationOrderBase implements DependentPlugin {
         RegistrationOrder4(List<Class<?>> list) {
             super(list);
@@ -129,6 +133,7 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder5 extends RegistrationOrderBase implements DependentPlugin {
         RegistrationOrder5(List<Class<?>> list) {
             super(list);

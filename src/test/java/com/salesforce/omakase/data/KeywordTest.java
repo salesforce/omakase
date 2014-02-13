@@ -19,7 +19,6 @@ package com.salesforce.omakase.data;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

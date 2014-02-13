@@ -94,6 +94,7 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("abc 123  ", "abc"),
             withExpectedResult("ABC__A_", "ABC__A_"),

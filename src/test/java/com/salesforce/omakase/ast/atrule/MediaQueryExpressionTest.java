@@ -21,6 +21,7 @@ import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -82,5 +83,29 @@ public class MediaQueryExpressionTest {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
         exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
         assertThat(StyleWriter.compressed().writeSnippet(exp)).isEqualTo("(max-width:300px)");
+    }
+
+    @Test
+    public void propagatesBroadcastToTerms() {
+        MediaQueryExpression exp = new MediaQueryExpression("max-width");
+        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
+        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
+        exp.propagateBroadcast(broadcaster);
+        assertThat(broadcaster.find(NumericalValue.class).isPresent()).isTrue();
+    }
+
+    @Test
+    public void copyNoTerms() {
+        MediaQueryExpression exp = new MediaQueryExpression("max-width");
+        MediaQueryExpression copy = exp.copy();
+        assertThat(copy.feature()).isEqualTo("max-width");
+    }
+
+    @Test
+    public void copyWithTerms() {
+        MediaQueryExpression exp = new MediaQueryExpression("max-width");
+        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
+        MediaQueryExpression copy = exp.copy();
+        assertThat(copy.terms()).hasSize(1);
     }
 }

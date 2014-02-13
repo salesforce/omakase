@@ -16,7 +16,10 @@
 
 package com.salesforce.omakase.plugin.basic;
 
+import com.salesforce.omakase.Omakase;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -27,6 +30,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class PrefixerUnitTest {
+    @Rule public final ExpectedException exception = ExpectedException.none();
+
     @Test
     public void customShouldNotSupportAnythingByDefault() {
         assertThat(Prefixer.customBrowserSupport().support().supportedBrowsers()).isEmpty();
@@ -52,5 +57,12 @@ public class PrefixerUnitTest {
     public void setPrune() {
         Prefixer prefixer = Prefixer.defaultBrowserSupport().prune(true);
         assertThat(prefixer.prune()).isTrue();
+    }
+
+    @Test
+    public void throwsErrorIfPrefixPrunerAlreadyRegistered() {
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("plugin should be registered AFTER");
+        Omakase.source("").add(PrefixPruner.prunePrefixedAtRules()).add(Prefixer.defaultBrowserSupport()).process();
     }
 }

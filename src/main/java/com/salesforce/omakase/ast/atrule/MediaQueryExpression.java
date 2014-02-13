@@ -154,15 +154,17 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
 
     @Override
     protected MediaQueryExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         MediaQueryExpression copy = new MediaQueryExpression(feature);
 
-        List<PropertyValueMember> termsCopy = Lists.newArrayList();
-        for (PropertyValueMember term : terms) {
-            termsCopy.add(term.copy());
+        if (terms != null && !terms.isEmpty()) {
+            List<PropertyValueMember> termsCopy = Lists.newArrayList();
+            for (PropertyValueMember term : terms) {
+                termsCopy.add(term.copy());
+            }
+
+            copy.terms(termsCopy);
         }
 
-        copy.terms(termsCopy);
         return copy;
     }
 }

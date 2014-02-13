@@ -34,7 +34,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "UnusedParameters"})
 public class RemovalTest {
     private int count;
 

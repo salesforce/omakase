@@ -40,12 +40,7 @@ public final class CompoundToken implements Token {
     public CompoundToken(Token first, Token second) {
         this.first = first;
         this.second = second;
-
-        StringBuilder sb = new StringBuilder(first.description().length() + second.description().length() + 4);
-        sb.append(first.description());
-        sb.append(" OR ");
-        sb.append(second.description());
-        this.description = sb.toString();
+        this.description = first.description() + " OR " + second.description();
     }
 
     @Override

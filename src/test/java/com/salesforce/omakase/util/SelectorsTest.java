@@ -26,7 +26,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "FieldCanBeLocal", "UnusedDeclaration"})
 public class SelectorsTest {
     private SelectorPart part;
     private SelectorPart obj1;

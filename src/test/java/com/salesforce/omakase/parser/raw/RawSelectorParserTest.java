@@ -115,6 +115,7 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(".class1, .class2", ".class1"),
             withExpectedResult(".class1 + .class2 { color: red }", ".class1 + .class2"),
@@ -143,7 +144,7 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
     @Test
     public void correctLineAndColumnNumber() {
         GenericParseResult result = parse("\n  .class1").get(0);
-        Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
+        Syntax<?> syntax = Iterables.get(result.broadcastedSyntax, 0);
         assertThat(syntax.line()).isEqualTo(2);
         assertThat(syntax.column()).isEqualTo(3);
     }

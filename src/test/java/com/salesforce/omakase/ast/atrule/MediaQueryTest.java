@@ -179,4 +179,31 @@ public class MediaQueryTest {
         exp2.destroy();
         assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (min-width:800px)");
     }
+
+    @Test
+    public void makeCopyNoTypeOrResetriction() {
+        mq.expressions().append(exp1);
+        MediaQuery copy = mq.copy();
+        assertThat(copy.expressions()).hasSize(1);
+        assertThat(copy.expressions().first().get().feature()).isEqualTo("min-width");
+    }
+
+    @Test
+    public void makeCopyTypeOnly() {
+        mq.type("tv");
+        mq.expressions().append(exp1);
+        MediaQuery copy = mq.copy();
+
+        assertThat(copy.type().get()).isEqualTo("tv");
+        assertThat(copy.expressions()).hasSize(1);
+    }
+
+    @Test
+    public void makeCopyTypeAndRestriction() {
+        mq.type("tv").restriction(MediaRestriction.NOT);
+        MediaQuery copy = mq.copy();
+
+        assertThat(copy.type().get()).isEqualTo("tv");
+        assertThat(copy.restriction().get()).isEqualTo(MediaRestriction.NOT);
+    }
 }

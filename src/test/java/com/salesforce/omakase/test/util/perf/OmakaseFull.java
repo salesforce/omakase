@@ -23,7 +23,6 @@ import com.salesforce.omakase.Omakase;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("UnusedParameters")
 public final class OmakaseFull implements PerfTestParser {
     @Override
     public String code() {

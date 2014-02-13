@@ -25,5 +25,10 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
  * @see Stylesheet
  */
 public interface StatementIterable extends Iterable<Statement>, Syntax<StatementIterable> {
+    /**
+     * Gets the {@link SyntaxCollection} of statements within this unit.
+     *
+     * @return All statements.
+     */
     SyntaxCollection<StatementIterable, Statement> statements();
 }

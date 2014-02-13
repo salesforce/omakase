@@ -93,8 +93,7 @@ public class GenerateBrowserEnum {
         writer.template("browser-enum.ftl");
         writer.data("browsers", browsers);
 
-        boolean changed = writer.write();
-        return changed;
+        return writer.write();
     }
 
     private String versions(Map browser, int indexOfCurrent) {

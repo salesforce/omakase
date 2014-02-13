@@ -35,7 +35,7 @@ import java.util.Map;
  * <p/>
  * See ${generator} for instructions on updating.
  */
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings({"UnusedDeclaration", "SpellCheckingInspection"})
 public enum Keyword {
     <#list keywords as keyword>
     /** CSS keyword named '${keyword}' */

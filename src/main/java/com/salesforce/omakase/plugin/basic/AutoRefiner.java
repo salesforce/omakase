@@ -119,6 +119,11 @@ public final class AutoRefiner implements Plugin {
         if (all || refinables.contains(refinable.getClass())) refinable.refine();
     }
 
+    /**
+     * Creates a new {@link AutoRefiner} that refines everything.
+     *
+     * @return The new {@link AutoRefiner} instance.
+     */
     public static AutoRefiner refineEverything() {
         return new AutoRefiner().all();
     }

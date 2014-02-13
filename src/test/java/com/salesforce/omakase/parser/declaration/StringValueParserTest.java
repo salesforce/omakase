@@ -87,6 +87,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("\"this is a 'string'.\"", "this is a 'string'."),
             withExpectedResult("\"this is a \\\"string\\\".\"", "this is a \\\"string\\\"."),

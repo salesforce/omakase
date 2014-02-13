@@ -103,7 +103,6 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
 
     @Override
     protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         MediaQueryList copy = new MediaQueryList();
         for (MediaQuery query : queries) {
             copy.queries().append(query.copy());

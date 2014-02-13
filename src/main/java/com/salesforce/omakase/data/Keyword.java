@@ -35,7 +35,7 @@ import java.util.Map;
  * <p/>
  * See class com.salesforce.omakase.test.util.tool.GenerateKeywordEnum for instructions on updating.
  */
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings({"UnusedDeclaration", "SpellCheckingInspection"})
 public enum Keyword {
     /** CSS keyword named 'above' */
     ABOVE("above"),

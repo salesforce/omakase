@@ -46,12 +46,11 @@ public class SyntaxTreeTest {
         "#div1, #div2 { position:absolute; /*orphaned-r*/}\n" +
         "/*orphaned-s*/";
 
-    private SyntaxTree tree;
     private Stylesheet stylesheet;
 
     @Before
     public void setup() {
-        tree = new SyntaxTree();
+        SyntaxTree tree = new SyntaxTree();
         Omakase.source(SRC).request(tree).process();
         stylesheet = tree.stylesheet();
     }

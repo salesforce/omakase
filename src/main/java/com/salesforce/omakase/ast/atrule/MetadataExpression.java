@@ -6,8 +6,6 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
-import java.io.IOException;
-
 /**
  * Represents an expression that should never be written out.
  * <p/>
@@ -38,6 +36,6 @@ public final class MetadataExpression extends AbstractSyntax<AtRuleExpression> i
     }
 
     @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+    public void write(StyleWriter writer, StyleAppendable appendable) {
     }
 }

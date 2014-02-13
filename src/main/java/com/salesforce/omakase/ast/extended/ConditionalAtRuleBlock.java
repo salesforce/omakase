@@ -110,11 +110,6 @@ public final class ConditionalAtRuleBlock extends AbstractSyntax<StatementIterab
         return condition;
     }
 
-    /**
-     * Gets the {@link SyntaxCollection} of statements within this conditional at-rule block.
-     *
-     * @return The collection of statements within this conditional at-rule block.
-     */
     @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;

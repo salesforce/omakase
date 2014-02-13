@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.CssAnnotation;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public final class CssAnnotations {
     public static final String NOFLIP = "noflip";
 

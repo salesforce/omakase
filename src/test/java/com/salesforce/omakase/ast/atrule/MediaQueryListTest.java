@@ -103,4 +103,11 @@ public class MediaQueryListTest {
         q2.destroy();
         assertThat(StyleWriter.verbose().writeSnippet(list)).isEqualTo("only screen and (min-width: 800px)");
     }
+
+    @Test
+    public void testCopy() {
+        list.queries().append(q1).append(q2);
+        MediaQueryList copy = (MediaQueryList)list.copy();
+        assertThat(copy.queries()).hasSize(2);
+    }
 }

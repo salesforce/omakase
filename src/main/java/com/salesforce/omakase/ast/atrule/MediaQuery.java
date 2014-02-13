@@ -177,15 +177,14 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
 
     @Override
     protected MediaQuery makeCopy(Prefix prefix, SupportMatrix support) {
-        // TESTME
         MediaQuery copy = new MediaQuery();
-
-        if (restriction.isPresent()) {
-            copy.restriction(restriction.get());
-        }
 
         if (type.isPresent()) {
             copy.type(type.get());
+        }
+
+        if (restriction.isPresent()) {
+            copy.restriction(restriction.get());
         }
 
         for (MediaQueryExpression expression : expressions) {

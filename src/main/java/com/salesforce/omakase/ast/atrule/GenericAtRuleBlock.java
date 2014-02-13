@@ -58,11 +58,6 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
         this.statements.appendAll(statements);
     }
 
-    /**
-     * Gets the {@link SyntaxCollection} of statements within this block.
-     *
-     * @return The collection of statements within this block.
-     */
     @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;

@@ -87,6 +87,7 @@ public class KeyframeSelectorSequenceParserTest extends AbstractParserTest<Keyfr
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<Integer>> results = parseWithExpected(
             withExpectedResult("50%, 50%", 4),
             withExpectedResult("from", 2),

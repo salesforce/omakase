@@ -76,6 +76,7 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("p", "p"),
             withExpectedResult("P", "p"),

@@ -35,7 +35,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * Unit test that ensures that regular comments are correctly associated with units and that orphaned comments are created as
  * appropriate.
  */
-@SuppressWarnings({"JavaDoc", "ConstantConditions"})
+@SuppressWarnings({"JavaDoc"})
 public class CommentPositionTest {
     private static final String SRC = "/*0*/\n" +
         "\n" +

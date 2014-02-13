@@ -68,11 +68,6 @@ public final class Stylesheet extends AbstractSyntax<StatementIterable> implemen
         this(null);
     }
 
-    /**
-     * Gets all {@link Statement}s in this stylesheet.
-     *
-     * @return All statements.
-     */
     @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;

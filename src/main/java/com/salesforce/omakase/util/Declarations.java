@@ -20,28 +20,81 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.declaration.Declaration;
 
 import java.util.List;
 
 /**
- * TESTME
- * <p/>
- * TODO description
+ * Utilities for working with {@link Declaration}s.
  *
  * @author nmcwilliams
  */
 public final class Declarations {
     private Declarations() {}
 
-    public static Iterable<Declaration> within(StatementIterable iterable) {
-        return within(iterable, true);
+    /**
+     * Finds all {@link Declaration}s within the given {@link StatementIterable} (e.g., a {@link Stylesheet} or {@link
+     * AtRuleBlock}).
+     * <p/>
+     * By default this will recurse into any inner/child {@link StatementIterable}s as well, including their {@link Declaration}s.
+     * If you only want {@link Declaration}s one level deep, call {@link #within(StatementIterable, boolean)} with false.
+     * <p/>
+     * This is optimized to not copy each {@link Declaration} into a new collection, but returns lazy {@link Iterable} instead.
+     * <p/>
+     * Examples:
+     * <pre><code>
+     * for (Declaration declaration : Declarations.within(atRule.block().get())) {
+     *      ...
+     * }
+     * </code></pre>
+     * <pre><code>
+     * for (Declaration declaration : Declarations.within(stylesheet)) {
+     *      ...
+     * }
+     * </code></pre>
+     *
+     * @param parent
+     *     Find declarations within this {@link StatementIterable}.
+     *
+     * @return An {@link Iterable} over each {@link Declaration}.
+     */
+    public static Iterable<Declaration> within(StatementIterable parent) {
+        return within(parent, true);
     }
 
-    public static Iterable<Declaration> within(StatementIterable iterable, boolean recurse) {
+    /**
+     * Finds all {@link Declaration}s within the given {@link StatementIterable} (e.g., a {@link Stylesheet} or {@link
+     * AtRuleBlock}).
+     * <p/>
+     * This is optimized to not copy each {@link Declaration} into a new collection, but returns lazy {@link Iterable} instead.
+     * <p/>
+     * Examples:
+     * <pre><code>
+     * for (Declaration declaration : Declarations.within(atRule.block().get(), true)) {
+     *      ...
+     * }
+     * </code></pre>
+     * <pre><code>
+     * for (Declaration declaration : Declarations.within(stylesheet, false)) {
+     *      ...
+     * }
+     * </code></pre>
+     *
+     * @param parent
+     *     Find declarations within this {@link StatementIterable}.
+     * @param recurse
+     *     Whether to recursively look include any child/inner {@link StatementIterable}s. Pass false to only iterate over the
+     *     {@link Declaration}s one level deep.
+     *
+     * @return An {@link Iterable} over each {@link Declaration}.
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static Iterable<Declaration> within(StatementIterable parent, boolean recurse) {
         List<Iterable<Declaration>> iterables = Lists.newArrayList();
 
-        for (Statement statement : iterable.statements()) {
+        for (Statement statement : parent.statements()) {
             if (statement.asRule().isPresent()) {
                 iterables.add(statement.asRule().get().declarations());
             } else if (recurse && statement.asAtRule().isPresent() && statement.asAtRule().get().block().isPresent()) {
@@ -51,5 +104,4 @@ public final class Declarations {
 
         return Iterables.concat(iterables);
     }
-
 }

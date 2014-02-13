@@ -93,6 +93,7 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
     @Override
     @Test
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("#ffffff red", "ffffff"),
             withExpectedResult("#fff red", "fff"),

@@ -153,6 +153,7 @@ public final class As {
      *
      * @return this, for chaining.
      */
+    @SuppressWarnings("AutoBoxing")
     public As fields() {
         if (instance instanceof Syntax) {
             Syntax<?> syntax = (Syntax<?>)instance;

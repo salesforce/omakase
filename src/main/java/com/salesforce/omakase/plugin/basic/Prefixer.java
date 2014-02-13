@@ -16,13 +16,14 @@
 
 package com.salesforce.omakase.plugin.basic;
 
+import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 
 import static com.salesforce.omakase.data.Browser.*;
@@ -34,10 +35,8 @@ import static com.salesforce.omakase.plugin.basic.PrefixerHandlers.*;
  * <p/>
  * Which vendor prefixes are actually used depends of the browser versions that you want to support. You can manually specify
  * specific browser versions, last N versions, or just the latest browser version by utilizing the {@link SupportMatrix} returned
- * by the {@link #support()} method.
- * <p/>
- * In most cases however the default set of browser versions to support is adequate, as achieved by using the {@link
- * #defaultBrowserSupport()} constructor method.
+ * by the {@link #support()} method. In most cases however the default set of browser versions to support is adequate, as achieved
+ * by using the {@link #defaultBrowserSupport()} constructor method.
  * <p/>
  * Browser and prefix data is seamlessly handled via updates from the caniuse.com data. To update to the latest data, see the
  * readme file titled "Scripts".
@@ -65,7 +64,6 @@ import static com.salesforce.omakase.plugin.basic.PrefixerHandlers.*;
  * legacy linear-gradient syntax is not currently handled because several browser versions have passed since it was last used.
  * <p/>
  * Example usage:
- * <p/>
  * <pre><code>
  *     Prefixer prefixing = Prefixer.customBrowserSupport();
  *     prefixing.support().last(Browser.FIREFOX, 3);
@@ -80,10 +78,36 @@ import static com.salesforce.omakase.plugin.basic.PrefixerHandlers.*;
  * <p/>
  *     Omakase.source(cssSource).request(refinement).request(prefixing).process();
  * </code></pre>
+ * <p/>
+ * In some cases at-rules scoped by a prefixed name may have non-applicable prefixes added. For example:
+ * <pre><code>
+ * &#64;keyframes animation {
+ *     from { transform: rotate(0deg) }
+ *     from { transform: rotate(360deg) }
+ * }
+ * </code></pre>
+ * after prefixing could result in
+ * <p/>
+ * <pre><code>
+ * &#64;-webkit-keyframes animation {
+ *     from { -webkit-transform: rotate(0deg); -ms-transform: rotate(0deg); transform: rotate(0deg) }
+ *     from { -webkit-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg) }
+ * }
+ * </code></pre>
+ * <p/>
+ * Notice the {@code -ms-transform} is most likely unnecessary as it is within a {@code -webkit-} prefixed at-rule. The {@link
+ * PrefixPruner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. The plugin must be
+ * registered <em>after</em> this one:
+ * <pre><code>
+ *     Omakase.source(input)
+ *         .add(Prefixer.defaultBrowserSupport())
+ *         .add(PrefixPruner.prunePrefixedAtRules())
+ *         .process()
+ * </code></pre>
  *
  * @author nmcwilliams
  */
-public final class Prefixer implements Plugin {
+public final class Prefixer implements DependentPlugin {
     private final SupportMatrix support;
     private boolean rearrange;
     private boolean prune;
@@ -150,6 +174,14 @@ public final class Prefixer implements Plugin {
      */
     public boolean prune() {
         return prune;
+    }
+
+    @Override
+    public void dependencies(PluginRegistry registry) {
+        if (registry.retrieve(PrefixPruner.class).isPresent()) {
+            String msg = "The %s plugin should be registered AFTER the %s plugin";
+            throw new IllegalStateException(String.format(msg, PrefixPruner.class.getSimpleName(), Prefixer.class.getSimpleName()));
+        }
     }
 
     /**

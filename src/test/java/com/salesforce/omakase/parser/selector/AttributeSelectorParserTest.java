@@ -102,6 +102,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("[class]", "class"),
             withExpectedResult("[href]", "href"),
@@ -130,6 +131,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
 
     @Test
     public void matchesExpectedMatchType() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<AttributeMatchType>> results = parseWithExpected(
             withExpectedResult("[foo=\"bar\"]", AttributeMatchType.EQUALS),
             withExpectedResult("[foo~=\"bar\"]", AttributeMatchType.INCLUDES),
@@ -162,6 +164,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
 
     @Test
     public void matchesExpectedMatchValue() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("[foo=\"bar\"]", "bar"),
             withExpectedResult("[foo~=\"bar\"]", "bar"),

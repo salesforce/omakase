@@ -40,7 +40,7 @@ public class PrefixerUnitAtRuleTest {
         Omakase.source(original)
             .request(AutoRefiner.refineEverything())
             .request(prefixer)
-            .request(PrefixPruner.prefixedAtRules())
+            .request(PrefixPruner.prunePrefixedAtRules())
             .request(writer)
             .process();
         return writer.write();

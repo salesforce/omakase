@@ -87,6 +87,7 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
+        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("#id .class", "id"),
             withExpectedResult("#ID #id", "ID"),

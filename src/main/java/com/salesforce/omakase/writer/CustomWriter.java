@@ -69,5 +69,6 @@ public interface CustomWriter<T extends Writable> {
      * @throws IOException
      *     If an I/O error occurs.
      */
+    @SuppressWarnings("RedundantThrows")
     void write(T unit, StyleWriter writer, StyleAppendable appendable) throws IOException;
 }

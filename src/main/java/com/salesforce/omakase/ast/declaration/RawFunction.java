@@ -29,15 +29,13 @@ import com.salesforce.omakase.parser.refiner.StandardRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
-import java.io.IOException;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Raw syntax representing a function.
  * <p/>
- * This is usually just an intermediary object passed to {@link GenericRefiner#refine(RawFunction)}. You can subscribe to this method if
- * you would like to check ALL function-like values (e.g., to modify the raw args) before they are refined into the more
+ * This is usually just an intermediary object passed to {@link GenericRefiner#refine(RawFunction)}. You can subscribe to this
+ * method if you would like to check ALL function-like values (e.g., to modify the raw args) before they are refined into the more
  * specifically-typed function value.
  *
  * @author nmcwilliams
@@ -114,7 +112,7 @@ public final class RawFunction extends AbstractSyntax<RawFunction> {
     }
 
     @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+    public void write(StyleWriter writer, StyleAppendable appendable) {
         throw new UnsupportedOperationException("write not supported for " + RawFunction.class);
     }
 

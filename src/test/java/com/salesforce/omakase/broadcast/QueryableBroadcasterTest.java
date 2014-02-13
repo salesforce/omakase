@@ -59,6 +59,7 @@ public class QueryableBroadcasterTest {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         qb.broadcast(sample1);
         qb.broadcast(sample2);
+        @SuppressWarnings("rawtypes")
         Iterable<Syntax> filtered = qb.filter(Syntax.class);
         assertThat(filtered).hasSize(2);
         assertThat(Iterables.get(filtered, 0)).isSameAs(sample1);
