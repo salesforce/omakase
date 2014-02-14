@@ -313,6 +313,11 @@ public final class PrefixTables {
         builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 7.0);
         builder.put(Property.TAB_SIZE, Browser.OPERA, 12.1);
         builder.put(Property.TAB_SIZE, Browser.FIREFOX, 27.0);
+        builder.put(Property.APPEARANCE, Browser.FIREFOX, 27.0);
+        builder.put(Property.APPEARANCE, Browser.CHROME, 32.0);
+        builder.put(Property.APPEARANCE, Browser.SAFARI, 7.0);
+        builder.put(Property.APPEARANCE, Browser.ANDROID, 4.4);
+        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 7.0);
 
         PROPERTIES = builder.build();
     }

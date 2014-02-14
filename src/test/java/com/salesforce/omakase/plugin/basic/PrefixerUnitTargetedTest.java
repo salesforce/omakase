@@ -805,4 +805,15 @@ public class PrefixerUnitTargetedTest {
 
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void appearance() {
+        String original = ".test {appearance:none}";
+        String expected = ".test {-webkit-appearance:none; -moz-appearance:none; appearance:none}";
+
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().latest(Browser.FIREFOX);
+        prefixer.support().latest(Browser.CHROME);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

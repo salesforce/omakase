@@ -363,70 +363,72 @@ Prefixer prefixer = Prefixer.defaultBrowserSupport().rearrange(true);
 
 Here's a list of what's currently supported:
 
-    Property                    
+    Property
     ----------------------------
-    animation                   
-    animation-delay             
-    animation-direction         
-    animation-duration          
-    animation-fill-mode         
-    animation-iteration-count   
-    animation-name              
-    animation-play-state        
-    animation-timing-function   
-    backface-visibility         
-    background-clip             
-    background-origin           
-    background-size             
-    border-bottom-left-radius   
-    border-bottom-right-radius  
-    border-image                
-    border-image-outset         
-    border-image-repeat         
-    border-image-slice          
-    border-image-source         
-    border-image-width          
-    border-radius               
-    border-top-left-radius      
-    border-top-right-radius     
-    box-shadow                  
-    box-sizing                  
-    column-count                
-    column-fill                 
-    column-gap                  
-    column-rule                 
-    column-rule-color           
-    column-rule-style           
-    column-rule-width           
-    column-span                 
-    column-width                
-    columns                     
-    hyphens                     
-    perspective                 
-    perspective-origin          
-    tab-size                    
-    transform                   
-    transform-origin            
-    transform-style             
-    transition                  
-    transition-delay            
-    transition-duration         
-    transition-property         
-    transition-timing-function  
-    user-select                 
+    animation
+    animation-delay
+    animation-direction
+    animation-duration
+    animation-fill-mode
+    animation-iteration-count
+    animation-name
+    animation-play-state
+    animation-timing-function
+    appearance
+    backface-visibility
+    background-clip
+    background-origin
+    background-size
+    border-bottom-left-radius
+    border-bottom-right-radius
+    border-image
+    border-image-outset
+    border-image-repeat
+    border-image-slice
+    border-image-source
+    border-image-width
+    border-radius
+    border-top-left-radius
+    border-top-right-radius
+    box-shadow
+    box-sizing
+    column-count
+    column-fill
+    column-gap
+    column-rule
+    column-rule-color
+    column-rule-style
+    column-rule-width
+    column-span
+    column-width
+    columns
+    hyphens
+    perspective
+    perspective-origin
+    tab-size
+    transform
+    transform-origin
+    transform-style
+    transition
+    transition-delay
+    transition-duration
+    transition-property
+    transition-timing-function
+    user-select
 
-    Function                    
+    Function
     ----------------------------
-    calc                        
-    linear-gradient             
-    repeating-linear-gradient   
+    calc
+    linear-gradient
+    repeating-linear-gradient
 
-    At Rule                     
+    At Rule
     ----------------------------
-    keyframes                   
+    keyframes
 
-    Selector                    
+    Selector
     ----------------------------
+    placeholder
     selection    
 
 You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the "Scripts" section below.

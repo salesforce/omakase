@@ -37,6 +37,10 @@ public class PrintAllPrefixed {
         for (Map.Entry<String, List<String>> entry : properties.entrySet()) {
             props.addAll(entry.getValue());
         }
+        Map<String, List<String>> nsProperties = (Map)((Map)types.get("non-standard")).get("properties");
+        for (Map.Entry<String, List<String>> entry : nsProperties.entrySet()) {
+            props.add(entry.getKey());
+        }
         for (String p : props) {
             Property prop = Property.lookup(p);
             System.out.println(String.format("%-28s", prop));

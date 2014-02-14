@@ -123,3 +123,12 @@ at-rules:
 #    - min-content
 #    - fit-content
 
+# stuff not on caniuse.com
+non-standard:
+  properties:
+    appearance:
+      - firefox
+      - chrome
+      - safari
+      - android
+      - ios_safari

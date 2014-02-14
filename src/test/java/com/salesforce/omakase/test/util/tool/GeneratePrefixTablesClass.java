@@ -62,6 +62,9 @@ public class GeneratePrefixTablesClass {
         List<NameInfo> atRules = loadGeneric((Map)types.get("at-rules"));
         List<NameInfo> selectors = loadGeneric((Map)types.get("selectors"));
 
+        Map nonStandard = (Map)types.get("non-standard");
+        properties.addAll(readNonStandardProperties((Map)nonStandard.get("properties")));
+
         // write out the new class source
         SourceWriter writer = new SourceWriter();
 
@@ -91,6 +94,28 @@ public class GeneratePrefixTablesClass {
             }
         }
 
+        return info;
+    }
+
+    private List<PropertyInfo> readNonStandardProperties(Map<String, List<String>> properties) {
+        List<PropertyInfo> info = Lists.newArrayList();
+
+        for (Map.Entry<String, List<String>> entry : properties.entrySet()) {
+            Property property = Property.lookup(entry.getKey());
+            if (property == null) {
+                String msg = "Property '%s' does not exist in the Property enum";
+                throw new IllegalArgumentException(String.format(msg, entry.getKey()));
+            }
+
+            System.out.println(String.format("reading non-standard prefix data for '%s'...", entry.getKey()));
+            for (String browser : entry.getValue()) {
+                Browser b = Browser.valueOf(browser.toUpperCase());
+                Double version = b.versions().get(0);
+                info.add(new PropertyInfo(property, b, version));
+                System.out.println(String.format("- last required with prefix in %s %s", b, version));
+            }
+            System.out.println();
+        }
         return info;
     }
 
