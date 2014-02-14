@@ -118,6 +118,19 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
     Groupable<P, T> append(T unit);
 
     /**
+     * Replaces this unit with the given one.
+     * <p/>
+     * Specifically, it prepends the unit to this one, then calls {@link #destroy()} on this unit. Note that {@link #destroy()}
+     * basically makes this unit worthless, so do not do anything with it afterwards (like trying to put it back in the tree).
+     *
+     * @param unit
+     *     Replace with this unit.
+     *
+     * @return this, for chaining.
+     */
+    Groupable<P, T> replaceWith(T unit);
+
+    /**
      * Severes the connection between this unit and its collection. Generally this method is used internally. If you want to
      * remove a unit from the syntax tree, use {@link #destroy()} instead.
      *

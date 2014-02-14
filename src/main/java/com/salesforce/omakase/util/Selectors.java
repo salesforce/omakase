@@ -18,13 +18,7 @@ package com.salesforce.omakase.util;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.Combinator;
-import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.ast.selector.PseudoElementSelector;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.ast.selector.TypeSelector;
+import com.salesforce.omakase.ast.selector.*;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -84,6 +78,18 @@ public final class Selectors {
      */
     public static Optional<PseudoElementSelector> asPseudoElementSelector(SelectorPart part) {
         return as(PseudoElementSelector.class, part);
+    }
+
+    /**
+     * Gets the given part as an instance of a {@link PseudoClassSelector} if it is one.
+     *
+     * @param part
+     *     Check if this part is a {@link PseudoClassSelector}.
+     *
+     * @return The pseudo element selector, or {@link Optional#absent()} if the part is a different type.
+     */
+    public static Optional<PseudoClassSelector> asPseudoClassSelector(SelectorPart part) {
+        return as(PseudoClassSelector.class, part);
     }
 
     /**
@@ -250,6 +256,51 @@ public final class Selectors {
     }
 
     /**
+     * Checks the given {@link Selector} for the <em>first</em> {@link PseudoClassSelector} that matches the given name. If you
+     * don't actually need the instance itself then you can use {@link #hasPseudoClassSelector(Selector, String, boolean)}
+     * instead.
+     *
+     * @param selector
+     *     The selector to check.
+     * @param name
+     *     Check for a {@link PseudoClassSelector} with this name.
+     * @param exact
+     *     Specify true to match the exact name, false to only check the unprefixed portion.
+     *
+     * @return The class selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<PseudoClassSelector> findPseudoClassSelector(Selector selector, String name, boolean exact) {
+        return findPseudoClassSelector(selector.parts(), name, exact);
+    }
+
+    /**
+     * Checks the given parts for the <em>first</em> {@link PseudoClassSelector} that matches the given name. If you don't
+     * actually need the instance itself then you can use {@link #hasPseudoClassSelector(Iterable, String, boolean)} instead.
+     *
+     * @param parts
+     *     The parts to check.
+     * @param name
+     *     Check for a {@link PseudoClassSelector} with this name.
+     * @param exact
+     *     Specify true to match the exact name, false to only check the unprefixed portion.
+     *
+     * @return The type selector, or {@link Optional#absent()} if not found.
+     */
+    public static Optional<PseudoClassSelector> findPseudoClassSelector(Iterable<SelectorPart> parts, String name, boolean exact) {
+        for (SelectorPart part : parts) {
+            Optional<PseudoClassSelector> pseudo = asPseudoClassSelector(part);
+            if (pseudo.isPresent()) {
+                if (exact || pseudo.get().name().charAt(0) != '-') {
+                    if (pseudo.get().name().equals(name)) return pseudo;
+                } else if (Prefixes.unprefixed(pseudo.get().name()).equals(name)) {
+                    return pseudo;
+                }
+            }
+        }
+        return Optional.absent();
+    }
+
+    /**
      * Checks the given parts for a {@link ClassSelector} that matches the given name.
      * <p/>
      * If you would like access to the found instance itself then use {@link #findClassSelector(Selector, String)} instead.
@@ -354,7 +405,7 @@ public final class Selectors {
      * @param selector
      *     The {@link Selector} to check.
      * @param name
-     *     Check for a {@link TypeSelector} with this name.
+     *     Check for a {@link PseudoElementSelector} with this name.
      * @param exact
      *     Specify true to match the exact name, false to only check the unprefixed portion.
      *
@@ -381,6 +432,44 @@ public final class Selectors {
      */
     public static boolean hasPseudoElementSelector(Iterable<SelectorPart> parts, String name, boolean exact) {
         return findPseudoElementSelector(parts, name, exact).isPresent();
+    }
+
+    /**
+     * Checks the given parts for a {@link PseudoClassSelector} that matches the given name.
+     * <p/>
+     * If you would like access to the found instance itself then use {@link #findPseudoClassSelector(Selector, String, boolean)}
+     * instead.
+     *
+     * @param selector
+     *     The {@link Selector} to check.
+     * @param name
+     *     Check for a {@link PseudoClassSelector} with this name.
+     * @param exact
+     *     Specify true to match the exact name, false to only check the unprefixed portion.
+     *
+     * @return True if one of the parts is a {@link PseudoClassSelector} with the given name.
+     */
+    public static boolean hasPseudoClassSelector(Selector selector, String name, boolean exact) {
+        return hasPseudoClassSelector(selector.parts(), name, exact);
+    }
+
+    /**
+     * Checks the given parts for a {@link PseudoClassSelector} that matches the given name.
+     * <p/>
+     * If you would like access to the found instance itself then use {@link #findPseudoClassSelector(Iterable, String, boolean)}
+     * instead.
+     *
+     * @param parts
+     *     The parts to check.
+     * @param name
+     *     Check for a {@link PseudoClassSelector} with this name.
+     * @param exact
+     *     Specify true to match the exact name, false to only check the unprefixed portion.
+     *
+     * @return True if one of the parts is a {@link PseudoClassSelector} with the given name.
+     */
+    public static boolean hasPseudoClassSelector(Iterable<SelectorPart> parts, String name, boolean exact) {
+        return findPseudoClassSelector(parts, name, exact).isPresent();
     }
 
     /**

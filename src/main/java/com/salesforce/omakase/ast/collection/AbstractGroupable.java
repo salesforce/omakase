@@ -98,6 +98,16 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
     }
 
     @Override
+    public Groupable<P, T> replaceWith(T unit) {
+        checkNotNull(unit, "unit cannot be null");
+        checkState(!destroyed, "cannot operate on a destroyed unit!");
+        checkState(group != null, "cannot append to an isolated unit");
+        prepend(unit);
+        destroy();
+        return this;
+    }
+
+    @Override
     public Groupable<P, T> unlink() {
         if (group != null) group.remove(self());
         group = null;

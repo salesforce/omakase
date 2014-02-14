@@ -17,6 +17,7 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Rule;
@@ -25,11 +26,15 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixUtil;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Equivalents;
+import com.salesforce.omakase.util.Selectors;
 import com.salesforce.omakase.util.Values;
 
 import java.util.Set;
@@ -176,21 +181,81 @@ final class PrefixerHandlers {
     };
 
     /** handles the very special needs case of placeholder */
-    static final PrefixerHandler<PseudoElementSelector> PLACEHOLDER = new PrefixerHandler<PseudoElementSelector>() {
-        private static final String NAME = "placeholder";
+    static final PrefixerHandler<PseudoElementSelector> PLACEHOLDER = new PrefixerHandlerStandard<PseudoElementSelector, Statement>() {
+        // general known issues:
+        // 1: this might improperly rearrange the v19 moz syntax after the newer one.
+        // 2: If the newer or older moz syntax are present the other one won't be added.
 
         @Override
-        public boolean handle(PseudoElementSelector instance, boolean rearrange, boolean prune, SupportMatrix support) {
-            if (!instance.name().equals(NAME)) return false;
+        boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
+            return instance.name().equals("placeholder");
+        }
 
-            Set<Prefix> prefixes = support.prefixesForSelector(NAME);
-            if (prefixes.isEmpty()) return false;
+        @Override
+        Rule subject(PseudoElementSelector instance) {
+            return instance.parent().get().parent().get();
+        }
 
-            if (prefixes.contains(Prefix.WEBKIT)) {
-                Rule rule = instance.parent().get().parent().get();
-                rule.copy(Prefix.WEBKIT, support);
+        @Override
+        Set<Prefix> required(PseudoElementSelector instance, SupportMatrix support) {
+            return support.prefixesForSelector("placeholder");
+        }
+
+        @Override
+        Multimap<Prefix, ? extends Statement> equivalents(PseudoElementSelector instance) {
+            Multimap<Prefix, Rule> map = LinkedListMultimap.create();
+
+            // find prefixed equivalents to ::placeholder
+            map.putAll(Equivalents.prefixes(subject(instance), instance, Equivalents.PSEUDO_ELEMENTS));
+
+            // find prefixed equivalents to ::input-placeholder
+            map.putAll(Equivalents.prefixes(subject(instance), new PseudoElementSelector("input-placeholder"),
+                Equivalents.PSEUDO_ELEMENTS));
+
+            // find prefixed equivalents to :placeholder
+            map.putAll(Equivalents.prefixes(subject(instance), new PseudoClassSelector("placeholder"),
+                Equivalents.PSEUDO_CLASSES));
+
+            // find prefixed equivalents to :input-placeholder
+            map.putAll(Equivalents.prefixes(subject(instance), new PseudoClassSelector("input-placeholder"),
+                Equivalents.PSEUDO_CLASSES));
+
+            // ...yuk
+
+            return map;
+        }
+
+        @Override
+        protected void copy(Statement original, Prefix prefix, SupportMatrix support) {
+            // make the copy as normal
+            super.copy(original, prefix, support);
+
+            // find the copy
+            Rule copy = original.previous().get().asRule().get();
+
+            // special cases-- we need to switch the names/and or to a pseudo class for certain vendors
+            for (Selector selector : copy.selectors()) {
+                Optional<PseudoElementSelector> placeholder = Selectors.findPseudoElementSelector(selector, "placeholder", false);
+                if (placeholder.isPresent()) {
+                    if (prefix == Prefix.WEBKIT) {
+                        placeholder.get().name("-webkit-input-placeholder");
+                    } else if (prefix == Prefix.MS) {
+                        placeholder.get().replaceWith(new PseudoClassSelector("-ms-input-placeholder"));
+                    }
+                }
             }
-            return true;
+
+            // firefox special case where version 19 and below uses a pseudo class
+            if (prefix == Prefix.MOZ && support.lowestSupportedVersion(Browser.FIREFOX) <= 19) {
+                Rule oldMozCopy = (Rule)copy.copy();
+                for (Selector selector : oldMozCopy.selectors()) {
+                    Optional<PseudoElementSelector> placeholder = Selectors.findPseudoElementSelector(selector, "placeholder", false);
+                    if (placeholder.isPresent()) {
+                        placeholder.get().replaceWith(new PseudoClassSelector("-moz-placeholder"));
+                    }
+                }
+                copy.prepend(oldMozCopy);
+            }
         }
     };
 }

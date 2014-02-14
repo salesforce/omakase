@@ -99,6 +99,18 @@ public class SelectorsTest {
     }
 
     @Test
+    public void asPseudoClassSelectorPresent() {
+        part = new PseudoClassSelector("selection");
+        assertThat(Selectors.asPseudoClassSelector(part).isPresent()).isTrue();
+    }
+
+    @Test
+    public void asPseudoClassSelectorAbsent() {
+        part = new ClassSelector("test");
+        assertThat(Selectors.asPseudoClassSelector(part).isPresent()).isFalse();
+    }
+
+    @Test
     public void hasClassSelectorTrue() {
         Selector selector = new Selector(new ClassSelector("test"));
         assertThat(Selectors.hasClassSelector(selector, "test")).isTrue();
@@ -183,6 +195,54 @@ public class SelectorsTest {
     }
 
     @Test
+    public void hasPseudoClassSelectorTrueExactFalseIsPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("-webkit-blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "blah", false)).isTrue();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorTrueExactFalseIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "blah", false)).isTrue();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorFalseExactFalseIsPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("-webkit-blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "bud", false)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorFalseExactFalseIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "bud", false)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorTrueExactTrueIsPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("-webkit-blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "blah", true)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorTrueExactTrueIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "blah", true)).isTrue();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorFalseExactTrueIsPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("-webkit-blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "bud", true)).isFalse();
+    }
+
+    @Test
+    public void hasPseudoClassSelectorFalseExactTrueIsNotPrefixed() {
+        Selector selector = new Selector(new PseudoClassSelector("blah"));
+        assertThat(Selectors.hasPseudoClassSelector(selector, "bud", true)).isFalse();
+    }
+
+    @Test
     public void findClassSelector() {
         ClassSelector s1 = new ClassSelector("test");
         ClassSelector s2 = new ClassSelector("findme");
@@ -207,7 +267,7 @@ public class SelectorsTest {
     }
 
     @Test
-    public void findPseudoSelectorExact() {
+        public void findPseudoSelectorExact() {
         PseudoElementSelector s1 = new PseudoElementSelector("-moz-findme");
         PseudoElementSelector s2 = new PseudoElementSelector("findme");
         Selector selector = new Selector(s1, s2);
@@ -220,6 +280,22 @@ public class SelectorsTest {
         PseudoElementSelector s2 = new PseudoElementSelector("findme");
         Selector selector = new Selector(s1, s2);
         assertThat(Selectors.findPseudoElementSelector(selector, "findme", false).get()).isSameAs(s1);
+    }
+
+    @Test
+    public void findPseudoClassExact() {
+        PseudoClassSelector s1 = new PseudoClassSelector("-moz-findme");
+        PseudoClassSelector s2 = new PseudoClassSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findPseudoClassSelector(selector, "findme", true).get()).isSameAs(s2);
+    }
+
+    @Test
+    public void findPseudoClassNotExact() {
+        PseudoClassSelector s1 = new PseudoClassSelector("-moz-findme");
+        PseudoClassSelector s2 = new PseudoClassSelector("findme");
+        Selector selector = new Selector(s1, s2);
+        assertThat(Selectors.findPseudoClassSelector(selector, "findme", false).get()).isSameAs(s1);
     }
 
     @Test

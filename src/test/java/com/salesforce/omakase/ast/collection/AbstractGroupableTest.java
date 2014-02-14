@@ -203,6 +203,13 @@ public class AbstractGroupableTest {
     }
 
     @Test
+    public void replaceWith() {
+        parent.collection.append(child1);
+        child1.replaceWith(child2);
+        assertThat(parent.collection).containsExactly(child2);
+    }
+
+    @Test
     public void groupNotPresent() {
         assertThat(child1.group().isPresent()).isFalse();
     }

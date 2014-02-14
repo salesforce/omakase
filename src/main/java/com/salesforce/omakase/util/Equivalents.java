@@ -27,11 +27,14 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Prefix;
 
 /**
+ * TESTME
+ * <p/>
  * Utilities for finding prefixed equivalents.
  *
  * @author nmcwilliams
@@ -39,132 +42,288 @@ import com.salesforce.omakase.data.Prefix;
 public final class Equivalents {
     private Equivalents() {}
 
-    public static <G, P extends Named> Multimap<Prefix, G> prefixes(
-        G groupable, P prefixed, EquivalentWalker<G, P> walker) {
-        Multimap<Prefix, G> multimap = null;
+    /**
+     * Finds all peers of the given unit that match the same name, but with a prefix.
+     * <p/>
+     * What constitutes a "peer", and how matches are determined is based on the given {@link EquivalentWalker}.
+     *
+     * @param peer
+     *     The peer that is unprefixed. Usually this is either the same unit as unprefixed, or a parent of unprefixed.
+     * @param unprefixed
+     *     The unprefixed unit.
+     * @param walker
+     *     Handles the specifics of finding the peers.
+     * @param <P>
+     *     (P)eer. The type of units that are considered peers and also the type of unit that will be returned in the map.
+     * @param <N>
+     *     (N)amed unit. The unit that has the unprefixed name. This could be the same type as {@link P}, or it could be a unit
+     *     that's a child of {@link P}.
+     *
+     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    public static <P, N extends Named> Multimap<Prefix, P> prefixes(P peer, N unprefixed, EquivalentWalker<P, N> walker) {
+        Multimap<Prefix, P> multimap = null;
 
-        G previous = walker.previous(groupable, prefixed);
+        P previous = walker.previous(peer);
         while (previous != null) {
-            P located = walker.locate(previous, prefixed);
+            N located = walker.locate(previous, unprefixed);
             if (located != null) {
                 if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                 multimap.put(Prefixes.parsePrefix(located.name()).get(), previous);
             }
-            previous = walker.previous(previous, prefixed);
+            previous = walker.previous(previous);
         }
 
-        // look for prefixed versions appearing after the unprefixed one
-        G next = walker.next(groupable, prefixed);
+        // look for unprefixed versions appearing after the unprefixed one
+        P next = walker.next(peer);
         while (next != null) {
-            P located = walker.locate(next, prefixed);
+            N located = walker.locate(next, unprefixed);
             if (located != null) {
                 if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                 multimap.put(Prefixes.parsePrefix(located.name()).get(), next);
             }
-            next = walker.next(next, prefixed);
+            next = walker.next(next);
         }
 
-        return multimap == null ? ImmutableMultimap.<Prefix, G>of() : multimap;
+        return multimap == null ? ImmutableMultimap.<Prefix, P>of() : multimap;
     }
 
-    public interface EquivalentWalker<G, P extends Named> {
-        P locate(G groupable, P prefixed);
+    /**
+     * Responsible for finding the next and previous "peers", and also for determining whether a "peer" is an prefixed
+     * equivalent.
+     *
+     * @param <P>
+     *     (P)eer. See {@link #prefixes(Object, Named, EquivalentWalker)} for more details.
+     * @param <N>
+     *     (N)amed unit. See {@link #prefixes(Object, Named, EquivalentWalker)} for more details.
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    public interface EquivalentWalker<P, N extends Named> {
+        /**
+         * Returns the named unit that is prefixed-equivalent within/of the given peer, or null if the given peer is not
+         * prefixed-equivalent.
+         *
+         * @param peer
+         *     Locate the prefixed unit within/of this peer.
+         * @param unprefixed
+         *     The original unprefixed unit.
+         *
+         * @return The prefixed-equivalent, or null.
+         */
+        N locate(P peer, N unprefixed);
 
-        G previous(G groupable, P prefixed);
+        /**
+         * Gets the previous unit, or null if none.
+         *
+         * @param peer
+         *     Find the unit previous to this one.
+         *
+         * @return The previous unit, or null if none.
+         */
+        P previous(P peer);
 
-        G next(G groupable, P prefixed);
+        /**
+         * Gets the next unit, or null if none.
+         *
+         * @param peer
+         *     Find the unit after this one.
+         *
+         * @return The next unit, or null if none.
+         */
+        P next(P peer);
     }
 
-    private abstract static class Base<G extends Groupable<?, G>, S extends Named> implements EquivalentWalker<G, S> {
+    /** base for walkers that group any Groupable together */
+    private abstract static class Base<G extends Groupable<?, G>, N extends Named> implements EquivalentWalker<G, N> {
         @Override
-        public G previous(G groupable, S prefixed) {
-            return groupable.previous().orNull();
+        public G previous(G peer) {
+            return peer.previous().orNull();
         }
 
         @Override
-        public G next(G groupable, S prefixed) {
-            return groupable.next().orNull();
+        public G next(G peer) {
+            return peer.next().orNull();
         }
     }
 
-    private abstract static class RuleBase<S extends Named> implements EquivalentWalker<Rule, S> {
+    /** base for walkers that group {@link Rule}s together */
+    private abstract static class RuleBase<N extends Named> implements EquivalentWalker<Rule, N> {
         @Override
-        public Rule previous(Rule groupable, S prefixed) {
-            Optional<Statement> previous = groupable.next();
+        public Rule previous(Rule peer) {
+            Optional<Statement> previous = peer.previous();
             if (!previous.isPresent() || !previous.get().asRule().isPresent()) return null;
             return previous.get().asRule().get();
         }
 
         @Override
-        public Rule next(Rule groupable, S prefixed) {
-            Optional<Statement> next = groupable.next();
+        public Rule next(Rule peer) {
+            Optional<Statement> next = peer.next();
             if (!next.isPresent() || !next.get().asRule().isPresent()) return null;
             return next.get().asRule().get();
         }
     }
 
-    private abstract static class AtRuleBase<S extends Named> implements EquivalentWalker<AtRule, S> {
+    /** base for walkers that group {@link AtRule}s together */
+    private abstract static class AtRuleBase<N extends Named> implements EquivalentWalker<AtRule, N> {
         @Override
-        public AtRule previous(AtRule groupable, S prefixed) {
-            Optional<Statement> previous = groupable.next();
+        public AtRule previous(AtRule peer) {
+            Optional<Statement> previous = peer.previous();
             if (!previous.isPresent() || !previous.get().asAtRule().isPresent()) return null;
             return previous.get().asAtRule().get();
         }
 
         @Override
-        public AtRule next(AtRule groupable, S prefixed) {
-            Optional<Statement> next = groupable.next();
+        public AtRule next(AtRule peer) {
+            Optional<Statement> next = peer.next();
             if (!next.isPresent() || !next.get().asAtRule().isPresent()) return null;
             return next.get().asAtRule().get();
         }
     }
 
+    /** private utility */
     private static boolean isPrefixed(Named named) {
         return named.name().charAt(0) == '-';
     }
 
+    /**
+     * Finds declarations with prefixed-equivalent property names.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     *  .example {
+     *      color: red;
+     *      -webkit-border-radius: 3px;
+     *      -moz-border-radius: 3px;
+     *      border-radius: 3px;
+     *  }
+     * </code></pre>
+     * <p/>
+     * When given the last declaration in the rule, this will locate both the {@code -webkit-border-radius} and the {@code
+     * -moz-border-radius} declarations.
+     */
     public static final EquivalentWalker<Declaration, Declaration> PROPERTIES = new Base<Declaration, Declaration>() {
         @Override
-        public Declaration locate(Declaration groupable, Declaration prefixed) {
+        public Declaration locate(Declaration peer, Declaration unprefixed) {
             // check if the declaration has the same property name, but prefixed
-            return groupable.isPrefixed() && groupable.isPropertyIgnorePrefix(prefixed.propertyName()) ? groupable : null;
+            return peer.isPrefixed() && peer.isPropertyIgnorePrefix(unprefixed.propertyName()) ? peer : null;
         }
     };
 
+    /**
+     * Finds declarations with prefixed-equivalent function values.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     *  .example {
+     *      width: -webkit-calc(2px - 1px);
+     *      color: red;
+     *      width: calc(2px - 1px);
+     *  }
+     * </code></pre>
+     * When given the last declaration in the rule and a functionName of "calc", this will locate the first declaration, which
+     * contains the {@code -webkit-calc} function.
+     */
     public static final EquivalentWalker<Declaration, FunctionValue> FUNCTION_VALUES = new Base<Declaration, FunctionValue>() {
         @Override
-        public FunctionValue locate(Declaration groupable, FunctionValue prefixed) {
+        public FunctionValue locate(Declaration peer, FunctionValue unprefixed) {
             // check if the declaration has the same property name as the prefixed one
-            if (groupable.isProperty(prefixed.declaration().get().propertyName())) {
+            if (peer.isProperty(unprefixed.declaration().get().propertyName())) {
                 // try to find a function value with the same name but prefixed
-                for (FunctionValue function : Values.filter(FunctionValue.class, groupable.propertyValue())) {
-                    if (isPrefixed(function) && function.name().endsWith(prefixed.name())) return function;
+                for (FunctionValue function : Values.filter(FunctionValue.class, peer.propertyValue())) {
+                    if (isPrefixed(function) && function.name().endsWith(unprefixed.name())) return function;
                 }
             }
             return null;
         }
     };
 
+    /**
+     * Finds at-rules with prefixed-equivalent names.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     * &#64;-webkit-keyframes {
+     *   from { top: 0%}
+     *   to { top: 100%}
+     * }
+     * <p/>
+     * &#64;keyframes {
+     *   from { top: 0%}
+     *   to { top: 100%}
+     * }
+     * <p/>
+     * &#64;-moz-keyframes {
+     *   from { top: 0%}
+     *   to { top: 100%}
+     * }
+     * </code></pre>
+     * When given the middle, unprefixed at-rule, the at-rules before and after it will be returned. Only immediately adjacent
+     * at-rules will be considered.
+     */
     public static final EquivalentWalker<AtRule, AtRule> AT_RULES = new AtRuleBase<AtRule>() {
         @Override
-        public AtRule locate(AtRule groupable, AtRule prefixed) {
-            if (isPrefixed(groupable)) {
-                Prefixes.PrefixPair pair = Prefixes.splitPrefix(groupable.name());
-                if (pair.unprefixed().equals(prefixed.name()) && pair.prefix().isPresent()) {
-                    return groupable;
+        public AtRule locate(AtRule peer, AtRule unprefixed) {
+            if (isPrefixed(peer)) {
+                Prefixes.PrefixPair pair = Prefixes.splitPrefix(peer.name());
+                if (pair.prefix().isPresent() && pair.unprefixed().equals(unprefixed.name())) {
+                    return peer;
                 }
             }
             return null;
         }
     };
 
+    /**
+     * Finds rules with prefixed-equivalent pseudo element selectors.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     * &#64;::-moz-selection {
+     *   color: red;
+     * }
+     * &#64;::selection {
+     *   color: red;
+     * }
+     * </code></pre>
+     * When given the second, unprefixed rule, the one before it will be returned. Only immediately adjacent rules will be
+     * considered.
+     */
     public static final EquivalentWalker<Rule, PseudoElementSelector> PSEUDO_ELEMENTS = new RuleBase<PseudoElementSelector>() {
         @Override
-        public PseudoElementSelector locate(Rule groupable, PseudoElementSelector prefixed) {
-            for (Selector selector : groupable.selectors()) {
-                Optional<PseudoElementSelector> f = Selectors.findPseudoElementSelector(selector, prefixed.name(), false);
-                if (f.isPresent() && isPrefixed(f.get())) {
-                    return f.get();
+        public PseudoElementSelector locate(Rule peer, PseudoElementSelector unprefixed) {
+            for (Selector selector : peer.selectors()) {
+                Optional<PseudoElementSelector> s = Selectors.findPseudoElementSelector(selector, unprefixed.name(), false);
+                if (s.isPresent() && isPrefixed(s.get())) {
+                    return s.get();
+                }
+            }
+            return null;
+        }
+    };
+
+    /**
+     * Finds rules with prefixed-equivalent pseudo class selectors.
+     * <p/>
+     * For example, given the following css:
+     * <pre><code>
+     * &#64;:blah {
+     *   color: red;
+     * }
+     * &#64;:blah {
+     *   color: red;
+     * }
+     * </code></pre>
+     * When given the second, unprefixed rule, the one before it will be returned. Only immediately adjacent rules will be
+     * considered.
+     */
+    public static final EquivalentWalker<Rule, PseudoClassSelector> PSEUDO_CLASSES = new RuleBase<PseudoClassSelector>() {
+        @Override
+        public PseudoClassSelector locate(Rule peer, PseudoClassSelector unprefixed) {
+            for (Selector selector : peer.selectors()) {
+                Optional<PseudoClassSelector> s = Selectors.findPseudoClassSelector(selector, unprefixed.name(), false);
+                if (s.isPresent() && isPrefixed(s.get())) {
+                    return s.get();
                 }
             }
             return null;

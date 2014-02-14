@@ -746,19 +746,62 @@ public class PrefixerUnitTargetedTest {
         assertThat(process(original, columnsSetup())).isEqualTo(expected);
     }
 
+    private Prefixer placeholderSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().all(Browser.FIREFOX);
+        prefixer.support().all(Browser.CHROME);
+        prefixer.support().all(Browser.IE);
+        return prefixer;
+    }
+
     @Test
     public void placeholder() {
         String original = "input::placeholder {color:red}";
+
         String expected = "input::-webkit-input-placeholder {color:red}\n" +
             "input:-moz-placeholder {color:red}\n" +
             "input::-moz-placeholder {color:red}\n" +
             "input:-ms-input-placeholder {color:red}\n" +
             "input::placeholder {color:red}";
 
-        Prefixer prefixer = Prefixer.customBrowserSupport();
-        prefixer.support().all(Browser.FIREFOX);
-        prefixer.support().all(Browser.CHROME);
-        prefixer.support().all(Browser.IE);
+        assertThat(process(original, placeholderSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void placeholderExistingPresentDontRemove() {
+        String original = "input::-webkit-input-placeholder {color:red}\n" +
+            "input:-moz-placeholder {color:red}\n" +
+            "input::-moz-placeholder {color:red}\n" +
+            "input::placeholder {color:red}\n" +
+            "input:-ms-input-placeholder {color:red}";
+
+        String expected = "input::-webkit-input-placeholder {color:red}\n" +
+            "input:-moz-placeholder {color:red}\n" +
+            "input::-moz-placeholder {color:red}\n" +
+            "input::placeholder {color:red}\n" +
+            "input:-ms-input-placeholder {color:red}";
+
+        Prefixer prefixer = placeholderSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(false);
+
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void placeholderExistingPresentRearrangeAndAdd() {
+        String original = "input::-moz-placeholder {color:red}\n" +
+            "input::placeholder {color:red}\n" +
+            "input:-ms-input-placeholder {color:red}";
+
+        String expected = "input::-webkit-input-placeholder {color:red}\n" +
+            "input::-moz-placeholder {color:red}\n" +
+            "input:-ms-input-placeholder {color:red}\n" +
+            "input::placeholder {color:red}";
+
+        Prefixer prefixer = placeholderSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(true);
 
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }

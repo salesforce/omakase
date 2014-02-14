@@ -59,11 +59,11 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
             Collection<? extends G> matches = equivalents.get(prefix);
             if (!matches.isEmpty()) {
                 if (rearrange) {
-                   Actions.<G>moveBefore().apply(subject, matches);
+                    Actions.<G>moveBefore().apply(subject, matches);
                 }
                 equivalents.removeAll(prefix);
             } else {
-                subject.prepend(subject.copy(prefix, support));
+                copy(subject, prefix, support);
             }
         }
 
@@ -77,6 +77,11 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
         }
 
         return !required.isEmpty();
+    }
+
+    /** makes a copy of the instance with the given prefix */
+    protected void copy(G original, Prefix prefix, SupportMatrix support) {
+        original.prepend(original.copy(prefix, support));
     }
 
     /** should return false if the instance should be skipped */
