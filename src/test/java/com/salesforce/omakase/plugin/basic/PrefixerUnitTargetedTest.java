@@ -23,7 +23,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Targeted functional tests for {@link Prefixer}.
@@ -744,5 +744,22 @@ public class PrefixerUnitTargetedTest {
         String original = ".test {column-fill:balance}";
         String expected = ".test {-moz-column-fill:balance; column-fill:balance}";
         assertThat(process(original, columnsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void placeholder() {
+        String original = "input::placeholder {color:red}";
+        String expected = "input::-webkit-input-placeholder {color:red}\n" +
+            "input:-moz-placeholder {color:red}\n" +
+            "input::-moz-placeholder {color:red}\n" +
+            "input:-ms-input-placeholder {color:red}\n" +
+            "input::placeholder {color:red}";
+
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().all(Browser.FIREFOX);
+        prefixer.support().all(Browser.CHROME);
+        prefixer.support().all(Browser.IE);
+
+        assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 }

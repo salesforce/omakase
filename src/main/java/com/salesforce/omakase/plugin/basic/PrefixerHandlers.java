@@ -72,7 +72,7 @@ final class PrefixerHandlers {
 
         @Override
         Multimap<Prefix, Declaration> equivalents(Declaration instance) {
-            return Equivalents.prefixedDeclarations(instance);
+            return Equivalents.prefixes(subject(instance), instance, Equivalents.PROPERTIES);
         }
     };
 
@@ -96,7 +96,7 @@ final class PrefixerHandlers {
 
         @Override
         Multimap<Prefix, Declaration> equivalents(FunctionValue instance) {
-            return Equivalents.prefixedFunctions(subject(instance), instance.name());
+            return Equivalents.prefixes(subject(instance), instance, Equivalents.FUNCTION_VALUES);
         }
     };
 
@@ -119,13 +119,12 @@ final class PrefixerHandlers {
 
         @Override
         Multimap<Prefix, AtRule> equivalents(AtRule instance) {
-            return Equivalents.prefixedAtRules(instance);
+            return Equivalents.prefixes(subject(instance), instance, Equivalents.AT_RULES);
         }
     };
 
     /** handles pseudo element selector prefixes */
     static final PrefixerHandler<PseudoElementSelector> PSEUDO = new PrefixerHandlerStandard<PseudoElementSelector, Statement>() {
-
         @Override
         boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
             return !instance.name().startsWith("-") && PrefixUtil.isPrefixableSelector(instance.name());
@@ -143,11 +142,11 @@ final class PrefixerHandlers {
 
         @Override
         Multimap<Prefix, Rule> equivalents(PseudoElementSelector instance) {
-            return Equivalents.prefixedPseudoElementSelectors(instance);
+            return Equivalents.prefixes(subject(instance), instance, Equivalents.PSEUDO_ELEMENTS);
         }
     };
 
-    /** handles special case where transition is not prefixed by an inner keyword must be prefixed */
+    /** handles special case where transition is not prefixed but an inner keyword must be prefixed */
     static final PrefixerHandler<Declaration> TRANSITION = new PrefixerHandler<Declaration>() {
         @Override
         public boolean handle(Declaration instance, boolean rearrange, boolean prune, SupportMatrix support) {
@@ -173,6 +172,25 @@ final class PrefixerHandlers {
                 }
             }
             return false;
+        }
+    };
+
+    /** handles the very special needs case of placeholder */
+    static final PrefixerHandler<PseudoElementSelector> PLACEHOLDER = new PrefixerHandler<PseudoElementSelector>() {
+        private static final String NAME = "placeholder";
+
+        @Override
+        public boolean handle(PseudoElementSelector instance, boolean rearrange, boolean prune, SupportMatrix support) {
+            if (!instance.name().equals(NAME)) return false;
+
+            Set<Prefix> prefixes = support.prefixesForSelector(NAME);
+            if (prefixes.isEmpty()) return false;
+
+            if (prefixes.contains(Prefix.WEBKIT)) {
+                Rule rule = instance.parent().get().parent().get();
+                rule.copy(Prefix.WEBKIT, support);
+            }
+            return true;
         }
     };
 }

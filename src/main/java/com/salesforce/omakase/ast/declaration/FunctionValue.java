@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
@@ -36,11 +37,5 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "general interface for function terms", broadcasted = REFINED_DECLARATION)
-public interface FunctionValue extends Term {
-    /**
-     * Gets the name of the function.
-     *
-     * @return The name of the function.
-     */
-    String name();
+public interface FunctionValue extends Term, Named {
 }

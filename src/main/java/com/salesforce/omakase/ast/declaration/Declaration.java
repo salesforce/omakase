@@ -18,6 +18,7 @@ package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
@@ -51,7 +52,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration> {
+public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration>, Named {
     private final transient GenericRefiner refiner;
     private transient Broadcaster broadcaster;
 
@@ -309,6 +310,11 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      */
     public boolean isPrefixed() {
         return propertyName().isPrefixed();
+    }
+
+    @Override
+    public String name() {
+        return propertyName().name();
     }
 
     /**

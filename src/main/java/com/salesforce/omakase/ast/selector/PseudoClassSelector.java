@@ -18,6 +18,7 @@ package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -42,7 +43,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "pseudo class selector segment", broadcasted = REFINED_SELECTOR)
-public final class PseudoClassSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class PseudoClassSelector extends AbstractSelectorPart implements SimpleSelector, Named {
     private String name;
     private Optional<String> args = Optional.absent();
 
@@ -105,11 +106,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
         return this;
     }
 
-    /**
-     * Gets the selector name (e.g., "hover").
-     *
-     * @return The selector name.
-     */
+    @Override
     public String name() {
         return name;
     }

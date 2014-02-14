@@ -20,16 +20,16 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Prefix;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Utilities for finding prefixed equivalents.
@@ -39,257 +39,135 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Equivalents {
     private Equivalents() {}
 
-    /**
-     * TESTME
-     * <p/>
-     * Finds all {@link Declaration}s within the same rule that have the same property name as the given declaration and also have
-     * a vendor prefix.
-     * <p/>
-     * For example, given the following css:
-     * <pre><code>
-     *  .example {
-     *      color: red;
-     *      -webkit-border-radius: 3px;
-     *      -moz-border-radius: 3px;
-     *      border-radius: 3px;
-     *  }
-     * </code></pre>
-     * <p/>
-     * When given the last declaration in the rule, this will return both the {@code -webkit-border-radius} and the {@code
-     * -moz-border-radius} declarations.
-     *
-     * @param unprefixed
-     *     Find other declarations that are prefixed equivalents of this one.
-     *
-     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
-     *
-     * @throws IllegalArgumentException
-     *     If the given declaration is detached or is prefixed itself.
-     */
-    public static Multimap<Prefix, Declaration> prefixedDeclarations(Declaration unprefixed) {
-        checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
+    public static <G, P extends Named> Multimap<Prefix, G> prefixes(
+        G groupable, P prefixed, EquivalentWalker<G, P> walker) {
+        Multimap<Prefix, G> multimap = null;
 
-        Multimap<Prefix, Declaration> multimap = null;
-
-        for (Declaration declaration : unprefixed.group().get()) {
-            if (declaration.isPrefixed() && declaration.isPropertyIgnorePrefix(unprefixed.propertyName())) {
+        G previous = walker.previous(groupable, prefixed);
+        while (previous != null) {
+            P located = walker.locate(previous, prefixed);
+            if (located != null) {
                 if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                multimap.put(declaration.propertyName().prefix().get(), declaration);
+                multimap.put(Prefixes.parsePrefix(located.name()).get(), previous);
             }
-        }
-
-        return multimap == null ? ImmutableMultimap.<Prefix, Declaration>of() : multimap;
-    }
-
-    /**
-     * TESTME
-     * <p/>
-     * Finds all {@link Declaration}s within the same rule that contains a prefixed version of the given function name. The
-     * property name of the declaration must be the same.
-     * <p/>
-     * For example, given the following css:
-     * <pre><code>
-     *  .example {
-     *      width: -webkit-calc(2px - 1px);
-     *      color: red;
-     *      width: calc(2px - 1px);
-     *  }
-     * </code></pre>
-     * When given the last declaration in the rule and a functionName of "calc", this will return the first declaration, which
-     * contains the {@code -webkit-calc} function.
-     *
-     * @param unprefixed
-     *     Match against this {@link Declaration}.
-     * @param functionName
-     *     The name of the function, e.g., "linear-gradient".
-     *
-     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
-     *
-     * @throws IllegalArgumentException
-     *     If the given declaration is detached or is prefixed itself.
-     */
-    public static Multimap<Prefix, Declaration> prefixedFunctions(Declaration unprefixed, String functionName) {
-        checkArgument(!unprefixed.isPrefixed(), "declaration must not have a prefixed property");
-
-        Multimap<Prefix, Declaration> multimap = null;
-
-        for (Declaration declaration : unprefixed.group().get()) {
-            // property must have the same name
-            if (declaration.isProperty(unprefixed.propertyName())) {
-                for (FunctionValue function : Values.filter(FunctionValue.class, declaration.propertyValue())) {
-                    String name = function.name();
-                    if (name.startsWith("-") && name.endsWith(functionName)) {
-                        Optional<Prefix> prefix = Prefixes.parsePrefix(name);
-                        if (prefix.isPresent()) {
-                            if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                            multimap.put(prefix.get(), declaration);
-                        }
-                    }
-                }
-            }
-        } //pyramid of dooooom
-
-        return multimap == null ? ImmutableMultimap.<Prefix, Declaration>of() : multimap;
-    }
-
-    /**
-     * TESTME
-     * <p/>
-     * Finds all {@link AtRule}s within the same sheet/group that have the same at-rule name as the given at-rule and also have a
-     * vendor prefix.
-     * <p/>
-     * Only at-rules contiguous to the one given will be considered.
-     * <p/>
-     * For example, given the following css:
-     * <pre><code>
-     * &#64;-webkit-keyframes {
-     *   from { top: 0%}
-     *   to { top: 100%}
-     * }
-     * <p/>
-     * &#64;keyframes {
-     *   from { top: 0%}
-     *   to { top: 100%}
-     * }
-     * <p/>
-     * &#64;-moz-keyframes {
-     *   from { top: 0%}
-     *   to { top: 100%}
-     * }
-     * </code></pre>
-     * When given the middle, unprefixed at-rule, the at-rules before and after it will be returned.
-     *
-     * @param unprefixed
-     *     Match against this {@link AtRule}.
-     *
-     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
-     *
-     * @throws IllegalArgumentException
-     *     If the given at-rule is detached or is prefixed itself.
-     */
-    public static Multimap<Prefix, AtRule> prefixedAtRules(AtRule unprefixed) {
-        checkArgument(!unprefixed.name().startsWith("-"), "at-rule must not have a prefixed property");
-
-        Multimap<Prefix, AtRule> multimap = null;
-
-        // look for prefixed versions appearing before the unprefixed one
-        Optional<Statement> previous = unprefixed.previous();
-
-        while (previous.isPresent() && previous.get().asAtRule().isPresent()) {
-            AtRule atRule = previous.get().asAtRule().get();
-            if (atRule.name().startsWith("-")) {
-                Prefixes.PrefixPair pair = Prefixes.splitPrefix(atRule.name());
-                if (pair.unprefixed().equals(unprefixed.name()) && pair.prefix().isPresent()) {
-                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                    multimap.put(pair.prefix().get(), atRule);
-                    previous = atRule.previous();
-                }
-            } else {
-                previous = Optional.absent();
-            }
+            previous = walker.previous(previous, prefixed);
         }
 
         // look for prefixed versions appearing after the unprefixed one
-        Optional<Statement> next = unprefixed.next();
-
-        while (next.isPresent() && next.get().asAtRule().isPresent()) {
-            AtRule atRule = next.get().asAtRule().get();
-            if (atRule.name().startsWith("-")) {
-                Prefixes.PrefixPair pair = Prefixes.splitPrefix(atRule.name());
-                if (pair.unprefixed().equals(unprefixed.name()) && pair.prefix().isPresent()) {
-                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                    multimap.put(pair.prefix().get(), atRule);
-                    next = atRule.next();
-                    continue;
-                }
+        G next = walker.next(groupable, prefixed);
+        while (next != null) {
+            P located = walker.locate(next, prefixed);
+            if (located != null) {
+                if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
+                multimap.put(Prefixes.parsePrefix(located.name()).get(), next);
             }
-            next = Optional.absent();
+            next = walker.next(next, prefixed);
         }
 
-        return multimap == null ? ImmutableMultimap.<Prefix, AtRule>of() : multimap;
+        return multimap == null ? ImmutableMultimap.<Prefix, G>of() : multimap;
     }
 
-    /**
-     * TESTME
-     * <p/>
-     * Finds all {@link Rule}s within the same sheet/group that have the same selector name as the one given and also have a
-     * vendor prefix.
-     * <p/>
-     * Only rules contiguous to the one that contains the given selector will be considered.
-     * <p/>
-     * For example, given the following css:
-     * <pre><code>
-     * &#64;::-moz-selection {
-     *   color: red;
-     * }
-     * &#64;::selection {
-     *   color: red;
-     * }
-     * </code></pre>
-     * When given the second, unprefixed rule, the one before it will be returned.
-     *
-     * @param unprefixed
-     *     Match against this {@link PseudoElementSelector}.
-     *
-     * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
-     *
-     * @throws IllegalArgumentException
-     *     If the given selector is detached or is prefixed itself, or if the selector's rule is detached.
-     */
-    public static Multimap<Prefix, Rule> prefixedPseudoElementSelectors(PseudoElementSelector unprefixed) {
-        checkArgument(!unprefixed.name().startsWith("-"), "selector must not have a prefixed property");
+    public interface EquivalentWalker<G, P extends Named> {
+        P locate(G groupable, P prefixed);
 
-        Multimap<Prefix, Rule> multimap = null;
+        G previous(G groupable, P prefixed);
 
-        String expectedName = unprefixed.name();
-        Rule parentRule = unprefixed.parentSelector().get().parent().get();
-
-        // look for prefixed versions appearing before the unprefixed one
-        Optional<Statement> previous = parentRule.previous();
-
-        while (previous.isPresent() && previous.get().asRule().isPresent()) {
-            Rule rule = previous.get().asRule().get();
-            boolean found = false;
-
-            for (Selector selector : rule.selectors()) {
-                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, false);
-                if (pseudo.isPresent() && pseudo.get().name().charAt(0) == '-') {
-                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                    multimap.put(Prefixes.parsePrefix(pseudo.get().name()).get(), rule);
-                    previous = rule.previous();
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                previous = Optional.absent();
-            }
-        }
-
-        // look for prefixed versions appearing after the unprefixed one
-        Optional<Statement> next = parentRule.next();
-
-        while (next.isPresent() && next.get().asRule().isPresent()) {
-            Rule rule = next.get().asRule().get();
-            boolean found = false;
-
-            for (Selector selector : rule.selectors()) {
-                Optional<PseudoElementSelector> pseudo = Selectors.findPseudoElementSelector(selector, expectedName, false);
-                if (pseudo.isPresent() && pseudo.get().name().charAt(0) == '-') {
-                    if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
-                    multimap.put(Prefixes.parsePrefix(pseudo.get().name()).get(), rule);
-                    next = rule.next();
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                next = Optional.absent();
-            }
-        }
-
-        return multimap == null ? ImmutableMultimap.<Prefix, Rule>of() : multimap;
+        G next(G groupable, P prefixed);
     }
+
+    private abstract static class Base<G extends Groupable<?, G>, S extends Named> implements EquivalentWalker<G, S> {
+        @Override
+        public G previous(G groupable, S prefixed) {
+            return groupable.previous().orNull();
+        }
+
+        @Override
+        public G next(G groupable, S prefixed) {
+            return groupable.next().orNull();
+        }
+    }
+
+    private abstract static class RuleBase<S extends Named> implements EquivalentWalker<Rule, S> {
+        @Override
+        public Rule previous(Rule groupable, S prefixed) {
+            Optional<Statement> previous = groupable.next();
+            if (!previous.isPresent() || !previous.get().asRule().isPresent()) return null;
+            return previous.get().asRule().get();
+        }
+
+        @Override
+        public Rule next(Rule groupable, S prefixed) {
+            Optional<Statement> next = groupable.next();
+            if (!next.isPresent() || !next.get().asRule().isPresent()) return null;
+            return next.get().asRule().get();
+        }
+    }
+
+    private abstract static class AtRuleBase<S extends Named> implements EquivalentWalker<AtRule, S> {
+        @Override
+        public AtRule previous(AtRule groupable, S prefixed) {
+            Optional<Statement> previous = groupable.next();
+            if (!previous.isPresent() || !previous.get().asAtRule().isPresent()) return null;
+            return previous.get().asAtRule().get();
+        }
+
+        @Override
+        public AtRule next(AtRule groupable, S prefixed) {
+            Optional<Statement> next = groupable.next();
+            if (!next.isPresent() || !next.get().asAtRule().isPresent()) return null;
+            return next.get().asAtRule().get();
+        }
+    }
+
+    private static boolean isPrefixed(Named named) {
+        return named.name().charAt(0) == '-';
+    }
+
+    public static final EquivalentWalker<Declaration, Declaration> PROPERTIES = new Base<Declaration, Declaration>() {
+        @Override
+        public Declaration locate(Declaration groupable, Declaration prefixed) {
+            // check if the declaration has the same property name, but prefixed
+            return groupable.isPrefixed() && groupable.isPropertyIgnorePrefix(prefixed.propertyName()) ? groupable : null;
+        }
+    };
+
+    public static final EquivalentWalker<Declaration, FunctionValue> FUNCTION_VALUES = new Base<Declaration, FunctionValue>() {
+        @Override
+        public FunctionValue locate(Declaration groupable, FunctionValue prefixed) {
+            // check if the declaration has the same property name as the prefixed one
+            if (groupable.isProperty(prefixed.declaration().get().propertyName())) {
+                // try to find a function value with the same name but prefixed
+                for (FunctionValue function : Values.filter(FunctionValue.class, groupable.propertyValue())) {
+                    if (isPrefixed(function) && function.name().endsWith(prefixed.name())) return function;
+                }
+            }
+            return null;
+        }
+    };
+
+    public static final EquivalentWalker<AtRule, AtRule> AT_RULES = new AtRuleBase<AtRule>() {
+        @Override
+        public AtRule locate(AtRule groupable, AtRule prefixed) {
+            if (isPrefixed(groupable)) {
+                Prefixes.PrefixPair pair = Prefixes.splitPrefix(groupable.name());
+                if (pair.unprefixed().equals(prefixed.name()) && pair.prefix().isPresent()) {
+                    return groupable;
+                }
+            }
+            return null;
+        }
+    };
+
+    public static final EquivalentWalker<Rule, PseudoElementSelector> PSEUDO_ELEMENTS = new RuleBase<PseudoElementSelector>() {
+        @Override
+        public PseudoElementSelector locate(Rule groupable, PseudoElementSelector prefixed) {
+            for (Selector selector : groupable.selectors()) {
+                Optional<PseudoElementSelector> f = Selectors.findPseudoElementSelector(selector, prefixed.name(), false);
+                if (f.isPresent() && isPrefixed(f.get())) {
+                    return f.get();
+                }
+            }
+            return null;
+        }
+    };
 }

@@ -291,7 +291,7 @@ Here is how you would register the `Prefixer` plugin using the default browser l
 
 ```java
 Prefixer prefixer = Prefixer.defaultBrowserSupport();
-Omakase.source(input).add(prefixer).process();
+Omakase.source(input).request(prefixer).process();
 ```
 
 The default browser version support includes the last four versions of iOS Safari, last two versions of Chrome and Firefox, last three of Android, IE 7+, and the latest versions of Safari, IE Mobile and Opera Mini.
@@ -299,12 +299,12 @@ The default browser version support includes the last four versions of iOS Safar
 You can specify an alternative set of browsers to support as well:
 
 ```java
-Prefixer prefixer = Prefixer.customBrowserSupport();
-prefixer.support().all(Browser.IE);
-prefixer.support().latest(Browser.FIREFOX);
-prefixer.support().browser(Browser.SAFARI, 6.1);
-prefixer.support().last(Browser.SAFARI, 2);
-Omakase.source(input).add(prefixer).process();
+Prefixer prefixing = Prefixer.customBrowserSupport();
+prefixing.support().all(Browser.IE);
+prefixing.support().latest(Browser.FIREFOX);
+prefixing.support().browser(Browser.SAFARI, 6.1);
+prefixing.support().last(Browser.SAFARI, 2);
+Omakase.source(input).request(prefixing).process();
 ```
 
 This is cumulative, so you can also add extra support to the defaults instead.
@@ -430,6 +430,20 @@ Here's a list of what's currently supported:
     selection    
 
 You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the "Scripts" section below.
+
+#### PrefixPruner
+
+TODO explain this more.
+
+Pending further explanation, it's usually a good idea to add the `PrefixPruner` plugin after the `Prefixer` plugin:
+
+```java
+Prefixer prefixer = Prefixer.defaultBrowserSupport();
+PrefixPruner pruning = PrefixPruner.prunePrefixedAtRules;
+Omakase.source(input).request(prefixer).request(pruning).process();
+```
+
+This will remove prefixed declarations inside of prefixed at rules, where the declaration's prefix doesn't match the at-rules prefix.
 
 ### Creating custom plugins
 
@@ -748,7 +762,7 @@ The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily 
 You can alternatively specify your own `ErrorManager` implementation, for example to store all errors and present them in full at once at the end of parsing. To do so, create a class that implements the `ErrorManager` interface and provide it during parser setup:
 
 ```java
-Omakase.source(input).add(myCustomErrorManager).process();
+Omakase.source(input).request(myCustomErrorManager).process();
 ```
 
 ### Custom writers

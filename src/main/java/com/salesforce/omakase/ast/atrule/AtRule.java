@@ -18,6 +18,7 @@ package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
@@ -52,7 +53,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule> {
+public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule>,
+    Named {
     private final transient GenericRefiner refiner;
     private final String name;
 
@@ -116,11 +118,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         this.refiner = null;
     }
 
-    /**
-     * Gets the name of this {@link AtRule}.
-     *
-     * @return The name.
-     */
+    @Override
     public String name() {
         return name;
     }

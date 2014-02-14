@@ -18,6 +18,7 @@ package com.salesforce.omakase.ast.selector;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -40,7 +41,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
  */
 @Subscribable
 @Description(value = "pseudo element selector segment", broadcasted = REFINED_SELECTOR)
-public final class PseudoElementSelector extends AbstractSelectorPart implements SimpleSelector {
+public final class PseudoElementSelector extends AbstractSelectorPart implements SimpleSelector, Named {
     /** these can use pseudo class syntax but are actually pseudo elements */
     public static final Set<String> POSERS = Sets.newHashSet("first-line", "first-letter", "before", "after");
 
@@ -103,11 +104,7 @@ public final class PseudoElementSelector extends AbstractSelectorPart implements
         return this;
     }
 
-    /**
-     * Gets the selector name (e.g., "before").
-     *
-     * @return The selector name.
-     */
+    @Override
     public String name() {
         return name;
     }

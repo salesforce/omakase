@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
@@ -30,4 +31,6 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "a single segment of a property value", broadcasted = REFINED_DECLARATION)
-public interface Term extends PropertyValueMember {}
+public interface Term extends PropertyValueMember {
+    Optional<Declaration> declaration();
+}

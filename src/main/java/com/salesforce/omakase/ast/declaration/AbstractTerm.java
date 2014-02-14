@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
@@ -43,5 +44,10 @@ public abstract class AbstractTerm extends AbstractGroupable<PropertyValue, Prop
     @Override
     protected Term self() {
         return this;
+    }
+
+    @Override
+    public Optional<Declaration> declaration() {
+        return parent().isPresent() ? parent().get().declaration() : Optional.<Declaration>absent();
     }
 }

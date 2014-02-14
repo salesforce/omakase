@@ -191,9 +191,14 @@ public final class Prefixer implements DependentPlugin {
      *     The declaration instance.
      */
     @Rework
+    @SuppressWarnings("UnusedAssignment")
     public void declaration(Declaration declaration) {
-        if (!PROPERTY.handle(declaration, rearrange, prune, support)) {
-            TRANSITION.handle(declaration, rearrange, prune, support);
+        boolean handled = false;
+
+        handled = PROPERTY.handle(declaration, rearrange, prune, support);
+
+        if (!handled) {
+            handled = TRANSITION.handle(declaration, rearrange, prune, support);
         }
     }
 
@@ -226,8 +231,15 @@ public final class Prefixer implements DependentPlugin {
      *     The selector instance.
      */
     @Rework
+    @SuppressWarnings("UnusedAssignment")
     public void pseudoElementSelector(PseudoElementSelector selector) {
-        PSEUDO.handle(selector, rearrange, prune, support);
+        boolean handled = false;
+
+        handled = PLACEHOLDER.handle(selector, rearrange, prune, support);
+
+        if (!handled) {
+            handled = PSEUDO.handle(selector, rearrange, prune, support);
+        }
     }
 
     /**

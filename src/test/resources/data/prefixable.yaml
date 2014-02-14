@@ -107,6 +107,8 @@ functions:
 selectors:
   css-selection:
     - selection
+  css-placeholder:
+    - placeholder
 
 # prefixed at-rules
 at-rules:
