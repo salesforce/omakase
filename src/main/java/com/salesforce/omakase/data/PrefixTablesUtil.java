@@ -24,14 +24,14 @@ import com.google.common.collect.Table;
  *
  * @author nmcwilliams
  */
-public final class PrefixUtil {
+public final class PrefixTablesUtil {
     // static caches, based on prefix tables data being immutable
     private static final Table<Property, Browser, Double> PROPERTY_CACHE = HashBasedTable.create();
     private static final Table<String, Browser, Double> FUNCTION_CACHE = HashBasedTable.create();
     private static final Table<String, Browser, Double> AT_RULE_CACHE = HashBasedTable.create();
     private static final Table<String, Browser, Double> SELECTOR_CACHE = HashBasedTable.create();
 
-    private PrefixUtil() {}
+    private PrefixTablesUtil() {}
 
     /**
      * Gets whether prefix info exists for the given {@link Property}.

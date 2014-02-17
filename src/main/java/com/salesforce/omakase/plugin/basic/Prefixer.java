@@ -198,7 +198,7 @@ public final class Prefixer implements DependentPlugin {
         handled = PROPERTY.handle(declaration, rearrange, prune, support);
 
         if (!handled) {
-            handled = TRANSITION.handle(declaration, rearrange, prune, support);
+            handled = TRANSITION_VALUE.handle(declaration, rearrange, prune, support);
         }
     }
 

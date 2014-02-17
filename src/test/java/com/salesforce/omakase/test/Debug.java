@@ -18,6 +18,7 @@ package com.salesforce.omakase.test;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -26,8 +27,9 @@ import java.io.IOException;
 /** Temp test for debugging. */
 @SuppressWarnings("JavaDoc")
 public final class Debug {
-    public static final String SRC = "a:hover::before .class:before {\n" +
-
+    public static final String SRC = ".THIS {\n" +
+        "  transition: transform 250ms;\n" +
+        "  transform: translate3d(0,0,0);\n" +
         "}";
 
     private Debug() {}
@@ -35,11 +37,14 @@ public final class Debug {
     public static void main(String[] args) throws IOException {
         StyleWriter writer = StyleWriter.verbose();
 
+        Prefixer prefixer = Prefixer.defaultBrowserSupport();
+
         Omakase.source(SRC)
             .request(writer)
-            // .request(new EchoLogger())
             .request(new StandardValidation())
+            .request(prefixer)
             .request(new Plugin() {
+
             })
             .process();
 

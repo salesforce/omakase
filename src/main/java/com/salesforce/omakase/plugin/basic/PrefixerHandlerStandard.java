@@ -85,14 +85,14 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
     }
 
     /** should return false if the instance should be skipped */
-    abstract boolean applicable(T instance, SupportMatrix support);
+    protected abstract boolean applicable(T instance, SupportMatrix support);
 
     /** should return the main subject (prepend, append, and move stuff around this) */
-    abstract G subject(T instance);
+    protected abstract G subject(T instance);
 
     /** should return the set of required {@link Prefix}es for the given instance */
-    abstract Set<Prefix> required(T instance, SupportMatrix support);
+    protected abstract Set<Prefix> required(T instance, SupportMatrix support);
 
     /** should return the set of related objects that may be existing prefixed equivalents for rearrangement or removal */
-    abstract Multimap<Prefix, ? extends G> equivalents(T instance);
+    protected abstract Multimap<Prefix, ? extends G> equivalents(T instance);
 }

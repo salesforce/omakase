@@ -23,7 +23,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.PrefixUtil;
+import com.salesforce.omakase.data.PrefixTablesUtil;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.util.As;
@@ -235,7 +235,7 @@ public final class SupportMatrix {
             Set<Prefix> required = Sets.newHashSet();
 
             for (Browser browser : supported.keySet()) {
-                Double lastPrefixed = PrefixUtil.lastVersionPropertyIsPrefixed(property, browser);
+                Double lastPrefixed = PrefixTablesUtil.lastVersionPropertyIsPrefixed(property, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
 
@@ -262,7 +262,7 @@ public final class SupportMatrix {
             Set<Prefix> required = Sets.newHashSet();
 
             for (Browser browser : supported.keySet()) {
-                Double lastPrefixed = PrefixUtil.lastVersionFunctionIsPrefixed(name, browser);
+                Double lastPrefixed = PrefixTablesUtil.lastVersionFunctionIsPrefixed(name, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
 
@@ -288,7 +288,7 @@ public final class SupportMatrix {
             Set<Prefix> required = Sets.newHashSet();
 
             for (Browser browser : supported.keySet()) {
-                Double lastPrefixed = PrefixUtil.lastVersionAtRuleIsPrefixed(name, browser);
+                Double lastPrefixed = PrefixTablesUtil.lastVersionAtRuleIsPrefixed(name, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
 
@@ -314,7 +314,7 @@ public final class SupportMatrix {
             Set<Prefix> required = Sets.newHashSet();
 
             for (Browser browser : supported.keySet()) {
-                Double lastPrefixed = PrefixUtil.lastVersionSelectorIsPrefixed(name, browser);
+                Double lastPrefixed = PrefixTablesUtil.lastVersionSelectorIsPrefixed(name, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
 
@@ -340,7 +340,7 @@ public final class SupportMatrix {
      */
 
     public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
-        return PrefixUtil.isPrefixableProperty(property) && prefixesForProperty(property).contains(prefix);
+        return PrefixTablesUtil.isPrefixableProperty(property) && prefixesForProperty(property).contains(prefix);
     }
 
     /**
@@ -355,7 +355,7 @@ public final class SupportMatrix {
      * @return True if the function name requires the given prefix.
      */
     public boolean requiresPrefixForFunction(Prefix prefix, String function) {
-        return PrefixUtil.isPrefixableFunction(function) && prefixesForFunction(function).contains(prefix);
+        return PrefixTablesUtil.isPrefixableFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
     /**
@@ -369,7 +369,7 @@ public final class SupportMatrix {
      * @return True if the at-rule requires the given prefix.
      */
     public boolean requiresPrefixForAtRule(Prefix prefix, String name) {
-        return PrefixUtil.isPrefixableAtRule(name) && prefixesForAtRule(name).contains(prefix);
+        return PrefixTablesUtil.isPrefixableAtRule(name) && prefixesForAtRule(name).contains(prefix);
     }
 
     /**
@@ -384,7 +384,7 @@ public final class SupportMatrix {
      * @return True if the selector requires the given prefix.
      */
     public boolean requiresPrefixForSelector(Prefix prefix, String name) {
-        return PrefixUtil.isPrefixableSelector(name) && prefixesForSelector(name).contains(prefix);
+        return PrefixTablesUtil.isPrefixableSelector(name) && prefixesForSelector(name).contains(prefix);
     }
 
     @Override

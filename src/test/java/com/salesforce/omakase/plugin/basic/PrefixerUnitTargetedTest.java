@@ -179,11 +179,42 @@ public class PrefixerUnitTargetedTest {
     }
 
     @Test
+    public void transitionWithPrefixablePropsLeavesExisting() {
+        String original = ".test {-moz-transition:-moz-transform 1s; transition:transform 1s}";
+        String expected = ".test {-moz-transition:-moz-transform 1s; transition:transform 1s}";
+        assertThat(process(original, transitionSetup())).isEqualTo(expected);
+    }
+
+    @Test
     public void transitionNotPrefixedButValueIs() {
         String original = ".test {transition:width 1s,transform 1s}";
         String expected = ".test {transition:width 1s,-webkit-transform 1s; transition:width 1s,transform 1s}";
         Prefixer prefixer = Prefixer.customBrowserSupport();
         prefixer.support().browser(Browser.CHROME, 30); // chrome 30 has transform prefixed but not transition
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    //@Test known issue, to fix start with PrefixerHandlers#TRANSITION#equivalents
+    public void transitionNotPrefixedButValueIsLeavesExisting() {
+        String original = ".test {transition:width 1s,-webkit-transform 1s; transition:width 1s,transform 1s}";
+        String expected = ".test {transition:width 1s,-webkit-transform 1s; transition:width 1s,transform 1s}";
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.CHROME, 30); // chrome 30 has transform prefixed but not transition
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    //@Test known issue, see PrefixerHandlers#TRANSITION for notes
+    public void transitionPrefixedInOneBrowserNotInOtherButValueIs() {
+        String original = ".test {transition:transform 1s}";
+        String expected = ".test {" +
+            "-webkit-transition:-webkit-transform 1s; " +
+            "-moz-transition:-moz-transform 1s; " +
+            "transition:-webkit-transform 1s; " +
+            "transition:transform 1s}";
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.CHROME, 30); // chrome 30 has transform prefixed but not transition
+        prefixer.support().browser(Browser.IOS_SAFARI, 6.1); // ios safari 6 has transition and transform prefixed
+        prefixer.support().browser(Browser.FIREFOX, 15);// for transition and transform
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
