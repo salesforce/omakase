@@ -72,7 +72,8 @@ public final class Equivalents {
                 if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                 multimap.put(Prefixes.parsePrefix(located.name()).get(), previous);
             }
-            previous = walker.previous(previous);
+            previous = (located != null || walker.walkAll()) ? walker.previous(previous) : null;
+
         }
 
         // look for unprefixed versions appearing after the unprefixed one
@@ -83,7 +84,7 @@ public final class Equivalents {
                 if (multimap == null) multimap = LinkedListMultimap.create(); // perf -- delayed creation
                 multimap.put(Prefixes.parsePrefix(located.name()).get(), next);
             }
-            next = walker.next(next);
+            next = (located != null || walker.walkAll()) ? walker.next(next) : null;
         }
 
         return multimap == null ? ImmutableMultimap.<Prefix, P>of() : multimap;
@@ -132,6 +133,16 @@ public final class Equivalents {
          * @return The next unit, or null if none.
          */
         P next(P peer);
+
+        /**
+         * Specifies whether we should walk all peers, or stop when a peer does not match.
+         * <p/>
+         * In other words, return true to evaluate all peers, even when null is returned from {@link #locate(Object, Named)}, and
+         * return false to stop walking (in that direction) once {@link #locate(Object, Named)} returns null.
+         *
+         * @return Whether all peers should be walked, or if we should stop walking a direction once a peer does not match.
+         */
+        boolean walkAll();
     }
 
     /** base for walkers that group any Groupable together */
@@ -145,10 +156,15 @@ public final class Equivalents {
         public G next(G peer) {
             return peer.next().orNull();
         }
+
+        @Override
+        public boolean walkAll() {
+            return true;
+        }
     }
 
     /** base for walkers that group {@link Rule}s together */
-    private abstract static class RuleBase<N extends Named> implements EquivalentWalker<Rule, N> {
+    public abstract static class RuleBase<N extends Named> implements EquivalentWalker<Rule, N> {
         @Override
         public Rule previous(Rule peer) {
             Optional<Statement> previous = peer.previous();
@@ -161,6 +177,11 @@ public final class Equivalents {
             Optional<Statement> next = peer.next();
             if (!next.isPresent() || !next.get().asRule().isPresent()) return null;
             return next.get().asRule().get();
+        }
+
+        @Override
+        public boolean walkAll() {
+            return false;
         }
     }
 
@@ -178,6 +199,11 @@ public final class Equivalents {
             Optional<Statement> next = peer.next();
             if (!next.isPresent() || !next.get().asAtRule().isPresent()) return null;
             return next.get().asAtRule().get();
+        }
+
+        @Override
+        public boolean walkAll() {
+            return false;
         }
     }
 
@@ -260,6 +286,9 @@ public final class Equivalents {
      * </code></pre>
      * When given the middle, unprefixed at-rule, the at-rules before and after it will be returned. Only immediately adjacent
      * at-rules will be considered.
+     * <p/>
+     * Note that this only compares immediately adjacent peers, for as long as a match is found. The first peer that does not
+     * match prefix and raw expression content will halt looking in that direction (before and after).
      */
     public static final EquivalentWalker<AtRule, AtRule> AT_RULES = new AtRuleBase<AtRule>() {
         @Override
@@ -267,7 +296,12 @@ public final class Equivalents {
             if (isPrefixed(peer)) {
                 Prefixes.PrefixPair pair = Prefixes.splitPrefix(peer.name());
                 if (pair.prefix().isPresent() && pair.unprefixed().equals(unprefixed.name())) {
+                    // compare raw expressions
+                    String unprefixedExpr = unprefixed.rawExpression().isPresent() ? unprefixed.rawExpression().get().content() : "";
+                    String peerExpr = peer.rawExpression().isPresent() ? peer.rawExpression().get().content() : "";
+                    if (unprefixedExpr.equals(peerExpr)) {
                     return peer;
+                    }
                 }
             }
             return null;
@@ -288,6 +322,9 @@ public final class Equivalents {
      * </code></pre>
      * When given the second, unprefixed rule, the one before it will be returned. Only immediately adjacent rules will be
      * considered.
+     * <p/>
+     * Note that this only compares immediately adjacent peers, for as long as a match is found. The first peer that does not
+     * match will halt looking in that direction (before and after).
      */
     public static final EquivalentWalker<Rule, PseudoElementSelector> PSEUDO_ELEMENTS = new RuleBase<PseudoElementSelector>() {
         @Override
@@ -316,6 +353,9 @@ public final class Equivalents {
      * </code></pre>
      * When given the second, unprefixed rule, the one before it will be returned. Only immediately adjacent rules will be
      * considered.
+     * <p/>
+     * Note that this only compares immediately adjacent peers, for as long as a match is found. The first peer that does not
+     * match will halt looking in that direction (before and after).
      */
     public static final EquivalentWalker<Rule, PseudoClassSelector> PSEUDO_CLASSES = new RuleBase<PseudoClassSelector>() {
         @Override

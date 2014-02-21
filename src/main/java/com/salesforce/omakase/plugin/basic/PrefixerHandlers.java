@@ -18,9 +18,9 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -223,26 +223,34 @@ final class PrefixerHandlers {
 
         @Override
         protected Multimap<Prefix, ? extends Statement> equivalents(PseudoElementSelector instance) {
-            Multimap<Prefix, Rule> map = LinkedListMultimap.create();
+            // this custom walker is based on the fact that the standard pseudo walkers will stop at the first non-match (walkAll
+            // returns false). We want to to continue walking as long as any one of the following four permutations match.
+            Equivalents.EquivalentWalker<Rule, Named> walker = new Equivalents.RuleBase<Named>() {
+                @Override
+                public Named locate(Rule peer, Named unprefixed) {
+                    // find prefixed equivalents to ::placeholder
+                    Named located = Equivalents.PSEUDO_ELEMENTS.locate(peer, new PseudoElementSelector("placeholder"));
 
-            // find prefixed equivalents to ::placeholder
-            map.putAll(Equivalents.prefixes(subject(instance), instance, Equivalents.PSEUDO_ELEMENTS));
+                    // find prefixed equivalents to ::input-placeholder
+                    if (located == null) {
+                        located = Equivalents.PSEUDO_ELEMENTS.locate(peer, new PseudoElementSelector("input-placeholder"));
+                    }
 
-            // find prefixed equivalents to ::input-placeholder
-            map.putAll(Equivalents.prefixes(subject(instance), new PseudoElementSelector("input-placeholder"),
-                Equivalents.PSEUDO_ELEMENTS));
+                    // find prefixed equivalents to :placeholder
+                    if (located == null) {
+                        located = Equivalents.PSEUDO_CLASSES.locate(peer, new PseudoClassSelector("placeholder"));
+                    }
 
-            // find prefixed equivalents to :placeholder
-            map.putAll(Equivalents.prefixes(subject(instance), new PseudoClassSelector("placeholder"),
-                Equivalents.PSEUDO_CLASSES));
+                    // find prefixed equivalents to :input-placeholder
+                    if (located == null) {
+                        located = Equivalents.PSEUDO_CLASSES.locate(peer, new PseudoClassSelector("input-placeholder"));
+                    }
 
-            // find prefixed equivalents to :input-placeholder
-            map.putAll(Equivalents.prefixes(subject(instance), new PseudoClassSelector("input-placeholder"),
-                Equivalents.PSEUDO_CLASSES));
+                    return located;
+                }
+            };
 
-            // ...yuk
-
-            return map;
+            return Equivalents.prefixes(subject(instance), instance, walker);
         }
 
         @Override

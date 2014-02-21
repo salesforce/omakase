@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Functional tests for {@link Prefixer} at-rule replacements.
@@ -482,5 +482,44 @@ public class PrefixerUnitAtRuleTest {
             "}";
 
         assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // from a bug, verify that all prefixes are added for contiguous at-rules
+    @Test
+    public void atRuleMultiple() {
+        String original = "@keyframes test1 {\n" +
+            "  from {top: 0%}\n" +
+            "  to {top: 100%}\n" +
+            "}\n" +
+            "@keyframes test2 {\n" +
+            "  from {top: 0%}\n" +
+            "  to {top: 100%}\n" +
+            "}";
+        String expected = "@-webkit-keyframes test1 {\n" +
+            "  from {top:0%}\n" +
+            "  to {top:100%}\n" +
+            "}\n" +
+            "@-moz-keyframes test1 {\n" +
+            "  from {top:0%}\n" +
+            "  to {top:100%}\n" +
+            "}\n" +
+            "@keyframes test1 {\n" +
+            "  from {top:0%}\n" +
+            "  to {top:100%}\n" +
+            "}\n" +
+            "@-webkit-keyframes test2 {\n" +
+            "  from {top:0%}\n" +
+            "  to {top:100%}\n" +
+            "}\n" +
+            "@-moz-keyframes test2 {\n" +
+            "  from {top:0%}\n" +
+            "  to {top:100%}\n" +
+            "}\n" +
+            "@keyframes test2 {\n" +
+            "  from {top:0%}\n" +
+            "  to {top:100%}\n" +
+            "}";
+
+        assertThat(process(original, setup(Prefix.MOZ, Prefix.WEBKIT))).isEqualTo(expected);
     }
 }
