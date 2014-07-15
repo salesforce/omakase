@@ -41,6 +41,9 @@ public class Run {
     @Option(name = "-p", aliases = "--perf", usage = "performance test (ex. \"-p full\", \"-p full-heavy\")", metaVar = "<mode-input>")
     private String perf;
 
+    @Option(name = "-q", aliases = "--perfhelp", usage = "more details on running perf tests")
+    private boolean perfHelp;
+
     @Option(name = "-d", aliases = "--deploy", usage = "build and deploy jars (requires additional setup, see deploy.md)")
     private boolean deploy;
 
@@ -81,6 +84,34 @@ public class Run {
                 }
             } else if (perf != null) {
                 PerfTest.main(new String[]{perf});
+            } else if (perfHelp) {
+                System.out.println("\nHelp With Running Performance Tests:\n");
+
+                System.out.println("The perf test args take the format of " +
+                    Colors.yellow("[parserMode]") + "-" + Colors.lightBlue("[source]"));
+
+                System.out.println("\nFor example:\n\n" +
+                    "    omakase -p " + Colors.yellow("full" + "-" + Colors.lightBlue("heavy") + "\n\n") +
+                    "means run the \"Omakase Full\" parser configuration with the \"heavy\" CSS source code\n");
+
+                System.out.println("\n" + Colors.grey("Parser Configuration Options:"));
+                System.out.println("thin (Omakase, in minimal parsing mode)");
+                System.out.println("full (Omakase, in full parsing mode)");
+                System.out.println("prefixer (Omakase, in full parsing mode with auto prefixer turned on)");
+
+                System.out.println("\n" + Colors.grey("Source Options:"));
+                System.out.println("simple (a small amount of basic CSS)");
+                System.out.println("button (CSS for a button widget)");
+                System.out.println("heavy (a large amount of CSS)");
+
+                System.out.println("\n" + Colors.grey("Examples:"));
+                System.out.println("omakase -p thin-button");
+                System.out.println("omakase -p thin-heavy");
+                System.out.println("omakase -p prefixer-simple");
+                System.out.println("omakase -p prefixer-heavy");
+
+                System.out.println("\nNote that there are additional parser configurations in the perf-test git branch.");
+                System.out.println("See PerfTestInput.java for the CSS sources.");
             } else if (deploy) {
                 if (!exec("mvn deploy")) {
                     System.out.println("\n" + Colors.red("could not deploy to the internal aura maven repo"));
