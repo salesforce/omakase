@@ -16,20 +16,18 @@
 
 package com.salesforce.omakase.data;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
 /**
  * Utilities for working with the generated data in {@link PrefixTables}.
  *
  * @author nmcwilliams
  */
 public final class PrefixTablesUtil {
+    // TODO whether additional caching here improves performance is questionable, and if enabled needs to be made thread-safe
     // static caches, based on prefix tables data being immutable
-    private static final Table<Property, Browser, Double> PROPERTY_CACHE = HashBasedTable.create();
-    private static final Table<String, Browser, Double> FUNCTION_CACHE = HashBasedTable.create();
-    private static final Table<String, Browser, Double> AT_RULE_CACHE = HashBasedTable.create();
-    private static final Table<String, Browser, Double> SELECTOR_CACHE = HashBasedTable.create();
+    // private static final Table<Property, Browser, Double> PROPERTY_CACHE = HashBasedTable.create();
+    // private static final Table<String, Browser, Double> FUNCTION_CACHE = HashBasedTable.create();
+    // private static final Table<String, Browser, Double> AT_RULE_CACHE = HashBasedTable.create();
+    // private static final Table<String, Browser, Double> SELECTOR_CACHE = HashBasedTable.create();
 
     private PrefixTablesUtil() {}
 
@@ -92,15 +90,8 @@ public final class PrefixTablesUtil {
      * @return The last version, or -1 if all known versions of the browser supports the property unprefixed.
      */
     public static Double lastVersionPropertyIsPrefixed(Property property, Browser browser) {
-        Double cached = PROPERTY_CACHE.get(property, browser);
-
-        if (cached == null) {
-            cached = PrefixTables.PROPERTIES.get(property, browser);
-            if (cached == null) cached = -1d;
-            PROPERTY_CACHE.put(property, browser, cached);
-        }
-
-        return cached;
+        final Double val = PrefixTables.PROPERTIES.get(property, browser);
+        return val != null ? val : -1d;
     }
 
     /**
@@ -114,15 +105,8 @@ public final class PrefixTablesUtil {
      * @return The last version, or -1 if all known versions of the browser supports the function name unprefixed.
      */
     public static Double lastVersionFunctionIsPrefixed(String name, Browser browser) {
-        Double cached = FUNCTION_CACHE.get(name, browser);
-
-        if (cached == null) {
-            cached = PrefixTables.FUNCTIONS.get(name, browser);
-            if (cached == null) cached = -1d;
-            FUNCTION_CACHE.put(name, browser, cached);
-        }
-
-        return cached;
+        final Double val = PrefixTables.FUNCTIONS.get(name, browser);
+        return val != null ? val : -1d;
     }
 
     /**
@@ -136,15 +120,8 @@ public final class PrefixTablesUtil {
      * @return The last version, or -1 if all known versions of the browser supports the at-rule unprefixed.
      */
     public static Double lastVersionAtRuleIsPrefixed(String name, Browser browser) {
-        Double cached = AT_RULE_CACHE.get(name, browser);
-
-        if (cached == null) {
-            cached = PrefixTables.AT_RULES.get(name, browser);
-            if (cached == null) cached = -1d;
-            AT_RULE_CACHE.put(name, browser, cached);
-        }
-
-        return cached;
+        final Double val = PrefixTables.AT_RULES.get(name, browser);
+        return val != null ? val : -1d;
     }
 
     /**
@@ -158,14 +135,7 @@ public final class PrefixTablesUtil {
      * @return The last version, or -1 if all known versions of the browser supports the selector unprefixed.
      */
     public static Double lastVersionSelectorIsPrefixed(String name, Browser browser) {
-        Double cached = SELECTOR_CACHE.get(name, browser);
-
-        if (cached == null) {
-            cached = PrefixTables.SELECTORS.get(name, browser);
-            if (cached == null) cached = -1d;
-            SELECTOR_CACHE.put(name, browser, cached);
-        }
-
-        return cached;
+        final Double val = PrefixTables.SELECTORS.get(name, browser);
+        return val != null ? val : -1d;
     }
 }
