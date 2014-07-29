@@ -152,6 +152,10 @@ public class GeneratePrefixTablesClass {
             for (Map.Entry<String, String> browserVersionPrefixInfo : browserSpecific.entrySet()) {
                 if (browserVersionPrefixInfo.getValue().contains("x")) {
                     String last = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
+                    if (last.indexOf(".") != last.lastIndexOf(".")) {
+                        // hacky deal with something like Android 4.4.3. Just treat it as 4.4 for now.
+                        last = last.substring(0, last.lastIndexOf("."));
+                    }
                     lastPrefixed = Math.max(lastPrefixed, Double.parseDouble(last));
                 }
             }
