@@ -35,7 +35,7 @@ public class SingleInterestBroadcasterTest {
 
     @Test
     public void broadcastedExpectedUnit() {
-        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<ClassSelector>(ClassSelector.class);
+        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<>(ClassSelector.class);
         ClassSelector s = new ClassSelector("test");
         sb.broadcast(s);
         assertThat(sb.broadcasted().get()).isSameAs(s);
@@ -43,7 +43,7 @@ public class SingleInterestBroadcasterTest {
 
     @Test
     public void onlyStoresFirstOccurrence() {
-        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<ClassSelector>(ClassSelector.class);
+        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<>(ClassSelector.class);
         ClassSelector s = new ClassSelector("test");
         ClassSelector s2 = new ClassSelector("test");
 
@@ -54,7 +54,7 @@ public class SingleInterestBroadcasterTest {
 
     @Test
     public void ignoresBroadcastsOfWrongType() {
-        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<ClassSelector>(ClassSelector.class);
+        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<>(ClassSelector.class);
         IdSelector s = new IdSelector("test");
         ClassSelector s2 = new ClassSelector("test");
 
@@ -65,7 +65,7 @@ public class SingleInterestBroadcasterTest {
 
     @Test
     public void testReset() {
-        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<ClassSelector>(ClassSelector.class);
+        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<>(ClassSelector.class);
         ClassSelector s = new ClassSelector("test");
         ClassSelector s2 = new ClassSelector("test");
 
@@ -79,7 +79,7 @@ public class SingleInterestBroadcasterTest {
     @Test
     public void relaysWhenMatched() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<ClassSelector>(ClassSelector.class, qb);
+        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<>(ClassSelector.class, qb);
         ClassSelector s = new ClassSelector("test");
         sb.broadcast(s);
 
@@ -89,7 +89,7 @@ public class SingleInterestBroadcasterTest {
     @Test
     public void relaysWhenNotMatched() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<ClassSelector>(ClassSelector.class, qb);
+        SingleInterestBroadcaster<ClassSelector> sb = new SingleInterestBroadcaster<>(ClassSelector.class, qb);
         IdSelector s = new IdSelector("test");
         sb.broadcast(s);
 

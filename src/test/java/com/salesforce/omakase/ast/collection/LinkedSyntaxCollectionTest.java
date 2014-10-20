@@ -97,7 +97,7 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void isEmptyOrNoneWritableTrue() {
-        SyntaxCollection<Parent, ChildNotWritable> c = new LinkedSyntaxCollection<Parent, ChildNotWritable>(new Parent());
+        SyntaxCollection<Parent, ChildNotWritable> c = new LinkedSyntaxCollection<>(new Parent());
         c.append(new ChildNotWritable());
         assertThat(collection.isEmptyOrNoneWritable()).isTrue();
     }
@@ -512,7 +512,7 @@ public class LinkedSyntaxCollectionTest {
     }
 
     private static final class Parent {
-        private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<Parent, Child>(this);
+        private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<>(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {

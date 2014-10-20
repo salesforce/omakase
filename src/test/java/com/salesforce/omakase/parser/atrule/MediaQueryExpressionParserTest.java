@@ -112,7 +112,6 @@ public class MediaQueryExpressionParserTest extends AbstractParserTest<MediaQuer
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("(color)", "color"),
             withExpectedResult("   (color)", "color"),

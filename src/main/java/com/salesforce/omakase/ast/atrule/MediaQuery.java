@@ -72,7 +72,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
      */
     public MediaQuery(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        this.expressions = new LinkedSyntaxCollection<MediaQuery, MediaQueryExpression>(this, broadcaster);
+        this.expressions = new LinkedSyntaxCollection<>(this, broadcaster);
     }
 
     /**

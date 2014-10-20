@@ -108,7 +108,6 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
 
     @Test
     @Override
-    @SuppressWarnings("unchecked")
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<Double>> results = parseWithExpected(
             withExpectedResult("1", 1d),

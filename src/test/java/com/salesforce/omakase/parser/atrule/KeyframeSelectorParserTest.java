@@ -97,7 +97,6 @@ public class KeyframeSelectorParserTest extends AbstractParserTest<KeyframeSelec
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("from", "from"),
             withExpectedResult("to", "to"),

@@ -86,8 +86,8 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
      */
     public Rule(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        selectors = new LinkedSyntaxCollection<Rule, Selector>(this, broadcaster);
-        declarations = new LinkedSyntaxCollection<Rule, Declaration>(this, broadcaster);
+        selectors = new LinkedSyntaxCollection<>(this, broadcaster);
+        declarations = new LinkedSyntaxCollection<>(this, broadcaster);
     }
 
     /**

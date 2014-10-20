@@ -17,10 +17,15 @@
 package com.salesforce.omakase.ast;
 
 /**
- * TODO description
+ * Represents something that has a name.
  *
  * @author nmcwilliams
  */
 public interface Named {
+    /**
+     * Gets the name of this object.
+     *
+     * @return The name.
+     */
     String name();
 }

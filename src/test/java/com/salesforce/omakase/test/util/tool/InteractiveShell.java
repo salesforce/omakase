@@ -65,7 +65,6 @@ public class InteractiveShell {
     }
 
     /** Options for css processing */
-    @SuppressWarnings({"NonFinalFieldInEnum", "FieldMayBeFinal"})
     private enum Command {
 
         PROCESS("!", "on a new line to finish") {
@@ -211,7 +210,7 @@ public class InteractiveShell {
 
         final String key;
         final String description;
-        boolean on;
+        @SuppressWarnings("NonFinalFieldInEnum") boolean on;
 
         Command(String key, String description) {
             this.key = key;

@@ -52,7 +52,7 @@ public final class Actions {
      * @return The {@link ActionWithSubject} instance.
      */
     public static <T extends Groupable<?, T>> ActionWithSubject<T> moveBefore() {
-        return new MoveBefore<T>();
+        return new MoveBefore<>();
     }
 
     private static class MoveBefore<T extends Groupable<?, T>> implements ActionWithSubject<T> {
@@ -74,7 +74,7 @@ public final class Actions {
      * @return The {@link ActionWithSubject} instance.
      */
     public static <T extends Groupable<?, T>> ActionWithSubject<T> moveAfter() {
-        return new MoveAfter<T>();
+        return new MoveAfter<>();
     }
 
     private static class MoveAfter<T extends Groupable<?, T>> implements ActionWithSubject<T> {

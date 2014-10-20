@@ -715,7 +715,7 @@ public final class Source {
             if (comment != null) {
                 // delayed (re)creation of the comment buffer
                 if (comments == null) {
-                    comments = new ArrayList<String>(2);
+                    comments = new ArrayList<>(2);
                 }
                 comments.add(comment);
             } else {

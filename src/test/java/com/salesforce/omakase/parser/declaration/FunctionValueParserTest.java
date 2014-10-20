@@ -125,7 +125,6 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("urlx(one.png)", "one.png"),
             withExpectedResult("urlx(/one/one.png)", "/one/one.png"),
@@ -160,7 +159,6 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
 
     @Test
     public void matchesExpectedFunctionName() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("urlx(one.png)", "urlx"),
             withExpectedResult("calc(100%/3 - 2*1em - 2*1px)", "calc"),

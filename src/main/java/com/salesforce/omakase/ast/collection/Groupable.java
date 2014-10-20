@@ -131,7 +131,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
     Groupable<P, T> replaceWith(T unit);
 
     /**
-     * Severes the connection between this unit and its collection. Generally this method is used internally. If you want to
+     * Severs the connection between this unit and its collection. Generally this method is used internally. If you want to
      * remove a unit from the syntax tree, use {@link #destroy()} instead.
      *
      * @return this, for chaining.

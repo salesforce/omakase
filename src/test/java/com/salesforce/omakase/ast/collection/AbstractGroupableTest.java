@@ -289,7 +289,7 @@ public class AbstractGroupableTest {
     }
 
     private static final class Parent {
-        private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<Parent, Child>(this);
+        private final SyntaxCollection<Parent, Child> collection = new LinkedSyntaxCollection<>(this);
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {

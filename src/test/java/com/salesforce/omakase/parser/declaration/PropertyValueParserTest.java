@@ -213,8 +213,8 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
 
     @Test
     public void parsesImportant() {
-        List<String> sourcesWithSpace = new ArrayList<String>();
-        List<String> sourcesWithoutSpace = new ArrayList<String>();
+        List<String> sourcesWithSpace = new ArrayList<>();
+        List<String> sourcesWithoutSpace = new ArrayList<>();
 
         for (String source : validSources()) {
             sourcesWithSpace.add(source + " !important");

@@ -497,7 +497,7 @@ public final class Selectors {
     public static Iterable<SelectorPart> adjoining(SelectorPart part) {
         if (part.type().isCombinator()) return Sets.newHashSet(part);
 
-        Deque<SelectorPart> deque = new ArrayDeque<SelectorPart>();
+        Deque<SelectorPart> deque = new ArrayDeque<>();
 
         // add previous parts until we hit a combinator
         Optional<SelectorPart> previous = part.previous();

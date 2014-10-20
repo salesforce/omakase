@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "unchecked", "rawtypes"})
+@SuppressWarnings({"rawtypes", "JavaDoc", "unchecked"})
 public class GeneratePrefixTablesClass {
     private static final String ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/features-json/";
     private static final Yaml yaml = new Yaml();

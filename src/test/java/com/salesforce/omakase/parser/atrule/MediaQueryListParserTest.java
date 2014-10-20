@@ -102,7 +102,6 @@ public class MediaQueryListParserTest extends AbstractParserTest<MediaQueryListP
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<Integer>> results = parseWithExpected(
             withExpectedResult("all and (min-color: 4)", 1),
             withExpectedResult("all and (max-width:800px), screen and (color)", 2),

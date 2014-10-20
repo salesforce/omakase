@@ -33,7 +33,7 @@ import java.util.Set;
  * @param <T>
  *     (T)ype of prefixable AST object to handle.
  * @param <G>
- *     Type of the related prefixable equivalents. A (G)roupable, usually {@link Declaration} or {@link Statement}.
+ *     Type of the related prefixable equivalents. A Groupable, usually {@link Declaration} or {@link Statement}.
  *
  * @author nmcwilliams
  * @see Prefixer

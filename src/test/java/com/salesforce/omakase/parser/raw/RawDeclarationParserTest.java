@@ -151,7 +151,6 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("color:red", "red"),
             withExpectedResult("/*comment*//*comment*/ color: red", "red"),
@@ -182,7 +181,6 @@ public class RawDeclarationParserTest extends AbstractParserTest<RawDeclarationP
 
     @Test
     public void correctPropertyName() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("color:red", "color"),
             withExpectedResult("border-radius: 5px", "border-radius"),

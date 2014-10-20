@@ -32,5 +32,10 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 @Subscribable
 @Description(value = "a single segment of a property value", broadcasted = REFINED_DECLARATION)
 public interface Term extends PropertyValueMember {
+    /**
+     * Shortcut method to get the parent {@link Declaration} containing this term.
+     *
+     * @return The parent {@link Declaration}, or {@link Optional#absent()} if this term is detached or without a parent.
+     */
     Optional<Declaration> declaration();
 }

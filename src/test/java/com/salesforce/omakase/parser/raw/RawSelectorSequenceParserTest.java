@@ -83,7 +83,6 @@ public class RawSelectorSequenceParserTest extends AbstractParserTest<RawSelecto
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<Integer>> results = parseWithExpected(
             withExpectedResult("#abc, #abc", 2),
             withExpectedResult(".class, .class", 2),

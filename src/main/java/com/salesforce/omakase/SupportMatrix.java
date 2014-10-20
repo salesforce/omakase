@@ -46,10 +46,10 @@ public final class SupportMatrix {
     /* using tree so that getting browser versions are in ascending order */
     private final Multimap<Browser, Double> supported = TreeMultimap.create();
 
-    private final Map<Property, Set<Prefix>> propertyCache = new EnumMap<Property, Set<Prefix>>(Property.class);
-    private final Map<String, Set<Prefix>> functionCache = new HashMap<String, Set<Prefix>>(8);
-    private final Map<String, Set<Prefix>> atRuleCache = new HashMap<String, Set<Prefix>>(2);
-    private final Map<String, Set<Prefix>> selectorCache = new HashMap<String, Set<Prefix>>(2);
+    private final Map<Property, Set<Prefix>> propertyCache = new EnumMap<>(Property.class);
+    private final Map<String, Set<Prefix>> functionCache = new HashMap<>(8);
+    private final Map<String, Set<Prefix>> atRuleCache = new HashMap<>(2);
+    private final Map<String, Set<Prefix>> selectorCache = new HashMap<>(2);
 
     /**
      * Designate support for the given {@link Browser} and version.

@@ -54,7 +54,7 @@ import java.util.Set;
  * @author nmcwilliams
  */
 public final class AutoRefiner implements Plugin {
-    private final Set<Class<? extends Refinable<?>>> refinables = Sets.newHashSet();
+    private final Set<Class<?>> refinables = Sets.newHashSet();
     private boolean all;
 
     /**

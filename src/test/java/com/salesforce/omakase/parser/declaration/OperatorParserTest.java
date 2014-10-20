@@ -87,7 +87,6 @@ public class OperatorParserTest extends AbstractParserTest<OperatorParser> {
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<OperatorType>> results = parseWithExpected(
             withExpectedResult(" ", OperatorType.SPACE),
             withExpectedResult("    ", OperatorType.SPACE),

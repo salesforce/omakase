@@ -92,7 +92,6 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<SelectorPartType>> results = parseWithExpected(
             withExpectedResult(" .class", SelectorPartType.DESCENDANT_COMBINATOR),
             withExpectedResult("   .class", SelectorPartType.DESCENDANT_COMBINATOR),

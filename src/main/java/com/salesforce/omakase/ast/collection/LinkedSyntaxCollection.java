@@ -54,7 +54,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @SuppressWarnings("AutoBoxing")
 public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implements SyntaxCollection<P, T> {
     private final P parent;
-    private final Lookup<T> lookup = new Lookup<T>();
+    private final Lookup<T> lookup = new Lookup<>();
 
     private Node<T> first;
     private Node<T> last;
@@ -170,7 +170,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         checkArgument(!unit.destroyed(), "cannot prepend a destroyed unit!");
 
         // create a new node
-        first = new Node<T>(null, first, unit);
+        first = new Node<>(null, first, unit);
         lookup.put(unit.id(), first);
         if (last == null) last = first;
 
@@ -200,7 +200,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         if (node == first || isEmpty()) return prepend(unit);
 
         // create a new node
-        lookup.put(unit.id(), new Node<T>(node.previous, node, unit));
+        lookup.put(unit.id(), new Node<>(node.previous, node, unit));
 
         // perform associative actions on the unit
         associate(unit);
@@ -214,7 +214,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         checkArgument(!unit.destroyed(), "cannot append a destroyed unit!");
 
         // create a new node
-        last = new Node<T>(last, null, unit);
+        last = new Node<>(last, null, unit);
         lookup.put(unit.id(), last);
         if (first == null) first = last;
 
@@ -244,7 +244,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         if (node == last || (node.previous == null && node.next == null)) return append(unit);
 
         // create a new node
-        lookup.put(unit.id(), new Node<T>(node, node.next, unit));
+        lookup.put(unit.id(), new Node<>(node, node.next, unit));
 
         // perform associative actions on the unit
         associate(unit);
@@ -324,7 +324,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     private static final class Lookup<E extends Syntax<?>> {
-        private List<Node<E>> sparse = new ArrayList<Node<E>>();
+        private List<Node<E>> sparse = new ArrayList<>();
         private Map<Integer, Node<E>> dense;
         private int count = 0;
 
@@ -333,7 +333,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
             if (count < 64) {
                 sparse.add(node);
             } else if (count == 64) {
-                dense = new HashMap<Integer, Node<E>>(128);
+                dense = new HashMap<>(128);
                 for (Node<E> n : sparse) {
                     dense.put(n.unit.id(), n);
                 }

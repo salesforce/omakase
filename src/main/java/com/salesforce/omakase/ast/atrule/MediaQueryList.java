@@ -66,7 +66,7 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
      */
     public MediaQueryList(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        queries = new LinkedSyntaxCollection<MediaQueryList, MediaQuery>(this, broadcaster);
+        queries = new LinkedSyntaxCollection<>(this, broadcaster);
     }
 
     /**

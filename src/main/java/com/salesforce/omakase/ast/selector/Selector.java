@@ -85,7 +85,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         super(rawContent.line(), rawContent.column());
         this.refiner = refiner;
         this.rawContent = rawContent;
-        this.parts = new LinkedSyntaxCollection<Selector, SelectorPart>(this, refiner.broadcaster());
+        this.parts = new LinkedSyntaxCollection<>(this, refiner.broadcaster());
     }
 
     /**

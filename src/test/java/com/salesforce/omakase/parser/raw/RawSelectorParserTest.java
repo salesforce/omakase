@@ -115,7 +115,6 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(".class1, .class2", ".class1"),
             withExpectedResult(".class1 + .class2 { color: red }", ".class1 + .class2"),

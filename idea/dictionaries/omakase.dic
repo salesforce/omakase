@@ -42,6 +42,7 @@ nozoom
 omakase
 opied
 paren
+parens
 passthrough
 perf
 performant
@@ -68,3 +69,7 @@ unescaped
 unparsable
 unprefixed
 yaml
+recurse
+noparse
+keyframe
+lookups

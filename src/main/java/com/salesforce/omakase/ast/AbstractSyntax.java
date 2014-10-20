@@ -129,7 +129,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
         // delayed creation of comments list
         if (this.comments == null) {
-            this.comments = new ArrayList<Comment>(comments.size());
+            this.comments = new ArrayList<>(comments.size());
         }
 
         // add the comments
@@ -147,7 +147,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
         // delayed creation of comments list
         if (comments == null) {
-            comments = new ArrayList<Comment>(toCopy.size());
+            comments = new ArrayList<>(toCopy.size());
         }
 
         comments.addAll(toCopy);
@@ -165,7 +165,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
         // delayed creation of comments list
         if (this.orphanedComments == null) {
-            this.orphanedComments = new ArrayList<Comment>(comments.size());
+            this.orphanedComments = new ArrayList<>(comments.size());
         }
 
         // add the comments
@@ -183,7 +183,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
         // delayed creation of comments list
         if (orphanedComments == null) {
-            orphanedComments = new ArrayList<Comment>(toCopy.size());
+            orphanedComments = new ArrayList<>(toCopy.size());
         }
 
         orphanedComments.addAll(toCopy);

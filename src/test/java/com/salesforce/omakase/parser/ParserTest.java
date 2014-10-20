@@ -26,33 +26,33 @@ import org.junit.Test;
 public interface ParserTest {
     /** Tests that true is always returned when parsing is expected to be successful. */
     @Test
-    public void returnsFalseOnFailure();
+    void returnsFalseOnFailure();
 
     /** Tests that false is always returned when parsing is expected to fail. */
     @Test
-    public void returnsTrueOnSuccess();
+    void returnsTrueOnSuccess();
 
     /** Tests that a valid source is completely parsed */
     @Test
-    public void eofOnValidSources();
+    void eofOnValidSources();
 
     /** Tests the number of broadcasted syntax units is exactly as expected. */
     @Test
-    public void matchesExpectedBroadcastCount();
+    void matchesExpectedBroadcastCount();
 
     /** Tests that the content of the broadcasted syntax units is as expected. */
     @Test
-    public void matchesExpectedBroadcastContent();
+    void matchesExpectedBroadcastContent();
 
     /** Tests that the source's index doesn't change if parsing is not successful. */
     @Test
-    public void noChangeToStreamOnFailure();
+    void noChangeToStreamOnFailure();
 
     /** Tests that the source advances to the expected index if parsing is successful. */
     @Test
-    public void expectedStreamPositionOnSuccess();
+    void expectedStreamPositionOnSuccess();
 
     /** Tests that created AST objects have the correct line and column numbers. */
     @Test
-    public void lineAndColumnForSubStreams();
+    void lineAndColumnForSubStreams();
 }

@@ -76,7 +76,7 @@ public final class PropertyValue extends AbstractSyntax<PropertyValue> {
      */
     public PropertyValue(int line, int column, Broadcaster broadcaster) {
         super(line, column);
-        members = new LinkedSyntaxCollection<PropertyValue, PropertyValueMember>(this, broadcaster);
+        members = new LinkedSyntaxCollection<>(this, broadcaster);
     }
 
     /**

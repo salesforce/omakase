@@ -110,7 +110,6 @@ public class MediaQueryParserTest extends AbstractParserTest<MediaQueryParser> {
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("(color)", ""),
             withExpectedResult("(min-width:800px)", ""),
@@ -134,7 +133,6 @@ public class MediaQueryParserTest extends AbstractParserTest<MediaQueryParser> {
 
     @Test
     public void matchesExpectedRestriction() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<MediaRestriction>> results = parseWithExpected(
             TemplatesHelper.<MediaRestriction>withExpectedResult("(color)", null),
             TemplatesHelper.<MediaRestriction>withExpectedResult("(min-width:800px)", null),
@@ -159,7 +157,6 @@ public class MediaQueryParserTest extends AbstractParserTest<MediaQueryParser> {
 
     @Test
     public void matchesExpectedExpressions() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<Integer>> results = parseWithExpected(
             withExpectedResult("(color)", 1),
             withExpectedResult("(min-width:800px)", 1),

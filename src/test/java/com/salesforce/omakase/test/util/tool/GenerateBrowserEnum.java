@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "JavaDoc", "unchecked"})
 public class GenerateBrowserEnum {
     private static final String BROWSERS_ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/data.json";
 

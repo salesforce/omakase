@@ -80,7 +80,6 @@ public class KeyframeRuleParserTest extends AbstractParserTest<KeyframeRuleParse
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<Integer>> results = parseWithExpected(
             // +1 for selector, +1 for declaration, +2 for notify declaration block start/end
             withExpectedResult("from { top: 100% }", 4),

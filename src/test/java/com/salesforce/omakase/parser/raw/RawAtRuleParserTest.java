@@ -170,7 +170,6 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
     @Override
     public void matchesExpectedBroadcastContent() {
         // expression value
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(
                 "@charset \"UTF-8\"; \n .class {...}",
@@ -230,7 +229,6 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
 
     @Test
     public void expectedName() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(
                 "@charset \"UTF-8\"; \n .class {...}",
@@ -275,7 +273,6 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
 
     @Test
     public void expectedBlockValue() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(
                 "@charset \"UTF-8\"; \n .class {...}",

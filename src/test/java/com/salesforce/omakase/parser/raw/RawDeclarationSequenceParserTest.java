@@ -77,7 +77,6 @@ public class RawDeclarationSequenceParserTest extends AbstractParserTest<RawDecl
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<Integer>> results = parseWithExpected(
             withExpectedResult("color:red", 1),
             withExpectedResult("color: red; margin: 1px solid red", 2),

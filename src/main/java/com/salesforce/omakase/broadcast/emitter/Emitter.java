@@ -48,11 +48,11 @@ public final class Emitter {
     private static final AnnotationScanner scanner = new AnnotationScanner();
 
     /** cache of class -> (class + supers). Only supers marked as {@link Subscribable} are stored */
-    private static final Map<Class<?>, List<Class<?>>> hierarchyCache = new HashMap<Class<?>, List<Class<?>>>(32);
+    private static final Map<Class<?>, List<Class<?>>> hierarchyCache = new HashMap<>(32);
 
     /** subscriptions and validators (direct, specific per type). Segmented separately for perf */
-    private final Map<Class<?>, Set<Subscription>> processors = new HashMap<Class<?>, Set<Subscription>>(32);
-    private final Map<Class<?>, Set<Subscription>> validators = new HashMap<Class<?>, Set<Subscription>>(32);
+    private final Map<Class<?>, Set<Subscription>> processors = new HashMap<>(32);
+    private final Map<Class<?>, Set<Subscription>> validators = new HashMap<>(32);
 
     /**
      * subscriptions and validators (direct and indirect, i.e., hierarchy, this is important for ordering).
@@ -71,7 +71,7 @@ public final class Emitter {
      * hierarchy is looked at for the event, ClassSelector will come before SimpleSelector. However since Class1 is registered
      * first, its subscription to SimpleSelector must be invoked before Class2's subscription to ClassSelector.
      */
-    private final Map<Class<?>, Iterable<Subscription>> processorsCache = new HashMap<Class<?>, Iterable<Subscription>>();
+    private final Map<Class<?>, Iterable<Subscription>> processorsCache = new HashMap<>();
     private final Map<Class<?>, Iterable<Subscription>> validatorsCache = Maps.newHashMap();
 
     private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
@@ -114,14 +114,14 @@ public final class Emitter {
             if (subscription.phase() == SubscriptionPhase.PROCESS) {
                 subscriptions = processors.get(entry.getKey());
                 if (subscriptions == null) {
-                    subscriptions = new LinkedHashSet<Subscription>(5);
+                    subscriptions = new LinkedHashSet<>(5);
                     processors.put(entry.getKey(), subscriptions);
                 }
                 subscriptions.add(subscription);
             } else {
                 subscriptions = validators.get(entry.getKey());
                 if (subscriptions == null) {
-                    subscriptions = new LinkedHashSet<Subscription>(5);
+                    subscriptions = new LinkedHashSet<>(5);
                     validators.put(entry.getKey(), subscriptions);
                 }
                 subscriptions.add(subscription);

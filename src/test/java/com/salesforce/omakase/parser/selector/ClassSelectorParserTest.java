@@ -69,7 +69,6 @@ public class ClassSelectorParserTest extends AbstractParserTest<ClassSelectorPar
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
-        @SuppressWarnings("unchecked")
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult(".class", "class"),
             withExpectedResult(".CLASS", "CLASS"),
