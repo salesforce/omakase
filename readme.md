@@ -1,7 +1,7 @@
 Omakase
 =======
 
-Fast and slightly opinionated CSS parser.
+Fast, Java-based, plugin-oriented CSS3+ parser.
 
 Omakase (お任せ o-ma-ka-say) is a Japanese phrase that means "I'll leave it to you" (from Japanese "to entrust"). In Japan it can be used at any restaurant.
 
