@@ -1,21 +1,58 @@
 Steps
 =====
 
+_The following steps have been reviewed as of IntelliJ v. 13.1_
+
 Plugins
 -------
-For some of the following instructions to work, ensure you have the following plugins enabled:
+Ensure you have these plugins enabled:
 
 1. Copyright
 2. Inspection Gadgets
+3. Maven Integration
+
+Optionally (depending on what projects you are working with) you should also enable:
+
+1. CSS Support
+2. YAML
+3. FreeMarker Support
+4. JUnit
+5. Git Integration
+
+
+Project
+-------
+
+Import the project into IntelliJ:
+
+1. Click Import Project
+2. Select the top-level omakase folder
+3. ok
+
+Ensure that your project is using Java 1.7 or above, e.g., 
+
+1. Right-click on the omakase module in the Project view
+2. Choose Module Settings
+3. Select the Sources tab
+4. Under Language Level, choose 7.0
+5. Click on Project Settings in the left-most panel
+6. Project SDK should be 1.7
+7. Project language level should be 7.0
 
 Settings
 --------
+
+These settings will ensure you have the correct code style, formatting, indentation, inspections etc... 
+
+*IMPORTANT*: it's possible that importing these settings may change general options that are not specific to the Omakase module as well. This may be important to you if you use IntelliJ for other projects. Beware! (I've done my best to not export any settings that might do this).
+
 1. file -> import settings -> choose idea/settings.jar
 2. settings -> code style -> choose scheme 'Omakase'
 3. ok
 
 Inspections
 -----------
+
 1. settings -> inspections -> import -> choose idea/Omakase.xml
     1. ensure that 'Omakase' is chosen in the dropdown on left
 2. a bunch of inspections in the list should be highlighted as blue
@@ -76,7 +113,12 @@ TODOs
 
 Optional
 --------
-1. Remove file header (settings -> includes -> File Header -> clear content)
+1. Remove file header (settings -> File and Code Templates -> includes -> File Header -> clear content) OR change file header to something like this:
+/**
+ * TODO description
+ *
+ * @author yourname
+ */
 2. Useful to make projects automatically (settings -> compiler -> make project automatcally)
 
 Reload
