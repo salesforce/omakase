@@ -28,9 +28,9 @@ Omakase is built 100% solely for parsing CSS, which means that the error message
 
 Omakase comes with some neat plugins out of the box, including:
 
-- **Conditionals** conditional if blocks
-- **Prefixer** automatic vendor prefixing
-- **DirectionFlip** automatic RTL support
+- **Conditionals** - conditional if-style blocks
+- **Prefixer** - automatic vendor prefixing
+- **DirectionFlip** - automatic RTL support
 
 These and more are described below.
 
