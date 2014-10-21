@@ -102,7 +102,11 @@ public class GenerateBrowserEnum {
 
         for (int i = 0; i <= indexOfCurrent; i++) { // skip the last two, as they are "future" versions
             if (all.get(i) != null) {
-                for (String s : Splitter.on("-").split(all.get(i))) filtered.add(Double.valueOf(s));
+                for (String s : Splitter.on("-").split(all.get(i))) {
+                    if (s.indexOf(".") == s.lastIndexOf(".")) { // hacky deal with something like Android 4.4.3. Just skip for now
+                        filtered.add(Double.valueOf(s));
+                    }
+                }
             }
         }
 
