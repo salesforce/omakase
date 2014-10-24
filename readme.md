@@ -1186,3 +1186,10 @@ These classes handle refinement of selectors, declarations, at-rules and functio
 
 Omakase is *not* explicitly designed for full thread-safety. That is, while many core classes have been written to be thread-safe, it is not recommended to try to share AST objects (anything that extends from `Syntax`) between threads. If you are doing a parse operation and working with the resultant AST objects within a single thread then everything should be fine.
 
+### Dependencies Graph
+
+To view statistics on dependencies, run:
+
+    mvn project-info-reports:dependencies
+    open target/site/dependencies.html
+
