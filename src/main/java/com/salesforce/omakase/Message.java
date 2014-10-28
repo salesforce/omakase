@@ -41,6 +41,7 @@ public enum Message {
     UNPARSABLE_DECLARATION_VALUE("Unable to parse remaining declaration value '%s' (did you forget a semicolon?)"),
     UNPARSABLE_CONDITIONAL_CONTENT("Unable to parse the remaining content in the conditional at-rule: %s"),
     UNPARSABLE_MEDIA("Unable to parse the remaining content in the media query '%s'"),
+    UNPARSABLE_FONT_FACE("Unable to parse the remaining content in the font face rule '%s'"),
     UNPARSABLE_KEYFRAMES("Unable to parse the remaining content in the keyframes at-rule '%s'"),
     EXPECTED_VALUE("Expected to parse a property value"),
     EXPECTED_TO_FIND("Expected to find %s"),
@@ -83,6 +84,7 @@ public enum Message {
     MALFORMED_DECLARATION("Malformed declaration. Did you forget to add the property name or the colon delimiter?"),
     MEDIA_EXPR("Missing the media query's expression"),
     MEDIA_BLOCK("Missing the media query's block"),
+    FONT_FACE("Missing the font face's block"),
     DIDNT_FIND_MEDIA_LIST("Expected to parse a valid media query list"),
     MISSING_MEDIA_TYPE("Expected to find media type (e.g., 'screen', the type is required after 'only' or 'not')"),
     MISSING_AND("Expected to find keyword 'and'"),
@@ -91,7 +93,8 @@ public enum Message {
     MISSING_COLON("Expected to find ':' after the property name"),
     UNEXPECTED_KEYFRAME_NAME("Unexpected content after the keyframes name: %s"),
     MISSING_KEYFRAMES_BLOCK("Missing keyframes block"),
-    MISSING_PERCENTAGE("Missing '%' in keyframe selector");
+    MISSING_PERCENTAGE("Missing '%' in keyframe selector"),
+    UNEXPECTED_EXPRESSION_FONT_FACE("Unexpected expression after '@font-face'");
 
     private final String message;
 

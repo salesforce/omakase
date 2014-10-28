@@ -46,7 +46,7 @@ public class BasePluginTest {
         Reflections reflections = new Reflections("com.salesforce.omakase.ast");
         Set<Class<?>> subscribables = Sets.newHashSet(reflections.getTypesAnnotatedWith(Subscribable.class));
 
-        assertThat(subscriptions).containsAll(subscribables);
+        assertThat(subscriptions).describedAs("BasePlugin is missing subscribable units").containsAll(subscribables);
 
         Sets.SetView<Class<?>> difference = Sets.difference(subscriptions, subscribables);
         assertThat(difference).describedAs("BasePlugin has a subscription to an object that is not subscribable").isEmpty();

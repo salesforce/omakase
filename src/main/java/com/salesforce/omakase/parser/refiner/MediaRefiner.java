@@ -70,7 +70,7 @@ public final class MediaRefiner implements AtRuleRefiner {
             refinedExpression = true;
         }
 
-        // refine the block (unless it was already done
+        // refine the block (unless it was already done)
         if (!rule.hasRefinedBlock()) {
             // must have a block
             if (!rule.rawBlock().isPresent()) throw new ParserException(rule, Message.MEDIA_BLOCK);

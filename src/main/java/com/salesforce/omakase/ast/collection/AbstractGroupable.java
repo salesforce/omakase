@@ -25,11 +25,10 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Base class for {@link Groupable}s.
- *
  * @param <T>
- *     Same type as the {@link Groupable}.
+ *     See "T" described in the {@link Groupable} documentation.
  * @param <P>
- *     Same type as for the {@link Groupable}.
+ *     See "P" described in the {@link Groupable} documentation.
  *
  * @author nmcwilliams
  */

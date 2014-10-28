@@ -72,7 +72,7 @@ public final class KeyframeSelectorParser extends AbstractParser {
 
         // create and broadcast the parent selector
         Selector selector = new Selector(line, column, keyframeSelector);
-        selector.propagateBroadcast(broadcaster);
+        selector.propagateBroadcast(broadcaster); // propagate because the original broadcaster wasn't used to parse
         return true;
     }
 }

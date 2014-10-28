@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Status;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -69,6 +70,10 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
 
     /**
      * Retrieves all broadcasted events.
+     * <p/>
+     * If using this in a loop, take note that performing a refine action on the filtered object may result in a {@link
+     * ConcurrentModificationException}, as the refinement may result in the broadcast of additional syntax units. In this case
+     * you could make an immutable copy of the results first.
      *
      * @return All broadcasted events.
      */
@@ -78,6 +83,10 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
 
     /**
      * Gets all broadcasted events that are instances of the given class.
+     * <p/>
+     * If using this in a loop, take note that performing a refine action on the filtered object may result in a {@link
+     * ConcurrentModificationException}, as the refinement may result in the broadcast of additional syntax units. In this case
+     * you could make an immutable copy of the results first.
      *
      * @param <T>
      *     Type of the {@link Broadcastable} unit.
@@ -99,7 +108,7 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      *     Get the first {@link Broadcastable} unit that is an instance of this class.
      *
      * @return The first matching {@link Broadcastable} unit that is an instance of the given class, or {@link Optional#absent()}
-     *         if not present.
+     * if not present.
      */
     @SuppressWarnings("unchecked")
     public <T extends Broadcastable> Optional<T> find(Class<T> klass) {
@@ -116,7 +125,7 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      *     Get the one and only {@link Broadcastable} unit that is an instance of this class.
      *
      * @return The single matching {@link Broadcastable} unit that is an instance of the given class, or {@link Optional#absent()}
-     *         if not present.
+     * if not present.
      */
     public <T extends Broadcastable> Optional<T> findOnly(Class<T> klass) {
         Optional<T> found = find(klass);

@@ -135,4 +135,12 @@ public class StandardRefinerTest {
 
         assertThat(ar.isRefined()).isTrue();
     }
+
+    @Test
+    public void refinesFontFace() {
+        GenericRefiner refiner = new GenericRefiner(new StatusChangingBroadcaster());
+        AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, "font-family:MyFont; src:url(MyFont.ttf);"), refiner);
+        new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+        assertThat(ar.isRefined()).isTrue();
+    }
 }

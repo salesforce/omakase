@@ -169,7 +169,6 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
         wroteFirst = false;
         for (Declaration declaration : declarations) {
             if (declaration.isWritable()) {
-
                 if (wroteFirst) {
                     appendable.append(';');
                 }
