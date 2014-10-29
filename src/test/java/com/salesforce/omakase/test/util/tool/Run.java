@@ -50,6 +50,9 @@ public class Run {
     @Option(name = "-u", aliases = "--update", usage = "regenerate data enum, data class and prefixes source files")
     private boolean update;
 
+    @Option(name = "-l", aliases = "--update-local", usage = "regenerate keyword, property and prefix enums only (no prefix data)")
+    private boolean local;
+
     @Option(name = "-s", aliases = {"--syntax", "--sub"}, usage = "print the subscribable syntax table")
     private boolean sub;
 
@@ -120,6 +123,10 @@ public class Run {
                 } else if (!exec("mvn deploy -P sfdc")) {
                     System.out.println("\n" + Colors.red("could not deploy to the sfdc nexus repo"));
                 }
+            } else if (local) {
+                new GeneratePrefixEnum().run();
+                new GenerateKeywordEnum().run();
+                new GeneratePropertyEnum().run();
             } else if (update) {
                 new GeneratePrefixEnum().run();
                 new GenerateKeywordEnum().run();
