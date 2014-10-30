@@ -105,6 +105,7 @@ public class RawAtRuleParserTest extends AbstractParserTest<RawAtRuleParser> {
                     "format('svg');\n }",
                 "@font-face {\n  font-family: 'Graublau Web';\n  src: url('GraublauWeb.eot?') format('eot'), " +
                     "url('GraublauWeb.woff') format('woff'), url('GraublauWeb.ttf') format('truetype');\n}",
+                "@font-face {\n  font-family: 'Graublau Web';\n  src: url('GraublauWeb.eot?'); unicode-range: u+ff0\n}",
                 "@media (min-width: 700px) { ... }",
                 "@media (min-width: 700px) and (orientation: landscape) { ... }",
                 "@media tv and (min-width: 700px) and (orientation: landscape) { ... }",

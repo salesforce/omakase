@@ -51,7 +51,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
     }
 
-    /** A list of invalid sources. */
+    /** A list of invalid sources. Note: this is be renamed to not applicable sources. */
     public abstract List<String> invalidSources();
 
     /**
@@ -71,7 +71,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     /**
      * Whether the parser is allowed to trim whitespace even if it doesn't successfully parse. (not allowed in some cases where
-     * whitespace can be significant, e.g., descendant combinator). ==
+     * whitespace can be significant, e.g., descendant combinator).
      */
     public abstract boolean allowedToTrimLeadingWhitespace();
 
@@ -81,6 +81,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
      *
      * @return The class.
      */
+    @SuppressWarnings("rawtypes")
     public Class<? extends Syntax> mainAstObjectClass() {
         return Syntax.class;
     }
@@ -154,6 +155,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         parser.parse(source, broadcaster);
 
+        @SuppressWarnings("rawtypes")
         Optional<? extends Syntax> syntax = broadcaster.find(mainAstObjectClass());
         if (!syntax.isPresent()) {
             fail("Test Error: expected source to broadcast a Syntax object");
@@ -213,6 +215,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     public static class ParseResult<T> {
         public QueryableBroadcaster broadcaster;
         public Iterable<Broadcastable> broadcasted;
+        @SuppressWarnings("rawtypes")
         public Iterable<Syntax> broadcastedSyntax;
         public boolean success;
         public Source source;

@@ -32,17 +32,17 @@
 .searchResults .chatterlisticon img,
 .homeTab .bPageTitle .thumbnail_visible,
 .feedcontainer .feeditemusericon {
-  height: 45px; /* pmagnusson: this is not needed, each image already have a with and height attribute. */
+  height: 45px; /* aaa: this is not needed, each image already have a with and height attribute. */
   width: 45px;
 }
 
 .feedcontainer .feeditemcommentphoto img {
-  width: 30px; /* pmagnusson: this is not needed, each image already have a with and height attribute. */
+  width: 30px; /* aaa: this is not needed, each image already have a with and height attribute. */
   height: 30px;
 }
 
 .thumbnailPanel .thumbnailTable.guests img {
-  border-color: #F07E05; /* TODO: pmagnusson replace with chatter-externalIndicator */
+  border-color: #F07E05; /* sson replace with chatter-externalIndicator */
 }
 
 .fileTypeIcon img.filePrivateIcon {
@@ -6771,7 +6771,7 @@ input#taskCreatePanel_sub {
 /**
  * Styling of the recommendations section of the chatterPage, peopleListPage, homePage
  * and some other pages.
- * @author pmagnusson
+ * @author aaa
  * @since 178
  */
 .recommend a {
@@ -7435,7 +7435,7 @@ input.socialPubButton:hover {
  * Styling of the WhatToDoNow list that appears above the recommendations widget
  * at a couple of different pages across the chatter pages.
  * Originally implemented by egustafson at 176,
- * moved here by pmagnusson at 178
+ * moved here by aaa at 178
  */
 
 .chatterlvthirdcolumn .todoListBox {
@@ -7922,7 +7922,7 @@ a:focus .feedSearchIcon {
  * more location independent with the Zen initiative.
  *
  * see SfdcApp.MruHovers.js and ChatterHover.js for more info
- * @author pmagnusson
+ * @author aaa
  * @since 178
  */
 .chatterHover {

@@ -19,7 +19,13 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.Operator;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
+import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -89,7 +95,10 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
                 "1px /*x*/ 1px 1px 1px/*x*/",
                 "/*x*/1px /*x*/ 1px 1px 1px",
                 "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)",
-                "-.8em 0 0 0"
+                "-.8em 0 0 0",
+                "U+000-49F",
+                "U+000-49F, U+2000-27FF,\nU+2900-2BFF, U+1D400-1D7FF",
+                "U+000-49F, U+27FF ,  U+29??, U+1D400-1D7FF"
             );
     }
 
@@ -124,6 +133,7 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
             withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 8), // RawFunction adds each
             withExpectedResult("-1px 1px 0 #222", 7),
             withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 17), // RawFunction adds 1 each
+            withExpectedResult("U+000-49F, U+27FF ,  U+29??,   U+1D400-1D7FF", 7),
             withExpectedResult("-1px 1px 0 #222", 7)));
 
         for (ParseResult<Integer> result : results) {

@@ -94,7 +94,10 @@ public enum Message {
     UNEXPECTED_KEYFRAME_NAME("Unexpected content after the keyframes name: %s"),
     MISSING_KEYFRAMES_BLOCK("Missing keyframes block"),
     MISSING_PERCENTAGE("Missing '%' in keyframe selector"),
-    UNEXPECTED_EXPRESSION_FONT_FACE("Unexpected expression after '@font-face'");
+    UNEXPECTED_EXPRESSION_FONT_FACE("Unexpected expression after '@font-face'"),
+    UNICODE_LONG("More than 6 hexidecimal or wildcard characters in a unicode range is not allowed"),
+    HEX_AFTER_WILDCARD("Hexidecimal characters are not allowed after a wildcard in a unicode range"),
+    WILDCARD_NOT_ALLOWED("Wildcard not allowed in unicode interval ranges");
 
     private final String message;
 

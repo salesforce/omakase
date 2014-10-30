@@ -332,7 +332,7 @@ public final class Source {
      * mostly just useful for development purposes anyway. (http://dev.w3 .org/csswg/css-syntax/#preprocessing-the-input-source)
      *
      * @return The next character (i.e., the character at the current position after the result of this call), or {@link
-     *         #NULL_CHAR} if at the end of the source.
+     * #NULL_CHAR} if at the end of the source.
      */
     public char next() {
         // if we are at the end then return null
@@ -370,6 +370,16 @@ public final class Source {
         while (newIndex > index) {
             next();
         }
+    }
+
+    /**
+     * Same as {@link #next()}, except this returns this {@link Source} object instead of the character.
+     *
+     * @return this, for chaining.
+     */
+    public Source skip() {
+        next();
+        return this;
     }
 
     /**
@@ -549,8 +559,7 @@ public final class Source {
      * @param token
      *     The token to match.
      *
-     * @return A string containing all characters that were matched, excluding the character that matched the given {@link
-     *         Token}.
+     * @return A string containing all characters that were matched, excluding the character that matched the given {@link Token}.
      */
     public String until(Token token) {
         // save the current index so we can return the matched substring

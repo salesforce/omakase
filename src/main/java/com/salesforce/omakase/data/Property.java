@@ -887,6 +887,9 @@ public enum Property {
     /** CSS property named 'unicode-bidi' */
     UNICODE_BIDI("unicode-bidi"),
 
+    /** CSS property named 'unicode-range' */
+    UNICODE_RANGE("unicode-range"),
+
     /** CSS property named 'user-modify' */
     USER_MODIFY("user-modify"),
 

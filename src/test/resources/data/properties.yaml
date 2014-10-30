@@ -285,6 +285,7 @@ properties:
   - transition-property
   - transition-timing-function
   - unicode-bidi
+  - unicode-range
   - user-modify
   - user-select
   - vertical-align

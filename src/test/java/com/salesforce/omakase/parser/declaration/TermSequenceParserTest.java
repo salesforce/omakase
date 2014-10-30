@@ -91,7 +91,10 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
                 "1px  1px 1px  /*x*/1px",
                 "1px /*x*/ 1px 1px 1px/*x*/",
                 "/*x*/1px /*x*/ 1px 1px 1px",
-                "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)"
+                "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)",
+                "U+000-49F",
+                "U+000-49F, U+2000-27FF,\nU+2900-2BFF, U+1D400-1D7FF",
+                "U+000-49F, U+27FF ,  U+29??, U+1D400-1D7FF"
             );
     }
 
@@ -102,7 +105,7 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
             withExpectedResult("#ffcc11 ", 8),
             withExpectedResult("1px 1px $ 1px", 8),
             withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 42),
-            withExpectedResult("-1px 1px 0 #222!important", 15)); // doesnt parse !important
+            withExpectedResult("-1px 1px 0 #222!important", 15)); // doesn't parse !important
     }
 
     @Override
@@ -158,6 +161,7 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
             withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 8), // RawFunction adds each
             withExpectedResult("-1px 1px 0 #222", 7),
             withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 17), // RawFunction adds 1 each
+            withExpectedResult("U+000-49F, U+27FF ,  U+29??,   U+1D400-1D7FF", 7),
             withExpectedResult("-1px 1px 0 #222", 7)));
 
         for (ParseResult<Integer> result : results) {

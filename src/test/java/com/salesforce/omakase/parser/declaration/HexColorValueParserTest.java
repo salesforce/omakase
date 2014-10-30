@@ -34,7 +34,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public class HexColorValueParserTest extends AbstractParserTest<HexColorValueParser> {
     @Override
     public List<String> invalidSources() {
@@ -90,8 +90,8 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
         return false;
     }
 
-    @Override
     @Test
+    @Override
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<String>> results = parseWithExpected(
             withExpectedResult("#ffffff red", "ffffff"),

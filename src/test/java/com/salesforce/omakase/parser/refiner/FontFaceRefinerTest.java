@@ -41,7 +41,7 @@ import static org.fest.assertions.api.Assertions.*;
 public class FontFaceRefinerTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
-    private final String SAMPLE = "font-family: MyFont;\n" +
+    private static final String SAMPLE = "font-family: MyFont;\n" +
         "  src: local(\"My Font\"), local(\"MyFont\"), url(MyFont.ttf);\n" +
         "  font-weight: bold;";
 
@@ -103,11 +103,13 @@ public class FontFaceRefinerTest {
         assertThat(ar.block().get()).isInstanceOf(FontFaceBlock.class);
     }
 
-//    TODO unicode test
-//    @Test
-//    public void fontFaceWithUnicodeRange() {
-//        fail("do it");
-//    }
+    @Test
+    public void fontFaceWithUnicodeRange() {
+        // just test that it can handle it without stumbling
+        String src = "font-family:MyFont; unicode-range: U+400-4ff";
+        AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, src), refiner);
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+    }
 
     @Test
     public void fontFaceWithBase64() {

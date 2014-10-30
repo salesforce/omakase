@@ -234,6 +234,20 @@ public class SourceTest {
     }
 
     @Test
+    public void skip() {
+        Source source = new Source("abc");
+        source.skip();
+        assertThat(source.index()).isEqualTo(1);
+    }
+
+    @Test
+    public void skipAtEnd() {
+        Source source = new Source("abc");
+        source.skip().skip().skip().skip();
+        assertThat(source.eof()).isTrue();
+    }
+
+    @Test
     public void peek() {
         Source source = new Source("abc");
         assertThat(source.peek()).isEqualTo('b');

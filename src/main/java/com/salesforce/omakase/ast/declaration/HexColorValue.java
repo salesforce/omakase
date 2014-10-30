@@ -50,7 +50,7 @@ public final class HexColorValue extends AbstractTerm {
      * @param column
      *     The column number.
      * @param color
-     *     The hex color (do not include the #).
+     *     The hex color (do not include the #). Automatically lower-cased.
      */
     public HexColorValue(int line, int column, String color) {
         super(line, column);
@@ -85,10 +85,10 @@ public final class HexColorValue extends AbstractTerm {
     }
 
     /**
-     * Sets the value of the color (converted to lower-case).
+     * Sets the value of the color (will be converted to lower-case).
      *
      * @param color
-     *     The hex color (do not include the #).
+     *     The hex color (do not include the #). Automatically lower-cased.
      *
      * @return this, for chaining.
      */
@@ -144,7 +144,7 @@ public final class HexColorValue extends AbstractTerm {
      * </pre>
      *
      * @param color
-     *     The color value.
+     *     The color value. Automatically lower-cased.
      *
      * @return The new {@link HexColorValue} instance.
      */

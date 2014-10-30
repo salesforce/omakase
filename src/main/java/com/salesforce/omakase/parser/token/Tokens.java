@@ -94,6 +94,12 @@ public enum Tokens implements Token {
     /** exclamation */
     EXCLAMATION('!', "!"),
 
+    /** question mark */
+    QUESTION('?', "?"),
+
+    /** u (unicode-range delimiter) */
+    U(anyOf("Uu"), "u (case-insensitive)"),
+
     /** double quote */
     DOUBLE_QUOTE('"', "\" (double quote)"),
 
@@ -114,6 +120,9 @@ public enum Tokens implements Token {
 
     /** color in hex format */
     HEX_COLOR(inRange('a', 'f').or(inRange('0', '9')).or(inRange('A', 'F')), "hex color [a-fA-F0-9]{3,6}"),
+
+    /** hexidecimal number */
+    HEXIDECIMAL(inRange('0', '9').or(inRange('a', 'f').or(inRange('A', 'F'))), "hexidecimal number [a-fA-F0-9]"),
 
     /** first allowed character in a css ident/name (ordered based on likelihood of occurrence) */
     NMSTART(inRange('a', 'z').or(inRange('A', 'Z').or(is('_'))), "valid first identifier character (no digits)"),

@@ -90,6 +90,16 @@ public class StandardRefinerTest {
     }
 
     @Test
+    public void refinedDeclarationBadUrange() {
+        RawSyntax name = new RawSyntax(2, 3, "unicode-range");
+        RawSyntax value = new RawSyntax(2, 5, "u+ffx");
+
+        exception.expect(ParserException.class);
+        exception.expectMessage("Unable to parse remaining declaration value");
+        new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster())).refine();
+    }
+
+    @Test
     public void refineDeclarationAddsOrphanedComments() {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");

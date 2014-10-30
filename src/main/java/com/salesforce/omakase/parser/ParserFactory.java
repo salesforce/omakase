@@ -87,9 +87,11 @@ public final class ParserFactory {
     private static final Parser keywordValue = new KeywordValueParser();
     private static final Parser hexColorValue = new HexColorValueParser();
     private static final Parser stringValue = new StringValueParser();
+    private static final Parser unicodeRangeValue = new UnicodeRangeValueParser();
 
     private static final Parser term = hexColorValue
         .or(functionValue)
+        .or(unicodeRangeValue)
         .or(keywordValue)
         .or(numericalValue)
         .or(stringValue);
@@ -315,6 +317,15 @@ public final class ParserFactory {
      */
     public static Parser stringValueParser() {
         return stringValue;
+    }
+
+    /**
+     * Gets the {@link UnicodeRangeValueParser}.
+     *
+     * @return The parser instance.
+     */
+    public static Parser unicodeRangeValueParser() {
+        return unicodeRangeValue;
     }
 
     /**
