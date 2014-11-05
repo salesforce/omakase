@@ -99,7 +99,7 @@ public final class FontFaceBlock extends AbstractSyntax<StatementIterable> imple
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
-        appendable.indentIf(!writer.isCompressed());
+        appendable.indentIf(writer.isVerbose());
 
         // font descriptors
         boolean wroteFirst = false;
