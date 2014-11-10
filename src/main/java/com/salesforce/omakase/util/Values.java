@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.writer.StyleWriter;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +36,15 @@ import java.util.List;
  * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.propertyValue())}
  * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue())}
  * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue())}
+ * </pre>
+ * <p/>
+ * This also has a convenience function for getting the textual value of a {@link Term} within a {@link PropertyValue}, when you
+ * know the {@link PropertyValue} should only have one {@link Term} but you aren't quite sure (or it doesn't quite matter) what
+ * specific {@link Term} it is.
+ * <p/>
+ * Example:
+ * <pre>
+ * {@code Optional<String> font = Values.textual(propertyValue); // get font name whether from a string or keyword term}
  * </pre>
  *
  * @author nmcwilliams
@@ -58,7 +68,7 @@ public final class Values {
      *     The value.
      *
      * @return The hex color value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as
-     *         stated above.
+     * stated above.
      */
     public static Optional<HexColorValue> asHexColor(PropertyValue value) {
         return as(HexColorValue.class, value);
@@ -79,7 +89,7 @@ public final class Values {
      *     The value.
      *
      * @return The keyword value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
-     *         above.
+     * above.
      */
     public static Optional<KeywordValue> asKeyword(PropertyValue value) {
         return as(KeywordValue.class, value);
@@ -100,7 +110,7 @@ public final class Values {
      *     The value.
      *
      * @return The numerical value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as
-     *         stated above.
+     * stated above.
      */
     public static Optional<NumericalValue> asNumerical(PropertyValue value) {
         return as(NumericalValue.class, value);
@@ -121,7 +131,7 @@ public final class Values {
      *     The value.
      *
      * @return The string value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
-     *         above.
+     * above.
      */
     public static Optional<StringValue> asString(PropertyValue value) {
         return as(StringValue.class, value);
@@ -217,6 +227,8 @@ public final class Values {
      *     The list of {@link PropertyValue}s to join.
      *
      * @return The new {@link PropertyValue} instance.
+     *
+     * @see #split(OperatorType, PropertyValue)
      */
     public static PropertyValue join(OperatorType operatorType, Iterable<PropertyValue> toJoin) {
         PropertyValue joined = new PropertyValue();
@@ -227,5 +239,40 @@ public final class Values {
         }
 
         return joined;
+    }
+
+    /**
+     * Gets the <em>textual</em> content of the single {@link Term} within the given {@link PropertyValue}. The returned {@link
+     * Optional} will only be present if the given property value contains only one {@link Term}.
+     * <p/>
+     * This method may be useful as a generic way of getting the value of unknown or potentially varying term types.
+     * <p/>
+     * <b>Important:</b> this is not a substitute or a replica of how the term will actually be written to a stylesheet. The
+     * textual content returned may not include certain tokens and outer symbols such as hashes, quotes, parenthesis, etc... . To
+     * get the textual content as it would be written to a stylesheet see {@link StyleWriter#writeSingle (Writable)} instead.
+     * However note that you should rarely have need for doing that outside of actually creating stylesheet output.
+     * <p/>
+     * {@link KeywordValue}s will simply return the keyword, {@link StringValue}s will return the contents of the string <b>not
+     * including quotes</b>, functions will return the content of the function not including the parenthesis, {@link
+     * HexColorValue} will return the hex value without the leading '#' , and so on... See each specific {@link Term}
+     * implementation for more details.
+     * <p/>
+     * <b>Important:</b> if the given property value has more than one term then this method will return {@link
+     * Optional#absent()}. It will not concatenate term values.
+     *
+     * @param value
+     *     The value.
+     *
+     * @return The textual content, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as
+     * stated above.
+     *
+     * @see Term#textualValue()
+     */
+    public static Optional<String> textual(PropertyValue value) {
+        ImmutableList<Term> terms = value.terms();
+        if (terms.size() == 1) {
+            return Optional.of(terms.get(0).textualValue());
+        }
+        return Optional.absent();
     }
 }

@@ -76,6 +76,12 @@ public class HexColorValueTest {
     }
 
     @Test
+    public void textualValueIncludesNumberOnly() {
+        value = new HexColorValue(5, 2, "123123");
+        assertThat(value.textualValue()).isEqualTo("123123");
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         value = HexColorValue.of("fff");
         StyleWriter writer = StyleWriter.verbose();

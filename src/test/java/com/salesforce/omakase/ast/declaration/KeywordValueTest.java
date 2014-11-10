@@ -61,6 +61,12 @@ public class KeywordValueTest {
     }
 
     @Test
+    public void textualValueReturnsKeyword() {
+        value = new KeywordValue("red");
+        assertThat(value.textualValue()).isEqualTo("red");
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         value = KeywordValue.of("absolute");
         StyleWriter writer = StyleWriter.verbose();

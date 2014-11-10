@@ -117,6 +117,16 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
         return quotationMode;
     }
 
+    /**
+     * Gets the url (does not includes quotes). Prefer to use {@link #url()}, which is identical to this method.
+     *
+     * @return The url.
+     */
+    @Override
+    public String textualValue() {
+        return url();
+    }
+
     @Override
     public String name() {
         return "url";

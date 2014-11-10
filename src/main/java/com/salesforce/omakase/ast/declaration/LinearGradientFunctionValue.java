@@ -133,6 +133,16 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
         return repeating;
     }
 
+    /**
+     * Gets the raw function arguments. Prefer to use {@link #args()}, which is identical to this method.
+     *
+     * @return The function arguments.
+     */
+    @Override
+    public String textualValue() {
+        return args;
+    }
+
     @Override
     public String name() {
         return repeating ? "repeating-linear-gradient" : "linear-gradient";

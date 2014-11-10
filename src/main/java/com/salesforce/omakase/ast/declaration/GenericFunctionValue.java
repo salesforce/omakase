@@ -120,6 +120,16 @@ public final class GenericFunctionValue extends AbstractTerm implements Function
         return args;
     }
 
+    /**
+     * Gets the raw arguments. Prefer to use {@link #args()}, which is identical to this method.
+     *
+     * @return The inner arguments.
+     */
+    @Override
+    public String textualValue() {
+        return args();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // for args (compression here is tricky, probably sufficient to reduce repeating whitespace)

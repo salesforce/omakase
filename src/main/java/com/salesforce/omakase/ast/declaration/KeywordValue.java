@@ -126,6 +126,16 @@ public final class KeywordValue extends AbstractTerm {
         return Optional.fromNullable(Keyword.lookup(keyword));
     }
 
+    /**
+     * Gets the keyword value. Prefer to use {@link #keyword()}, which is identical to this method.
+     *
+     * @return The keyword.
+     */
+    @Override
+    public String textualValue() {
+        return keyword();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(keyword);

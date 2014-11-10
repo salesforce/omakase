@@ -72,6 +72,16 @@ public final class UnquotedIEFilter extends AbstractTerm {
         return content;
     }
 
+    /**
+     * Gets the content. Prefer to use {@link #content()}, which is identical to this method.
+     *
+     * @return The content.
+     */
+    @Override
+    public String textualValue() {
+        return content();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(content);

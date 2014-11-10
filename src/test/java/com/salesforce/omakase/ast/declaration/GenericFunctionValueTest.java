@@ -70,6 +70,12 @@ public class GenericFunctionValueTest {
     }
 
     @Test
+    public void textualValueReturnsArgs() {
+        value = new GenericFunctionValue("url", "home.png");
+        assertThat(value.textualValue()).isEqualTo("home.png");
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         value = new GenericFunctionValue("url", "home.png");
         assertThat(StyleWriter.verbose().writeSnippet(value)).isEqualTo("url(home.png)");

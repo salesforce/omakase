@@ -72,6 +72,12 @@ public class LinearGradientFunctionValueTest {
     }
 
     @Test
+    public void textualValueReturnsArgs() {
+        function = new LinearGradientFunctionValue("red, yellow");
+        assertThat(function.textualValue()).isEqualTo("red, yellow");
+    }
+
+    @Test
     public void testWrite() {
         function = new LinearGradientFunctionValue("to top, red, #fcc");
         assertThat(StyleWriter.writeSingle(function)).isEqualTo("linear-gradient(to top, red, #fcc)");

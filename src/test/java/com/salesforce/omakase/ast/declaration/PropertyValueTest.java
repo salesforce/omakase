@@ -204,5 +204,10 @@ public class PropertyValueTest {
         protected PropertyValueMember makeCopy(Prefix prefix, SupportMatrix support) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public String textualValue() {
+            throw new UnsupportedOperationException();
+        }
     }
 }

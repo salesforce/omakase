@@ -125,6 +125,16 @@ public final class HexColorValue extends AbstractTerm {
         return color.length() == 3;
     }
 
+    /**
+     * Gets the color value (does not include the #). Prefer to use {@link #color()}, which is identical to this method.
+     *
+     * @return The color value.
+     */
+    @Override
+    public String textualValue() {
+        return color();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append('#').append(color);

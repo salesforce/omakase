@@ -64,6 +64,12 @@ public class NumericalValueTest {
     }
 
     @Test
+    public void valueFromStringLeadingZero() {
+        numerical = new NumericalValue(5, 5, "000.100");
+        assertThat(numerical.value()).isEqualTo("000.100");
+    }
+
+    @Test
     public void setValueFromInteger() {
         numerical = new NumericalValue(1);
         numerical.value(100);
@@ -77,6 +83,21 @@ public class NumericalValueTest {
         numerical.value(10.5);
         assertThat(numerical.value()).isEqualTo("10.5");
         assertThat(numerical.doubleValue()).isEqualTo(10.5);
+    }
+
+    @Test
+    public void setValueFromDoubleLeadingZero() {
+        numerical = new NumericalValue(5);
+        numerical.value(0.5);
+        assertThat(numerical.value()).isEqualTo("0.5");
+        assertThat(numerical.doubleValue()).isEqualTo(0.5);
+    }
+
+    @Test
+    public void setValueFromDoubleManyLeadingZero() {
+        numerical = new NumericalValue(5);
+        numerical.value(000.5);
+        assertThat(numerical.value()).isEqualTo("0.5");
     }
 
     @Test
@@ -144,6 +165,45 @@ public class NumericalValueTest {
         assertThat(numerical.isNegative()).isFalse();
         numerical.explicitSign(NumericalValue.Sign.POSITIVE);
         assertThat(numerical.isNegative()).isFalse();
+    }
+
+    @Test
+    public void textualValueInteger() {
+        numerical = NumericalValue.of(10);
+        assertThat(numerical.textualValue()).isEqualTo("10");
+    }
+
+    @Test
+    public void textualValueDouble() {
+        numerical = NumericalValue.of(10.5);
+        assertThat(numerical.textualValue()).isEqualTo("10.5");
+    }
+
+    @Test
+    public void textualValueLeadingZero() {
+        numerical = NumericalValue.of(0.9);
+        assertThat(numerical.textualValue()).isEqualTo("0.9");
+    }
+
+    @Test
+    public void textualValueNumberAndSign() {
+        numerical = NumericalValue.of(10).explicitSign(NumericalValue.Sign.NEGATIVE);
+        assertThat(numerical.textualValue()).isEqualTo("-10");
+    }
+
+    @Test
+    public void textualValueNumberAndUnit() {
+        numerical = NumericalValue.of(10).unit("px");
+        assertThat(numerical.textualValue()).isEqualTo("10px");
+    }
+
+    @Test
+    public void textualValueNumberSignAndUnit() {
+        numerical = NumericalValue.of(10)
+            .unit("px")
+            .explicitSign(NumericalValue.Sign.NEGATIVE);
+
+        assertThat(numerical.textualValue()).isEqualTo("-10px");
     }
 
     @Test

@@ -19,6 +19,9 @@ package com.salesforce.omakase.ast.declaration;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.util.Values;
+import com.salesforce.omakase.writer.StyleWriter;
+import com.salesforce.omakase.writer.Writable;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
@@ -38,4 +41,32 @@ public interface Term extends PropertyValueMember {
      * @return The parent {@link Declaration}, or {@link Optional#absent()} if this term is detached or without a parent.
      */
     Optional<Declaration> declaration();
+
+    /**
+     * Gets the <em>textual</em> content of this term.
+     * <p/>
+     * This method may be useful as a generic way of getting the value of unknown or potentially varying term types.
+     * <p/>
+     * If you have the concrete type of the {@link Term} in hand, prefer to use the more specific getter method instead of this
+     * one.
+     * <p/>
+     * <b>Important:</b> this is not a substitute or a replica of how the term will actually be written to a stylesheet. The
+     * textual content returned may not include certain tokens and outer symbols such as hashes, quotes, parenthesis, etc... . To
+     * get the textual content as it would be written to a stylesheet see {@link StyleWriter#writeSingle(Writable)} instead.
+     * However note that you should rarely have need for doing that outside of actually creating stylesheet output.
+     * <p/>
+     * {@link KeywordValue}s will simply return the keyword, {@link StringValue}s will return the contents of the string <b>not
+     * including quotes</b>, functions will return the content of the function not including the parenthesis, {@link
+     * HexColorValue} will return the hex value without the leading '#' , and so on... See each specific {@link Term}
+     * implementation for more details.
+     * <p/>
+     * For custom {@link Term} implementations-- You should return the most appropriate string value representing the inner
+     * content of your term. If this is not applicable, either throw {@link UnsupportedOperationException} or return an empty
+     * string. Do not return null.
+     *
+     * @return The textual content.
+     *
+     * @see {@link Values#textual(PropertyValue)}
+     */
+    String textualValue();
 }

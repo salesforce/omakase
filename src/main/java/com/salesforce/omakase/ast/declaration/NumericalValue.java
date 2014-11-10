@@ -131,6 +131,7 @@ public final class NumericalValue extends AbstractTerm {
         checkArgument(value >= 0, "value must not be negative. Use explicitSign() for negative values");
         DecimalFormat fmt = new DecimalFormat("#");
         fmt.setMaximumIntegerDigits(309);
+        fmt.setMinimumIntegerDigits(1);
         fmt.setMaximumFractionDigits(340);
         this.raw = fmt.format(value);
         return this;
@@ -224,10 +225,32 @@ public final class NumericalValue extends AbstractTerm {
         return explicitSign.isPresent() && explicitSign.get() == Sign.NEGATIVE;
     }
 
+    /**
+     * Returns the sign (if explicitly present), the number, and the unit (if present).
+     *
+     * @return The number, including sign and and unit if explicitly present.
+     */
+    @Override
+    public String textualValue() {
+        StringBuilder builder = new StringBuilder();
+
+        if (explicitSign.isPresent()) {
+            builder.append(explicitSign.get().symbol);
+        }
+
+        builder.append(raw);
+
+        if (unit.isPresent()) {
+            builder.append(unit.get());
+        }
+
+        return builder.toString();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // sign
-        if (explicitSign().isPresent()) {
+        if (explicitSign.isPresent()) {
             appendable.append(explicitSign.get().symbol);
         }
 

@@ -54,6 +54,12 @@ public class StringValueTest {
     }
 
     @Test
+    public void textualValueReturnsContent() {
+        StringValue s = new StringValue(QuotationMode.DOUBLE, "test");
+        assertThat(s.textualValue()).isEqualTo("test");
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.verbose();

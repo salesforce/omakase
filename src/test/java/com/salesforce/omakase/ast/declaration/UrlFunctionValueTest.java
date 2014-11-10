@@ -58,6 +58,13 @@ public class UrlFunctionValueTest {
     }
 
     @Test
+    public void textualValueReturnsUrl() {
+        UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
+        url.quotationMode(QuotationMode.DOUBLE);
+        assertThat(url.url()).isEqualTo("/images/one.png");
+    }
+
+    @Test
     public void writeSingleQuotes() throws IOException {
         UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
         url.quotationMode(QuotationMode.SINGLE);

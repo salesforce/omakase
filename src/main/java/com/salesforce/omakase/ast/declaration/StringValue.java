@@ -115,6 +115,16 @@ public final class StringValue extends AbstractTerm {
         return mode;
     }
 
+    /**
+     * Gets the content of the string. Prefer to use {@link #content()}, which is identical to this method.
+     *
+     * @return The content of the string.
+     */
+    @Override
+    public String textualValue() {
+        return content();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (mode == QuotationMode.SINGLE) {

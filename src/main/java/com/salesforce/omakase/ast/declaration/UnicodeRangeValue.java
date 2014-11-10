@@ -116,6 +116,16 @@ public class UnicodeRangeValue extends AbstractTerm {
         return value;
     }
 
+    /**
+     * Gets the unicode-range value. Prefer to use {@link #value()}, which is identical to this method.
+     *
+     * @return The unicode-range value.
+     */
+    @Override
+    public String textualValue() {
+        return value();
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(value);

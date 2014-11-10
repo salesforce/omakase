@@ -58,6 +58,12 @@ public class UnicodeRangeValueTest {
     }
 
     @Test
+    public void textualValueReturnsValue() {
+        range = new UnicodeRangeValue(5, 10, "u+ff0");
+        assertThat(range.textualValue()).isEqualTo("u+ff0");
+    }
+
+    @Test
     public void writeVerbose() {
         range = new UnicodeRangeValue(5, 10, "u+0025-00ff");
         StyleWriter writer = StyleWriter.verbose();
