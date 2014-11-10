@@ -70,4 +70,9 @@ public final class ThrowingErrorManager implements ErrorManager {
             logger.warn(ErrorUtils.format(cause, sourceName, message));
         }
     }
+
+    @Override
+    public String getSourceName() {
+        return sourceName;
+    }
 }

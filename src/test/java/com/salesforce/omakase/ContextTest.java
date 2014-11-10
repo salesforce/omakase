@@ -227,6 +227,11 @@ public class ContextTest {
         public void report(ErrorLevel level, Syntax<?> cause, String message) {
             reported = true;
         }
+
+        @Override
+        public String getSourceName() {
+            return null;
+        }
     }
 
     @SuppressWarnings("StaticNonFinalField") static int num;

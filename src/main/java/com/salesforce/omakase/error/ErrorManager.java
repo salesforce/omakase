@@ -46,4 +46,11 @@ public interface ErrorManager {
      *     The error message.
      */
     void report(ErrorLevel level, Syntax<?> cause, String message);
+
+    /**
+     * Gets the name of the source currently being parsed. If not available this may return null.
+     *
+     * @return The name of the source currently being parsed.
+     */
+    String getSourceName();
 }

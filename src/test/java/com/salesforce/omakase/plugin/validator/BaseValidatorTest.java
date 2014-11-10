@@ -167,5 +167,10 @@ public class BaseValidatorTest<T extends Plugin> {
             this.level = level;
             this.message = message;
         }
+
+        @Override
+        public String getSourceName() {
+            return null;
+        }
     }
 }
