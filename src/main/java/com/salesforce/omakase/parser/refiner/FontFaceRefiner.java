@@ -79,6 +79,7 @@ public class FontFaceRefiner implements AtRuleRefiner {
         ParserFactory.rawDeclarationSequenceParser().parse(source, queryable, refiner);
 
         // pull the property name and property values into font descriptors and add them to the block
+        // FIXME avoid this auto refinement
         for (Declaration declaration : ImmutableList.copyOf(queryable.filter(Declaration.class))) {
             block.fontDescriptors().append(new FontDescriptor(declaration.propertyName(), declaration.propertyValue()));
         }
