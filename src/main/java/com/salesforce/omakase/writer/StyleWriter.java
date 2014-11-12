@@ -18,9 +18,11 @@ package com.salesforce.omakase.writer;
 
 import com.google.common.collect.Maps;
 import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.util.As;
 
 import java.io.IOException;
 import java.util.Map;
@@ -53,13 +55,19 @@ import static com.google.common.base.Preconditions.*;
  * </code></pre>
  * <p/>
  * Unless otherwise specified, {@link WriterMode#INLINE} will be used.
+ * <p/>
+ * By default this will not write out CSS comments, however you can change that behavior with {@link #writeComments(boolean)}.
  *
  * @author nmcwilliams
  */
 public final class StyleWriter implements DependentPlugin {
     private final Map<Class<? extends Writable>, CustomWriter<?>> overrides = Maps.newHashMap();
+
     private SyntaxTree tree;
     private WriterMode mode;
+
+    private boolean writeComments;
+    private boolean onlyAnnotated;
 
     /** Creates a new {@link StyleWriter} instance using {@link WriterMode#INLINE}. */
     public StyleWriter() {
@@ -95,6 +103,15 @@ public final class StyleWriter implements DependentPlugin {
     }
 
     /**
+     * Gets the {@link WriterMode}.
+     *
+     * @return The writer mode.
+     */
+    public WriterMode mode() {
+        return mode;
+    }
+
+    /**
      * Gets whether the current {@link WriterMode} is {@link WriterMode#VERBOSE}.
      *
      * @return True if the current {@link WriterMode} is verbose.
@@ -119,6 +136,57 @@ public final class StyleWriter implements DependentPlugin {
      */
     public boolean isCompressed() {
         return mode == WriterMode.COMPRESSED;
+    }
+
+    /**
+     * Gets whether comments will be written out.
+     *
+     * @return True if comments will be written out.
+     */
+    public boolean shouldWriteComments() {
+        return writeComments;
+    }
+
+    /**
+     * Specifies whether only annotated comments should be written out. See {@link #writeComments(boolean, boolean)},
+     *
+     * @return True if only annotated comments should be written out.
+     */
+    public boolean onlyWriteAnnotatedComments() {
+        return onlyAnnotated;
+    }
+
+    /**
+     * Sets whether comments will be written out.
+     *
+     * @param writeComments
+     *     Whether comments should be written out.
+     *
+     * @return this, for chaining.
+     */
+    public StyleWriter writeComments(boolean writeComments) {
+        return writeComments(writeComments, false);
+    }
+
+    /**
+     * Sets whether comments will be written out.
+     * <p/>
+     * Use this method to specify that only annotated comments should be written out. For example:
+     * <pre>
+     * <code>writer.writeComments(true, true);</code>
+     * </pre>
+     *
+     * @param writeComments
+     *     Whether comments should be written out.
+     * @param onlyAnnotated
+     *     If writeComments was specified true, indicate whether only annotated comments should be written out.
+     *
+     * @return this, for chaining.
+     */
+    public StyleWriter writeComments(boolean writeComments, boolean onlyAnnotated) {
+        this.writeComments = writeComments;
+        this.onlyAnnotated = onlyAnnotated;
+        return this;
     }
 
     /**
@@ -193,13 +261,16 @@ public final class StyleWriter implements DependentPlugin {
      * <p/>
      * This is usually used within implementations of {@link Writable#write(StyleWriter, StyleAppendable)} to write inner units.
      * To write a single, isolated object use {@link #writeSnippet(Writable)} instead.
+     * <p/>
+     * This will automatically handle writing out comments and orphaned comments if the given writable is a {@link Syntax} unit,
+     * if applicable according to the current options.
      *
-     * @param <T>
-     *     Type of the unit to write.
      * @param writable
      *     The unit to write.
      * @param appendable
      *     Write the unit's output to this {@link StyleAppendable}.
+     * @param <T>
+     *     Type of the unit to write.
      *
      * @throws IOException
      *     If an I/O error occurs.
@@ -207,12 +278,24 @@ public final class StyleWriter implements DependentPlugin {
     @SuppressWarnings("unchecked")
     public <T extends Writable> void writeInner(T writable, StyleAppendable appendable) throws IOException {
         Class<? extends Writable> klass = writable.getClass();
+        Syntax<?> syntax = (writable instanceof Syntax) ? (Syntax<?>)writable : null;
 
         if (overrides.containsKey(klass)) {
             // cast is safe as long as the map is guarded by #override
             ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
         } else if (writable.isWritable()) {
+            // write comments
+            if (syntax != null && !syntax.writesOwnComments()) {
+                StyleWriter.appendComments(syntax.comments(), this, appendable);
+            }
+
+            // write the object
             writable.write(this, appendable);
+
+            // write orphaned comments
+            if (syntax != null && !syntax.writesOwnOrphanedComments()) {
+                StyleWriter.appendComments(syntax.orphanedComments(), this, appendable);
+            }
         }
     }
 
@@ -256,6 +339,11 @@ public final class StyleWriter implements DependentPlugin {
         }
 
         return appendable.toString();
+    }
+
+    @Override
+    public String toString() {
+        return As.string(this).add("mode", mode).add("writeComments", writeComments).toString();
     }
 
     /**
@@ -313,5 +401,31 @@ public final class StyleWriter implements DependentPlugin {
      */
     public static String writeSingle(Writable writable, WriterMode mode) {
         return new StyleWriter(mode).writeSnippet(writable);
+    }
+
+    /**
+     * Utility method for assisting with writing comments.
+     *
+     * @param comments
+     *     The comments to write.
+     * @param writer
+     *     The {@link StyleWriter} containing the configuration information.
+     * @param appendable
+     *     Write the unit's output to this {@link StyleAppendable}.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     * @see Syntax#writesOwnComments()
+     * @see Syntax#writesOwnOrphanedComments()
+     */
+    public static void appendComments(Iterable<Comment> comments, StyleWriter writer, StyleAppendable appendable) throws
+        IOException {
+        if (writer.shouldWriteComments()) {
+            for (Comment comment : comments) {
+                if (!writer.onlyWriteAnnotatedComments() || comment.annotation().isPresent()) {
+                    writer.writeInner(comment, appendable);
+                }
+            }
+        }
     }
 }

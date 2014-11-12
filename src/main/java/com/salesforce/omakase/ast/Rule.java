@@ -139,6 +139,11 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
     }
 
     @Override
+    public boolean writesOwnOrphanedComments() {
+        return true;
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // newlines (unless first statement)
         if (!writer.isCompressed() && !isFirst()) {
@@ -185,6 +190,9 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
         }
 
         if (wroteFirst && writer.isVerbose()) appendable.append(';');
+
+        // custom handling of orphaned comments if they exist, because they have to go before the closing brace
+        StyleWriter.appendComments(orphanedComments(), writer, appendable);
 
         // close declaration block
         appendable.unindentIf(writer.isVerbose());

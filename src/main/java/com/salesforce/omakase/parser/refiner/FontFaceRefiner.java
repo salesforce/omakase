@@ -84,6 +84,9 @@ public class FontFaceRefiner implements AtRuleRefiner {
             block.fontDescriptors().append(new FontDescriptor(declaration));
         }
 
+        // add orphaned comments
+        block.orphanedComments(source.collectComments().flushComments());
+
         // nothing should be left in the source
         if (!source.eof()) {
             throw new ParserException(source, Message.UNPARSABLE_FONT_FACE, source.remaining());

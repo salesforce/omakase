@@ -96,6 +96,11 @@ public final class FontFaceBlock extends AbstractSyntax<StatementIterable> imple
     }
 
     @Override
+    public boolean writesOwnOrphanedComments() {
+        return true;
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
@@ -120,6 +125,9 @@ public final class FontFaceBlock extends AbstractSyntax<StatementIterable> imple
             }
         }
         if (wroteFirst && writer.isVerbose()) appendable.append(';');
+
+        // custom handling of orphaned comments if they exist, because they have to go before the closing brace
+        StyleWriter.appendComments(orphanedComments(), writer, appendable);
 
         // close block
         appendable.unindentIf(writer.isVerbose());

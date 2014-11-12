@@ -28,6 +28,8 @@ import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;
 
+import java.util.List;
+
 /**
  * Parses an {@link AtRule}.
  *
@@ -61,6 +63,7 @@ public final class RawAtRuleParser extends AbstractParser {
 
         // skip whitespace after the expression
         source.skipWhitepace();
+        List<String> comments = source.flushComments();
 
         RawSyntax block = null;
 
@@ -75,9 +78,11 @@ public final class RawAtRuleParser extends AbstractParser {
         // expression content must be present
         if (expression == null && block == null) throw new ParserException(source, Message.MISSING_AT_RULE_VALUE);
 
+        source.flushComments(); // ignore any comments that were in the block, the block itself will handle them
+
         // create and broadcast the new rule
         AtRule rule = new AtRule(startLine, startColumn, name.get(), expression, block, refiner);
-        rule.comments(source.flushComments());
+        rule.comments(comments);
         broadcaster.broadcast(rule);
 
         return true;

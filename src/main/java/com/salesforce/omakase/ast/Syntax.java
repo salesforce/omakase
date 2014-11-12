@@ -27,6 +27,8 @@ import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
 
 import java.util.List;
@@ -171,8 +173,8 @@ public interface Syntax<C> extends Writable, Broadcastable {
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.
      * <p/>
-     * A unit is associated with all comments that directly precede it. In the case of selectors, both the {@link Selector} object
-     * and the first {@link SimpleSelector} within the {@link Selector} object will return the same comments.
+     * A unit is associated with all comments that directly precede it. However in the case of the <em>first</em> {@link
+     * SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the comment instead.
      *
      * @return The list of comments. Never returns null.
      */
@@ -217,8 +219,9 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
      * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
      * <p/>
-     * Any comments that precede this unit in the source code will be checked for the annotation. For more information see the
-     * main readme file.
+     * Any comments that precede this unit in the source code will be checked for the annotation. However in the case of the
+     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
+     * annotation instead. For more information see the main readme file.
      *
      * @param name
      *     Check for an annotation with this name.
@@ -235,6 +238,11 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * efficiency.
      * <p/>
      * The annotation must match according to the rules defined in {@link CssAnnotation#equals(Object)}.
+     * <p/>
+     * In additional to dynamically added annotations, this will also match against regular comments from the source file. Any
+     * comments that precede this unit in the source code will be checked for the annotation. However in the case of the
+     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
+     * annotation instead. For more information see the main readme file.
      *
      * @param annotation
      *     Check for a {@link CssAnnotation} that equals this one.
@@ -252,8 +260,9 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
      * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
      * <p/>
-     * Any comments that precede this unit in the source code will be checked for the annotation. For more information see the
-     * main readme file.
+     * Any comments that precede this unit in the source code will be checked for the annotation. However in the case of the
+     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
+     * annotation instead. For more information see the main readme file.
      *
      * @param name
      *     Get the annotation with this name.
@@ -271,8 +280,9 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
      * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
      * <p/>
-     * Any comments that precede this unit in the source code will be checked for the annotation. For more information see the
-     * main readme file.
+     * Any comments that precede this unit in the source code will be checked for the annotation.However in the case of the
+     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
+     * annotation instead. For more information see the main readme file.
      *
      * @return All found {@link CssAnnotation}s.
      */
@@ -293,4 +303,28 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *     Append this annotation.
      */
     void annotate(CssAnnotation annotation);
+
+    /**
+     * Specifies whether this object will handle writing its own comments, instead of the automatic behavior of the {@link
+     * StyleWriter}.
+     * <p/>
+     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be written
+     * out or not. The {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)} utility method contains this
+     * logic and is the preferable way to handle it.
+     *
+     * @return True if this object writes its own comments.
+     */
+    boolean writesOwnComments();
+
+    /**
+     * Specifies whether this object will handle writing its own orphaned comments, instead of the automatic behavior of the
+     * {@link StyleWriter}.
+     * <p/>
+     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be written
+     * out or not. The {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)} utility method contains this
+     * logic and is the preferable way to handle it.
+     *
+     * @return True if this object writes its own comments.
+     */
+    boolean writesOwnOrphanedComments();
 }

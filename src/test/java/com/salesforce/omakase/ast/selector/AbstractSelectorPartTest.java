@@ -53,9 +53,10 @@ public class AbstractSelectorPartTest {
 
     @Test
     public void commentsWhenAttached() {
+        // note - changed behavior to not include parent selector comments
         selector.comments(Lists.newArrayList("test"));
         part.comments(Lists.newArrayList("test"));
-        assertThat(part.comments()).hasSize(2);
+        assertThat(part.comments()).hasSize(1);
     }
 
     @Test

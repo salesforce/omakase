@@ -32,9 +32,13 @@ import java.io.IOException;
  * {@link ClassSelector} override will not be utilized unless {@link Selector#refine()} is called on the parent {@link Selector}.
  * An easy way to handle this is with an {@link AutoRefiner}. See the notes on that class for more information.
  * <p/>
- * <b>Also Important:</b> The default {@link StyleWriter} (in {@link StyleWriter#writeInner(Writable, StyleAppendable)}) usually checks
- * that the unit should actually be written out via {@link Writable#isWritable()}. Generally custom writers should check this as
- * well before writing.
+ * <b>Also Important:</b> The default {@link StyleWriter} (in {@link StyleWriter#writeInner(Writable, StyleAppendable)}) usually
+ * checks that the unit should actually be written out via {@link Writable#isWritable()}. Generally custom writers should check
+ * this as well before writing.
+ * <p/>
+ * Note that custom writers must handle the writing (or not writing) of CSS comments on their own. For assistance with this see
+ * {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)}. Also see {@link Syntax#writesOwnComments()} and
+ * {@link Syntax#writesOwnOrphanedComments()}.
  *
  * @param <T>
  *     The Type of object being overridden.

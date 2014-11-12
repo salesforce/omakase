@@ -52,14 +52,14 @@ public class CommentTest {
     public void writeInline() throws IOException {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(c)).isEqualTo("");
+        assertThat(writer.writeSnippet(c)).isEqualTo("/* test */");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(c)).isEqualTo("");
+        assertThat(writer.writeSnippet(c)).isEqualTo("/* test */");
     }
 
     @Test

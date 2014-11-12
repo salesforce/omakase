@@ -42,6 +42,7 @@ public class StyleWriterTest {
         StyleWriter writer = new StyleWriter();
         writer.mode(WriterMode.COMPRESSED);
         assertThat(writer.isCompressed()).isTrue();
+        assertThat(writer.mode()).isSameAs(WriterMode.COMPRESSED);
     }
 
     @Test
@@ -64,6 +65,27 @@ public class StyleWriterTest {
         StyleWriter writer = StyleWriter.compressed();
         Omakase.source(".test{color:red}").request(writer).process();
         assertThat(writer.write()).isEqualTo(".test{color:red}");
+    }
+
+    @Test
+         public void writeWithComments() {
+        StyleWriter writer = StyleWriter.compressed().writeComments(true);
+        Omakase.source("/*test*/.test{color:red}").request(writer).process();
+        assertThat(writer.write()).isEqualTo("/*test*/.test{color:red}");
+    }
+
+    @Test
+    public void writeWithCommentsOnlyAnnotated() {
+        StyleWriter writer = StyleWriter.compressed().writeComments(true, true);
+        Omakase.source("/*@yes*/.test{/*no*/color:red}").request(writer).process();
+        assertThat(writer.write()).isEqualTo("/*@yes*/.test{color:red}");
+    }
+
+    @Test
+    public void writeWithOrphanedComments() {
+        StyleWriter writer = StyleWriter.compressed().writeComments(true);
+        Omakase.source(".test{color:red/*test*/}").request(writer).process();
+        assertThat(writer.write()).isEqualTo(".test{color:red/*test*/}");
     }
 
     @Test

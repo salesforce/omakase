@@ -92,7 +92,11 @@ public final class MediaRefiner implements AtRuleRefiner {
             }
 
             // create and add the block
-            rule.block(new GenericAtRuleBlock(queryable.filter(Statement.class), broadcaster));
+            GenericAtRuleBlock genericBlock = new GenericAtRuleBlock(queryable.filter(Statement.class), broadcaster);
+            rule.block(genericBlock);
+
+            // add orphaned comments
+            genericBlock.orphanedComments(source.collectComments().flushComments());
 
             // once they are in the syntax collection, now we can let them be broadcasted
             queue.resume();

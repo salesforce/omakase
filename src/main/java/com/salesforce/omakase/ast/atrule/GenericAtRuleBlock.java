@@ -80,14 +80,24 @@ public final class GenericAtRuleBlock extends AbstractSyntax<StatementIterable> 
     }
 
     @Override
+    public boolean writesOwnOrphanedComments() {
+        return true;
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
         appendable.indentIf(!writer.isCompressed());
         appendable.newlineIf(!writer.isCompressed());
+
         for (Statement statement : statements) {
             writer.writeInner(statement, appendable);
         }
+
+        // custom handling of orphaned comments if they exist, because they have to go before the closing brace
+        StyleWriter.appendComments(orphanedComments(), writer, appendable);
+
         appendable.unindentIf(!writer.isCompressed());
         appendable.newlineIf(!writer.isCompressed());
         appendable.append('}');

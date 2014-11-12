@@ -259,6 +259,16 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     }
 
     @Override
+    public boolean writesOwnComments() {
+        return false;
+    }
+
+    @Override
+    public boolean writesOwnOrphanedComments() {
+        return false;
+    }
+
+    @Override
     public final int hashCode() {
         // final because the basic broadcasting behavior assumes identity-based equality. In addition,
         // there is no universally logical non-identity-based implementation of hashCode and equals that applies to all of the

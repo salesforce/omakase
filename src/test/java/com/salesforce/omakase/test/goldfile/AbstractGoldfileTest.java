@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.test.goldfile;
 
+import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,11 @@ public abstract class AbstractGoldfileTest {
 
     @Test
     public void goldfile() throws IOException {
-        Goldfile.test(name(), mode, autoRefine);
+        StyleWriter writer = new StyleWriter(mode);
+        applyAdditionalWriterConfig(writer);
+        Goldfile.test(name(), writer, autoRefine);
     }
+
+    /** add any additional settings to the writer */
+    protected void applyAdditionalWriterConfig(StyleWriter writer) {}
 }

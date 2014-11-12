@@ -47,8 +47,8 @@ public final class Goldfile {
      *
      * @param name
      *     The name of the file (excluding the path and extension).
-     * @param mode
-     *     The compression level.
+     * @param writer
+     *     The StyleWriter setup with the right compression level
      * @param autoRefine
      *     Whether we should add an {@link AutoRefiner}.
      *
@@ -56,18 +56,17 @@ public final class Goldfile {
      *     If there is a problem with teh files.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void test(String name, WriterMode mode, boolean autoRefine) throws IOException {
+    public static void test(String name, StyleWriter writer, boolean autoRefine) throws IOException {
         // grab the source to parse
         File sourceFile = sourceFile(name);
         assertThat(sourceFile.exists()).describedAs("Source file not found: " + sourceFile.getPath()).isTrue();
         String source = fileContents(sourceFile);
 
         // grab the expected parse results
-        File expectedFile = resultsFile(name, autoRefine, mode);
+        File expectedFile = resultsFile(name, autoRefine, writer.mode());
         String expected = expectedFile.exists() ? fileContents(expectedFile) : null;
 
         // parsing setup
-        StyleWriter writer = new StyleWriter().mode(mode);
         AutoRefiner refiner = new AutoRefiner().all();
         SyntaxTree tree = new SyntaxTree();
 

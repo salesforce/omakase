@@ -17,9 +17,6 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
@@ -43,15 +40,6 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
     @Override
     public Optional<Selector> parentSelector() {
         return parent();
-    }
-
-    @Override
-    public ImmutableList<Comment> comments() {
-        if (isFirst() && parentSelector().isPresent()) {
-            // the first selector part should also include the comments included on the selector
-            return ImmutableList.copyOf(Iterables.concat(parentSelector().get().comments(), super.comments()));
-        }
-        return super.comments();
     }
 
     @Override

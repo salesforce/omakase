@@ -24,7 +24,6 @@ import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
-import com.salesforce.omakase.writer.WriterMode;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Represents a CSS comment.
  * <p/>
- * By default, comments are not written out except for in {@link WriterMode#VERBOSE}.
+ * By default, comments are not written out. You can control this behavior with {@link StyleWriter#writeComments(boolean)}.
  */
 
 public final class Comment implements Writable {
@@ -154,9 +153,9 @@ public final class Comment implements Writable {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (writer.isVerbose()) {
-            appendable.append("/*").append(content).append("*/");
-        }
+        appendable.append("/*").append(content).append("*/");
+        // if content contains new line then add a line break after it
+        appendable.newlineIf(writer.isVerbose() && content.contains("\n"));
     }
 
     @Override
