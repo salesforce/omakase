@@ -130,6 +130,7 @@ properties:
   - float-offset
   - font
   - font-family
+  - font-feature-settings
   - font-size
   - font-size-adjust
   - font-stretch

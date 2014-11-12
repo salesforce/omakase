@@ -422,6 +422,9 @@ public enum Property {
     /** CSS property named 'font-family' */
     FONT_FAMILY("font-family"),
 
+    /** CSS property named 'font-feature-settings' */
+    FONT_FEATURE_SETTINGS("font-feature-settings"),
+
     /** CSS property named 'font-size' */
     FONT_SIZE("font-size"),
 
