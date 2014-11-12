@@ -32,7 +32,7 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-public final class GenericAtRuleExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+public class GenericAtRuleExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
     private String expression;
 
     /**
