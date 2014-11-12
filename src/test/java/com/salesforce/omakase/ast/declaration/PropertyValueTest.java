@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
@@ -188,6 +189,24 @@ public class PropertyValueTest {
         assertThat(copy.comments()).hasSize(1);
         PropertyValueMember first = Iterables.get(copy.members(), 0);
         assertThat(((GenericFunctionValue)first).name()).isEqualTo("-moz-calc");
+    }
+
+    @Test
+    public void textualValueKeyword() {
+        PropertyValue pv = PropertyValue.of(KeywordValue.of(Keyword.NONE));
+        assertThat(pv.singleTextualValue().get()).isEqualTo("none");
+    }
+
+    @Test
+    public void textualValueString() {
+        PropertyValue pv = PropertyValue.of(new StringValue(QuotationMode.SINGLE, "Times New Roman"));
+        assertThat(pv.singleTextualValue().get()).isEqualTo("Times New Roman");
+    }
+
+    @Test
+    public void textualValueMultipleTerms() {
+        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1), NumericalValue.of(1));
+        assertThat(pv.singleTextualValue().isPresent()).isFalse();
     }
 
     private static final class NonWritableTerm extends AbstractTerm {

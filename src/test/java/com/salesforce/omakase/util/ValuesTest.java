@@ -199,22 +199,4 @@ public class ValuesTest {
         assertThat(Iterables.get(join.members(), 5)).isInstanceOf(Operator.class);
         assertThat(Iterables.get(join.members(), 6)).isInstanceOf(NumericalValue.class);
     }
-
-    @Test
-    public void textualValueKeyword() {
-        PropertyValue pv = PropertyValue.of(KeywordValue.of(Keyword.NONE));
-        assertThat(Values.textual(pv).get()).isEqualTo("none");
-    }
-
-    @Test
-    public void textualValueString() {
-        PropertyValue pv = PropertyValue.of(new StringValue(QuotationMode.SINGLE, "Times New Roman"));
-        assertThat(Values.textual(pv).get()).isEqualTo("Times New Roman");
-    }
-
-    @Test
-    public void textualValueMultipleTerms() {
-        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1), NumericalValue.of(1));
-        assertThat(Values.textual(pv).isPresent()).isFalse();
-    }
 }

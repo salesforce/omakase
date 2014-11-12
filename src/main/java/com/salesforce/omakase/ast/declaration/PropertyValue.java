@@ -40,8 +40,8 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * <p/>
  * This contains a list of {@link Term}s, for example numbers, keywords, functions, hex colors, etc...
  * <p/>
- * You can add new members to this via {@link #append(PropertyValueMember)}, or by utilizing the {@link
- * SyntaxCollection} returned by the {@link #members()} method.
+ * You can add new members to this via {@link #append(PropertyValueMember)}, or by utilizing the {@link SyntaxCollection} returned
+ * by the {@link #members()} method.
  * <p/>
  * In the CSS 2.1 spec this is called "expr", which is obviously shorthand for "expression", however "expression" is name now
  * given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
@@ -129,6 +129,38 @@ public final class PropertyValue extends AbstractSyntax<PropertyValue> {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Gets the <em>textual</em> content of the only {@link Term} within this {@link PropertyValue}. The returned {@link Optional}
+     * will only be present if this {@link PropertyValue} contains exactly one {@link Term}!
+     * <p/>
+     * This method may be useful as a generic way of getting the value of unknown or potentially varying term types.
+     * <p/>
+     * <b>Important:</b> this is not a substitute or a replica of how the term or this property value will actually be written to
+     * a stylesheet. The textual content returned may not include certain tokens and outer symbols such as hashes, quotes,
+     * parenthesis, etc... . To get the textual content as it would be written to a stylesheet see {@link StyleWriter#writeSingle
+     * (Writable)} instead. However note that you should rarely have need for doing that outside of actually creating stylesheet
+     * output.
+     * <p/>
+     * {@link KeywordValue}s will simply return the keyword, {@link StringValue}s will return the contents of the string <b>not
+     * including quotes</b>, functions will return the content of the function not including the parenthesis, {@link
+     * HexColorValue} will return the hex value without the leading '#' , and so on... See each specific {@link Term}
+     * implementation for more details.
+     * <p/>
+     * <b>Important:</b> if this property value has more than one term then this method will return {@link Optional#absent()}. It
+     * will not concatenate term values.
+     *
+     * @return The textual content, or {@link Optional#absent()} if there is more than one or no terms present.
+     *
+     * @see Term#textualValue()
+     */
+    public Optional<String> singleTextualValue() {
+        ImmutableList<Term> terms = terms();
+        if (terms.size() == 1) {
+            return Optional.of(terms.get(0).textualValue());
+        }
+        return Optional.absent();
     }
 
     /**
