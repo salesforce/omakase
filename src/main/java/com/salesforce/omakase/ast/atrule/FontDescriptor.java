@@ -56,7 +56,7 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     private PropertyValue propertyValue;
 
     /**
-     * Creates a new FontDescriptor instance with the given property name and value.
+     * Creates a new {@link FontDescriptor} instance with the given property name and value.
      *
      * @param propertyName
      *     The name of this font-descriptor.
@@ -66,6 +66,21 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     public FontDescriptor(PropertyName propertyName, PropertyValue propertyValue) {
         this.propertyName = checkNotNull(propertyName, "propertyName cannot be null");
         this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
+    }
+
+    /**
+     * Creates a new {@link FontDescriptor} instance using the given {@link Declaration}s {@link PropertyName} and {@link
+     * PropertyValue}, as well as comments.
+     * <p/>
+     * Note that this will result in refinement of the {@link Declaration} if not already done so.
+     *
+     * @param source
+     *     The source {@link Declaration}
+     */
+    public FontDescriptor(Declaration source) {
+        this.propertyName = checkNotNull(source.propertyName(), "the source declaration must have a property name");
+        this.propertyValue = checkNotNull(source.propertyValue(), "the source declaration must have a property value");
+        this.comments(source); // copy comments
     }
 
     /**
