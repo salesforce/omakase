@@ -75,6 +75,14 @@ public class AbstractSyntaxTest {
     }
 
     @Test
+    public void testAddComment() {
+        TestSyntax t = new TestSyntax(10, 15);
+        Comment c = new Comment("test");
+        t.comment(c);
+        assertThat(t.comments()).containsExactly(c);
+    }
+
+    @Test
     public void testComments() throws Exception {
         TestSyntax t = new TestSyntax(10, 15);
         t.comments(Lists.newArrayList("my comment"));
@@ -96,6 +104,16 @@ public class AbstractSyntaxTest {
         TestSyntax t2 = new TestSyntax();
         t2.comments(t);
         assertThat(t.comments().get(0).content()).isEqualTo("test");
+    }
+
+    @Test
+    public void testCommentsFromDynamicAnnotation() {
+        TestSyntax t = new TestSyntax();
+        CssAnnotation a = new CssAnnotation("test");
+
+        assertThat(t.comments()).hasSize(0);
+        t.annotate(a);
+        assertThat(t.comments()).hasSize(1);
     }
 
     @Test
@@ -152,23 +170,59 @@ public class AbstractSyntaxTest {
     }
 
     @Test
-    public void hasAnnotationTrue() {
+    public void hasAnnotationStringNameTrue() {
         TestSyntax t = new TestSyntax(1, 1);
         t.comments(Lists.newArrayList("@test"));
         assertThat(t.hasAnnotation("test")).isTrue();
     }
 
     @Test
-    public void hasAnnotationFalseNoComments() {
+    public void hasAnnotationStringNameTrueFromDynamicAnnotation() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.annotate(new CssAnnotation("test"));
+        assertThat(t.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationStringNameFalseNoComments() {
         TestSyntax t = new TestSyntax(1, 1);
         assertThat(t.hasAnnotation("test")).isFalse();
     }
 
     @Test
-    public void hasAnnotationFalseDifferentComments() {
+    public void hasAnnotationStringNameFalseDifferentComments() {
         TestSyntax t = new TestSyntax(1, 1);
         t.comments(Lists.newArrayList("@test2"));
         assertThat(t.hasAnnotation("test")).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationObjectTrueFromNormal() {
+        TestSyntax t = new TestSyntax(1, 1);
+        t.comments(Lists.newArrayList("@test"));
+        assertThat(t.hasAnnotation(new CssAnnotation("test"))).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationObjectTrueFromDynamicAnnotation() {
+        TestSyntax t = new TestSyntax();
+        CssAnnotation a = new CssAnnotation("test");
+        t.annotate(a);
+        assertThat(t.hasAnnotation(a)).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationObjectFalse() {
+        TestSyntax t = new TestSyntax();
+        CssAnnotation a = new CssAnnotation("test");
+        t.annotate(a);
+        assertThat(t.hasAnnotation(new CssAnnotation("test2"))).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationObjectFalseNoneAdded() {
+        TestSyntax t = new TestSyntax();
+        assertThat(t.hasAnnotation(new CssAnnotation("test"))).isFalse();
     }
 
     @Test
@@ -176,6 +230,22 @@ public class AbstractSyntaxTest {
         TestSyntax t = new TestSyntax(1, 1);
         t.comments(Lists.newArrayList("@test"));
         assertThat(t.annotation("test").isPresent()).isTrue();
+    }
+
+    @Test
+    public void getAnnotationFromDynamicAnnotationPresent() {
+        TestSyntax t = new TestSyntax(1, 1);
+        CssAnnotation a = new CssAnnotation("test");
+        t.annotate(a);
+        assertThat(t.annotation("test").isPresent()).isTrue();
+    }
+
+    @Test
+    public void getAnnotationFromDynamicAnnotationAbsent() {
+        TestSyntax t = new TestSyntax(1, 1);
+        CssAnnotation a = new CssAnnotation("test");
+        t.annotate(a);
+        assertThat(t.annotation("test2").isPresent()).isFalse();
     }
 
     @Test
@@ -202,6 +272,15 @@ public class AbstractSyntaxTest {
     public void allAnnotationsWhenEmpty() {
         TestSyntax t = new TestSyntax(1, 1);
         assertThat(t.annotations()).isEmpty();
+    }
+
+    @Test
+    public void allAnnotationsFromDynamicAnnotation() {
+        TestSyntax t = new TestSyntax();
+        t.comments(Lists.newArrayList("@test"));
+        t.annotate(new CssAnnotation("one"));
+        t.annotate(new CssAnnotation("two"));
+        assertThat(t.annotations()).hasSize(3);
     }
 
     @Test

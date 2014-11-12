@@ -51,7 +51,7 @@ import java.util.List;
  * @author nmcwilliams
  */
 @Subscribable
-@Description(broadcasted = BroadcastRequirement.SPECIAL,value = "top level interface for all units")
+@Description(broadcasted = BroadcastRequirement.SPECIAL, value = "top level interface for all units")
 public interface Syntax<C> extends Writable, Broadcastable {
     /**
      * Gets the unique identifier for this unit. This can be used as a key in maps or in any other case where storing a short
@@ -129,6 +129,20 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * @return The new instance.
      */
     C copy(Prefix prefix, SupportMatrix support);
+
+    /**
+     * Adds the given {@link Comment} to this unit.
+     * <p/>
+     * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
+     * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
+     * Declaration} itself instead of the property name or value inside of it.
+     *
+     * @param comment
+     *     The comment to add.
+     *
+     * @return this, for chaining.
+     */
+    Syntax<C> comment(Comment comment);
 
     /**
      * Adds the given comments to this unit.
@@ -214,6 +228,22 @@ public interface Syntax<C> extends Writable, Broadcastable {
     boolean hasAnnotation(String name);
 
     /**
+     * Checks if this unit has a CSS comment with a {@link CssAnnotation} that equals the given one.
+     * <p/>
+     * This is most useful in tangent with the {@link #annotate(CssAnnotation)} method. You can annotate many syntax units using
+     * that method and then subsequently check for the annotation using this method, reusing the same instance in all cases for
+     * efficiency.
+     * <p/>
+     * The annotation must match according to the rules defined in {@link CssAnnotation#equals(Object)}.
+     *
+     * @param annotation
+     *     Check for a {@link CssAnnotation} that equals this one.
+     *
+     * @return True if a {@link CssAnnotation} was found that equals the given one.
+     */
+    boolean hasAnnotation(CssAnnotation annotation);
+
+    /**
      * Gets the {@link CssAnnotation} with the given name from the comments associated with this unit, if there is one.
      * <p/>
      * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
@@ -247,4 +277,20 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * @return All found {@link CssAnnotation}s.
      */
     List<CssAnnotation> annotations();
+
+    /**
+     * Appends the given {@link CssAnnotation} to this unit.
+     * <p/>
+     * A {@link Comment} will be created and appended to this unit using the normal CSS comment annotation syntax. This means if
+     * CSS comments are written out then they will include this annotation. The comment will also be returned by normal comment
+     * retrieval methods such as {@link #comments()}.
+     * <p/>
+     * You can subsequently check for this annotation again using the {@link #hasAnnotation(CssAnnotation)} method. This might be
+     * useful in plugins that dynamically annotate syntax units and then subsequently check for the annotation later on, as using
+     * both of these methods can efficiently reuse the same {@link CssAnnotation} instance.
+     *
+     * @param annotation
+     *     Append this annotation.
+     */
+    void annotate(CssAnnotation annotation);
 }

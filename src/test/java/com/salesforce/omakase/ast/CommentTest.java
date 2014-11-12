@@ -63,19 +63,13 @@ public class CommentTest {
     }
 
     @Test
-    public void hasAnnotationTrueSpace() {
-        Comment c = new Comment(" @test");
-        assertThat(c.hasAnnotation("test")).isTrue();
-    }
-
-    @Test
     public void hasAnnotationTrueSpaced() {
         Comment c = new Comment(" @test");
         assertThat(c.hasAnnotation("test")).isTrue();
     }
 
     @Test
-    public void hasAnnotationFalseDifferentContent() {
+    public void hasAnnotationFalseCommentNotAnnotated() {
         Comment c = new Comment("test");
         assertThat(c.hasAnnotation("test")).isFalse();
     }
@@ -149,5 +143,68 @@ public class CommentTest {
     public void getAnnotationAbsent() {
         Comment c = new Comment("test");
         assertThat(c.annotation().isPresent()).isFalse();
+    }
+
+    @Test
+    public void newCommentFromAnnotation() {
+        CssAnnotation a = new CssAnnotation("test");
+        Comment c = new Comment(a);
+        assertThat(c.content()).isEqualTo("@test");
+    }
+
+    @Test
+    public void newCommentFromAnnotationWithArgs() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.content()).isEqualTo("@test arg");
+    }
+
+    @Test
+    public void fromAnnotationObjectHasAnnotationStringTrue() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void fromAnnotationObjectHasAnnotationStringFalse() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.hasAnnotation("test2")).isFalse();
+    }
+
+    @Test
+    public void fromAnnotationObjectHasAnnotationObjectTrue() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.hasAnnotation(a)).isTrue();
+    }
+
+    @Test
+    public void fromAnnotationObjectHasAnnotationDifferentInstance() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.hasAnnotation(new CssAnnotation("test", "arg"))).isTrue();
+    }
+
+    @Test
+    public void fromAnnotationObjectHasAnnotationObjectFalse() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.hasAnnotation(new CssAnnotation("blah"))).isFalse();
+    }
+
+    @Test
+    public void fromAnnotationObjectGetAnnotationByNamePresent() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.annotation("test").get()).isSameAs(a);
+    }
+
+    @Test
+    public void fromAnnotationObjectGetAnnotationByNameAbsent() {
+        CssAnnotation a = new CssAnnotation("test", "arg");
+        Comment c = new Comment(a);
+        assertThat(c.annotation("tes2t").isPresent()).isFalse();
     }
 }

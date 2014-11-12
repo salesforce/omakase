@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Base class for {@link Syntax} units.
  *
@@ -45,6 +47,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     private List<Comment> comments;
     private List<Comment> orphanedComments;
+
     private Status status = Status.UNBROADCASTED;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
@@ -124,15 +127,18 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     protected abstract C makeCopy(Prefix prefix, SupportMatrix support);
 
     @Override
+    public Syntax<C> comment(Comment comment) {
+        checkNotNull(comment, "comment cannot be null");
+        getOrCreateComments(4).add(comment);
+        return this;
+    }
+
+    @Override
     public Syntax<C> comments(List<String> comments) {
         if (comments == null || comments.isEmpty()) return this;
 
-        // delayed creation of comments list
-        if (this.comments == null) {
-            this.comments = new ArrayList<>(comments.size());
-        }
+        getOrCreateComments(comments.size());
 
-        // add the comments
         for (String comment : comments) {
             this.comments.add(new Comment(comment));
         }
@@ -145,12 +151,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
         ImmutableList<Comment> toCopy = copyFrom.comments();
         if (toCopy.isEmpty()) return this;
 
-        // delayed creation of comments list
-        if (comments == null) {
-            comments = new ArrayList<>(toCopy.size());
-        }
-
-        comments.addAll(toCopy);
+        getOrCreateComments(toCopy.size()).addAll(toCopy);
         return this;
     }
 
@@ -163,12 +164,8 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     public Syntax<C> orphanedComments(List<String> comments) {
         if (comments == null || comments.isEmpty()) return this;
 
-        // delayed creation of comments list
-        if (this.orphanedComments == null) {
-            this.orphanedComments = new ArrayList<>(comments.size());
-        }
+        getOrCreateOrphanedComments(comments.size());
 
-        // add the comments
         for (String comment : comments) {
             this.orphanedComments.add(new Comment(comment));
         }
@@ -181,12 +178,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
         ImmutableList<Comment> toCopy = copyFrom.orphanedComments();
         if (toCopy.isEmpty()) return this;
 
-        // delayed creation of comments list
-        if (orphanedComments == null) {
-            orphanedComments = new ArrayList<>(toCopy.size());
-        }
-
-        orphanedComments.addAll(toCopy);
+        getOrCreateOrphanedComments(toCopy.size()).addAll(toCopy);
         return this;
     }
 
@@ -201,6 +193,17 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
         for (Comment comment : comments) {
             if (comment.hasAnnotation(name)) return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean hasAnnotation(CssAnnotation annotation) {
+        if (comments == null) return false;
+
+        for (Comment comment : comments) {
+            if (comment.hasAnnotation(annotation)) return true;
         }
 
         return false;
@@ -230,6 +233,11 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
         }
 
         return found;
+    }
+
+    @Override
+    public void annotate(CssAnnotation annotation) {
+        getOrCreateComments(4).add(annotation.toComment(true));
     }
 
     @Override
@@ -273,5 +281,21 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
         // this doesn't have to be final...it's just final as a reminder that usually it shouldn't be added because this
         // default implementation is good enough.
         return As.string(this).fields().toString();
+    }
+
+    /** utility to ensure the comments list is created before using it */
+    private List<Comment> getOrCreateComments(int initialSize) {
+        if (comments == null) {
+            comments = new ArrayList<>(initialSize);
+        }
+        return comments;
+    }
+
+    /** utility to ensure the orphaned comments list is created before using it */
+    private List<Comment> getOrCreateOrphanedComments(int initialSize) {
+        if (orphanedComments == null) {
+            orphanedComments = new ArrayList<>(initialSize);
+        }
+        return orphanedComments;
     }
 }

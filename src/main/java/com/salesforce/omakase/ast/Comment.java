@@ -29,6 +29,8 @@ import com.salesforce.omakase.writer.WriterMode;
 import java.io.IOException;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Represents a CSS comment.
  * <p/>
@@ -52,6 +54,18 @@ public final class Comment implements Writable {
      */
     public Comment(String content) {
         this.content = content;
+    }
+
+    /**
+     * Creates a new {@link Comment} with the given {@link CssAnnotation} as the content.
+     *
+     * @param annotation
+     *     The annotation representing the comment.
+     */
+    public Comment(CssAnnotation annotation) {
+        this.annotation = checkNotNull(annotation, "annotation cannot be null");
+        this.content = annotation.toString();
+        this.checked = true;
     }
 
     /**
@@ -80,6 +94,22 @@ public final class Comment implements Writable {
     public boolean hasAnnotation(String name) {
         checkForAnnotation();
         return (annotation != null) && annotation.name().equals(name);
+    }
+
+    /**
+     * Checks if this comment has a {@link CssAnnotation} that equals the given one.
+     * <p/>
+     * This will be true if the both the name and the args match exactly. See {@link CssAnnotation#equals(Object)}. If you only
+     * care about matching the comment name, see {@link #hasAnnotation(String)} instead.
+     *
+     * @param annotation
+     *     Check for an annotation that equals this one.
+     *
+     * @return True if a {@link Comment} was found that matches the given one.
+     */
+    public boolean hasAnnotation(CssAnnotation annotation) {
+        checkForAnnotation();
+        return (this.annotation != null) && this.annotation.equals(annotation);
     }
 
     /**
@@ -134,6 +164,9 @@ public final class Comment implements Writable {
         return As.string(this).fields().toString();
     }
 
+    /**
+     * Checks the content for a {@link CssAnnotation} (result of this check is cached and reused on subsequent checks).
+     */
     private void checkForAnnotation() {
         if (checked) return;
         checked = true;
