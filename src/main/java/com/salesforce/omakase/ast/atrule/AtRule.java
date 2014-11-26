@@ -285,9 +285,22 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         if (!super.isWritable()) return false;
 
         if (isRefined()) {
-            if (shouldWriteName) return true;
-            if (expression.isPresent() && expression.get().isWritable()) return true;
-            return block.isPresent() && block.get().isWritable();
+            // this logic is based on the assumed general behavior of not being writable when no contents are writable. For
+            // example, if the block is not writable but the expression present and writable, writing out just the expression
+            // could result in invalid css.
+
+            // if expression is present, it must be writable
+            if (expression.isPresent() && !expression.get().isWritable()) {
+                return false;
+            }
+
+            // if block is present, it must be writable
+            if (block.isPresent() && !block.get().isWritable()) {
+                return false;
+            }
+
+            // otherwise if we have a writable name, expression or block return true
+            return shouldWriteName || expression.isPresent() || block.isPresent();
         }
         return true;
     }

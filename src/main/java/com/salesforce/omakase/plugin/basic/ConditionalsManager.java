@@ -32,6 +32,8 @@ import java.util.Set;
  * (<code>@if(...) { ... }</code>) away. This might be useful if you intend to deal with the conditionals as part of a subsequent
  * parsing operation.
  *
+ * FIXME rename to ConditionalsConfig
+ *
  * @author nmcwilliams
  */
 public final class ConditionalsManager {

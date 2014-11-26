@@ -218,32 +218,64 @@ public class AtRuleTest {
     }
 
     @Test
-    public void isWritableTrueIfWriteName() {
-        AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlockNotWritable());
+    public void isWritableFalse_expressionNotWritable() {
+        // false when expression present but not writable, block present and writable
+        AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlock());
+        ar.shouldWriteName(true);
+        assertThat(ar.isWritable()).isFalse();
+    }
+
+    @Test
+    public void isWritableFalse_blockPresentNotWritable() {
+        // false when block present but not writable, expression present and writable
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlockNotWritable());
+        ar.shouldWriteName(true);
+        assertThat(ar.isWritable()).isFalse();
+    }
+
+    @Test
+    public void isWritableTrue_expressionWritableBlockAbsent() {
+        // true if expression writable, block not present
+        AtRule ar = new AtRule("test", new CustomExpression(), null);
         ar.shouldWriteName(true);
         assertThat(ar.isWritable()).isTrue();
     }
 
     @Test
-    public void isWritableTrueIfWriteExpression() {
-        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlockNotWritable());
+    public void isWritableTrue_blockWritableExpressionNotPresent() {
+        // true if block writable, expression not present
+        AtRule ar = new AtRule("test", null, new CustomBlock());
+        ar.shouldWriteName(true);
+        assertThat(ar.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableTrue_blockAndExpressionWritableNameTrue() {
+        // true if block writable and expression writable, should write name true
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
+        ar.shouldWriteName(true);
+        assertThat(ar.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableTrue_blockAndExpressionWritableNameFalse() {
+        // true if block writable and expression writable, should write name false
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
         ar.shouldWriteName(false);
         assertThat(ar.isWritable()).isTrue();
     }
 
     @Test
-    public void isWritableTrueIfWriteBlock() {
-        AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlock());
-        ar.shouldWriteName(false);
-        assertThat(ar.isWritable()).isTrue();
-    }
-
-    @Test
-    public void isWritableFalseIfRefinedAndNoneWritable() {
+    public void isWritableFalse_noneWritableWriteNameFalse() {
+        // false when none writable, should write name false
         AtRule ar = new AtRule("test", new CustomExpressionNotWritable(), new CustomBlockNotWritable());
         ar.shouldWriteName(false);
         assertThat(ar.isWritable()).isFalse();
     }
+
+    // true if should write name true, everything else absent
+    // false when none present, should write name false
+    // testing above conditions n/a as at least an expression or a block is currently required
 
     @Test
     public void writeUnrefined() throws IOException {
