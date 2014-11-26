@@ -1,15 +1,14 @@
 Steps
 =====
 
-_The following steps have been reviewed as of IntelliJ v. 13.1_
+_The following steps have been reviewed as of IntelliJ v. 14.0.1_
 
 Plugins
 -------
 Ensure you have these plugins enabled:
 
 1. Copyright
-2. Inspection Gadgets
-3. Maven Integration
+2. Maven Integration
 
 Optionally (depending on what projects you are working with) you should also enable:
 
@@ -47,13 +46,15 @@ These settings will ensure you have the correct code style, formatting, indentat
 *IMPORTANT*: it's possible that importing these settings may change general options that are not specific to the Omakase module as well. This may be important to you if you use IntelliJ for other projects. Beware! (I've done my best to not export any settings that might do this).
 
 1. file -> import settings -> choose idea/settings.jar
-2. settings -> code style -> choose scheme 'Omakase'
+2. preferences -> editor -> code style -> choose scheme 'Omakase'
 3. ok
+
+If you don't import settings, the most important thing is that you use 4 spaces instead of tabs, and a right margin of 130. There are other settings for Java formatting, in which case you either need to manually duplicate or otherwise ensure any code you check in conforms with the existing code.
 
 Inspections
 -----------
 
-1. settings -> inspections -> import -> choose idea/Omakase.xml
+1. preferences -> editor -> inspections -> import -> choose idea/Omakase.xml
     1. ensure that 'Omakase' is chosen in the dropdown on left
 2. a bunch of inspections in the list should be highlighted as blue
 3. ok
@@ -62,7 +63,7 @@ Note: when running 'Inspect Code', ensure that the 'Omakase' inspection profile 
 
 Copyright
 ---------
-1. preferences -> Copyright -> Copyright Profiles
+1. preferences -> editor -> copyright -> copyright profiles
 2. click the '+' sign
 3. enter 'Omakase' as the name
 4. enter copyright text as follows:
@@ -81,11 +82,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-5. Under 'Allow replacing copyright...' add 'Copyright'
-6. Click 'Apply'
-7. settings -> Copyright
+5. under 'Allow replacing copyright...' add 'Copyright'
+6. click 'Apply'
+7. preferences -> editor -> copyright
     1. under 'Default project copyright' choose 'Omakase'
-8. settings -> Copyright -> Formatting
+    2. click 'Apply'
+8. preferences -> editor -> copyright -> formatting
     1. 'Use block comment' *selected*
     2. 'Prefix each line' *selected*
     3. 'Before other comments' *selected*
@@ -94,13 +96,13 @@ limitations under the License.
 
 Dictionaries
 ------------
-1. settings -> spelling -> dictionaries (tab)
+1. preferences -> editor -> spelling -> dictionaries (tab)
 2. click '+' -> choose idea/dictionaries
 3. ok
 
 File Encodings
 --------------
-1. File encodings should be UTF-8 (preferences -> file encodings)
+1. File encodings should be UTF-8 (preferences -> editor -> file encodings)
 
 TODOs
 -----
@@ -113,13 +115,13 @@ TODOs
 
 Optional
 --------
-1. Remove file header (settings -> File and Code Templates -> includes -> File Header -> clear content) OR change file header to something like this:
+1. Remove file header (preferences -> editor -> File and Code Templates -> includes -> File Header -> clear content) OR change file header to something like this:
 /**
  * TODO description
  *
  * @author yourname
  */
-2. Useful to make projects automatically (settings -> compiler -> make project automatcally)
+2. Useful to make projects automatically (settings -> compiler -> make project automatically)
 
 Reload
 ------
