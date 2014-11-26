@@ -39,7 +39,7 @@ import java.util.Iterator;
  * @see FontDescriptor
  * @see FontFaceRefiner
  */
-public final class FontFaceBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+public final class FontFaceBlock extends AbstractAtRuleBlock {
     private final SyntaxCollection<FontFaceBlock, FontDescriptor> fontDescriptors;
 
     /**

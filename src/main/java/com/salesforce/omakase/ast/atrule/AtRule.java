@@ -116,6 +116,10 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         this.expression = Optional.fromNullable(expression);
         this.block = Optional.fromNullable(block);
         this.refiner = null;
+
+        if (block != null) {
+            block.parent(this);
+        }
     }
 
     @Override
@@ -174,7 +178,9 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      * @return this, for chaining.
      */
     public AtRule expression(AtRuleExpression expression) {
-        checkState(expression != null || block.isPresent(), "either the expression or the block must be present");
+        if (expression == null) {
+            checkState(block.isPresent(), "cannot remove / set a null expression when the block is absent");
+        }
         this.expression = Optional.fromNullable(expression);
         return this;
     }
@@ -207,7 +213,11 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      * @return this, for chaining.
      */
     public AtRule block(AtRuleBlock block) {
-        checkState(expression.isPresent() || block != null, "either the expression or the block must be present");
+        if (block == null) {
+            checkState(expression.isPresent(), "cannot remove / set a null block when the expression is absent");
+        } else {
+            block.parent(this);
+        }
         this.block = Optional.fromNullable(block);
         return this;
     }

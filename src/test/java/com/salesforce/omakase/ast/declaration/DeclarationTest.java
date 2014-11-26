@@ -21,6 +21,11 @@ import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
+import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
@@ -396,5 +401,29 @@ public class DeclarationTest {
         assertThat(copy.isPrefixed()).isTrue();
         assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
         assertThat(copy.comments()).hasSameSizeAs(d.comments());
+    }
+
+    @Test
+    public void testParentAtRulePresent() {
+        Declaration d = new Declaration(Property.COLOR, KeywordValue.of(Keyword.RED));
+        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        rule.declarations().append(d);
+
+        GenericAtRuleBlock block = new GenericAtRuleBlock();
+        block.statements().append(rule);
+        AtRule ar = new AtRule("media", new GenericAtRuleExpression(1, 1, "all"), block);
+
+        assertThat(d.parentAtRule().get()).isSameAs(ar);
+    }
+
+    @Test
+    public void testParentAtRuleAbsent() {
+        Declaration d = new Declaration(Property.COLOR, KeywordValue.of(Keyword.RED));
+        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        rule.declarations().append(d);
+
+        assertThat(d.parentAtRule().isPresent()).isFalse();
     }
 }

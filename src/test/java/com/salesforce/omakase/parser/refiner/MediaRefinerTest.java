@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.atrule.AbstractAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.atrule.AtRuleExpression;
@@ -181,7 +182,7 @@ public class MediaRefinerTest {
         }
     }
 
-    private static final class TestBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+    private static final class TestBlock extends AbstractAtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 

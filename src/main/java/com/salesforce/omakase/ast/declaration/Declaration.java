@@ -22,7 +22,10 @@ import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -175,7 +178,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * Gets the original, raw, non-validated property name.
      *
      * @return The raw property name, or {@link Optional#absent()} if the raw property name is not set (e.g., a dynamically
-     *         created unit).
+     * created unit).
      */
     public Optional<RawSyntax> rawPropertyName() {
         return Optional.fromNullable(rawPropertyName);
@@ -185,7 +188,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * Gets the original, raw, non-validated property value.
      *
      * @return The raw property value, or {@link Optional#absent()} if the raw property value is not set (e.g., a dynamically
-     *         created unit).
+     * created unit).
      */
     public Optional<RawSyntax> rawPropertyValue() {
         return Optional.fromNullable(rawPropertyValue);
@@ -359,6 +362,28 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      */
     public PropertyValue propertyValue() {
         return refine().propertyValue;
+    }
+
+    /**
+     * Similar to {@link #parent()}, except this will return the containing {@link AtRule}.
+     * <p/>
+     * This is only applicable for declarations directly within a {@link Rule}, directly within an {@link AtRuleBlock}, directly
+     * within a {@link AtRule}.
+     *
+     * @return The parent {@link AtRule}, or {@link Optional#absent()} if not present or if the parent hierarchy doesn't match as
+     * described above.
+     */
+    public Optional<AtRule> parentAtRule() {
+        Optional<Rule> rule = parent();
+
+        if (rule.isPresent()) {
+            Optional<StatementIterable> parent = rule.get().parent();
+            if (parent.isPresent() && parent.get() instanceof AtRuleBlock) {
+                return ((AtRuleBlock)parent.get()).parent();
+            }
+        }
+
+        return Optional.absent();
     }
 
     @Override

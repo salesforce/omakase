@@ -190,6 +190,23 @@ public class AtRuleTest {
     }
 
     @Test
+    public void setsBlockParentFromConstructor() {
+        AtRuleBlock block = new CustomBlock();
+        assertThat(block.parent().isPresent()).isFalse();
+        AtRule ar = new AtRule("test", new CustomExpression(), block);
+        assertThat(block.parent().get()).isSameAs(ar);
+    }
+
+    @Test
+    public void setsBlockParentFromMethod() {
+        AtRuleBlock block = new CustomBlock();
+        assertThat(block.parent().isPresent()).isFalse();
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
+        ar.block(block);
+        assertThat(block.parent().get()).isSameAs(ar);
+    }
+
+    @Test
     public void propagatesBroadcastToExpression() {
         AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
         CustomExpression expression = new CustomExpression();
@@ -412,7 +429,7 @@ public class AtRuleTest {
         }
     }
 
-    public static final class CustomBlock extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+    public static final class CustomBlock extends AbstractAtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("{custom}");
@@ -434,7 +451,7 @@ public class AtRuleTest {
         }
     }
 
-    public static final class CustomBlockNotWritable extends AbstractSyntax<StatementIterable> implements AtRuleBlock {
+    public static final class CustomBlockNotWritable extends AbstractAtRuleBlock {
         @Override
         public boolean isWritable() {
             return false;

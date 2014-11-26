@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.StatementIterable;
 
 /**
@@ -23,4 +24,27 @@ import com.salesforce.omakase.ast.StatementIterable;
  *
  * @author nmcwilliams
  */
-public interface AtRuleBlock extends StatementIterable {}
+public interface AtRuleBlock extends StatementIterable {
+    /**
+     * Sets the parent {@link AtRule}. Generally this is handled automatically when this block is set on the {@link AtRule}, so it
+     * is not recommended to call this method manually. If you do, results may be unexpected.
+     * <p/>
+     * Do not use this method to move a block from one parent to another.
+     *
+     * @param atRule
+     *     The parent at-rule.
+     *
+     * @return this, for chaining.
+     *
+     * @see AbstractAtRuleBlock
+     */
+    AtRuleBlock parent(AtRule atRule);
+
+    /**
+     * Gets the parent {@link AtRule} that owns this property, or absent if not set. This will not be set for dynamically created
+     * property values not yet added to an {@link AtRule} instance.
+     *
+     * @return The parent {@link AtRule}, or {@link Optional#absent()} if not set.
+     */
+    Optional<AtRule> parent();
+}
