@@ -16,17 +16,21 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * Base class for {@link AtRuleExpression}s.
+ * Base class for {@link AtRuleBlock}s.
  *
  * @author nmcwilliams
  */
-public abstract class AbstractAtRuleExpression extends AbstractSyntax implements AtRuleExpression {
+public abstract class AbstractAtRuleMember extends AbstractSyntax implements AtRuleMember {
+    private Optional<AtRule> atRule = Optional.absent();
+
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
-    public AbstractAtRuleExpression() {}
+    public AbstractAtRuleMember() {
+    }
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -36,7 +40,18 @@ public abstract class AbstractAtRuleExpression extends AbstractSyntax implements
      * @param column
      *     The column number.
      */
-    public AbstractAtRuleExpression(int line, int column) {
+    public AbstractAtRuleMember(int line, int column) {
         super(line, column);
+    }
+
+    @Override
+    public AbstractAtRuleMember parent(AtRule atRule) {
+        this.atRule = Optional.fromNullable(atRule);
+        return this;
+    }
+
+    @Override
+    public Optional<AtRule> parent() {
+        return atRule;
     }
 }

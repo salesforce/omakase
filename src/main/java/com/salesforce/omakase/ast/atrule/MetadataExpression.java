@@ -10,7 +10,7 @@ import com.salesforce.omakase.writer.StyleWriter;
  *
  * @author nmcwilliams
  */
-public final class MetadataExpression extends AbstractAtRuleExpression {
+public final class MetadataExpression extends AbstractAtRuleMember implements AtRuleExpression {
     private static final MetadataExpression INSTANCE = new MetadataExpression();
 
     /**

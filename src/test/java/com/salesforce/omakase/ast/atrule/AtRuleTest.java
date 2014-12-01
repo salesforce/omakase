@@ -189,6 +189,23 @@ public class AtRuleTest {
     }
 
     @Test
+    public void setsExpressionParentFromConstructor() {
+        AtRuleExpression expression = new CustomExpression();
+        assertThat(expression.parent().isPresent()).isFalse();
+        AtRule ar = new AtRule("test", expression, new CustomBlock());
+        assertThat(expression.parent().get()).isSameAs(ar);
+    }
+
+    @Test
+    public void setsExpressionParentFromMethod() {
+        AtRuleExpression expression = new CustomExpression();
+        assertThat(expression.parent().isPresent()).isFalse();
+        AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
+        ar.expression(expression);
+        assertThat(expression.parent().get()).isSameAs(ar);
+    }
+
+    @Test
     public void setsBlockParentFromConstructor() {
         AtRuleBlock block = new CustomBlock();
         assertThat(block.parent().isPresent()).isFalse();
@@ -399,7 +416,7 @@ public class AtRuleTest {
         assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
     }
 
-    public static final class CustomExpression extends AbstractAtRuleExpression {
+    public static final class CustomExpression extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("(custom)");
@@ -410,10 +427,9 @@ public class AtRuleTest {
             return new CustomExpression();
         }
 
-
     }
 
-    public static final class CustomExpressionNotWritable extends AbstractAtRuleExpression {
+    public static final class CustomExpressionNotWritable extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public boolean isWritable() {
             return false;
@@ -430,7 +446,7 @@ public class AtRuleTest {
         }
     }
 
-    public static final class CustomBlock extends AbstractAtRuleBlock {
+    public static final class CustomBlock extends AbstractAtRuleMember implements AtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("{custom}");
@@ -452,7 +468,7 @@ public class AtRuleTest {
         }
     }
 
-    public static final class CustomBlockNotWritable extends AbstractAtRuleBlock {
+    public static final class CustomBlockNotWritable extends AbstractAtRuleMember implements AtRuleBlock {
         @Override
         public boolean isWritable() {
             return false;

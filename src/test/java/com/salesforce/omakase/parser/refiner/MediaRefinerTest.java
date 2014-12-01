@@ -20,9 +20,10 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
-import com.salesforce.omakase.ast.atrule.AbstractAtRuleBlock;
-import com.salesforce.omakase.ast.atrule.AbstractAtRuleExpression;
+import com.salesforce.omakase.ast.atrule.AbstractAtRuleMember;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.AtRuleBlock;
+import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -168,7 +169,7 @@ public class MediaRefinerTest {
         assertThat(broadcaster.find(com.salesforce.omakase.ast.Rule.class).isPresent()).isTrue();
     }
 
-    private static final class TestExpression extends AbstractAtRuleExpression {
+    private static final class TestExpression  extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 
@@ -178,7 +179,7 @@ public class MediaRefinerTest {
         }
     }
 
-    private static final class TestBlock extends AbstractAtRuleBlock {
+    private static final class TestBlock extends AbstractAtRuleMember implements AtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 

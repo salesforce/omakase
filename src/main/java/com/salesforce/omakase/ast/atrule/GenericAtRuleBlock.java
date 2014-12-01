@@ -36,7 +36,7 @@ import java.util.Iterator;
  *
  * @author nmcwilliams
  */
-public final class GenericAtRuleBlock extends AbstractAtRuleBlock {
+public final class GenericAtRuleBlock extends AbstractAtRuleMember implements AtRuleBlock {
     private final SyntaxCollection<StatementIterable, Statement> statements;
 
     /** Creates a new {@link GenericAtRuleBlock} instance with no statements or {@link Broadcaster} specified. */

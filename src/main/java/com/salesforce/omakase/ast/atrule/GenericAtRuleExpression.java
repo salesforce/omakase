@@ -16,11 +16,11 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import java.io.IOException;
-
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
+
+import java.io.IOException;
 
 /**
  * A generic {@link AtRuleExpression} value.
@@ -29,7 +29,7 @@ import com.salesforce.omakase.writer.StyleWriter;
  *
  * @author nmcwilliams
  */
-public class GenericAtRuleExpression extends AbstractAtRuleExpression {
+public class GenericAtRuleExpression extends AbstractAtRuleMember implements AtRuleExpression {
     private String expression;
 
     /**
@@ -85,7 +85,7 @@ public class GenericAtRuleExpression extends AbstractAtRuleExpression {
     }
 
     @Override
-    public AtRuleExpression copy() {
+    public GenericAtRuleExpression copy() {
         return new GenericAtRuleExpression(expression).copiedFrom(this);
     }
 }

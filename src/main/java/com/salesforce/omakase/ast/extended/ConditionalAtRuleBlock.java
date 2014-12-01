@@ -19,7 +19,8 @@ package com.salesforce.omakase.ast.extended;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
-import com.salesforce.omakase.ast.atrule.AbstractAtRuleBlock;
+import com.salesforce.omakase.ast.atrule.AbstractAtRuleMember;
+import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -59,7 +60,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
  */
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
-public final class ConditionalAtRuleBlock extends AbstractAtRuleBlock {
+public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implements AtRuleBlock {
     private final SyntaxCollection<StatementIterable, Statement> statements;
     private final ConditionalsManager manager;
     private final String condition;

@@ -16,14 +16,12 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.ast.Syntax;
-
 /**
  * The expression of an {@link AtRule}.
  *
  * @author nmcwilliams
  */
-public interface AtRuleExpression extends Syntax {
+public interface AtRuleExpression extends AtRuleMember {
     @Override
     AtRuleExpression copy();
 }

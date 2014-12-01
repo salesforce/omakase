@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
@@ -42,7 +41,7 @@ import java.io.IOException;
  */
 @Subscribable
 @Description(value = "full media query string", broadcasted = BroadcastRequirement.REFINED_AT_RULE)
-public final class MediaQueryList extends AbstractSyntax implements AtRuleExpression {
+public final class MediaQueryList extends AbstractAtRuleMember implements AtRuleExpression {
     private final SyntaxCollection<MediaQueryList, MediaQuery> queries;
 
     /**
