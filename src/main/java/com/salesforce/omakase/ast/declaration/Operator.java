@@ -83,7 +83,9 @@ public final class Operator extends AbstractGroupable<PropertyValue, PropertyVal
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.spaceIf(writer.isVerbose() && type == OperatorType.SLASH);
         type.write(writer, appendable);
+        appendable.spaceIf(writer.isVerbose() && type != OperatorType.SPACE);
     }
 
     @Override
