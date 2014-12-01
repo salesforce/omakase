@@ -23,4 +23,7 @@ import com.salesforce.omakase.ast.collection.Groupable;
  *
  * @author nmcwilliams
  */
-public interface PropertyValueMember extends Groupable<PropertyValue, PropertyValueMember> {}
+public interface PropertyValueMember extends Groupable<PropertyValue, PropertyValueMember> {
+    @Override
+    PropertyValueMember copy();
+}

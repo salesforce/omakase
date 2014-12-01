@@ -47,4 +47,7 @@ public interface Statement extends Groupable<StatementIterable, Statement> {
      *         otherwise.
      */
     Optional<AtRule> asAtRule();
+
+    @Override
+    Statement copy();
 }

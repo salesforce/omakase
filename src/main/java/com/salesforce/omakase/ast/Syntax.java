@@ -47,14 +47,11 @@ import java.util.List;
  * CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled with custom validation to
  * ensure correct usage. See {@link Refinable} for more information.
  *
- * @param <C>
- *     (C)opiedType. Type of unit created when copied (usually the same type as the implementing class itself).
- *
  * @author nmcwilliams
  */
 @Subscribable
 @Description(broadcasted = BroadcastRequirement.SPECIAL, value = "top level interface for all units")
-public interface Syntax<C> extends Writable, Broadcastable {
+public interface Syntax extends Writable, Broadcastable {
     /**
      * Gets the unique identifier for this unit. This can be used as a key in maps or in any other case where storing a short
      * identifier is preferable.
@@ -98,39 +95,51 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *
      * @return The new instance.
      */
-    C copy();
+    Syntax copy();
 
     /**
-     * Performs a deep copy of the instance.
-     * <p/>
-     * This includes any inner syntax units, for example the selectors inside of a rule. This also carries over the comments and
-     * orphaned comments.
-     * <p/>
-     * If applicable and required by the supported browser versions (as specified in the given {@link SupportMatrix}), this will
-     * also prefix certain values and members as part of the copy.
+     * Applies the given prefix to this unit and all inner units, if required according to the given {@link SupportMatrix}. This
+     * usually works along with {@link #copy()}.
      * <p/>
      * Take the following for example:
      * <pre><code>
-     * PropertyName pn = PropertyName.using("border-radius");
-     * PropertyName copy = PropertyName.copyWithPrefix(Prefix.WEBKIT, support);
+     * PropertyName propertyName = PropertyName.using("border-radius");
+     * propertyName.prefix(Prefix.WEBKIT, support);
      * </code></pre>
      * <p/>
      * Assuming that a version of Chrome was added to the {@link SupportMatrix} that requires a prefix for the {@code
-     * border-radius} property, the copy will have the webkit prefix, e.g., {@code -webkit-border-radius}.
-     * <p/>
-     * This should also cascade to any inner or child syntax units. For example, if calling on a {@link Declaration} instance,
-     * both the property name and also any applicable parts of the declaration value should get prefixed.
-     * <p/>
-     * For implementations, it should be understood that both the prefix and support properties may be null.
+     * border-radius} property, a change will be made resulting in the webkit prefix being used, e.g., {@code
+     * -webkit-border-radius}.
      *
      * @param prefix
-     *     Apply this {@link Prefix} is applicable.
+     *     Apply this {@link Prefix} if applicable.
      * @param support
      *     Represents the supported browser versions.
-     *
-     * @return The new instance.
      */
-    C copy(Prefix prefix, SupportMatrix support);
+    void prefix(Prefix prefix, SupportMatrix support);
+
+    /**
+     * Applies the given prefix to this unit and optionally all inner units, if required according to the given {@link
+     * SupportMatrix}. This usually works along with {@link #copy()}.
+     * <p/>
+     * Take the following for example:
+     * <pre><code>
+     * PropertyName propertyName = PropertyName.using("border-radius");
+     * propertyName.prefix(Prefix.WEBKIT, support);
+     * </code></pre>
+     * <p/>
+     * Assuming that a version of Chrome was added to the {@link SupportMatrix} that requires a prefix for the {@code
+     * border-radius} property, a change will be made resulting in the webkit prefix being used, e.g., {@code
+     * -webkit-border-radius}.
+     *
+     * @param prefix
+     *     Apply this {@link Prefix} if applicable.
+     * @param support
+     *     Represents the supported browser versions.
+     * @param deep
+     *     Specifies whether inner units should be prefixed as well.
+     */
+    void prefix(Prefix prefix, SupportMatrix support, boolean deep);
 
     /**
      * Adds the given {@link Comment} to this unit.
@@ -144,7 +153,7 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax<C> comment(Comment comment);
+    Syntax comment(Comment comment);
 
     /**
      * Adds the given comments to this unit.
@@ -158,7 +167,7 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax<C> comments(List<String> comments);
+    Syntax comments(List<String> comments);
 
     /**
      * Copies all comments from the given syntax unit.
@@ -168,7 +177,7 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax<C> comments(Syntax<?> copyFrom);
+    Syntax comments(Syntax copyFrom);
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.
@@ -188,7 +197,7 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax<C> orphanedComments(List<String> comments);
+    Syntax orphanedComments(List<String> comments);
 
     /**
      * Copies all orphaned comments from the given syntax unit.
@@ -198,7 +207,7 @@ public interface Syntax<C> extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax<C> orphanedComments(Syntax<?> copyFrom);
+    Syntax orphanedComments(Syntax copyFrom);
 
     /**
      * Gets all orphaned comments (comments that appear after or at the end of the unit).
@@ -308,9 +317,9 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * Specifies whether this object will handle writing its own comments, instead of the automatic behavior of the {@link
      * StyleWriter}.
      * <p/>
-     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be written
-     * out or not. The {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)} utility method contains this
-     * logic and is the preferable way to handle it.
+     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be
+     * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)} utility method contains
+     * this logic and is the preferable way to handle it.
      *
      * @return True if this object writes its own comments.
      */
@@ -320,9 +329,9 @@ public interface Syntax<C> extends Writable, Broadcastable {
      * Specifies whether this object will handle writing its own orphaned comments, instead of the automatic behavior of the
      * {@link StyleWriter}.
      * <p/>
-     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be written
-     * out or not. The {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)} utility method contains this
-     * logic and is the preferable way to handle it.
+     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be
+     * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)} utility method contains
+     * this logic and is the preferable way to handle it.
      *
      * @return True if this object writes its own comments.
      */

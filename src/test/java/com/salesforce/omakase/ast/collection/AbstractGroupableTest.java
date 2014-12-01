@@ -16,9 +16,7 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -237,27 +235,27 @@ public class AbstractGroupableTest {
         child1.unlink();
         assertThat(parent.collection).doesNotContain(child1);
         assertThat(child1.group().isPresent()).isFalse();
-        assertThat(child1.destroyed()).isFalse();
+        assertThat(child1.isDestroyed()).isFalse();
     }
 
     @Test
     public void destroyed() {
         parent.collection.append(child1);
-        assertThat(child1.destroyed()).isFalse();
+        assertThat(child1.isDestroyed()).isFalse();
         child1.destroy();
-        assertThat(child1.destroyed()).isTrue();
+        assertThat(child1.isDestroyed()).isTrue();
         assertThat(child1.group().isPresent()).isFalse();
     }
 
     @Test
     public void destroyAlreadyDestroyed() {
         child1.destroy();
-        assertThat(child1.destroyed()).isTrue();
+        assertThat(child1.isDestroyed()).isTrue();
     }
 
     @Test
     public void dynamicallyCreatedNotInitiallyDestroyed() {
-        assertThat(new Child("c").destroyed()).isFalse();
+        assertThat(new Child("c").isDestroyed()).isFalse();
     }
 
     @Test
@@ -310,7 +308,7 @@ public class AbstractGroupableTest {
         }
 
         @Override
-        protected Child makeCopy(Prefix prefix, SupportMatrix support) {
+        public Child copy() {
             throw new UnsupportedOperationException();
         }
     }

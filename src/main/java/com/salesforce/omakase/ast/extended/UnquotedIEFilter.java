@@ -16,11 +16,9 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.AbstractTerm;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -88,7 +86,7 @@ public final class UnquotedIEFilter extends AbstractTerm {
     }
 
     @Override
-    protected UnquotedIEFilter makeCopy(Prefix prefix, SupportMatrix support) {
-        return new UnquotedIEFilter(-1, -1, content);
+    public UnquotedIEFilter copy() {
+        return new UnquotedIEFilter(-1, -1, content).copiedFrom(this);
     }
 }

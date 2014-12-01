@@ -16,11 +16,9 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.selector.ClassSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -101,7 +99,7 @@ public final class ClassSelector extends AbstractSelectorPart implements SimpleS
     }
 
     @Override
-    protected ClassSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        return new ClassSelector(name);
+    public ClassSelector copy() {
+        return new ClassSelector(name).copiedFrom(this);
     }
 }

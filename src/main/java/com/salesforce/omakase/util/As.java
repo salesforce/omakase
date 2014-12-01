@@ -156,7 +156,7 @@ public final class As {
     @SuppressWarnings("AutoBoxing")
     public As fields() {
         if (instance instanceof Syntax) {
-            Syntax<?> syntax = (Syntax<?>)instance;
+            Syntax syntax = (Syntax)instance;
             addIf(syntax.line() > -1, "line", syntax.line());
             addIf(syntax.column() > -1, "col", syntax.line());
             addUnlessEmpty("comments", syntax.comments());

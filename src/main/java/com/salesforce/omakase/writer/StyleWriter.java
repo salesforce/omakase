@@ -278,7 +278,7 @@ public final class StyleWriter implements DependentPlugin {
     @SuppressWarnings("unchecked")
     public <T extends Writable> void writeInner(T writable, StyleAppendable appendable) throws IOException {
         Class<? extends Writable> klass = writable.getClass();
-        Syntax<?> syntax = (writable instanceof Syntax) ? (Syntax<?>)writable : null;
+        Syntax syntax = (writable instanceof Syntax) ? (Syntax)writable : null;
 
         if (overrides.containsKey(klass)) {
             // cast is safe as long as the map is guarded by #override

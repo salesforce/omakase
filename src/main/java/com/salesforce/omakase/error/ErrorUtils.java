@@ -74,7 +74,7 @@ public final class ErrorUtils {
      *
      * @return The formatted message.
      */
-    public static String format(Syntax<?> cause, String message) {
+    public static String format(Syntax cause, String message) {
         return format(cause, null, message);
     }
 
@@ -91,7 +91,7 @@ public final class ErrorUtils {
      * @return The formatted message.
      */
     @SuppressWarnings("AutoBoxing")
-    public static String format(Syntax<?> cause, String resourceName, String message) {
+    public static String format(Syntax cause, String resourceName, String message) {
         if (resourceName != null) {
             return format(String.format("%s:\nat line %s, column %s in source %s, " +
                 "caused by\n%s",

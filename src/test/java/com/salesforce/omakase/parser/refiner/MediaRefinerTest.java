@@ -17,19 +17,15 @@
 package com.salesforce.omakase.parser.refiner;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.atrule.AbstractAtRuleBlock;
+import com.salesforce.omakase.ast.atrule.AbstractAtRuleExpression;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
-import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -172,12 +168,12 @@ public class MediaRefinerTest {
         assertThat(broadcaster.find(com.salesforce.omakase.ast.Rule.class).isPresent()).isTrue();
     }
 
-    private static final class TestExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+    private static final class TestExpression extends AbstractAtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 
         @Override
-        protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
+        public TestExpression copy() {
             throw new UnsupportedOperationException();
         }
     }
@@ -192,7 +188,7 @@ public class MediaRefinerTest {
         }
 
         @Override
-        protected StatementIterable makeCopy(Prefix prefix, SupportMatrix support) {
+        public TestBlock copy() {
             throw new UnsupportedOperationException();
         }
 

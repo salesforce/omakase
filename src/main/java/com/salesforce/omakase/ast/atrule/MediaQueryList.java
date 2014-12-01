@@ -42,7 +42,7 @@ import java.io.IOException;
  */
 @Subscribable
 @Description(value = "full media query string", broadcasted = BroadcastRequirement.REFINED_AT_RULE)
-public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+public final class MediaQueryList extends AbstractSyntax implements AtRuleExpression {
     private final SyntaxCollection<MediaQueryList, MediaQuery> queries;
 
     /**
@@ -102,11 +102,16 @@ public final class MediaQueryList extends AbstractSyntax<AtRuleExpression> imple
     }
 
     @Override
-    protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        MediaQueryList copy = new MediaQueryList();
+    public MediaQueryList copy() {
+        MediaQueryList copy = new MediaQueryList().copiedFrom(this);
         for (MediaQuery query : queries) {
             copy.queries().append(query.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(queries, prefix, support, deep);
     }
 }

@@ -53,4 +53,7 @@ public interface SelectorPart extends Groupable<Selector, SelectorPart> {
      * @return The {@link SelectorPartType}.
      */
     SelectorPartType type();
+
+    @Override
+    SelectorPart copy();
 }

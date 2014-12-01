@@ -68,7 +68,7 @@ public final class ParserException extends OmakaseException {
      * @param args
      *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
      */
-    public ParserException(Syntax<?> cause, Message message, Object... args) {
+    public ParserException(Syntax cause, Message message, Object... args) {
         this(cause, message.message(args));
     }
 
@@ -82,7 +82,7 @@ public final class ParserException extends OmakaseException {
      * @param message
      *     The error message.
      */
-    public ParserException(Syntax<?> cause, String message) {
+    public ParserException(Syntax cause, String message) {
         super(ErrorUtils.format(cause, message));
     }
 

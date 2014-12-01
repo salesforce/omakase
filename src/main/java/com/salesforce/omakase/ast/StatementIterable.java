@@ -24,7 +24,7 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
  * @author nmcwilliams
  * @see Stylesheet
  */
-public interface StatementIterable extends Iterable<Statement>, Syntax<StatementIterable> {
+public interface StatementIterable extends Iterable<Statement>, Syntax {
     /**
      * Gets the {@link SyntaxCollection} of statements within this unit.
      *

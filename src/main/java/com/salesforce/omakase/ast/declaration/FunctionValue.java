@@ -37,5 +37,4 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "general interface for function terms", broadcasted = REFINED_DECLARATION)
-public interface FunctionValue extends Term, Named {
-}
+public interface FunctionValue extends Term, Named {}

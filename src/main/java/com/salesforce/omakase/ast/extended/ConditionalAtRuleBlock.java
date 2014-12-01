@@ -16,13 +16,10 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.atrule.AbstractAtRuleBlock;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -36,6 +33,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -152,11 +150,16 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleBlock {
     }
 
     @Override
-    protected ConditionalAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
-        List<Statement> copiedStatements = Lists.newArrayList();
+    public ConditionalAtRuleBlock copy() {
+        List<Statement> copiedStatements = new ArrayList<>();
         for (Statement statement : statements) {
             copiedStatements.add(statement.copy());
         }
-        return new ConditionalAtRuleBlock(-1, -1, manager, condition, copiedStatements, null);
+        return new ConditionalAtRuleBlock(-1, -1, manager, condition, copiedStatements, null).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(statements, prefix, support, deep);
     }
 }

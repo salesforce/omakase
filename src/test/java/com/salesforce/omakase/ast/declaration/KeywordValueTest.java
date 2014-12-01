@@ -94,60 +94,60 @@ public class KeywordValueTest {
     }
 
     @Test
-    public void copyTransitionPrefixRequired() {
+    public void transitionPrefixRequired() {
         value = KeywordValue.of(Property.BORDER_RADIUS.toString());
         new Declaration(Property.TRANSITION, value);
 
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.SAFARI, 4);
 
-        KeywordValue copy = (KeywordValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.keyword()).isEqualTo("-webkit-border-radius");
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.keyword()).isEqualTo("-webkit-border-radius");
     }
 
     @Test
-    public void copyTransitionPrefixNotRequired() {
+    public void transitionPrefixNotRequired() {
         value = KeywordValue.of(Property.BORDER_RADIUS.toString());
         new Declaration(Property.TRANSITION, value);
 
         SupportMatrix support = new SupportMatrix();
 
-        KeywordValue copy = (KeywordValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.keyword()).isEqualTo("border-radius");
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.keyword()).isEqualTo("border-radius");
     }
 
     @Test
-    public void copyTransitionPropertyPrefixRequired() {
+    public void transitionPropertyPrefixRequired() {
         value = KeywordValue.of(Property.BORDER_RADIUS.toString());
         new Declaration(Property.TRANSITION_PROPERTY, value);
 
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.SAFARI, 4);
 
-        KeywordValue copy = (KeywordValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.keyword()).isEqualTo("-webkit-border-radius");
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.keyword()).isEqualTo("-webkit-border-radius");
     }
 
     @Test
-    public void copyTransitionPropertyPrefixNotRequired() {
+    public void transitionPropertyPrefixNotRequired() {
         value = KeywordValue.of(Property.BORDER_RADIUS.toString());
         new Declaration(Property.TRANSITION_PROPERTY, value);
 
         SupportMatrix support = new SupportMatrix();
 
-        KeywordValue copy = (KeywordValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.keyword()).isEqualTo("border-radius");
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.keyword()).isEqualTo("border-radius");
     }
 
     @Test
-    public void copyWithPrefixNotTransition() {
+    public void prefixNotTransition() {
         value = KeywordValue.of(Property.BORDER_RADIUS.toString());
         new Declaration(Property.DISPLAY, value);
 
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.SAFARI, 4);
 
-        KeywordValue copy = (KeywordValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.keyword()).isEqualTo("border-radius");
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.keyword()).isEqualTo("border-radius");
     }
 }

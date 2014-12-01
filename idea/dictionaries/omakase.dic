@@ -8,6 +8,7 @@ broadcastable
 broadcasted
 caniuse
 classname
+codepoint
 combinator
 combinators
 commentable
@@ -20,6 +21,8 @@ firefox
 fixme
 goldfile
 groupable
+hexidecimal
+hexidecimals
 ident
 idents
 importants

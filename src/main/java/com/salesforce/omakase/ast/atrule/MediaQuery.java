@@ -176,8 +176,8 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
     }
 
     @Override
-    protected MediaQuery makeCopy(Prefix prefix, SupportMatrix support) {
-        MediaQuery copy = new MediaQuery();
+    public MediaQuery copy() {
+        MediaQuery copy = new MediaQuery().copiedFrom(this);
 
         if (type.isPresent()) {
             copy.type(type.get());
@@ -192,5 +192,10 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
         }
 
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(expressions, prefix, support, deep);
     }
 }

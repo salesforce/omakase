@@ -56,7 +56,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule>,
     Named {
     private final transient GenericRefiner refiner;
-    private final String name;
+    private String name;
 
     // unrefined
     private final Optional<RawSyntax> rawExpression;
@@ -365,24 +365,44 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     @Override
-    protected AtRule makeCopy(Prefix prefix, SupportMatrix support) {
-        String newName = name;
-        if (prefix != null && support != null && support.requiresPrefixForAtRule(prefix, name)) {
-            newName = prefix + name;
-        }
+    public AtRule copy() {
+        AtRule copy;
 
         if (isRefined()) {
             AtRuleExpression expressionCopy = expression.isPresent() ? expression.get().copy() : null;
-            AtRuleBlock blockCopy = block.isPresent() ? (AtRuleBlock)block.get().copy() : null;
-            AtRule copy = new AtRule(newName, expressionCopy, blockCopy);
-            copy.shouldWriteName(shouldWriteName);
-            return copy;
+            AtRuleBlock blockCopy = block.isPresent() ? block.get().copy() : null;
+            copy = new AtRule(name, expressionCopy, blockCopy).copiedFrom(this);
         } else {
             RawSyntax expressionCopy = rawExpression.isPresent() ? rawExpression.get().copy() : null;
             RawSyntax blockCopy = rawBlock.isPresent() ? rawBlock.get().copy() : null;
-            AtRule copy = new AtRule(-1, -1, newName, expressionCopy, blockCopy, refiner);
-            copy.shouldWriteName(shouldWriteName);
-            return copy;
+            copy = new AtRule(-1, -1, name, expressionCopy, blockCopy, refiner).copiedFrom(this);
+        }
+        copy.shouldWriteName(shouldWriteName);
+        return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        if (support.requiresPrefixForAtRule(prefix, name)) {
+            name = prefix + name;
+        }
+
+        if (!deep) return;
+
+        if (isRefined()) {
+            if (expression.isPresent()) {
+                expression.get().prefix(prefix, support, deep);
+            }
+            if (block.isPresent()) {
+                block.get().prefix(prefix, support, deep);
+            }
+        } else {
+            if (rawExpression.isPresent()) {
+                rawExpression.get().prefix(prefix, support, deep);
+            }
+            if (rawBlock.isPresent()) {
+                rawBlock.get().prefix(prefix, support, deep);
+            }
         }
     }
 }

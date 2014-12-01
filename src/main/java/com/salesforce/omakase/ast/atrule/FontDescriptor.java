@@ -200,7 +200,14 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     }
 
     @Override
-    protected FontDescriptor makeCopy(Prefix prefix, SupportMatrix support) {
-        return new FontDescriptor(propertyName.copy(prefix, support), propertyValue.copy(prefix, support));
+    public FontDescriptor copy() {
+        return new FontDescriptor(propertyName.copy(), propertyValue.copy()).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        if (!deep) return;
+        propertyName.prefix(prefix, support, deep);
+        propertyValue.prefix(prefix, support, deep);
     }
 }

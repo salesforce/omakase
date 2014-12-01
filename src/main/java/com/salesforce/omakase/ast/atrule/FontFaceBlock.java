@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Syntax;
@@ -136,11 +135,16 @@ public final class FontFaceBlock extends AbstractAtRuleBlock {
     }
 
     @Override
-    protected FontFaceBlock makeCopy(Prefix prefix, SupportMatrix support) {
-        FontFaceBlock copy = new FontFaceBlock();
+    public FontFaceBlock copy() {
+        FontFaceBlock copy = new FontFaceBlock().copiedFrom(this);
         for (FontDescriptor descriptor : fontDescriptors) {
-            copy.fontDescriptors().append(descriptor.copy(prefix, support));
+            copy.fontDescriptors().append(descriptor.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(fontDescriptors, prefix, support, deep);
     }
 }

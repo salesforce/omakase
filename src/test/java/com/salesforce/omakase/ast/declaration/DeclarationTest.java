@@ -389,18 +389,15 @@ public class DeclarationTest {
     }
 
     @Test
-    public void copyWithPrefix() {
+    public void prefix() {
         Declaration d = new Declaration(Property.BORDER_RADIUS, NumericalValue.of(5, "px"));
         d.comments(Lists.newArrayList("test"));
 
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 3.6);
 
-        Declaration copy = d.copy(Prefix.MOZ, support);
-        assertThat(copy.isProperty(Property.MARGIN));
-        assertThat(copy.isPrefixed()).isTrue();
-        assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
-        assertThat(copy.comments()).hasSameSizeAs(d.comments());
+        d.prefix(Prefix.MOZ, support, true);
+        assertThat(d.isPrefixed()).isTrue();
     }
 
     @Test

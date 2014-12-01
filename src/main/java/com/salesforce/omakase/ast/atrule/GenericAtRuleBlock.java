@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
@@ -104,11 +103,16 @@ public final class GenericAtRuleBlock extends AbstractAtRuleBlock {
     }
 
     @Override
-    protected GenericAtRuleBlock makeCopy(Prefix prefix, SupportMatrix support) {
-        GenericAtRuleBlock copy = new GenericAtRuleBlock();
+    public GenericAtRuleBlock copy() {
+        GenericAtRuleBlock copy = new GenericAtRuleBlock().copiedFrom(this);
         for (Statement statement : statements) {
             copy.statements().append(statement.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(statements, prefix, support, deep);
     }
 }

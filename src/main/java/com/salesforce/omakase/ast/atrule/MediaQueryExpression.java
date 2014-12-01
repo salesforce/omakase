@@ -27,6 +27,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -153,18 +154,23 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
     }
 
     @Override
-    protected MediaQueryExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        MediaQueryExpression copy = new MediaQueryExpression(feature);
+    public MediaQueryExpression copy() {
+        MediaQueryExpression copy = new MediaQueryExpression(feature).copiedFrom(this);
 
         if (terms != null && !terms.isEmpty()) {
-            List<PropertyValueMember> termsCopy = Lists.newArrayList();
-            for (PropertyValueMember term : terms) {
-                termsCopy.add(term.copy());
+            List<PropertyValueMember> membersCopy = new ArrayList<>();
+            for (PropertyValueMember member : terms) {
+                membersCopy.add(member.copy());
             }
 
-            copy.terms(termsCopy);
+            copy.terms(membersCopy);
         }
 
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(terms, prefix, support, deep);
     }
 }

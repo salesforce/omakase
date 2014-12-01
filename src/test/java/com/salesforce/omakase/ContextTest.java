@@ -224,7 +224,7 @@ public class ContextTest {
         }
 
         @Override
-        public void report(ErrorLevel level, Syntax<?> cause, String message) {
+        public void report(ErrorLevel level, Syntax cause, String message) {
             reported = true;
         }
 

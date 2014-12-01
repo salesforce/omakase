@@ -44,7 +44,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Stylesheet extends AbstractSyntax<StatementIterable> implements StatementIterable {
+public final class Stylesheet extends AbstractSyntax implements StatementIterable {
     private final SyntaxCollection<StatementIterable, Statement> statements;
     private final transient Broadcaster broadcaster;
 
@@ -99,11 +99,16 @@ public final class Stylesheet extends AbstractSyntax<StatementIterable> implemen
     }
 
     @Override
-    protected Stylesheet makeCopy(Prefix prefix, SupportMatrix support) {
-        Stylesheet copy = new Stylesheet(broadcaster);
+    public Stylesheet copy() {
+        Stylesheet copy = new Stylesheet(broadcaster).copiedFrom(this);
         for (Statement statement : statements) {
             copy.append(statement.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(statements, prefix, support, deep);
     }
 }

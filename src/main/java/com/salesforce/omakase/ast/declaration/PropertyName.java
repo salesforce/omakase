@@ -19,6 +19,7 @@ package com.salesforce.omakase.ast.declaration;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Prefixes;
@@ -40,7 +41,7 @@ import static com.salesforce.omakase.util.Prefixes.PrefixPair;
  *
  * @author nmcwilliams
  */
-public final class PropertyName extends AbstractSyntax<PropertyName> {
+public final class PropertyName extends AbstractSyntax implements Named {
     private static final char STAR = '*';
 
     private final String name;
@@ -73,6 +74,7 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
      *
      * @return The full property name.
      */
+    @Override
     public String name() {
         return prefix.isPresent() ? prefix.get() + name : name;
     }
@@ -250,14 +252,16 @@ public final class PropertyName extends AbstractSyntax<PropertyName> {
     }
 
     @Override
-    protected PropertyName makeCopy(Prefix prefix, SupportMatrix support) {
-        if (prefix != null && support != null) {
-            Optional<Property> property = asProperty();
-            if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
-                return PropertyName.using(property.get()).prefix(prefix).starHack(starHack);
-            }
+    public PropertyName copy() {
+        return PropertyName.using(name()).starHack(starHack).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        Optional<Property> property = asProperty();
+        if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
+            prefix(prefix);
         }
-        return PropertyName.using(name()).starHack(starHack);
     }
 
     /**

@@ -84,22 +84,22 @@ public class PseudoElementSelectorTest {
     }
 
     @Test
-    public void copyWithPrefixRequired() {
+    public void prefixRequired() {
         PseudoElementSelector s = new PseudoElementSelector("selection");
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 25);
 
-        PseudoElementSelector copy = (PseudoElementSelector)s.copy(Prefix.MOZ, support);
-        assertThat(copy.name()).isEqualTo("-moz-selection");
+        s.prefix(Prefix.MOZ, support);
+        assertThat(s.name()).isEqualTo("-moz-selection");
     }
 
     @Test
-    public void copyWithPrefixNotRequired() {
+    public void prefixNotRequired() {
         PseudoElementSelector s = new PseudoElementSelector("selection");
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 25);
 
-        PseudoElementSelector copy = (PseudoElementSelector)s.copy(Prefix.WEBKIT, support);
-        assertThat(copy.name()).isEqualTo("selection");
+        s.prefix(Prefix.WEBKIT, support);
+        assertThat(s.name()).isEqualTo("selection");
     }
 }

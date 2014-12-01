@@ -127,6 +127,11 @@ final class PrefixerHandlers {
         protected Multimap<Prefix, AtRule> equivalents(AtRule instance) {
             return Equivalents.prefixes(subject(instance), instance, Equivalents.AT_RULES);
         }
+
+        @Override
+        protected boolean prefixInnerUnits() {
+            return false;
+        }
     };
 
     /** handles pseudo element selector prefixes */
@@ -275,7 +280,7 @@ final class PrefixerHandlers {
 
             // firefox special case where version 19 and below uses a pseudo class
             if (prefix == Prefix.MOZ && support.lowestSupportedVersion(Browser.FIREFOX) <= 19) {
-                Rule oldMozCopy = (Rule)copy.copy();
+                Rule oldMozCopy = copy.copy();
                 for (Selector selector : oldMozCopy.selectors()) {
                     Optional<PseudoElementSelector> placeholder = Selectors.findPseudoElementSelector(selector, "placeholder", false);
                     if (placeholder.isPresent()) {

@@ -80,8 +80,20 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
     }
 
     /** makes a copy of the instance with the given prefix */
+    @SuppressWarnings("unchecked")
     protected void copy(G original, Prefix prefix, SupportMatrix support) {
-        original.prepend(original.copy(prefix, support));
+        G copy = (G)original.copy();
+        copy.prefix(prefix, support, prefixInnerUnits());
+        original.prepend(copy);
+    }
+
+    /**
+     * Specifies whether prefixing should extend to all inner units or just the top-level unit.
+     *
+     * @return True if prefixing should extend to all inner units.
+     */
+    protected boolean prefixInnerUnits() {
+        return true;
     }
 
     /** should return false if the instance should be skipped */

@@ -16,11 +16,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.UnicodeRangeValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -132,7 +130,7 @@ public class UnicodeRangeValue extends AbstractTerm {
     }
 
     @Override
-    protected PropertyValueMember makeCopy(Prefix prefix, SupportMatrix support) {
-        return new UnicodeRangeValue(value, true);
+    public UnicodeRangeValue copy() {
+        return new UnicodeRangeValue(value, true).copiedFrom(this);
     }
 }

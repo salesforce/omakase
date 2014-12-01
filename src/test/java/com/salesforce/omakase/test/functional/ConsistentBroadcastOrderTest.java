@@ -49,8 +49,8 @@ public class ConsistentBroadcastOrderTest {
 
     @Test
     public void testConsistentOrdering() throws Exception {
-        final List<Syntax<?>> parsed = Lists.newArrayList();
-        final List<Syntax<?>> copied = Lists.newArrayList();
+        final List<Syntax> parsed = Lists.newArrayList();
+        final List<Syntax> copied = Lists.newArrayList();
 
         Omakase.source(SRC)
             .request(new AutoRefiner().all())
@@ -58,7 +58,7 @@ public class ConsistentBroadcastOrderTest {
                 private boolean madeCopy;
 
                 @Observe
-                public void observe(Syntax<?> syntax) {
+                public void observe(Syntax syntax) {
                     if (!madeCopy) {
                         parsed.add(syntax);
                     } else {

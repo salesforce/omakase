@@ -17,12 +17,10 @@
 package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -150,7 +148,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
     }
 
     @Override
-    protected PseudoClassSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        return new PseudoClassSelector(name, args.orNull());
+    public PseudoClassSelector copy() {
+        return new PseudoClassSelector(name, args.orNull()).copiedFrom(this);
     }
 }

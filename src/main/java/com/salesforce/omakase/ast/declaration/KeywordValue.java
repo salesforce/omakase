@@ -142,25 +142,26 @@ public final class KeywordValue extends AbstractTerm {
     }
 
     @Override
-    protected KeywordValue makeCopy(Prefix prefix, SupportMatrix support) {
-        String copied = keyword;
+    public KeywordValue copy() {
+        return new KeywordValue(keyword).copiedFrom(this);
+    }
 
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
         // if we are part of a "transition" declaration, we may need to be prefixed if we are a prefixable property-name
         // keyword. E.g., in "transition: border-radius 1s", the "border-radius" is a keyword value that represents a
         // property-name that may need to be prefixed.
-        if (prefix != null && support != null && parent().get().declaration().isPresent()) {
+        if (parent().isPresent() && parent().get().declaration().isPresent()) {
             Declaration declaration = parent().get().declaration().get();
 
             // transition
             if (declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) {
                 Property property = Property.lookup(keyword);
                 if (property != null && support.requiresPrefixForProperty(prefix, property)) {
-                    copied = prefix + keyword;
+                    keyword(prefix + keyword);
                 }
             }
         }
-
-        return new KeywordValue(copied);
     }
 
     /**

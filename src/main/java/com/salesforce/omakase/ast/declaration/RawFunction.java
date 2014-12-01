@@ -16,13 +16,11 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.GenericRefiner;
 import com.salesforce.omakase.parser.refiner.StandardRefiner;
@@ -45,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Subscribable
 @Description(value = "a raw function before refinement", broadcasted = BroadcastRequirement.REFINED_DECLARATION)
-public final class RawFunction extends AbstractSyntax<RawFunction> {
+public final class RawFunction extends AbstractSyntax {
     private String name;
     private String args;
 
@@ -117,7 +115,7 @@ public final class RawFunction extends AbstractSyntax<RawFunction> {
     }
 
     @Override
-    protected RawFunction makeCopy(Prefix prefix, SupportMatrix support) {
+    public RawFunction copy() {
         throw new UnsupportedOperationException("copy not supported for " + RawFunction.class);
     }
 }

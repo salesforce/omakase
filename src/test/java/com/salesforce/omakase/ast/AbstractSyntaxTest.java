@@ -18,9 +18,7 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -290,7 +288,7 @@ public class AbstractSyntaxTest {
         assertThat(t1.id()).isNotEqualTo(t2.id());
     }
 
-    public static final class TestSyntax extends AbstractSyntax<TestSyntax> {
+    public static final class TestSyntax extends AbstractSyntax {
         private String name;
 
         public TestSyntax() {
@@ -305,8 +303,8 @@ public class AbstractSyntaxTest {
         }
 
         @Override
-        protected TestSyntax makeCopy(Prefix prefix, SupportMatrix support) {
-            return new TestSyntax(name);
+        public TestSyntax copy() {
+            return new TestSyntax(name).copiedFrom(this);
         }
 
         @Override

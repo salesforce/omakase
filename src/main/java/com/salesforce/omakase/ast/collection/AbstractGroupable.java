@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Base class for {@link Groupable}s.
+ *
  * @param <T>
  *     See "T" described in the {@link Groupable} documentation.
  * @param <P>
@@ -32,7 +33,7 @@ import static com.google.common.base.Preconditions.*;
  *
  * @author nmcwilliams
  */
-public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends AbstractSyntax<T> implements Groupable<P, T> {
+public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends AbstractSyntax implements Groupable<P, T> {
     private SyntaxCollection<P, T> group;
     private boolean destroyed;
 
@@ -121,7 +122,7 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
     }
 
     @Override
-    public boolean destroyed() {
+    public boolean isDestroyed() {
         return destroyed;
     }
 

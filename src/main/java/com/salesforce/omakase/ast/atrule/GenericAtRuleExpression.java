@@ -16,14 +16,11 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
+import java.io.IOException;
+
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * A generic {@link AtRuleExpression} value.
@@ -32,7 +29,7 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-public class GenericAtRuleExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+public class GenericAtRuleExpression extends AbstractAtRuleExpression {
     private String expression;
 
     /**
@@ -88,7 +85,7 @@ public class GenericAtRuleExpression extends AbstractSyntax<AtRuleExpression> im
     }
 
     @Override
-    protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
-        return new GenericAtRuleExpression(expression);
+    public AtRuleExpression copy() {
+        return new GenericAtRuleExpression(expression).copiedFrom(this);
     }
 }

@@ -35,6 +35,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
@@ -225,13 +226,18 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     }
 
     @Override
-    protected Selector makeCopy(Prefix prefix, SupportMatrix support) {
-        List<SelectorPart> copiedParts = Lists.newArrayList();
+    public Selector copy() {
+        List<SelectorPart> copiedParts = new ArrayList<>();
 
         for (SelectorPart part : parts) {
-            copiedParts.add(part.copy(prefix, support));
+            copiedParts.add(part.copy());
         }
 
-        return new Selector(copiedParts);
+        return new Selector(copiedParts).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(parts, prefix, support, deep);
     }
 }

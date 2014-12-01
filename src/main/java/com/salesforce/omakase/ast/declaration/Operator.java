@@ -16,11 +16,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -89,7 +87,7 @@ public final class Operator extends AbstractGroupable<PropertyValue, PropertyVal
     }
 
     @Override
-    protected Operator makeCopy(Prefix prefix, SupportMatrix support) {
-        return new Operator(type);
+    public Operator copy() {
+        return new Operator(type).copiedFrom(this);
     }
 }

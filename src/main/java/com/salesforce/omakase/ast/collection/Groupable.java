@@ -42,7 +42,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
  * @author nmcwilliams
  * @see SyntaxCollection
  */
-public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
+public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
     /**
      * Gets whether this unit is the first within its group.
      * <p/>
@@ -151,7 +151,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax<T> {
      *
      * @return True if the unit has been destroyed.
      */
-    boolean destroyed();
+    boolean isDestroyed();
 
     /**
      * Sets the group. Internal method only! Do not call directly or behavior will be unexpected.

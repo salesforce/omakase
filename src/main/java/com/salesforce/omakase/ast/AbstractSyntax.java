@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.util.As;
@@ -28,17 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Base class for {@link Syntax} units.
  *
- * @param <C>
- *     (C)opiedType. Type of unit created when copied (usually the same type as the implementing class itself).
- *
  * @author nmcwilliams
  */
-public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
+public abstract class AbstractSyntax implements Syntax {
     private static final AtomicInteger sequence = new AtomicInteger();
     private final int id = sequence.incrementAndGet();
 
@@ -93,48 +91,73 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
         return true;
     }
 
+    /**
+     * For implementations: do not copy comments or orphaned comments, instead be sure to call {@link #copiedFrom(Syntax)} on the
+     * new copy.
+     */
     @Override
-    public final C copy() {
-        return copy(null, null);
+    public abstract Syntax copy(); // overriding just to comment on subclass implementations as done above.
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support) {
+        prefix(prefix, support, true);
     }
 
     @Override
-    public final C copy(Prefix prefix, SupportMatrix support) {
-        C copy = makeCopy(prefix, support);
-        if (comments != null) copy.comments(this);
-        if (orphanedComments != null) copy.orphanedComments(this);
-        return copy;
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        // default case is to do nothing
     }
 
     /**
-     * Inner method to perform a deep copy of the instance.
-     * <p/>
-     * For implementations, take note that the prefix and support params may be null. Do <em>not</em> copy comments or orphaned
-     * comments as this is already handled. If applicable and present, the prefix and support should be used to vendor prefix
-     * certain values. Prefixes should only be added if the {@link SupportMatrix} has a browser version that requires it. See
-     * {@link #copy (Prefix, SupportMatrix)} for more details.
+     * Helper method to handle prefixing inner units. This will prefix each inner unit, <b>but only</b> if <code>deep</code> is
+     * true.
      *
+     * @param children
+     *     The children to copy, usually a {@link SyntaxCollection}.
      * @param prefix
-     *     Apply this {@link Prefix} is applicable.
+     *     The prefix (just pass it along).
      * @param support
-     *     Represents the supported browser versions.
-     *
-     * @return The new copy.
-     *
-     * @see #copy()
-     * @see #copy(Prefix, SupportMatrix)
+     *     The support (just pass it along).
+     * @param deep
+     *     Whether to deep copy (just pass it along).
      */
-    protected abstract C makeCopy(Prefix prefix, SupportMatrix support);
+    protected void prefixChildren(Iterable<? extends Syntax> children, Prefix prefix, SupportMatrix support, boolean deep) {
+        if (deep) {
+            for (Syntax child : children) {
+                child.prefix(prefix, support, deep);
+            }
+        }
+    }
+
+    /**
+     * This should be called on all copied units. It handles shared logic such as copying comments.
+     * <p/>
+     * Examples:
+     * <code><pre>
+     *     Rule copy = new Rule().copiedFrom(original);
+     * </pre></code>
+     *
+     * @param original
+     *     The original, copied unit.
+     *
+     * @return this, for chaining.
+     */
+    @SuppressWarnings("unchecked")
+    protected final <T extends Syntax> T copiedFrom(T original) {
+        checkArgument(original.getClass().equals(getClass()), "cannot copy from a mismatched type");
+        this.comments(original).orphanedComments(original);
+        return (T)this; // safe from checkArgument above
+    }
 
     @Override
-    public Syntax<C> comment(Comment comment) {
+    public Syntax comment(Comment comment) {
         checkNotNull(comment, "comment cannot be null");
         getOrCreateComments(4).add(comment);
         return this;
     }
 
     @Override
-    public Syntax<C> comments(List<String> comments) {
+    public Syntax comments(List<String> comments) {
         if (comments == null || comments.isEmpty()) return this;
 
         getOrCreateComments(comments.size());
@@ -147,7 +170,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     }
 
     @Override
-    public Syntax<C> comments(Syntax<?> copyFrom) {
+    public Syntax comments(Syntax copyFrom) {
         ImmutableList<Comment> toCopy = copyFrom.comments();
         if (toCopy.isEmpty()) return this;
 
@@ -161,7 +184,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     }
 
     @Override
-    public Syntax<C> orphanedComments(List<String> comments) {
+    public Syntax orphanedComments(List<String> comments) {
         if (comments == null || comments.isEmpty()) return this;
 
         getOrCreateOrphanedComments(comments.size());
@@ -174,7 +197,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
     }
 
     @Override
-    public Syntax<C> orphanedComments(Syntax<?> copyFrom) {
+    public Syntax orphanedComments(Syntax copyFrom) {
         ImmutableList<Comment> toCopy = copyFrom.orphanedComments();
         if (toCopy.isEmpty()) return this;
 
@@ -252,8 +275,7 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
-        // only broadcast ourselves once
-        if (this.status == Status.UNBROADCASTED) {
+        if (this.status == Status.UNBROADCASTED) { // only broadcast ourselves once
             broadcaster.broadcast(this);
         }
     }
@@ -295,17 +317,13 @@ public abstract class AbstractSyntax<C extends Syntax<C>> implements Syntax<C> {
 
     /** utility to ensure the comments list is created before using it */
     private List<Comment> getOrCreateComments(int initialSize) {
-        if (comments == null) {
-            comments = new ArrayList<>(initialSize);
-        }
+        if (comments == null) comments = new ArrayList<>(initialSize);
         return comments;
     }
 
     /** utility to ensure the orphaned comments list is created before using it */
     private List<Comment> getOrCreateOrphanedComments(int initialSize) {
-        if (orphanedComments == null) {
-            orphanedComments = new ArrayList<>(initialSize);
-        }
+        if (orphanedComments == null) orphanedComments = new ArrayList<>(initialSize);
         return orphanedComments;
     }
 }

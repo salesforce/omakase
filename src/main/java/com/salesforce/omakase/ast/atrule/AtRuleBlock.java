@@ -47,4 +47,7 @@ public interface AtRuleBlock extends StatementIterable {
      * @return The parent {@link AtRule}, or {@link Optional#absent()} if not set.
      */
     Optional<AtRule> parent();
+
+    @Override
+    AtRuleBlock copy();
 }

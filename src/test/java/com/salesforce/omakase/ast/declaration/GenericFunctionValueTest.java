@@ -111,27 +111,25 @@ public class GenericFunctionValueTest {
     }
 
     @Test
-    public void copyWithPrefixMatch() {
+    public void prefixRequired() {
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.CHROME, 19);
         value = new GenericFunctionValue("calc", "2px-1px");
         value.comments(Lists.newArrayList("test"));
 
-        GenericFunctionValue copy = (GenericFunctionValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.name()).isEqualTo("-webkit-calc");
-        assertThat(copy.args()).isEqualTo("2px-1px");
-        assertThat(copy.comments()).hasSameSizeAs(value.comments());
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.name()).isEqualTo("-webkit-calc");
+        assertThat(value.args()).isEqualTo("2px-1px");
     }
 
     @Test
-    public void copyWithPrefixDoesntMatch() {
+    public void prefixNotRequired() {
         SupportMatrix support = new SupportMatrix();
         value = new GenericFunctionValue("calc", "2px-1px");
         value.comments(Lists.newArrayList("test"));
 
-        GenericFunctionValue copy = (GenericFunctionValue)value.copy(Prefix.WEBKIT, support);
-        assertThat(copy.name()).isEqualTo("calc");
-        assertThat(copy.args()).isEqualTo("2px-1px");
-        assertThat(copy.comments()).hasSameSizeAs(value.comments());
+        value.prefix(Prefix.WEBKIT, support);
+        assertThat(value.name()).isEqualTo("calc");
+        assertThat(value.args()).isEqualTo("2px-1px");
     }
 }

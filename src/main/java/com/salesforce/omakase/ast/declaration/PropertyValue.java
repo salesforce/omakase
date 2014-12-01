@@ -54,7 +54,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "interface for all property values", broadcasted = REFINED_DECLARATION)
-public final class PropertyValue extends AbstractSyntax<PropertyValue> {
+public final class PropertyValue extends AbstractSyntax {
     private final SyntaxCollection<PropertyValue, PropertyValueMember> members;
     private transient Optional<Declaration> declaration = Optional.absent();
     private boolean important;
@@ -229,13 +229,20 @@ public final class PropertyValue extends AbstractSyntax<PropertyValue> {
     }
 
     @Override
-    protected PropertyValue makeCopy(Prefix prefix, SupportMatrix support) {
-        PropertyValue copy = new PropertyValue();
-        copy.important(important);
+    public PropertyValue copy() {
+        PropertyValue copy = new PropertyValue().important(important).copiedFrom(this);
         for (PropertyValueMember member : members) {
-            copy.append(member.copy(prefix, support));
+            copy.append(member.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        if (!deep) return;
+        for (PropertyValueMember member : members) {
+            member.prefix(prefix, support, deep);
+        }
     }
 
     /**

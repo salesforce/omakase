@@ -201,14 +201,20 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
     }
 
     @Override
-    protected Rule makeCopy(Prefix prefix, SupportMatrix support) {
-        Rule copy = new Rule();
+    public Rule copy() {
+        Rule copy = new Rule().copiedFrom(this);
         for (Selector selector : selectors) {
-            copy.selectors().append(selector.copy(prefix, support));
+            copy.selectors().append(selector.copy());
         }
         for (Declaration declaration : declarations) {
-            copy.declarations().append(declaration.copy(prefix, support));
+            copy.declarations().append(declaration.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        prefixChildren(selectors, prefix, support, deep);
+        prefixChildren(declarations, prefix, support, deep);
     }
 }

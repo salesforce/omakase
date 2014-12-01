@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
@@ -369,25 +368,25 @@ public class AtRuleTest {
     }
 
     @Test
-    public void copyWithPrefix() {
+    public void prefix() {
         CustomExpression expression = new CustomExpression();
         CustomBlock block = new CustomBlock();
         AtRule ar = new AtRule("keyframes", expression, block);
 
         SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
-        AtRule copy = (AtRule)ar.copy(Prefix.WEBKIT, support);
-        assertThat(copy.name()).isEqualTo("-webkit-keyframes");
+        ar.prefix(Prefix.WEBKIT, support);
+        assertThat(ar.name()).isEqualTo("-webkit-keyframes");
     }
 
     @Test
-    public void copyWithPrefixNotNeeded() {
+    public void prefixWhenNotNeeded() {
         CustomExpression expression = new CustomExpression();
         CustomBlock block = new CustomBlock();
         AtRule ar = new AtRule("keyframes", expression, block);
 
         SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
-        AtRule copy = (AtRule)ar.copy(Prefix.MOZ, support);
-        assertThat(copy.name()).isEqualTo("keyframes");
+        ar.prefix(Prefix.MOZ, support);
+        assertThat(ar.name()).isEqualTo("keyframes");
     }
 
     @Test
@@ -400,19 +399,21 @@ public class AtRuleTest {
         assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
     }
 
-    public static final class CustomExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+    public static final class CustomExpression extends AbstractAtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("(custom)");
         }
 
         @Override
-        protected CustomExpression makeCopy(Prefix prefix, SupportMatrix support) {
+        public CustomExpression copy() {
             return new CustomExpression();
         }
+
+
     }
 
-    public static final class CustomExpressionNotWritable extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+    public static final class CustomExpressionNotWritable extends AbstractAtRuleExpression {
         @Override
         public boolean isWritable() {
             return false;
@@ -424,7 +425,7 @@ public class AtRuleTest {
         }
 
         @Override
-        protected CustomExpression makeCopy(Prefix prefix, SupportMatrix support) {
+        public CustomExpression copy() {
             return new CustomExpression();
         }
     }
@@ -441,7 +442,7 @@ public class AtRuleTest {
         }
 
         @Override
-        protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
+        public CustomBlock copy() {
             return new CustomBlock();
         }
 
@@ -468,7 +469,7 @@ public class AtRuleTest {
         }
 
         @Override
-        protected CustomBlock makeCopy(Prefix prefix, SupportMatrix support) {
+        public CustomBlock copy() {
             return new CustomBlock();
         }
 

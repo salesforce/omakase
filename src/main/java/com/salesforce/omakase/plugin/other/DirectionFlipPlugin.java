@@ -249,7 +249,7 @@ public final class DirectionFlipPlugin implements DependentPlugin {
             return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0));
         case 3:
             // the 2nd term, when flipped, is used in both the first and 3rd positions.  Use a copy of the term for the 3rd.
-            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), (Term)terms.get(1).copy(),
+            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(1).copy(),
                 terms.get(2));
         case 4:
             return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(3), terms.get(2));

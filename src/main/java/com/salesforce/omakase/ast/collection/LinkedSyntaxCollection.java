@@ -16,6 +16,16 @@
 
 package com.salesforce.omakase.ast.collection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -27,16 +37,6 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.util.As;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Standard (default) implementation of the {@link SyntaxCollection}.
@@ -167,7 +167,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     @Override
     public SyntaxCollection<P, T> prepend(T unit) {
         checkNotNull(unit, "unit cannot be null");
-        checkArgument(!unit.destroyed(), "cannot prepend a destroyed unit!");
+        checkArgument(!unit.isDestroyed(), "cannot prepend a destroyed unit!");
 
         // create a new node
         first = new Node<>(null, first, unit);
@@ -190,7 +190,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     public SyntaxCollection<P, T> prependBefore(T index, T unit) throws IllegalArgumentException {
         checkNotNull(index, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
-        checkArgument(!unit.destroyed(), "cannot prepend a destroyed unit!");
+        checkArgument(!unit.isDestroyed(), "cannot prepend a destroyed unit!");
 
         // find the node for the index unit
         Node<T> node = lookup.get(index.id());
@@ -211,7 +211,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     @Override
     public SyntaxCollection<P, T> append(T unit) {
         checkNotNull(unit, "unit cannot be null");
-        checkArgument(!unit.destroyed(), "cannot append a destroyed unit!");
+        checkArgument(!unit.isDestroyed(), "cannot append a destroyed unit!");
 
         // create a new node
         last = new Node<>(last, null, unit);
@@ -234,7 +234,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     public SyntaxCollection<P, T> appendAfter(T index, T unit) throws IllegalArgumentException {
         checkNotNull(index, "exiting cannot be null");
         checkNotNull(unit, "unit cannot be null");
-        checkArgument(!unit.destroyed(), "cannot append a destroyed unit!");
+        checkArgument(!unit.isDestroyed(), "cannot append a destroyed unit!");
 
         // find the node for the index unit
         Node<T> node = lookup.get(index.id());
@@ -323,7 +323,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         }
     }
 
-    private static final class Lookup<E extends Syntax<?>> {
+    private static final class Lookup<E extends Syntax> {
         private List<Node<E>> sparse = new ArrayList<>();
         private Map<Integer, Node<E>> dense;
         private int count = 0;

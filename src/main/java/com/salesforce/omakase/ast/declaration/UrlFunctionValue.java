@@ -17,11 +17,9 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -149,7 +147,7 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
     }
 
     @Override
-    protected UrlFunctionValue makeCopy(Prefix prefix, SupportMatrix support) {
-        return new UrlFunctionValue(url).quotationMode(quotationMode.orNull());
+    public UrlFunctionValue copy() {
+        return new UrlFunctionValue(url).quotationMode(quotationMode.orNull()).copiedFrom(this);
     }
 }

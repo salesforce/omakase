@@ -35,7 +35,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class QueuingBroadcasterTest {
     private QueuingBroadcaster queue;
     private QueryableBroadcaster qb;
-    private Syntax<?> unit;
+    private Syntax unit;
 
     @Before
     public void setup() {
@@ -72,11 +72,11 @@ public class QueuingBroadcasterTest {
     public void broadcastOrderWhenResumingAfterPause() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
-        Syntax<?> u4 = new ClassSelector("test4");
-        Syntax<?> u5 = new ClassSelector("test5");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
+        Syntax u4 = new ClassSelector("test4");
+        Syntax u5 = new ClassSelector("test5");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -92,9 +92,9 @@ public class QueuingBroadcasterTest {
     public void peek() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -107,9 +107,9 @@ public class QueuingBroadcasterTest {
     public void peekLast() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -122,9 +122,9 @@ public class QueuingBroadcasterTest {
     public void rejectFirst() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -140,9 +140,9 @@ public class QueuingBroadcasterTest {
     public void rejectLast() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -158,9 +158,9 @@ public class QueuingBroadcasterTest {
     public void rejectMiddle() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -190,9 +190,9 @@ public class QueuingBroadcasterTest {
     public void size() {
         queue.pause();
 
-        Syntax<?> u1 = new ClassSelector("test1");
-        Syntax<?> u2 = new ClassSelector("test2");
-        Syntax<?> u3 = new ClassSelector("test3");
+        Syntax u1 = new ClassSelector("test1");
+        Syntax u2 = new ClassSelector("test2");
+        Syntax u3 = new ClassSelector("test3");
 
         queue.broadcast(u1);
         queue.broadcast(u2);
@@ -203,7 +203,7 @@ public class QueuingBroadcasterTest {
 
     @Test
     public void updatesStatus() {
-        Syntax<?> u1 = new ClassSelector("test1");
+        Syntax u1 = new ClassSelector("test1");
 
         u1.status(Status.UNBROADCASTED);
         queue.broadcast(u1);

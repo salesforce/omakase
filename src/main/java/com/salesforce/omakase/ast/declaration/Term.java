@@ -19,7 +19,6 @@ package com.salesforce.omakase.ast.declaration;
 import com.google.common.base.Optional;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
 
@@ -65,8 +64,9 @@ public interface Term extends PropertyValueMember {
      * string. Do not return null.
      *
      * @return The textual content.
-     *
-     * @see {@link Values#textual(PropertyValue)}
      */
     String textualValue();
+
+    @Override
+    Term copy();
 }

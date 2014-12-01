@@ -17,11 +17,9 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -265,8 +263,8 @@ public final class NumericalValue extends AbstractTerm {
     }
 
     @Override
-    protected NumericalValue makeCopy(Prefix prefix, SupportMatrix support) {
-        NumericalValue copy = new NumericalValue(-1, -1, raw);
+    public NumericalValue copy() {
+        NumericalValue copy = new NumericalValue(-1, -1, raw).copiedFrom(this);
         if (unit.isPresent()) copy.unit(unit.get());
         if (explicitSign.isPresent()) copy.explicitSign(explicitSign.get());
         return copy;

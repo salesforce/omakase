@@ -72,6 +72,28 @@ public class LinearGradientFunctionValueTest {
     }
 
     @Test
+    public void testPrefix() {
+        function = new LinearGradientFunctionValue("red, yellow");
+        assertThat(function.prefix().isPresent()).isFalse();
+        function.prefix(Prefix.MOZ);
+        assertThat(function.prefix().get()).isSameAs(Prefix.MOZ);
+    }
+
+    @Test
+    public void nameWhenPrefixedAndRepeating() {
+        function = new LinearGradientFunctionValue("red, yellow").repeating(true);
+        function.prefix(Prefix.MOZ);
+        assertThat(function.name()).isEqualTo("-moz-repeating-linear-gradient");
+    }
+
+    @Test
+    public void nameWhenPrefixedAndNotRepeating() {
+        function = new LinearGradientFunctionValue("red, yellow");
+        function.prefix(Prefix.MOZ);
+        assertThat(function.name()).isEqualTo("-moz-linear-gradient");
+    }
+
+    @Test
     public void textualValueReturnsArgs() {
         function = new LinearGradientFunctionValue("red, yellow");
         assertThat(function.textualValue()).isEqualTo("red, yellow");
@@ -104,118 +126,108 @@ public class LinearGradientFunctionValueTest {
         function = new LinearGradientFunctionValue("red, yellow");
         function.comments(Lists.newArrayList("test"));
         function.repeating(true);
-        LinearGradientFunctionValue copy = (LinearGradientFunctionValue)function.copy();
+        LinearGradientFunctionValue copy = function.copy();
         assertThat(copy.args()).isEqualTo(function.args());
         assertThat(copy.comments()).hasSameSizeAs(function.comments());
         assertThat(copy.repeating()).isEqualTo(function.repeating());
     }
 
     @Test
-    public void copyWithPrefix() {
+    public void prefixRequired() {
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 15);
 
         function = new LinearGradientFunctionValue("red, yellow");
-        function.comments(Lists.newArrayList("test"));
 
-        FunctionValue copy = (FunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy).isInstanceOf(GenericFunctionValue.class);
+        function.prefix(Prefix.MOZ, support);
 
-        GenericFunctionValue gfv = (GenericFunctionValue)copy;
-
-        assertThat(gfv.name()).isEqualTo("-moz-linear-gradient");
-        assertThat(gfv.args()).isEqualTo(function.args());
-        assertThat(gfv.comments()).hasSameSizeAs(function.comments());
+        assertThat(function.name()).isEqualTo("-moz-linear-gradient");
+        assertThat(function.args()).isEqualTo("red, yellow");
     }
 
     @Test
-    public void copyWithPrefixWhenRepeating() {
+    public void prefixWhenRepeating() {
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.FIREFOX, 15);
 
         function = new LinearGradientFunctionValue("red, yellow");
         function.repeating(true);
-        function.comments(Lists.newArrayList("test"));
 
-        FunctionValue copy = (FunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy).isInstanceOf(GenericFunctionValue.class);
+        function.prefix(Prefix.MOZ, support);
 
-        GenericFunctionValue gfv = (GenericFunctionValue)copy;
-
-        assertThat(gfv.name()).isEqualTo("-moz-repeating-linear-gradient");
-        assertThat(gfv.args()).isEqualTo(function.args());
-        assertThat(gfv.comments()).hasSameSizeAs(function.comments());
+        assertThat(function.name()).isEqualTo("-moz-repeating-linear-gradient");
+        assertThat(function.args()).isEqualTo("red, yellow");
     }
 
     @Test
-    public void copyWithPrefixToBottom() {
+    public void prefixToBottom() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to bottom, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("top, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("top, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixToTop() {
+    public void prefixToTop() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to top, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("bottom, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("bottom, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixToRight() {
+    public void prefixToRight() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to right, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("left, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("left, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixToLeft() {
+    public void prefixToLeft() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to left, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("right, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("right, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixToTopRight() {
+    public void prefixToTopRight() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("to top right, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("bottom left, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("bottom left, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixHasAngle() {
+    public void prefixHasAngle() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("50deg, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("40deg, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("40deg, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixHasHighAngle() {
+    public void prefixHasHighAngle() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("355deg, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("95deg, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("95deg, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixHasNegativeAngle() {
+    public void prefixHasNegativeAngle() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("-45deg, red, yellow");
-        GenericFunctionValue copy = (GenericFunctionValue)function.copy(Prefix.MOZ, support);
-        assertThat(copy.args()).isEqualTo("135deg, red, yellow");
+        function.prefix(Prefix.MOZ, support);
+        assertThat(function.args()).isEqualTo("135deg, red, yellow");
     }
 
     @Test
-    public void copyWithPrefixNotPrefixable() {
+    public void prefixNotRequired() {
         SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
         function = new LinearGradientFunctionValue("red, yellow");
-        FunctionValue copy = (FunctionValue)function.copy(Prefix.WEBKIT, support);
-        assertThat(copy.name()).isEqualTo("linear-gradient");
+        function.prefix(Prefix.WEBKIT, support);
+        assertThat(function.name()).isEqualTo("linear-gradient");
     }
 }

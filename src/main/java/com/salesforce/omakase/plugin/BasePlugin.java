@@ -54,7 +54,7 @@ public class BasePlugin implements Plugin {
      * @param syntax
      *     The {@link Syntax} instance.
      */
-    public void syntax(Syntax<?> syntax) {}
+    public void syntax(Syntax syntax) {}
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events

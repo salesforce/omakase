@@ -61,6 +61,7 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
 
     private String args;
     private boolean repeating;
+    private Optional<Prefix> prefix = Optional.absent();
 
     /**
      * Constructs a new instance of a {@link LinearGradientFunctionValue}.
@@ -134,6 +135,28 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
     }
 
     /**
+     * Sets the vendor prefix.
+     *
+     * @param prefix
+     *     The prefix, or null to remove.
+     *
+     * @return this, for chaining.
+     */
+    public LinearGradientFunctionValue prefix(Prefix prefix) {
+        this.prefix = Optional.fromNullable(prefix);
+        return this;
+    }
+
+    /**
+     * Gets the prefix, if present.
+     *
+     * @return The prefix, or {@link Optional#absent()} if no prefix exists.
+     */
+    public Optional<Prefix> prefix() {
+        return prefix;
+    }
+
+    /**
      * Gets the raw function arguments. Prefer to use {@link #args()}, which is identical to this method.
      *
      * @return The function arguments.
@@ -145,6 +168,19 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
 
     @Override
     public String name() {
+        StringBuilder builder = new StringBuilder(32);
+        if (prefix.isPresent()) {
+            builder.append(prefix.get());
+        }
+        return builder.append(unprefixedName()).toString();
+    }
+
+    /**
+     * Gets the name of the function without the prefix, is present.
+     *
+     * @return The name of the function.
+     */
+    public String unprefixedName() {
         return repeating ? "repeating-linear-gradient" : "linear-gradient";
     }
 
@@ -154,8 +190,13 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
     }
 
     @Override
-    protected FunctionValue makeCopy(Prefix prefix, SupportMatrix support) {
-        if (prefix != null && support != null && support.requiresPrefixForFunction(prefix, name())) {
+    public LinearGradientFunctionValue copy() {
+        return new LinearGradientFunctionValue(args).repeating(repeating).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        if (support.requiresPrefixForFunction(prefix, unprefixedName())) {
             String newArgs = args;
 
             char first = args.charAt(0);
@@ -176,9 +217,8 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
                 }
             }
 
-            return new GenericFunctionValue(prefix + name(), newArgs);
+            prefix(prefix);
+            args(newArgs);
         }
-
-        return new LinearGradientFunctionValue(args).repeating(repeating);
     }
 }

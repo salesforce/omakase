@@ -1,8 +1,5 @@
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.AbstractSyntax;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -13,7 +10,7 @@ import com.salesforce.omakase.writer.StyleWriter;
  *
  * @author nmcwilliams
  */
-public final class MetadataExpression extends AbstractSyntax<AtRuleExpression> implements AtRuleExpression {
+public final class MetadataExpression extends AbstractAtRuleExpression {
     private static final MetadataExpression INSTANCE = new MetadataExpression();
 
     /**
@@ -26,7 +23,7 @@ public final class MetadataExpression extends AbstractSyntax<AtRuleExpression> i
     }
 
     @Override
-    protected AtRuleExpression makeCopy(Prefix prefix, SupportMatrix support) {
+    public MetadataExpression copy() {
         return INSTANCE;
     }
 

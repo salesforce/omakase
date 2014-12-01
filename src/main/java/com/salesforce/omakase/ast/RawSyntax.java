@@ -16,8 +16,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
 import com.salesforce.omakase.parser.raw.RawSelectorParser;
@@ -34,7 +32,7 @@ import java.io.IOException;
  * @see RawSelectorParser
  * @see RawAtRuleParser
  */
-public final class RawSyntax extends AbstractSyntax<RawSyntax> {
+public final class RawSyntax extends AbstractSyntax {
     private final String content;
 
     /**
@@ -68,7 +66,7 @@ public final class RawSyntax extends AbstractSyntax<RawSyntax> {
     }
 
     @Override
-    protected RawSyntax makeCopy(Prefix prefix, SupportMatrix support) {
-        return new RawSyntax(-1, -1, content);
+    public RawSyntax copy() {
+        return new RawSyntax(-1, -1, content).copiedFrom(this);
     }
 }

@@ -273,35 +273,32 @@ public class PropertyNameTest {
     }
 
     @Test
-    public void copyWithPrefixRequired() {
+    public void prefixRequired() {
         PropertyName name = PropertyName.using("border-radius");
         name.comments(Lists.newArrayList("test"));
         SupportMatrix support = new SupportMatrix();
         support.browser(Browser.SAFARI, 4);
 
-        PropertyName copy = name.copy(Prefix.WEBKIT, support);
-        assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
-        assertThat(copy.prefix().get()).isSameAs(Prefix.WEBKIT);
-        assertThat(copy.hasStarHack()).isFalse();
-        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+        name.prefix(Prefix.WEBKIT, support);
+        assertThat(name.unprefixedName()).isEqualTo("border-radius");
+        assertThat(name.prefix().get()).isSameAs(Prefix.WEBKIT);
     }
 
     @Test
-    public void copyWithPrefixNotRequired() {
+    public void prefixNotRequired() {
         PropertyName name = PropertyName.using("border-radius");
         name.comments(Lists.newArrayList("test"));
         SupportMatrix support = new SupportMatrix();
 
-        PropertyName copy = name.copy(Prefix.WEBKIT, support);
-        assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
-        assertThat(copy.isPrefixed()).isFalse();
-        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+        name.prefix(Prefix.WEBKIT, support);
+        assertThat(name.name()).isEqualTo("border-radius");
+        assertThat(name.isPrefixed()).isFalse();
     }
 
     @Test
-    public void copyUnknownProperty() {
+    public void prefixUnknownProperty() {
         PropertyName name = PropertyName.using("blah");
-        PropertyName copy = name.copy(Prefix.WEBKIT, new SupportMatrix());
-        assertThat(copy.name()).isEqualTo(name.name());
+        name.prefix(Prefix.WEBKIT, new SupportMatrix());
+        assertThat(name.name()).isEqualTo("blah");
     }
 }

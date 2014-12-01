@@ -119,7 +119,7 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     public void correctLineAndColumnNumber() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {
-            Syntax<?> syntax = Iterables.get(result.broadcastedSyntax, 0);
+            Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
             assertThat(syntax.line())
                 .describedAs(result.source.toString())
                 .isEqualTo(1);

@@ -137,11 +137,15 @@ public class GenericFunctionValue extends AbstractTerm implements FunctionValue 
     }
 
     @Override
-    protected GenericFunctionValue makeCopy(Prefix prefix, SupportMatrix support) {
-        if (prefix != null && support != null && support.requiresPrefixForFunction(prefix, name)) {
-            return new GenericFunctionValue(prefix + name, args);
+    public GenericFunctionValue copy() {
+        return new GenericFunctionValue(name, args).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        if (support.requiresPrefixForFunction(prefix, name)) {
+            this.name(prefix + name);
         }
-        return new GenericFunctionValue(name, args);
     }
 
     /**

@@ -444,7 +444,14 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     @Override
-    protected Declaration makeCopy(Prefix prefix, SupportMatrix support) {
-        return new Declaration(propertyName().copy(prefix, support), propertyValue().copy(prefix, support));
+    public Declaration copy() {
+        return new Declaration(propertyName().copy(), propertyValue().copy()).copiedFrom(this);
+    }
+
+    @Override
+    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
+        if (!deep) return;
+        propertyValue().prefix(prefix, support, deep);
+        propertyName().prefix(prefix, support, deep);
     }
 }

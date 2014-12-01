@@ -16,9 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -94,7 +92,7 @@ public class KeyframeSelector extends AbstractSelectorPart {
     }
 
     @Override
-    protected KeyframeSelector makeCopy(Prefix prefix, SupportMatrix support) {
-        return new KeyframeSelector(keyframe);
+    public KeyframeSelector copy() {
+        return new KeyframeSelector(keyframe).copiedFrom(this);
     }
 }
