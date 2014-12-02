@@ -33,13 +33,13 @@ import java.util.Map;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class CustomVarRefiner implements FunctionRefiner {
+public class CustomVarRefinerz implements FunctionRefiner {
     public enum Mode {PASSTHROUGH, RESOLVE}
 
     private final Mode mode;
     private final Map<String, String> vars;
 
-    public CustomVarRefiner(Mode mode, Map<String, String> vars) {
+    public CustomVarRefinerz(Mode mode, Map<String, String> vars) {
         this.mode = mode;
         this.vars = vars;
     }

@@ -21,7 +21,7 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.test.sample.customfunction.CustomVarRefiner.Mode;
+import com.salesforce.omakase.test.sample.customfunction.CustomVarRefinerz.Mode;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.util.Map;
  * The custom function represents a variable lookup, using the format <code>custom-var(varName)</code>.
  * <p/>
  * We give the parser an instance of the {@link CustomVarPlugin}. This plugin is a {@link SyntaxPlugin} that registers our {@link
- * CustomVarRefiner}. The refiner handles actually parsing the custom function, and creates {@link CustomVarFunction} AST objects.
+ * CustomVarRefinerz}. The refiner handles actually parsing the custom function, and creates {@link CustomVarFunction} AST objects.
  * Because we make the AST object {@link Subscribable}, it can be subcribed to like any other standard AST objects, which our
  * {@link CustomVarCounter} plugin demonstrates.
  * <p/>

@@ -31,8 +31,8 @@ import java.util.Map;
 public class CustomVarPlugin implements SyntaxPlugin {
     private final FunctionRefiner refiner;
 
-    public CustomVarPlugin(CustomVarRefiner.Mode mode, Map<String, String> vars) {
-        this.refiner = new CustomVarRefiner(mode, vars);
+    public CustomVarPlugin(CustomVarRefinerz.Mode mode, Map<String, String> vars) {
+        this.refiner = new CustomVarRefinerz(mode, vars);
     }
 
     @Override
