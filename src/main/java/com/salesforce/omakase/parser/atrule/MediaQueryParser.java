@@ -21,6 +21,7 @@ import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQuery;
 import com.salesforce.omakase.ast.atrule.MediaQueryExpression;
+import com.salesforce.omakase.ast.atrule.MediaRestriction;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
@@ -29,8 +30,6 @@ import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import com.salesforce.omakase.ast.atrule.MediaRestriction;
 
 /**
  * Parsers a {@link MediaQuery}.

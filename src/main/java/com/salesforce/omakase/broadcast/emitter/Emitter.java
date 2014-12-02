@@ -18,7 +18,6 @@ package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Status;
@@ -72,7 +71,7 @@ public final class Emitter {
      * first, its subscription to SimpleSelector must be invoked before Class2's subscription to ClassSelector.
      */
     private final Map<Class<?>, Iterable<Subscription>> processorsCache = new HashMap<>();
-    private final Map<Class<?>, Iterable<Subscription>> validatorsCache = Maps.newHashMap();
+    private final Map<Class<?>, Iterable<Subscription>> validatorsCache = new HashMap<>();
 
     private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
 

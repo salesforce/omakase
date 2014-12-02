@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
@@ -20,6 +19,7 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.util.CssAnnotations;
 import com.salesforce.omakase.util.Values;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +176,7 @@ public final class DirectionFlipPlugin implements DependentPlugin {
     private boolean handleFlippableBorderRadius(Declaration declaration, Property property) {
         if (Property.BORDER_RADIUS == property) {
             List<PropertyValue> split = Values.split(OperatorType.SLASH, declaration.propertyValue());
-            List<PropertyValue> join = Lists.newArrayList();
+            List<PropertyValue> join = new ArrayList<>();
             if (split.size() == 1 || split.size() == 2) {
                 for (PropertyValue val : split) {
                     join.add(flipBorderRadiusSet(val));

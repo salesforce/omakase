@@ -32,7 +32,7 @@ import org.junit.rules.ExpectedException;
 import java.util.List;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaQueryExpressionParser}.

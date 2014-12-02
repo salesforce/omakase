@@ -17,10 +17,10 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
+import com.salesforce.omakase.util.As;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -37,7 +37,7 @@ import java.util.Set;
  * @author nmcwilliams
  */
 public final class ConditionalsManager {
-    private final Set<String> trueConditions = Sets.newHashSet();
+    private final Set<String> trueConditions = new HashSet<>();
     private boolean passthroughMode;
 
     /**

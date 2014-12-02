@@ -16,10 +16,10 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.util.As;
 
 /**
  * A plugin that stores the parsed {@link Stylesheet} object.

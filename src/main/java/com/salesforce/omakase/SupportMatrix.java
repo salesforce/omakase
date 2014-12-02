@@ -30,6 +30,7 @@ import com.salesforce.omakase.util.As;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -232,7 +233,7 @@ public final class SupportMatrix {
         Set<Prefix> cached = propertyCache.get(property);
 
         if (cached == null) {
-            Set<Prefix> required = Sets.newHashSet();
+            Set<Prefix> required = new HashSet<>();
 
             for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixTablesUtil.lastVersionPropertyIsPrefixed(property, browser);
@@ -259,7 +260,7 @@ public final class SupportMatrix {
         Set<Prefix> cached = functionCache.get(name);
 
         if (cached == null) {
-            Set<Prefix> required = Sets.newHashSet();
+            Set<Prefix> required = new HashSet<>();
 
             for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixTablesUtil.lastVersionFunctionIsPrefixed(name, browser);
@@ -285,7 +286,7 @@ public final class SupportMatrix {
         Set<Prefix> cached = atRuleCache.get(name);
 
         if (cached == null) {
-            Set<Prefix> required = Sets.newHashSet();
+            Set<Prefix> required = new HashSet<>();
 
             for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixTablesUtil.lastVersionAtRuleIsPrefixed(name, browser);
@@ -311,7 +312,7 @@ public final class SupportMatrix {
         Set<Prefix> cached = selectorCache.get(name);
 
         if (cached == null) {
-            Set<Prefix> required = Sets.newHashSet();
+            Set<Prefix> required = new HashSet<>();
 
             for (Browser browser : supported.keySet()) {
                 Double lastPrefixed = PrefixTablesUtil.lastVersionSelectorIsPrefixed(name, browser);

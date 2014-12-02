@@ -17,6 +17,7 @@
 package com.salesforce.omakase.data;
 
 import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 /**

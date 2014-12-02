@@ -20,7 +20,7 @@ import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.parser.ParserFactory;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Parsers}.

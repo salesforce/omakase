@@ -26,8 +26,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Functional tests for {@link Prefixer} selector replacements.

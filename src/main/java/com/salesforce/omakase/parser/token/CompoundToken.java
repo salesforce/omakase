@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.util.As;
 
 /**
  * A combination matcher that does an OR comparison of two {@link Token}s.

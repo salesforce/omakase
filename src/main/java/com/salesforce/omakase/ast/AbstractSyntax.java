@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -251,7 +250,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public List<CssAnnotation> annotations() {
-        List<CssAnnotation> found = Lists.newArrayList();
+        List<CssAnnotation> found = new ArrayList<>();
 
         if (comments != null) {
             for (Comment comment : comments) {

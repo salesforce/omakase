@@ -17,13 +17,13 @@
 package com.salesforce.omakase.util;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.declaration.Declaration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,7 +92,7 @@ public final class Declarations {
      */
     @SuppressWarnings("ConstantConditions")
     public static Iterable<Declaration> within(StatementIterable parent, boolean recurse) {
-        List<Iterable<Declaration>> iterables = Lists.newArrayList();
+        List<Iterable<Declaration>> iterables = new ArrayList<>();
 
         for (Statement statement : parent.statements()) {
             if (statement.asRule().isPresent()) {

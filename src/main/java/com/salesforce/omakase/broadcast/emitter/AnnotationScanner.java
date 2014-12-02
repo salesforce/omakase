@@ -22,7 +22,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -32,6 +31,7 @@ import com.salesforce.omakase.plugin.Plugin;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -73,7 +73,7 @@ final class AnnotationScanner {
     }
 
     private static Set<SubscriptionMetadata> parse(Class<?> klass) {
-        Set<SubscriptionMetadata> set = Sets.newHashSet();
+        Set<SubscriptionMetadata> set = new HashSet<>();
 
         for (Method method : klass.getMethods()) {
             if (SKIP.contains(method.getName())) continue;

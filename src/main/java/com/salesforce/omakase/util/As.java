@@ -17,11 +17,11 @@
 package com.salesforce.omakase.util;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author nmcwilliams
  */
 public final class As {
-    private final List<Entry> entries = Lists.newArrayList();
+    private final List<Entry> entries = new ArrayList<>();
     private final Object instance;
 
     private String name;
@@ -163,7 +163,7 @@ public final class As {
             addUnlessEmpty("orphaned comments", syntax.orphanedComments());
         }
 
-        List<Field> fields = Lists.newArrayList();
+        List<Field> fields = new ArrayList<>();
 
         for (Field field : instance.getClass().getDeclaredFields()) {
             if (!Modifier.isTransient(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {

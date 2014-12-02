@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.*;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -175,7 +176,7 @@ public final class Values {
      * @return The filtered results.
      */
     public static <T extends Term> Iterable<T> filter(Class<T> klass, PropertyValue value) {
-        List<T> filtered = Lists.newArrayList();
+        List<T> filtered = new ArrayList<>();
         for (PropertyValueMember member : value.members()) {
             if (klass.isAssignableFrom(member.getClass())) filtered.add(klass.cast(member));
         }

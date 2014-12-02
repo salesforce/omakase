@@ -17,12 +17,12 @@
 package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.DependentPlugin;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -38,7 +38,7 @@ import java.util.Set;
  * @author nmcwilliams
  */
 public final class ConditionalsCollector implements DependentPlugin {
-    private final Set<String> conditions = Sets.newHashSet();
+    private final Set<String> conditions = new HashSet<>();
 
     @Override
     public void dependencies(PluginRegistry registry) {

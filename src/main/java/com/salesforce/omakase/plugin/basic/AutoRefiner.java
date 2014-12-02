@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.plugin.basic;
 
-import com.google.common.collect.Sets;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Syntax;
@@ -29,6 +28,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -54,7 +54,7 @@ import java.util.Set;
  * @author nmcwilliams
  */
 public final class AutoRefiner implements Plugin {
-    private final Set<Class<?>> refinables = Sets.newHashSet();
+    private final Set<Class<?>> refinables = new HashSet<>();
     private boolean all;
 
     /**
