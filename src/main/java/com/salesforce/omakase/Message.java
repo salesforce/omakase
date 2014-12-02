@@ -27,6 +27,7 @@ package com.salesforce.omakase;
 @SuppressWarnings("JavaDoc")
 public enum Message {
     DUPLICATE_PLUGIN("Only one plugin instance of each type allowed: %s"),
+    ONLY_ONE_TOKEN_FACTORY("Only one token factory is allowed, but an instance of %s was already registered"),
     NO_SUPPLIER("No supplier defined for %s. Use require(Class, Supplier) instead."),
     EXPECTED_SELECTOR("Expected to find a selector (after the trailing '%s')"),
     MISSING_PSEUDO_NAME("expected to find a valid pseudo element or class name " +

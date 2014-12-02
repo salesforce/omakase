@@ -18,31 +18,38 @@ package com.salesforce.omakase.test.sample.customfunction;
 
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.plugin.SyntaxPlugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.test.sample.customfunction.SampleCustomFunctionRefiner.Mode;
+import com.salesforce.omakase.test.sample.customfunction.CustomVarRefiner.Mode;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.util.Map;
 
 /**
- * An example of using our sample custom function classes.
+ * An example of using the sample custom function classes.
  * <p/>
  * The custom function represents a variable lookup, using the format <code>custom-var(varName)</code>.
  * <p/>
- * This sample usages parses a CSS source twice. The first time we just count the number of times the custom function is used, but
+ * We give the parser an instance of the {@link CustomVarPlugin}. This plugin is a {@link SyntaxPlugin} that registers our {@link
+ * CustomVarRefiner}. The refiner handles actually parsing the custom function, and creates {@link CustomVarFunction} AST objects.
+ * Because we make the AST object {@link Subscribable}, it can be subcribed to like any other standard AST objects, which our
+ * {@link CustomVarCounter} plugin demonstrates.
+ * <p/>
+ * This sample usage parses a CSS source twice. The first time we just count the number of times the custom function is used, but
  * we don't resolve anything. The second time we resolve and replace the custom function with the substituted values.
  * <p/>
  * Things to try:
  * <p/>
  * <b>1)</b> Change the variable values. <b>2)</b> Have the sample CSS reference an invalid variable. <b>3)</b> Have a variable
- * value result in invalid CSS (e.g., making primary-color too many chars). <b>4)</b> Write another custom plugin that validates Terms, and see how it validates the
- * substituted variable values as well, etc...
+ * value result in invalid CSS (e.g., making primary-color too many chars). <b>4)</b> Write another custom plugin that validates
+ * Terms, and see how it validates the substituted variable values as well, etc...
  *
  * @author nmcwilliams
  */
 @SuppressWarnings({"SpellCheckingInspection", "JavaDoc", "UtilityClassWithoutPrivateConstructor"})
-public final class SampleCustomFunctionUsage {
+public final class SampleUsage {
     // the sample variables
     private static final Map<String, String> VARS = ImmutableMap.<String, String>builder()
         .put("primary-color", "#56ff00")
@@ -66,9 +73,9 @@ public final class SampleCustomFunctionUsage {
         // setup the plugins we want
         StyleWriter verbose = StyleWriter.verbose();
         StandardValidation validation = new StandardValidation();
-        SampleCustomFunctionPlugin passthrough = new SampleCustomFunctionPlugin(Mode.PASSTHROUGH, VARS);
-        SampleCustomFunctionPlugin resolve = new SampleCustomFunctionPlugin(Mode.RESOLVE, VARS);
-        SampleCustomFunctionCounter counting = new SampleCustomFunctionCounter();
+        CustomVarPlugin passthrough = new CustomVarPlugin(Mode.PASSTHROUGH, VARS);
+        CustomVarPlugin resolve = new CustomVarPlugin(Mode.RESOLVE, VARS);
+        CustomVarCounter counting = new CustomVarCounter();
 
         // parse without resolving the vars, but count them
         Omakase.source(input)

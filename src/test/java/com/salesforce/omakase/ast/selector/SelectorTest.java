@@ -57,7 +57,7 @@ public class SelectorTest {
     @Test
     public void appendPart() {
         selector = new Selector(new ClassSelector("test"));
-        selector.parts().append(new IdSelector("test"));
+        selector.append(new IdSelector("test"));
         assertThat(selector.parts()).hasSize(2);
     }
 
@@ -160,6 +160,29 @@ public class SelectorTest {
     public void notWritableWhenDetached() {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.destroy();
+        assertThat(selector.isWritable()).isFalse();
+    }
+
+    @Test
+    public void alwaysWritableWhenAttachedAndUnrefined() {
+        selector = new Selector(new RawSyntax(1, 1, ".test"), new MasterRefiner());
+        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        rule.selectors().append(selector);
+        assertThat(selector.isWritable()).isTrue();
+    }
+
+    @Test
+    public void notWritableWhenNoParts() {
+        selector = new Selector();
+        selector.refine();
+        assertThat(selector.isWritable()).isFalse();
+    }
+
+    @Test
+    public void notWritableWhenPartsDestroyed() {
+        ClassSelector cs = new ClassSelector("test");
+        selector = new Selector(cs);
+        cs.destroy();
         assertThat(selector.isWritable()).isFalse();
     }
 

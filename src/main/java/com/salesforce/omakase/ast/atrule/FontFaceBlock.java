@@ -104,31 +104,20 @@ public final class FontFaceBlock extends AbstractAtRuleMember implements AtRuleB
         appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
         appendable.indentIf(writer.isVerbose());
+        appendable.newlineIf(writer.isVerbose());
+        writer.incrementDepth();
 
         // font descriptors
-        boolean wroteFirst = false;
         for (FontDescriptor descriptor : fontDescriptors) {
-            if (descriptor.isWritable()) {
-                if (wroteFirst) {
-                    appendable.append(';');
-                }
-
-                if (writer.isVerbose()) {
-                    appendable.newline();
-                } else if (writer.isInline() && wroteFirst) {
-                    appendable.space();
-                }
-
                 writer.writeInner(descriptor, appendable);
-                wroteFirst = true;
-            }
         }
-        if (wroteFirst && writer.isVerbose()) appendable.append(';');
+        if (writer.isVerbose()) appendable.append(';');
 
         // custom handling of orphaned comments if they exist, because they have to go before the closing brace
-        StyleWriter.appendComments(orphanedComments(), writer, appendable);
+        writer.appendComments(orphanedComments(), appendable);
 
         // close block
+        writer.decrementDepth();
         appendable.unindentIf(writer.isVerbose());
         appendable.newlineIf(writer.isVerbose());
         appendable.append('}');

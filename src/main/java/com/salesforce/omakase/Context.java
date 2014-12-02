@@ -57,9 +57,6 @@ final class Context implements Broadcaster, PluginRegistry {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
 
-    /** token factory affects delimiter grammar rules */
-    private TokenFactory tokenFactory = StandardTokenFactory.instance();
-
     /** uses an {@link Emitter} to broadcast events */
     private final EmittingBroadcaster emittingBroadcaster = new EmittingBroadcaster();
 
@@ -68,6 +65,9 @@ final class Context implements Broadcaster, PluginRegistry {
 
     /** main broadcaster - consumer changeable via {@link #broadcaster(Broadcaster)} */
     private Broadcaster broadcaster = visitor;
+
+    /** token factory affects delimiter grammar rules */
+    private TokenFactory tokenFactory;
 
     /** internal construction only */
     Context() {}
@@ -119,6 +119,21 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     @Override
+    public <T extends TokenFactory> T requireTokenFactory(Class<T> klass, Supplier<T> supplier) {
+        if (klass.isInstance(tokenFactory)) {
+            @SuppressWarnings("unchecked")
+            T instance = (T)tokenFactory;
+            return instance;
+        } else if (tokenFactory != null) {
+            throw new IllegalArgumentException(Message.ONLY_ONE_TOKEN_FACTORY.message(tokenFactory.getClass()));
+        }
+
+        T supplied = supplier.get();
+        this.tokenFactory = checkNotNull(supplied, "cannot assign a null token factory");
+        return supplied;
+    }
+
+    @Override
     public <T extends Plugin> Optional<T> retrieve(Class<T> klass) {
         return Optional.fromNullable(registry.getInstance(klass));
     }
@@ -158,6 +173,10 @@ final class Context implements Broadcaster, PluginRegistry {
      * @return The {@link MasterRefiner} instance.
      */
     public MasterRefiner createRefiner() {
+        if (tokenFactory == null) {
+            tokenFactory = StandardTokenFactory.instance();
+        }
+
         MasterRefiner refiner = new MasterRefiner(broadcaster, tokenFactory);
 
         for (SyntaxPlugin plugin : filter(SyntaxPlugin.class)) {
@@ -165,19 +184,6 @@ final class Context implements Broadcaster, PluginRegistry {
         }
 
         return refiner;
-    }
-
-    /**
-     * Register a custom {@link TokenFactory}. This should be called ahead of {@link #before()} or bad stuff will happen.
-     *
-     * @param tokenFactory
-     *     The {@link TokenFactory}.
-     *
-     * @return this, for chaining.
-     */
-    public Context tokenFactory(TokenFactory tokenFactory) {
-        this.tokenFactory = checkNotNull(tokenFactory, "tokenFactory cannot be null");
-        return this;
     }
 
     /**

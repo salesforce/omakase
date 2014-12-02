@@ -95,7 +95,7 @@ public final class GenericAtRuleBlock extends AbstractAtRuleMember implements At
         }
 
         // custom handling of orphaned comments if they exist, because they have to go before the closing brace
-        StyleWriter.appendComments(orphanedComments(), writer, appendable);
+        writer.appendComments(orphanedComments(), appendable);
 
         appendable.unindentIf(!writer.isCompressed());
         appendable.newlineIf(!writer.isCompressed());

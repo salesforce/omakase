@@ -25,6 +25,8 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.util.As;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.*;
@@ -68,6 +70,8 @@ public final class StyleWriter implements DependentPlugin {
 
     private boolean writeComments;
     private boolean onlyAnnotated;
+
+    private final Deque<StackEntry> stack = new ArrayDeque<>();
 
     /** Creates a new {@link StyleWriter} instance using {@link WriterMode#INLINE}. */
     public StyleWriter() {
@@ -275,18 +279,21 @@ public final class StyleWriter implements DependentPlugin {
      * @throws IOException
      *     If an I/O error occurs.
      */
-    @SuppressWarnings("unchecked")
     public <T extends Writable> void writeInner(T writable, StyleAppendable appendable) throws IOException {
+        incrementDepth();
+
         Class<? extends Writable> klass = writable.getClass();
         Syntax syntax = (writable instanceof Syntax) ? (Syntax)writable : null;
 
         if (overrides.containsKey(klass)) {
             // cast is safe as long as the map is guarded by #override
-            ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
+            @SuppressWarnings("unchecked")
+            CustomWriter<T> custom = (CustomWriter<T>)overrides.get(klass);
+            custom.write(writable, this, appendable);
         } else if (writable.isWritable()) {
             // write comments
             if (syntax != null && !syntax.writesOwnComments()) {
-                StyleWriter.appendComments(syntax.comments(), this, appendable);
+                appendComments(syntax.comments(), appendable);
             }
 
             // write the object
@@ -294,9 +301,14 @@ public final class StyleWriter implements DependentPlugin {
 
             // write orphaned comments
             if (syntax != null && !syntax.writesOwnOrphanedComments()) {
-                StyleWriter.appendComments(syntax.orphanedComments(), this, appendable);
+                appendComments(syntax.orphanedComments(), appendable);
             }
+
+            // keep track of how many syntax units written at this depth
+            stack.peek().incrementPeerCountAtDepth();
         }
+
+        decrementDepth();
     }
 
     /**
@@ -322,23 +334,67 @@ public final class StyleWriter implements DependentPlugin {
      */
     @SuppressWarnings("unchecked")
     public <T extends Writable> String writeSnippet(T writable) {
-        Class<? extends Writable> klass = writable.getClass();
         StyleAppendable appendable = new StyleAppendable();
 
         try {
-            if (overrides.containsKey(klass)) {
-                // cast is safe as long as the map is guarded by #override
-                ((CustomWriter<T>)overrides.get(klass)).write(writable, this, appendable);
-            } else {
-                // skip isWritable check
-                writable.write(this, appendable);
-            }
+            writeInner(writable, appendable);
         } catch (IOException e) {
             // we don't expect an IO error because we know our appendable is using a string builder.
             throw new AssertionError("unexpected IO error");
         }
 
         return appendable.toString();
+    }
+
+    /**
+     * Increments the stack depth.
+     * <p/>
+     * This is usually handled automatically internally, however you may want to call this when writing out inner objects at an
+     * artificially deeper depth level. If you do so, be sure to call {@link #decrementDepth()} at the end.
+     *
+     * @return this, for chaining.
+     */
+    public StyleWriter incrementDepth() {
+        stack.push(new StackEntry(stack.peek()));
+        return this;
+    }
+
+    /**
+     * Decrements the stack depth.
+     * <p/>
+     * This is usually handled automatically internally. See {@link #incrementDepth()} for details on when you may want to use
+     * this manually.
+     *
+     * @return this, for chaining.
+     */
+    public StyleWriter decrementDepth() {
+        stack.pop();
+        return this;
+    }
+
+    /**
+     * Gets the count of the number of peer units previously written out at the current depth level. Units that return false from
+     * {@link Writable#isWritable()} are not included.
+     *
+     * @return The number of peers previously written out at the current depth level.
+     */
+    public int countAtCurrentDepth() {
+        return stack.isEmpty() ? 0 : stack.peek().numberOfPreviousPeers();
+    }
+
+    /**
+     * Gets whether no peer units have been written out at the current depth level.
+     * <p/>
+     * The depth level is incremented every time {@link #writeInner(Writable, StyleAppendable)} inner is called. For example, two
+     * rules within a stylesheet are at the same depth level, two selectors within a rule, two declarations within a rule, etc...
+     * <p/>
+     * This is usually used when something should be written only for the first unit in a collection, or conversely for all units
+     * but the first.
+     *
+     * @return True if no peer units have been written out at the current depth level.
+     */
+    public boolean isFirstAtCurrentDepth() {
+        return countAtCurrentDepth() == 0;
     }
 
     @Override
@@ -408,8 +464,6 @@ public final class StyleWriter implements DependentPlugin {
      *
      * @param comments
      *     The comments to write.
-     * @param writer
-     *     The {@link StyleWriter} containing the configuration information.
      * @param appendable
      *     Write the unit's output to this {@link StyleAppendable}.
      *
@@ -418,14 +472,46 @@ public final class StyleWriter implements DependentPlugin {
      * @see Syntax#writesOwnComments()
      * @see Syntax#writesOwnOrphanedComments()
      */
-    public static void appendComments(Iterable<Comment> comments, StyleWriter writer, StyleAppendable appendable) throws
+    public void appendComments(Iterable<Comment> comments, StyleAppendable appendable) throws
         IOException {
-        if (writer.shouldWriteComments()) {
+        if (shouldWriteComments()) {
             for (Comment comment : comments) {
-                if (!writer.onlyWriteAnnotatedComments() || comment.annotation().isPresent()) {
-                    writer.writeInner(comment, appendable);
+                if (!onlyWriteAnnotatedComments() || comment.annotation().isPresent()) {
+                    writeInner(comment, appendable);
                 }
             }
+        }
+    }
+
+    /** used to help keep track of how many inner units are written at a certain depth. */
+    private static final class StackEntry {
+        private final StackEntry parent;
+        private int numChildren;
+
+        public StackEntry(StackEntry parent) {
+            this.parent = parent;
+        }
+
+        /** increment the count of children directly below this depth */
+        public void incrementNumChildren() {
+            numChildren++;
+        }
+
+        /** gets the number of children directly below this depth */
+        public int totalChildren() {
+            return numChildren;
+        }
+
+        /** increment the number of peers at this depth */
+        public void incrementPeerCountAtDepth() {
+            if (this.parent != null) {
+                this.parent.incrementNumChildren();
+            }
+        }
+
+        /** gets the number of peers at this depth */
+        public int numberOfPreviousPeers() {
+            return this.parent != null ? this.parent.totalChildren() : 0;
         }
     }
 }

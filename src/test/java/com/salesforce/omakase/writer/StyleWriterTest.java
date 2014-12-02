@@ -17,6 +17,11 @@
 package com.salesforce.omakase.writer;
 
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.collection.AbstractGroupable;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import org.junit.Test;
@@ -68,7 +73,7 @@ public class StyleWriterTest {
     }
 
     @Test
-         public void writeWithComments() {
+    public void writeWithComments() {
         StyleWriter writer = StyleWriter.compressed().writeComments(true);
         Omakase.source("/*test*/.test{color:red}").request(writer).process();
         assertThat(writer.write()).isEqualTo("/*test*/.test{color:red}");
@@ -120,6 +125,63 @@ public class StyleWriterTest {
     public void writeSingle() {
         ClassSelector s = new ClassSelector("test");
         assertThat(StyleWriter.writeSingle(s)).isEqualTo(".test");
+    }
+
+    private static final class Level1 extends AbstractSyntax {
+        SyntaxCollection<Level1, Level2> children = new LinkedSyntaxCollection<>(this);
+        int count;
+
+        public Level1() {
+            children.append(new Level2(this));
+            children.append(new Level2(this));
+        }
+
+        @Override
+        public Syntax copy() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+            assertThat(writer.countAtCurrentDepth()).isEqualTo(0);
+            for (Level2 child : children) {
+                writer.writeInner(child, appendable);
+                count++;
+            }
+        }
+    }
+
+    private static final class Level2 extends AbstractGroupable<Level1, Level2> {
+        Level1 parent;
+
+        public Level2(Level1 parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected Level2 self() {
+            return this;
+        }
+
+        @Override
+        public Syntax copy() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+            assertThat(writer.countAtCurrentDepth() == parent.count);
+            if (parent.count == 0) {
+                assertThat(writer.isFirstAtCurrentDepth()).isTrue();
+            } else {
+                assertThat(writer.isFirstAtCurrentDepth()).isFalse();
+            }
+        }
+    }
+
+    @Test
+    public void testDepthMethods() throws IOException {
+        StyleWriter.verbose().writeInner(new Level1(), new StyleAppendable());
     }
 
     public static final class SampleCustomWriter implements CustomWriter<Selector> {

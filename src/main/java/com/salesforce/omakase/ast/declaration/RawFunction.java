@@ -18,12 +18,10 @@ package com.salesforce.omakase.ast.declaration;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
-import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.refiner.StandardRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -38,7 +36,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author nmcwilliams
  * @see FunctionRefiner
- * @see StandardRefiner#refine(RawFunction, Broadcaster, MasterRefiner)
  * @see GenericFunctionValue
  */
 @Subscribable

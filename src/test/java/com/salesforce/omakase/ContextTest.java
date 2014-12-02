@@ -28,6 +28,7 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.token.BaseTokenFactory;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
@@ -92,6 +93,26 @@ public class ContextTest {
         });
 
         assertThat(c.retrieve(TestPlugin.class).get()).isSameAs(tp);
+    }
+
+    @Test
+    public void noErrorIfRequireSameTokenFactory() {
+        CustomTokenFactory custom = new CustomTokenFactory();
+        CustomTokenFactory ret = c.requireTokenFactory(CustomTokenFactory.class, com.google.common.base.Suppliers.ofInstance(custom));
+        assertThat(ret).isSameAs(custom);
+
+        // since already registered, should get the previous instance
+        ret = c.requireTokenFactory(CustomTokenFactory.class, com.google.common.base.Suppliers.ofInstance(new CustomTokenFactory()));
+        assertThat(ret).isSameAs(custom);
+    }
+
+    @Test
+    public void errorsIfRequireMultipleTokenFactories() {
+        c.requireTokenFactory(CustomTokenFactory.class, com.google.common.base.Suppliers.ofInstance(new CustomTokenFactory()));
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Only one token factory is allowed");
+        c.requireTokenFactory(CustomTokenFactory2.class, com.google.common.base.Suppliers.ofInstance(new CustomTokenFactory2()));
     }
 
     @Test
@@ -265,4 +286,8 @@ public class ContextTest {
             order = num++;
         }
     }
+
+    public static final class CustomTokenFactory extends BaseTokenFactory {}
+
+    public static final class CustomTokenFactory2 extends BaseTokenFactory {}
 }

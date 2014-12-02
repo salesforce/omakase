@@ -99,6 +99,57 @@ public class RuleTest {
     }
 
     @Test
+    public void isWritableTrueWhenSelectorsAndDeclarationsWritable() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.selectors().append(s);
+        rule.declarations().append(d);
+
+        assertThat(rule.isWritable()).isTrue();
+    }
+
+    @Test
+    public void isWritableFalseWhenNoSelectors() {
+        Rule rule = new Rule();
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.declarations().append(d);
+        assertThat(rule.isWritable()).isFalse();
+    }
+
+    @Test
+    public void isWritableFalseWhenSelectorsNotWritable() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.selectors().append(s);
+        rule.declarations().append(d);
+
+        s.destroy();
+        assertThat(rule.isWritable()).isFalse();
+    }
+
+    @Test
+    public void isWritableFalseWhenNoDeclarations() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        rule.selectors().append(s);
+        assertThat(rule.isWritable()).isFalse();
+    }
+
+    @Test
+    public void isWritableFalseWhenDeclarationsNotWritable() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.selectors().append(s);
+        rule.declarations().append(d);
+
+        d.destroy();
+        assertThat(rule.isWritable()).isFalse();
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         Rule rule = new Rule();
         rule.selectors().append(new Selector(new ClassSelector("class")));

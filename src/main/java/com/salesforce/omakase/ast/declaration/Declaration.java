@@ -426,12 +426,29 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     @Override
+    public boolean writesOwnComments() {
+        return true;
+    }
+
+    @Override
     public boolean isWritable() {
         return super.isWritable() && (!isRefined() || (propertyName.isWritable() && propertyValue.isWritable()));
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (!writer.isFirstAtCurrentDepth()) {
+            appendable.append(';');
+
+            if (writer.isVerbose()) {
+                appendable.newline();
+            } else if (writer.isInline() && !writer.isFirstAtCurrentDepth()) {
+                appendable.space();
+            }
+        }
+
+        writer.appendComments(comments(), appendable);
+
         if (isRefined()) {
             writer.writeInner(propertyName, appendable);
             appendable.append(':').spaceIf(writer.isVerbose());

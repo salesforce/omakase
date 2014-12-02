@@ -134,8 +134,8 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
 
     @Override
     public boolean isWritable() {
-        // don't write out rules with no selectors or all detached selectors
-        return super.isWritable() && !selectors.isEmpty() && !declarations.isEmpty();
+        // don't write out rules with no selectors/declarations or all detached selectors/declarations
+        return super.isWritable() && !selectors.isEmptyOrNoneWritable() && !declarations.isEmptyOrNoneWritable();
     }
 
     @Override
@@ -146,55 +146,34 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // newlines (unless first statement)
-        if (!writer.isCompressed() && !isFirst()) {
-            appendable.newline();
-            appendable.newlineIf(writer.isVerbose());
+        if (!writer.isCompressed() && !writer.isFirstAtCurrentDepth()) {
+            appendable.newline().newlineIf(writer.isVerbose());
         }
-
-        boolean wroteFirst = false;
 
         // selectors
         for (Selector selector : selectors) {
-            if (selector.isWritable()) {
-                if (wroteFirst) {
-                    appendable.append(',');
-                    appendable.spaceIf(!writer.isCompressed());
-                }
-                writer.writeInner(selector, appendable);
-                wroteFirst = true;
-            }
+            writer.writeInner(selector, appendable);
         }
 
         // open declaration block
         appendable.spaceIf(!writer.isCompressed());
         appendable.append('{');
         appendable.indentIf(writer.isVerbose());
+        appendable.newlineIf(writer.isVerbose());
+        writer.incrementDepth();
 
         // declarations
-        wroteFirst = false;
         for (Declaration declaration : declarations) {
-            if (declaration.isWritable()) {
-                if (wroteFirst) {
-                    appendable.append(';');
-                }
-
-                if (writer.isVerbose()) {
-                    appendable.newline();
-                } else if (writer.isInline() && wroteFirst) {
-                    appendable.space();
-                }
-
-                writer.writeInner(declaration, appendable);
-                wroteFirst = true;
-            }
+            writer.writeInner(declaration, appendable);
         }
 
-        if (wroteFirst && writer.isVerbose()) appendable.append(';');
+        if (writer.isVerbose()) appendable.append(';');
 
         // custom handling of orphaned comments if they exist, because they have to go before the closing brace
-        StyleWriter.appendComments(orphanedComments(), writer, appendable);
+        writer.appendComments(orphanedComments(), appendable);
 
         // close declaration block
+        writer.decrementDepth();
         appendable.unindentIf(writer.isVerbose());
         appendable.newlineIf(writer.isVerbose());
         appendable.append('}');

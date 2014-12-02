@@ -30,6 +30,7 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -155,6 +156,8 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     /**
      * Gets the individual parts of the selector. The selector will be automatically refined if not done so already.
+     * <p/>
+     * <b>Warning:</b> do not call from within a custom {@link Refiner}.
      *
      * @return The list of {@link SelectorPart} members.
      */
@@ -163,7 +166,20 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     }
 
     /**
-     * Appends all of the given parts to this {@link Selector}.
+     * Appends the given part to this {@link Selector}. The selector will not be automatically refined.
+     *
+     * @param newPart
+     *     The part to append.
+     *
+     * @return this, for chaining.
+     */
+    public Selector append(SelectorPart newPart) {
+        parts.append(newPart);
+        return this;
+    }
+
+    /**
+     * Appends all of the given parts to this {@link Selector}. The selector will not be automatically refined.
      *
      * @param newParts
      *     The parts to append.
@@ -191,7 +207,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     @Override
     public boolean isRefined() {
-        return !parts.isEmpty();
+        return rawContent == null || !parts.isEmpty();
     }
 
     @Override
@@ -215,7 +231,25 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     }
 
     @Override
+    public boolean writesOwnComments() {
+        return true;
+    }
+
+    @Override
+    public boolean isWritable() {
+        // if unrefined (and super returns true) we should always be written out
+        return super.isWritable() && (!isRefined() || !parts.isEmptyOrNoneWritable());
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (!writer.isFirstAtCurrentDepth()) {
+            appendable.append(',');
+            appendable.spaceIf(!writer.isCompressed());
+        }
+
+        writer.appendComments(comments(), appendable);
+
         if (isRefined()) {
             for (SelectorPart part : parts) {
                 writer.writeInner(part, appendable);

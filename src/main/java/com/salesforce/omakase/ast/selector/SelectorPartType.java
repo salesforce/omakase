@@ -60,7 +60,10 @@ public enum SelectorPartType {
     GENERAL_SIBLING_COMBINATOR(true),
 
     /** a comment that is not associated with another syntax unit */
-    ORPHANED_COMMENT;
+    ORPHANED_COMMENT,
+
+    /** custom syntax */
+    CUSTOM;
 
     private final boolean isCombinator;
 

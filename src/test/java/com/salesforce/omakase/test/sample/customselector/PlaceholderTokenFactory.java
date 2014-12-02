@@ -18,12 +18,16 @@ package com.salesforce.omakase.test.sample.customselector;
 
 import com.salesforce.omakase.parser.token.BaseTokenFactory;
 import com.salesforce.omakase.parser.token.Token;
+import com.salesforce.omakase.parser.token.TokenFactory;
 
 /**
-* TODO description
-*
-* @author nmcwilliams
-*/
+ * Since we are redefining what is recognized as a valid selector, we have to provide a custom {@link TokenFactory}.
+ * <p/>
+ * If our custom syntax did not affect any of the delimiter points (beginning and end of standard AST objects) then we would not
+ * need this class.
+ *
+ * @author nmcwilliams
+ */
 public final class PlaceholderTokenFactory extends BaseTokenFactory {
     @Override
     public Token selectorBegin() {

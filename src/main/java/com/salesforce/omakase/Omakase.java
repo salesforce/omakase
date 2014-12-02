@@ -24,7 +24,6 @@ import com.salesforce.omakase.error.ThrowingErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.token.StandardTokenFactory;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -95,9 +94,6 @@ public final class Omakase {
      * <p/>
      * Use {@link #request(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used by
      * default.
-     * <p/>
-     * Use {@link #request(TokenFactory)} to specify a custom token factory. Otherwise {@link StandardTokenFactory} is used by
-     * default.
      */
     public static final class Request {
         private final Context context;
@@ -109,7 +105,6 @@ public final class Omakase {
         Request(CharSequence source) {
             this.context = new Context();
             this.source = new Source(source.toString());
-            this.tokenFactory = StandardTokenFactory.instance();
             this.em = new ThrowingErrorManager();
         }
 
@@ -179,41 +174,6 @@ public final class Omakase {
         }
 
         /**
-         * Specifies a custom {@link TokenFactory} to use. In advanced usage, custom token factories can be used to alter or add
-         * various grammar delimiters.
-         * <p/>
-         * This is equivalent to {@link #request(TokenFactory)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param tokenFactory
-         *     The token factory to use.
-         *
-         * @return this, for chaining.
-         */
-        public Request add(TokenFactory tokenFactory) {
-            return request(tokenFactory);
-        }
-
-        /**
-         * Specifies a custom {@link TokenFactory} to use. In advanced usage, custom token factories can be used to alter or add
-         * various grammar delimiters.
-         * <p/>
-         * This is equivalent to {@link #add(TokenFactory)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param tokenFactory
-         *     The token factory to use.
-         *
-         * @return this, for chaining.
-         */
-        public Request request(TokenFactory tokenFactory) {
-            this.tokenFactory = checkNotNull(tokenFactory, "the token factory cannot be null");
-            return this;
-        }
-
-        /**
          * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
          * <p/>
          * This is equivalent to {@link #request(ErrorManager)}. Choose based on which reads better for your usage ("request" is
@@ -270,10 +230,8 @@ public final class Omakase {
          * for further processing or information retrieval.
          */
         public PluginRegistry process() {
-            context.tokenFactory(tokenFactory);
-            context.errorManager(em);
-
             try {
+                context.errorManager(em);
                 context.before();
                 ParserFactory.stylesheetParser().parse(source, context, context.createRefiner());
                 context.after();

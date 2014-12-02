@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author nmcwilliams
  */
 @SuppressWarnings({"JavaDoc", "UnusedParameters"})
-public class SampleCustomFunctionCounter implements Plugin {
+public class CustomVarCounter implements Plugin {
     private final Multiset<String> details = HashMultiset.create();
 
     public int count() {
@@ -45,7 +45,7 @@ public class SampleCustomFunctionCounter implements Plugin {
     }
 
     @Observe
-    public void observe(SampleCustomFunction function) {
+    public void observe(CustomVarFunction function) {
         details.add(function.arg());
     }
 }

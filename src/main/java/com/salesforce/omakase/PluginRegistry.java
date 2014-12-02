@@ -18,6 +18,7 @@ package com.salesforce.omakase;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 
@@ -53,9 +54,10 @@ public interface PluginRegistry {
     void register(Plugin plugin);
 
     /**
-     * Specifies that a particular plugin is required as a dependency. If the plugin is already registered then the registered
-     * instance will simply be returned. If the plugin is not registered then a new instance will be created, registered, then
-     * returned.
+     * Specifies that a particular plugin is required as a dependency.
+     * <p/>
+     * If the plugin is already registered then the registered instance will simply be returned. If the plugin is not registered
+     * then a new instance will be created, registered, then returned.
      * <p/>
      * This method is only for library-provided plugins. To require a custom plugin, use {@link #require(Class, Supplier)}
      * instead.
@@ -78,10 +80,10 @@ public interface PluginRegistry {
     <T extends Plugin> T require(Class<T> klass);
 
     /**
-     * Same as {@link #require(Class)}, except this should be used for custom (non-library-provided) plugins. The {@link Supplier}
-     * is used to get an instance if one is not already registered.
+     * Same as {@link #require(Class)}, except this should be used for custom (non-library-provided) plugins.
      * <p/>
-     * This method is usually used within the {@link DependentPlugin#dependencies(PluginRegistry)} method.
+     * The {@link Supplier} is used to get an instance if one is not already registered. This method is usually used within the
+     * {@link DependentPlugin#dependencies(PluginRegistry)} method.
      *
      * @param <T>
      *     Type of the plugin.
@@ -93,6 +95,23 @@ public interface PluginRegistry {
      * @return An instance of the plugin.
      */
     <T extends Plugin> T require(Class<T> klass, Supplier<T> supplier);
+
+    /**
+     * Specifies that a particular {@link TokenFactory} is required as a dependency.
+     * <p/>
+     * If a {@link TokenFactory} was already required and has the same type, the previously registered instance will simply be
+     * returned. Otherwise if a token factory of a different type was registered an exception will be thrown.
+     *
+     * @param klass
+     *     The {@link TokenFactory} class.
+     * @param supplier
+     *     Supplies an instance of the plugin. It's fine to use an anonymous class here.
+     * @param <T>
+     *     Type of the {@link TokenFactory}.
+     *
+     * @return An instance of the {@link TokenFactory}.
+     */
+    <T extends TokenFactory> T requireTokenFactory(Class<T> klass, Supplier<T> supplier);
 
     /**
      * Retrieves the instance of the given {@link Plugin} type. This is normally used by {@link Plugin}s to access another {@link

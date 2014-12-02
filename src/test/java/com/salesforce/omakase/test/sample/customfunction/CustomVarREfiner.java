@@ -27,19 +27,19 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import java.util.Map;
 
 /**
- * The refiner handles converting the raw function into either the custom AST object ({@link SampleCustomFunction}) or the
+ * The refiner handles converting the raw function into either the custom AST object ({@link CustomVarFunction}) or the
  * individual {@link Term}s.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class SampleCustomFunctionRefiner implements FunctionRefiner {
+public class CustomVarRefiner implements FunctionRefiner {
     public enum Mode {PASSTHROUGH, RESOLVE}
 
     private final Mode mode;
     private final Map<String, String> vars;
 
-    public SampleCustomFunctionRefiner(Mode mode, Map<String, String> vars) {
+    public CustomVarRefiner(Mode mode, Map<String, String> vars) {
         this.mode = mode;
         this.vars = vars;
     }
@@ -47,7 +47,7 @@ public class SampleCustomFunctionRefiner implements FunctionRefiner {
     @Override
     public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
         // we only want to refine things with our name
-        if (raw.name().equals(SampleCustomFunction.NAME)) {
+        if (raw.name().equals(CustomVarFunction.NAME)) {
 
             // do some simple validation
             String arg = raw.args();
@@ -59,7 +59,7 @@ public class SampleCustomFunctionRefiner implements FunctionRefiner {
 
             if (mode == Mode.PASSTHROUGH) {
                 // don't resolve, just convert to our custom AST object
-                SampleCustomFunction function = new SampleCustomFunction(arg);
+                CustomVarFunction function = new CustomVarFunction(arg);
 
                 // by broadcasting, it automatically gets added to the declaration since it is a Term. Also this is what
                 // enables delivery to any subscription methods for the AST object.

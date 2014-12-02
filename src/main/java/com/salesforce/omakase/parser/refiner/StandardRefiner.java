@@ -25,9 +25,7 @@ import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
@@ -41,7 +39,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
+final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     DeclarationRefiner, FunctionRefiner {
 
     private static final Set<AtRuleRefiner> STANDARD_AT_RULES = ImmutableSet.of(
@@ -65,28 +63,15 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
 
     @Override
     public boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
-        if (selector.isRefined()) return false;
-
-        // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
-        // plugins that utilize order (#isFirst(), etc...) work smoothly.
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
-        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
+        // parse inner content
         Source source = new Source(selector.rawContent(), false);
-
-        // parse the contents
-        ParserFactory.complexSelectorParser().parse(source, queryable, refiner);
+        ParserFactory.complexSelectorParser().parse(source, broadcaster, refiner);
 
         // grab orphaned comments
         selector.orphanedComments(source.collectComments().flushComments());
 
         // there should be nothing left
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_SELECTOR);
-
-        // store the parsed selector parts
-        selector.appendAll(queryable.filter(SelectorPart.class));
-
-        // once they are all added we're good to send them out
-        queue.resume();
 
         return true;
     }

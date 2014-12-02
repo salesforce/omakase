@@ -324,7 +324,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // newlines (unless first statement)
-        if (!writer.isCompressed() && !isFirst()) {
+        if (!writer.isCompressed() && !writer.isFirstAtCurrentDepth()) {
             appendable.newline().newlineIf(writer.isVerbose());
         }
 

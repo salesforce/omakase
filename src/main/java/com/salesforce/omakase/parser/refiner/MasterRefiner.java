@@ -22,8 +22,10 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.token.StandardTokenFactory;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
@@ -200,12 +202,33 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      * @return Whether refinement occurred or not.
      */
     public boolean refine(Selector selector, Broadcaster broadcaster) {
+        // try the custom refiners
         for (SelectorRefiner strategy : selectorRefiners) {
-            if (strategy.refine(selector, broadcaster, this)) return true;
+            if (refine(selector, broadcaster, strategy)) return true;
         }
 
         // fallback to the default refiner
-        return STANDARD.refine(selector, broadcaster, this);
+        return refine(selector, broadcaster, STANDARD);
+    }
+
+    /** attempts to refine a selector using the given refiner */
+    private boolean refine(Selector selector, Broadcaster broadcaster, SelectorRefiner refiner) {
+        // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
+        // plugins that utilize order (#isFirst(), etc...) work smoothly.
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
+
+        if (refiner.refine(selector, queryable, this)) {
+            // store the parsed selector parts
+            selector.appendAll(queryable.filter(SelectorPart.class));
+
+            // once they are all added we're good to send them out
+            queue.resume();
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

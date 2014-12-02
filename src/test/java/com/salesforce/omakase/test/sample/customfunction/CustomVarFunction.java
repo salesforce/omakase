@@ -36,11 +36,11 @@ import java.io.IOException;
 
 @Subscribable
 @SuppressWarnings("JavaDoc")
-public class SampleCustomFunction extends AbstractTerm implements FunctionValue {
+public class CustomVarFunction extends AbstractTerm implements FunctionValue {
     public static final String NAME = "custom-var";
     private final String arg;
 
-    public SampleCustomFunction(String arg) {
+    public CustomVarFunction(String arg) {
         this.arg = arg;
     }
 
@@ -59,8 +59,8 @@ public class SampleCustomFunction extends AbstractTerm implements FunctionValue 
     }
 
     @Override
-    public SampleCustomFunction copy() {
-        return new SampleCustomFunction(arg).copiedFrom(this);
+    public CustomVarFunction copy() {
+        return new CustomVarFunction(arg).copiedFrom(this);
     }
 
     @Override

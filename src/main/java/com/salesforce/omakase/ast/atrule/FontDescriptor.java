@@ -188,12 +188,29 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     }
 
     @Override
+    public boolean writesOwnComments() {
+        return true;
+    }
+
+    @Override
     public boolean isWritable() {
         return super.isWritable() && propertyName.isWritable() && propertyValue.isWritable();
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        if (!writer.isFirstAtCurrentDepth()) {
+            appendable.append(';');
+
+            if (writer.isVerbose()) {
+                appendable.newline();
+            } else if (writer.isInline() && !writer.isFirstAtCurrentDepth()) {
+                appendable.space();
+            }
+        }
+
+        writer.appendComments(comments(), appendable);
+
         writer.writeInner(propertyName, appendable);
         appendable.append(':').spaceIf(writer.isVerbose());
         writer.writeInner(propertyValue, appendable);

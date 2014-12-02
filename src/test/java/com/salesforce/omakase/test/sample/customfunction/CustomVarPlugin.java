@@ -28,11 +28,11 @@ import java.util.Map;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class SampleCustomFunctionPlugin implements SyntaxPlugin {
+public class CustomVarPlugin implements SyntaxPlugin {
     private final FunctionRefiner refiner;
 
-    public SampleCustomFunctionPlugin(SampleCustomFunctionRefiner.Mode mode, Map<String, String> vars) {
-        this.refiner = new SampleCustomFunctionRefiner(mode, vars);
+    public CustomVarPlugin(CustomVarRefiner.Mode mode, Map<String, String> vars) {
+        this.refiner = new CustomVarRefiner(mode, vars);
     }
 
     @Override
