@@ -56,7 +56,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     );
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
         for (AtRuleRefiner strategy : STANDARD_AT_RULES) {
             if (strategy.refine(atRule, broadcaster, refiner)) return true;
         }
@@ -64,7 +64,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     }
 
     @Override
-    public boolean refine(Selector selector, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
         if (selector.isRefined()) return false;
 
         // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
@@ -92,7 +92,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     }
 
     @Override
-    public boolean refine(Declaration declaration, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
         if (declaration.isRefined()) return false;
 
         // using a queue so that we can link everything together before terms, etc... are emitted
@@ -122,7 +122,7 @@ public final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     }
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
         for (FunctionRefiner strategy : STANDARD_FUNCTIONS) {
             if (strategy.refine(raw, broadcaster, refiner)) return true;
         }

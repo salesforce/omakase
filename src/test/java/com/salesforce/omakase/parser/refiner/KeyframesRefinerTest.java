@@ -39,13 +39,13 @@ public class KeyframesRefinerTest {
 
     KeyframesRefiner strategy;
     QueryableBroadcaster broadcaster;
-    GenericRefiner refiner;
+    MasterRefiner refiner;
 
     @Before
     public void setup() {
         strategy = new KeyframesRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new GenericRefiner(broadcaster).register(strategy);
+        refiner = new MasterRefiner(broadcaster).register(strategy);
     }
 
     @Test

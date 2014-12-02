@@ -33,13 +33,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class LinearGradientRefinerTest {
     private LinearGradientRefiner linearRefiner;
     private QueryableBroadcaster broadcaster;
-    private GenericRefiner refiner;
+    private MasterRefiner refiner;
 
     @Before
     public void setup() {
         linearRefiner = new LinearGradientRefiner();
         broadcaster = new QueryableBroadcaster();
-         refiner = new GenericRefiner(broadcaster).register(linearRefiner);
+         refiner = new MasterRefiner(broadcaster).register(linearRefiner);
     }
 
     @Test

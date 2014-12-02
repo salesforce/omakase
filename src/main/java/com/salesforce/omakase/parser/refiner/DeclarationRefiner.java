@@ -54,5 +54,5 @@ public interface DeclarationRefiner extends Refiner {
      *         Refiner} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
      *         segment of the object and still return false.
      */
-    boolean refine(Declaration declaration, Broadcaster broadcaster, GenericRefiner refiner);
+    boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner);
 }

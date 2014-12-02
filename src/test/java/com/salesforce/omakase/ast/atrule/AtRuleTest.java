@@ -24,7 +24,7 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -44,13 +44,13 @@ public class AtRuleTest {
 
     private RawSyntax rawExpression;
     private RawSyntax rawBlock;
-    private GenericRefiner refiner;
+    private MasterRefiner refiner;
 
     @Before
     public void setup() {
         rawExpression = new RawSyntax(1, 1, "all and (max-width: 800px)");
         rawBlock = new RawSyntax(1, 1, "p { color: red;}");
-        refiner = new GenericRefiner(new QueryableBroadcaster());
+        refiner = new MasterRefiner(new QueryableBroadcaster());
     }
 
     @Test

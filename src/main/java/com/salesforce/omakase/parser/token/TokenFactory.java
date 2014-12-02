@@ -24,9 +24,13 @@ import com.salesforce.omakase.parser.Parser;
  * A factory for retrieving various {@link Token}s. Mainly used by {@link Parser}s.
  * <p/>
  * The motivation for using a factory interface for tokens is that it provides the ability for highly-customized input source code
- * grammar. This could be used, for example, to enable grammar similar to the popular Stylus open source library.
+ * grammar. This could be used, for example, to enable newline and whitespace delimited grammar instead of colons, semicolons,
+ * brackets, etc...
+ * <p/>
+ * Custom token factories will usually extends from {@link BaseTokenFactory}.
  *
  * @author nmcwilliams
+ * @see BaseTokenFactory
  */
 public interface TokenFactory {
     /**

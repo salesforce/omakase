@@ -26,7 +26,7 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.raw.RawRuleParser;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Similar to {@link RawRuleParser}, except this only parses {@link KeyframeSelector}s.
@@ -35,7 +35,7 @@ import com.salesforce.omakase.parser.refiner.GenericRefiner;
  */
 public final class KeyframeRuleParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         source.collectComments();
 
         int line = source.originalLine();
@@ -48,7 +48,7 @@ public final class KeyframeRuleParser extends AbstractParser {
         if (!ParserFactory.keyframeSelectorSequenceParser().parse(source, queryable, refiner)) return false;
 
         // parse the declaration block
-        source.skipWhitepace().expect(tokenFactory().declarationBlockBegin());
+        source.skipWhitepace().expect(refiner.tokenFactory().declarationBlockBegin());
 
         // parse all declarations
         ParserFactory.rawDeclarationSequenceParser().parse(source, queryable, refiner);
@@ -62,7 +62,7 @@ public final class KeyframeRuleParser extends AbstractParser {
         rule.orphanedComments(source.collectComments().flushComments());
 
         // parse the end of the block (must be after orphaned comments parsing)
-        source.expect(tokenFactory().declarationBlockEnd());
+        source.expect(refiner.tokenFactory().declarationBlockEnd());
 
         // broadcast the rule
         broadcaster.broadcast(rule);

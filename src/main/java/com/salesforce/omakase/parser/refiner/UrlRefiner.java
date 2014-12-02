@@ -35,7 +35,7 @@ public final class UrlRefiner implements FunctionRefiner {
     private static final String NAME = "url";
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
         if (!raw.name().equals(NAME)) return false;
 
         // check for quotes

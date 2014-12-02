@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample;
+package com.salesforce.omakase.test.sample.customfunction;
 
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.Term;
@@ -22,7 +22,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.FunctionRefiner;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 import java.util.Map;
 
@@ -45,7 +45,7 @@ public class SampleCustomFunctionRefiner implements FunctionRefiner {
     }
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
         // we only want to refine things with our name
         if (raw.name().equals(SampleCustomFunction.NAME)) {
 

@@ -79,5 +79,5 @@ public interface FunctionRefiner extends Refiner {
      * @return True if refinement was performed, otherwise false. If true, no other registered {@link Refiner} objects will be
      *         executed for the given {@link RawFunction} instance.
      */
-    boolean refine(RawFunction raw, Broadcaster broadcaster, GenericRefiner refiner);
+    boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner);
 }

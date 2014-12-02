@@ -51,13 +51,13 @@ public class MediaRefinerTest {
 
     MediaRefiner strategy;
     QueryableBroadcaster broadcaster;
-    GenericRefiner refiner;
+    MasterRefiner refiner;
 
     @Before
     public void setup() {
         strategy = new MediaRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new GenericRefiner(broadcaster).register(strategy);
+        refiner = new MasterRefiner(broadcaster).register(strategy);
     }
 
     @Test

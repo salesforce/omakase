@@ -39,13 +39,13 @@ public class UrlRefinerTest {
 
     private UrlRefiner urlRefiner;
     private QueryableBroadcaster broadcaster;
-    private GenericRefiner refiner;
+    private MasterRefiner refiner;
 
     @Before
     public void setup() {
         urlRefiner = new UrlRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new GenericRefiner(broadcaster).register(urlRefiner);
+        refiner = new MasterRefiner(broadcaster).register(urlRefiner);
 
     }
 

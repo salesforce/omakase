@@ -32,7 +32,7 @@ import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -55,7 +55,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Description(broadcasted = AUTOMATIC)
 public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule>,
     Named {
-    private final transient GenericRefiner refiner;
+    private final transient MasterRefiner refiner;
     private String name;
 
     // unrefined
@@ -82,9 +82,9 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      * @param rawBlock
      *     The raw at-rule block. If no block is present pass in null.
      * @param refiner
-     *     The {@link GenericRefiner} to be used later during refinement of this object.
+     *     The {@link MasterRefiner} to be used later during refinement of this object.
      */
-    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, GenericRefiner refiner) {
+    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, MasterRefiner refiner) {
         super(line, column);
         this.name = name;
         this.rawExpression = Optional.fromNullable(rawExpression);

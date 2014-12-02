@@ -22,7 +22,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 import static com.salesforce.omakase.parser.Source.Snapshot;
@@ -55,7 +55,7 @@ import static com.salesforce.omakase.parser.Source.Snapshot;
  */
 public final class UnicodeRangeValueParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
         source.collectComments(false);
 

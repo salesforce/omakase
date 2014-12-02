@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 salesforce.com, inc.
+ * Copyright (C) 2014 salesforce.com, inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser;
-
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
+package com.salesforce.omakase.test.sample.customselector;
 
 /**
- * Base class for {@link Parser}s.
+ * TODO description
  *
  * @author nmcwilliams
  */
-public abstract class AbstractParser implements Parser {
-    @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
-        return parse(source, broadcaster, new MasterRefiner(broadcaster));
-    }
-
-    @Override
-    public Parser or(Parser other) {
-        return new CombinationParser(this, other);
-    }
+public class PlaceholderSelector {
 }

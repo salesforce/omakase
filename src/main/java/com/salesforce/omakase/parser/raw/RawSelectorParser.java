@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Parses a {@link Selector}.
@@ -32,17 +32,17 @@ import com.salesforce.omakase.parser.refiner.GenericRefiner;
 public final class RawSelectorParser extends AbstractParser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         source.collectComments();
 
-        if (!tokenFactory().selectorBegin().matches(source.current())) return false;
+        if (!refiner.tokenFactory().selectorBegin().matches(source.current())) return false;
 
         // grab current position before parsing
         int line = source.originalLine();
         int column = source.originalColumn();
 
         // grab everything until the end of the selector
-        String content = source.until(tokenFactory().selectorEnd());
+        String content = source.until(refiner.tokenFactory().selectorEnd());
         RawSyntax raw = new RawSyntax(line, column, content.trim());
 
         // create selector and associate comments

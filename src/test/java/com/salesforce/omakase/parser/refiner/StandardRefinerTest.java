@@ -46,7 +46,7 @@ public class StandardRefinerTest {
     @Test
     public void refineSelector() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        Selector selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        Selector selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         selector.refine();
         assertThat(selector.parts()).isNotEmpty();
     }
@@ -54,7 +54,7 @@ public class StandardRefinerTest {
     @Test
     public void refineSelectorThrowsErrorIfHasUnparsableContent() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id !!!!");
-        Selector selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        Selector selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
 
         exception.expect(ParserException.class);
         exception.expectMessage(Message.UNPARSABLE_SELECTOR.message());
@@ -64,7 +64,7 @@ public class StandardRefinerTest {
     @Test
     public void refinedSelectorAddsOrphanedComments() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id /*orphaned*/");
-        Selector selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        Selector selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         selector.refine();
         assertThat(selector.orphanedComments()).isNotEmpty();
     }
@@ -73,7 +73,7 @@ public class StandardRefinerTest {
     public void refineDeclaration() {
         RawSyntax rawName = new RawSyntax(2, 3, "display");
         RawSyntax rawValue = new RawSyntax(2, 5, "none");
-        Declaration declaration = new Declaration(rawName, rawValue, new GenericRefiner(new StatusChangingBroadcaster()));
+        Declaration declaration = new Declaration(rawName, rawValue, new MasterRefiner(new StatusChangingBroadcaster()));
         declaration.refine();
         assertThat(declaration.propertyName()).isNotNull();
         assertThat(declaration.propertyValue()).isNotNull();
@@ -86,7 +86,7 @@ public class StandardRefinerTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage("Unable to parse remaining declaration value");
-        new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster())).refine();
+        new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster())).refine();
     }
 
     @Test
@@ -96,14 +96,14 @@ public class StandardRefinerTest {
 
         exception.expect(ParserException.class);
         exception.expectMessage("Unable to parse remaining declaration value");
-        new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster())).refine();
+        new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster())).refine();
     }
 
     @Test
     public void refineDeclarationAddsOrphanedComments() {
         RawSyntax name = new RawSyntax(2, 3, "display");
         RawSyntax value = new RawSyntax(2, 5, "none /*orphaned*/");
-        Declaration d = new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
         d.refine();
         assertThat(d.orphanedComments()).isNotEmpty();
     }
@@ -112,7 +112,7 @@ public class StandardRefinerTest {
     public void refinedUrlFunctionValue() {
         RawFunction raw = new RawFunction(5, 2, "url", "one.png");
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        new StandardRefiner().refine(raw, qb, new GenericRefiner(qb));
+        new StandardRefiner().refine(raw, qb, new MasterRefiner(qb));
 
         assertThat(qb.all()).hasSize(1);
         assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(UrlFunctionValue.class);
@@ -122,7 +122,7 @@ public class StandardRefinerTest {
     public void refinedLinearGradientFunctionValue() {
         RawFunction raw = new RawFunction(5, 2, "linear-gradient", "red, yellow");
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        new StandardRefiner().refine(raw, qb, new GenericRefiner(qb));
+        new StandardRefiner().refine(raw, qb, new MasterRefiner(qb));
 
         assertThat(qb.all()).hasSize(1);
         assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(LinearGradientFunctionValue.class);
@@ -130,7 +130,7 @@ public class StandardRefinerTest {
 
     @Test
     public void refinedMediaQuery() {
-        GenericRefiner refiner = new GenericRefiner(new StatusChangingBroadcaster());
+        MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
         new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
@@ -139,7 +139,7 @@ public class StandardRefinerTest {
 
     @Test
     public void refinesKeyframes() {
-        GenericRefiner refiner = new GenericRefiner(new StatusChangingBroadcaster());
+        MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "keyframes", new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "from{top:0%} to{top:100%}"), refiner);
         new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
@@ -148,7 +148,7 @@ public class StandardRefinerTest {
 
     @Test
     public void refinesFontFace() {
-        GenericRefiner refiner = new GenericRefiner(new StatusChangingBroadcaster());
+        MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, "font-family:MyFont; src:url(MyFont.ttf);"), refiner);
         new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
         assertThat(ar.isRefined()).isTrue();

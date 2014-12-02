@@ -45,7 +45,7 @@ public final class KeyframesRefiner implements AtRuleRefiner {
     private static final String KEYFRAMES = "keyframes";
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
         // @keyframes might be prefixed
         String name = Prefixes.unprefixed(atRule.name());
         if (!name.equals(KEYFRAMES)) return false;

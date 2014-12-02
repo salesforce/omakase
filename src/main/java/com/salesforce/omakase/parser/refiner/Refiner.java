@@ -35,7 +35,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @see SelectorRefiner
  * @see FunctionRefiner
  * @see StandardRefiner
- * @see GenericRefiner
+ * @see MasterRefiner
  * @see SyntaxPlugin
  */
 public interface Refiner {}

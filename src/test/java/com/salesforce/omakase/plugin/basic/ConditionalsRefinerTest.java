@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class ConditionalsRefinerTest {
     private static final RawSyntax VALID_BLOCK = new RawSyntax(1, 1, "  .class{color:red;\n  margin:10px;}\n\n #id1, " +
         "#id2 { padding: 0}  \n");
 
-    private GenericRefiner refiner;
+    private MasterRefiner refiner;
     private QueryableBroadcaster broadcaster;
     private ConditionalsRefiner strategy;
 
@@ -53,7 +53,7 @@ public class ConditionalsRefinerTest {
     public void setup() {
         strategy = new ConditionalsRefiner(new ConditionalsManager().addTrueConditions("ie7"));
         broadcaster = new QueryableBroadcaster();
-        refiner = new GenericRefiner(broadcaster).register(strategy);
+        refiner = new MasterRefiner(broadcaster).register(strategy);
     }
 
     @Test

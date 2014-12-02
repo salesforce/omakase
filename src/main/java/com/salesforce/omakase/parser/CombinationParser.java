@@ -17,7 +17,7 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second parser will
@@ -48,7 +48,7 @@ public final class CombinationParser extends AbstractParser {
     }
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         return first.parse(source, broadcaster, refiner) || second.parse(source, broadcaster, refiner);
     }
 }

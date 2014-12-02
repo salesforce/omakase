@@ -20,7 +20,7 @@ import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.util.Declarations;
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class PrefixPrunerTest {
             "transform:rotate(0deg)}\n to {-webkit-transform:rotate(360deg); -moz-transform:rotate(0deg); -ms-transform:rotate(0deg); transform:rotate" +
             "(360deg)}\n");
 
-        AtRule ar = new AtRule(-1, -1, "-webkit-keyframes", exp, block, new GenericRefiner());
+        AtRule ar = new AtRule(-1, -1, "-webkit-keyframes", exp, block, new MasterRefiner());
         ar.refine();
 
         pruner.atRule(ar);

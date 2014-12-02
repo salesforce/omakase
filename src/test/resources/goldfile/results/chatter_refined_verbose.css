@@ -576,7 +576,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
 }
 
 .linkedContentDetailsContainer {
-  margin: 0,10px;
+  margin: 0, 10px;
 }
 
 .linkedContentDetailsContainer, .contentDetails, .selectedFileDetailsContainer, .fileDetails {
@@ -1728,7 +1728,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
   margin: 3px;
   width: 477px;
   height: 20px;
-  font-family: 'Arial','Helvetica',sans-serif;
+  font-family: 'Arial', 'Helvetica', sans-serif;
   font-size: 100%;
 }
 
@@ -4527,9 +4527,9 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
   background: -moz-linear-gradient(#f8f8f8, #eeeeee);
   background: -webkit-linear-gradient(#f8f8f8, #eeeeee);
   background: -ms-linear-gradient(#f8f8f8, #eeeeee);
-  -webkit-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1),0px 1px 0px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1),0px 1px 0px rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1),0px 1px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 1px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 1px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 1px 0px rgba(0, 0, 0, 0.1);
 }
 
 .cxhover .feedcommentactions .commentActionMenuButton, .feeditemcomment.cxhover .zen-trigger.commentActionMenuButton {
@@ -6925,7 +6925,7 @@ body .publishercontainer .quickActionPanel .quickActionForm, .publishercontainer
 }
 
 .publishercontainer .quickActionPanel select, .publishercontainer .quickActionPanel .zen-select {
-  font-family: 'Arial','Helvetica',san-serif;
+  font-family: 'Arial', 'Helvetica', san-serif;
   color: #222;
   font-padding: 10px;
   height: 30px;

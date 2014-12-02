@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 salesforce.com, inc.
+ * Copyright (C) 2014 salesforce.com, inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.parser;
+package com.salesforce.omakase.test.sample.customselector;
 
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.token.BaseTokenFactory;
+import com.salesforce.omakase.parser.token.Token;
 
 /**
- * Base class for {@link Parser}s.
- *
- * @author nmcwilliams
- */
-public abstract class AbstractParser implements Parser {
+* TODO description
+*
+* @author nmcwilliams
+*/
+public final class PlaceholderTokenFactory extends BaseTokenFactory {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
-        return parse(source, broadcaster, new MasterRefiner(broadcaster));
-    }
-
-    @Override
-    public Parser or(Parser other) {
-        return new CombinationParser(this, other);
+    public Token selectorBegin() {
+        // allow selectors to begin with the percentage as well
+        return super.selectorBegin().or(PlaceholderTokens.PERCENTAGE);
     }
 }

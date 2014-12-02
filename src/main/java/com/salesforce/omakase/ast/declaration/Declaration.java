@@ -34,7 +34,7 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.PropertyValueParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -56,7 +56,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
 public final class Declaration extends AbstractGroupable<Rule, Declaration> implements Refinable<Declaration>, Named {
-    private final transient GenericRefiner refiner;
+    private final transient MasterRefiner refiner;
     private transient Broadcaster broadcaster;
 
     /* unrefined */
@@ -79,9 +79,9 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * @param rawPropertyValue
      *     The raw property value.
      * @param refiner
-     *     The {@link GenericRefiner} to be used later during refinement of this object.
+     *     The {@link MasterRefiner} to be used later during refinement of this object.
      */
-    public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, GenericRefiner refiner) {
+    public Declaration(RawSyntax rawPropertyName, RawSyntax rawPropertyValue, MasterRefiner refiner) {
         super(rawPropertyName.line(), rawPropertyName.column());
         this.rawPropertyName = rawPropertyName;
         this.rawPropertyValue = rawPropertyValue;

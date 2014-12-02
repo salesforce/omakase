@@ -23,7 +23,7 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -34,7 +34,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public final class RawDeclarationParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         source.collectComments();
 
         // grab our current position before parsing anything
@@ -54,13 +54,13 @@ public final class RawDeclarationParser extends AbstractParser {
 
         // read colon
         source.skipWhitepace();
-        source.expect(tokenFactory().propertyNameEnd(), Message.MISSING_COLON);
+        source.expect(refiner.tokenFactory().propertyNameEnd(), Message.MISSING_COLON);
         source.skipWhitepace();
 
         //read the property value
         line = source.originalLine();
         column = source.originalColumn();
-        content = source.until(tokenFactory().declarationEnd());
+        content = source.until(refiner.tokenFactory().declarationEnd());
         RawSyntax value = new RawSyntax(line, column, content.trim());
 
         // create the new declaration and associate comments

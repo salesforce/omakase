@@ -22,7 +22,8 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.token.TokenFactory;
 
 /**
  * Parses a sequence of comma-separated selectors.
@@ -31,11 +32,13 @@ import com.salesforce.omakase.parser.refiner.GenericRefiner;
  */
 public final class RawSelectorSequenceParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         source.collectComments();
 
+        TokenFactory tf = refiner.tokenFactory();
+
         // check if the next character is a valid first character for a selector
-        if (!tokenFactory().selectorBegin().matches(source.current())) return false;
+        if (!tf.selectorBegin().matches(source.current())) return false;
 
         boolean foundDelimiter = false;
         boolean foundSelector = false;
@@ -46,11 +49,11 @@ public final class RawSelectorSequenceParser extends AbstractParser {
             foundSelector = ParserFactory.rawSelectorParser().parse(source, broadcaster, refiner);
 
             if (foundDelimiter && !foundSelector) {
-                throw new ParserException(source, Message.EXPECTED_SELECTOR, tokenFactory().selectorDelimiter().description());
+                throw new ParserException(source, Message.EXPECTED_SELECTOR, tf.selectorDelimiter().description());
             }
 
             // try to parse a delimiter (e.g., comma)
-            foundDelimiter = source.skipWhitepace().optionallyPresent(tokenFactory().selectorDelimiter());
+            foundDelimiter = source.skipWhitepace().optionallyPresent(tf.selectorDelimiter());
         } while (foundDelimiter);
 
         return true;

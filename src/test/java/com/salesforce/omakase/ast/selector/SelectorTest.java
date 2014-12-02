@@ -20,7 +20,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
@@ -41,7 +41,7 @@ public class SelectorTest {
     @Test
     public void rawContent() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         assertThat(selector.rawContent()).isSameAs(raw);
     }
 
@@ -80,7 +80,7 @@ public class SelectorTest {
     @Test
     public void isRefinedTrue() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         selector.refine();
         assertThat(selector.isRefined()).isTrue();
     }
@@ -88,7 +88,7 @@ public class SelectorTest {
     @Test
     public void isRefinedFalse() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         assertThat(selector.isRefined()).isFalse();
     }
 
@@ -101,7 +101,7 @@ public class SelectorTest {
     @Test
     public void refine() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         selector.refine();
         assertThat(selector.parts()).isNotEmpty();
     }
@@ -130,21 +130,21 @@ public class SelectorTest {
     @Test
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         assertThat(StyleWriter.verbose().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         assertThat(StyleWriter.inline().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new GenericRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
         assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo(".class > #id");
     }
 

@@ -54,7 +54,7 @@ public class FontFaceRefiner implements AtRuleRefiner {
     private static final String FONT_FACE = "font-face";
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
         if (!atRule.name().equals(FONT_FACE)) return false;
 
         // shouldn't have an expression

@@ -62,5 +62,5 @@ public interface AtRuleRefiner extends Refiner {
      *         objects will be executed for the given instance. It is acceptable for a refiner to refine only a segment of the
      *         object and still return false.
      */
-    boolean refine(AtRule atRule, Broadcaster broadcaster, GenericRefiner refiner);
+    boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner);
 }

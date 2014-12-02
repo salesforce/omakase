@@ -42,7 +42,7 @@ public final class MediaRefiner implements AtRuleRefiner {
     private static final String MEDIA = "media";
 
     @Override
-    public boolean refine(AtRule rule, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean refine(AtRule rule, Broadcaster broadcaster, MasterRefiner refiner) {
         if (!rule.name().equals(MEDIA)) return false;
 
         boolean refinedExpression = false;

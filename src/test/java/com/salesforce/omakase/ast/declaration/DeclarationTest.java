@@ -30,7 +30,7 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -55,7 +55,7 @@ public class DeclarationTest {
     public void setup() {
         rawName = new RawSyntax(2, 3, "display");
         rawValue = new RawSyntax(2, 5, "none");
-        fromRaw = new Declaration(rawName, rawValue, new GenericRefiner(new StatusChangingBroadcaster()));
+        fromRaw = new Declaration(rawName, rawValue, new MasterRefiner(new StatusChangingBroadcaster()));
     }
 
     @Test
@@ -318,7 +318,7 @@ public class DeclarationTest {
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
 
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSnippet(d)).isEqualTo("border: 1px solid red");
@@ -328,7 +328,7 @@ public class DeclarationTest {
     public void writeInlineUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
 
         StyleWriter writer = StyleWriter.inline();
         assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
@@ -338,7 +338,7 @@ public class DeclarationTest {
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
 
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
@@ -356,7 +356,7 @@ public class DeclarationTest {
     public void isWritableWhenUnrefinedAndAttached() {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new GenericRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
         com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isTrue();

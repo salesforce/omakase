@@ -24,7 +24,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;
 
@@ -38,8 +38,8 @@ import java.util.List;
  */
 public final class RawAtRuleParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
-        TokenFactory tf = tokenFactory();
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+        TokenFactory tf = refiner.tokenFactory();
 
         source.skipWhitepace();
         source.collectComments();

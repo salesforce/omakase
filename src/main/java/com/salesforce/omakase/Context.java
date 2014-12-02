@@ -31,13 +31,17 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.broadcast.emitter.Emitter;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.parser.token.StandardTokenFactory;
+import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.BroadcastingPlugin;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
@@ -52,6 +56,9 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 final class Context implements Broadcaster, PluginRegistry {
     /** registry of all plugins */
     private final ClassToInstanceMap<Plugin> registry = MutableClassToInstanceMap.create();
+
+    /** token factory affects delimiter grammar rules */
+    private TokenFactory tokenFactory = StandardTokenFactory.instance();
 
     /** uses an {@link Emitter} to broadcast events */
     private final EmittingBroadcaster emittingBroadcaster = new EmittingBroadcaster();
@@ -143,21 +150,34 @@ final class Context implements Broadcaster, PluginRegistry {
     }
 
     /**
-     * Creates a new {@link GenericRefiner} instance with the {@link Broadcaster} currently set on this {@link Context} and with
-     * the {@link Refiner}s from all registered {@link SyntaxPlugin}s.
+     * Creates a new {@link MasterRefiner} instance with the {@link Broadcaster} currently set on this {@link Context} and with
+     * the {@link Refiner}s from all registered {@link SyntaxPlugin}s. This will use the {@link StandardTokenFactory}.
      * <p/>
      * This should be called <em>after</em> any calls to {@link #broadcaster (Broadcaster)}.
      *
-     * @return The {@link GenericRefiner} instance.
+     * @return The {@link MasterRefiner} instance.
      */
-    public GenericRefiner createRefiner() {
-        GenericRefiner refiner = new GenericRefiner(broadcaster);
+    public MasterRefiner createRefiner() {
+        MasterRefiner refiner = new MasterRefiner(broadcaster, tokenFactory);
 
         for (SyntaxPlugin plugin : filter(SyntaxPlugin.class)) {
             plugin.registerRefiners(refiner);
         }
 
         return refiner;
+    }
+
+    /**
+     * Register a custom {@link TokenFactory}. This should be called ahead of {@link #before()} or bad stuff will happen.
+     *
+     * @param tokenFactory
+     *     The {@link TokenFactory}.
+     *
+     * @return this, for chaining.
+     */
+    public Context tokenFactory(TokenFactory tokenFactory) {
+        this.tokenFactory = checkNotNull(tokenFactory, "tokenFactory cannot be null");
+        return this;
     }
 
     /**

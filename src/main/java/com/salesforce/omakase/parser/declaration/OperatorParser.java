@@ -22,7 +22,7 @@ import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -33,7 +33,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public final class OperatorParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         // skip comments at the beginning but not whitespace
         source.collectComments(false);
 

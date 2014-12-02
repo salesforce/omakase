@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
@@ -25,8 +24,11 @@ import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.parser.token.StandardTokenFactory;
+import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,67 +36,81 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Top-level manager/registry used for refining {@link Refinable} objects, such as {@link Selector} and {@link Declaration}, and
  * other "refinable" syntax such as custom functions.
- * <p/>
- * This is normally internal-use only.
  *
  * @author nmcwilliams
  * @see SyntaxPlugin
  * @see RefinerRegistry
  */
-public final class GenericRefiner implements Refiner, RefinerRegistry {
+public final class MasterRefiner implements Refiner, RefinerRegistry {
     private static final StandardRefiner STANDARD = new StandardRefiner();
 
     private final Broadcaster defaultBroadcaster;
-    private final List<AtRuleRefiner> atRuleRefiners = Lists.newArrayList();
-    private final List<SelectorRefiner> selectorRefiners = Lists.newArrayList();
-    private final List<DeclarationRefiner> declarationRefiners = Lists.newArrayList();
-    private final List<FunctionRefiner> functionRefiners = Lists.newArrayList();
+    private final TokenFactory tokenFactory;
+
+    private final List<AtRuleRefiner> atRuleRefiners = new ArrayList<>();
+    private final List<SelectorRefiner> selectorRefiners = new ArrayList<>();
+    private final List<DeclarationRefiner> declarationRefiners = new ArrayList<>();
+    private final List<FunctionRefiner> functionRefiners = new ArrayList<>();
 
     /**
-     * Creates a new {@link GenericRefiner} instance without a specific {@link Broadcaster} specified.
+     * Creates a new {@link MasterRefiner} instance without a specific {@link Broadcaster} specified.
      * <p/>
      * Generally not the constructor to use.
      */
-    public GenericRefiner() {
+    public MasterRefiner() {
         this(new QueryableBroadcaster());
     }
 
     /**
-     * Creates a new {@link GenericRefiner} instance with the given {@link Broadcaster} to use for new refined AST objects.
+     * Creates a new {@link MasterRefiner} instance with the given {@link Broadcaster} to use for new refined AST objects.
      *
      * @param broadcaster
      *     The {@link Broadcaster} to use for refined AST objects.
      */
-    public GenericRefiner(Broadcaster broadcaster) {
+    public MasterRefiner(Broadcaster broadcaster) {
+        this(broadcaster, StandardTokenFactory.instance());
+    }
+
+    /**
+     * Creates a new {@link MasterRefiner} instance with the given {@link Broadcaster} to use for new refined AST objects. The
+     * given {@link TokenFactory} is used for grammar token delimiters.
+     *
+     * @param broadcaster
+     *     The {@link Broadcaster} to use for refined AST objects.
+     * @param tokenFactory
+     *     The {@link TokenFactory} parsers should use.
+     */
+    public MasterRefiner(Broadcaster broadcaster, TokenFactory tokenFactory) {
         this.defaultBroadcaster = broadcaster;
+        this.tokenFactory = tokenFactory;
     }
 
     @Override
-    public GenericRefiner register(AtRuleRefiner refiner) {
+    public MasterRefiner register(AtRuleRefiner refiner) {
         atRuleRefiners.add(checkNotNull(refiner, "refiner cannot be null"));
         return this;
     }
 
     @Override
-    public GenericRefiner register(SelectorRefiner refiner) {
+    public MasterRefiner register(SelectorRefiner refiner) {
         selectorRefiners.add(checkNotNull(refiner, "refiner cannot be null"));
         return this;
     }
 
     @Override
-    public GenericRefiner register(DeclarationRefiner refiner) {
+    public MasterRefiner register(DeclarationRefiner refiner) {
         declarationRefiners.add(checkNotNull(refiner, "refiner cannot be null"));
         return this;
     }
 
     @Override
-    public GenericRefiner register(FunctionRefiner refiner) {
+    public MasterRefiner register(FunctionRefiner refiner) {
         functionRefiners.add(checkNotNull(refiner, "refiner cannot be null"));
         return this;
     }
 
     @Override
-    public GenericRefiner registerMulti(Refiner refiner) {
+    public MasterRefiner registerMulti(Refiner refiner) {
         if (refiner instanceof AtRuleRefiner) {
             atRuleRefiners.add((AtRuleRefiner)refiner);
         }
@@ -114,7 +130,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines an {@link AtRule} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, MasterRefiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
      *
@@ -131,7 +147,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines an {@link AtRule} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, MasterRefiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
      *
@@ -155,7 +171,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines a {@link Selector} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, MasterRefiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
      *
@@ -172,7 +188,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines a {@link Selector} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, MasterRefiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
      *
@@ -196,7 +212,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines a {@link Declaration} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, MasterRefiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
      *
@@ -213,7 +229,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines a {@link Declaration} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, MasterRefiner)} will be used.
      * <p/>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
      *
@@ -237,7 +253,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines a {@link GenericFunctionValue} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(RawFunction, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(RawFunction, Broadcaster, MasterRefiner)} will be used.
      *
      * @param raw
      *     The {@link RawFunction} to refine.
@@ -252,7 +268,7 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
      * Refines a {@link GenericFunctionValue} object.
      * <p/>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
-     * if none are registered then {@link StandardRefiner#refine(RawFunction, Broadcaster, GenericRefiner)} will be used.
+     * if none are registered then {@link StandardRefiner#refine(RawFunction, Broadcaster, MasterRefiner)} will be used.
      *
      * @param raw
      *     The {@link RawFunction} to refine.
@@ -271,12 +287,21 @@ public final class GenericRefiner implements Refiner, RefinerRegistry {
     }
 
     /**
-     * Gets the {@link Broadcaster} registered with this {@link GenericRefiner}.
+     * Gets the {@link Broadcaster} registered with this {@link MasterRefiner}.
      *
      * @return The {@link Broadcaster}.
      */
     public Broadcaster broadcaster() {
         return defaultBroadcaster;
+    }
+
+    /**
+     * Gets the {@link TokenFactory} registered with this {@link MasterRefiner}.
+     *
+     * @return The {@link TokenFactory}.
+     */
+    public TokenFactory tokenFactory() {
+        return tokenFactory;
     }
 }
 

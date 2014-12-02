@@ -47,13 +47,13 @@ public class FontFaceRefinerTest {
 
     FontFaceRefiner strategy;
     QueryableBroadcaster broadcaster;
-    GenericRefiner refiner;
+    MasterRefiner refiner;
 
     @Before
     public void setup() {
         strategy = new FontFaceRefiner();
         broadcaster = new QueryableBroadcaster();
-        refiner = new GenericRefiner(broadcaster).register(strategy);
+        refiner = new MasterRefiner(broadcaster).register(strategy);
     }
 
     @Test

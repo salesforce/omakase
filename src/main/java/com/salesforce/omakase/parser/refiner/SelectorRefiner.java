@@ -56,5 +56,5 @@ public interface SelectorRefiner extends Refiner {
      *         Refiner} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
      *         segment of the object and still return false.
      */
-    boolean refine(Selector selector, Broadcaster broadcaster, GenericRefiner refiner);
+    boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner);
 }

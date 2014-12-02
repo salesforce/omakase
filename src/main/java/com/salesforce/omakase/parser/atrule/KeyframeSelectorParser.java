@@ -27,7 +27,7 @@ import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Parses a single {@link KeyframeSelector} part.
@@ -39,7 +39,7 @@ import com.salesforce.omakase.parser.refiner.GenericRefiner;
  */
 public final class KeyframeSelectorParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         source.skipWhitepace();
 
         int line = source.originalLine();

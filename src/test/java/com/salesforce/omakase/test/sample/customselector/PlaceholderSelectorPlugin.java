@@ -14,30 +14,19 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample;
+package com.salesforce.omakase.test.sample.customselector;
 
-import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
-import com.salesforce.omakase.test.sample.SampleCustomFunctionRefiner.Mode;
-
-import java.util.Map;
 
 /**
- * This is the actual plugin that gets registered with the parser.
+ * TODO description
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
-public class SampleCustomFunctionPlugin implements SyntaxPlugin {
-    private final FunctionRefiner refiner;
-
-    public SampleCustomFunctionPlugin(Mode mode, Map<String, String> vars) {
-        this.refiner = new SampleCustomFunctionRefiner(mode, vars);
-    }
-
+public class PlaceholderSelectorPlugin implements SyntaxPlugin {
     @Override
     public void registerRefiners(RefinerRegistry registry) {
-        registry.register(refiner);
+        registry.register(new PlaceholderSelectorRefiner());
     }
 }

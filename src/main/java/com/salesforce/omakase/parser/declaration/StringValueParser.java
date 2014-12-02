@@ -21,7 +21,7 @@ import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.AbstractParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.GenericRefiner;
+import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public final class StringValueParser extends AbstractParser {
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, GenericRefiner refiner) {
+    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
         source.collectComments(false);
 

@@ -478,10 +478,10 @@ public class PrefixerUnitTargetedTest {
             "}";
 
         String expected = ".test {\n" +
-            "  background: -webkit-linear-gradient(red, green) no-repeat,-webkit-linear-gradient(blue, yellow) no-repeat;\n" +
-            "  background: -moz-linear-gradient(red, green) no-repeat,-moz-linear-gradient(blue, yellow) no-repeat;\n" +
-            "  background: -o-linear-gradient(red, green) no-repeat,-o-linear-gradient(blue, yellow) no-repeat;\n" +
-            "  background: linear-gradient(red, green) no-repeat,linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: -webkit-linear-gradient(red, green) no-repeat, -webkit-linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: -moz-linear-gradient(red, green) no-repeat, -moz-linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: -o-linear-gradient(red, green) no-repeat, -o-linear-gradient(blue, yellow) no-repeat;\n" +
+            "  background: linear-gradient(red, green) no-repeat, linear-gradient(blue, yellow) no-repeat;\n" +
             "}";
 
         assertThat(process(original, linearGradientSetup(), WriterMode.VERBOSE)).isEqualTo(expected);
