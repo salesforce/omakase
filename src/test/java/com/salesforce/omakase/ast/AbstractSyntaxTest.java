@@ -73,6 +73,13 @@ public class AbstractSyntaxTest {
     }
 
     @Test
+    public void testAddCommentString() {
+        TestSyntax t = new TestSyntax(10, 15);
+        t.comment("test");
+        assertThat(t.comments().get(0).content()).isEqualTo("test");
+    }
+
+    @Test
     public void testAddComment() {
         TestSyntax t = new TestSyntax(10, 15);
         Comment c = new Comment("test");

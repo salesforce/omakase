@@ -150,6 +150,11 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
+    public Syntax comment(String comment) {
+        return comment(new Comment(comment));
+    }
+
+    @Override
     public Syntax comment(Comment comment) {
         checkNotNull(comment, "comment cannot be null");
         getOrCreateComments(4).add(comment);

@@ -142,6 +142,20 @@ public interface Syntax extends Writable, Broadcastable {
     void prefix(Prefix prefix, SupportMatrix support, boolean deep);
 
     /**
+     * Adds the given comment to this unit.
+     * <p/>
+     * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
+     * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
+     * Declaration} itself instead of the property name or value inside of it.
+     *
+     * @param comment
+     *     The comment to add.
+     *
+     * @return this, for chaining.
+     */
+    Syntax comment(String comment);
+
+    /**
      * Adds the given {@link Comment} to this unit.
      * <p/>
      * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
