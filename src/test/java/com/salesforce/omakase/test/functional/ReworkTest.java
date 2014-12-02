@@ -80,12 +80,12 @@ public class ReworkTest {
         Omakase
             .source(INPUT) // specify INPUT css source code
             .broadcaster(broadcaster) // wrap the default broadcaster within our own
-            .request(prefixBorderRadius) // add plugin instance
-            .request(replaceClassName) // add plugin instance
-            .request(addZoomToInlineBlock) // add plugin instance
-            .request(addNewRules) // add plugin instance
-            .request(new StandardValidation()) // add all default validation plugins
-            .request(inlineWriter) // add the inline mode writer
+            .use(prefixBorderRadius) // add plugin instance
+            .use(replaceClassName) // add plugin instance
+            .use(addZoomToInlineBlock) // add plugin instance
+            .use(addNewRules) // add plugin instance
+            .use(new StandardValidation()) // add all default validation plugins
+            .use(inlineWriter) // add the inline mode writer
             .process(); // process the css source + run plugins
 
         // uncomment to view output

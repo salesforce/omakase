@@ -40,7 +40,7 @@ public class RegistrationAndDependencyOrderTest {
     @Test
     public void registrationOrder() {
         List<Class<?>> list = Lists.newArrayList();
-        Omakase.source(".test{}").request(new RegistrationOrder5(list)).process();
+        Omakase.source(".test{}").use(new RegistrationOrder5(list)).process();
 
         assertThat(list).containsExactly(
             RegistrationOrder2.class,

@@ -37,7 +37,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class PrefixerUnitFunctionTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
-        Omakase.source(original).request(new AutoRefiner().all()).request(writer).request(prefixer).process();
+        Omakase.source(original).use(AutoRefiner.refineEverything()).use(writer).use(prefixer).process();
         return writer.write();
     }
 

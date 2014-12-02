@@ -53,8 +53,8 @@ public class ConsistentBroadcastOrderTest {
         final List<Syntax> copied = Lists.newArrayList();
 
         Omakase.source(SRC)
-            .request(new AutoRefiner().all())
-            .request(new Plugin() {
+            .use(new AutoRefiner().all())
+            .use(new Plugin() {
                 private boolean madeCopy;
 
                 @Observe
@@ -70,7 +70,7 @@ public class ConsistentBroadcastOrderTest {
                     }
                 }
             })
-            .request(new Plugin() {
+            .use(new Plugin() {
                 private final Set<Statement> copies = Sets.newHashSet();
 
                 @Rework

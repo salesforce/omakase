@@ -103,10 +103,10 @@ public class VaryingConditionalsTest {
         // parsing
         Omakase
             .source(INPUT)
-            .request(refiner)
-            .request(conditionals)
-            .request(validation)
-            .request(inline)
+            .use(refiner)
+            .use(conditionals)
+            .use(validation)
+            .use(inline)
             .process();
 
         // ie7 only
@@ -144,10 +144,10 @@ public class VaryingConditionalsTest {
         // parsing
         Omakase
             .source("@if (ie7) { .test {border: 1px solid red} }")
-            .request(refiner)
-            .request(conditionals)
-            .request(validation)
-            .request(counter)
+            .use(refiner)
+            .use(conditionals)
+            .use(validation)
+            .use(counter)
             .process();
 
         assertThat(counter.ruleCount).isGreaterThan(0);

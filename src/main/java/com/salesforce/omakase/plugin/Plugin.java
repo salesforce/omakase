@@ -24,7 +24,7 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 /**
  * A plugin that is registered during CSS processing to perform rework, validation, and more.
  * <p/>
- * Plugins are registered during parser setup using {@link Omakase.Request#request(Plugin...)} (and similar methods). Plugins will
+ * Plugins are registered during parser setup using {@link Omakase.Request#use(Plugin...)} (and similar methods). Plugins will
  * generally be executed in the order that they are registered.
  * <p/>
  * Note that when implementing a plugin, not all subscriptions will be received automatically. sometimes an {@link AutoRefiner} is

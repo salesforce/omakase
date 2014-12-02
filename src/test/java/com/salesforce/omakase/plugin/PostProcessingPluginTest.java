@@ -33,7 +33,7 @@ public class PostProcessingPluginTest {
     @Test
     public void callsMethod() {
         PostProcessingTest test = new PostProcessingTest();
-        Omakase.source("p{color:red}").request(test).process();
+        Omakase.source("p{color:red}").use(test).process();
         assertThat(test.called).isTrue();
     }
 

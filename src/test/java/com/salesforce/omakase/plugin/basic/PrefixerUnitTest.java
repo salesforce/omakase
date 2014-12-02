@@ -63,6 +63,6 @@ public class PrefixerUnitTest {
     public void throwsErrorIfPrefixPrunerAlreadyRegistered() {
         exception.expect(IllegalStateException.class);
         exception.expectMessage("plugin should be registered AFTER");
-        Omakase.source("").add(PrefixPruner.prunePrefixedAtRules()).add(Prefixer.defaultBrowserSupport()).process();
+        Omakase.source("").use(PrefixPruner.prunePrefixedAtRules()).use(Prefixer.defaultBrowserSupport()).process();
     }
 }

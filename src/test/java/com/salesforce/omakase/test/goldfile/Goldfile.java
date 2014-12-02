@@ -71,11 +71,11 @@ public final class Goldfile {
         SyntaxTree tree = new SyntaxTree();
 
         Omakase.Request request = Omakase.source(source);
-        if (autoRefine) request.add(refiner);
-        request.add(tree);
-        request.add(writer);
-        request.add(new StandardValidation(false));
-        request.add(new UnquotedIEFilterPlugin());
+        if (autoRefine) request.use(refiner);
+        request.use(tree);
+        request.use(writer);
+        request.use(new StandardValidation(false));
+        request.use(new UnquotedIEFilterPlugin());
 
         // do the parsing and get results
         request.process();

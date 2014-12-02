@@ -51,7 +51,7 @@ public class SyntaxTreeTest {
     @Before
     public void setup() {
         SyntaxTree tree = new SyntaxTree();
-        Omakase.source(SRC).request(tree).process();
+        Omakase.source(SRC).use(tree).process();
         stylesheet = tree.stylesheet();
     }
 

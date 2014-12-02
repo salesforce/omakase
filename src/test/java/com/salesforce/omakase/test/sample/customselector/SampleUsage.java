@@ -76,9 +76,9 @@ public final class SampleUsage {
 
         // parse without resolving the vars, but count them
         Omakase.source(input)
-            .request(verbose)
-            .request(validation)
-            .request(placeholders)
+            .use(verbose)
+            .use(validation)
+            .use(placeholders)
             .process();
 
         System.out.println("\n\nOUTPUT:\n");

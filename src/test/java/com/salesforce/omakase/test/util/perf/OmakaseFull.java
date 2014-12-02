@@ -36,6 +36,6 @@ public final class OmakaseFull implements PerfTestParser {
 
     @Override
     public void parse(String input) {
-        Omakase.source(input).request(PluginSet.normal()).process();
+        Omakase.source(input).use(PluginSet.normal()).process();
     }
 }

@@ -48,7 +48,7 @@ import java.util.Set;
  *   ...(subscription methods)...
  * }<code></pre>
  * <p/>
- * If you are manually including this with {@link Omakase.Request#request(Plugin...)} then you almost always want to ensure that
+ * If you are manually including this with {@link Omakase.Request#use(Plugin...)} then you almost always want to ensure that
  * it is registered  first before any other plugins.
  *
  * @author nmcwilliams

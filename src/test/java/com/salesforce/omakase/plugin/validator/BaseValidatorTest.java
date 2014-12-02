@@ -142,10 +142,10 @@ public class BaseValidatorTest<T extends Plugin> {
     protected ValidationErrorManager testValidation(String src) {
         ValidationErrorManager em = new ValidationErrorManager();
         Omakase.source(src)
-            .request(em)
-            .request(new AutoRefiner().all())
-            .request(new SyntaxTree())
-            .request(plugin)
+            .use(em)
+            .use(new AutoRefiner().all())
+            .use(new SyntaxTree())
+            .use(plugin)
             .process();
 
         return em;

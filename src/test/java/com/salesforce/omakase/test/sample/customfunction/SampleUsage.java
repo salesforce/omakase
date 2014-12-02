@@ -79,10 +79,10 @@ public final class SampleUsage {
 
         // parse without resolving the vars, but count them
         Omakase.source(input)
-            .request(verbose)
-            .request(validation)
-            .request(passthrough)
-            .request(counting)
+            .use(verbose)
+            .use(validation)
+            .use(passthrough)
+            .use(counting)
             .process();
 
         System.out.printf("OUTPUT (passthrough):\n");
@@ -91,9 +91,9 @@ public final class SampleUsage {
 
         // this time resolve the vars
         Omakase.source(input)
-            .request(verbose)
-            .request(validation)
-            .request(resolve)
+            .use(verbose)
+            .use(validation)
+            .use(resolve)
             .process();
 
         System.out.printf("\n\nOUTPUT (resolved):\n");

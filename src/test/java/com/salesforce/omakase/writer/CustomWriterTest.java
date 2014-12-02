@@ -35,7 +35,7 @@ public class CustomWriterTest {
     public void testCustomWriter() {
         StyleWriter writer = StyleWriter.compressed();
         writer.override(Selector.class, new TestCustomWriter());
-        Omakase.source(".class{color:red}").add(writer).process();
+        Omakase.source(".class{color:red}").use(writer).process();
 
         assertThat(writer.write()).isEqualTo("CUSTOM.class{color:red}");
     }

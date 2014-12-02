@@ -259,10 +259,10 @@ public class InteractiveShell {
             if (input.isEmpty()) return "";
 
             Omakase.Request request = Omakase.source(input);
-            request.add(new StandardValidation());
-            request.add(new UnquotedIEFilterPlugin());
-            request.add(writer);
-            if (prefixer != null) request.add(prefixer);
+            request.use(new StandardValidation());
+            request.use(new UnquotedIEFilterPlugin());
+            request.use(writer);
+            if (prefixer != null) request.use(prefixer);
             request.process();
 
             return writer.write();

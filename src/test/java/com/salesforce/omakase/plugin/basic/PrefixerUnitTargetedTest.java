@@ -39,10 +39,10 @@ public class PrefixerUnitTargetedTest {
     private String process(String original, Prefixer prefixer, WriterMode mode) {
         StyleWriter writer = new StyleWriter(mode);
         Omakase.source(original)
-            .request(AutoRefiner.refineEverything())
-            .request(prefixer)
-            .request(PrefixPruner.prunePrefixedAtRules())
-            .request(writer)
+            .use(AutoRefiner.refineEverything())
+            .use(prefixer)
+            .use(PrefixPruner.prunePrefixedAtRules())
+            .use(writer)
             .process();
         return writer.write();
     }

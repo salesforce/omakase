@@ -40,10 +40,10 @@ public class RawFunctionRefinementTest {
     public void destroyedNoLongerBroadcasted() {
         Omakase
             .source(".test{color:test(abc)}")
-            .request(new AutoRefiner().all())
-            .request(new StandardValidation())
-            .request(new Ref())
-            .request(new Plugin() {
+            .use(new AutoRefiner().all())
+            .use(new StandardValidation())
+            .use(new Ref())
+            .use(new Plugin() {
                 @Rework
                 public void test(RawFunction raw) {
                     raw.args("xyz");

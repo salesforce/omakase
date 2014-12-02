@@ -38,14 +38,14 @@ public class ConditionalsValidatorTest {
     public void validatesBadBlockSyntax() {
         String src = "@if {.class{color:red}}";
         exception.expect(FatalException.class);
-        Omakase.source(src).request(new ConditionalsValidator()).process();
+        Omakase.source(src).use(new ConditionalsValidator()).process();
     }
 
     @Test
     public void validatesBadInnerSyntax() {
         String src = "@if(ie7) {.class{color:red}";
         exception.expect(FatalException.class);
-        Omakase.source(src).request(new ConditionalsValidator()).process();
+        Omakase.source(src).use(new ConditionalsValidator()).process();
     }
 
     @Test
@@ -53,15 +53,15 @@ public class ConditionalsValidatorTest {
         String src = "@if(ie8) {.class{color:red}}";
         exception.expect(FatalException.class);
         exception.expectMessage("Invalid condition");
-        Omakase.source(src).request(new ConditionalsValidator("ie7")).process();
+        Omakase.source(src).use(new ConditionalsValidator("ie7")).process();
     }
 
     @Test
     public void dependenciesWhenConditionalsPresent() {
         String src = "@if(ie8) {.class{color:red}}";
         PluginRegistry registry = Omakase.source(src)
-            .request(new Conditionals())
-            .request(new ConditionalsValidator())
+            .use(new Conditionals())
+            .use(new ConditionalsValidator())
             .process();
 
         assertThat(registry.retrieve(Conditionals.class).get().manager().isPassthroughMode()).isFalse();
@@ -71,7 +71,7 @@ public class ConditionalsValidatorTest {
     public void dependenciesWhenConditionalsNotPresent() {
         String src = "@if(ie8) {.class{color:red}}";
         PluginRegistry registry = Omakase.source(src)
-            .request(new ConditionalsValidator())
+            .use(new ConditionalsValidator())
             .process();
 
         assertThat(registry.retrieve(Conditionals.class).get().manager().isPassthroughMode()).isTrue();

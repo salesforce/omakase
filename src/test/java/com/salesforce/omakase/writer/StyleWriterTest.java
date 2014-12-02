@@ -68,28 +68,28 @@ public class StyleWriterTest {
     @Test
     public void write() {
         StyleWriter writer = StyleWriter.compressed();
-        Omakase.source(".test{color:red}").request(writer).process();
+        Omakase.source(".test{color:red}").use(writer).process();
         assertThat(writer.write()).isEqualTo(".test{color:red}");
     }
 
     @Test
     public void writeWithComments() {
         StyleWriter writer = StyleWriter.compressed().writeComments(true);
-        Omakase.source("/*test*/.test{color:red}").request(writer).process();
+        Omakase.source("/*test*/.test{color:red}").use(writer).process();
         assertThat(writer.write()).isEqualTo("/*test*/.test{color:red}");
     }
 
     @Test
     public void writeWithCommentsOnlyAnnotated() {
         StyleWriter writer = StyleWriter.compressed().writeComments(true, true);
-        Omakase.source("/*@yes*/.test{/*no*/color:red}").request(writer).process();
+        Omakase.source("/*@yes*/.test{/*no*/color:red}").use(writer).process();
         assertThat(writer.write()).isEqualTo("/*@yes*/.test{color:red}");
     }
 
     @Test
     public void writeWithOrphanedComments() {
         StyleWriter writer = StyleWriter.compressed().writeComments(true);
-        Omakase.source(".test{color:red/*test*/}").request(writer).process();
+        Omakase.source(".test{color:red/*test*/}").use(writer).process();
         assertThat(writer.write()).isEqualTo(".test{color:red/*test*/}");
     }
 
@@ -97,7 +97,7 @@ public class StyleWriterTest {
     public void writeToAppendable() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
         StringBuilder builder = new StringBuilder();
-        Omakase.source(".test{color:red}").request(writer).process();
+        Omakase.source(".test{color:red}").use(writer).process();
         writer.writeTo(builder);
         assertThat(builder.toString()).isEqualTo(".test{color:red}");
     }
@@ -107,7 +107,7 @@ public class StyleWriterTest {
         StyleWriter writer = StyleWriter.compressed();
         SampleCustomWriter sample = new SampleCustomWriter();
         writer.override(Selector.class, sample);
-        Omakase.source(".test{color:red}").request(writer).process();
+        Omakase.source(".test{color:red}").use(writer).process();
         writer.write();
         assertThat(sample.called).isTrue();
     }

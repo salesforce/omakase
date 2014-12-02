@@ -47,10 +47,10 @@ public final class Debug {
         Prefixer prefixer = Prefixer.defaultBrowserSupport();
 
         Omakase.source(source)
-            .request(writer)
-            .request(new StandardValidation())
-            .request(prefixer)
-            .request(new Plugin() {
+            .use(writer)
+            .use(new StandardValidation())
+            .use(prefixer)
+            .use(new Plugin() {
 
             })
             .process();

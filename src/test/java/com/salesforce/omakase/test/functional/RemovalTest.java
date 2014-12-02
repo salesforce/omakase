@@ -51,22 +51,22 @@ public class RemovalTest {
     public void destroyedNoLongerBroadcasted() {
         Omakase
             .source(".test{color:red}")
-            .request(new AutoRefiner().all())
-            .request(new StandardValidation())
-            .request(new Plugin() {
+            .use(new AutoRefiner().all())
+            .use(new StandardValidation())
+            .use(new Plugin() {
                 @Rework
                 public void test(Declaration d) {
                     increment();
                     d.destroy();
                 }
             })
-            .request(new Plugin() {
+            .use(new Plugin() {
                 @Rework
                 public void test(Declaration d) {
                     increment();
                 }
             })
-            .request(new Plugin() {
+            .use(new Plugin() {
                 @Validate
                 public void test(Declaration d, ErrorManager em) {
                     increment();

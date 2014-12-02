@@ -50,7 +50,7 @@ public class ConditionalsCollectorTest {
     @Before
     public void setup() {
         collector = new ConditionalsCollector();
-        Omakase.source(SOURCE).request(collector).process();
+        Omakase.source(SOURCE).use(collector).process();
     }
 
     @Test

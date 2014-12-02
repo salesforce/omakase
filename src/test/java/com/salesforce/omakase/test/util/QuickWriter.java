@@ -43,7 +43,7 @@ public final class QuickWriter {
     public static void writeAllModes(CharSequence input) throws IOException {
         StyleWriter writer = new StyleWriter();
         Omakase.source(input)
-            .request(writer)
+            .use(writer)
             .process();
 
         writer.mode(WriterMode.VERBOSE);
@@ -68,8 +68,8 @@ public final class QuickWriter {
 
         writer = new StyleWriter();
         Omakase.source(input)
-            .request(new AutoRefiner().all())
-            .request(writer)
+            .use(new AutoRefiner().all())
+            .use(writer)
             .process();
 
         writer.mode(WriterMode.VERBOSE);

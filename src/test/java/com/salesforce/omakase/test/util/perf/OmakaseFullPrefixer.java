@@ -48,7 +48,7 @@ public final class OmakaseFullPrefixer implements PerfTestParser {
 
         PrefixPruner pruner = PrefixPruner.prunePrefixedAtRules();
 
-        Omakase.source(input).request(PluginSet.normal()).request(prefixer).request(pruner).process();
+        Omakase.source(input).use(PluginSet.normal()).use(prefixer).use(pruner).process();
     }
 }
 

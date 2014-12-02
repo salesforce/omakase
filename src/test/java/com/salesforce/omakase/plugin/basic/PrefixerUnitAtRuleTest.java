@@ -38,10 +38,10 @@ public class PrefixerUnitAtRuleTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
         Omakase.source(original)
-            .request(AutoRefiner.refineEverything())
-            .request(prefixer)
-            .request(PrefixPruner.prunePrefixedAtRules())
-            .request(writer)
+            .use(AutoRefiner.refineEverything())
+            .use(prefixer)
+            .use(PrefixPruner.prunePrefixedAtRules())
+            .use(writer)
             .process();
         return writer.write();
     }

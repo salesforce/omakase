@@ -92,7 +92,7 @@ public final class Omakase {
      * This object allows you to add plugins in order to specify the validation, rework, etc... performed on the processed code.
      * See {@link Plugin} for more information.
      * <p/>
-     * Use {@link #request(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used by
+     * Use {@link #use(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used by
      * default.
      */
     public static final class Request {
@@ -110,98 +110,38 @@ public final class Omakase {
 
         /**
          * Registers a plugin to process or utilize the parsed source code.
-         * <p/>
-         * This is equivalent to {@link #request(Plugin...)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
          *
          * @param plugins
          *     The plugin(s) to add.
          *
          * @return this, for chaining.
          */
-        public Request add(Plugin... plugins) {
-            return request(plugins);
+        public Request use(Plugin... plugins) {
+            return use(Lists.newArrayList(plugins));
         }
 
         /**
          * Registers a plugin to process or utilize the parsed source code.
-         * <p/>
-         * This is equivalent to {@link #add(Plugin...)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param plugins
-         *     The plugin(s) to add.
-         *
-         * @return this, for chaining.
-         */
-        public Request request(Plugin... plugins) {
-            return request(Lists.newArrayList(plugins));
-        }
-
-        /**
-         * Registers a plugin to process or utilize the parsed source code.
-         * <p/>
-         * This is equivalent to {@link #request(Iterable)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
          *
          * @param plugins
          *     The plugins to add.
          *
          * @return this, for chaining.
          */
-        public Request add(Iterable<? extends Plugin> plugins) {
-            return request(plugins);
-        }
-
-        /**
-         * Registers a plugin to process or utilize the parsed source code.
-         * <p/>
-         * This method is equivalent to {@link #add(Iterable)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param plugins
-         *     The plugins to add.
-         *
-         * @return this, for chaining.
-         */
-        public Request request(Iterable<? extends Plugin> plugins) {
+        public Request use(Iterable<? extends Plugin> plugins) {
             context.register(plugins);
             return this;
         }
 
         /**
          * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
-         * <p/>
-         * This is equivalent to {@link #request(ErrorManager)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
          *
          * @param em
          *     The error manager.
          *
          * @return this, for chaining.
          */
-        public Request add(ErrorManager em) {
-            return request(em);
-        }
-
-        /**
-         * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
-         * <p/>
-         * This is equivalent to {@link #add(ErrorManager)}. Choose based on which reads better for your usage ("request" is
-         * preferred, however "add" is more fluent when you can't inline the whole request and must make individual calls
-         * instead).
-         *
-         * @param em
-         *     The error manager.
-         *
-         * @return this, for chaining.
-         */
-        public Request request(ErrorManager em) {
+        public Request use(ErrorManager em) {
             this.em = checkNotNull(em, "the error manager cannot be null");
             return this;
         }
