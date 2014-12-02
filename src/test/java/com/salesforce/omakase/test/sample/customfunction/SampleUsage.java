@@ -48,7 +48,7 @@ import java.util.Map;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"SpellCheckingInspection", "JavaDoc", "UtilityClassWithoutPrivateConstructor"})
+@SuppressWarnings("ALL")
 public final class SampleUsage {
     // the sample variables
     private static final Map<String, String> VARS = ImmutableMap.<String, String>builder()
@@ -70,11 +70,17 @@ public final class SampleUsage {
             "  background: custom-var(primary-color)\n" +
             "}";
 
+        System.out.println("Sample Custom Function\n");
+
+        System.out.println("INPUT:\n--------------------");
+        System.out.println(input);
+        System.out.println();
+
         // setup the plugins we want
         StyleWriter verbose = StyleWriter.verbose();
         StandardValidation validation = new StandardValidation();
         CustomVarPlugin passthrough = new CustomVarPlugin(Mode.PASSTHROUGH, VARS);
-        CustomVarPlugin resolve = new CustomVarPlugin(Mode.RESOLVE, VARS);
+        CustomVarPlugin resolving = new CustomVarPlugin(Mode.RESOLVE, VARS);
         CustomVarCounter counting = new CustomVarCounter();
 
         // parse without resolving the vars, but count them
@@ -85,7 +91,7 @@ public final class SampleUsage {
             .use(counting)
             .process();
 
-        System.out.printf("OUTPUT (passthrough):\n");
+        System.out.println("\nOUTPUT (passthrough):\n-------------------------");
         verbose.writeTo(System.out);
         counting.summarize(System.out);
 
@@ -93,10 +99,10 @@ public final class SampleUsage {
         Omakase.source(input)
             .use(verbose)
             .use(validation)
-            .use(resolve)
+            .use(resolving)
             .process();
 
-        System.out.printf("\n\nOUTPUT (resolved):\n");
+        System.out.println("\n\n\nOUTPUT (resolved):\n-------------------------");
         verbose.writeTo(System.out);
 
         System.out.println("\n\n");

@@ -66,7 +66,10 @@ public final class SampleUsage {
             "  color: #6f9ff1;\n" +
             "}";
 
-        System.out.println("INPUT:\n");
+
+        System.out.println("Sample Custom Selector\n");
+
+        System.out.println("INPUT:\n--------------------");
         System.out.println(input);
 
         // setup the plugins we want
@@ -81,7 +84,7 @@ public final class SampleUsage {
             .use(placeholders)
             .process();
 
-        System.out.println("\n\nOUTPUT:\n");
+        System.out.println("\n\nOUTPUT:\n--------------------");
         verbose.writeTo(System.out);
     }
 }

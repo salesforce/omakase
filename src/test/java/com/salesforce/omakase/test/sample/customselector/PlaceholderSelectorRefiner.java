@@ -62,7 +62,7 @@ public class PlaceholderSelectorRefiner implements SelectorRefiner {
         } else if (content.contains(PlaceholderTokens.PIPE.symbol())) {
             // PLACEHOLDER REF `.selector|name`
 
-            // parse the normal selectors
+            // parse the normal selectors, they will automatically be broadcasted
             ParserFactory.complexSelectorParser().parse(source, broadcaster, refiner);
 
             // parse the reference
