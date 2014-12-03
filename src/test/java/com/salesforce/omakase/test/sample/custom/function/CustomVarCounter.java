@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample.customfunction;
+package com.salesforce.omakase.test.sample.custom.function;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;

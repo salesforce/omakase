@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample.customselector;
+package com.salesforce.omakase.test.sample.custom.selector;
 
 import com.salesforce.omakase.parser.token.BaseTokenFactory;
 import com.salesforce.omakase.parser.token.Token;

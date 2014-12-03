@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample.customfunction;
+package com.salesforce.omakase.test.sample.custom.function;
 
 import com.salesforce.omakase.ast.declaration.AbstractTerm;
 import com.salesforce.omakase.ast.declaration.FunctionValue;

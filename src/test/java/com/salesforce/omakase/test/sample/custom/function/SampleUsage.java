@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample.customfunction;
+package com.salesforce.omakase.test.sample.custom.function;
 
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.test.sample.customfunction.CustomVarRefiner.Mode;
+import com.salesforce.omakase.test.sample.custom.function.CustomVarRefiner.Mode;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;

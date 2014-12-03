@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.test.sample.customselector;
+package com.salesforce.omakase.test.sample.custom.function;
 
-import com.google.common.base.Suppliers;
-import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.RefinerRegistry;
-import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
+
+import java.util.Map;
 
 /**
  * This is the actual plugin that gets registered with the parser.
@@ -28,19 +28,15 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class PlaceholderSelectorPlugin implements SyntaxPlugin, DependentPlugin {
-    private static final PlaceholderTokenFactory TOKEN_FACTORY = new PlaceholderTokenFactory();
+public class CustomVarPlugin implements SyntaxPlugin {
+    private final FunctionRefiner refiner;
 
-    @Override
-    public void dependencies(PluginRegistry registry) {
-        // this ensures our token factory is registered, but allows for another plugin to have
-        // registered an instance of the same token factory class already
-        registry.requireTokenFactory(PlaceholderTokenFactory.class, Suppliers.ofInstance(TOKEN_FACTORY));
+    public CustomVarPlugin(CustomVarRefiner.Mode mode, Map<String, String> vars) {
+        this.refiner = new CustomVarRefiner(mode, vars);
     }
 
     @Override
     public void registerRefiners(RefinerRegistry registry) {
-        // register our refiner
-        registry.register(new PlaceholderSelectorRefiner());
+        registry.register(refiner);
     }
 }
