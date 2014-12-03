@@ -69,7 +69,7 @@ Use the `StyleWriter` plugin to write the processed CSS:
 
 ```java
 StyleWriter verbose = StyleWriter.verbose();
-Omakase.source(input).request(verbose).process();
+Omakase.source(input).use(verbose).process();
 String out = verbose.write();
 ```
 
@@ -77,7 +77,7 @@ You can also write to an `Appendable`
 
 ```java
 StyleWriter verbose = StyleWriter.verbose();
-Omakase.source(input).request(verbose).process();
+Omakase.source(input).use(verbose).process();
 StringBuilder builder = new StringBuilder();
 String out = verbose.writeTo(builder);
 ```
@@ -113,7 +113,7 @@ In Omakase, _validation_ refers to both actual syntax validation (e.g., that the
 All validation is written and registered as plugins. To enable the standard validations, register an instance of the `StandardValidation` plugin:
 
 ```java
-Omakase.source(input).request(new StandardValidation()).process();
+Omakase.source(input).use(new StandardValidation()).process();
 ```
 
 This auto-refines every selector, declaration and at-rule (see the "AutoRefiner" section below for more information on auto-refinement) and registers the standard list of built-in validators.
@@ -140,7 +140,7 @@ The `SyntaxTree` plugin is an extremely simple plugin that only grabs and stores
 
 ```java
 SyntaxTree tree = new SyntaxTree();
-Omakase.source(input).request(tree).process();
+Omakase.source(input).use(tree).process();
 Stylesheet stylesheet = tree.stylesheet();
 System.out.println("#statements = " + stylesheet.statements().size());
 ```
@@ -161,7 +161,7 @@ Many plugins will automatically register an `AutoRefiner` as a dependency anyway
 
 ```java
 AutoRefiner refinement = new AutoRefiner().all();
-Omakase.source(input).request(refinement).process();
+Omakase.source(input).use(refinement).process();
 ```
 
 You may be wondering when you *wouldn't* want auto refinement. The main use-case is when you need to perform dynamic substitions in the CSS. You first parse the CSS with auto-refinement (automatically done when a StandardValidation plugin is added). This ensures you actually have valid CSS. You can store this preprocessed source code in memory or on the filesystem.
@@ -190,7 +190,7 @@ To use conditionals, register the `Conditionals` plugin:
 
 ```java
 Conditionals conditionals = new Conditionals("ie7");
-Omakase.source(input).request(conditionals).process();
+Omakase.source(input).use(conditionals).process();
 ```
 
 You can manage the set of *true conditions* to print out variations of the CSS:
@@ -198,7 +198,7 @@ You can manage the set of *true conditions* to print out variations of the CSS:
 ```java
 Conditionals conditionals = new Conditionals();
 StyleWriter writer = StyleWriter.compressed();
-Omakase.source(input).request(conditionals).request(writer).process();
+Omakase.source(input).use(conditionals).use(writer).process();
 
 // ie7
 conditionals.manager().replaceTrueConditions("ie7");
@@ -230,7 +230,7 @@ The `ConditionalsCollector` plugin can be used when you need to know what condit
 StyleWriter writer = StyleWriter.compressed();
 Conditionals conditionals = new Conditionals();
 ConditionalsCollector collector = new ConditionalsCollector();
-Omakase.source(input).request(conditionals).request(collector).request(writer).process();
+Omakase.source(input).use(conditionals).use(collector).use(writer).process();
 
 Map<String, String> variations = new HashMap<String, String>();
 variations.put("default", writer.write());
@@ -249,7 +249,7 @@ The `ConditionalsValidator` plugin can be used to ensure only certain conditions
 
 ```java
 ConditionalsValidator validation = new ConditionalsValidator("ie8", "ie9", "ie10", "chrome", "firefox");
-Omakase.source(input).request(validation).process();
+Omakase.source(input).use(validation).process();
 ```
 
 Note that `ConditionalsValidator` automatically registers an instance of the `Conditionals` plugin as well. If you are explicitly adding the `Conditionals` plugin, it must be registered *before* the `ConditionalsValidator` instance.
@@ -260,7 +260,7 @@ If you are in the unfortunate situation of using crappy legacy IE filters then t
 
 ```java
 UnquotedIEFilterPlugin ieFilters = new UnquotedIEFilterPlugin();
-Omakase.source(input).request(ieFilters).process();
+Omakase.source(input).use(ieFilters).process();
 ```
 
 Note that *quoted* IE filters do not require this plugin. An example of an unquoted IE filter:
@@ -303,7 +303,7 @@ Here is how you would register the `Prefixer` plugin using the default browser l
 
 ```java
 Prefixer prefixer = Prefixer.defaultBrowserSupport();
-Omakase.source(input).request(prefixer).process();
+Omakase.source(input).use(prefixer).process();
 ```
 
 The default browser version support includes the last four versions of iOS Safari, last two versions of Chrome and Firefox, last three of Android, IE 7+, and the latest versions of Safari, IE Mobile and Opera Mini.
@@ -316,7 +316,7 @@ prefixing.support().all(Browser.IE);
 prefixing.support().latest(Browser.FIREFOX);
 prefixing.support().browser(Browser.SAFARI, 6.1);
 prefixing.support().last(Browser.SAFARI, 2);
-Omakase.source(input).request(prefixing).process();
+Omakase.source(input).use(prefixing).process();
 ```
 
 This is cumulative, so you can also add extra support to the defaults instead.
@@ -454,7 +454,7 @@ Pending further explanation, it's usually a good idea to add the `PrefixPruner` 
 ```java
 Prefixer prefixer = Prefixer.defaultBrowserSupport();
 PrefixPruner pruning = PrefixPruner.prunePrefixedAtRules;
-Omakase.source(input).request(prefixer).request(pruning).process();
+Omakase.source(input).use(prefixer).use(pruning).process();
 ```
 
 This will remove prefixed declarations inside of prefixed at rules, where the declaration's prefix doesn't match the at-rules prefix.
@@ -776,7 +776,7 @@ The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily 
 You can alternatively specify your own `ErrorManager` implementation, for example to store all errors and present them in full at once at the end of parsing. To do so, create a class that implements the `ErrorManager` interface and provide it during parser setup:
 
 ```java
-Omakase.source(input).request(myCustomErrorManager).process();
+Omakase.source(input).use(myCustomErrorManager).process();
 ```
 
 ### Custom writers
@@ -808,7 +808,7 @@ Afterwards, register this custom writer with the `StyleWriter` instance:
 ```java
 StyleWriter writer = StyleWriter.compressed();
 writer.override(Selector.class, new MyCustomWriter());
-Omakase.source(".class{color:red}").request(writer).process();
+Omakase.source(".class{color:red}").use(writer).process();
 ```
 
 You can only register one override per AST object type.

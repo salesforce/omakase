@@ -49,7 +49,7 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * <p/>
  * Example usage:
  * <pre>
- * <code>Omakase.source(input).request(new UnquotedIEFilterPlugin()).(...).process()</code>
+ * <code>Omakase.source(input).use(new UnquotedIEFilterPlugin()).(...).process()</code>
  * </pre>
  *
  * @author nmcwilliams

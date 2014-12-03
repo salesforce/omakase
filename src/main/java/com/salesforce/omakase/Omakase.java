@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <code><pre>
  *     StandardValidation validation = new StandardValidation();
  *     StyleWriter verbose = StyleWriter.verbose();
- *     Omakase.source(input).request(validation).request(verbose).process();
+ *     Omakase.source(input).use(validation).use(verbose).process();
  *     verbose.writeTo(System.out);
  * </pre></code>
  * Example:
@@ -46,9 +46,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     StyleWriter inline = StyleWriter.inline();
  * <p/>
  *     Omakase.source(input)
- *         .request(validation)
- *         .request(inline)
- *         .request(new Plugin() {
+ *         .use(validation)
+ *         .use(inline)
+ *         .use(new Plugin() {
  *             {@code @}Rework
  *             public void rework(Selector selector) {
  *                 ...

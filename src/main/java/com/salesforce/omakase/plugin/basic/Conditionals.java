@@ -38,7 +38,7 @@ import java.util.Set;
  * To enable conditionals, register an instance of this plugin during parser setup:
  * <pre>
  * Conditionals conditionals = new Conditionals("ie7");
- * Omakase.source(input).request(conditionals).process();
+ * Omakase.source(input).use(conditionals).process();
  * </pre>
  * <p/>
  * For more information on using and configuring conditionals see the main readme file.

@@ -76,7 +76,7 @@ import static com.salesforce.omakase.plugin.basic.PrefixerHandlers.*;
  * <p/>
  *     AutoRefiner refinement = new AutoRefiner().all();
  * <p/>
- *     Omakase.source(cssSource).request(refinement).request(prefixing).process();
+ *     Omakase.source(cssSource).use(refinement).use(prefixing).process();
  * </code></pre>
  * <p/>
  * In some cases at-rules scoped by a prefixed name may have non-applicable prefixes added. For example:

@@ -39,17 +39,17 @@ import static com.google.common.base.Preconditions.*;
  * Examples:
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
- * Omakase.source(input).request(verbose).process();
+ * Omakase.source(input).use(verbose).process();
  * String css = verbose.write();
  * </code></pre>
  * <pre><code>
  * StyleWriter compressed = StyleWriter.compressed();
- * Omakase.source(input).request(compressed).process();
+ * Omakase.source(input).use(compressed).process();
  * String css = compressed.write();
  * </code></pre>
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
- * Omakase.source(input).request(verbose).process();
+ * Omakase.source(input).use(verbose).process();
  * verbose.writeTo(System.out);
  * </code></pre>
  * <pre><code>
