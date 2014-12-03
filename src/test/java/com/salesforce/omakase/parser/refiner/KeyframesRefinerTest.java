@@ -54,7 +54,7 @@ public class KeyframesRefinerTest {
     public void returnsFalseIfNotApplicable() {
         AtRule ar = new AtRule(1, 1, "blah",
             new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "50%{top:100px}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.NONE);
         assertThat(ar.isRefined()).isFalse();
     }
 
@@ -62,7 +62,7 @@ public class KeyframesRefinerTest {
     public void returnsFalseIfNotApplicableAndPrefixed() {
         AtRule ar = new AtRule(1, 1, "-webkit-blah",
             new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "50%{top:100px}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.NONE);
         assertThat(ar.isRefined()).isFalse();
     }
 
@@ -70,7 +70,7 @@ public class KeyframesRefinerTest {
     public void returnsTrueIfMatches() {
         AtRule ar = new AtRule(1, 1, "keyframes",
             new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "50%{top:100px}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(GenericAtRuleExpression.class).isPresent()).isTrue();
         assertThat(broadcaster.find(GenericAtRuleBlock.class).isPresent()).isTrue();
     }
@@ -79,7 +79,7 @@ public class KeyframesRefinerTest {
     public void returnsTrueIfMatchesPrefix() {
         AtRule ar = new AtRule(1, 1, "-webkit-keyframes",
             new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "50%{top:100px}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(GenericAtRuleExpression.class).isPresent()).isTrue();
         assertThat(broadcaster.find(GenericAtRuleBlock.class).isPresent()).isTrue();
     }

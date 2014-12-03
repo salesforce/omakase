@@ -23,6 +23,7 @@ import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class CustomVarRefiner implements FunctionRefiner {
     }
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
         // we only want to refine things with our name
         if (raw.name().equals(CustomVarFunction.NAME)) {
 
@@ -72,8 +73,8 @@ public class CustomVarRefiner implements FunctionRefiner {
                 ParserFactory.termSequenceParser().parse(source, broadcaster, refiner);
             }
 
-            return true;
+            return Refinement.FULL;
         }
-        return false;
+        return Refinement.NONE;
     }
 }

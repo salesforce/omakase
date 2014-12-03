@@ -31,6 +31,7 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
 import com.salesforce.omakase.parser.refiner.DeclarationRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.token.Tokens;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class MixinRefiner implements AtRuleRefiner, DeclarationRefiner {
 
     /** handles mixin definitions (at-rule) */
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
         if (atRule.name().equals("mixin")) {
             // must have an expression, which contains the name and params definition
             if (!atRule.rawExpression().isPresent()) throw new ParserException(atRule, "missing mixin name and args");
@@ -103,17 +104,17 @@ public class MixinRefiner implements AtRuleRefiner, DeclarationRefiner {
             // broadcast the mixin (and by doing so it will automatically be associated with the at-rule)
             broadcaster.broadcast(mixin);
 
-            return true;
+            return Refinement.FULL;
         }
-        return false;
+        return Refinement.NONE;
     }
 
     /** handles mixin references within rules, i.e., the thing that starts with "+" */
     @Override
-    public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
         // only check raw declarations
         if (!declaration.rawPropertyName().isPresent() || !declaration.rawPropertyValue().isPresent()) {
-            return false;
+            return Refinement.NONE;
         }
 
         RawSyntax rawName = declaration.rawPropertyName().get();
@@ -155,8 +156,8 @@ public class MixinRefiner implements AtRuleRefiner, DeclarationRefiner {
             PropertyValue propertyValue = PropertyValue.of(mixinRef);
             propertyValue.propagateBroadcast(broadcaster); // this handles broadcasting the inner mixin ref too
 
-            return true;
+            return Refinement.FULL;
         }
-        return false;
+        return Refinement.NONE;
     }
 }

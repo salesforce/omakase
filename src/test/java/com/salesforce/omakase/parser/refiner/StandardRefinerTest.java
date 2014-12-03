@@ -21,6 +21,7 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.LinearGradientFunctionValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
@@ -109,6 +110,16 @@ public class StandardRefinerTest {
     }
 
     @Test
+    public void refinedUnknownFunctionValue() {
+        RawFunction raw = new RawFunction(5, 2, "unknown", "red, yellow");
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        new StandardRefiner().refine(raw, qb, new MasterRefiner(qb));
+
+        assertThat(qb.all()).hasSize(1);
+        assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(GenericFunctionValue.class);
+    }
+    
+    @Test
     public void refinedUrlFunctionValue() {
         RawFunction raw = new RawFunction(5, 2, "url", "one.png");
         QueryableBroadcaster qb = new QueryableBroadcaster();
@@ -129,28 +140,38 @@ public class StandardRefinerTest {
     }
 
     @Test
+    public void doesntRefineUnknownAtRule() {
+        MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
+        AtRule ar = new AtRule(1, 1, "blah", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
+        Refinement result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+
+        assertThat(result).isSameAs(Refinement.NONE);
+    }
+
+    @Test
     public void refinedMediaQuery() {
         MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        boolean result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+        Refinement result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
-        assertThat(result).isTrue();
+        assertThat(result).isSameAs(Refinement.FULL);
     }
 
     @Test
     public void refinesKeyframes() {
         MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "keyframes", new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "from{top:0%} to{top:100%}"), refiner);
-        boolean result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+        Refinement result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
-        assertThat(result).isTrue();
+        assertThat(result).isSameAs(Refinement.FULL);
     }
 
     @Test
     public void refinesFontFace() {
         MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, "font-family:MyFont; src:url(MyFont.ttf);"), refiner);
-        boolean result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
-        assertThat(result).isTrue();
+        Refinement result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+
+        assertThat(result).isSameAs(Refinement.FULL);
     }
 }

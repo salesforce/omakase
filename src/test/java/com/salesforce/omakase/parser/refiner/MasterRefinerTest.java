@@ -24,7 +24,9 @@ import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -35,9 +37,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class MasterRefinerTest {
+    @Rule public final ExpectedException exception = ExpectedException.none();
+
     @Test
     public void customAtRuleRefinement() {
-        AtRuleStrategy strategy = new AtRuleStrategy();
+        AtRuleStrategyFull strategy = new AtRuleStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
         assertThat(strategy.called).isTrue();
@@ -45,8 +49,8 @@ public class MasterRefinerTest {
 
     @Test
     public void testMultipleCustomAtRule() {
-        AtRuleStrategyFalse strategy1 = new AtRuleStrategyFalse();
-        AtRuleStrategy strategy2 = new AtRuleStrategy();
+        AtRuleStrategyNone strategy1 = new AtRuleStrategyNone();
+        AtRuleStrategyFull strategy2 = new AtRuleStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
         assertThat(strategy1.called).isTrue();
@@ -62,7 +66,7 @@ public class MasterRefinerTest {
 
     @Test
     public void customSelectorRefinement() {
-        SelectorStrategy strategy = new SelectorStrategy();
+        SelectorStrategyFull strategy = new SelectorStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
         assertThat(strategy.called).isTrue();
@@ -70,8 +74,8 @@ public class MasterRefinerTest {
 
     @Test
     public void testMultipleCustomSelector() {
-        SelectorStrategyFalse strategy1 = new SelectorStrategyFalse();
-        SelectorStrategy strategy2 = new SelectorStrategy();
+        SelectorStrategyNone strategy1 = new SelectorStrategyNone();
+        SelectorStrategyFull strategy2 = new SelectorStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
         assertThat(strategy1.called).isTrue();
@@ -88,7 +92,7 @@ public class MasterRefinerTest {
 
     @Test
     public void customDeclarationRefinement() {
-        DeclarationStrategy strategy = new DeclarationStrategy();
+        DeclarationStrategyFull strategy = new DeclarationStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
         assertThat(strategy.called).isTrue();
@@ -96,8 +100,8 @@ public class MasterRefinerTest {
 
     @Test
     public void testMultipleCustomDeclaration() {
-        DeclarationStrategyFalse strategy1 = new DeclarationStrategyFalse();
-        DeclarationStrategy strategy2 = new DeclarationStrategy();
+        DeclarationStrategyNone strategy1 = new DeclarationStrategyNone();
+        DeclarationStrategyFull strategy2 = new DeclarationStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
         assertThat(strategy1.called).isTrue();
@@ -113,7 +117,7 @@ public class MasterRefinerTest {
 
     @Test
     public void functionValueRefinement() {
-        FunctionStrategy strategy = new FunctionStrategy();
+        FunctionStrategyFull strategy = new FunctionStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy);
         refiner.refine(new RawFunction(1, 1, "test", "blah"));
         assertThat(strategy.called).isTrue();
@@ -122,7 +126,7 @@ public class MasterRefinerTest {
     @Test
     public void testMultipleFunctionValue() {
         FunctionStrategyFalse strategy1 = new FunctionStrategyFalse();
-        FunctionStrategy strategy2 = new FunctionStrategy();
+        FunctionStrategyFull strategy2 = new FunctionStrategyFull();
         MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy1).register(strategy2);
         refiner.refine(new RawFunction(1, 1, "test", "blah"));
         assertThat(strategy1.called).isTrue();
@@ -135,74 +139,365 @@ public class MasterRefinerTest {
         refiner.refine(new RawFunction(1, 1, "test", "blah")); // no errors
     }
 
-    public static final class AtRuleStrategy implements AtRuleRefiner {
+    @Test
+    public void atRuleAllNone() {
+        AtRuleStrategyNone strategy1 = new AtRuleStrategyNone();
+        AtRuleStrategyNone strategy2 = new AtRuleStrategyNone();
+        AtRuleStrategyNone strategy3 = new AtRuleStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
+
+        assertThat(result).isSameAs(Refinement.NONE);
+    }
+
+    @Test
+    public void atRuleAnyFull() {
+        AtRuleStrategyFull strategy1 = new AtRuleStrategyFull();
+        AtRuleStrategyNone strategy2 = new AtRuleStrategyNone();
+        AtRuleStrategyNone strategy3 = new AtRuleStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL);
+    }
+
+    @Test
+    public void atRulePartialThenFull() {
+        AtRuleStrategyPartial strategy1 = new AtRuleStrategyPartial();
+        AtRuleStrategyNone strategy2 = new AtRuleStrategyNone();
+        AtRuleStrategyFull strategy3 = new AtRuleStrategyFull();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL);
+    }
+
+    @Test
+    public void atRuleIfPartialThenNone() {
+        AtRuleStrategyPartial strategy1 = new AtRuleStrategyPartial();
+        AtRuleStrategyNone strategy2 = new AtRuleStrategyNone();
+        AtRuleStrategyNone strategy3 = new AtRuleStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
+
+        assertThat(result).isSameAs(Refinement.PARTIAL);
+    }
+
+    @Test
+    public void atRuleAllPartial() {
+        AtRuleStrategyPartial strategy1 = new AtRuleStrategyPartial();
+        AtRuleStrategyPartial strategy2 = new AtRuleStrategyPartial();
+        AtRuleStrategyPartial strategy3 = new AtRuleStrategyPartial();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new AtRule(5, 5, "t", new RawSyntax(1, 1, "t"), new RawSyntax(1, 1, "t"), refiner));
+
+        assertThat(result).isSameAs(Refinement.PARTIAL);
+    }
+
+    @Test
+    public void selectorAllNone() {
+        SelectorStrategyNone strategy1 = new SelectorStrategyNone();
+        SelectorStrategyNone strategy2 = new SelectorStrategyNone();
+        SelectorStrategyNone strategy3 = new SelectorStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL); //standard takes it
+    }
+
+    @Test
+    public void selectorAnyFull() {
+        SelectorStrategyFull strategy1 = new SelectorStrategyFull();
+        SelectorStrategyNone strategy2 = new SelectorStrategyNone();
+        SelectorStrategyNone strategy3 = new SelectorStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL);
+    }
+
+    @Test
+    public void selectorPartialThenFull() {
+        SelectorStrategyPartial strategy1 = new SelectorStrategyPartial();
+        SelectorStrategyNone strategy2 = new SelectorStrategyNone();
+        SelectorStrategyFull strategy3 = new SelectorStrategyFull();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL);
+    }
+
+    @Test
+    public void selectorIfPartialThenNone() {
+        SelectorStrategyPartial strategy1 = new SelectorStrategyPartial();
+        SelectorStrategyNone strategy2 = new SelectorStrategyNone();
+        SelectorStrategyNone strategy3 = new SelectorStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL); // standard takes it
+    }
+
+    @Test
+    public void selectorAllPartial() {
+        SelectorStrategyPartial strategy1 = new SelectorStrategyPartial();
+        SelectorStrategyPartial strategy2 = new SelectorStrategyPartial();
+        SelectorStrategyPartial strategy3 = new SelectorStrategyPartial();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Selector(new RawSyntax(1, 1, "p"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL); // standard takes it
+    }
+
+    @Test
+    public void declarationAllNone() {
+        DeclarationStrategyNone strategy1 = new DeclarationStrategyNone();
+        DeclarationStrategyNone strategy2 = new DeclarationStrategyNone();
+        DeclarationStrategyNone strategy3 = new DeclarationStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL); //standard takes it
+    }
+
+    @Test
+    public void declarationAnyFull() {
+        DeclarationStrategyFull strategy1 = new DeclarationStrategyFull();
+        DeclarationStrategyNone strategy2 = new DeclarationStrategyNone();
+        DeclarationStrategyNone strategy3 = new DeclarationStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL);
+    }
+
+    @Test
+    public void declarationPartialThenFull() {
+        DeclarationStrategyPartial strategy1 = new DeclarationStrategyPartial();
+        DeclarationStrategyNone strategy2 = new DeclarationStrategyNone();
+        DeclarationStrategyFull strategy3 = new DeclarationStrategyFull();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL);
+    }
+
+    @Test
+    public void declarationIfPartialThenNone() {
+        DeclarationStrategyPartial strategy1 = new DeclarationStrategyPartial();
+        DeclarationStrategyNone strategy2 = new DeclarationStrategyNone();
+        DeclarationStrategyNone strategy3 = new DeclarationStrategyNone();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL); // standard takes it
+    }
+
+    @Test
+    public void declarationAllPartial() {
+        DeclarationStrategyPartial strategy1 = new DeclarationStrategyPartial();
+        DeclarationStrategyPartial strategy2 = new DeclarationStrategyPartial();
+        DeclarationStrategyPartial strategy3 = new DeclarationStrategyPartial();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster())
+            .register(strategy1)
+            .register(strategy2)
+            .register(strategy3);
+
+        Refinement result = refiner.refine(new Declaration(new RawSyntax(5, 5, "color"), new RawSyntax(5, 5, "red"), refiner));
+
+        assertThat(result).isSameAs(Refinement.FULL); // standard takes it
+    }
+
+    @Test
+    public void rawFunctionPartialThrowsError() {
+        FunctionStrategyPartial strategy1 = new FunctionStrategyPartial();
+
+        MasterRefiner refiner = new MasterRefiner(new QueryableBroadcaster()).register(strategy1);
+
+        exception.expect(UnsupportedOperationException.class);
+        refiner.refine(new RawFunction(1, 1, "test", "blah"));
+    }
+
+    public static final class AtRuleStrategyFull implements AtRuleRefiner {
         boolean called;
 
         @Override
-        public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return true;
+            return Refinement.FULL;
         }
     }
 
-    public static final class AtRuleStrategyFalse implements AtRuleRefiner {
+    public static final class AtRuleStrategyPartial implements AtRuleRefiner {
         boolean called;
 
         @Override
-        public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return false;
+            return Refinement.PARTIAL;
         }
     }
 
-    public static final class SelectorStrategy implements SelectorRefiner {
+    public static final class AtRuleStrategyNone implements AtRuleRefiner {
         boolean called;
 
         @Override
-        public boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return true;
+            return Refinement.NONE;
         }
     }
 
-    public static final class SelectorStrategyFalse implements SelectorRefiner {
+    public static final class SelectorStrategyFull implements SelectorRefiner {
         boolean called;
 
         @Override
-        public boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return false;
+            return Refinement.FULL;
         }
     }
 
-    public static final class DeclarationStrategy implements DeclarationRefiner {
+    public static final class SelectorStrategyPartial implements SelectorRefiner {
         boolean called;
 
         @Override
-        public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
+            called = true;
+            return Refinement.PARTIAL;
+        }
+    }
+
+    public static final class SelectorStrategyNone implements SelectorRefiner {
+        boolean called;
+
+        @Override
+        public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
+            called = true;
+            return Refinement.NONE;
+        }
+    }
+
+    public static final class DeclarationStrategyFull implements DeclarationRefiner {
+        boolean called;
+
+        @Override
+        public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
             broadcaster.broadcast(new PropertyValue());
-            return true;
+            return Refinement.FULL;
         }
     }
 
-    public static final class DeclarationStrategyFalse implements DeclarationRefiner {
+    public static final class DeclarationStrategyPartial implements DeclarationRefiner {
         boolean called;
 
         @Override
-        public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return false;
+            broadcaster.broadcast(new PropertyValue());
+            return Refinement.PARTIAL;
         }
     }
 
-    public static final class FunctionStrategy implements FunctionRefiner {
+    public static final class DeclarationStrategyNone implements DeclarationRefiner {
         boolean called;
 
         @Override
-        public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return true;
+            return Refinement.NONE;
+        }
+    }
+
+    public static final class FunctionStrategyFull implements FunctionRefiner {
+        boolean called;
+
+        @Override
+        public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+            called = true;
+            return Refinement.FULL;
+        }
+    }
+
+    public static final class FunctionStrategyPartial implements FunctionRefiner {
+        boolean called;
+
+        @Override
+        public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+            called = true;
+            return Refinement.PARTIAL;
         }
     }
 
@@ -210,9 +505,9 @@ public class MasterRefinerTest {
         boolean called;
 
         @Override
-        public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
-            return false;
+            return Refinement.NONE;
         }
     }
 }

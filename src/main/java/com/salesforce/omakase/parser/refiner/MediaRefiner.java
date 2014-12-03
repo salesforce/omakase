@@ -24,7 +24,6 @@ import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
@@ -42,11 +41,8 @@ public final class MediaRefiner implements AtRuleRefiner {
     private static final String MEDIA = "media";
 
     @Override
-    public boolean refine(AtRule rule, Broadcaster broadcaster, MasterRefiner refiner) {
-        if (!rule.name().equals(MEDIA)) return false;
-
-        boolean refinedExpression = false;
-        boolean refinedBlock = false;
+    public Refinement refine(AtRule rule, Broadcaster broadcaster, MasterRefiner refiner) {
+        if (!rule.name().equals(MEDIA)) return Refinement.NONE;
 
         // refine the expression (unless it was already done)
         if (!rule.hasRefinedExpression()) {
@@ -65,8 +61,6 @@ public final class MediaRefiner implements AtRuleRefiner {
 
             // nothing should be left in the expression content
             if (!source.skipWhitepace().eof()) throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
-
-            refinedExpression = true;
         }
 
         // refine the block (unless it was already done)
@@ -76,10 +70,7 @@ public final class MediaRefiner implements AtRuleRefiner {
 
             Source source = new Source(rule.rawBlock().get());
 
-            // we want to hold off emitting statements until they get shuffled into a syntax collection. This is so that any plugins
-            // that depend on order (appending, prepending, etc...) will work.
-            QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
-            QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
+            QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
             // parse the inner statements
             while (!source.eof()) {
@@ -96,13 +87,8 @@ public final class MediaRefiner implements AtRuleRefiner {
 
             // add orphaned comments
             genericBlock.orphanedComments(source.collectComments().flushComments());
-
-            // once they are in the syntax collection, now we can let them be broadcasted
-            queue.resume();
-
-            refinedBlock = true;
         }
 
-        return refinedExpression || refinedBlock;
+        return Refinement.FULL;
     }
 }

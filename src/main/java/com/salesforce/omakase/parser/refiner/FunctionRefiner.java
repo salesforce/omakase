@@ -76,8 +76,7 @@ public interface FunctionRefiner extends Refiner {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if refinement was performed, otherwise false. If true, no other registered {@link Refiner} objects will be
-     *         executed for the given {@link RawFunction} instance.
+     * @return One of the {@link Refinement} values.
      */
-    boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner);
+    Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner);
 }

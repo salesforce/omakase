@@ -24,6 +24,7 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.refiner.SelectorRefiner;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class PlaceholderSelectorRefiner implements SelectorRefiner {
     private final Map<String, PlaceholderSelector> placeholders = new HashMap<>();
 
     @Override
-    public boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
         String content = selector.rawContent().content();
         Source source = new Source(content);
         source.skipWhitepace();
@@ -58,7 +59,7 @@ public class PlaceholderSelectorRefiner implements SelectorRefiner {
             placeholders.put(placeholder.name(), placeholder);
             broadcaster.broadcast(placeholder);
 
-            return true;
+            return Refinement.FULL;
         } else if (content.contains(PlaceholderTokens.PIPE.symbol())) {
             // PLACEHOLDER REF `.selector|name`
 
@@ -76,9 +77,9 @@ public class PlaceholderSelectorRefiner implements SelectorRefiner {
             PlaceholderSelector placeholder = placeholders.get(name.get());
             if (placeholder == null) throw new ParserException(source, "Unknown placeholder selector '" + name.get() + "'");
             placeholder.addReference(selector);
-            return true;
+            return Refinement.FULL;
         }
 
-        return false;
+        return Refinement.NONE;
     }
 }

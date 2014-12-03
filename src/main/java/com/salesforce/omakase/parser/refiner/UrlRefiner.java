@@ -35,8 +35,8 @@ public final class UrlRefiner implements FunctionRefiner {
     private static final String NAME = "url";
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
-        if (!raw.name().equals(NAME)) return false;
+    public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+        if (!raw.name().equals(NAME)) return Refinement.NONE;
 
         // check for quotes
         Source source = new Source(raw.args(), raw.line(), raw.column());
@@ -61,6 +61,6 @@ public final class UrlRefiner implements FunctionRefiner {
         url.quotationMode(mode);
         broadcaster.broadcast(url);
 
-        return true;
+        return Refinement.FULL;
     }
 }

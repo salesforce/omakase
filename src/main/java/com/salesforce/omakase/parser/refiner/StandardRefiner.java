@@ -50,15 +50,22 @@ final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     );
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+        Refinement refinement = Refinement.NONE;
+
         for (AtRuleRefiner strategy : STANDARD_AT_RULES) {
-            if (strategy.refine(atRule, broadcaster, refiner)) return true;
+            Refinement result = strategy.refine(atRule, broadcaster, refiner);
+            if (result == Refinement.FULL) {
+                return Refinement.FULL;
+            } else if (result == Refinement.PARTIAL) {
+                refinement = Refinement.PARTIAL;
+            }
         }
-        return false;
+        return refinement;
     }
 
     @Override
-    public boolean refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
         // parse inner content
         Source source = new Source(selector.rawContent(), false);
         ParserFactory.complexSelectorParser().parse(source, broadcaster, refiner);
@@ -69,13 +76,11 @@ final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         // there should be nothing left
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_SELECTOR);
 
-        return true;
+        return Refinement.FULL;
     }
 
     @Override
-    public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
-        if (declaration.isRefined()) return false;
-
+    public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
         // parse inner content
         Source source = new Source(declaration.rawPropertyValue().get());
         ParserFactory.propertyValueParser().parse(source, broadcaster, refiner);
@@ -86,19 +91,24 @@ final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
         // there should be nothing left
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE, source.remaining());
 
-        return true;
+        return Refinement.FULL;
     }
 
     @Override
-    public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
         for (FunctionRefiner strategy : STANDARD_FUNCTIONS) {
-            if (strategy.refine(raw, broadcaster, refiner)) return true;
+            Refinement result = strategy.refine(raw, broadcaster, refiner);
+            assert result != Refinement.PARTIAL : "Partial refinement of RawFunctions is not supported";
+
+            if (result == Refinement.FULL) {
+                return Refinement.FULL;
+            }
         }
 
         GenericFunctionValue generic = new GenericFunctionValue(raw.line(), raw.column(), raw.name(), raw.args());
         generic.comments(raw);
         broadcaster.broadcast(generic);
 
-        return true;
+        return Refinement.FULL;
     }
 }

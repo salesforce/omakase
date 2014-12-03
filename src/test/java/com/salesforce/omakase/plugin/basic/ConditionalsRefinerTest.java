@@ -24,6 +24,7 @@ import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class ConditionalsRefinerTest {
     @Test
     public void returnsFalseForNonMatchingAtRule() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "{}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.NONE);
         assertThat(ar.isRefined()).isFalse();
     }
 
@@ -118,8 +119,8 @@ public class ConditionalsRefinerTest {
         AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
         new Stylesheet(broadcaster).append(ar);
 
-        boolean result = strategy.refine(ar, broadcaster, refiner);
-        assertThat(result).isTrue();
+        Refinement result = strategy.refine(ar, broadcaster, refiner);
+        assertThat(result).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(ConditionalAtRuleBlock.class).isPresent()).isTrue();
     }
 

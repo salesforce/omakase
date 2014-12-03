@@ -29,6 +29,7 @@ import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -53,9 +54,9 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
     }
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
         // must be named  "if"
-        if (!atRule.name().equals(IF)) return false;
+        if (!atRule.name().equals(IF)) return Refinement.NONE;
 
         // the at-rule must have an expression
         if (!atRule.rawExpression().isPresent()) {
@@ -108,6 +109,6 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
         // don't print out the name of the at-rule
         atRule.shouldWriteName(false);
 
-        return true;
+        return Refinement.FULL;
     }
 }

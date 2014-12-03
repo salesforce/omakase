@@ -45,7 +45,7 @@ public class LinearGradientRefinerTest {
     @Test
     public void returnsFalseForNonMatchingFunction() {
         RawFunction functionValue = new RawFunction(5, 2, "blah", "blah");
-        assertThat(linearRefiner.refine(functionValue, broadcaster, refiner)).isFalse();
+        assertThat(linearRefiner.refine(functionValue, broadcaster, refiner)).isSameAs(Refinement.NONE);
     }
 
     @Test

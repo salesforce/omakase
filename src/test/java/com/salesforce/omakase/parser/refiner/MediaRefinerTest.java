@@ -63,16 +63,16 @@ public class MediaRefinerTest {
     @Test
     public void returnsFalseIfNotApplicable() {
         AtRule ar = new AtRule(1, 1, "blah", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.NONE);
         assertThat(ar.isRefined()).isFalse();
     }
 
     @Test
-    public void doesntRefinedExpressionIfAlreadyRefined() {
+    public void doesntRefineExpressionIfAlreadyRefined() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
         TestExpression expression = new TestExpression();
         ar.expression(expression);
-        strategy.refine(ar, broadcaster, refiner);
+        Refinement refinement = strategy.refine(ar, broadcaster, refiner);
         assertThat(ar.expression().get()).isSameAs(expression);
     }
 
@@ -89,7 +89,7 @@ public class MediaRefinerTest {
     public void returnsTrueIfRefinedExpressionOnly() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
         ar.block(new TestBlock());
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(AtRuleExpression.class).isPresent()).isTrue();
     }
 
@@ -97,7 +97,7 @@ public class MediaRefinerTest {
     public void returnsTrueIfRefinedBlockOnly() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
         ar.expression(new TestExpression());
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(AtRuleBlock.class).isPresent()).isTrue();
     }
 
@@ -144,28 +144,28 @@ public class MediaRefinerTest {
     @Test
     public void setsTheExpression() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(ar.expression().isPresent()).isTrue();
     }
 
     @Test
     public void broadcastsTheExpression() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(MediaQueryList.class).isPresent()).isTrue();
     }
 
     @Test
     public void setsTheBlock() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(ar.block().isPresent()).isTrue();
     }
 
     @Test
     public void broadcastsTheBlock() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
         assertThat(broadcaster.find(com.salesforce.omakase.ast.Rule.class).isPresent()).isTrue();
     }
 

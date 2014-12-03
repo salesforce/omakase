@@ -50,9 +50,7 @@ public interface DeclarationRefiner extends Refiner {
      * @param refiner
      *     Pass this refiner to any parser methods that require one.
      *
-     * @return True if <em>complete</em> refinement was performed, otherwise false. If true, no other registered {@link
-     *         Refiner} objects will be executed for the given instance. It is acceptable for a refiner to refine only a
-     *         segment of the object and still return false.
+     * @return One of the {@link Refinement} values.
      */
-    boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner);
+    Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner);
 }

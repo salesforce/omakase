@@ -54,8 +54,8 @@ public class FontFaceRefiner implements AtRuleRefiner {
     private static final String FONT_FACE = "font-face";
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
-        if (!atRule.name().equals(FONT_FACE)) return false;
+    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+        if (!atRule.name().equals(FONT_FACE)) return Refinement.NONE;
 
         // shouldn't have an expression
         if (atRule.rawExpression().isPresent()) {
@@ -95,6 +95,6 @@ public class FontFaceRefiner implements AtRuleRefiner {
         // we didn't give the original broadcaster to the parser, so now ensure the block and child elements are broadcasted
         block.propagateBroadcast(broadcaster);
 
-        return true;
+        return Refinement.FULL;
     }
 }

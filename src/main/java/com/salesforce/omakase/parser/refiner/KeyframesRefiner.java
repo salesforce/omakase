@@ -45,10 +45,10 @@ public final class KeyframesRefiner implements AtRuleRefiner {
     private static final String KEYFRAMES = "keyframes";
 
     @Override
-    public boolean refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
+    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
         // @keyframes might be prefixed
         String name = Prefixes.unprefixed(atRule.name());
-        if (!name.equals(KEYFRAMES)) return false;
+        if (!name.equals(KEYFRAMES)) return Refinement.NONE;
 
         // must have a keyframes name
         if (!atRule.rawExpression().isPresent()) {
@@ -98,6 +98,6 @@ public final class KeyframesRefiner implements AtRuleRefiner {
         // once they are in the syntax collection, now we can let them be broadcasted
         queue.resume();
 
-        return true;
+        return Refinement.FULL;
     }
 }

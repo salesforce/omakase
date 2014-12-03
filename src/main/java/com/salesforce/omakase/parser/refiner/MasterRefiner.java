@@ -148,7 +148,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(AtRule atRule) {
+    public Refinement refine(AtRule atRule) {
         return refine(atRule, defaultBroadcaster);
     }
 
@@ -167,20 +167,33 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(AtRule atRule, Broadcaster broadcaster) {
+    public Refinement refine(AtRule atRule, Broadcaster broadcaster) {
+        Refinement refinement = Refinement.NONE;
+
+        // tru the custom refiners
         for (AtRuleRefiner strategy : atRuleRefiners) {
-            if (refine(atRule, broadcaster, strategy)) return true;
+            Refinement result = refine(atRule, broadcaster, strategy);
+            if (result == Refinement.FULL) {
+                return Refinement.FULL;
+            } else if (result == Refinement.PARTIAL) {
+                refinement = Refinement.PARTIAL;
+            }
         }
 
-        // fallback to the default refiner
-        return refine(atRule, broadcaster, STANDARD);
+        // fallback to the default refiner (refinement is currently either partial or none)
+        Refinement standard = refine(atRule, broadcaster, STANDARD);
+        return (standard == Refinement.FULL) ? Refinement.FULL : refinement;
     }
 
     /** attempts to refine an at-rule using the given refiner */
-    private boolean refine(AtRule atRule, Broadcaster broadcaster, AtRuleRefiner refiner) {
-        QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
+    private Refinement refine(AtRule atRule, Broadcaster broadcaster, AtRuleRefiner refiner) {
+        // use a queue so that we can hold off on broadcasting the the expression or block until we can automatically associate
+        // it with the parent at rule
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
 
-        if (refiner.refine(atRule, queryable, this)) {
+        Refinement result = refiner.refine(atRule, queryable, this);
+        if (result == Refinement.FULL || result == Refinement.PARTIAL) {
             // automatically add the expression if it was broadcasted
             Optional<AtRuleExpression> expression = queryable.find(AtRuleExpression.class);
             if (expression.isPresent()) {
@@ -193,10 +206,12 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
                 atRule.block(block.get());
             }
 
-            return true;
+            // once they are all added we're good to send them out
+            queue.resume();
+            return result;
         }
 
-        return false;
+        return Refinement.NONE;
     }
 
     /**
@@ -212,7 +227,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(Selector selector) {
+    public Refinement refine(Selector selector) {
         return refine(selector, defaultBroadcaster);
     }
 
@@ -231,34 +246,42 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(Selector selector, Broadcaster broadcaster) {
+    public Refinement refine(Selector selector, Broadcaster broadcaster) {
+        Refinement refinement = Refinement.NONE;
+
         // try the custom refiners
         for (SelectorRefiner strategy : selectorRefiners) {
-            if (refine(selector, broadcaster, strategy)) return true;
+            Refinement result = refine(selector, broadcaster, strategy);
+            if (result == Refinement.FULL) {
+                return Refinement.FULL;
+            } else if (result == Refinement.PARTIAL) {
+                refinement = Refinement.PARTIAL;
+            }
         }
 
-        // fallback to the default refiner
-        return refine(selector, broadcaster, STANDARD);
+        // fallback to the default refiner (refinement is currently either partial or none)
+        Refinement standard = refine(selector, broadcaster, STANDARD);
+        return (standard == Refinement.FULL) ? Refinement.FULL : refinement;
     }
 
     /** attempts to refine a selector using the given refiner */
-    private boolean refine(Selector selector, Broadcaster broadcaster, SelectorRefiner refiner) {
+    private Refinement refine(Selector selector, Broadcaster broadcaster, SelectorRefiner refiner) {
         // use a queue so that we can hold off on broadcasting the individual parts until we have them all. This makes rework
         // plugins that utilize order (#isFirst(), etc...) work smoothly.
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
         QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
 
-        if (refiner.refine(selector, queryable, this)) {
+        Refinement result = refiner.refine(selector, queryable, this);
+        if (result == Refinement.FULL || result == Refinement.PARTIAL) {
             // store the parsed selector parts
             selector.appendAll(queryable.filter(SelectorPart.class));
 
             // once they are all added we're good to send them out
             queue.resume();
-
-            return true;
+            return result;
         }
 
-        return false;
+        return Refinement.NONE;
     }
 
     /**
@@ -274,7 +297,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(Declaration declaration) {
+    public Refinement refine(Declaration declaration) {
         return refine(declaration, defaultBroadcaster);
     }
 
@@ -293,22 +316,33 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(Declaration declaration, Broadcaster broadcaster) {
+    public Refinement refine(Declaration declaration, Broadcaster broadcaster) {
+        Refinement refinement = Refinement.NONE;
+
+        // try the custom refiners
         for (DeclarationRefiner strategy : declarationRefiners) {
-            if (refine(declaration, broadcaster, strategy)) return true;
+            Refinement result = refine(declaration, broadcaster, strategy);
+            if (result == Refinement.FULL) {
+                return Refinement.FULL;
+            } else if (result == Refinement.PARTIAL) {
+                refinement = Refinement.PARTIAL;
+            }
+
         }
 
-        // fallback to the default refiner
-        return refine(declaration, broadcaster, STANDARD);
+        // fallback to the default refiner (refinement is currently either partial or none)
+        Refinement standard = refine(declaration, broadcaster, STANDARD);
+        return (standard == Refinement.FULL) ? Refinement.FULL : refinement;
     }
 
     /** attempts to refine a declaration using the given refiner */
-    private boolean refine(Declaration declaration, Broadcaster broadcaster, DeclarationRefiner refiner) {
+    private Refinement refine(Declaration declaration, Broadcaster broadcaster, DeclarationRefiner refiner) {
         // using a queue so that we can link everything together before terms, etc... are emitted
         QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause().alwaysFlush(RawFunction.class);
         SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, queue);
 
-        if (refiner.refine(declaration, single, this)) {
+        Refinement result = refiner.refine(declaration, single, this);
+        if (result == Refinement.FULL || result == Refinement.PARTIAL) {
             // store the parsed value
             Optional<PropertyValue> value = single.broadcasted();
             if (!value.isPresent()) throw new ParserException(declaration, Message.BAD_DECLARATION_REFINER, refiner);
@@ -316,11 +350,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
             // everything is linked so send the broadcasts out
             queue.resume();
-
-            return true;
+            return result;
         }
 
-        return false;
+        return Refinement.NONE;
     }
 
     /**
@@ -334,7 +367,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(RawFunction raw) {
+    public Refinement refine(RawFunction raw) {
         return refine(raw, defaultBroadcaster);
     }
 
@@ -351,9 +384,17 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      *
      * @return Whether refinement occurred or not.
      */
-    public boolean refine(RawFunction raw, Broadcaster broadcaster) {
+    public Refinement refine(RawFunction raw, Broadcaster broadcaster) {
+        Refinement refinement = Refinement.NONE;
+
+        // try the custom refiners
         for (FunctionRefiner strategy : functionRefiners) {
-            if (strategy.refine(raw, broadcaster, this)) return true;
+            Refinement result = strategy.refine(raw, broadcaster, this);
+            if (result == Refinement.FULL) {
+                return Refinement.FULL;
+            } else if (result == Refinement.PARTIAL) {
+                throw new UnsupportedOperationException("Partial refinement of RawFunctions is not supported");
+            }
         }
 
         // fallback to the default refiner

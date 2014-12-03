@@ -25,6 +25,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.parser.refiner.DeclarationRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
 
@@ -60,16 +61,16 @@ public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
     /** refiner */
     protected static final DeclarationRefiner REFINER = new DeclarationRefiner() {
         @Override
-        public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
             RawSyntax raw = declaration.rawPropertyValue().get();
 
             if (raw.content().startsWith("progid:")) {
                 PropertyValue pv = PropertyValue.of(new UnquotedIEFilter(raw.line(), raw.column(), raw.content()));
                 broadcaster.broadcast(pv);
-                return true;
+                return Refinement.FULL;
             }
 
-            return false;
+            return Refinement.NONE;
         }
     };
 

@@ -59,14 +59,14 @@ public class FontFaceRefinerTest {
     @Test
     public void returnsFalseIfNotApplicable() {
         AtRule ar = new AtRule(1, 1, "blah", null, new RawSyntax(2, 2, SAMPLE), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isFalse();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.NONE);
         assertThat(ar.isRefined()).isFalse();
     }
 
     @Test
     public void returnsTrueIfMatches() {
         AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, SAMPLE), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class FontFaceRefinerTest {
         // just test that it can handle it without stumbling
         String src = "font-family:MyFont; unicode-range: U+400-4ff";
         AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, src), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class FontFaceRefinerTest {
             "AEAAAALAIAAAwAwT1MvMggi/M4AAAC8AAAAYGNtYXAaVcxvAAAJHAAAAExnYXNwAAAAEAAAAWgAAAAIZ2x5Zqx71TYAAAFwAAATcGhlYWQJSKSJAAAU4AAAADZoaGVhJCMCPQAAFRgAAAAkaG10eDNAAJIAAJU8AAAAdGxvY2E6yD88AAAVsAAAADxtYXhwADIJQgAAFewAAAAgJmFtZcKc7PgAAJYMAAAJTnJvc3QAAwAAAAAXXAAAACAAAwIAAZAAJQAAAUwJZgAAAEcJTAFmAAAA9QA) " +
             "format('truetype');";
         AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, src), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
+        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.FULL);
     }
 
     @Test

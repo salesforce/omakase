@@ -22,6 +22,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.parser.refiner.FunctionRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
@@ -55,9 +56,9 @@ public class RawFunctionRefinementTest {
 
     private static final class Ref implements Plugin, FunctionRefiner {
         @Override
-        public boolean refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
+        public Refinement refine(RawFunction raw, Broadcaster broadcaster, MasterRefiner refiner) {
             assertThat(raw.args()).isEqualTo("xyz");
-            return false;
+            return Refinement.NONE;
         }
     }
 }

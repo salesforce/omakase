@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.util.Values;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class UnquotedIEFilterPluginTest {
     @Test
     public void refineDeclarationNoMatchReturnsFalse() {
         Declaration d = new Declaration(new RawSyntax(2, 3, "display"), new RawSyntax(2, 5, "none"), refiner);
-        assertThat(REFINER.refine(d, broadcaster, refiner)).isFalse();
+        assertThat(REFINER.refine(d, broadcaster, refiner)).isSameAs(Refinement.NONE);
         assertThat(d.isRefined()).isFalse();
     }
 
@@ -57,7 +58,7 @@ public class UnquotedIEFilterPluginTest {
         Declaration d = new Declaration(new RawSyntax(2, 3, "filter"), new RawSyntax(2, 5,
             "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)"), refiner);
 
-        assertThat(REFINER.refine(d, broadcaster, refiner)).isTrue();
+        assertThat(REFINER.refine(d, broadcaster, refiner)).isSameAs(Refinement.FULL);
         Optional<UnquotedIEFilter> ief = Values.as(UnquotedIEFilter.class, d.propertyValue());
         assertThat(ief.isPresent()).isTrue();
 

@@ -52,7 +52,7 @@ public class UrlRefinerTest {
     @Test
     public void returnsFalseForNonMatchingFunction() {
         RawFunction functionValue = new RawFunction(5, 2, "blah", "blah");
-        assertThat(urlRefiner.refine(functionValue, broadcaster, refiner)).isFalse();
+        assertThat(urlRefiner.refine(functionValue, broadcaster, refiner)).isSameAs(Refinement.NONE);
     }
 
     @Test
