@@ -69,7 +69,8 @@ public final class KeyframesRefiner implements AtRuleRefiner {
             throw new ParserException(source, Message.UNEXPECTED_KEYFRAME_NAME, source.remaining());
         }
 
-        atRule.expression(new GenericAtRuleExpression(ident.get()));
+        // create and broadcast the expression
+        broadcaster.broadcast(new GenericAtRuleExpression(ident.get()));
 
         // must have a block
         if (!atRule.rawBlock().isPresent()) {
@@ -91,8 +92,8 @@ public final class KeyframesRefiner implements AtRuleRefiner {
             if (!matched && !source.eof()) throw new ParserException(source, Message.UNPARSABLE_KEYFRAMES, source.remaining());
         }
 
-        // create and add the block
-        atRule.block(new GenericAtRuleBlock(queryable.filter(Statement.class), broadcaster));
+        // create and broadcast the block
+        broadcaster.broadcast(new GenericAtRuleBlock(queryable.filter(Statement.class), broadcaster));
 
         // once they are in the syntax collection, now we can let them be broadcasted
         queue.resume();

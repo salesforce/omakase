@@ -102,8 +102,7 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
         ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), manager, condition,
             queryable.filter(Statement.class), broadcaster);
 
-        // set and broadcast it
-        atRule.block(block);
+        // broadcast it
         broadcaster.broadcast(block);
 
         // don't print out the name of the at-rule

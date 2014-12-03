@@ -120,7 +120,7 @@ public class ConditionalsRefinerTest {
 
         boolean result = strategy.refine(ar, broadcaster, refiner);
         assertThat(result).isTrue();
-        assertThat(ar.isRefined()).isTrue();
+        assertThat(broadcaster.find(ConditionalAtRuleBlock.class).isPresent()).isTrue();
     }
 
     @Test

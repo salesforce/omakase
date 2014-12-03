@@ -132,25 +132,25 @@ public class StandardRefinerTest {
     public void refinedMediaQuery() {
         MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
-        new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+        boolean result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
-        assertThat(ar.isRefined()).isTrue();
+        assertThat(result).isTrue();
     }
 
     @Test
     public void refinesKeyframes() {
         MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "keyframes", new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "from{top:0%} to{top:100%}"), refiner);
-        new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+        boolean result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
 
-        assertThat(ar.isRefined()).isTrue();
+        assertThat(result).isTrue();
     }
 
     @Test
     public void refinesFontFace() {
         MasterRefiner refiner = new MasterRefiner(new StatusChangingBroadcaster());
         AtRule ar = new AtRule(1, 1, "font-face", null, new RawSyntax(2, 2, "font-family:MyFont; src:url(MyFont.ttf);"), refiner);
-        new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
-        assertThat(ar.isRefined()).isTrue();
+        boolean result = new StandardRefiner().refine(ar, refiner.broadcaster(), refiner);
+        assertThat(result).isTrue();
     }
 }

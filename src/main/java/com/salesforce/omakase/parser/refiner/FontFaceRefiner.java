@@ -92,9 +92,6 @@ public class FontFaceRefiner implements AtRuleRefiner {
             throw new ParserException(source, Message.UNPARSABLE_FONT_FACE, source.remaining());
         }
 
-        // add the block to the at rule
-        atRule.block(block);
-
         // we didn't give the original broadcaster to the parser, so now ensure the block and child elements are broadcasted
         block.propagateBroadcast(broadcaster);
 

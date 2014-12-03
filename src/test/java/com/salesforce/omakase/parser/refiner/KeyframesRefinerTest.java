@@ -19,6 +19,8 @@ package com.salesforce.omakase.parser.refiner;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
+import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import org.junit.Before;
@@ -69,7 +71,8 @@ public class KeyframesRefinerTest {
         AtRule ar = new AtRule(1, 1, "keyframes",
             new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "50%{top:100px}"), refiner);
         assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
-        assertThat(ar.isRefined()).isTrue();
+        assertThat(broadcaster.find(GenericAtRuleExpression.class).isPresent()).isTrue();
+        assertThat(broadcaster.find(GenericAtRuleBlock.class).isPresent()).isTrue();
     }
 
     @Test
@@ -77,7 +80,8 @@ public class KeyframesRefinerTest {
         AtRule ar = new AtRule(1, 1, "-webkit-keyframes",
             new RawSyntax(1, 1, "test"), new RawSyntax(2, 2, "50%{top:100px}"), refiner);
         assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
-        assertThat(ar.isRefined()).isTrue();
+        assertThat(broadcaster.find(GenericAtRuleExpression.class).isPresent()).isTrue();
+        assertThat(broadcaster.find(GenericAtRuleBlock.class).isPresent()).isTrue();
     }
 
     @Test

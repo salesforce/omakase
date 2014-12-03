@@ -90,7 +90,7 @@ public class MediaRefinerTest {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
         ar.block(new TestBlock());
         assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
-        assertThat(ar.expression().isPresent()).isTrue();
+        assertThat(broadcaster.find(AtRuleExpression.class).isPresent()).isTrue();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class MediaRefinerTest {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}"), refiner);
         ar.expression(new TestExpression());
         assertThat(strategy.refine(ar, broadcaster, refiner)).isTrue();
-        assertThat(ar.block().isPresent()).isTrue();
+        assertThat(broadcaster.find(AtRuleBlock.class).isPresent()).isTrue();
     }
 
     @Test

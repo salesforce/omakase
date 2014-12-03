@@ -62,7 +62,6 @@ public final class MediaRefiner implements AtRuleRefiner {
 
             // must have found a media query list
             if (!list.isPresent()) throw new ParserException(source, Message.DIDNT_FIND_MEDIA_LIST);
-            rule.expression(list.get());
 
             // nothing should be left in the expression content
             if (!source.skipWhitepace().eof()) throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
@@ -93,7 +92,7 @@ public final class MediaRefiner implements AtRuleRefiner {
 
             // create and add the block
             GenericAtRuleBlock genericBlock = new GenericAtRuleBlock(queryable.filter(Statement.class), broadcaster);
-            rule.block(genericBlock);
+            broadcaster.broadcast(genericBlock);
 
             // add orphaned comments
             genericBlock.orphanedComments(source.collectComments().flushComments());
