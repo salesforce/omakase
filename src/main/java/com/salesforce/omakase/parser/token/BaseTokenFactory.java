@@ -16,6 +16,8 @@
 
 package com.salesforce.omakase.parser.token;
 
+import com.google.common.base.Optional;
+
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
@@ -94,5 +96,12 @@ public class BaseTokenFactory implements TokenFactory {
     @Override
     public Token propertyNameEnd() {
         return COLON;
+    }
+
+    @Override
+    public Optional<Token> specialDeclarationBegin() {
+        // to allow for the the IE7 star hack - http://en.wikipedia.org/wiki/CSS_filter#Star_hack
+        // it's not part of the CSS spec, but it still needs to be handled
+        return Optional.<Token>of(Tokens.STAR);
     }
 }

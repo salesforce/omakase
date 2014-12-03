@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.parser.token;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.Parser;
@@ -116,4 +117,15 @@ public interface TokenFactory {
      * @return The {@link Token} representing what indicates the end of a property name.
      */
     Token propertyNameEnd();
+
+    /**
+     * Gets the {@link Token} representing an optional special character that may appear before a normal property name in a {@link
+     * Declaration}.
+     * <p/>
+     * For example, to enable the star hack the "*" token could be returned. If overriding this method, consider using a {@link
+     * CompoundToken} of the super class implementation.
+     *
+     * @return The {@link Token} representing an optional special {@link Declaration} start character.
+     */
+    Optional<Token> specialDeclarationBegin();
 }
