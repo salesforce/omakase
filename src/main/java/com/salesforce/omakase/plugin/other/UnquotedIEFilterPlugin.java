@@ -18,6 +18,7 @@ package com.salesforce.omakase.plugin.other;
 
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -63,7 +64,8 @@ public final class UnquotedIEFilterPlugin implements SyntaxPlugin {
             RawSyntax raw = declaration.rawPropertyValue().get();
 
             if (raw.content().startsWith("progid:")) {
-                declaration.propertyValue(new UnquotedIEFilter(raw.line(), raw.column(), raw.content()));
+                PropertyValue pv = PropertyValue.of(new UnquotedIEFilter(raw.line(), raw.column(), raw.content()));
+                broadcaster.broadcast(pv);
                 return true;
             }
 

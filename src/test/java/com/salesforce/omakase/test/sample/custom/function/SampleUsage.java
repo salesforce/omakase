@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * An example of using the sample custom function classes.
+ * An example of using the sample custom function classes in this package.
  * <p/>
  * The custom function represents a variable lookup, using the format <code>custom-var(varName)</code>.
  * <p/>
@@ -48,7 +48,7 @@ import java.util.Map;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "JavaDoc"})
 public final class SampleUsage {
     // the sample variables
     private static final Map<String, String> VARS = ImmutableMap.<String, String>builder()

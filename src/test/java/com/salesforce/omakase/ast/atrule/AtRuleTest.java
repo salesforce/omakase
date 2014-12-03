@@ -416,6 +416,18 @@ public class AtRuleTest {
         assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
     }
 
+    @Test
+    public void markAsMetadataRuleDoesntReplaceExistingExpression() {
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null, refiner);
+        CustomExpressionNotWritable expr = new CustomExpressionNotWritable();
+        ar.expression(expr);
+        ar.markAsMetadataRule();
+        assertThat(ar.shouldWriteName()).isFalse();
+        assertThat(ar.isRefined()).isTrue();
+        assertThat(ar.expression().get()).isSameAs(expr);
+        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
+    }
+
     public static final class CustomExpression extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {

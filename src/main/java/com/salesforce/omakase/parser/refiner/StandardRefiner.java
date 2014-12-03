@@ -16,18 +16,14 @@
 
 package com.salesforce.omakase.parser.refiner;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueuingBroadcaster;
-import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
@@ -80,28 +76,15 @@ final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
         if (declaration.isRefined()) return false;
 
-        // using a queue so that we can link everything together before terms, etc... are emitted
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause().alwaysFlush(RawFunction.class);
-
-        SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, queue);
+        // parse inner content
         Source source = new Source(declaration.rawPropertyValue().get());
-
-        // parse the contents
-        ParserFactory.propertyValueParser().parse(source, single, refiner);
+        ParserFactory.propertyValueParser().parse(source, broadcaster, refiner);
 
         // grab orphaned comments
         declaration.orphanedComments(source.collectComments().flushComments());
 
-        // there should be nothing left in the source
+        // there should be nothing left
         if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_DECLARATION_VALUE, source.remaining());
-
-        // store the parsed value
-        Optional<PropertyValue> value = single.broadcasted();
-        if (!value.isPresent()) throw new ParserException(source, Message.EXPECTED_VALUE);
-        declaration.propertyValue(value.get());
-
-        // everything is linked so send the broadcasts out
-        queue.resume();
 
         return true;
     }

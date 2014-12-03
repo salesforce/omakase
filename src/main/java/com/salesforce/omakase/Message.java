@@ -98,7 +98,8 @@ public enum Message {
     UNEXPECTED_EXPRESSION_FONT_FACE("Unexpected expression after '@font-face'"),
     UNICODE_LONG("More than 6 hexidecimal or wildcard characters in a unicode range is not allowed"),
     HEX_AFTER_WILDCARD("Hexidecimal characters are not allowed after a wildcard in a unicode range"),
-    WILDCARD_NOT_ALLOWED("Wildcard not allowed in unicode interval ranges");
+    WILDCARD_NOT_ALLOWED("Wildcard not allowed in unicode interval ranges"),
+    BAD_DECLARATION_REFINER("DeclarationRefiner '%s' returned true but did not broadcast a PropertyValue");
 
     private final String message;
 

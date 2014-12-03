@@ -24,7 +24,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.io.IOException;
 
 /**
- * An example of using the sample custom selector classes.
+ * An example of using the sample custom selector classes in this package.
  * <p/>
  * This feature mimics the "placeholder" selector functionality common in CSS preprocessors. Placeholder selectors are written
  * with a special syntax using the format <code>%name</code>. The placeholder has a rule and declarations as normal, however the
@@ -77,7 +77,7 @@ public final class SampleUsage {
         StandardValidation validation = new StandardValidation();
         PlaceholderSelectorPlugin placeholders = new PlaceholderSelectorPlugin();
 
-        // parse without resolving the vars, but count them
+        // parse
         Omakase.source(input)
             .use(verbose)
             .use(validation)

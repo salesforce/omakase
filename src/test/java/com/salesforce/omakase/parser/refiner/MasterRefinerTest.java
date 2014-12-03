@@ -19,6 +19,7 @@ package com.salesforce.omakase.parser.refiner;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -180,6 +181,7 @@ public class MasterRefinerTest {
         @Override
         public boolean refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
             called = true;
+            broadcaster.broadcast(new PropertyValue());
             return true;
         }
     }

@@ -255,7 +255,9 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      */
     public AtRule markAsMetadataRule() {
         shouldWriteName(false);
-        expression(MetadataExpression.instance());
+        if (!expression.isPresent()) {
+            expression(MetadataExpression.instance());
+        }
         return this;
     }
 

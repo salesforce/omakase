@@ -16,16 +16,23 @@
 
 package com.salesforce.omakase.parser.refiner;
 
+import com.google.common.base.Optional;
+import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.AtRuleBlock;
+import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
+import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.token.StandardTokenFactory;
 import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
@@ -162,11 +169,34 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      */
     public boolean refine(AtRule atRule, Broadcaster broadcaster) {
         for (AtRuleRefiner strategy : atRuleRefiners) {
-            if (strategy.refine(atRule, broadcaster, this)) return true;
+            if (refine(atRule, broadcaster, strategy)) return true;
         }
 
         // fallback to the default refiner
-        return STANDARD.refine(atRule, broadcaster, this);
+        return refine(atRule, broadcaster, STANDARD);
+    }
+
+    /** attempts to refine an at-rule using the given refiner */
+    private boolean refine(AtRule atRule, Broadcaster broadcaster, AtRuleRefiner refiner) {
+        QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
+
+        if (refiner.refine(atRule, queryable, this)) {
+            // automatically add the expression if it was broadcasted
+            Optional<AtRuleExpression> expression = queryable.find(AtRuleExpression.class);
+            if (expression.isPresent()) {
+                atRule.expression(expression.get());
+            }
+
+            // automatically add the block if it was broadcasted
+            Optional<AtRuleBlock> block = queryable.find(AtRuleBlock.class);
+            if (block.isPresent()) {
+                atRule.block(block.get());
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -265,11 +295,32 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      */
     public boolean refine(Declaration declaration, Broadcaster broadcaster) {
         for (DeclarationRefiner strategy : declarationRefiners) {
-            if (strategy.refine(declaration, broadcaster, this)) return true;
+            if (refine(declaration, broadcaster, strategy)) return true;
         }
 
         // fallback to the default refiner
-        return STANDARD.refine(declaration, broadcaster, this);
+        return refine(declaration, broadcaster, STANDARD);
+    }
+
+    /** attempts to refine a declaration using the given refiner */
+    private boolean refine(Declaration declaration, Broadcaster broadcaster, DeclarationRefiner refiner) {
+        // using a queue so that we can link everything together before terms, etc... are emitted
+        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause().alwaysFlush(RawFunction.class);
+        SingleInterestBroadcaster<PropertyValue> single = SingleInterestBroadcaster.of(PropertyValue.class, queue);
+
+        if (refiner.refine(declaration, single, this)) {
+            // store the parsed value
+            Optional<PropertyValue> value = single.broadcasted();
+            if (!value.isPresent()) throw new ParserException(declaration, Message.BAD_DECLARATION_REFINER, refiner);
+            declaration.propertyValue(value.get());
+
+            // everything is linked so send the broadcasts out
+            queue.resume();
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
