@@ -132,13 +132,15 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     /**
-     * Specifies whether the name should be written out. This might be specified as false by custom {@link Refiner} objects where
-     * the name of the custom at-rule is not applicable in the final CSS source.
+     * Specifies whether the name should be written out. This might be specified as false by custom {@link Refiner}s where the
+     * name of the custom at-rule is not applicable in the final CSS source.
      *
      * @param shouldWriteName
      *     Whether the at-rule name (and @ symbol) should be written out.
      *
      * @return this, for chaining.
+     *
+     * @see #markAsMetadataRule()
      */
     public AtRule shouldWriteName(boolean shouldWriteName) {
         this.shouldWriteName = shouldWriteName;
@@ -175,6 +177,9 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Sets the {@link AtRuleExpression}.
+     * <p/>
+     * Note that custom {@link AtRuleRefiner}s should usually just broadcast a {@link AtRuleExpression} instead of calling this
+     * method directly.
      *
      * @param expression
      *     The expression.
@@ -194,6 +199,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     /**
      * Gets the at-rule expression, if present. Note that this attempts refinement on the expression unless a refined expression
      * is already set.
+     * <p/>
+     * <b>Important:</b> do not call this from within a custom refiner! It will result in a StackOverflow error.
      *
      * @return The expression, or {@link Optional#absent()} if not present.
      */
@@ -212,6 +219,9 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Sets the {@link AtRuleBlock}.
+     * <p/>
+     * Note that custom {@link AtRuleRefiner}s should usually just broadcast an {@link AtRuleBlock} instead of calling this method
+     * directly.
      *
      * @param block
      *     The block.
@@ -230,6 +240,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Gets the at-rule block, if present. Note that this attempts refinement on the block unless a refined block is already set.
+     * <p/>
+     * <b>Important:</b> do not call this from within a custom refiner! It will result in a StackOverflow error.
      *
      * @return The block, or {@link Optional#absent()} if not present.
      */

@@ -71,7 +71,7 @@ public final class SampleUsage {
             "  +vertical-align: true;\n" +
             "}";
 
-        System.out.println("Sample Custom Declaration\n");
+        System.out.println("Sample Custom Declaration and At Rule\n");
 
         System.out.println("INPUT:\n--------------------");
         System.out.println(input);
