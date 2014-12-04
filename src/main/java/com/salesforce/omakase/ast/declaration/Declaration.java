@@ -368,7 +368,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * Similar to {@link #parent()}, except this will return the containing {@link AtRule}.
      * <p/>
      * This is only applicable for declarations directly within a {@link Rule}, directly within an {@link AtRuleBlock}, directly
-     * within a {@link AtRule}.
+     * within an {@link AtRule}.
      *
      * @return The parent {@link AtRule}, or {@link Optional#absent()} if not present or if the parent hierarchy doesn't match as
      * described above.

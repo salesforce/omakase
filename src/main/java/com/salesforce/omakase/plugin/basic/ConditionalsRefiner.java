@@ -23,7 +23,6 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.broadcast.QueuingBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
@@ -79,11 +78,7 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
 
         // setup stuff for parsing inner statements
         source = new Source(atRule.rawBlock().get());
-
-        // we want to hold off emitting statements until they get shuffled into a syntax collection. This is so that any plugins
-        // that depend on order (appending, prepending, etc...) will work.
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
-        QueryableBroadcaster queryable = new QueryableBroadcaster(queue);
+        QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // parse the inner statements
         while (!source.eof()) {
@@ -96,14 +91,9 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
             }
         }
 
-        // once they are in the syntax collection, now we can let them be broadcasted
-        queue.resume();
-
-        // create the new conditional node
+        // create the new conditional node and broadcast it
         ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), manager, condition,
             queryable.filter(Statement.class), broadcaster);
-
-        // broadcast it
         broadcaster.broadcast(block);
 
         // don't print out the name of the at-rule

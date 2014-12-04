@@ -143,9 +143,8 @@ public abstract class AbstractSyntax implements Syntax {
      */
     @SuppressWarnings("unchecked")
     protected final <T extends Syntax> T copiedFrom(T original) {
-        checkArgument(original.getClass().equals(getClass()), "cannot copy from a mismatched type");
         this.comments(original).orphanedComments(original);
-        return (T)this; // safe from checkArgument above
+        return (T)this;
     }
 
     @Override

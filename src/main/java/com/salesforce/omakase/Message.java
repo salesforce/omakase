@@ -79,7 +79,7 @@ public enum Message {
     MISSING_CONDITIONAL_EXPRESSION("Missing expression for conditional at-rule (@if). Expressions must be within " +
         "parenthesis, " +
         "e.g., (ie7)"),
-    MISSING_CONDITIONAL_BLOCK("Missing block for the conditional at-rule (@oif). The block must be encased within curly " +
+    MISSING_CONDITIONAL_BLOCK("Missing block for the conditional at-rule (@if). The block must be encased within curly " +
         "braces {}"),
     UNEXPECTED_AFTER_QUOTE("Unexpected content in url after closing quote '%s'"),
     MALFORMED_DECLARATION("Malformed declaration. Did you forget to add the property name or the colon delimiter?"),
