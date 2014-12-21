@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
@@ -35,11 +34,6 @@ public abstract class AbstractSelectorPart extends AbstractGroupable<Selector, S
      */
     public AbstractSelectorPart(int line, int column) {
         super(line, column);
-    }
-
-    @Override
-    public Optional<Selector> parentSelector() {
-        return parent();
     }
 
     @Override

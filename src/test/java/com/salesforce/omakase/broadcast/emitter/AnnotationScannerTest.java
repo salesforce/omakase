@@ -19,6 +19,7 @@ package com.salesforce.omakase.broadcast.emitter;
 import com.google.common.collect.Maps;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.broadcast.annotation.Restrict;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
@@ -102,36 +103,58 @@ public class AnnotationScannerTest {
         scanner.scan(new InvalidValidate());
     }
 
+    @Test
+    public void findsRestrict() {
+        Map<String, Subscription> map = Maps.newHashMap();
+        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
+            map.put(subscription.method().getName(), subscription);
+        }
+
+        Subscription preprocess = map.get("observe2");
+        assertThat(preprocess != null).describedAs("expected to find method annotated with @Restrict");
+        assertThat(preprocess.restriction().isPresent()).isTrue();
+    }
+
+    @Test
+    public void noRestrict() {
+        Map<String, Subscription> map = Maps.newHashMap();
+        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
+            map.put(subscription.method().getName(), subscription);
+        }
+
+        Subscription preprocess = map.get("observe");
+        assertThat(preprocess.restriction().isPresent()).isFalse();
+    }
+
+
     @SuppressWarnings("UnusedParameters")
     public static final class AllValid implements Plugin {
         @Observe
-        public void observe(ClassSelector cs) {
-        }
+        public void observe(ClassSelector cs) {}
 
         @Rework
-        public void rework(ClassSelector cs) {
-        }
+        public void rework(ClassSelector cs) {}
 
         @Validate
-        public void validate(ClassSelector cs, ErrorManager em) {
-        }
+        public void validate(ClassSelector cs, ErrorManager em) {}
+
+        @Observe
+        @Restrict(dynamicUnits = false)
+        public void observe2(ClassSelector cs) {}
     }
 
     public static final class InvalidObserve implements Plugin {
         @Observe
-        public void observe() {
-        }
+        public void observe() {}
     }
 
     public static final class InvalidRework implements Plugin {
         @Rework
-        public void rework() {
-        }
+        public void rework() {}
     }
 
     public static final class InvalidValidate implements Plugin {
         @Validate
-        public void validate() {
-        }
+        public void validate() {}
     }
 }

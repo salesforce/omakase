@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Restrict;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
@@ -56,4 +57,14 @@ public interface Refinable<T> {
      * @return The refined object.
      */
     T refine();
+
+    /**
+     * Returns whether this unit contains raw content (i.e., content from an underlying source). For dynamically created units (e
+     * .g., through java code) this will normally be false.
+     *
+     * @return True if this unit contains raw content.
+     *
+     * @see Restrict
+     */
+    boolean containsRawSyntax();
 }

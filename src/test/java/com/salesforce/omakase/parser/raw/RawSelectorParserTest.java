@@ -136,7 +136,7 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
 
         for (ParseResult<String> result : results) {
             Selector s = result.broadcaster.findOnly(Selector.class).get();
-            assertThat(s.rawContent().content()).isEqualTo(result.expected);
+            assertThat(s.raw().content()).isEqualTo(result.expected);
         }
     }
 

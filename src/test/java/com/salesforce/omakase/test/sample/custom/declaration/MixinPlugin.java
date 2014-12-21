@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.test.sample.custom.declaration;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Suppliers;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -54,9 +53,7 @@ public class MixinPlugin implements SyntaxPlugin, DependentPlugin {
      */
     @Rework
     public void resolve(MixinReference mixinReference) {
-        Optional<Declaration> placeholder = mixinReference.declaration();
-        if (!placeholder.isPresent()) return;
-
+        Declaration placeholder = mixinReference.declaration();
         Mixin mixin = mixinReference.mixin();
 
         for (Declaration declaration : mixin.declarations()) {
@@ -71,10 +68,10 @@ public class MixinPlugin implements SyntaxPlugin, DependentPlugin {
             }
 
             Declaration cloned = new Declaration(rawName, rawProp, null);
-            placeholder.get().prepend(cloned);
+            placeholder.prepend(cloned);
         }
 
         // not strictly necessary as it won't write out anyway, but we're done with it
-        placeholder.get().destroy();
+        placeholder.destroy();
     }
 }

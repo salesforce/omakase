@@ -152,7 +152,7 @@ public class PropertyValueTest {
     @Test
     public void defaultNoParentDeclaration() {
         PropertyValue val = PropertyValue.of(NumericalValue.of(1));
-        assertThat(val.declaration().isPresent()).isFalse();
+        assertThat(val.declaration()).isNull();
     }
 
     @Test
@@ -160,7 +160,7 @@ public class PropertyValueTest {
         PropertyValue val = PropertyValue.of(NumericalValue.of(0));
         Declaration d = new Declaration(Property.FONT_SIZE, NumericalValue.of(1, "px"));
         val.declaration(d);
-        assertThat(val.declaration().get()).isSameAs(d);
+        assertThat(val.declaration()).isSameAs(d);
     }
 
     @Test

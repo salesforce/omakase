@@ -17,6 +17,12 @@
 package com.salesforce.omakase.test;
 
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.broadcast.annotation.Rework;
+import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
@@ -28,17 +34,13 @@ import java.io.IOException;
 /** Temp test for debugging. */
 @SuppressWarnings({"JavaDoc", "UnusedDeclaration", "SpellCheckingInspection"})
 public final class Debug {
-    public static final String SRC = "@font-face {\n" +
-        "  font-family: 'Ampersand';\n" +
-        "  src: local('Times New Roman');\n" +
-        "  unicode-range: U+26;\n" +
-        "}";
+    public static final String SRC = ".THIS{color: red}";
 
     private Debug() {}
 
     public static void main(String[] args) throws IOException {
-        // withPlugins(SRC);
-        writeAllModes(SRC);
+        withPlugins(SRC);
+//        writeAllModes(SRC);
     }
 
     private static void withPlugins(String source) throws IOException {
@@ -49,9 +51,12 @@ public final class Debug {
         Omakase.source(source)
             .use(writer)
             .use(new StandardValidation())
-            .use(prefixer)
             .use(new Plugin() {
-
+                @Rework
+                public void addDeclaration(Rule rule) {
+                    Declaration d = new Declaration(Property.COLOR, KeywordValue.of(Keyword.YELLOW));
+                    rule.declarations().append(d);
+                }
             })
             .process();
 

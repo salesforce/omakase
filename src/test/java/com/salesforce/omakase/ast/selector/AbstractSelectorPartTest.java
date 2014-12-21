@@ -35,16 +35,6 @@ public class AbstractSelectorPartTest {
     }
 
     @Test
-    public void parentSelector() {
-        assertThat(part.parentSelector().get()).isSameAs(selector);
-    }
-
-    @Test
-    public void parentSelectorWhenDetached() {
-        assertThat(new IdSelector("test").parentSelector().isPresent()).isFalse();
-    }
-
-    @Test
     public void commentsWhenDetached() {
         IdSelector id = new IdSelector("2");
         id.comments(Lists.newArrayList("test"));

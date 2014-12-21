@@ -151,8 +151,8 @@ public final class KeywordValue extends AbstractTerm {
         // if we are part of a "transition" declaration, we may need to be prefixed if we are a prefixable property-name
         // keyword. E.g., in "transition: border-radius 1s", the "border-radius" is a keyword value that represents a
         // property-name that may need to be prefixed.
-        if (parent().isPresent() && parent().get().declaration().isPresent()) {
-            Declaration declaration = parent().get().declaration().get();
+        if (parent() != null && parent().declaration() != null) {
+            Declaration declaration = parent().declaration();
 
             // transition
             if (declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) {

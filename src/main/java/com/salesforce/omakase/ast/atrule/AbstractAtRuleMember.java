@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
 
@@ -26,7 +25,7 @@ import com.salesforce.omakase.ast.Syntax;
  * @author nmcwilliams
  */
 public abstract class AbstractAtRuleMember extends AbstractSyntax implements AtRuleMember {
-    private Optional<AtRule> atRule = Optional.absent();
+    private AtRule atRule;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractAtRuleMember() {
@@ -46,12 +45,12 @@ public abstract class AbstractAtRuleMember extends AbstractSyntax implements AtR
 
     @Override
     public AbstractAtRuleMember parent(AtRule atRule) {
-        this.atRule = Optional.fromNullable(atRule);
+        this.atRule = atRule;
         return this;
     }
 
     @Override
-    public Optional<AtRule> parent() {
+    public AtRule parent() {
         return atRule;
     }
 }

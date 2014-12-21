@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.broadcast.annotation.Restrict;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
@@ -66,7 +67,7 @@ final class AnnotationScanner {
         Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
 
         for (SubscriptionMetadata md : cache.getUnchecked(subscriber.getClass())) {
-            subscriptions.put(md.event, new Subscription(md.phase, subscriber, md.method));
+            subscriptions.put(md.event, new Subscription(md.phase, subscriber, md.method, md.filter));
         }
 
         return subscriptions;
@@ -80,6 +81,9 @@ final class AnnotationScanner {
 
             boolean annotated = false;
 
+            // the restrict annotation
+            final Restrict filter = method.getAnnotation(Restrict.class);
+
             // the observe annotation
             if (method.isAnnotationPresent(Observe.class)) {
                 annotated = true;
@@ -89,7 +93,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS, filter));
             }
 
             // the rework annotation
@@ -102,7 +106,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS, filter));
             }
 
             // the validate annotation
@@ -119,7 +123,7 @@ final class AnnotationScanner {
                 if (!errorManager) throw new SubscriptionException(Message.MISSING_ERROR_MANAGER, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.VALIDATE));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.VALIDATE, filter));
             }
 
             // this is required for anonymous inner classes
@@ -136,11 +140,13 @@ final class AnnotationScanner {
         final Method method;
         final Class<?> event;
         final SubscriptionPhase phase;
+        final Restrict filter;
 
-        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionPhase phase) {
+        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionPhase phase, Restrict filter) {
             this.method = method;
             this.event = event;
             this.phase = phase;
+            this.filter = filter;
         }
     }
 }

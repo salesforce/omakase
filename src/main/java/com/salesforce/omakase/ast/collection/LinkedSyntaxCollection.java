@@ -40,8 +40,8 @@ import static com.google.common.base.Preconditions.*;
 /**
  * Standard (default) implementation of the {@link SyntaxCollection}.
  * <p/>
- * This uses a linked-approach approach optimized for random lookups, insertions and removals. Uniqueness is maintained like a set
- * and prevents duplicates. Appending or prepending an existing unit will simply move it's position.
+ * This uses a linked-node approach optimized for random lookups, insertions and removals. Uniqueness is maintained like a set and
+ * prevents duplicates. Appending or prepending an existing unit will simply move it's position.
  *
  * @param <P>
  *     Type of the (P)arent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).

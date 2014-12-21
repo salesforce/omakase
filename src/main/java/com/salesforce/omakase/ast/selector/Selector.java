@@ -69,7 +69,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Description(broadcasted = AUTOMATIC)
 public final class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
     private final SyntaxCollection<Selector, SelectorPart> parts;
-    private final RawSyntax rawContent;
+    private final RawSyntax raw;
     private final transient MasterRefiner refiner;
 
     /**
@@ -78,15 +78,15 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
      * <p/>
      * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
      *
-     * @param rawContent
+     * @param raw
      *     The selector content.
      * @param refiner
      *     The {@link MasterRefiner} to be used later during refinement of this object.
      */
-    public Selector(RawSyntax rawContent, MasterRefiner refiner) {
-        super(rawContent.line(), rawContent.column());
+    public Selector(RawSyntax raw, MasterRefiner refiner) {
+        super(raw.line(), raw.column());
         this.refiner = refiner;
-        this.rawContent = rawContent;
+        this.raw = raw;
         this.parts = new LinkedSyntaxCollection<>(this, refiner.broadcaster());
     }
 
@@ -141,7 +141,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     public Selector(int line, int column, Iterable<SelectorPart> parts) {
         super(line, column);
         this.refiner = null;
-        this.rawContent = null;
+        this.raw = null;
         this.parts = new LinkedSyntaxCollection<Selector, SelectorPart>(this).appendAll(parts);
     }
 
@@ -150,8 +150,8 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
      *
      * @return The raw selector content.
      */
-    public RawSyntax rawContent() {
-        return rawContent;
+    public RawSyntax raw() {
+        return raw;
     }
 
     /**
@@ -207,7 +207,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     @Override
     public boolean isRefined() {
-        return rawContent == null || !parts.isEmpty();
+        return raw == null || !parts.isEmpty();
     }
 
     @Override
@@ -217,6 +217,11 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         }
 
         return this;
+    }
+
+    @Override
+    public boolean containsRawSyntax() {
+        return raw != null;
     }
 
     @Override
@@ -255,7 +260,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
                 writer.writeInner(part, appendable);
             }
         } else {
-            writer.writeInner(rawContent, appendable);
+            writer.writeInner(raw, appendable);
         }
     }
 

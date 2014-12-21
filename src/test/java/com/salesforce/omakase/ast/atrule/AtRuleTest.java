@@ -191,35 +191,35 @@ public class AtRuleTest {
     @Test
     public void setsExpressionParentFromConstructor() {
         AtRuleExpression expression = new CustomExpression();
-        assertThat(expression.parent().isPresent()).isFalse();
+        assertThat(expression.parent()).isNull();
         AtRule ar = new AtRule("test", expression, new CustomBlock());
-        assertThat(expression.parent().get()).isSameAs(ar);
+        assertThat(expression.parent()).isSameAs(ar);
     }
 
     @Test
     public void setsExpressionParentFromMethod() {
         AtRuleExpression expression = new CustomExpression();
-        assertThat(expression.parent().isPresent()).isFalse();
+        assertThat(expression.parent()).isNull();
         AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
         ar.expression(expression);
-        assertThat(expression.parent().get()).isSameAs(ar);
+        assertThat(expression.parent()).isSameAs(ar);
     }
 
     @Test
     public void setsBlockParentFromConstructor() {
         AtRuleBlock block = new CustomBlock();
-        assertThat(block.parent().isPresent()).isFalse();
+        assertThat(block.parent()).isNull();
         AtRule ar = new AtRule("test", new CustomExpression(), block);
-        assertThat(block.parent().get()).isSameAs(ar);
+        assertThat(block.parent()).isSameAs(ar);
     }
 
     @Test
     public void setsBlockParentFromMethod() {
         AtRuleBlock block = new CustomBlock();
-        assertThat(block.parent().isPresent()).isFalse();
+        assertThat(block.parent()).isNull();
         AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
         ar.block(block);
-        assertThat(block.parent().get()).isSameAs(ar);
+        assertThat(block.parent()).isSameAs(ar);
     }
 
     @Test

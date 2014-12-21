@@ -133,13 +133,13 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
     }
 
     @Override
-    public Optional<SyntaxCollection<P, T>> group() {
-        return Optional.fromNullable(group);
+    public SyntaxCollection<P, T> group() {
+        return group;
     }
 
     @Override
-    public Optional<P> parent() {
-        return group == null ? Optional.<P>absent() : Optional.of(group().get().parent());
+    public P parent() {
+        return group == null ? null : group().parent();
     }
 
     @Override

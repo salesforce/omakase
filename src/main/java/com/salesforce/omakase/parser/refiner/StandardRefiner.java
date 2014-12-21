@@ -67,7 +67,7 @@ final class StandardRefiner implements AtRuleRefiner, SelectorRefiner,
     @Override
     public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
         // parse inner content
-        Source source = new Source(selector.rawContent(), false);
+        Source source = new Source(selector.raw(), false);
         ParserFactory.complexSelectorParser().parse(source, broadcaster, refiner);
 
         // grab orphaned comments

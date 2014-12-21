@@ -131,8 +131,8 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
     Groupable<P, T> replaceWith(T unit);
 
     /**
-     * Severs the connection between this unit and its collection. Generally this method is used internally. If you want to
-     * remove a unit from the syntax tree, use {@link #destroy()} instead.
+     * Severs the connection between this unit and its collection. Generally this method is used internally. If you want to remove
+     * a unit from the syntax tree, use {@link #destroy()} instead.
      *
      * @return this, for chaining.
      */
@@ -168,15 +168,17 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
      * <p/>
      * This can be used to find all peers of the unit (e.g., all other declarations in the same rule as this one).
      *
-     * @return The group {@link SyntaxCollection}, or {@link Optional#absent()} if the group is not specified.
+     * @return The group {@link SyntaxCollection}. If working with this term before it has been properly linked then this may
+     * return null. This is not the case for normal subscription methods.
      */
-    Optional<SyntaxCollection<P, T>> group();
+    SyntaxCollection<P, T> group();
 
     /**
      * Gets the parent {@link Syntax} unit that owns the {@link SyntaxCollection} that contains this unit. See {@link
      * SyntaxCollection#parent()}.
      *
-     * @return The parent, or {@link Optional#absent()} if this unit has not been added to any collection.
+     * @return The parent. If working with this term before it has been properly linked then this may return null. This is not the
+     * case for normal subscription methods.
      */
-    Optional<P> parent();
+    P parent();
 }

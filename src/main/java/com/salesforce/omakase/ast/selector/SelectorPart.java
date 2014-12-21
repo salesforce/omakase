@@ -32,7 +32,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
 @Description(value = "group interface for all selector segments", broadcasted = REFINED_SELECTOR)
 public interface SelectorPart extends Groupable<Selector, SelectorPart> {
     /**
-     * Gets the parent {@link Selector} instance. This is equivalent to {@link #parent()}.
+     * Gets the parent {@link Selector} instance.
      * <p/>
      * Take this CSS snippet for example:
      * <p/>
@@ -45,7 +45,8 @@ public interface SelectorPart extends Groupable<Selector, SelectorPart> {
      *
      * @return The parent, or {@link Optional#absent()} if the parent is not specified.
      */
-    Optional<Selector> parentSelector();
+    @Override
+    Selector parent(); // overridden for docs
 
     /**
      * Gets the {@link SelectorPartType} of this {@link SelectorPart}. This is a delegate to {@link Groupable#parent()}.

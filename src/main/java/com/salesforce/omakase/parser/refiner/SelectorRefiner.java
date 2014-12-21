@@ -35,9 +35,9 @@ public interface SelectorRefiner extends Refiner {
      * Refines a {@link Selector}.
      * <p/>
      * The information in the given {@link Selector} can be used to determine if the selector is applicable to your custom syntax
-     * (e.g., checking {@link Selector#rawContent()} or even {@link Selector#comments()}).
+     * (e.g., checking {@link Selector#raw()} or even {@link Selector#comments()}).
      * <p/>
-     * Utilize the {@link Selector#rawContent()} to get the raw, unrefined syntax. Note that it's possible for this content to
+     * Utilize the {@link Selector#raw()} to get the raw, unrefined syntax. Note that it's possible for this content to
      * contain comments. Parse this information into your own custom {@link SelectorPart} objects and then optionally broadcast
      * them using the given {@link Broadcaster} (if you intend to broadcast your custom AST objects they must be annotated with
      * the {@link Subscribable} annotation and implement {@link Syntax}). Be sure to actually add the objects to the {@link

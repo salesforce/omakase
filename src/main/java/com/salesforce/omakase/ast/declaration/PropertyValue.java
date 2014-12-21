@@ -56,7 +56,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 @Description(value = "interface for all property values", broadcasted = REFINED_DECLARATION)
 public final class PropertyValue extends AbstractSyntax {
     private final SyntaxCollection<PropertyValue, PropertyValueMember> members;
-    private transient Optional<Declaration> declaration = Optional.absent();
+    private transient Declaration declaration;
     private boolean important;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
@@ -193,16 +193,17 @@ public final class PropertyValue extends AbstractSyntax {
      *     The {@link Declaration} that contains this property.
      */
     public void declaration(Declaration parent) {
-        this.declaration = Optional.fromNullable(parent);
+        this.declaration = parent;
     }
 
     /**
-     * Gets the parent {@link Declaration} that owns this property, or absent if not set. This will not be set for dynamically
-     * created property values not yet added to a {@link Declaration} instance.
+     * Gets the parent {@link Declaration} that owns this property. This will not be set for dynamically created property values
+     * not yet added to a {@link Declaration} instance.
      *
-     * @return The parent {@link Declaration}, or {@link Optional#absent()} if not set.
+     * @return The parent {@link Declaration}. If working with this term before it has been properly linked then this may return
+     * null. This is not the case for normal subscription methods.
      */
-    public Optional<Declaration> declaration() {
+    public Declaration declaration() {
         return declaration;
     }
 
@@ -241,7 +242,7 @@ public final class PropertyValue extends AbstractSyntax {
     public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
         if (!deep) return;
         for (PropertyValueMember member : members) {
-            member.prefix(prefix, support, deep);
+            member.prefix(prefix, support, true);
         }
     }
 

@@ -54,11 +54,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class ReworkTest {
-    static final String INPUT = ".left-alone {margin: 0;}\n" +
+    private static final String INPUT = ".left-alone {margin: 0;}\n" +
         ".THIS .inner, .xyz .THIS {display: inline-block; padding: 10px;}\n" +
         ".curvy {border: 3px solid red; border-radius: 40px 10px;}";
 
-    static final String EXPECTED = ".left-alone {margin:0}\n" +
+    private static final String EXPECTED = ".left-alone {margin:0}\n" +
         ".replaced .inner, .xyz .THIS {display:inline-block; zoom:1; padding:10px}\n" +
         ".curvy {border:3px solid red; -webkit-border-radius:40px 10px; border-radius:40px 10px}\n" +
         ".rounded {-webkit-border-radius:10px 5em; border-radius:10px 5em}\n" +

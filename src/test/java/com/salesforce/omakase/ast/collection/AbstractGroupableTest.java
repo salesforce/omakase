@@ -209,24 +209,24 @@ public class AbstractGroupableTest {
 
     @Test
     public void groupNotPresent() {
-        assertThat(child1.group().isPresent()).isFalse();
+        assertThat(child1.group()).isNull();
     }
 
     @Test
     public void dynamicallyCreatedInitiallyNoGroup() {
-        assertThat(new Child("c").group().isPresent()).isFalse();
+        assertThat(new Child("c").group()).isNull();
     }
 
     @Test
     public void group() {
         parent.collection.append(child1).append(child2).append(child3);
-        assertThat(child2.group().get()).isSameAs(parent.collection);
+        assertThat(child2.group()).isSameAs(parent.collection);
     }
 
     @Test
     public void parentWhenGrouped() {
         parent.collection.append(child1).append(child2);
-        assertThat(child1.parent().get()).isSameAs(parent);
+        assertThat(child1.parent()).isSameAs(parent);
     }
 
     @Test
@@ -234,7 +234,7 @@ public class AbstractGroupableTest {
         parent.collection.append(child1);
         child1.unlink();
         assertThat(parent.collection).doesNotContain(child1);
-        assertThat(child1.group().isPresent()).isFalse();
+        assertThat(child1.group()).isNull();
         assertThat(child1.isDestroyed()).isFalse();
     }
 
@@ -244,7 +244,7 @@ public class AbstractGroupableTest {
         assertThat(child1.isDestroyed()).isFalse();
         child1.destroy();
         assertThat(child1.isDestroyed()).isTrue();
-        assertThat(child1.group().isPresent()).isFalse();
+        assertThat(child1.group()).isNull();
     }
 
     @Test
@@ -283,7 +283,7 @@ public class AbstractGroupableTest {
 
     @Test
     public void parentWhenNotGrouped() {
-        assertThat(child1.parent().isPresent()).isFalse();
+        assertThat(child1.parent()).isNull();
     }
 
     private static final class Parent {

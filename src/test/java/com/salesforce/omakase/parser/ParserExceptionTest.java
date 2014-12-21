@@ -129,7 +129,7 @@ public class ParserExceptionTest {
             "Selector {\n" +
             "  line: 5\n" +
             "  col: 5\n" +
-            "  rawContent: RawSyntax{line=5, col=5, content=#id}\n" +
+            "  raw: RawSyntax{line=5, col=5, content=#id}\n" +
             "}");
     }
 

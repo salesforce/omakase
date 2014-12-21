@@ -16,7 +16,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -37,9 +36,10 @@ public interface Term extends PropertyValueMember {
     /**
      * Shortcut method to get the parent {@link Declaration} containing this term.
      *
-     * @return The parent {@link Declaration}, or {@link Optional#absent()} if this term is detached or without a parent.
+     * @return The parent {@link Declaration}. If working with this term before it has been properly linked then this may return
+     * null. This is not the case for normal subscription methods.
      */
-    Optional<Declaration> declaration();
+    Declaration declaration();
 
     /**
      * Gets the <em>textual</em> content of this term.

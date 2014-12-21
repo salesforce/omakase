@@ -365,7 +365,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     /**
-     * Similar to {@link #parent()}, except this will return the containing {@link AtRule}.
+     * Similar to {@link #parent()}, except this will return the parent's containing {@link AtRule}.
      * <p/>
      * This is only applicable for declarations directly within a {@link Rule}, directly within an {@link AtRuleBlock}, directly
      * within an {@link AtRule}.
@@ -374,12 +374,12 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * described above.
      */
     public Optional<AtRule> parentAtRule() {
-        Optional<Rule> rule = parent();
+        Rule rule = parent();
 
-        if (rule.isPresent()) {
-            Optional<StatementIterable> parent = rule.get().parent();
-            if (parent.isPresent() && parent.get() instanceof AtRuleBlock) {
-                return ((AtRuleBlock)parent.get()).parent();
+        if (rule != null) {
+            StatementIterable parent = rule.parent();
+            if (parent instanceof AtRuleBlock) {
+                return Optional.fromNullable(((AtRuleBlock)parent).parent());
             }
         }
 
@@ -407,6 +407,11 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
             propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
         }
         return propertyName;
+    }
+
+    @Override
+    public boolean containsRawSyntax() {
+        return rawPropertyName != null || rawPropertyValue != null;
     }
 
     @Override
@@ -468,7 +473,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     @Override
     public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
         if (!deep) return;
-        propertyValue().prefix(prefix, support, deep);
-        propertyName().prefix(prefix, support, deep);
+        propertyValue().prefix(prefix, support, true);
+        propertyName().prefix(prefix, support, true);
     }
 }

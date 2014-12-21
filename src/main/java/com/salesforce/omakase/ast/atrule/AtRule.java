@@ -59,8 +59,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     private String name;
 
     // unrefined
-    private final Optional<RawSyntax> rawExpression;
-    private final Optional<RawSyntax> rawBlock;
+    private final RawSyntax rawExpression;
+    private final RawSyntax rawBlock;
 
     // refined
     private Optional<AtRuleExpression> expression;
@@ -87,8 +87,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, MasterRefiner refiner) {
         super(line, column);
         this.name = name;
-        this.rawExpression = Optional.fromNullable(rawExpression);
-        this.rawBlock = Optional.fromNullable(rawBlock);
+        this.rawExpression = rawExpression;
+        this.rawBlock = rawBlock;
         this.expression = Optional.absent();
         this.block = Optional.absent();
         this.refiner = refiner;
@@ -111,8 +111,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         checkArgument(expression != null || block != null, "either the expression or the block must be present");
 
         this.name = name;
-        this.rawExpression = Optional.absent();
-        this.rawBlock = Optional.absent();
+        this.rawExpression = null;
+        this.rawBlock = null;
         this.expression = Optional.fromNullable(expression);
         this.block = Optional.fromNullable(block);
         this.refiner = null;
@@ -161,7 +161,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      * @return The raw expression, or {@link Optional#absent()} if not present.
      */
     public Optional<RawSyntax> rawExpression() {
-        return rawExpression;
+        return Optional.fromNullable(rawExpression);
     }
 
     /**
@@ -170,7 +170,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      * @return The at-rule block, or {@link Optional#absent()} if not present.
      */
     public Optional<RawSyntax> rawBlock() {
-        return rawBlock;
+        return Optional.fromNullable(rawBlock);
     }
 
     /**
@@ -288,6 +288,11 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     @Override
+    public boolean containsRawSyntax() {
+        return rawExpression != null || rawBlock != null;
+    }
+
+    @Override
     public void propagateBroadcast(Broadcaster broadcaster) {
         if (expression.isPresent()) {
             expression.get().propagateBroadcast(broadcaster);
@@ -352,17 +357,17 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             appendable.append('@').append(name).space();
 
             // expression
-            if (rawExpression.isPresent()) {
-                writer.writeInner(rawExpression.get(), appendable);
-                appendable.spaceIf(rawBlock.isPresent() && !writer.isCompressed());
+            if (rawExpression != null) {
+                writer.writeInner(rawExpression, appendable);
+                appendable.spaceIf(rawBlock != null && !writer.isCompressed());
             }
 
             // block
-            if (rawBlock.isPresent()) {
+            if (rawBlock != null) {
                 appendable.append('{');
                 appendable.indentIf(writer.isVerbose());
                 appendable.newlineIf(writer.isVerbose());
-                writer.writeInner(rawBlock.get(), appendable);
+                writer.writeInner(rawBlock, appendable);
                 appendable.unindentIf(writer.isVerbose());
                 appendable.newlineIf(writer.isVerbose());
                 appendable.append('}');
@@ -381,8 +386,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             AtRuleBlock blockCopy = block.isPresent() ? block.get().copy() : null;
             copy = new AtRule(name, expressionCopy, blockCopy).copiedFrom(this);
         } else {
-            RawSyntax expressionCopy = rawExpression.isPresent() ? rawExpression.get().copy() : null;
-            RawSyntax blockCopy = rawBlock.isPresent() ? rawBlock.get().copy() : null;
+            RawSyntax expressionCopy = rawExpression != null ? rawExpression.copy() : null;
+            RawSyntax blockCopy = rawBlock != null ? rawBlock.copy() : null;
             copy = new AtRule(-1, -1, name, expressionCopy, blockCopy, refiner).copiedFrom(this);
         }
         copy.shouldWriteName(shouldWriteName);
@@ -395,21 +400,21 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             name = prefix + name;
         }
 
-        if (!deep) return;
-
-        if (isRefined()) {
-            if (expression.isPresent()) {
-                expression.get().prefix(prefix, support, deep);
-            }
-            if (block.isPresent()) {
-                block.get().prefix(prefix, support, deep);
-            }
-        } else {
-            if (rawExpression.isPresent()) {
-                rawExpression.get().prefix(prefix, support, deep);
-            }
-            if (rawBlock.isPresent()) {
-                rawBlock.get().prefix(prefix, support, deep);
+        if (deep) {
+            if (isRefined()) {
+                if (expression.isPresent()) {
+                    expression.get().prefix(prefix, support, true);
+                }
+                if (block.isPresent()) {
+                    block.get().prefix(prefix, support, true);
+                }
+            } else {
+                if (rawExpression != null) {
+                    rawExpression.prefix(prefix, support, true);
+                }
+                if (rawBlock != null) {
+                    rawBlock.prefix(prefix, support, true);
+                }
             }
         }
     }

@@ -153,7 +153,7 @@ public final class DirectionFlipPlugin implements DependentPlugin {
      */
     @Rework
     public void rework(KeywordValue keywordValue) {
-        if (hasNoFlip(keywordValue.parent().get().declaration().get())) {
+        if (hasNoFlip(keywordValue.parent().declaration())) {
             return;
         }
         Optional<Keyword> optionalKeyword = keywordValue.asKeyword();

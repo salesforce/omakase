@@ -85,13 +85,12 @@ final class PrefixerHandlers {
     static final PrefixerHandler<FunctionValue> FUNCTION = new PrefixerHandlerStandard<FunctionValue, Declaration>() {
         @Override
         protected boolean applicable(FunctionValue instance, SupportMatrix support) {
-            return instance.parent().get().declaration().isPresent()
-                && instance.name().charAt(0) != '-' && PrefixTablesUtil.isPrefixableFunction(instance.name());
+            return instance.name().charAt(0) != '-' && PrefixTablesUtil.isPrefixableFunction(instance.name());
         }
 
         @Override
         protected Declaration subject(FunctionValue instance) {
-            return instance.group().get().parent().declaration().get();
+            return instance.parent().declaration();
         }
 
         @Override
@@ -143,7 +142,7 @@ final class PrefixerHandlers {
 
         @Override
         protected Rule subject(PseudoElementSelector instance) {
-            return instance.parent().get().parent().get();
+            return instance.parent().parent();
         }
 
         @Override
@@ -218,7 +217,7 @@ final class PrefixerHandlers {
 
         @Override
         protected Rule subject(PseudoElementSelector instance) {
-            return instance.parent().get().parent().get();
+            return instance.parent().parent();
         }
 
         @Override

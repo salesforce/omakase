@@ -151,7 +151,7 @@ public class DeclarationTest {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
-        assertThat(d.propertyValue().declaration().get()).isSameAs(d);
+        assertThat(d.propertyValue().declaration()).isSameAs(d);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class DeclarationTest {
         PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
         d.propertyValue(newValue);
 
-        assertThat(oldValue.declaration().isPresent()).isFalse();
+        assertThat(oldValue.declaration()).isNull();
         assertThat(oldValue.status() == Status.NEVER_EMIT);
     }
 

@@ -254,7 +254,7 @@ public final class Equivalents {
         @Override
         public FunctionValue locate(Declaration peer, FunctionValue unprefixed) {
             // check if the declaration has the same property name as the prefixed one
-            if (peer.isProperty(unprefixed.declaration().get().propertyName())) {
+            if (peer.isProperty(unprefixed.declaration().propertyName())) {
                 // try to find a function value with the same name but prefixed
                 for (FunctionValue function : Values.filter(FunctionValue.class, peer.propertyValue())) {
                     if (isPrefixed(function) && function.name().endsWith(unprefixed.name())) return function;

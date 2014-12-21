@@ -58,7 +58,7 @@ public final class Actions {
     private static class MoveBefore<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
         public void apply(T subject, Iterable<? extends T> instances) {
-            SyntaxCollection<?, T> collection = subject.group().get();
+            SyntaxCollection<?, T> collection = subject.group();
             for (T instance : instances) {
                 collection.prependBefore(subject, instance);
             }
@@ -80,7 +80,7 @@ public final class Actions {
     private static class MoveAfter<T extends Groupable<?, T>> implements ActionWithSubject<T> {
         @Override
         public void apply(T subject, Iterable<? extends T> instances) {
-            SyntaxCollection<?, T> collection = subject.group().get();
+            SyntaxCollection<?, T> collection = subject.group();
             T index = subject;
             for (T instance : instances) {
                 collection.appendAfter(index, instance);

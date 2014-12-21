@@ -225,7 +225,8 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     /**
      * Gets the parent {@link Syntax} unit that owns this collection.
      *
-     * @return The parent.
+     * @return The parent. If working with a collection before it's owner is properly linked into the tree then this may return
+     * null.
      */
     P parent();
 

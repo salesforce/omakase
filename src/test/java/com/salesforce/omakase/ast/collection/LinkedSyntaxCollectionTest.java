@@ -235,7 +235,7 @@ public class LinkedSyntaxCollectionTest {
         collection.prepend(child1);
         collection.prepend(child1);
         assertThat(collection).containsExactly(child1);
-        assertThat(child1.group().get()).isSameAs(collection);
+        assertThat(child1.group()).isSameAs(collection);
     }
 
     @Test
@@ -251,7 +251,7 @@ public class LinkedSyntaxCollectionTest {
         collection2.prepend(child1);
         collection.prepend(child1);
         assertThat(collection).containsExactly(child1);
-        assertThat(child1.group().get()).isSameAs(collection);
+        assertThat(child1.group()).isSameAs(collection);
         assertThat(collection2).isEmpty();
     }
 
@@ -343,7 +343,7 @@ public class LinkedSyntaxCollectionTest {
         collection.append(child1);
         collection.append(child1);
         assertThat(collection).containsExactly(child1);
-        assertThat(child1.group().get()).isSameAs(collection);
+        assertThat(child1.group()).isSameAs(collection);
     }
 
     @Test
@@ -359,7 +359,7 @@ public class LinkedSyntaxCollectionTest {
         collection2.append(child1);
         collection.append(child1);
         assertThat(collection).containsExactly(child1);
-        assertThat(child1.group().get()).isSameAs(collection);
+        assertThat(child1.group()).isSameAs(collection);
         assertThat(collection2).isEmpty();
     }
 
@@ -460,8 +460,8 @@ public class LinkedSyntaxCollectionTest {
         collection.append(child1);
         collection.remove(child1);
         assertThat(collection).isEmpty();
-        assertThat(child1.group().isPresent()).isFalse();
-        assertThat(child1.parent().isPresent()).isFalse();
+        assertThat(child1.group()).isNull();
+        assertThat(child1.parent()).isNull();
     }
 
     @Test

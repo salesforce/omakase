@@ -46,5 +46,5 @@ public interface AtRuleMember extends Syntax {
      *
      * @return The parent {@link AtRule}, or {@link Optional#absent()} if not set.
      */
-    Optional<AtRule> parent();
+    AtRule parent();
 }
