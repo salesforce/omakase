@@ -224,7 +224,7 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     @Override
     public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
         if (!deep) return;
-        propertyName.prefix(prefix, support, deep);
-        propertyValue.prefix(prefix, support, deep);
+        propertyName.prefix(prefix, support, true);
+        propertyValue.prefix(prefix, support, true);
     }
 }

@@ -37,7 +37,7 @@ import java.io.IOException;
  * this as well before writing.
  * <p/>
  * Note that custom writers must handle the writing (or not writing) of CSS comments on their own. For assistance with this see
- * {@link StyleWriter#appendComments(Iterable, StyleWriter, StyleAppendable)}. Also see {@link Syntax#writesOwnComments()} and
+ * {@link StyleWriter#appendComments(Iterable, StyleAppendable)}. Also see {@link Syntax#writesOwnComments()} and
  * {@link Syntax#writesOwnOrphanedComments()}.
  *
  * @param <T>

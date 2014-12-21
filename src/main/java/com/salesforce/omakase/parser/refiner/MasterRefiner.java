@@ -385,8 +385,6 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
      * @return Whether refinement occurred or not.
      */
     public Refinement refine(RawFunction raw, Broadcaster broadcaster) {
-        Refinement refinement = Refinement.NONE;
-
         // try the custom refiners
         for (FunctionRefiner strategy : functionRefiners) {
             Refinement result = strategy.refine(raw, broadcaster, this);

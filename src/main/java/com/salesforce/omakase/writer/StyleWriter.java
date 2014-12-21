@@ -332,7 +332,6 @@ public final class StyleWriter implements DependentPlugin {
      *
      * @return The output CSS code for the given unit.
      */
-    @SuppressWarnings("unchecked")
     public <T extends Writable> String writeSnippet(T writable) {
         StyleAppendable appendable = new StyleAppendable();
 

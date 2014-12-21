@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Base class for {@link Syntax} units.
@@ -121,10 +121,9 @@ public abstract class AbstractSyntax implements Syntax {
      *     Whether to deep copy (just pass it along).
      */
     protected void prefixChildren(Iterable<? extends Syntax> children, Prefix prefix, SupportMatrix support, boolean deep) {
-        if (deep) {
-            for (Syntax child : children) {
-                child.prefix(prefix, support, deep);
-            }
+        if (!deep) return;
+        for (Syntax child : children) {
+            child.prefix(prefix, support, true);
         }
     }
 
