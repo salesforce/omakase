@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -148,10 +149,11 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     /**
      * Gets the original, raw, non-validated selector content.
      *
-     * @return The raw selector content.
+     * @return The raw selector content, or {@link Optional#absent()} if the raw content is not set (e.g., a dynamically created
+     * unit).
      */
-    public RawSyntax raw() {
-        return raw;
+    public Optional<RawSyntax> raw() {
+        return Optional.fromNullable(raw);
     }
 
     /**

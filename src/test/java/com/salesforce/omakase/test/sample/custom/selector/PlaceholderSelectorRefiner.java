@@ -40,7 +40,7 @@ public class PlaceholderSelectorRefiner implements SelectorRefiner {
 
     @Override
     public Refinement refine(Selector selector, Broadcaster broadcaster, MasterRefiner refiner) {
-        String content = selector.raw().content();
+        String content = selector.raw().get().content();
         Source source = new Source(content);
         source.skipWhitepace();
 

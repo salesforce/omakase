@@ -42,7 +42,7 @@ public class SelectorTest {
     public void rawContent() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
-        assertThat(selector.raw()).isSameAs(raw);
+        assertThat(selector.raw().get()).isSameAs(raw);
     }
 
     @Test

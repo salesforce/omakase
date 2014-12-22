@@ -73,8 +73,8 @@ public class SyntaxTreeTest {
     public void selectorsOrder() {
         Rule rule = Iterables.get(stylesheet.statements(), 6).asRule().get();
         assertThat(rule.selectors()).hasSize(2);
-        assertThat(rule.selectors().first().get().raw().content()).isEqualTo("#div1");
-        assertThat(rule.selectors().last().get().raw().content()).isEqualTo("#div2");
+        assertThat(rule.selectors().first().get().raw().get().content()).isEqualTo("#div1");
+        assertThat(rule.selectors().last().get().raw().get().content()).isEqualTo("#div2");
     }
 
     @Test
