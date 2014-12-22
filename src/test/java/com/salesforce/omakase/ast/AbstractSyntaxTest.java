@@ -289,6 +289,22 @@ public class AbstractSyntaxTest {
     }
 
     @Test
+    public void annotateUnlessPresentFromSource() {
+        TestSyntax t = new TestSyntax();
+        t.comments(Lists.newArrayList("@test"));
+        t.annotateUnlessPresent(new CssAnnotation("test"));
+        assertThat(t.annotations()).hasSize(1);
+    }
+
+    @Test
+    public void annotateUnlessPresentTriedTwice() {
+        TestSyntax t = new TestSyntax();
+        t.annotateUnlessPresent(new CssAnnotation("test"));
+        t.annotateUnlessPresent(new CssAnnotation("test"));
+        assertThat(t.annotations()).hasSize(1);
+    }
+
+    @Test
     public void hasId() {
         TestSyntax t1 = new TestSyntax();
         TestSyntax t2 = new TestSyntax();

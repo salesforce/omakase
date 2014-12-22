@@ -266,6 +266,11 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
+    public void annotateUnlessPresent(CssAnnotation annotation) {
+        if (!hasAnnotation(annotation)) annotate(annotation);
+    }
+
+    @Override
     public void status(Status status) {
         this.status = status;
     }

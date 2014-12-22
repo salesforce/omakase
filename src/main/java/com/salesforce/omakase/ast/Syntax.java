@@ -328,12 +328,21 @@ public interface Syntax extends Writable, Broadcastable {
     void annotate(CssAnnotation annotation);
 
     /**
+     * Same as {@link #annotate(CssAnnotation)}, except only if {@link #hasAnnotation(CssAnnotation)} is false for the given
+     * annotation.
+     *
+     * @param annotation
+     *     Add this annotation.
+     */
+    void annotateUnlessPresent(CssAnnotation annotation);
+
+    /**
      * Specifies whether this object will handle writing its own comments, instead of the automatic behavior of the {@link
      * StyleWriter}.
      * <p/>
      * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be
-     * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains
-     * this logic and is the preferable way to handle it.
+     * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains this logic
+     * and is the preferable way to handle it.
      *
      * @return True if this object writes its own comments.
      */
@@ -344,8 +353,8 @@ public interface Syntax extends Writable, Broadcastable {
      * {@link StyleWriter}.
      * <p/>
      * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be
-     * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains
-     * this logic and is the preferable way to handle it.
+     * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains this logic
+     * and is the preferable way to handle it.
      *
      * @return True if this object writes its own comments.
      */
