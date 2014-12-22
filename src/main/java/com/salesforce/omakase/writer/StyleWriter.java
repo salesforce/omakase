@@ -58,7 +58,7 @@ import static com.google.common.base.Preconditions.*;
  * <p/>
  * Unless otherwise specified, {@link WriterMode#INLINE} will be used.
  * <p/>
- * By default this will not write out CSS comments, however you can change that behavior with {@link #writeComments(boolean)}.
+ * By default this will not write out CSS comments, however you can change that behavior with {@link #writeAllComments(boolean)}.
  *
  * @author nmcwilliams
  */
@@ -68,8 +68,9 @@ public final class StyleWriter implements DependentPlugin {
     private SyntaxTree tree;
     private WriterMode mode;
 
-    private boolean writeComments;
-    private boolean onlyAnnotated;
+    private boolean writeAllComments;
+    private boolean writeAnnotatedComments;
+    private boolean writeBangComments;
 
     private final Deque<StackEntry> stack = new ArrayDeque<>();
 
@@ -143,54 +144,73 @@ public final class StyleWriter implements DependentPlugin {
     }
 
     /**
-     * Gets whether comments will be written out.
+     * Sets whether all comments will be written out.
+     *
+     * @param writeComments
+     *     Whether all comments should be written out.
+     *
+     * @return this, for chaining.
+     */
+    public StyleWriter writeAllComments(boolean writeComments) {
+        this.writeAllComments = writeComments;
+        return this;
+    }
+
+    /**
+     * Gets whether all comments will be written out.
      *
      * @return True if comments will be written out.
      */
-    public boolean shouldWriteComments() {
-        return writeComments;
+    public boolean shouldWriteAllComments() {
+        return writeAllComments;
     }
 
     /**
-     * Specifies whether only annotated comments should be written out. See {@link #writeComments(boolean, boolean)},
+     * Sets whether comments with annotations should be written out, even if {@link #shouldWriteAllComments()} is false. This can
+     * be useful to preserve annotations across parsing operations.
      *
-     * @return True if only annotated comments should be written out.
-     */
-    public boolean onlyWriteAnnotatedComments() {
-        return onlyAnnotated;
-    }
-
-    /**
-     * Sets whether comments will be written out.
-     *
-     * @param writeComments
-     *     Whether comments should be written out.
+     * @param writeAnnotatedComments
+     *     Whether comments with annotations should be written out.
      *
      * @return this, for chaining.
      */
-    public StyleWriter writeComments(boolean writeComments) {
-        return writeComments(writeComments, false);
-    }
-
-    /**
-     * Sets whether comments will be written out.
-     * <p/>
-     * Use this method to specify that only annotated comments should be written out. For example:
-     * <pre>
-     * <code>writer.writeComments(true, true);</code>
-     * </pre>
-     *
-     * @param writeComments
-     *     Whether comments should be written out.
-     * @param onlyAnnotated
-     *     If writeComments was specified true, indicate whether only annotated comments should be written out.
-     *
-     * @return this, for chaining.
-     */
-    public StyleWriter writeComments(boolean writeComments, boolean onlyAnnotated) {
-        this.writeComments = writeComments;
-        this.onlyAnnotated = onlyAnnotated;
+    public StyleWriter writeAnnotatedComments(boolean writeAnnotatedComments) {
+        this.writeAnnotatedComments = writeAnnotatedComments;
         return this;
+    }
+
+    /**
+     * Returns whether comments with annotations should be written out, even if {@link #shouldWriteAllComments()} is false. This
+     * can be useful to preserve annotations across parsing operations.
+     *
+     * @return True if annotated comments should always be written out.
+     */
+    public boolean shouldWriteAnnotatedComments() {
+        return writeAllComments || writeAnnotatedComments;
+    }
+
+    /**
+     * Returns whether comments starting with '!' should be written out, even if {@link #shouldWriteAllComments()} is false. There
+     * must not be any whitespace between the comment open and the bang. This may be useful for preserving copyrights.
+     *
+     * @param writeBangComments
+     *     Whether comments with bangs should be written out.
+     *
+     * @return this, for chaining.
+     */
+    public StyleWriter writeBangComments(boolean writeBangComments) {
+        this.writeBangComments = writeBangComments;
+        return this;
+    }
+
+    /**
+     * Returns whether comments starting with '!' should be written out, even if {@link #shouldWriteAllComments()} is false. There
+     * must not be any whitespace between the comment open and the bang. This may be useful for preserving copyrights.
+     *
+     * @return True if annotated comments should always be written out.
+     */
+    public boolean shouldWriteBangComments() {
+        return writeAllComments || writeBangComments;
     }
 
     /**
@@ -398,7 +418,7 @@ public final class StyleWriter implements DependentPlugin {
 
     @Override
     public String toString() {
-        return As.string(this).add("mode", mode).add("writeComments", writeComments).toString();
+        return As.string(this).add("mode", mode).add("writeComments", writeAllComments).toString();
     }
 
     /**
@@ -473,11 +493,13 @@ public final class StyleWriter implements DependentPlugin {
      */
     public void appendComments(Iterable<Comment> comments, StyleAppendable appendable) throws
         IOException {
-        if (shouldWriteComments()) {
-            for (Comment comment : comments) {
-                if (!onlyWriteAnnotatedComments() || comment.annotation().isPresent()) {
-                    writeInner(comment, appendable);
-                }
+        for (Comment comment : comments) {
+            if (shouldWriteAllComments()) {
+                writeInner(comment, appendable);
+            } else if (shouldWriteAnnotatedComments() && comment.annotation().isPresent()) {
+                writeInner(comment, appendable);
+            } else if (shouldWriteBangComments() && comment.startsWithBang()) {
+                writeInner(comment, appendable);
             }
         }
     }

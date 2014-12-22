@@ -73,22 +73,35 @@ public class StyleWriterTest {
     }
 
     @Test
-    public void writeWithComments() {
-        StyleWriter writer = StyleWriter.compressed().writeComments(true);
+    public void writeWithAllComments() {
+        StyleWriter writer = StyleWriter.compressed().writeAllComments(true);
         Omakase.source("/*test*/.test{color:red}").use(writer).process();
         assertThat(writer.write()).isEqualTo("/*test*/.test{color:red}");
+
+        Omakase.source("/*@test*/.test{color:red}").use(writer).process();
+        assertThat(writer.write()).isEqualTo("/*@test*/.test{color:red}");
+
+        Omakase.source("/*!test*/.test{color:red}").use(writer).process();
+        assertThat(writer.write()).isEqualTo("/*!test*/.test{color:red}");
     }
 
     @Test
-    public void writeWithCommentsOnlyAnnotated() {
-        StyleWriter writer = StyleWriter.compressed().writeComments(true, true);
-        Omakase.source("/*@yes*/.test{/*no*/color:red}").use(writer).process();
+    public void writeWithAnnotatedCommentsOnly() {
+        StyleWriter writer = StyleWriter.compressed().writeAnnotatedComments(true);
+        Omakase.source("/*@yes*/.test{/*no*//*!no*/color:red}").use(writer).process();
         assertThat(writer.write()).isEqualTo("/*@yes*/.test{color:red}");
     }
 
     @Test
+    public void writeWithBangCommentsOnly() {
+        StyleWriter writer = StyleWriter.compressed().writeBangComments(true);
+        Omakase.source("/*!yes*/.test{/*no*//*@no*/color:red}").use(writer).process();
+        assertThat(writer.write()).isEqualTo("/*!yes*/.test{color:red}");
+    }
+
+    @Test
     public void writeWithOrphanedComments() {
-        StyleWriter writer = StyleWriter.compressed().writeComments(true);
+        StyleWriter writer = StyleWriter.compressed().writeAllComments(true);
         Omakase.source(".test{color:red/*test*/}").use(writer).process();
         assertThat(writer.write()).isEqualTo(".test{color:red/*test*/}");
     }

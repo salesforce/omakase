@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Represents a CSS comment.
  * <p/>
- * By default, comments are not written out. You can control this behavior with {@link StyleWriter#writeComments(boolean)}.
+ * By default, comments are not written out. You can control this behavior with {@link StyleWriter#writeAllComments(boolean)}.
  */
 
 public final class Comment implements Writable {
@@ -144,6 +144,16 @@ public final class Comment implements Writable {
     public Optional<CssAnnotation> annotation() {
         checkForAnnotation();
         return Optional.fromNullable(annotation);
+    }
+
+    /**
+     * Returns whether the comment starts with ! (this is strict, no whitespace allowed between the opening comment and the
+     * bang).
+     *
+     * @return True if the comment starts with '!'.
+     */
+    public boolean startsWithBang() {
+        return content.charAt(0) == '!';
     }
 
     @Override

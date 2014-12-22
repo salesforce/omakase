@@ -340,7 +340,7 @@ public interface Syntax extends Writable, Broadcastable {
      * Specifies whether this object will handle writing its own comments, instead of the automatic behavior of the {@link
      * StyleWriter}.
      * <p/>
-     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be
+     * If returning true, be sure to check {@link StyleWriter#shouldWriteAllComments()} to determine if comments should actually be
      * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains this logic
      * and is the preferable way to handle it.
      *
@@ -352,7 +352,7 @@ public interface Syntax extends Writable, Broadcastable {
      * Specifies whether this object will handle writing its own orphaned comments, instead of the automatic behavior of the
      * {@link StyleWriter}.
      * <p/>
-     * If returning true, be sure to check {@link StyleWriter#shouldWriteComments()} to determine if comments should actually be
+     * If returning true, be sure to check {@link StyleWriter#shouldWriteAllComments()} to determine if comments should actually be
      * written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains this logic
      * and is the preferable way to handle it.
      *

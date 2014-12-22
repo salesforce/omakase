@@ -31,6 +31,6 @@ public class CommentedGoldfileTest extends AbstractGoldfileTest {
 
     @Override
     protected void applyAdditionalWriterConfig(StyleWriter writer) {
-        writer.writeComments(true);
+        writer.writeAllComments(true);
     }
 }

@@ -207,4 +207,16 @@ public class CommentTest {
         Comment c = new Comment(a);
         assertThat(c.annotation("tes2t").isPresent()).isFalse();
     }
+
+    @Test
+    public void startsWithBangTrue() {
+        Comment c = new Comment("!copyright");
+        assertThat(c.startsWithBang()).isTrue();
+    }
+
+    @Test
+    public void startsWithBangFalse() {
+        Comment c = new Comment("blah!blah!");
+        assertThat(c.startsWithBang()).isFalse();
+    }
 }
