@@ -25,18 +25,16 @@ import java.util.Set;
 
 /**
  * Manages the set of "trueConditions" as used by the {@link Conditionals} plugin and individual {@link ConditionalAtRuleBlock}
- * objects.
+ * objects, and other options.
  * <p/>
  * This can be used to add to or remove from the set of "trueConditions". You can also specify "passthroughMode" as true, which
  * indicates that the {@link ConditionalAtRuleBlock} should write itself out without stripping the actual outer block
  * (<code>@if(...) { ... }</code>) away. This might be useful if you intend to deal with the conditionals as part of a subsequent
  * parsing operation.
  *
- * FIXME rename to ConditionalsConfig
- *
  * @author nmcwilliams
  */
-public final class ConditionalsManager {
+public final class ConditionalsConfig {
     private final Set<String> trueConditions = new HashSet<>();
     private boolean passthroughMode;
 
@@ -71,7 +69,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager addTrueConditions(String... trueConditions) {
+    public ConditionalsConfig addTrueConditions(String... trueConditions) {
         return addTrueConditions(ImmutableSet.copyOf(trueConditions));
     }
 
@@ -83,7 +81,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager addTrueConditions(Iterable<String> trueConditions) {
+    public ConditionalsConfig addTrueConditions(Iterable<String> trueConditions) {
         // add each condition, making sure it's lower-cased for comparison purposes
         for (String condition : trueConditions) {
             this.trueConditions.add(condition.toLowerCase());
@@ -100,7 +98,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager removeTrueCondition(String condition) {
+    public ConditionalsConfig removeTrueCondition(String condition) {
         trueConditions.remove(condition);
         return this;
     }
@@ -110,7 +108,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager clearTrueConditions() {
+    public ConditionalsConfig clearTrueConditions() {
         trueConditions.clear();
         return this;
     }
@@ -123,7 +121,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager replaceTrueConditions(String... trueConditions) {
+    public ConditionalsConfig replaceTrueConditions(String... trueConditions) {
         return replaceTrueConditions(ImmutableSet.copyOf(trueConditions));
     }
 
@@ -135,7 +133,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager replaceTrueConditions(Iterable<String> trueConditions) {
+    public ConditionalsConfig replaceTrueConditions(Iterable<String> trueConditions) {
         clearTrueConditions();
         return addTrueConditions(trueConditions);
     }
@@ -148,7 +146,7 @@ public final class ConditionalsManager {
      *
      * @return this, for chaining.
      */
-    public ConditionalsManager passthroughMode(boolean passthroughMode) {
+    public ConditionalsConfig passthroughMode(boolean passthroughMode) {
         this.passthroughMode = passthroughMode;
         return this;
     }

@@ -39,9 +39,13 @@ public class ConditionalsCollectorTest {
         "    .test {color: green}\n" +
         "}\n" +
         "\n" +
+        "@if(!ie9) {\n" +
+        "    .test {color: green}\n" +
+        "}\n" +
+        "\n" +
         "#id, #id2 {font-size: 10em;margin: 10px}\n" +
         "\n" +
-        "@if(webkit) {\n" +
+        "@if(webkit || blink) {\n" +
         "    #id {border: 1px}\n" +
         "}";
 
@@ -69,7 +73,15 @@ public class ConditionalsCollectorTest {
     }
 
     @Test
-    public void conditions() {
-        assertThat(collector.foundConditions()).containsOnly("ie7", "ie8", "webkit");
+    public void testFoundConditions() {
+        assertThat(collector.foundConditions()).containsOnly("ie7", "ie8", "ie9", "webkit", "blink");
+    }
+
+    @Test
+    public void testExcludeNegationOnly() {
+        collector = new ConditionalsCollector().excludeNegationOnly(true);
+        Omakase.source(SOURCE).use(collector).process();
+        assertThat(collector.foundConditions()).containsOnly("ie7", "ie8", "webkit", "blink");
     }
 }
+

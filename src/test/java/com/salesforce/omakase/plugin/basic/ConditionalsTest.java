@@ -28,8 +28,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class ConditionalsTest {
     @Test
-    public void getsManager() {
+    public void getsConfig() {
         Conditionals conditionals = new Conditionals("ie7");
-        assertThat(conditionals.manager().hasCondition("ie7")).isTrue();
+        assertThat(conditionals.config().hasCondition("ie7")).isTrue();
     }
 }

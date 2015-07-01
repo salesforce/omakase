@@ -18,6 +18,7 @@ package com.salesforce.omakase.plugin.basic;
 
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.DependentPlugin;
@@ -39,6 +40,7 @@ import java.util.Set;
  */
 public final class ConditionalsCollector implements DependentPlugin {
     private final Set<String> conditions = new HashSet<>();
+    private boolean excludeNegationOnly;
 
     @Override
     public void dependencies(PluginRegistry registry) {
@@ -47,14 +49,37 @@ public final class ConditionalsCollector implements DependentPlugin {
     }
 
     /**
+     * Specify true to ignore conditions that are <em>only</em> used with the negation operator (e.g., <code>!ie9</code>).
+     * <p/>
+     * In some cases you may not care about conditions only referenced in this way. For example, if you were using this plugin to
+     * determine which permutations to create based on which conditions are referenced, you wouldn't want the conditions only used
+     * with negation, as you would not need to generate permutations for those conditions.
+     * <p/>
+     * This method should only be called before parsing has begun.
+     *
+     * @param excludeNegationOnly
+     *     Whether to ignore conditions only used with the negation operator.
+     *
+     * @return this, for chaining.
+     */
+    public ConditionalsCollector excludeNegationOnly(boolean excludeNegationOnly) {
+        this.excludeNegationOnly = excludeNegationOnly;
+        return this;
+    }
+
+    /**
      * Subscription method - do not call directly.
      *
-     * @param conditional
+     * @param block
      *     The conditional at-rule block instance.
      */
     @Observe
-    public void conditional(ConditionalAtRuleBlock conditional) {
-        conditions.add(conditional.condition());
+    public void conditional(ConditionalAtRuleBlock block) {
+        for (Conditional c : block.conditionals()) {
+            if (!excludeNegationOnly || !c.isLogicalNegation()) {
+                conditions.add(c.condition());
+            }
+        }
     }
 
     /**

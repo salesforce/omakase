@@ -201,23 +201,38 @@ StyleWriter writer = StyleWriter.compressed();
 Omakase.source(input).use(conditionals).use(writer).process();
 
 // ie7
-conditionals.manager().replaceTrueConditions("ie7");
+conditionals.config().replaceTrueConditions("ie7");
 String ie7 = writer.write();
 
 // firefox
-conditionals.manager().replaceTrueConditions("firefox");
+conditionals.config().replaceTrueConditions("firefox");
 String firefox = writer.write();
 
 // chrome
-conditionals.manager().replaceTrueConditions("webkit", "chrome");
+conditionals.config().replaceTrueConditions("webkit", "chrome");
 String chrome = writer.write();
+```
+You can also use logical negation and logical or operators in the CSS:
+
+```css
+@if (!ie7) {
+  .button {
+    display: inline-block;
+  }
+}
+
+@if (ie8 || ie9 || ie10) {
+  .button {
+    marign: 7px;
+  }
+}
 ```
 
 Finally, if you would like to enable conditions and validate them but hold off on actually evaluating them, you can specify `passthroughMode` as true:
 
 ```java
-new Conditionals("ie7").manager().passthroughMode(true);
-new Conditionals(true).manager().addTrueConditions("ie7"); // same as above
+new Conditionals("ie7").config().passthroughMode(true);
+new Conditionals(true).config().addTrueConditions("ie7"); // same as above
 ```
 
 Of course, any string can be used and referred to as a *true condition*, not just browsers. Finally, note that the default behavior is to automatically convert all conditions found in the input as well as the specified *true conditions* to **lower-case**. Thus, usage is not case-dependent.
@@ -329,7 +344,7 @@ Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector,
 
 The `Prefixer` plugin works well with existing CSS that is already littered with various vendor prefixes. By default, if a prefix is already present then it will be preserved as-is. That is, a duplicate prefix will not be added. This allows you to turn on and use the plugin right away without having to clean up your CSS file. It can even be a way for you to specify a value for the prefixed declaration that differs from the unprefixed one.
 
-On the other hand, in many cases it will be more performant to actually have all unecessary prefixes removed. You can do this with the `prune` method. 
+On the other hand, in many cases it will be more performant to actually have all unecessary prefixes removed. You can do this with the `prune` method.
 
 For example, take the following:
 
@@ -441,7 +456,7 @@ Here's a list of what's currently supported:
     Selector
     ----------------------------
     placeholder
-    selection    
+    selection
 
 You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the "Scripts" section below.
 

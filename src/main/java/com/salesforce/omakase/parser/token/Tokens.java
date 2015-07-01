@@ -106,6 +106,9 @@ public enum Tokens implements Token {
     /** single quote */
     SINGLE_QUOTE('\'', "' (single quote)"),
 
+    /** pipe character */
+    PIPE('|', "| (pipe)"),
+
     /** newline character */
     NEWLINE('\n', "newline"),
 

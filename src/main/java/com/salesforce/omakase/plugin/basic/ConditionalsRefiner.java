@@ -16,10 +16,12 @@
 
 package com.salesforce.omakase.plugin.basic;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -31,6 +33,9 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.token.Tokens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Parses {@link AtRule} objects that are {@link ConditionalAtRuleBlock}s.
  *
@@ -40,16 +45,16 @@ import com.salesforce.omakase.parser.token.Tokens;
  */
 public final class ConditionalsRefiner implements AtRuleRefiner {
     private static final String IF = "if";
-    private final ConditionalsManager manager;
+    private final ConditionalsConfig config;
 
     /**
      * Creates a new {@link ConditionalsRefiner} instance.
      *
-     * @param manager
-     *     The {@link ConditionalsManager} instance, to be passed all new {@link ConditionalAtRuleBlock} instances.
+     * @param config
+     *     The {@link ConditionalsConfig} instance, to be passed all new {@link ConditionalAtRuleBlock} instances.
      */
-    public ConditionalsRefiner(ConditionalsManager manager) {
-        this.manager = manager;
+    public ConditionalsRefiner(ConditionalsConfig config) {
+        this.config = config;
     }
 
     @Override
@@ -67,10 +72,38 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
             throw new ParserException(atRule, Message.MISSING_CONDITIONAL_BLOCK);
         }
 
-        // parse the condition, lower-case for comparison purposes
+        // parse the condition(s), lower-case for comparison purposes. Conditions can be preceded be a logical negation operator
+        // (!) and multiple conditions can be separated by logical OR operators (||)
+
+        List<Conditional> conditionals = new ArrayList<>(3); // if changing from a list check unit tests
+
         RawSyntax rawExpression = atRule.rawExpression().get();
         Source source = new Source(rawExpression.content(), rawExpression.line(), rawExpression.column(), false);
-        String condition = source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN).trim().toLowerCase();
+
+        source.expect(Tokens.OPEN_PAREN);
+        source.skipWhitepace();
+
+        // find the first condition
+        boolean isNegated = source.optionallyPresent(Tokens.EXCLAMATION);
+        Optional<String> condition = source.readIdent();
+        if (!condition.isPresent()) throw new ParserException(source, Message.CONDITION_NAME);
+        conditionals.add(new Conditional(condition.get().toLowerCase(), isNegated));
+
+        // find extra conditions after logical ORs
+        source.skipWhitepace();
+        while (source.optionallyPresent(Tokens.PIPE)) {
+            source.expect(Tokens.PIPE);
+            source.skipWhitepace();
+
+            isNegated = source.optionallyPresent(Tokens.EXCLAMATION);
+            condition = source.readIdent();
+            if (!condition.isPresent()) throw new ParserException(source, Message.CONDITION_NAME);
+            conditionals.add(new Conditional(condition.get().toLowerCase(), isNegated));
+
+            source.skipWhitepace();
+        }
+
+        source.expect(Tokens.CLOSE_PAREN);
 
         // nothing should be left
         source.skipWhitepace();
@@ -92,8 +125,8 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
         }
 
         // create the new conditional node and broadcast it
-        ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), manager, condition,
-            queryable.filter(Statement.class), broadcaster);
+        ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), conditionals,
+            queryable.filter(Statement.class), config, broadcaster);
         broadcaster.broadcast(block);
 
         // don't print out the name of the at-rule

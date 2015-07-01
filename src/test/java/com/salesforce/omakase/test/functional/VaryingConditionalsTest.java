@@ -113,23 +113,23 @@ public class VaryingConditionalsTest {
         assertThat(inline.write()).describedAs("ie7 only").isEqualTo(EXPECTED_IE7);
 
         // ie7 + webkit
-        conditionals.manager().addTrueConditions("webkit");
+        conditionals.config().addTrueConditions("webkit");
         assertThat(inline.write()).describedAs("ie7 + webkit").isEqualTo(EXPECTED_BOTH);
 
         // webkit only
-        conditionals.manager().removeTrueCondition("ie7");
+        conditionals.config().removeTrueCondition("ie7");
         assertThat(inline.write()).describedAs("webkit only").isEqualTo(WEBKIT_ONLY);
 
         // ie8
-        conditionals.manager().clearTrueConditions().addTrueConditions("ie8");
+        conditionals.config().clearTrueConditions().addTrueConditions("ie8");
         assertThat(inline.write()).describedAs("ie8").isEqualTo(NONE);
 
         // none
-        conditionals.manager().clearTrueConditions();
+        conditionals.config().clearTrueConditions();
         assertThat(inline.write()).describedAs("ie8").isEqualTo(NONE);
 
         // passthrough
-        conditionals.manager().passthroughMode(true);
+        conditionals.config().passthroughMode(true);
         assertThat(inline.write()).describedAs("passthrough").isEqualTo(PASSTHROUGH);
     }
 

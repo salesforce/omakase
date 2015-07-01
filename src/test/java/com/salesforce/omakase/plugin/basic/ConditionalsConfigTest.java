@@ -23,15 +23,15 @@ import org.junit.Test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link ConditionalsManager}.
+ * Unit tests for {@link ConditionalsConfig}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class ConditionalsManagerTest {
+public class ConditionalsConfigTest {
     @Test
     public void addCondition() {
-        ConditionalsManager manager = new ConditionalsManager();
+        ConditionalsConfig manager = new ConditionalsConfig();
         manager.addTrueConditions(Sets.newHashSet("ie7"));
         assertThat(manager.trueConditions()).hasSize(1);
         assertThat(Iterables.get(manager.trueConditions(), 0)).isEqualTo("ie7");
@@ -39,21 +39,21 @@ public class ConditionalsManagerTest {
 
     @Test
     public void hasConditionTrue() {
-        ConditionalsManager manager = new ConditionalsManager();
+        ConditionalsConfig manager = new ConditionalsConfig();
         manager.addTrueConditions("ie7");
         assertThat(manager.hasCondition("ie7")).isTrue();
     }
 
     @Test
     public void hasConditionFalse() {
-        ConditionalsManager manager = new ConditionalsManager();
+        ConditionalsConfig manager = new ConditionalsConfig();
         manager.addTrueConditions("ie7");
         assertThat(manager.hasCondition("ie8")).isFalse();
     }
 
     @Test
     public void removeCondition() {
-        ConditionalsManager manager = new ConditionalsManager().addTrueConditions("ie7");
+        ConditionalsConfig manager = new ConditionalsConfig().addTrueConditions("ie7");
         assertThat(manager.trueConditions()).hasSize(1);
         assertThat(Iterables.get(manager.trueConditions(), 0)).isEqualTo("ie7");
         manager.removeTrueCondition("ie7");
@@ -62,7 +62,7 @@ public class ConditionalsManagerTest {
 
     @Test
     public void clearConditions() {
-        ConditionalsManager manager = new ConditionalsManager().addTrueConditions("ie7", "ie8");
+        ConditionalsConfig manager = new ConditionalsConfig().addTrueConditions("ie7", "ie8");
         assertThat(manager.trueConditions()).hasSize(2);
         manager.clearTrueConditions();
         assertThat(manager.trueConditions()).isEmpty();
@@ -70,19 +70,19 @@ public class ConditionalsManagerTest {
 
     @Test
     public void replacesConditions() {
-        ConditionalsManager manager = new ConditionalsManager().addTrueConditions("ie7", "ie8");
+        ConditionalsConfig manager = new ConditionalsConfig().addTrueConditions("ie7", "ie8");
         assertThat(manager.replaceTrueConditions("chrome").trueConditions()).containsExactly("chrome");
     }
 
     @Test
     public void passthroughModeDefaultFalse() {
-        ConditionalsManager manager = new ConditionalsManager();
+        ConditionalsConfig manager = new ConditionalsConfig();
         assertThat(manager.isPassthroughMode()).isFalse();
     }
 
     @Test
     public void passthroughModeTrue() {
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
+        ConditionalsConfig manager = new ConditionalsConfig().passthroughMode(true);
         assertThat(manager.isPassthroughMode()).isTrue();
     }
 }

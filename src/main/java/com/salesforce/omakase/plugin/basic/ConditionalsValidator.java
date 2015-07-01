@@ -19,6 +19,7 @@ package com.salesforce.omakase.plugin.basic;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
@@ -38,12 +39,12 @@ import java.util.Set;
  * assumption of all other related conditionals plugins.
  * <p/>
  * Also note that this will automatically enable the {@link Conditionals} plugin, in passthroughMode (see {@link
- * ConditionalsManager#passthroughMode(boolean)}) unless a {@link Conditionals} plugin instance was registered before this one.
+ * ConditionalsConfig#passthroughMode(boolean)}) unless a {@link Conditionals} plugin instance was registered before this one.
  *
  * @author nmcwilliams
  * @see Conditionals
  * @see ConditionalsCollector
- * @see ConditionalsManager
+ * @see ConditionalsConfig
  * @see ConditionalAtRuleBlock
  */
 public class ConditionalsValidator implements DependentPlugin {
@@ -110,8 +111,10 @@ public class ConditionalsValidator implements DependentPlugin {
      */
     @Validate
     public void validate(ConditionalAtRuleBlock block, ErrorManager em) {
-        if (allowedConditions != null && !allowedConditions.contains(block.condition())) {
-            em.report(ErrorLevel.FATAL, block, String.format(MSG, block.condition(), allowedConditions));
+        for (Conditional conditional : block.conditionals()) {
+            if (allowedConditions != null && !allowedConditions.contains(conditional.condition())) {
+                em.report(ErrorLevel.FATAL, block, String.format(MSG, conditional.condition(), allowedConditions));
+            }
         }
     }
 }

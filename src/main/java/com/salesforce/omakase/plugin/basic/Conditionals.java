@@ -32,8 +32,8 @@ import java.util.Set;
  * {@code @}if(ie7) { .test{color:red} }
  * </pre>
  * <p/>
- * This block will output its inner statements if its condition (argument) is contained within a specified set of strings that
- * should evaluate to "true".
+ * This block will output its inner statements if its condition matches one of the true conditions in the {@link
+ * ConditionalsConfig} instance.
  * <p/>
  * To enable conditionals, register an instance of this plugin during parser setup:
  * <pre>
@@ -44,28 +44,28 @@ import java.util.Set;
  * For more information on using and configuring conditionals see the main readme file.
  *
  * @author nmcwilliams
- * @see ConditionalsManager
+ * @see ConditionalsConfig
  * @see ConditionalsCollector
  */
 public final class Conditionals implements SyntaxPlugin, DependentPlugin {
-    private final ConditionalsManager manager = new ConditionalsManager();
+    private final ConditionalsConfig config = new ConditionalsConfig();
 
     /**
-     * Creates a new {@link Conditionals} plugin instance with no specified true conditions. Be sure to add the conditions later
-     * via the {@link #manager()} method if applicable.
+     * Creates a new {@link Conditionals} plugin instance with no specified true conditions. Be sure to add these true conditions
+     * later via the {@link #config()} method if applicable.
      */
     public Conditionals() {}
 
     /**
      * Creates a new {@link Conditionals} plugin instance with passthroughMode set as given. See {@link
-     * ConditionalsManager#passthroughMode(boolean)} for more information. Be sure to add the conditions later via the {@link
-     * #manager()} method if applicable.
+     * ConditionalsConfig#passthroughMode(boolean)} for more information. Be sure to add the conditions later via the {@link
+     * #config()} method if applicable.
      *
      * @param passthroughMode
      *     Whether passthroughMode should be enabled.
      */
     public Conditionals(boolean passthroughMode) {
-        manager.passthroughMode(passthroughMode);
+        config.passthroughMode(passthroughMode);
     }
 
     /**
@@ -87,7 +87,7 @@ public final class Conditionals implements SyntaxPlugin, DependentPlugin {
      *     Set containing the strings that should evaluate to "true".
      */
     public Conditionals(Set<String> trueConditions) {
-        manager.addTrueConditions(trueConditions);
+        config.addTrueConditions(trueConditions);
     }
 
     @Override
@@ -97,16 +97,16 @@ public final class Conditionals implements SyntaxPlugin, DependentPlugin {
 
     @Override
     public void registerRefiners(RefinerRegistry registry) {
-        registry.register(new ConditionalsRefiner(manager));
+        registry.register(new ConditionalsRefiner(config));
     }
 
     /**
-     * Gets the {@link ConditionalsManager} instance. The {@link ConditionalsManager} can be used to add, remove, or update the
-     * set of "trueConditions".
+     * Gets the {@link ConditionalsConfig} instance. The {@link ConditionalsConfig} can be used to add, remove, or update the set
+     * of "trueConditions".
      *
-     * @return The {@link ConditionalsManager} instance.
+     * @return The {@link ConditionalsConfig} instance.
      */
-    public ConditionalsManager manager() {
-        return manager;
+    public ConditionalsConfig config() {
+        return config;
     }
 }

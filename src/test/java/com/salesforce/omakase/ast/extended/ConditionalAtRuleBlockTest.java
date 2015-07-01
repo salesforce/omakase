@@ -26,7 +26,7 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.plugin.basic.ConditionalsManager;
+import com.salesforce.omakase.plugin.basic.ConditionalsConfig;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,43 +43,90 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class ConditionalAtRuleBlockTest {
-    private static final ConditionalsManager MANAGER = new ConditionalsManager().addTrueConditions("ie7", "webkit");
+    private static final ConditionalsConfig CONFIG = new ConditionalsConfig().addTrueConditions("ie7", "webkit");
+    private static final Conditional IE7 = new Conditional("ie7", false);
     private List<Statement> statements;
+    private List<Conditional> conditionals;
 
     @Before
     public void setup() {
         statements = Lists.newArrayList();
+        conditionals = Lists.newArrayList();
     }
 
     @Test
-    public void getCondition() {
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, MANAGER, "ie7", statements, null);
-        assertThat(b.condition()).isEqualTo("ie7");
+    public void getConditionals() {
+        conditionals.add(IE7);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
+        assertThat(b.conditionals()).containsExactly(IE7);
     }
 
     @Test
     public void getStatements() {
         statements.add(new Rule());
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, MANAGER, "ie7", statements, null);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
         assertThat(b.statements()).hasSize(1);
     }
 
     @Test
+    public void matchesOnlyConditional() {
+        conditionals.add(IE7);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
+        assertThat(b.matches()).isTrue();
+    }
+
+    @Test
+    public void doesntMatchOnlyConditional() {
+        conditionals.add(new Conditional("ie8", false));
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
+        assertThat(b.matches()).isFalse();
+    }
+
+    @Test
+    public void matchesSubsequentConditional() {
+        conditionals.add(new Conditional("ie8", false));
+        conditionals.add(IE7);
+        conditionals.add(new Conditional("ie9", false));
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
+        assertThat(b.matches()).isTrue();
+    }
+
+    @Test
+    public void doesntMatchAnyConditional() {
+        conditionals.add(new Conditional("ie8", false));
+        conditionals.add(new Conditional("ie9", false));
+        conditionals.add(new Conditional("ie10", false));
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
+        assertThat(b.matches()).isFalse();
+    }
+
+    @Test
+    public void matchesNegation() {
+        conditionals.add(new Conditional("ie10", true));
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
+        assertThat(b.matches()).isTrue();
+    }
+
+    @Test
     public void isWritableMethodWhenMatches() {
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, MANAGER, "ie7", statements, null);
+        conditionals.add(IE7);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
         assertThat(b.isWritable()).isTrue();
     }
 
     @Test
     public void notWritableMethodWhenNotMatches() {
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, MANAGER, "ie8", statements, null);
+        conditionals.add(new Conditional("ie8", false));
+        conditionals.add(new Conditional("ie9", false));
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
         assertThat(b.isWritable()).isFalse();
     }
 
     @Test
     public void isWritableWhenPassthroughMode() {
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie8", statements, null);
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        conditionals.add(IE7);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
         assertThat(b.isWritable()).isTrue();
     }
 
@@ -90,7 +137,8 @@ public class ConditionalAtRuleBlockTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
         statements.add(rule);
 
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, MANAGER, "ie7", statements, null);
+        conditionals.add(IE7);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
         assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo(".test{display:none}");
     }
 
@@ -101,8 +149,9 @@ public class ConditionalAtRuleBlockTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
         statements.add(rule);
 
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
+        conditionals.add(IE7);
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
         assertThat(StyleWriter.verbose().writeSnippet(b)).isEqualTo("@if(ie7) {\n.test {\n  display: none;\n}\n}");
     }
 
@@ -113,8 +162,9 @@ public class ConditionalAtRuleBlockTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
         statements.add(rule);
 
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "webkit", statements, null);
+        conditionals.add(new Conditional("webkit", false));
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
         assertThat(StyleWriter.inline().writeSnippet(b)).isEqualTo("@if(webkit) {\n.test {display:none}\n}");
     }
 
@@ -125,9 +175,54 @@ public class ConditionalAtRuleBlockTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
         statements.add(rule);
 
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
+        conditionals.add(IE7);
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
         assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo("@if(ie7){.test{display:none}}");
+    }
+
+    @Test
+    public void writesLogicalOrVerbose() {
+        Rule rule = new Rule(5, 5, new QueryableBroadcaster());
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
+        statements.add(rule);
+
+        conditionals.add(IE7);
+        conditionals.add(new Conditional("ie8", false));
+        conditionals.add(new Conditional("ie9", false));
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
+        assertThat(StyleWriter.verbose().writeSnippet(b)).isEqualTo("@if(ie7 || ie8 || ie9) {\n.test {\n  display: none;\n}\n}");
+    }
+
+    @Test
+    public void writeLogicalOrInline() {
+        Rule rule = new Rule(5, 5, new QueryableBroadcaster());
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
+        statements.add(rule);
+
+        conditionals.add(new Conditional("ie7", false));
+        conditionals.add(new Conditional("ie10", true));
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
+        assertThat(StyleWriter.inline().writeSnippet(b)).isEqualTo("@if(ie7 || !ie10) {\n.test {display:none}\n}");
+    }
+
+    @Test
+    public void writesLogicalorCompressed() {
+        Rule rule = new Rule(5, 5, new QueryableBroadcaster());
+        rule.selectors().append(new Selector(new ClassSelector("test")));
+        rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
+        statements.add(rule);
+
+        conditionals.add(IE7);
+        conditionals.add(new Conditional("ie8", true));
+        conditionals.add(new Conditional("ie9", false));
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
+        assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo("@if(ie7||!ie8||ie9){.test{display:none}}");
     }
 
     @Test
@@ -138,8 +233,9 @@ public class ConditionalAtRuleBlockTest {
         rule.declarations().append(d);
         statements.add(rule);
 
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
+        conditionals.add(IE7);
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
 
         QueryableBroadcaster qb = new QueryableBroadcaster();
         b.propagateBroadcast(qb);
@@ -152,11 +248,13 @@ public class ConditionalAtRuleBlockTest {
         rule.selectors().append(new Selector(new ClassSelector("test")));
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of("none")));
         statements.add(rule);
-        ConditionalsManager manager = new ConditionalsManager().passthroughMode(true);
-        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, manager, "ie7", statements, null);
 
-        ConditionalAtRuleBlock copy = (ConditionalAtRuleBlock)b.copy();
-        assertThat(copy.condition()).isEqualTo("ie7");
+        conditionals.add(IE7);
+        ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
+        ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
+
+        ConditionalAtRuleBlock copy = b.copy();
+        assertThat(copy.conditionals().get(0).condition()).isEqualTo("ie7");
         assertThat(copy.statements()).hasSize(1);
     }
 }

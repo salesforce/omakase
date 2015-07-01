@@ -20,6 +20,7 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
@@ -52,7 +53,7 @@ public class ConditionalsRefinerTest {
 
     @Before
     public void setup() {
-        strategy = new ConditionalsRefiner(new ConditionalsManager().addTrueConditions("ie7"));
+        strategy = new ConditionalsRefiner(new ConditionalsConfig().addTrueConditions("ie7"));
         broadcaster = new QueryableBroadcaster();
         refiner = new MasterRefiner(broadcaster).register(strategy);
     }
@@ -134,7 +135,7 @@ public class ConditionalsRefinerTest {
         assertThat(ar.block().get()).isInstanceOf(ConditionalAtRuleBlock.class);
 
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
-        assertThat(block.condition()).isEqualTo("ie7");
+        assertThat(block.conditionals().get(0).condition()).isEqualTo("ie7");
         assertThat(block.statements()).hasSize(2);
     }
 
@@ -166,7 +167,7 @@ public class ConditionalsRefinerTest {
         strategy.refine(ar, broadcaster, refiner);
 
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
-        assertThat(block.condition()).isEqualTo("ie7");
+        assertThat(block.conditionals().get(0).condition()).isEqualTo("ie7");
     }
 
     @Test
@@ -177,7 +178,7 @@ public class ConditionalsRefinerTest {
         strategy.refine(ar, broadcaster, refiner);
 
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
-        assertThat(block.condition()).isEqualTo("ie7");
+        assertThat(block.conditionals().get(0).condition()).isEqualTo("ie7");
     }
 
     @Test
@@ -190,5 +191,83 @@ public class ConditionalsRefinerTest {
         ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
         assertThat(block.line()).isEqualTo(5);
         assertThat(block.column()).isEqualTo(2);
+    }
+
+    @Test
+    public void parsesNegation() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(!ie7)"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refine(ar, broadcaster, refiner);
+
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        Conditional c = block.conditionals().get(0);
+        assertThat(c.condition()).isEqualTo("ie7");
+        assertThat(c.isLogicalNegation()).isTrue();
+    }
+
+    @Test
+    public void parsesLogicalOR() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || ie7)"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refine(ar, broadcaster, refiner);
+
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+
+        Conditional c1 = block.conditionals().get(0);
+        assertThat(c1.condition()).isEqualTo("ie6");
+        assertThat(c1.isLogicalNegation()).isFalse();
+
+        Conditional c2 = block.conditionals().get(1);
+        assertThat(c2.condition()).isEqualTo("ie7");
+        assertThat(c2.isLogicalNegation()).isFalse();
+    }
+
+    @Test
+    public void parsesNegationMixedWithLogicalOR() {
+        // no, this condition does not make any sense but hey
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || !IE7 || IE8 || !ie9)"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        strategy.refine(ar, broadcaster, refiner);
+
+        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+
+        Conditional c1 = block.conditionals().get(0);
+        assertThat(c1.condition()).isEqualTo("ie6");
+        assertThat(c1.isLogicalNegation()).isFalse();
+
+        Conditional c2 = block.conditionals().get(1);
+        assertThat(c2.condition()).isEqualTo("ie7");
+        assertThat(c2.isLogicalNegation()).isTrue();
+
+        Conditional c3 = block.conditionals().get(2);
+        assertThat(c3.condition()).isEqualTo("ie8");
+        assertThat(c3.isLogicalNegation()).isFalse();
+
+        Conditional c4 = block.conditionals().get(3);
+        assertThat(c4.condition()).isEqualTo("ie9");
+        assertThat(c4.isLogicalNegation()).isTrue();
+    }
+
+    @Test
+    public void errorsIfInvalidLogicalOR() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 | ie7)"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        exception.expect(ParserException.class);
+        exception.expectMessage("Expected to find |");
+        strategy.refine(ar, broadcaster, refiner);
+    }
+
+    @Test
+    public void errorsIfMissingConditionAfterOR() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || )"), VALID_BLOCK, refiner);
+        new Stylesheet(broadcaster).append(ar);
+
+        exception.expect(ParserException.class);
+        exception.expectMessage("Expected to find a valid condition name");
+        strategy.refine(ar, broadcaster, refiner);
     }
 }

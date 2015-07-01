@@ -49,11 +49,26 @@ public class ConditionalsValidatorTest {
     }
 
     @Test
+    public void noErrorIfConditionAllowed() {
+        String src = "@if(ie7) {.class{color:red}}";
+        Omakase.source(src).use(new ConditionalsValidator("ie7")).process();
+        // no error
+    }
+
+    @Test
     public void errorsIfConditionNotAllowed() {
         String src = "@if(ie8) {.class{color:red}}";
         exception.expect(FatalException.class);
         exception.expectMessage("Invalid condition");
         Omakase.source(src).use(new ConditionalsValidator("ie7")).process();
+    }
+
+    @Test
+    public void errorsIfSomeConditionsNotAllowed() {
+        String src = "@if(ie7 || mobile) {.class{color:red}}";
+        exception.expect(FatalException.class);
+        exception.expectMessage("Invalid condition");
+        Omakase.source(src).use(new ConditionalsValidator("ie7", "desktop")).process();
     }
 
     @Test
@@ -64,7 +79,7 @@ public class ConditionalsValidatorTest {
             .use(new ConditionalsValidator())
             .process();
 
-        assertThat(registry.retrieve(Conditionals.class).get().manager().isPassthroughMode()).isFalse();
+        assertThat(registry.retrieve(Conditionals.class).get().config().isPassthroughMode()).isFalse();
     }
 
     @Test
@@ -74,6 +89,6 @@ public class ConditionalsValidatorTest {
             .use(new ConditionalsValidator())
             .process();
 
-        assertThat(registry.retrieve(Conditionals.class).get().manager().isPassthroughMode()).isTrue();
+        assertThat(registry.retrieve(Conditionals.class).get().config().isPassthroughMode()).isTrue();
     }
 }

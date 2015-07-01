@@ -16,6 +16,7 @@
 
 package com.salesforce.omakase.ast.extended;
 
+import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
@@ -28,7 +29,7 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.basic.Conditionals;
-import com.salesforce.omakase.plugin.basic.ConditionalsManager;
+import com.salesforce.omakase.plugin.basic.ConditionalsConfig;
 import com.salesforce.omakase.plugin.basic.ConditionalsRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
 
 /**
@@ -49,8 +50,9 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
  * {@code @}if(ie7) { .test{color:red} }
  * </pre>
  * <p/>
- * This block will output its inner statements if its condition (argument) is contained within a specified set of strings that
- * should evaluate to "true".
+ * This block will output its inner statements if its condition is contained within the set of "true" condition strings, as
+ * specified by a {@link ConditionalsConfig}. Negation may be specified on conditions using <code>!</code>. Multiple conditions
+ * may be specified using <code>||</code>.
  * <p/>
  * For more information on using and configuring conditionals see the main readme file.
  *
@@ -61,53 +63,69 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
 public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implements AtRuleBlock {
+    private final ImmutableList<Conditional> conditionals;
     private final SyntaxCollection<StatementIterable, Statement> statements;
-    private final ConditionalsManager manager;
-    private final String condition;
+    private final ConditionalsConfig config;
 
     /**
-     * Creates a new {@link ConditionalAtRuleBlock} instance with the given true conditions, condition, and set of statements.
+     * Creates a new {@link ConditionalAtRuleBlock} instance with the given conditions, statements and config object.
      * <p/>
-     * The given set of conditions represents the set of strings that equal the "true" values. During printing/writing of the CSS
-     * source, this block will only be printed if its given condition is contained with the trueConditions set. Note that this is
-     * case-sensitive. It is highly recommended to enforce a single case (e.g., lower-case) among the given condition and set of
-     * trueConditions in order to ensure this works properly.
+     * The given config contains the set of strings that are the "true" values/conditions. During output of the CSS source, this
+     * block and its contents will only be written out if its condition matches what is in the config (or vice versa if the
+     * negation operator is used).
      * <p/>
-     * It is acceptable for the given Set to be changed after being passed to this class, allowing for producing multiple
-     * variations of the CSS source from a single parse operation. For example, set the trueConditions, write out the source,
-     * change the trueConditions, write out the source again, etc... . However also note that this also makes this class not
-     * thread-safe, depending on how the given set is used or altered outside of this class.
+     * Note that this matching is case-sensitive. It is highly recommended to enforce a single case (e.g., lower-case) among the
+     * given conditions and set of true conditions in order to ensure matching works properly (by default the various conditionals
+     * plugin classes do this automatically).
+     * <p/>
+     * It is acceptable for the given config to change its set of true conditions, allowing the outputting of multiple variations
+     * of the CSS source from a single parse operation. For example, set the true conditions, write out the source, change the
+     * true conditions, write out the source again, etc.
      *
      * @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param manager
-     *     The {@link ConditionalsManager} instance.
-     * @param condition
-     *     The condition for this particular conditional at-rule block.
+     * @param config
+     *     The {@link ConditionalsConfig} instance.
+     * @param conditionals
+     *     The  list of conditionals.
      * @param statements
      *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
      *     set.
      * @param broadcaster
      *     The {@link Broadcaster} to use for broadcasting new units.
      */
-    public ConditionalAtRuleBlock(int line, int column, ConditionalsManager manager, String condition,
-        Iterable<Statement> statements, Broadcaster broadcaster) {
+    public ConditionalAtRuleBlock(int line, int column, Iterable<Conditional> conditionals, Iterable<Statement> statements,
+        ConditionalsConfig config, Broadcaster broadcaster) {
         super(line, column);
-        this.condition = checkNotNull(condition, "condition cannot be null");
-        this.manager = checkNotNull(manager, "manager cannot be null");
+        this.config = checkNotNull(config, "config cannot be null");
+        this.conditionals = ImmutableList.copyOf(checkNotNull(conditionals, "conditionals cannot be null"));
         this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
         this.statements.appendAll(statements);
     }
 
     /**
-     * Gets the condition (argument) of the conditional at-rule block.
+     * Gets the list of {@link Conditionals} specified as arguments to this block. There may be more than one if the
+     * <code>||</code> operator was used.
      *
-     * @return The lower-cased condition string.
+     * @return The list of conditionals.
      */
-    public String condition() {
-        return condition;
+    public ImmutableList<Conditional> conditionals() {
+        return conditionals;
+    }
+
+    /**
+     * Returns true if at least one of the {@link Conditionals} in this block matches any of the true conditions in the config at
+     * the time of this method call.
+     *
+     * @return True if the condition of this block evaluates to true.
+     */
+    public boolean matches() {
+        for (Conditional conditional : conditionals) {
+            if (conditional.matches(config)) return true;
+        }
+        return false;
     }
 
     @Override
@@ -122,13 +140,27 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
 
     @Override
     public boolean isWritable() {
-        return super.isWritable() && (manager.isPassthroughMode() || manager.hasCondition(condition));
+        return super.isWritable() && (config.isPassthroughMode() || matches());
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        if (manager.isPassthroughMode()) {
-            appendable.append("@if(").append(condition).append(')');
+        if (config.isPassthroughMode()) {
+            appendable.append("@if(");
+            writer.incrementDepth();
+            boolean isFirst = true;
+            for (Conditional conditional : conditionals) {
+                if (!isFirst) {
+                    appendable.spaceIf(!writer.isCompressed());
+                    appendable.append("||");
+                    appendable.spaceIf(!writer.isCompressed());
+                }
+                writer.writeInner(conditional, appendable);
+                isFirst = false;
+            }
+            writer.decrementDepth();
+            appendable.append(')');
+
             appendable.spaceIf(!writer.isCompressed());
             appendable.append('{');
             appendable.newlineIf(!writer.isCompressed());
@@ -138,7 +170,7 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
             writer.writeInner(statement, appendable);
         }
 
-        if (manager.isPassthroughMode()) {
+        if (config.isPassthroughMode()) {
             appendable.newlineIf(!writer.isCompressed());
             appendable.append('}');
         }
@@ -156,7 +188,7 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
         for (Statement statement : statements) {
             copiedStatements.add(statement.copy());
         }
-        return new ConditionalAtRuleBlock(-1, -1, manager, condition, copiedStatements, null).copiedFrom(this);
+        return new ConditionalAtRuleBlock(-1, -1, conditionals, copiedStatements, config, null).copiedFrom(this);
     }
 
     @Override
