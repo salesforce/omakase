@@ -17,6 +17,7 @@
 package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 
@@ -25,6 +26,10 @@ import com.salesforce.omakase.ast.selector.Selector;
  * <p/>
  * Please be aware that as this is post processing, and changes or modifications made to AST objects will not be automatically
  * provided to plugin subscription methods. Post processing is generally best for read-only operations.
+ * <p/>
+ * If you are looking to make modifications after the last rule has been parsed, consider creating a subscription method to {@link
+ * Stylesheet}, which should be the very last syntax unit to be broadcasted (except any broadcasts resulted from changes you
+ * make, which means multiple plugins doing this may not work well together).
  *
  * @author nmcwilliams
  */
