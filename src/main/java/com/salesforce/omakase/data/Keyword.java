@@ -17,13 +17,14 @@
 package com.salesforce.omakase.data;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.util.Values;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 import java.util.Map;
 
