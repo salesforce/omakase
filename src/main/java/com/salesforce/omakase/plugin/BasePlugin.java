@@ -31,8 +31,8 @@ import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.plugin.basic.Conditionals;
-import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.plugin.conditionals.Conditionals;
+import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.

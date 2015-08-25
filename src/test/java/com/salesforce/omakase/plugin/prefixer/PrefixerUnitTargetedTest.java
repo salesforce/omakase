@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
@@ -846,5 +849,23 @@ public class PrefixerUnitTargetedTest {
         prefixer.support().latest(Browser.FIREFOX);
         prefixer.support().latest(Browser.CHROME);
         assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    public Prefixer flexSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().all(Browser.FIREFOX);
+        prefixer.support().all(Browser.CHROME);
+        prefixer.support().all(Browser.SAFARI);
+        prefixer.support().all(Browser.IOS_SAFARI);
+        prefixer.support().all(Browser.IE);
+        return prefixer;
+    }
+
+    @Test
+    public void displayFlex() {
+        String original = ".test {display:flex}";
+        String expected = ".test {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex;}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
     }
 }

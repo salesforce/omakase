@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.other;
+package com.salesforce.omakase.plugin.misc;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -27,7 +27,7 @@ import com.salesforce.omakase.util.Values;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin.REFINER;
+import static com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin.REFINER;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.atrule.AtRule;

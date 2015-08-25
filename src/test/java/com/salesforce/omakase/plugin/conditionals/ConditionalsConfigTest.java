@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.conditionals;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

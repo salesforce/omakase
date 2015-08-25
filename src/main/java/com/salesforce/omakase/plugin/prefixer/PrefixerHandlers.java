@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -201,6 +201,33 @@ final class PrefixerHandlers {
         @Override
         protected Multimap<Prefix, ? extends Declaration> equivalents(Declaration instance) {
             return Equivalents.prefixes(subject(instance), instance, Equivalents.PROPERTIES);
+        }
+    };
+
+    static final PrefixerHandler<Declaration> FLEX_VALUE = new PrefixerHandlerStandard<Declaration, Declaration>() {
+        @Override
+        protected boolean applicable(Declaration instance, SupportMatrix support) {
+            // don't automatically trigger refinement on every declaration just to check if a prefix is needed.
+            if (!instance.isRefined() || instance.isPrefixed()) return false;
+
+            // must be the display property
+            Optional<Property> property = instance.propertyName().asProperty();
+            return property.isPresent() && property.get() == Property.DISPLAY;
+        }
+
+        @Override
+        protected Declaration subject(Declaration instance) {
+            return instance;
+        }
+
+        @Override
+        protected Set<Prefix> required(Declaration instance, SupportMatrix support) {
+            return null;
+        }
+
+        @Override
+        protected Multimap<Prefix, ? extends Declaration> equivalents(Declaration instance) {
+            return null;
         }
     };
 

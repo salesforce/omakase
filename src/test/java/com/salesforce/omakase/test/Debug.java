@@ -24,7 +24,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.basic.Prefixer;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.test.util.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;

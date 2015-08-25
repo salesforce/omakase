@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.conditionals;
 
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsCollector;
 import org.junit.Before;
 import org.junit.Test;
 

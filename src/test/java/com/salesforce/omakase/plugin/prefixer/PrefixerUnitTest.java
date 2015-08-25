@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

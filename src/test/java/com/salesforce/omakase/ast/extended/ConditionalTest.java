@@ -16,7 +16,7 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.plugin.basic.ConditionalsConfig;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;

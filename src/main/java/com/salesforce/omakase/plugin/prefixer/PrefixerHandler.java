@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.SupportMatrix;
 

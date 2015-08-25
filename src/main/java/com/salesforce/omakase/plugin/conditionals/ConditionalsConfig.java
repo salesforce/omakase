@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.conditionals;
 
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;

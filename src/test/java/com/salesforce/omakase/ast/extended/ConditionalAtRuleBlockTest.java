@@ -26,7 +26,7 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.plugin.basic.ConditionalsConfig;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;

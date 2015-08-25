@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.SupportMatrix;
@@ -24,10 +24,11 @@ import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 
 import static com.salesforce.omakase.data.Browser.*;
-import static com.salesforce.omakase.plugin.basic.PrefixerHandlers.*;
+import static com.salesforce.omakase.plugin.prefixer.PrefixerHandlers.*;
 
 /**
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
@@ -199,6 +200,10 @@ public final class Prefixer implements DependentPlugin {
 
         if (!handled) {
             handled = TRANSITION_VALUE.handle(declaration, rearrange, prune, support);
+        }
+
+        if (!handled) {
+            handled = FLEX_VALUE.handle(declaration, rearrange, prune, support);
         }
     }
 

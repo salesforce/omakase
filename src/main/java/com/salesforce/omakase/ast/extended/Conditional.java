@@ -16,8 +16,8 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.plugin.basic.Conditionals;
-import com.salesforce.omakase.plugin.basic.ConditionalsConfig;
+import com.salesforce.omakase.plugin.conditionals.Conditionals;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;

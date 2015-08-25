@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.conditionals;
 
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
@@ -22,6 +22,7 @@ import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 import java.util.HashSet;
 import java.util.Set;

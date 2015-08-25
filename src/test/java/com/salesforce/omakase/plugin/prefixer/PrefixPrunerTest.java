@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
 import com.salesforce.omakase.util.Declarations;
 import org.junit.Test;
 

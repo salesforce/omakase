@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.conditionals;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.SyntaxPlugin;
+import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 import java.util.Set;
 

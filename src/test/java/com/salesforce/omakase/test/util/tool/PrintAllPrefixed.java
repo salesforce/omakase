@@ -2,7 +2,7 @@ package com.salesforce.omakase.test.util.tool;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.plugin.basic.Prefixer;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;

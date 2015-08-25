@@ -21,7 +21,7 @@ import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.other.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;

@@ -18,8 +18,8 @@ package com.salesforce.omakase.test.util.perf;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.plugin.basic.PrefixPruner;
-import com.salesforce.omakase.plugin.basic.Prefixer;
+import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 
 /**
  * Omakase, testing auto prefixer.

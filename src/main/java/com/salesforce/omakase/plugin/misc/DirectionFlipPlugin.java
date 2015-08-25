@@ -1,4 +1,4 @@
-package com.salesforce.omakase.plugin.other;
+package com.salesforce.omakase.plugin.misc;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;

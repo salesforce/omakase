@@ -25,7 +25,7 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixTablesUtil;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.plugin.basic.Prefixer;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.util.As;
 
 import java.util.EnumMap;

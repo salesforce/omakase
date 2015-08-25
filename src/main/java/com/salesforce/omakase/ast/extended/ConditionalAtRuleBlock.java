@@ -28,9 +28,9 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.plugin.basic.Conditionals;
-import com.salesforce.omakase.plugin.basic.ConditionalsConfig;
-import com.salesforce.omakase.plugin.basic.ConditionalsRefiner;
+import com.salesforce.omakase.plugin.conditionals.Conditionals;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 

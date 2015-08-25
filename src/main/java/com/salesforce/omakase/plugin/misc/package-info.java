@@ -15,6 +15,6 @@
  */
 
 /**
- * Basic library-provided Plugins.
+ * Rarely used or discouraged library-provided Plugins.
  */
-package com.salesforce.omakase.plugin.basic;
+package com.salesforce.omakase.plugin.misc;
