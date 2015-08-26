@@ -16,14 +16,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -173,19 +168,6 @@ public class PropertyValueTest {
         assertThat(copy.isImportant()).isTrue();
         assertThat(copy.members()).hasSize(3);
         assertThat(copy.comments()).hasSize(1);
-    }
-
-    @Test
-    public void prefixRequired() {
-        PropertyValue val = PropertyValue.of(new GenericFunctionValue("calc", "2px-1px"));
-
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.FIREFOX, 15);
-
-        val.prefix(Prefix.MOZ, support, true);
-        assertThat(val.members()).hasSize(1);
-        PropertyValueMember first = Iterables.get(val.members(), 0);
-        assertThat(((Named)first).name()).isEqualTo("-moz-calc");
     }
 
     @Test

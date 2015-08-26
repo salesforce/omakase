@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
@@ -26,7 +25,6 @@ import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
@@ -96,50 +94,6 @@ public interface Syntax extends Writable, Broadcastable {
      * @return The new instance.
      */
     Syntax copy();
-
-    /**
-     * Applies the given prefix to this unit and all inner units, if required according to the given {@link SupportMatrix}. This
-     * usually works along with {@link #copy()}.
-     * <p/>
-     * Take the following for example:
-     * <pre><code>
-     * PropertyName propertyName = PropertyName.using("border-radius");
-     * propertyName.prefix(Prefix.WEBKIT, support);
-     * </code></pre>
-     * <p/>
-     * Assuming that a version of Chrome was added to the {@link SupportMatrix} that requires a prefix for the {@code
-     * border-radius} property, a change will be made resulting in the webkit prefix being used, e.g., {@code
-     * -webkit-border-radius}.
-     *
-     * @param prefix
-     *     Apply this {@link Prefix} if applicable.
-     * @param support
-     *     Represents the supported browser versions.
-     */
-    void prefix(Prefix prefix, SupportMatrix support);
-
-    /**
-     * Applies the given prefix to this unit and optionally all inner units, if required according to the given {@link
-     * SupportMatrix}. This usually works along with {@link #copy()}.
-     * <p/>
-     * Take the following for example:
-     * <pre><code>
-     * PropertyName propertyName = PropertyName.using("border-radius");
-     * propertyName.prefix(Prefix.WEBKIT, support);
-     * </code></pre>
-     * <p/>
-     * Assuming that a version of Chrome was added to the {@link SupportMatrix} that requires a prefix for the {@code
-     * border-radius} property, a change will be made resulting in the webkit prefix being used, e.g., {@code
-     * -webkit-border-radius}.
-     *
-     * @param prefix
-     *     Apply this {@link Prefix} if applicable.
-     * @param support
-     *     Represents the supported browser versions.
-     * @param deep
-     *     Specifies whether inner units should be prefixed as well.
-     */
-    void prefix(Prefix prefix, SupportMatrix support, boolean deep);
 
     /**
      * Adds the given comment to this unit.

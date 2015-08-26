@@ -16,14 +16,11 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -382,28 +379,6 @@ public class AtRuleTest {
         assertThat(copy.name()).isEqualTo("media-x");
         assertThat(copy.rawExpression().isPresent()).isTrue();
         assertThat(copy.rawBlock().isPresent()).isTrue();
-    }
-
-    @Test
-    public void prefix() {
-        CustomExpression expression = new CustomExpression();
-        CustomBlock block = new CustomBlock();
-        AtRule ar = new AtRule("keyframes", expression, block);
-
-        SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
-        ar.prefix(Prefix.WEBKIT, support);
-        assertThat(ar.name()).isEqualTo("-webkit-keyframes");
-    }
-
-    @Test
-    public void prefixWhenNotNeeded() {
-        CustomExpression expression = new CustomExpression();
-        CustomBlock block = new CustomBlock();
-        AtRule ar = new AtRule("keyframes", expression, block);
-
-        SupportMatrix support = new SupportMatrix().browser(Browser.CHROME, 30);
-        ar.prefix(Prefix.MOZ, support);
-        assertThat(ar.name()).isEqualTo("keyframes");
     }
 
     @Test

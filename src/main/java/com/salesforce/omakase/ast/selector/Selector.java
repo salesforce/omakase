@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.selector;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
@@ -29,7 +28,6 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.refiner.Refiner;
 import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
@@ -275,10 +273,5 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         }
 
         return new Selector(copiedParts).copiedFrom(this);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        prefixChildren(parts, prefix, support, deep);
     }
 }

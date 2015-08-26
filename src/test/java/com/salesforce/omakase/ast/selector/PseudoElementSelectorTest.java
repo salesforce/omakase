@@ -16,9 +16,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -81,25 +78,5 @@ public class PseudoElementSelectorTest {
     public void copy() {
         PseudoElementSelector s = new PseudoElementSelector("first-letter");
         assertThat(((PseudoElementSelector)s.copy()).name()).isEqualTo("first-letter");
-    }
-
-    @Test
-    public void prefixRequired() {
-        PseudoElementSelector s = new PseudoElementSelector("selection");
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.FIREFOX, 25);
-
-        s.prefix(Prefix.MOZ, support);
-        assertThat(s.name()).isEqualTo("-moz-selection");
-    }
-
-    @Test
-    public void prefixNotRequired() {
-        PseudoElementSelector s = new PseudoElementSelector("selection");
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.FIREFOX, 25);
-
-        s.prefix(Prefix.WEBKIT, support);
-        assertThat(s.name()).isEqualTo("selection");
     }
 }

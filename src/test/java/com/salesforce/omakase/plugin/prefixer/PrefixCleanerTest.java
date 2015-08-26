@@ -21,23 +21,22 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
 import com.salesforce.omakase.util.Declarations;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link PrefixPruner}.
+ * Unit tests for {@link PrefixCleaner}.
  *
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class PrefixPrunerTest {
+public class PrefixCleanerTest {
 
     @Test
     public void testRemoveDeclarations() {
-        PrefixPruner pruner = PrefixPruner.prunePrefixedAtRules();
+        PrefixCleaner pruner = PrefixCleaner.mismatchedPrefixedUnits();
 
         RawSyntax exp = new RawSyntax(-1, -1, "test");
 

@@ -17,11 +17,9 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -167,10 +165,5 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
         }
 
         return copy;
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        prefixChildren(terms, prefix, support, deep);
     }
 }

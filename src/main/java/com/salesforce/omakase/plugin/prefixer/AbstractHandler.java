@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Base class for most {@link PrefixerHandler} implementations.
+ * Base class for most {@link Handler} implementations.
  *
  * @param <T>
  *     (T)ype of prefixable AST object to handle.
@@ -37,10 +37,9 @@ import java.util.Set;
  *
  * @author nmcwilliams
  * @see Prefixer
- * @see PrefixerHandler
- * @see PrefixerHandlers
+ * @see Handler
  */
-abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements PrefixerHandler<T> {
+abstract class AbstractHandler<T, G extends Groupable<?, G>> implements Handler<T> {
     @Override
     public boolean handle(T instance, boolean rearrange, boolean prune, SupportMatrix support) {
         if (!applicable(instance, support)) return false;
@@ -83,17 +82,8 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
     @SuppressWarnings("unchecked")
     protected void copy(G original, Prefix prefix, SupportMatrix support) {
         G copy = (G)original.copy();
-        copy.prefix(prefix, support, prefixInnerUnits());
+        prefix(copy, prefix, support);
         original.prepend(copy);
-    }
-
-    /**
-     * Specifies whether prefixing should extend to all inner units or just the top-level unit.
-     *
-     * @return True if prefixing should extend to all inner units.
-     */
-    protected boolean prefixInnerUnits() {
-        return true;
     }
 
     /** should return false if the instance should be skipped */
@@ -107,4 +97,7 @@ abstract class PrefixerHandlerStandard<T, G extends Groupable<?, G>> implements 
 
     /** should return the set of related objects that may be existing prefixed equivalents for rearrangement or removal */
     protected abstract Multimap<Prefix, ? extends G> equivalents(T instance);
+
+    /** should handle prefixing the copied instance */
+    protected abstract void prefix(G copied, Prefix prefix, SupportMatrix support);
 }

@@ -24,7 +24,7 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.conditionals.Conditionals;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsCollector;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsValidator;
-import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
+import com.salesforce.omakase.plugin.prefixer.PrefixCleaner;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
@@ -58,10 +58,10 @@ final class Suppliers {
                 return Prefixer.defaultBrowserSupport();
             }
         })
-        .put(PrefixPruner.class, new Supplier<PrefixPruner>() {
+        .put(PrefixCleaner.class, new Supplier<PrefixCleaner>() {
             @Override
-            public PrefixPruner get() {
-                return new PrefixPruner();
+            public PrefixCleaner get() {
+                return new PrefixCleaner();
             }
         })
         .put(Conditionals.class, new Supplier<Conditionals>() {

@@ -28,7 +28,6 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 
 import static com.salesforce.omakase.data.Browser.*;
-import static com.salesforce.omakase.plugin.prefixer.PrefixerHandlers.*;
 
 /**
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
@@ -97,7 +96,7 @@ import static com.salesforce.omakase.plugin.prefixer.PrefixerHandlers.*;
  * </code></pre>
  * <p/>
  * Notice the {@code -ms-transform} is most likely unnecessary as it is within a {@code -webkit-} prefixed at-rule. The {@link
- * PrefixPruner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. The plugin must be
+ * PrefixCleaner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. The plugin must be
  * registered <em>after</em> this one:
  * <pre><code>
  *     Omakase.source(input)
@@ -109,11 +108,25 @@ import static com.salesforce.omakase.plugin.prefixer.PrefixerHandlers.*;
  * @author nmcwilliams
  */
 public final class Prefixer implements DependentPlugin {
+    // at-rule handlers
+    private static final Handler<AtRule> STANDARD_AT_RULE = new HandleAtRule();
+
+    // pseudo element selector handlers
+    private static final Handler<PseudoElementSelector> STANDARD_PSEUDO = new HandlePseudoElement();
+    private static final Handler<PseudoElementSelector> PLACEHOLDER = new HandlePlaceholder();
+
+    // declaration handlers
+    private static final Handler<Declaration> STANDARD_PROPERTY = new HandleProperty();
+    private static final Handler<Declaration> TRANSITION = new HandleTransition();
+
+    // function handlers
+    private static final Handler<FunctionValue> STANDARD_FUNCTION = new HandleFunction();
+
     private final SupportMatrix support;
     private boolean rearrange;
     private boolean prune;
 
-    /** use a constructor method instead of this */
+    /** private constructor -- use one of the constructor methods to create instances */
     private Prefixer(SupportMatrix support) {
         this.support = support == null ? new SupportMatrix() : support;
     }
@@ -179,9 +192,29 @@ public final class Prefixer implements DependentPlugin {
 
     @Override
     public void dependencies(PluginRegistry registry) {
-        if (registry.retrieve(PrefixPruner.class).isPresent()) {
+        if (registry.retrieve(PrefixCleaner.class).isPresent()) {
             String msg = "The %s plugin should be registered AFTER the %s plugin";
-            throw new IllegalStateException(String.format(msg, PrefixPruner.class.getSimpleName(), Prefixer.class.getSimpleName()));
+            throw new IllegalStateException(String.format(msg, PrefixCleaner.class.getSimpleName(), Prefixer.class.getSimpleName()));
+        }
+    }
+
+    /**
+     * Run the given list of prefix handlers on the instance in order. If a handler specifies that it is completely processed the
+     * prefixes then subsequent handlers will not be run.
+     *
+     * @param instance
+     *     The syntax unit.
+     * @param handlers
+     *     The prefix handlers.
+     * @param <T>
+     *     The type of syntax unit.
+     */
+    @SafeVarargs
+    private final <T> void run(T instance, Handler<T>... handlers) {
+        boolean finished = false;
+        for (Handler<T> handler : handlers) {
+            finished = handler.handle(instance, rearrange, prune, support);
+            if (finished) return;
         }
     }
 
@@ -192,19 +225,10 @@ public final class Prefixer implements DependentPlugin {
      *     The declaration instance.
      */
     @Rework
-    @SuppressWarnings("UnusedAssignment")
     public void declaration(Declaration declaration) {
-        boolean handled = false;
-
-        handled = PROPERTY.handle(declaration, rearrange, prune, support);
-
-        if (!handled) {
-            handled = TRANSITION_VALUE.handle(declaration, rearrange, prune, support);
-        }
-
-        if (!handled) {
-            handled = FLEX_VALUE.handle(declaration, rearrange, prune, support);
-        }
+        // don't automatically trigger refinement on every declaration just to check if a prefix is needed.
+        if (!declaration.isRefined() || declaration.isPrefixed()) return; // skip stuff already prefixed
+        run(declaration, TRANSITION, STANDARD_PROPERTY);
     }
 
     /**
@@ -215,7 +239,7 @@ public final class Prefixer implements DependentPlugin {
      */
     @Rework
     public void function(FunctionValue function) {
-        FUNCTION.handle(function, rearrange, prune, support);
+        run(function, STANDARD_FUNCTION);
     }
 
     /**
@@ -226,7 +250,9 @@ public final class Prefixer implements DependentPlugin {
      */
     @Rework
     public void atRule(AtRule atRule) {
-        AT_RULE.handle(atRule, rearrange, prune, support);
+        // don't automatically trigger refinement on every at rule just to check if a prefix is needed.
+        if (!atRule.isRefined() || atRule.name().charAt(0) == '-') return; // skip stuff already prefixed
+        run(atRule, STANDARD_AT_RULE);
     }
 
     /**
@@ -236,15 +262,9 @@ public final class Prefixer implements DependentPlugin {
      *     The selector instance.
      */
     @Rework
-    @SuppressWarnings("UnusedAssignment")
     public void pseudoElementSelector(PseudoElementSelector selector) {
-        boolean handled = false;
-
-        handled = PLACEHOLDER.handle(selector, rearrange, prune, support);
-
-        if (!handled) {
-            handled = PSEUDO.handle(selector, rearrange, prune, support);
-        }
+        if (selector.name().charAt(0) == '-') return; // skip stuff already prefixed
+        run(selector, PLACEHOLDER, STANDARD_PSEUDO);
     }
 
     /**

@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
@@ -27,7 +26,6 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -189,11 +187,5 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
             copy.declarations().append(declaration.copy());
         }
         return copy;
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        prefixChildren(selectors, prefix, support, deep);
-        prefixChildren(declarations, prefix, support, deep);
     }
 }

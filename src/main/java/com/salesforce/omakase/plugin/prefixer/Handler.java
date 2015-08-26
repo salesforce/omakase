@@ -26,7 +26,7 @@ import com.salesforce.omakase.SupportMatrix;
  *
  * @author nmcwilliams
  */
-interface PrefixerHandler<T> {
+interface Handler<T> {
     /**
      * Handle prefixing for the AST object.
      *

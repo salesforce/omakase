@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
@@ -29,7 +28,6 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.RawAtRuleParser;
 import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
@@ -124,6 +122,19 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             block.parent(this);
         }
 
+    }
+
+    /**
+     * Sets the at-rule name.
+     *
+     * @param name
+     *     The new name.
+     *
+     * @return this, for chaining.
+     */
+    public AtRule name(String name) {
+        this.name = checkNotNull(name, "name cannot be null");
+        return this;
     }
 
     @Override
@@ -404,30 +415,5 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         }
         copy.shouldWriteName(shouldWriteName);
         return copy;
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        if (support.requiresPrefixForAtRule(prefix, name)) {
-            name = prefix + name;
-        }
-
-        if (deep) {
-            if (isRefined()) {
-                if (expression.isPresent()) {
-                    expression.get().prefix(prefix, support, true);
-                }
-                if (block.isPresent()) {
-                    block.get().prefix(prefix, support, true);
-                }
-            } else {
-                if (rawExpression != null) {
-                    rawExpression.prefix(prefix, support, true);
-                }
-                if (rawBlock != null) {
-                    rawBlock.prefix(prefix, support, true);
-                }
-            }
-        }
     }
 }

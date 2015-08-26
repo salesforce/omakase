@@ -20,8 +20,6 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
@@ -44,7 +42,7 @@ public class PrefixerUnitTargetedTest {
         Omakase.source(original)
             .use(AutoRefiner.refineEverything())
             .use(prefixer)
-            .use(PrefixPruner.prunePrefixedAtRules())
+            .use(PrefixCleaner.mismatchedPrefixedUnits())
             .use(writer)
             .process();
         return writer.write();
@@ -206,7 +204,7 @@ public class PrefixerUnitTargetedTest {
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
-    //@Test known issue, see PrefixerHandlers#TRANSITION for notes
+    //@Test known issue (maybe not an issue?), see HandleTransition for more info
     public void transitionPrefixedInOneBrowserNotInOtherButValueIs() {
         String original = ".test {transition:transform 1s}";
         String expected = ".test {" +
@@ -702,6 +700,14 @@ public class PrefixerUnitTargetedTest {
     public void selection() {
         String original = "::selection {color:red}";
         String expected = "::-moz-selection {color:red}\n::selection {color:red}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void selectionWithOthers() {
+        String original = "p::selection {color:red}";
+        String expected = "p::-moz-selection {color:red}\np::selection {color:red}";
         Prefixer prefixer = Prefixer.customBrowserSupport(new SupportMatrix().browser(Browser.FIREFOX, 25));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }

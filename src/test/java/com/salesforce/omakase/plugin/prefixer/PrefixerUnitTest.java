@@ -17,8 +17,6 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -65,6 +63,6 @@ public class PrefixerUnitTest {
     public void throwsErrorIfPrefixPrunerAlreadyRegistered() {
         exception.expect(IllegalStateException.class);
         exception.expectMessage("plugin should be registered AFTER");
-        Omakase.source("").use(PrefixPruner.prunePrefixedAtRules()).use(Prefixer.defaultBrowserSupport()).process();
+        Omakase.source("").use(PrefixCleaner.mismatchedPrefixedUnits()).use(Prefixer.defaultBrowserSupport()).process();
     }
 }

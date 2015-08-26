@@ -16,11 +16,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.FunctionValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -139,13 +137,6 @@ public class GenericFunctionValue extends AbstractTerm implements FunctionValue 
     @Override
     public GenericFunctionValue copy() {
         return new GenericFunctionValue(name, args).copiedFrom(this);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        if (support.requiresPrefixForFunction(prefix, name)) {
-            this.name(prefix + name);
-        }
     }
 
     /**

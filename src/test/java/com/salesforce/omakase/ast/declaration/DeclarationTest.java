@@ -389,18 +389,6 @@ public class DeclarationTest {
     }
 
     @Test
-    public void prefix() {
-        Declaration d = new Declaration(Property.BORDER_RADIUS, NumericalValue.of(5, "px"));
-        d.comments(Lists.newArrayList("test"));
-
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.FIREFOX, 3.6);
-
-        d.prefix(Prefix.MOZ, support, true);
-        assertThat(d.isPrefixed()).isTrue();
-    }
-
-    @Test
     public void testParentAtRulePresent() {
         Declaration d = new Declaration(Property.COLOR, KeywordValue.of(Keyword.RED));
         Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());

@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.data.Prefix;
@@ -142,6 +141,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
     }
 
     /**
+     * TODO cache?
      * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a
      * prefixed property).
      *
@@ -254,14 +254,6 @@ public final class PropertyName extends AbstractSyntax implements Named {
     @Override
     public PropertyName copy() {
         return PropertyName.using(name()).starHack(starHack).copiedFrom(this);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        Optional<Property> property = asProperty();
-        if (property.isPresent() && support.requiresPrefixForProperty(prefix, property.get())) {
-            prefix(prefix);
-        }
     }
 
     /**

@@ -21,7 +21,9 @@ import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.selector.*;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * Utilities for working with {@link Selector}s and {@link SelectorPart}s.
@@ -517,5 +519,30 @@ public final class Selectors {
         }
 
         return deque;
+    }
+
+    /**
+     * Filters the selector parts in the given {@link Selector} to only the ones of the given class type.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code Iterable<ClassSelector> classes = Selectors.filter(ClassSelector.class, selector);}
+     * </pre>
+     *
+     * @param klass
+     *     Filter to parts of this class.
+     * @param selector
+     *     The {@link Selector} to filter.
+     * @param <T>
+     *     Filters to parts of this type.
+     *
+     * @return The filtered results.
+     */
+    public static <T extends SelectorPart> Iterable<T> filter(Class<T> klass, Selector selector) {
+        List<T> filtered = new ArrayList<>();
+        for (SelectorPart part : selector.parts()) {
+            if (klass.isAssignableFrom(part.getClass())) filtered.add(klass.cast(part));
+        }
+        return filtered;
     }
 }

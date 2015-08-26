@@ -17,8 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -270,35 +268,5 @@ public class PropertyNameTest {
         assertThat(copy.prefix().get()).isEqualTo(name.prefix().get());
         assertThat(copy.hasStarHack()).isEqualTo(name.hasStarHack());
         assertThat(copy.comments()).hasSameSizeAs(name.comments());
-    }
-
-    @Test
-    public void prefixRequired() {
-        PropertyName name = PropertyName.using("border-radius");
-        name.comments(Lists.newArrayList("test"));
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.SAFARI, 4);
-
-        name.prefix(Prefix.WEBKIT, support);
-        assertThat(name.unprefixedName()).isEqualTo("border-radius");
-        assertThat(name.prefix().get()).isSameAs(Prefix.WEBKIT);
-    }
-
-    @Test
-    public void prefixNotRequired() {
-        PropertyName name = PropertyName.using("border-radius");
-        name.comments(Lists.newArrayList("test"));
-        SupportMatrix support = new SupportMatrix();
-
-        name.prefix(Prefix.WEBKIT, support);
-        assertThat(name.name()).isEqualTo("border-radius");
-        assertThat(name.isPrefixed()).isFalse();
-    }
-
-    @Test
-    public void prefixUnknownProperty() {
-        PropertyName name = PropertyName.using("blah");
-        name.prefix(Prefix.WEBKIT, new SupportMatrix());
-        assertThat(name.name()).isEqualTo("blah");
     }
 }

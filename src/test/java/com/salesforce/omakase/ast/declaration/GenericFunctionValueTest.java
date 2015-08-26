@@ -17,9 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -108,28 +105,5 @@ public class GenericFunctionValueTest {
         assertThat(copy.name()).isEqualTo("test");
         assertThat(copy.args()).isEqualTo("args");
         assertThat(copy.comments()).hasSameSizeAs(value.comments());
-    }
-
-    @Test
-    public void prefixRequired() {
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.CHROME, 19);
-        value = new GenericFunctionValue("calc", "2px-1px");
-        value.comments(Lists.newArrayList("test"));
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.name()).isEqualTo("-webkit-calc");
-        assertThat(value.args()).isEqualTo("2px-1px");
-    }
-
-    @Test
-    public void prefixNotRequired() {
-        SupportMatrix support = new SupportMatrix();
-        value = new GenericFunctionValue("calc", "2px-1px");
-        value.comments(Lists.newArrayList("test"));
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.name()).isEqualTo("calc");
-        assertThat(value.args()).isEqualTo("2px-1px");
     }
 }

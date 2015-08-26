@@ -18,7 +18,6 @@ package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
@@ -26,7 +25,6 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.declaration.PropertyValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -236,14 +234,6 @@ public final class PropertyValue extends AbstractSyntax {
             copy.append(member.copy());
         }
         return copy;
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        if (!deep) return;
-        for (PropertyValueMember member : members) {
-            member.prefix(prefix, support, true);
-        }
     }
 
     /**

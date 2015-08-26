@@ -17,13 +17,10 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Keyword;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -144,24 +141,6 @@ public final class KeywordValue extends AbstractTerm {
     @Override
     public KeywordValue copy() {
         return new KeywordValue(keyword).copiedFrom(this);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        // if we are part of a "transition" declaration, we may need to be prefixed if we are a prefixable property-name
-        // keyword. E.g., in "transition: border-radius 1s", the "border-radius" is a keyword value that represents a
-        // property-name that may need to be prefixed.
-        if (parent() != null && parent().declaration() != null) {
-            Declaration declaration = parent().declaration();
-
-            // transition
-            if (declaration.isProperty(Property.TRANSITION) || declaration.isProperty(Property.TRANSITION_PROPERTY)) {
-                Property property = Property.lookup(keyword);
-                if (property != null && support.requiresPrefixForProperty(prefix, property)) {
-                    keyword(prefix + keyword);
-                }
-            }
-        }
     }
 
     /**

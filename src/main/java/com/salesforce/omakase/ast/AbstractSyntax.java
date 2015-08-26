@@ -18,10 +18,7 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.util.As;
 
 import java.util.ArrayList;
@@ -96,36 +93,6 @@ public abstract class AbstractSyntax implements Syntax {
      */
     @Override
     public abstract Syntax copy(); // overriding just to comment on subclass implementations as done above.
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support) {
-        prefix(prefix, support, true);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        // default case is to do nothing
-    }
-
-    /**
-     * Helper method to handle prefixing inner units. This will prefix each inner unit, <b>but only</b> if <code>deep</code> is
-     * true.
-     *
-     * @param children
-     *     The children to copy, usually a {@link SyntaxCollection}.
-     * @param prefix
-     *     The prefix (just pass it along).
-     * @param support
-     *     The support (just pass it along).
-     * @param deep
-     *     Whether to deep copy (just pass it along).
-     */
-    protected void prefixChildren(Iterable<? extends Syntax> children, Prefix prefix, SupportMatrix support, boolean deep) {
-        if (!deep) return;
-        for (Syntax child : children) {
-            child.prefix(prefix, support, true);
-        }
-    }
 
     /**
      * This should be called on all copied units. It handles shared logic such as copying comments.

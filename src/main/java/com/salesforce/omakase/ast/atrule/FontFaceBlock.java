@@ -16,14 +16,12 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.refiner.FontFaceRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -130,10 +128,5 @@ public final class FontFaceBlock extends AbstractAtRuleMember implements AtRuleB
             copy.fontDescriptors().append(descriptor.copy());
         }
         return copy;
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        prefixChildren(fontDescriptors, prefix, support, deep);
     }
 }

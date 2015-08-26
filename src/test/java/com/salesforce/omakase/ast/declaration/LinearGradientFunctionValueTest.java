@@ -17,8 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -130,104 +128,5 @@ public class LinearGradientFunctionValueTest {
         assertThat(copy.args()).isEqualTo(function.args());
         assertThat(copy.comments()).hasSameSizeAs(function.comments());
         assertThat(copy.repeating()).isEqualTo(function.repeating());
-    }
-
-    @Test
-    public void prefixRequired() {
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.FIREFOX, 15);
-
-        function = new LinearGradientFunctionValue("red, yellow");
-
-        function.prefix(Prefix.MOZ, support);
-
-        assertThat(function.name()).isEqualTo("-moz-linear-gradient");
-        assertThat(function.args()).isEqualTo("red, yellow");
-    }
-
-    @Test
-    public void prefixWhenRepeating() {
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.FIREFOX, 15);
-
-        function = new LinearGradientFunctionValue("red, yellow");
-        function.repeating(true);
-
-        function.prefix(Prefix.MOZ, support);
-
-        assertThat(function.name()).isEqualTo("-moz-repeating-linear-gradient");
-        assertThat(function.args()).isEqualTo("red, yellow");
-    }
-
-    @Test
-    public void prefixToBottom() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("to bottom, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("top, red, yellow");
-    }
-
-    @Test
-    public void prefixToTop() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("to top, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("bottom, red, yellow");
-    }
-
-    @Test
-    public void prefixToRight() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("to right, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("left, red, yellow");
-    }
-
-    @Test
-    public void prefixToLeft() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("to left, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("right, red, yellow");
-    }
-
-    @Test
-    public void prefixToTopRight() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("to top right, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("bottom left, red, yellow");
-    }
-
-    @Test
-    public void prefixHasAngle() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("50deg, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("40deg, red, yellow");
-    }
-
-    @Test
-    public void prefixHasHighAngle() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("355deg, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("95deg, red, yellow");
-    }
-
-    @Test
-    public void prefixHasNegativeAngle() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("-45deg, red, yellow");
-        function.prefix(Prefix.MOZ, support);
-        assertThat(function.args()).isEqualTo("135deg, red, yellow");
-    }
-
-    @Test
-    public void prefixNotRequired() {
-        SupportMatrix support = new SupportMatrix().browser(Browser.FIREFOX, 15);
-        function = new LinearGradientFunctionValue("red, yellow");
-        function.prefix(Prefix.WEBKIT, support);
-        assertThat(function.name()).isEqualTo("linear-gradient");
     }
 }

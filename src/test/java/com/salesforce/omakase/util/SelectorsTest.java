@@ -267,7 +267,7 @@ public class SelectorsTest {
     }
 
     @Test
-        public void findPseudoSelectorExact() {
+    public void findPseudoSelectorExact() {
         PseudoElementSelector s1 = new PseudoElementSelector("-moz-findme");
         PseudoElementSelector s2 = new PseudoElementSelector("findme");
         Selector selector = new Selector(s1, s2);
@@ -327,5 +327,28 @@ public class SelectorsTest {
         fill();
         obj2.destroy();
         assertThat(Selectors.adjoining(obj2)).containsExactly(obj2);
+    }
+
+    @Test
+    public void testFilterExisting() {
+        ClassSelector s1 = new ClassSelector("test1");
+        ClassSelector s2 = new ClassSelector("test2");
+        IdSelector s3 = new IdSelector("test3");
+        ClassSelector s4 = new ClassSelector("test4");
+        Selector selector = new Selector(s1, s2, Combinator.descendant(), s3, Combinator.adjacent(), s4);
+        Iterable<ClassSelector> filtered = Selectors.filter(ClassSelector.class, selector);
+
+        assertThat(filtered).containsExactly(s1, s2, s4);
+    }
+
+    @Test
+    public void testFilterEmpty() {
+        ClassSelector s1 = new ClassSelector("test1");
+        ClassSelector s2 = new ClassSelector("test2");
+        PseudoClassSelector s3 = new PseudoClassSelector("hover");
+        Selector selector = new Selector(s1, Combinator.descendant(), s2, s3);
+        Iterable<IdSelector> filtered = Selectors.filter(IdSelector.class, selector);
+
+        assertThat(filtered).isEmpty();
     }
 }

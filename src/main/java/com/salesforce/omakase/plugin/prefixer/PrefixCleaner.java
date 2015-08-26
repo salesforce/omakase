@@ -26,7 +26,6 @@ import com.salesforce.omakase.util.Declarations;
 import com.salesforce.omakase.util.Prefixes;
 
 /**
- * TODO rename this
  * This plugin handles removing unnecessary prefixed units.
  * <p/>
  * If an at-rule is prefixed, most likely any prefixed declarations within that at-rule with a differing prefix can be removed.
@@ -48,15 +47,15 @@ import com.salesforce.omakase.util.Prefixes;
  * </code></pre>
  * <p/>
  * Notice the {@code -ms-transform} is most likely unnecessary as it is within a {@code -webkit-} prefixed at-rule. The {@link
- * PrefixPruner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. Use the {@link
- * #prefixedAtRules()} instance method or the {@link #prunePrefixedAtRules()} constructor method to remove these unnecessary
+ * PrefixCleaner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. Use the {@link
+ * #prefixedAtRules()} instance method or the {@link #mismatchedPrefixedUnits()} constructor method to remove these unnecessary
  * prefixes.
  * <p/>
  * <b>Important:</b> This plugin must be registered <em>after</em> the {@link Prefixer} plugin:
  * <pre><code>
  * Omakase.source(input)
  *      .add(Prefixer.defaultBrowserSupport())
- *      .add(PrefixPruner.prunePrefixedAtRules())
+ *      .add(PrefixCleaner.mismatchedPrefixedUnits())
  *      .process()
  * </code></pre>
  * You can also specify the only prefix you want to keep with the {@link #keep(Prefix)} method, and all other prefixed selectors,
@@ -65,22 +64,22 @@ import com.salesforce.omakase.util.Prefixes;
  *
  * @author nmcwilliams
  */
-public final class PrefixPruner implements Plugin {
+public final class PrefixCleaner implements Plugin {
     private boolean prefixedAtRules;
 
     /**
-     * Creates a new {@link PrefixPruner} instance.
+     * Creates a new {@link PrefixCleaner} instance.
      */
-    public PrefixPruner() {
+    public PrefixCleaner() {
     }
 
     /**
-     * Creates a new {@link PrefixPruner} instance that will remove all units with a prefix that doesn't match the given one.
+     * Creates a new {@link PrefixCleaner} instance that will remove all units with a prefix that doesn't match the given one.
      *
      * @param prefix
      *     Only keep units with this prefix.
      */
-    public PrefixPruner(Prefix prefix) {
+    public PrefixCleaner(Prefix prefix) {
         keep(prefix);
     }
 
@@ -93,7 +92,7 @@ public final class PrefixPruner implements Plugin {
      * @return this, for chaining.
      */
     @SuppressWarnings("UnusedParameters")
-    public PrefixPruner keep(Prefix prefix) {
+    public PrefixCleaner keep(Prefix prefix) {
         // this.keeper = checkNotNull(prefix, "prefix cannot be null");
         //return this;
         throw new UnsupportedOperationException("not yet supported");
@@ -105,7 +104,7 @@ public final class PrefixPruner implements Plugin {
      *
      * @return this, for chaining.
      */
-    public PrefixPruner prefixedAtRules() {
+    public PrefixCleaner prefixedAtRules() {
         prefixedAtRules = true;
         return this;
     }
@@ -132,25 +131,25 @@ public final class PrefixPruner implements Plugin {
     }
 
     /**
-     * Creates a new {@link PrefixPruner} that will eliminate prefixed declarations within prefixed at-rules, where the
+     * Creates a new {@link PrefixCleaner} that will eliminate prefixed declarations within prefixed at-rules, where the
      * declaration's prefix doesn't match the at-rule's prefix.
      *
-     * @return The new {@link PrefixPruner} instance.
+     * @return The new {@link PrefixCleaner} instance.
      */
-    public static PrefixPruner prunePrefixedAtRules() {
-        return new PrefixPruner().prefixedAtRules();
+    public static PrefixCleaner mismatchedPrefixedUnits() {
+        return new PrefixCleaner().prefixedAtRules();
     }
 
     /**
-     * NOT IMPLEMENTED: Creates a new {@link PrefixPruner} that will eliminate all units with prefixes that do not match the given
+     * NOT IMPLEMENTED: Creates a new {@link PrefixCleaner} that will eliminate all units with prefixes that do not match the given
      * prefix.
      *
      * @param prefix
      *     Only keep units with this prefix.
      *
-     * @return The new {@link PrefixPruner} instance.
+     * @return The new {@link PrefixCleaner} instance.
      */
-    public static PrefixPruner onlyKeep(Prefix prefix) {
-        return new PrefixPruner(prefix);
+    public static PrefixCleaner onlyKeep(Prefix prefix) {
+        return new PrefixCleaner(prefix);
     }
 }

@@ -16,11 +16,7 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.SupportMatrix;
-import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -91,63 +87,5 @@ public class KeywordValueTest {
     public void copy() {
         value = KeywordValue.of(Keyword.INLINE_BLOCK);
         assertThat(((KeywordValue)value.copy()).asKeyword().get()).isSameAs(Keyword.INLINE_BLOCK);
-    }
-
-    @Test
-    public void transitionPrefixRequired() {
-        value = KeywordValue.of(Property.BORDER_RADIUS.toString());
-        new Declaration(Property.TRANSITION, value);
-
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.SAFARI, 4);
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.keyword()).isEqualTo("-webkit-border-radius");
-    }
-
-    @Test
-    public void transitionPrefixNotRequired() {
-        value = KeywordValue.of(Property.BORDER_RADIUS.toString());
-        new Declaration(Property.TRANSITION, value);
-
-        SupportMatrix support = new SupportMatrix();
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.keyword()).isEqualTo("border-radius");
-    }
-
-    @Test
-    public void transitionPropertyPrefixRequired() {
-        value = KeywordValue.of(Property.BORDER_RADIUS.toString());
-        new Declaration(Property.TRANSITION_PROPERTY, value);
-
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.SAFARI, 4);
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.keyword()).isEqualTo("-webkit-border-radius");
-    }
-
-    @Test
-    public void transitionPropertyPrefixNotRequired() {
-        value = KeywordValue.of(Property.BORDER_RADIUS.toString());
-        new Declaration(Property.TRANSITION_PROPERTY, value);
-
-        SupportMatrix support = new SupportMatrix();
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.keyword()).isEqualTo("border-radius");
-    }
-
-    @Test
-    public void prefixNotTransition() {
-        value = KeywordValue.of(Property.BORDER_RADIUS.toString());
-        new Declaration(Property.DISPLAY, value);
-
-        SupportMatrix support = new SupportMatrix();
-        support.browser(Browser.SAFARI, 4);
-
-        value.prefix(Prefix.WEBKIT, support);
-        assertThat(value.keyword()).isEqualTo("border-radius");
     }
 }

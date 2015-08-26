@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
@@ -30,7 +29,6 @@ import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.declaration.PropertyValueParser;
 import com.salesforce.omakase.parser.raw.RawDeclarationParser;
@@ -468,12 +466,5 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     @Override
     public Declaration copy() {
         return new Declaration(propertyName().copy(), propertyValue().copy()).copiedFrom(this);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        if (!deep) return;
-        propertyValue().prefix(prefix, support, true);
-        propertyName().prefix(prefix, support, true);
     }
 }

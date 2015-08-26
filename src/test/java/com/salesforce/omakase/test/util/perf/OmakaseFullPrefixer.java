@@ -18,7 +18,7 @@ package com.salesforce.omakase.test.util.perf;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
+import com.salesforce.omakase.plugin.prefixer.PrefixCleaner;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
 
 /**
@@ -46,7 +46,7 @@ public final class OmakaseFullPrefixer implements PerfTestParser {
         prefixer.support().all(Browser.OPERA);
         prefixer.rearrange(true);
 
-        PrefixPruner pruner = PrefixPruner.prunePrefixedAtRules();
+        PrefixCleaner pruner = PrefixCleaner.mismatchedPrefixedUnits();
 
         Omakase.source(input).use(PluginSet.normal()).use(prefixer).use(pruner).process();
     }

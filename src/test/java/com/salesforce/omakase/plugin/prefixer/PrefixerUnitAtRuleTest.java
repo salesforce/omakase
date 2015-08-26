@@ -22,8 +22,6 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.prefixer.PrefixPruner;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -43,7 +41,7 @@ public class PrefixerUnitAtRuleTest {
         Omakase.source(original)
             .use(AutoRefiner.refineEverything())
             .use(prefixer)
-            .use(PrefixPruner.prunePrefixedAtRules())
+            .use(PrefixCleaner.mismatchedPrefixedUnits())
             .use(writer)
             .process();
         return writer.write();

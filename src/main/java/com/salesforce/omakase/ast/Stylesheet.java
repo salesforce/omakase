@@ -16,13 +16,11 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.parser.raw.StylesheetParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
@@ -105,10 +103,5 @@ public final class Stylesheet extends AbstractSyntax implements StatementIterabl
             copy.append(statement.copy());
         }
         return copy;
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        prefixChildren(statements, prefix, support, deep);
     }
 }

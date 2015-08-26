@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.extended;
 
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.atrule.AbstractAtRuleMember;
@@ -27,7 +26,6 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.conditionals.Conditionals;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsRefiner;
@@ -39,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
 
 /**
@@ -189,10 +187,5 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
             copiedStatements.add(statement.copy());
         }
         return new ConditionalAtRuleBlock(-1, -1, conditionals, copiedStatements, config, null).copiedFrom(this);
-    }
-
-    @Override
-    public void prefix(Prefix prefix, SupportMatrix support, boolean deep) {
-        prefixChildren(statements, prefix, support, deep);
     }
 }
