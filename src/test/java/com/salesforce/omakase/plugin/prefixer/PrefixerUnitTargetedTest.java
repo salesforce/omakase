@@ -867,11 +867,267 @@ public class PrefixerUnitTargetedTest {
         return prefixer;
     }
 
+    public Prefixer flexSetupAlt() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 32); // no
+        prefixer.support().browser(Browser.CHROME, 43); // no
+        prefixer.support().browser(Browser.SAFARI, 7.1); // yes, final
+        prefixer.support().browser(Browser.IOS_SAFARI, 6.1); // yes, old
+        prefixer.support().browser(Browser.IE, 10); // yes
+        return prefixer;
+    }
+
+    public Prefixer flexSetupNone() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 32);
+        prefixer.support().browser(Browser.CHROME, 43);
+        return prefixer;
+    }
+
+    public Prefixer flex2009MozSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 21);
+        prefixer.support().browser(Browser.CHROME, 29);
+        prefixer.support().browser(Browser.IE, 11);
+        return prefixer;
+    }
+
+    public Prefixer flexFinalWebkitSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 32);
+        prefixer.support().browser(Browser.CHROME, 30);
+        prefixer.support().browser(Browser.SAFARI, 7.1); // needs -webkit
+        prefixer.support().browser(Browser.IE, 11);
+        return prefixer;
+    }
+
+    public Prefixer flexFinalMsSetup() {
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().browser(Browser.FIREFOX, 32);
+        prefixer.support().browser(Browser.CHROME, 30);
+        prefixer.support().browser(Browser.IE, 10);
+        return prefixer;
+    }
+
     @Test
     public void displayFlex() {
         String original = ".test {display:flex}";
-        String expected = ".test {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex;}";
+        String expected = ".test {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex}";
 
         assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexAlt() {
+        String original = ".test {display:flex}";
+        String expected = ".test {display:-webkit-box; display:-webkit-flex; display:-ms-flexbox; display:flex}";
+
+        assertThat(process(original, flexSetupAlt())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlex2009Moz() {
+        String original = ".test {display:flex}";
+        String expected = ".test {display:-moz-box; display:flex}";
+
+        assertThat(process(original, flex2009MozSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexFinalWebkit() {
+        String original = ".test {display:flex}";
+        String expected = ".test {display:-webkit-flex; display:flex}";
+
+        assertThat(process(original, flexFinalWebkitSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexFinalMs() {
+        String original = ".test {display:flex}";
+        String expected = ".test {display:-ms-flexbox; display:flex}";
+
+        assertThat(process(original, flexFinalMsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexPresentLeaveAsIs() {
+        String original = ".test {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex}";
+        String expected = ".test {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex}";
+
+        Prefixer prefixer = flexSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexPresentRemove() {
+        String original = ".test {display:-webkit-box; display:-moz-box; display:-ms-flexbox; display:flex; display:-webkit-flex}";
+        String expected = ".test {display:flex}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexPresentRearrange() {
+        String original = ".test {display:-webkit-flex; display:-webkit-box; display:flex; display:-ms-flexbox; display:-moz-box}";
+        String expected = ".test {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex}";
+
+        Prefixer prefixer = flexSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // known issue: see notes in HandleFlexValue
+    //@Test
+    public void displayFlexPresentRearrangeAddRemove() {
+        // add -webkit-box, remove -moz-box, rearrange rest
+        String original = ".test {display:-webkit-flex; display:flex; display:-ms-flexbox; display:-moz-box}";
+        String expected = ".test {display:-webkit-flex; display:-webkit-box; display:-ms-flexbox; display:flex}";
+
+        Prefixer prefixer = flexSetupAlt();
+        prefixer.prune(true);
+        prefixer.rearrange(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexWithInlineFlex() {
+        // not really valid use case, but it should still handle situations where unprefixed versions of inline-flex exist in
+        // the same as display:flex
+        String original = ".test {display:-webkit-inline-flex; display:flex; display:moz-inline-box}";
+        String expected = ".test {display:-webkit-inline-flex; display:-webkit-box; display:-webkit-flex; display:-ms-flexbox; " +
+            "display:flex; display:moz-inline-box}";
+
+        assertThat(process(original, flexSetupAlt())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayInlineFlex() {
+        String original = ".test {display:inline-flex}";
+        String expected = ".test {display:-webkit-inline-box; display:-webkit-inline-flex; display:-moz-inline-box; " +
+            "display:-ms-inline-flexbox; display:inline-flex}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayInlineFlexFinalWebkit() {
+        String original = ".test {display:inline-flex}";
+        String expected = ".test {display:-webkit-inline-flex; display:inline-flex}";
+
+        assertThat(process(original, flexFinalWebkitSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayInlineFlexPresentRemove() {
+        String original = ".test {display:-webkit-inline-box; display:-moz-inline-box; display:-ms-inline-flexbox; " +
+            "display:inline-flex; display:-webkit-inline-flex}";
+        String expected = ".test {display:inline-flex}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayInlineFlexPresentRearrange() {
+        String original = ".test {display:-webkit-inline-flex; display:-webkit-inline-box; display:inline-flex; " +
+            "display:-ms-inline-flexbox; display:-moz-inline-box}";
+        String expected = ".test {display:-webkit-inline-box; display:-webkit-inline-flex; display:-moz-inline-box; " +
+            "display:-ms-inline-flexbox; display:inline-flex}";
+
+        Prefixer prefixer = flexSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrder() {
+        String original = ".test {order:0}";
+        String expected = ".test {-webkit-box-ordinal-group:1; -webkit-order:0; -moz-box-ordinal-group:1; -ms-flex-order:0; order:0}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrderAlt() {
+        String original = ".test {order:0}";
+        String expected = ".test {-webkit-box-ordinal-group:1; -webkit-order:0; -ms-flex-order:0; order:0}";
+
+        assertThat(process(original, flexSetupAlt())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrder2009Moz() {
+        String original = ".test {order:-2}";
+        String expected = ".test {-moz-box-ordinal-group:-1; order:-2}";
+
+        assertThat(process(original, flex2009MozSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void testNegativeToPositiveFlexOrder() {
+        String original = ".test {order:-1}";
+        String expected = ".test {-moz-box-ordinal-group:0; order:-1}";
+
+        assertThat(process(original, flex2009MozSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrderFinalWebkit() {
+        String original = ".test {order:2}";
+        String expected = ".test {-webkit-order:2; order:2}";
+
+        assertThat(process(original, flexFinalWebkitSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrderFinalMs() {
+        String original = ".test {order:-1}";
+        String expected = ".test {-ms-flex-order:-1; order:-1}";
+
+        assertThat(process(original, flexFinalMsSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrderPresentLeaveAsIs() {
+        String original = ".test {-webkit-box-ordinal-group:1; -webkit-order:0; -moz-box-ordinal-group:1; -ms-flex-order:0; order:0}";
+        String expected = ".test {-webkit-box-ordinal-group:1; -webkit-order:0; -moz-box-ordinal-group:1; -ms-flex-order:0; order:0}";
+
+        Prefixer prefixer = flexSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrderPresentRemove() {
+        String original = ".test {-webkit-box-ordinal-group:1; -webkit-order:0; -moz-box-ordinal-group:1; -ms-flex-order:0; order:0}";
+        String expected = ".test {order:0}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void displayFlexOrderPresentRearrange() {
+        String original = ".test {-webkit-order:0; -webkit-box-ordinal-group:1; order:0; -ms-flex-order:0; " +
+            "-moz-box-ordinal-group:1; margin:0}";
+        String expected = ".test {-webkit-box-ordinal-group:1; -webkit-order:0; -moz-box-ordinal-group:1; " +
+            "-ms-flex-order:0; order:0; margin:0}";
+
+        Prefixer prefixer = flexSetup();
+        prefixer.prune(false);
+        prefixer.rearrange(true);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 }

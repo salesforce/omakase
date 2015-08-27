@@ -29,9 +29,10 @@ import com.google.common.collect.Table;
 @SuppressWarnings("AutoBoxing")
 public final class PrefixTables {
     static final Table<Property, Browser, Double> PROPERTIES;
-    static final Table<String, Browser, Double> FUNCTIONS;
+    static final Table<Keyword, Browser, Double> KEYWORDS;
     static final Table<String, Browser, Double> AT_RULES;
     static final Table<String, Browser, Double> SELECTORS;
+    static final Table<String, Browser, Double> FUNCTIONS;
 
     static {
         ImmutableTable.Builder<Property, Browser, Double> builder = ImmutableTable.builder();
@@ -305,6 +306,102 @@ public final class PrefixTables {
         builder.put(Property.COLUMN_RULE_STYLE, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.COLUMN_SPAN, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.COLUMN_FILL, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.ALIGN_CONTENT, Browser.IE, 10.0);
+        builder.put(Property.ALIGN_ITEMS, Browser.IE, 10.0);
+        builder.put(Property.ALIGN_SELF, Browser.IE, 10.0);
+        builder.put(Property.FLEX, Browser.IE, 10.0);
+        builder.put(Property.FLEX_BASIS, Browser.IE, 10.0);
+        builder.put(Property.FLEX_DIRECTION, Browser.IE, 10.0);
+        builder.put(Property.FLEX_FLOW, Browser.IE, 10.0);
+        builder.put(Property.FLEX_GROW, Browser.IE, 10.0);
+        builder.put(Property.FLEX_SHRINK, Browser.IE, 10.0);
+        builder.put(Property.FLEX_WRAP, Browser.IE, 10.0);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.IE, 10.0);
+        builder.put(Property.ORDER, Browser.IE, 10.0);
+        builder.put(Property.ALIGN_CONTENT, Browser.OPERA, 16.0);
+        builder.put(Property.ALIGN_ITEMS, Browser.OPERA, 16.0);
+        builder.put(Property.ALIGN_SELF, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX_BASIS, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX_DIRECTION, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX_FLOW, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX_GROW, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX_SHRINK, Browser.OPERA, 16.0);
+        builder.put(Property.FLEX_WRAP, Browser.OPERA, 16.0);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.OPERA, 16.0);
+        builder.put(Property.ORDER, Browser.OPERA, 16.0);
+        builder.put(Property.ALIGN_CONTENT, Browser.CHROME, 28.0);
+        builder.put(Property.ALIGN_ITEMS, Browser.CHROME, 28.0);
+        builder.put(Property.ALIGN_SELF, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX_BASIS, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX_DIRECTION, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX_FLOW, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX_GROW, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX_SHRINK, Browser.CHROME, 28.0);
+        builder.put(Property.FLEX_WRAP, Browser.CHROME, 28.0);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.CHROME, 28.0);
+        builder.put(Property.ORDER, Browser.CHROME, 28.0);
+        builder.put(Property.ALIGN_CONTENT, Browser.SAFARI, 8.0);
+        builder.put(Property.ALIGN_ITEMS, Browser.SAFARI, 8.0);
+        builder.put(Property.ALIGN_SELF, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX_BASIS, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX_DIRECTION, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX_FLOW, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX_GROW, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX_SHRINK, Browser.SAFARI, 8.0);
+        builder.put(Property.FLEX_WRAP, Browser.SAFARI, 8.0);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.SAFARI, 8.0);
+        builder.put(Property.ORDER, Browser.SAFARI, 8.0);
+        builder.put(Property.ALIGN_CONTENT, Browser.FIREFOX, 21.0);
+        builder.put(Property.ALIGN_ITEMS, Browser.FIREFOX, 21.0);
+        builder.put(Property.ALIGN_SELF, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX_BASIS, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX_DIRECTION, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX_FLOW, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX_GROW, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX_SHRINK, Browser.FIREFOX, 21.0);
+        builder.put(Property.FLEX_WRAP, Browser.FIREFOX, 21.0);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.FIREFOX, 21.0);
+        builder.put(Property.ORDER, Browser.FIREFOX, 21.0);
+        builder.put(Property.ALIGN_CONTENT, Browser.ANDROID, 4.3);
+        builder.put(Property.ALIGN_ITEMS, Browser.ANDROID, 4.3);
+        builder.put(Property.ALIGN_SELF, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX_BASIS, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX_DIRECTION, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX_FLOW, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX_GROW, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX_SHRINK, Browser.ANDROID, 4.3);
+        builder.put(Property.FLEX_WRAP, Browser.ANDROID, 4.3);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.ANDROID, 4.3);
+        builder.put(Property.ORDER, Browser.ANDROID, 4.3);
+        builder.put(Property.ALIGN_CONTENT, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.ALIGN_ITEMS, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.ALIGN_SELF, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX_BASIS, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX_DIRECTION, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX_FLOW, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX_GROW, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX_SHRINK, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.FLEX_WRAP, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.ORDER, Browser.IE_MOBILE, 10.0);
+        builder.put(Property.ALIGN_CONTENT, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.ALIGN_ITEMS, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.ALIGN_SELF, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX_BASIS, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX_DIRECTION, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX_FLOW, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX_GROW, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX_SHRINK, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.FLEX_WRAP, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.JUSTIFY_CONTENT, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.ORDER, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.USER_SELECT, Browser.IE, 11.0);
         builder.put(Property.USER_SELECT, Browser.OPERA, 30.0);
         builder.put(Property.USER_SELECT, Browser.CHROME, 44.0);
@@ -330,26 +427,26 @@ public final class PrefixTables {
     }
 
     static {
-        ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
+        ImmutableTable.Builder<Keyword, Browser, Double> builder = ImmutableTable.builder();
 
-        builder.put("calc", Browser.CHROME, 25.0);
-        builder.put("calc", Browser.SAFARI, 6.0);
-        builder.put("calc", Browser.FIREFOX, 15.0);
-        builder.put("calc", Browser.IOS_SAFARI, 6.1);
-        builder.put("linear-gradient", Browser.OPERA, 12.0);
-        builder.put("repeating-linear-gradient", Browser.OPERA, 12.0);
-        builder.put("linear-gradient", Browser.CHROME, 25.0);
-        builder.put("repeating-linear-gradient", Browser.CHROME, 25.0);
-        builder.put("linear-gradient", Browser.SAFARI, 6.0);
-        builder.put("repeating-linear-gradient", Browser.SAFARI, 6.0);
-        builder.put("linear-gradient", Browser.FIREFOX, 15.0);
-        builder.put("repeating-linear-gradient", Browser.FIREFOX, 15.0);
-        builder.put("linear-gradient", Browser.ANDROID, 4.3);
-        builder.put("repeating-linear-gradient", Browser.ANDROID, 4.3);
-        builder.put("linear-gradient", Browser.IOS_SAFARI, 6.1);
-        builder.put("repeating-linear-gradient", Browser.IOS_SAFARI, 6.1);
+        builder.put(Keyword.FLEX, Browser.IE, 10.0);
+        builder.put(Keyword.INLINE_FLEX, Browser.IE, 10.0);
+        builder.put(Keyword.FLEX, Browser.OPERA, 16.0);
+        builder.put(Keyword.INLINE_FLEX, Browser.OPERA, 16.0);
+        builder.put(Keyword.FLEX, Browser.CHROME, 28.0);
+        builder.put(Keyword.INLINE_FLEX, Browser.CHROME, 28.0);
+        builder.put(Keyword.FLEX, Browser.SAFARI, 8.0);
+        builder.put(Keyword.INLINE_FLEX, Browser.SAFARI, 8.0);
+        builder.put(Keyword.FLEX, Browser.FIREFOX, 21.0);
+        builder.put(Keyword.INLINE_FLEX, Browser.FIREFOX, 21.0);
+        builder.put(Keyword.FLEX, Browser.ANDROID, 4.3);
+        builder.put(Keyword.INLINE_FLEX, Browser.ANDROID, 4.3);
+        builder.put(Keyword.FLEX, Browser.IE_MOBILE, 10.0);
+        builder.put(Keyword.INLINE_FLEX, Browser.IE_MOBILE, 10.0);
+        builder.put(Keyword.FLEX, Browser.IOS_SAFARI, 8.4);
+        builder.put(Keyword.INLINE_FLEX, Browser.IOS_SAFARI, 8.4);
 
-        FUNCTIONS = builder.build();
+        KEYWORDS = builder.build();
     }
 
     static {
@@ -379,6 +476,29 @@ public final class PrefixTables {
         builder.put("placeholder", Browser.IOS_SAFARI, 8.4);
 
         SELECTORS = builder.build();
+    }
+
+    static {
+        ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
+
+        builder.put("calc", Browser.CHROME, 25.0);
+        builder.put("calc", Browser.SAFARI, 6.0);
+        builder.put("calc", Browser.FIREFOX, 15.0);
+        builder.put("calc", Browser.IOS_SAFARI, 6.1);
+        builder.put("linear-gradient", Browser.OPERA, 12.0);
+        builder.put("repeating-linear-gradient", Browser.OPERA, 12.0);
+        builder.put("linear-gradient", Browser.CHROME, 25.0);
+        builder.put("repeating-linear-gradient", Browser.CHROME, 25.0);
+        builder.put("linear-gradient", Browser.SAFARI, 6.0);
+        builder.put("repeating-linear-gradient", Browser.SAFARI, 6.0);
+        builder.put("linear-gradient", Browser.FIREFOX, 15.0);
+        builder.put("repeating-linear-gradient", Browser.FIREFOX, 15.0);
+        builder.put("linear-gradient", Browser.ANDROID, 4.3);
+        builder.put("repeating-linear-gradient", Browser.ANDROID, 4.3);
+        builder.put("linear-gradient", Browser.IOS_SAFARI, 6.1);
+        builder.put("repeating-linear-gradient", Browser.IOS_SAFARI, 6.1);
+
+        FUNCTIONS = builder.build();
     }
 
     private PrefixTables() {}

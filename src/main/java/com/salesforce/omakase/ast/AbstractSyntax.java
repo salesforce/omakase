@@ -286,7 +286,11 @@ public abstract class AbstractSyntax implements Syntax {
     public final String toString() {
         // this doesn't have to be final...it's just final as a reminder that usually it shouldn't be added because this
         // default implementation is good enough.
-        return As.string(this).fields().toString();
+
+        // uncomment this for an object-based toString
+        //return As.string(this).fields().toString();
+
+        return As.simpleString(this);
     }
 
     /** utility to ensure the comments list is created before using it */

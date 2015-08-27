@@ -34,7 +34,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-final class HandlePseudoElement extends AbstractHandler<PseudoElementSelector, Statement> {
+final class HandlePseudoElement extends AbstractHandlerSimple<PseudoElementSelector, Statement> {
     @Override
     protected boolean applicable(PseudoElementSelector instance, SupportMatrix support) {
         return !instance.name().startsWith("-") && PrefixTablesUtil.isPrefixableSelector(instance.name());

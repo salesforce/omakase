@@ -107,7 +107,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      *     The {@link PropertyValue}.
      */
     public Declaration(Property propertyName, PropertyValue propertyValue) {
-        this(PropertyName.using(propertyName), propertyValue);
+        this(PropertyName.of(propertyName), propertyValue);
     }
 
     /**
@@ -126,7 +126,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      *     The single {@link Term}.
      */
     public Declaration(Property propertyName, Term singleValue) {
-        this(PropertyName.using(propertyName), PropertyValue.of(singleValue));
+        this(PropertyName.of(propertyName), PropertyValue.of(singleValue));
     }
 
     /**
@@ -201,7 +201,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * @return this, for chaining.
      */
     public Declaration propertyName(Property property) {
-        this.propertyName = PropertyName.using(checkNotNull(property, "property cannot be null"));
+        this.propertyName = PropertyName.of(checkNotNull(property, "property cannot be null"));
         return this;
     }
 
@@ -215,6 +215,19 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      */
     public Declaration propertyName(PropertyName propertyName) {
         this.propertyName = checkNotNull(propertyName, "propertyName cannot be null");
+        return this;
+    }
+
+    /**
+     * Sets a new property name. Generally, doing this should be avoided.
+     *
+     * @param propertyName
+     *     The new property name.
+     *
+     * @return this, for chaining.
+     */
+    public Declaration propertyName(String propertyName) {
+        this.propertyName = PropertyName.of(propertyName);
         return this;
     }
 
@@ -235,13 +248,13 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      * <code>if (declaration.isProperty("border-radius") {...}</code>
      * </pre>
      *
-     * @param property
+     * @param name
      *     Name of the property.
      *
      * @return True if this {@link Declaration} has the given property name.
      */
-    public boolean isProperty(String property) {
-        return propertyName().matches(property);
+    public boolean isProperty(String name) {
+        return propertyName().matches(name);
     }
 
     /**
@@ -302,6 +315,20 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      */
     public boolean isPropertyIgnorePrefix(PropertyName propertyName) {
         return propertyName().matchesIgnorePrefix(propertyName);
+    }
+
+    /**
+     * Same as {@link #isProperty(String)}, except this ignores the prefix.
+     *
+     * @param name
+     *     The property name.
+     *
+     * @return True if this {@link Declaration} has the given property name, ignoring the prefix.
+     *
+     * @see PropertyName#matchesIgnorePrefix(String)
+     */
+    public boolean isPropertyIgnorePrefix(String name) {
+        return propertyName().matchesIgnorePrefix(name);
     }
 
     /**
@@ -402,7 +429,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     /** Refines just the property name */
     private PropertyName refinePropertyName() {
         if (propertyName == null && !isRefined()) {
-            propertyName = PropertyName.using(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
+            propertyName = PropertyName.of(rawPropertyName.line(), rawPropertyName.column(), rawPropertyName.content());
         }
         return propertyName;
     }

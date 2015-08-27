@@ -71,7 +71,8 @@ public final class NumericalValueParser extends AbstractParser {
 
         // add the sign if applicable
         if (sign.isPresent()) {
-            numerical.explicitSign(sign.get().equals('-') ? Sign.NEGATIVE : Sign.POSITIVE);
+            //noinspection UnnecessaryUnboxing
+            numerical.explicitSign(sign.get().charValue() == '-' ? Sign.NEGATIVE : Sign.POSITIVE);
         }
 
         // check for a unit (% or alpha)

@@ -17,6 +17,7 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -38,7 +39,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  */
 @Subscribable
 @Description(value = "individual keyword value", broadcasted = REFINED_DECLARATION)
-public final class KeywordValue extends AbstractTerm {
+public final class KeywordValue extends AbstractTerm implements Named {
     private String keyword;
 
     /**
@@ -115,12 +116,18 @@ public final class KeywordValue extends AbstractTerm {
     }
 
     /**
-     * Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown keyword).
+     * TODO cache? Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown
+     * keyword).
      *
      * @return The {@link Keyword}.
      */
     public Optional<Keyword> asKeyword() {
         return Optional.fromNullable(Keyword.lookup(keyword));
+    }
+
+    @Override
+    public String name() {
+        return keyword();
     }
 
     /**

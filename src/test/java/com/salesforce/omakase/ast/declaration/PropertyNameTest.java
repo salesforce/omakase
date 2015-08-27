@@ -43,8 +43,8 @@ public class PropertyNameTest {
 
     @Before
     public void setup() {
-        prefixed = PropertyName.using(PREFIX + NAME);
-        unprefixed = PropertyName.using(NAME);
+        prefixed = PropertyName.of(PREFIX + NAME);
+        unprefixed = PropertyName.of(NAME);
     }
 
     @Test
@@ -101,14 +101,14 @@ public class PropertyNameTest {
 
     @Test
     public void hasPrefixTrue() {
-        PropertyName pn = PropertyName.using(Property.DISPLAY);
+        PropertyName pn = PropertyName.of(Property.DISPLAY);
         pn.prefix(Prefix.MOZ);
         assertThat(pn.hasPrefix(Prefix.MOZ)).isTrue();
     }
 
     @Test
     public void hasPrefixFalse() {
-        PropertyName pn = PropertyName.using(Property.DISPLAY);
+        PropertyName pn = PropertyName.of(Property.DISPLAY);
         pn.prefix(Prefix.MOZ);
         assertThat(pn.hasPrefix(Prefix.WEBKIT)).isFalse();
     }
@@ -125,12 +125,12 @@ public class PropertyNameTest {
 
     @Test
     public void asPropertyUnknownProperty() {
-        assertThat(PropertyName.using("blah").asProperty().isPresent()).isFalse();
+        assertThat(PropertyName.of("blah").asProperty().isPresent()).isFalse();
     }
 
     @Test
     public void asPropertyKnownProperty() {
-        assertThat(PropertyName.using(Property.DISPLAY).asProperty().get()).isSameAs(Property.DISPLAY);
+        assertThat(PropertyName.of(Property.DISPLAY).asProperty().get()).isSameAs(Property.DISPLAY);
     }
 
     @Test
@@ -155,9 +155,30 @@ public class PropertyNameTest {
 
     @Test
     public void matchesPropertyNameIgnorePrefix() {
-        PropertyName pn1 = PropertyName.using("-webkit-border-radius");
-        PropertyName pn2 = PropertyName.using("-moz-border-radius");
+        PropertyName pn1 = PropertyName.of("-webkit-border-radius");
+        PropertyName pn2 = PropertyName.of("-moz-border-radius");
         assertThat(pn1.matchesIgnorePrefix(pn2)).isTrue();
+    }
+
+
+    @Test
+    public void matchesIgnorePrefixTrueWhenPrefixedString() {
+        assertThat(prefixed.matchesIgnorePrefix("border-radius")).isTrue();
+    }
+
+    @Test
+    public void matchesIgnorePrefixTrueWhenNotPrefixedString() {
+        assertThat(unprefixed.matchesIgnorePrefix("border-radius")).isTrue();
+    }
+
+    @Test
+    public void matchesIgnorePrefixFalseWhenPrefixedString() {
+        assertThat(prefixed.matchesIgnorePrefix("border")).isFalse();
+    }
+
+    @Test
+    public void matchesIgnorePrefixFalseWhenNotPrefixedString() {
+        assertThat(unprefixed.matchesIgnorePrefix("border")).isFalse();
     }
 
     @Test
@@ -174,22 +195,22 @@ public class PropertyNameTest {
 
     @Test
     public void constructorMethodStringNameOnly() {
-        assertThat(PropertyName.using("color").name()).isEqualTo("color");
+        assertThat(PropertyName.of("color").name()).isEqualTo("color");
     }
 
     @Test
     public void constructorMethodStringAndPosition() {
-        assertThat(PropertyName.using(5, 5, "color").line()).isEqualTo(5);
+        assertThat(PropertyName.of(5, 5, "color").line()).isEqualTo(5);
     }
 
     @Test
     public void constructorMethodPropertyOnly() {
-        assertThat(PropertyName.using(Property.COLOR).name()).isEqualTo(Property.COLOR.toString());
+        assertThat(PropertyName.of(Property.COLOR).name()).isEqualTo(Property.COLOR.toString());
     }
 
     @Test
     public void constructorMethodPropertyAndPosition() {
-        assertThat(PropertyName.using(5, 5, Property.DISPLAY).line()).isEqualTo(5);
+        assertThat(PropertyName.of(5, 5, Property.DISPLAY).line()).isEqualTo(5);
     }
 
     @Test
@@ -199,66 +220,66 @@ public class PropertyNameTest {
 
     @Test
     public void matchesAnotherPropertyNameWithSameName() {
-        assertThat(unprefixed.matches(PropertyName.using(NAME))).isTrue();
+        assertThat(unprefixed.matches(PropertyName.of(NAME))).isTrue();
     }
 
     @Test
     public void matchesPropertyWithSameName() {
-        PropertyName name = PropertyName.using("display");
+        PropertyName name = PropertyName.of("display");
         assertThat(name.matches(Property.DISPLAY)).isTrue();
     }
 
     @Test
     public void matchesStringWithSameName() {
-        PropertyName name = PropertyName.using("display");
+        PropertyName name = PropertyName.of("display");
         assertThat(name.matches("display")).isTrue();
     }
 
     @Test
     public void doesNotMatchPropertyNameWithDifferentName() {
-        assertThat(unprefixed.matches(PropertyName.using("zyx"))).isFalse();
+        assertThat(unprefixed.matches(PropertyName.of("zyx"))).isFalse();
     }
 
     @Test
     public void doesNotMatchPropertyWithDifferentName() {
-        PropertyName name = PropertyName.using("display");
+        PropertyName name = PropertyName.of("display");
         assertThat(name.matches(Property.COLOR)).isFalse();
     }
 
     @Test
     public void doesNotMatchStringWithDifferentName() {
-        PropertyName name = PropertyName.using("display");
+        PropertyName name = PropertyName.of("display");
         assertThat(name.matches("color")).isFalse();
     }
 
     @Test
     public void starHackIsTrue() {
-        PropertyName name = PropertyName.using(STARHACK_NAME);
+        PropertyName name = PropertyName.of(STARHACK_NAME);
         assertThat(name.hasStarHack()).isTrue();
     }
 
     @Test
     public void starHackIsStrippedFromProperty() {
-        PropertyName name = PropertyName.using(STARHACK_NAME);
+        PropertyName name = PropertyName.of(STARHACK_NAME);
         assertThat(name.matches("color")).isTrue();
     }
 
     @Test
     public void starHackIsWrittenWithStar() throws IOException {
-        PropertyName name = PropertyName.using(STARHACK_NAME);
+        PropertyName name = PropertyName.of(STARHACK_NAME);
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSnippet(name)).isEqualTo(STARHACK_NAME);
     }
 
     @Test
     public void starHackIsFalse() {
-        PropertyName name = PropertyName.using("color");
+        PropertyName name = PropertyName.of("color");
         assertThat(name.hasStarHack()).isFalse();
     }
 
     @Test
     public void copyTest() {
-        PropertyName name = PropertyName.using("*-webkit-border-radius");
+        PropertyName name = PropertyName.of("*-webkit-border-radius");
         assertThat(name.isPrefixed()).isTrue();
         assertThat(name.hasStarHack()).isTrue();
         name.comments(Lists.newArrayList("test"));

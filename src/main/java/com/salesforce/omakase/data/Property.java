@@ -236,32 +236,8 @@ public enum Property {
     /** CSS property named 'bottom' */
     BOTTOM("bottom"),
 
-    /** CSS property named 'box-align' */
-    BOX_ALIGN("box-align"),
-
     /** CSS property named 'box-decoration-break' */
     BOX_DECORATION_BREAK("box-decoration-break"),
-
-    /** CSS property named 'box-direction' */
-    BOX_DIRECTION("box-direction"),
-
-    /** CSS property named 'box-flex' */
-    BOX_FLEX("box-flex"),
-
-    /** CSS property named 'box-flex-group' */
-    BOX_FLEX_GROUP("box-flex-group"),
-
-    /** CSS property named 'box-lines' */
-    BOX_LINES("box-lines"),
-
-    /** CSS property named 'box-ordinal-group' */
-    BOX_ORDINAL_GROUP("box-ordinal-group"),
-
-    /** CSS property named 'box-orient' */
-    BOX_ORIENT("box-orient"),
-
-    /** CSS property named 'box-pack' */
-    BOX_PACK("box-pack"),
 
     /** CSS property named 'box-shadow' */
     BOX_SHADOW("box-shadow"),
@@ -517,9 +493,6 @@ public enum Property {
 
     /** CSS property named 'image-resolution' */
     IMAGE_RESOLUTION("image-resolution"),
-
-    /** CSS property named 'inline-box-align' */
-    INLINE_BOX_ALIGN("inline-box-align"),
 
     /** CSS property named 'justify-content' */
     JUSTIFY_CONTENT("justify-content"),

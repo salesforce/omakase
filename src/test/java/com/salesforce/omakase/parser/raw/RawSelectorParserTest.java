@@ -70,6 +70,8 @@ public class RawSelectorParserTest extends AbstractParserTest<RawSelectorParser>
             "E[foo^=\"bar\"]",
             "E[foo$=\"bar\"]  ",
             "E[foo*=\"bar\"]",
+            "[hidden]",
+            "[foo=\"bar\"]",
             "E:nth-child(n)",
             "E::first-letter",
             "p+p",

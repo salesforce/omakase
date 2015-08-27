@@ -31,7 +31,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-final class HandleAtRule extends AbstractHandler<AtRule, Statement> {
+final class HandleAtRule extends AbstractHandlerSimple<AtRule, Statement> {
     @Override
     protected boolean applicable(AtRule instance, SupportMatrix support) {
         return PrefixTablesUtil.isPrefixableAtRule(instance.name());

@@ -51,9 +51,9 @@ public class RawFunctionTest {
     }
 
     @Test
-    public void writeNotSupported() {
-        exception.expect(UnsupportedOperationException.class);
-        StyleWriter.writeSingle(new RawFunction(1, 1, "name", "args args"));
+    public void write() {
+        String out = StyleWriter.writeSingle(new RawFunction(1, 1, "name", "args args"));
+        assertThat(out).isEqualTo("name(args args)");
     }
 
     @Test

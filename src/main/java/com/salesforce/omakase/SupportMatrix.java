@@ -22,12 +22,14 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixTablesUtil;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.util.As;
 
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,9 +50,10 @@ public final class SupportMatrix {
     private final Multimap<Browser, Double> supported = TreeMultimap.create();
 
     private final Map<Property, Set<Prefix>> propertyCache = new EnumMap<>(Property.class);
-    private final Map<String, Set<Prefix>> functionCache = new HashMap<>(8);
+    private final Map<Keyword, Set<Prefix>> keywordCache = new EnumMap<>(Keyword.class);
     private final Map<String, Set<Prefix>> atRuleCache = new HashMap<>(2);
     private final Map<String, Set<Prefix>> selectorCache = new HashMap<>(2);
+    private final Map<String, Set<Prefix>> functionCache = new HashMap<>(8);
 
     /**
      * Designate support for the given {@link Browser} and version.
@@ -189,6 +192,23 @@ public final class SupportMatrix {
     }
 
     /**
+     * Gets whether the specified version or lower of the browser is supported. If the browser is not supported then this returns
+     * false.
+     *
+     * @param browser
+     *     The {@link Browser}.
+     * @param version
+     *     The version.
+     *
+     * @return True if the given version or a lower one is supported
+     */
+    public boolean supportsVersionOrLower(Browser browser, double version) {
+        Collection<Double> versions = supported.get(browser);
+        if (versions.isEmpty()) return false;
+        return versions.iterator().next() <= version;
+    }
+
+    /**
      * Gets all supported versions of the given {@link Browser}.
      *
      * @param browser
@@ -248,27 +268,26 @@ public final class SupportMatrix {
     }
 
     /**
-     * Gets all prefixes required for the given function name (e.g., "calc" or "linear-gradient"), according to the supported
-     * browser versions.
+     * Gets all prefixes required for the given {@link Keyword} according to the supported browser versions.
      *
-     * @param name
-     *     Get required prefixes for functions with this name.
+     * @param keyword
+     *     Get required prefixes for this {@link Keyword}.
      *
      * @return The set of required prefixes.
      */
-    public Set<Prefix> prefixesForFunction(String name) {
-        Set<Prefix> cached = functionCache.get(name);
+    public Set<Prefix> prefixesForKeyword(Keyword keyword) {
+        Set<Prefix> cached = keywordCache.get(keyword);
 
         if (cached == null) {
             Set<Prefix> required = new HashSet<>();
 
             for (Browser browser : supported.keySet()) {
-                Double lastPrefixed = PrefixTablesUtil.lastVersionFunctionIsPrefixed(name, browser);
+                Double lastPrefixed = PrefixTablesUtil.lastVersionKeywordIsPrefixed(keyword, browser);
                 if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
             }
 
             cached = immutable(required);
-            functionCache.put(name, cached);
+            keywordCache.put(keyword, cached);
         }
 
         return cached;
@@ -327,6 +346,33 @@ public final class SupportMatrix {
     }
 
     /**
+     * Gets all prefixes required for the given function name (e.g., "calc" or "linear-gradient"), according to the supported
+     * browser versions.
+     *
+     * @param name
+     *     Get required prefixes for functions with this name.
+     *
+     * @return The set of required prefixes.
+     */
+    public Set<Prefix> prefixesForFunction(String name) {
+        Set<Prefix> cached = functionCache.get(name);
+
+        if (cached == null) {
+            Set<Prefix> required = new HashSet<>();
+
+            for (Browser browser : supported.keySet()) {
+                Double lastPrefixed = PrefixTablesUtil.lastVersionFunctionIsPrefixed(name, browser);
+                if (lowestSupportedVersion(browser) <= lastPrefixed) required.add(browser.prefix());
+            }
+
+            cached = immutable(required);
+            functionCache.put(name, cached);
+        }
+
+        return cached;
+    }
+
+    /**
      * Gets whether the given {@link Prefix} is required for the given {@link Property}, according to the supported browser
      * versions.
      * <p/>
@@ -339,24 +385,25 @@ public final class SupportMatrix {
      *
      * @return True if the property requires the given prefix.
      */
-
     public boolean requiresPrefixForProperty(Prefix prefix, Property property) {
         return PrefixTablesUtil.isPrefixableProperty(property) && prefixesForProperty(property).contains(prefix);
     }
 
     /**
-     * Gets whether the given {@link Prefix} is required for the given function name, according to the supported browser
+     * Gets whether the given {@link Prefix} is required for the given {@link Keyword}, according to the supported browser
      * versions.
+     * <p/>
+     * To get the set of all prefixes required by the keyword, use {@link #prefixesForKeyword(Keyword)} instead.
      *
      * @param prefix
      *     The {@link Prefix}.
-     * @param function
-     *     The function name, e.g., "linear-gradient".
+     * @param keyword
+     *     The {@link Keyword}.
      *
-     * @return True if the function name requires the given prefix.
+     * @return True if the property requires the given prefix.
      */
-    public boolean requiresPrefixForFunction(Prefix prefix, String function) {
-        return PrefixTablesUtil.isPrefixableFunction(function) && prefixesForFunction(function).contains(prefix);
+    public boolean requiresPrefixForKeyword(Prefix prefix, Keyword keyword) {
+        return PrefixTablesUtil.isPrefixableKeyword(keyword) && prefixesForKeyword(keyword).contains(prefix);
     }
 
     /**
@@ -386,6 +433,21 @@ public final class SupportMatrix {
      */
     public boolean requiresPrefixForSelector(Prefix prefix, String name) {
         return PrefixTablesUtil.isPrefixableSelector(name) && prefixesForSelector(name).contains(prefix);
+    }
+
+    /**
+     * Gets whether the given {@link Prefix} is required for the given function name, according to the supported browser
+     * versions.
+     *
+     * @param prefix
+     *     The {@link Prefix}.
+     * @param function
+     *     The function name, e.g., "linear-gradient".
+     *
+     * @return True if the function name requires the given prefix.
+     */
+    public boolean requiresPrefixForFunction(Prefix prefix, String function) {
+        return PrefixTablesUtil.isPrefixableFunction(function) && prefixesForFunction(function).contains(prefix);
     }
 
     @Override

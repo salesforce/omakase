@@ -28,43 +28,52 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class PrefixTablesUtilTest {
     @Test
-    public void hasPropertyTrue() {
+    public void isPrefixableProperty() {
         assertThat(PrefixTablesUtil.isPrefixableProperty(Property.BORDER_RADIUS)).isTrue();
     }
 
     @Test
-    public void hasPropertyFalse() {
+    public void isNotPrefixableProperty() {
         assertThat(PrefixTablesUtil.isPrefixableProperty(Property.BORDER)).isFalse();
     }
 
     @Test
-    public void hasFunctionTrue() {
-        assertThat(PrefixTablesUtil.isPrefixableFunction("calc")).isTrue();
+    public void isPrefixibleKeyword() {
+        assertThat(PrefixTablesUtil.isPrefixableKeyword(Keyword.FLEX)).isTrue();
     }
 
     @Test
-    public void hasFunctionFalse() {
-        assertThat(PrefixTablesUtil.isPrefixableFunction("blah")).isFalse();
+    public void isNotPrefixibleKeyword() {
+        assertThat(PrefixTablesUtil.isPrefixableKeyword(Keyword.ALL)).isFalse();
     }
-
     @Test
-    public void hasAtRule() {
+    public void isPrefixableAtRule() {
         assertThat(PrefixTablesUtil.isPrefixableAtRule("keyframes")).isTrue();
     }
 
     @Test
-    public void hasAtRuleFalse() {
+    public void isNotPrefixableAtRule() {
         assertThat(PrefixTablesUtil.isPrefixableAtRule("blah")).isFalse();
     }
 
     @Test
-    public void hasSelector() {
+    public void isPrefixableSelector() {
         assertThat(PrefixTablesUtil.isPrefixableSelector("selection")).isTrue();
     }
 
     @Test
-    public void hasSelectorFalse() {
+    public void isNotPrefixableSelector() {
         assertThat(PrefixTablesUtil.isPrefixableSelector("blah")).isFalse();
+    }
+
+    @Test
+    public void isPrefixableFunction() {
+        assertThat(PrefixTablesUtil.isPrefixableFunction("calc")).isTrue();
+    }
+
+    @Test
+    public void isNotPrefixableFunction() {
+        assertThat(PrefixTablesUtil.isPrefixableFunction("blah")).isFalse();
     }
 
     @Test
@@ -89,18 +98,24 @@ public class PrefixTablesUtilTest {
     }
 
     @Test
-    public void lastVersionFunctionIsPrefixed() {
-        assertThat(PrefixTablesUtil.lastVersionFunctionIsPrefixed("calc", Browser.CHROME)).isEqualTo(25);
+    public void lastVersionKeywordIsPrefixed() {
+        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.FLEX, Browser.FIREFOX)).isEqualTo(21);
     }
 
     @Test
-    public void lastVersionFunctionIsPrefixedNotPresent() {
-        assertThat(PrefixTablesUtil.lastVersionFunctionIsPrefixed("calc", Browser.IE)).isEqualTo(-1);
+    public void lastVersionKeywordIsPrefixedCached() {
+        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.FLEX, Browser.FIREFOX)).isEqualTo(21);
+        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.FLEX, Browser.FIREFOX)).isEqualTo(21);
     }
 
     @Test
-    public void lastPrefixedVersionFunctionForNotPrefixedFunction() {
-        assertThat(PrefixTablesUtil.lastVersionFunctionIsPrefixed("blah", Browser.IE)).isEqualTo(-1);
+    public void lastVersionKeywordIsPrefixedNotPresent() {
+        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.FLEX, Browser.OPERA_MINI)).isEqualTo(-1);
+    }
+
+    @Test
+    public void lastPrefixedVersionForNotPrefixedKeyword() {
+        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.ALL, Browser.CHROME)).isEqualTo(-1);
     }
 
     @Test
@@ -131,5 +146,20 @@ public class PrefixTablesUtilTest {
     @Test
     public void lastVersionSelectorWasPrefixedForNotPrefixedSelector() {
         assertThat(PrefixTablesUtil.lastVersionSelectorIsPrefixed("before", Browser.IE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void lastVersionFunctionIsPrefixed() {
+        assertThat(PrefixTablesUtil.lastVersionFunctionIsPrefixed("calc", Browser.CHROME)).isEqualTo(25);
+    }
+
+    @Test
+    public void lastVersionFunctionIsPrefixedNotPresent() {
+        assertThat(PrefixTablesUtil.lastVersionFunctionIsPrefixed("calc", Browser.IE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void lastPrefixedVersionFunctionForNotPrefixedFunction() {
+        assertThat(PrefixTablesUtil.lastVersionFunctionIsPrefixed("blah", Browser.IE)).isEqualTo(-1);
     }
 }

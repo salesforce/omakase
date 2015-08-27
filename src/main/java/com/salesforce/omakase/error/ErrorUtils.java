@@ -17,6 +17,9 @@
 package com.salesforce.omakase.error;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.collection.Groupable;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
@@ -94,7 +97,7 @@ public final class ErrorUtils {
     public static String format(Syntax cause, String resourceName, String message) {
         if (resourceName != null) {
             return format(String.format("%s:\nat line %s, column %s in source %s, " +
-                "caused by\n%s",
+                    "caused by\n%s",
                 message,
                 cause.line(),
                 cause.column(),
@@ -102,6 +105,19 @@ public final class ErrorUtils {
                 cause.toString()
             ));
         } else {
+            if (cause instanceof Groupable) {
+                Object parent = ((Groupable<?, ?>)cause).parent();
+                if (parent instanceof PropertyValue || parent instanceof Selector) {
+                    return format(String.format("%s:\nat line %s, column %s, caused by\n%s\nin\n%s",
+                        message,
+                        cause.line(),
+                        cause.column(),
+                        cause.toString(),
+                        parent.toString()
+                    ));
+                }
+            }
+
             return format(String.format("%s:\nat line %s, column %s, caused by\n%s",
                 message,
                 cause.line(),

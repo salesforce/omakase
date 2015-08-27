@@ -32,7 +32,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-class HandleProperty extends AbstractHandler<Declaration, Declaration> {
+class HandleProperty extends AbstractHandlerSimple<Declaration, Declaration> {
     @Override
     protected boolean applicable(Declaration instance, SupportMatrix support) {
         Optional<Property> property = instance.propertyName().asProperty();

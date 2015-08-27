@@ -78,14 +78,6 @@ abstract class AbstractHandler<T, G extends Groupable<?, G>> implements Handler<
         return !required.isEmpty();
     }
 
-    /** makes a copy of the instance with the given prefix */
-    @SuppressWarnings("unchecked")
-    protected void copy(G original, Prefix prefix, SupportMatrix support) {
-        G copy = (G)original.copy();
-        prefix(copy, prefix, support);
-        original.prepend(copy);
-    }
-
     /** should return false if the instance should be skipped */
     protected abstract boolean applicable(T instance, SupportMatrix support);
 
@@ -98,6 +90,6 @@ abstract class AbstractHandler<T, G extends Groupable<?, G>> implements Handler<
     /** should return the set of related objects that may be existing prefixed equivalents for rearrangement or removal */
     protected abstract Multimap<Prefix, ? extends G> equivalents(T instance);
 
-    /** should handle prefixing the copied instance */
-    protected abstract void prefix(G copied, Prefix prefix, SupportMatrix support);
+    /** should make (and prepends) a copy of the instance with the given prefix */
+    protected abstract void copy(G original, Prefix prefix, SupportMatrix support);
 }

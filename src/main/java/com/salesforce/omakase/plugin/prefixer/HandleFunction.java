@@ -44,7 +44,7 @@ import java.util.Set;
  *
  * @author nmcwilliams
  */
-final class HandleFunction extends AbstractHandler<FunctionValue, Declaration> {
+final class HandleFunction extends AbstractHandlerSimple<FunctionValue, Declaration> {
     private static final Map<String, String> DIR_FLIP = ImmutableMap.<String, String>builder()
         .put("to bottom", "top")
         .put("to top", "bottom")
@@ -63,7 +63,7 @@ final class HandleFunction extends AbstractHandler<FunctionValue, Declaration> {
 
     @Override
     protected Declaration subject(FunctionValue instance) {
-        return instance.parent().declaration();
+        return instance.declaration();
     }
 
     @Override

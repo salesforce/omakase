@@ -131,7 +131,7 @@ public class ReworkTest {
             if (declaration.isProperty(Property.BORDER_RADIUS)) {
 
                 // create a prefixed version of the property
-                PropertyName prop = PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
+                PropertyName prop = PropertyName.of(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
 
                 // create a new declaration with the prefixed property name and same property value
                 Declaration newDeclaration = new Declaration(prop, declaration.propertyValue());

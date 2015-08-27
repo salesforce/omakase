@@ -18,6 +18,7 @@ package com.salesforce.omakase;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import org.junit.Before;
@@ -94,6 +95,39 @@ public class SupportMatrixTest {
     public void supportsVersionFalse() {
         support.browser(Browser.CHROME, 27);
         assertThat(support.supportsVersion(Browser.CHROME, 26)).isFalse();
+    }
+
+    @Test
+    public void supportsVersionOrLower() {
+        support.browser(Browser.CHROME, 7);
+        support.browser(Browser.CHROME, 15);
+        support.browser(Browser.CHROME, 16);
+        support.browser(Browser.CHROME, 17);
+        support.browser(Browser.CHROME, 18);
+        support.browser(Browser.CHROME, 19);
+        support.browser(Browser.CHROME, 20);
+        assertThat(support.supportsVersionOrLower(Browser.CHROME, 20)).isTrue();
+        assertThat(support.supportsVersionOrLower(Browser.CHROME, 18)).isTrue();
+        assertThat(support.supportsVersionOrLower(Browser.CHROME, 12)).isTrue();
+    }
+
+    @Test
+    public void supportsVersionOrLowerFalse() {
+        support.browser(Browser.CHROME, 7);
+        support.browser(Browser.CHROME, 15);
+        support.browser(Browser.CHROME, 16);
+        support.browser(Browser.CHROME, 17);
+        support.browser(Browser.CHROME, 18);
+        support.browser(Browser.CHROME, 19);
+        support.browser(Browser.CHROME, 20);
+        assertThat(support.supportsVersionOrLower(Browser.CHROME, 6)).isFalse();
+        assertThat(support.supportsVersionOrLower(Browser.CHROME, 4)).isFalse();
+    }
+
+    @Test
+    public void supportsVersionOrLowerBrowserNotSupported() {
+        support.browser(Browser.CHROME, 20);
+        assertThat(support.supportsVersionOrLower(Browser.FIREFOX, 22)).isFalse();
     }
 
     @Test
@@ -191,6 +225,113 @@ public class SupportMatrixTest {
     }
 
     @Test
+    public void prefixesForKeyword() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 22);
+        support.browser(Browser.FIREFOX, 28);
+        assertThat(support.prefixesForKeyword(Keyword.FLEX)).containsOnly(Prefix.MS, Prefix.WEBKIT);
+    }
+
+    @Test
+    public void prefixesForKeywordCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 22);
+        support.browser(Browser.FIREFOX, 28);
+        assertThat(support.prefixesForKeyword(Keyword.FLEX)).containsOnly(Prefix.MS, Prefix.WEBKIT);
+        assertThat(support.prefixesForKeyword(Keyword.FLEX)).containsOnly(Prefix.MS, Prefix.WEBKIT);
+    }
+
+    @Test
+    public void requiresPrefixForKeywordTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 22);
+        support.browser(Browser.FIREFOX, 28);
+        assertThat(support.requiresPrefixForKeyword(Prefix.WEBKIT, Keyword.FLEX)).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForKeywordFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 22);
+        support.browser(Browser.FIREFOX, 28);
+        assertThat(support.requiresPrefixForKeyword(Prefix.MOZ, Keyword.FLEX)).isFalse();
+    }
+
+    @Test
+    public void requiresPrefixForUnprefixableKeywordFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 22);
+        support.browser(Browser.FIREFOX, 28);
+        assertThat(support.requiresPrefixForKeyword(Prefix.MS, Keyword.ABOVE)).isFalse();
+    }
+
+    @Test
+    public void prefixesForAtRule() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
+    public void prefixesForAtRuleCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
+    }
+
+    @Test
+    public void requiresPrefixForAtRuleTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "keyframes")).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForAtRuleFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "bop")).isFalse();
+    }
+
+    @Test
+    public void prefixesForSelector() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
+    }
+
+    @Test
+    public void prefixesForSelectorCached() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
+        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
+    }
+
+    @Test
+    public void requiresPrefixForSelectorTrue() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForSelector(Prefix.MOZ, "selection")).isTrue();
+    }
+
+    @Test
+    public void requiresPrefixForSelectorFalse() {
+        support.browser(Browser.IE, 10);
+        support.browser(Browser.CHROME, 20);
+        support.browser(Browser.FIREFOX, 14);
+        assertThat(support.requiresPrefixForSelector(Prefix.O, "baaahd")).isFalse();
+    }
+
+    @Test
     public void prefixesForFunction() {
         support.browser(Browser.IE, 10);
         support.browser(Browser.CHROME, 20);
@@ -229,69 +370,5 @@ public class SupportMatrixTest {
         support.browser(Browser.FIREFOX, 14);
         support.browser(Browser.OPERA, 12);
         assertThat(support.requiresPrefixForFunction(Prefix.O, "calc")).isFalse();
-    }
-
-    @Test
-    public void prefixesForAtRule() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
-    }
-
-    @Test
-    public void prefixesForAtRuleCached() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
-        assertThat(support.prefixesForAtRule("keyframes")).containsOnly(Prefix.WEBKIT, Prefix.MOZ);
-    }
-    @Test
-    public void requiresPrefixForAtRuleTrue() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "keyframes")).isTrue();
-    }
-
-    @Test
-    public void requiresPrefixForAtRuleFalse() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.requiresPrefixForAtRule(Prefix.WEBKIT, "bop")).isFalse();
-    }
-
-    @Test
-    public void prefixesForSelector() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
-    }
-
-    @Test
-    public void prefixesForSelectorCached() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
-        assertThat(support.prefixesForSelector("selection")).containsOnly(Prefix.MOZ);
-    }
-    @Test
-    public void requiresPrefixForSelectorTrue() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.requiresPrefixForSelector(Prefix.MOZ, "selection")).isTrue();
-    }
-
-    @Test
-    public void requiresPrefixForSelectorFalse() {
-        support.browser(Browser.IE, 10);
-        support.browser(Browser.CHROME, 20);
-        support.browser(Browser.FIREFOX, 14);
-        assertThat(support.requiresPrefixForSelector(Prefix.O, "baaahd")).isFalse();
     }
 }

@@ -110,8 +110,12 @@ public final class NumericalValue extends AbstractTerm {
      * @return this, for chaining.
      */
     public NumericalValue value(int value) {
-        checkArgument(value >= 0, "value must not be negative. Use explicitSign() for negative values");
-        this.raw = Integer.toString(value);
+        this.raw = Integer.toString(Math.abs(value));
+        if (value < 0) { // TESTME
+            explicitSign = Optional.of(Sign.NEGATIVE);
+        } else {
+            explicitSign = Optional.absent();
+        }
         return this;
     }
 
@@ -126,12 +130,16 @@ public final class NumericalValue extends AbstractTerm {
      * @return this, for chaining.
      */
     public NumericalValue value(double value) {
-        checkArgument(value >= 0, "value must not be negative. Use explicitSign() for negative values");
         DecimalFormat fmt = new DecimalFormat("#");
         fmt.setMaximumIntegerDigits(309);
         fmt.setMinimumIntegerDigits(1);
         fmt.setMaximumFractionDigits(340);
-        this.raw = fmt.format(value);
+        this.raw = fmt.format(Math.abs(value));
+        if (value < 0) { // TESTME
+            explicitSign = Optional.of(Sign.NEGATIVE);
+        } else {
+            explicitSign = Optional.absent();
+        }
         return this;
     }
 

@@ -96,9 +96,6 @@ final class HandlePlaceholder extends AbstractHandler<PseudoElementSelector, Sta
     }
 
     @Override
-    protected void prefix(Statement copied, Prefix prefix, SupportMatrix support) {}
-
-    @Override
     protected void copy(Statement original, Prefix prefix, SupportMatrix support) {
         // make the copy
         Rule copy = original.copy().asRule().get();

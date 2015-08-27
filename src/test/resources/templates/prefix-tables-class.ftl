@@ -29,9 +29,10 @@ import com.google.common.collect.Table;
 @SuppressWarnings("AutoBoxing")
 public final class PrefixTables {
     static final Table<Property, Browser, Double> PROPERTIES;
-    static final Table<String, Browser, Double> FUNCTIONS;
+    static final Table<Keyword, Browser, Double> KEYWORDS;
     static final Table<String, Browser, Double> AT_RULES;
     static final Table<String, Browser, Double> SELECTORS;
+    static final Table<String, Browser, Double> FUNCTIONS;
 
     static {
         ImmutableTable.Builder<Property, Browser, Double> builder = ImmutableTable.builder();
@@ -44,13 +45,13 @@ public final class PrefixTables {
     }
 
     static {
-        ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
+        ImmutableTable.Builder<Keyword, Browser, Double> builder = ImmutableTable.builder();
 
-        <#list functions as f>
-        builder.put("${f.name}", Browser.${f.browser}, ${f.version});
+        <#list keywords as k>
+        builder.put(Keyword.${k.keyword}, Browser.${k.browser}, ${k.version});
         </#list>
 
-        FUNCTIONS = builder.build();
+        KEYWORDS = builder.build();
     }
 
     static {
@@ -71,6 +72,16 @@ public final class PrefixTables {
         </#list>
 
         SELECTORS = builder.build();
+    }
+
+    static {
+        ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
+
+        <#list functions as f>
+        builder.put("${f.name}", Browser.${f.browser}, ${f.version});
+        </#list>
+
+        FUNCTIONS = builder.build();
     }
 
     private PrefixTables() {}

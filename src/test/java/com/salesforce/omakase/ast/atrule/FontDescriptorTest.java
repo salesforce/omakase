@@ -45,7 +45,7 @@ public class FontDescriptorTest {
 
     @Before
     public void setup() {
-        samplePropertyName = PropertyName.using(Property.FONT_FAMILY);
+        samplePropertyName = PropertyName.of(Property.FONT_FAMILY);
         samplePropertyValue = PropertyValue.of(StringValue.of(QuotationMode.DOUBLE, "My Font"));
         descriptor = new FontDescriptor(samplePropertyName, samplePropertyValue);
     }

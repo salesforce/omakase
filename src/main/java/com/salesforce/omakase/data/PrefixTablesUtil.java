@@ -25,9 +25,10 @@ public final class PrefixTablesUtil {
     // XXX whether additional caching here improves performance is questionable, and if enabled needs to be made thread-safe
     // static caches, based on prefix tables data being immutable
     // private static final Table<Property, Browser, Double> PROPERTY_CACHE = HashBasedTable.create();
-    // private static final Table<String, Browser, Double> FUNCTION_CACHE = HashBasedTable.create();
+    // private static final Table<String, Browser, Double> KEYWORD_CACHE = HashBasedTable.create();
     // private static final Table<String, Browser, Double> AT_RULE_CACHE = HashBasedTable.create();
     // private static final Table<String, Browser, Double> SELECTOR_CACHE = HashBasedTable.create();
+    // private static final Table<String, Browser, Double> FUNCTION_CACHE = HashBasedTable.create();
 
     private PrefixTablesUtil() {}
 
@@ -44,15 +45,15 @@ public final class PrefixTablesUtil {
     }
 
     /**
-     * Gets whether prefix info exists for the given function name.
+     * Gets whether prefix info exists for the given keyword.
      *
-     * @param function
-     *     Check if prefix info exists for this function name.
+     * @param keyword
+     *     Check if prefix info exists for this keyword.
      *
-     * @return True of prefix info exists for the given function name.
+     * @return True of prefix info exists for the given keyword.
      */
-    public static boolean isPrefixableFunction(String function) {
-        return PrefixTables.FUNCTIONS.containsRow(function);
+    public static boolean isPrefixableKeyword(Keyword keyword) {
+        return PrefixTables.KEYWORDS.containsRow(keyword);
     }
 
     /**
@@ -80,6 +81,18 @@ public final class PrefixTablesUtil {
     }
 
     /**
+     * Gets whether prefix info exists for the given function name.
+     *
+     * @param function
+     *     Check if prefix info exists for this function name.
+     *
+     * @return True of prefix info exists for the given function name.
+     */
+    public static boolean isPrefixableFunction(String function) {
+        return PrefixTables.FUNCTIONS.containsRow(function);
+    }
+
+    /**
      * Gets the last version of the given browser that requires a prefix for the given property.
      *
      * @param property
@@ -95,17 +108,17 @@ public final class PrefixTablesUtil {
     }
 
     /**
-     * Gets the last version of the given browser that requires a prefix for the given function name.
+     * Gets the last version of the given browser that requires a prefix for the given keyword.
      *
-     * @param name
-     *     The function name.
+     * @param keyword
+     *     The keyword.
      * @param browser
      *     The browser.
      *
-     * @return The last version, or -1 if all known versions of the browser supports the function name unprefixed.
+     * @return The last version, or -1 if all known versions of the browser supports the keyword unprefixed.
      */
-    public static Double lastVersionFunctionIsPrefixed(String name, Browser browser) {
-        final Double val = PrefixTables.FUNCTIONS.get(name, browser);
+    public static Double lastVersionKeywordIsPrefixed(Keyword keyword, Browser browser) {
+        final Double val = PrefixTables.KEYWORDS.get(keyword, browser);
         return val != null ? val : -1d;
     }
 
@@ -136,6 +149,21 @@ public final class PrefixTablesUtil {
      */
     public static Double lastVersionSelectorIsPrefixed(String name, Browser browser) {
         final Double val = PrefixTables.SELECTORS.get(name, browser);
+        return val != null ? val : -1d;
+    }
+
+    /**
+     * Gets the last version of the given browser that requires a prefix for the given function name.
+     *
+     * @param name
+     *     The function name.
+     * @param browser
+     *     The browser.
+     *
+     * @return The last version, or -1 if all known versions of the browser supports the function name unprefixed.
+     */
+    public static Double lastVersionFunctionIsPrefixed(String name, Browser browser) {
+        final Double val = PrefixTables.FUNCTIONS.get(name, browser);
         return val != null ? val : -1d;
     }
 }

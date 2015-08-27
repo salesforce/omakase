@@ -46,7 +46,7 @@ public class FontFaceBlockTest {
 
     @Before
     public void setup() {
-        samplePropertyName = PropertyName.using(Property.FONT_FAMILY);
+        samplePropertyName = PropertyName.of(Property.FONT_FAMILY);
         samplePropertyValue = PropertyValue.of(StringValue.of(QuotationMode.DOUBLE, "My Font"));
         descriptor = new FontDescriptor(samplePropertyName, samplePropertyValue);
         block = new FontFaceBlock();
@@ -85,13 +85,13 @@ public class FontFaceBlockTest {
     public void writeVerbose() {
         block = new FontFaceBlock();
 
-        PropertyName n1 = PropertyName.using(Property.FONT_FAMILY);
+        PropertyName n1 = PropertyName.of(Property.FONT_FAMILY);
         KeywordValue v1 = KeywordValue.of("MyFont");
 
-        PropertyName n2 = PropertyName.using(Property.SRC);
+        PropertyName n2 = PropertyName.of(Property.SRC);
         UrlFunctionValue v2 = new UrlFunctionValue("MyFont.ttf");
 
-        PropertyName n3 = PropertyName.using(Property.FONT_WEIGHT);
+        PropertyName n3 = PropertyName.of(Property.FONT_WEIGHT);
         KeywordValue v3 = KeywordValue.of(Keyword.BOLD);
 
         block.fontDescriptors().append(new FontDescriptor(n1, PropertyValue.of(v1)));
@@ -112,13 +112,13 @@ public class FontFaceBlockTest {
     public void writeInline() {
         block = new FontFaceBlock();
 
-        PropertyName n1 = PropertyName.using(Property.FONT_FAMILY);
+        PropertyName n1 = PropertyName.of(Property.FONT_FAMILY);
         KeywordValue v1 = KeywordValue.of("MyFont");
 
-        PropertyName n2 = PropertyName.using(Property.SRC);
+        PropertyName n2 = PropertyName.of(Property.SRC);
         UrlFunctionValue v2 = new UrlFunctionValue("MyFont.ttf");
 
-        PropertyName n3 = PropertyName.using(Property.FONT_WEIGHT);
+        PropertyName n3 = PropertyName.of(Property.FONT_WEIGHT);
         KeywordValue v3 = KeywordValue.of(Keyword.BOLD);
 
         block.fontDescriptors().append(new FontDescriptor(n1, PropertyValue.of(v1)));
@@ -135,13 +135,13 @@ public class FontFaceBlockTest {
     public void writeCompressed() {
         block = new FontFaceBlock();
 
-        PropertyName n1 = PropertyName.using(Property.FONT_FAMILY);
+        PropertyName n1 = PropertyName.of(Property.FONT_FAMILY);
         KeywordValue v1 = KeywordValue.of("MyFont");
 
-        PropertyName n2 = PropertyName.using(Property.SRC);
+        PropertyName n2 = PropertyName.of(Property.SRC);
         UrlFunctionValue v2 = new UrlFunctionValue("MyFont.ttf");
 
-        PropertyName n3 = PropertyName.using(Property.FONT_WEIGHT);
+        PropertyName n3 = PropertyName.of(Property.FONT_WEIGHT);
         KeywordValue v3 = KeywordValue.of(Keyword.BOLD);
 
         block.fontDescriptors().append(new FontDescriptor(n1, PropertyValue.of(v1)));

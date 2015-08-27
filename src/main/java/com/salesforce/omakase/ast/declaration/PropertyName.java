@@ -37,6 +37,9 @@ import static com.salesforce.omakase.util.Prefixes.PrefixPair;
  * #unprefixedName()}, or add/replace the prefix with {@link #prefix(Prefix)} method.
  * <p/>
  * Use {@link #name()} to get the full property name, including the prefix if it is present.
+ * <p/>
+ * The name of this property is immutable. If seeking to change the property name of a Declaration, see {@link
+ * Declaration#propertyName(Property)}, {@link Declaration#propertyName(String)}, and related methods.
  *
  * @author nmcwilliams
  */
@@ -141,9 +144,8 @@ public final class PropertyName extends AbstractSyntax implements Named {
     }
 
     /**
-     * TODO cache?
-     * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a
-     * prefixed property).
+     * TODO cache? Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown
+     * property or a prefixed property).
      *
      * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or it's unknown.
      */
@@ -186,18 +188,19 @@ public final class PropertyName extends AbstractSyntax implements Named {
     /**
      * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given string.
      *
-     * @param string
+     * @param name
      *     Match against this property name.
      *
      * @return True if this {@link PropertyName} has a name that equals the given string.
      */
-    public boolean matches(String string) {
-        if (string == null) return false;
-        return name().equals(string);
+    public boolean matches(String name) {
+        if (name == null) return false;
+        return name().equals(name);
     }
 
     /**
-     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given {@link Property}.
+     * TODO if caching Property then update this. Gets whether this {@link PropertyName} has a {@link #name()} that equals the
+     * given {@link Property}.
      *
      * @param property
      *     Match against this property.
@@ -222,6 +225,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
     }
 
     /**
+     * TODO fix this if caching Property
      * Same as {@link #matches(Property)}, except this ignores the prefix.
      *
      * @param property
@@ -245,6 +249,18 @@ public final class PropertyName extends AbstractSyntax implements Named {
         return unprefixedName().equals(other.unprefixedName());
     }
 
+    /**
+     * Same as {@link #matches(String)}, except this ignores the prefix of this property.
+     *
+     * @param name
+     *     The property name.
+     *
+     * @return True if this {@link PropertyName} has a name that equals the given string, ignoring the prefix of this property.
+     */
+    public boolean matchesIgnorePrefix(String name) {
+        return unprefixedName().equals(name);
+    }
+
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         if (starHack) appendable.append(STAR);
@@ -253,11 +269,11 @@ public final class PropertyName extends AbstractSyntax implements Named {
 
     @Override
     public PropertyName copy() {
-        return PropertyName.using(name()).starHack(starHack).copiedFrom(this);
+        return PropertyName.of(name()).starHack(starHack).copiedFrom(this);
     }
 
     /**
-     * Creates a new {@link PropertyName} instance using the given string. Prefer to use {@link #using(Property)} instead.
+     * Creates a new {@link PropertyName} instance using the given string. Prefer to use {@link #of(Property)} instead.
      * <p/>
      * Please note that the property name will be automatically lower-cased.
      *
@@ -266,13 +282,13 @@ public final class PropertyName extends AbstractSyntax implements Named {
      *
      * @return The new {@link PropertyName} instance.
      */
-    public static PropertyName using(String name) {
+    public static PropertyName of(String name) {
         checkNotNull(name, "name cannot be null");
-        return using(-1, -1, name);
+        return of(-1, -1, name);
     }
 
     /**
-     * Creates a new {@link PropertyName} from with the given String name. Prefer to use {@link #using(Property)} instead.
+     * Creates a new {@link PropertyName} from with the given String name. Prefer to use {@link #of(Property)} instead.
      * <p/>
      * Please note that the property name will be automatically lower-cased.
      *
@@ -285,7 +301,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      *
      * @return The new {@link PropertyName} instance.
      */
-    public static PropertyName using(int line, int column, String name) {
+    public static PropertyName of(int line, int column, String name) {
         Property recognized = Property.lookup(name.toLowerCase());
         String nameToUse = recognized != null ? recognized.toString() : name.toLowerCase();
         return new PropertyName(line, column, nameToUse);
@@ -299,8 +315,8 @@ public final class PropertyName extends AbstractSyntax implements Named {
      *
      * @return The new {@link PropertyName} instance.
      */
-    public static PropertyName using(Property property) {
-        return using(-1, -1, property);
+    public static PropertyName of(Property property) {
+        return of(-1, -1, property);
     }
 
     /**
@@ -315,7 +331,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      *
      * @return The new {@link PropertyName} instance.
      */
-    public static PropertyName using(int line, int column, Property property) {
+    public static PropertyName of(int line, int column, Property property) {
         return new PropertyName(line, column, property.toString());
     }
 }

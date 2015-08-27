@@ -69,19 +69,19 @@ properties:
 #    - break-after
 #    - break-inside
 
-#  flexbox:
-#    - flex
-#    - flex-grow
-#    - flex-shrink
-#    - flex-basis
-#    - flex-direction
-#    - flex-wrap
-#    - flex-flow
-#    - justify-content
-#    - order
-#    - align-items
-#    - align-self
-#    - align-content
+  flexbox:
+    - align-content
+    - align-items
+    - align-self
+    - flex
+    - flex-basis
+    - flex-direction
+    - flex-flow
+    - flex-grow
+    - flex-shrink
+    - flex-wrap
+    - justify-content
+    - order
 
   user-select-none:
     - user-select
@@ -91,6 +91,29 @@ properties:
 
   css3-tabsize:
     - tab-size
+
+# prefixed keywords
+keywords:
+  flexbox:
+    - flex
+    - inline-flex
+#  intrinsic-width:
+#    - fill-available
+#    - max-content
+#    - min-content
+#    - fit-content
+
+# prefixed at-rules
+at-rules:
+  css-animation:
+    - keyframes
+
+# prefixed selectors
+selectors:
+  css-selection:
+    - selection
+  css-placeholder:
+    - placeholder
 
 # prefixed functions
 functions:
@@ -102,26 +125,6 @@ functions:
     - repeating-linear-gradient
 #    - radial-gradient
 #    - repeating-radial-gradient
-
-# prefixed selectors
-selectors:
-  css-selection:
-    - selection
-  css-placeholder:
-    - placeholder
-
-# prefixed at-rules
-at-rules:
-  css-animation:
-    - keyframes
-
-# prefixed keywords
-# keywords:
-#  intrinsic-width:
-#    - fill-available
-#    - max-content
-#    - min-content
-#    - fit-content
 
 # stuff not on caniuse.com
 non-standard:

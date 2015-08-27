@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.data.Keyword;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -93,6 +94,30 @@ public final class Values {
      */
     public static Optional<KeywordValue> asKeyword(PropertyValue value) {
         return as(KeywordValue.class, value);
+    }
+
+    /**
+     * Same as {@link #asKeyword(PropertyValue)}, except this returns the specific Keyword enum value (not the syntax unit).
+     * <p/>
+     * Gets the single {@link Keyword} (from a single {@link KeywordValue}) within the given {@link PropertyValue}. The returned
+     * {@link Optional} will only be present if the given property value contains only one {@link Term} which is an instance of a
+     * {@link KeywordValue} and has a recognized keyword.
+     * <p/>
+     * Example:
+     * <pre>
+     * {@code Keyword keyword = Value.asKeywordEnum(declaration.getPropertyValue())}
+     * </pre>
+     *
+     * @param value
+     *     The value.
+     *
+     * @return The keyword value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
+     * above.
+     */
+    public static Optional<Keyword> asKeywordEnum(PropertyValue value) {
+        Optional<KeywordValue> keywordValue = asKeyword(value);
+        if (!keywordValue.isPresent()) return Optional.absent();
+        return keywordValue.get().asKeyword();
     }
 
     /**

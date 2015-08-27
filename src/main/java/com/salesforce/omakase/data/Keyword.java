@@ -169,6 +169,9 @@ public enum Keyword {
     /** CSS keyword named 'fixed' */
     FIXED("fixed"),
 
+    /** CSS keyword named 'flex' */
+    FLEX("flex"),
+
     /** CSS keyword named 'fuchsia' */
     FUCHSIA("fuchsia"),
 
@@ -213,6 +216,9 @@ public enum Keyword {
 
     /** CSS keyword named 'inline-box' */
     INLINE_BOX("inline-box"),
+
+    /** CSS keyword named 'inline-flex' */
+    INLINE_FLEX("inline-flex"),
 
     /** CSS keyword named 'inline-grid' */
     INLINE_GRID("inline-grid"),
@@ -581,5 +587,4 @@ public enum Keyword {
     public static Keyword lookup(String name) {
         return map.get(name);
     }
-
 }

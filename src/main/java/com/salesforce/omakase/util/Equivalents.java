@@ -146,7 +146,7 @@ public final class Equivalents {
     }
 
     /** base for walkers that group any Groupable together */
-    private abstract static class Base<G extends Groupable<?, G>, N extends Named> implements EquivalentWalker<G, N> {
+    public abstract static class Base<G extends Groupable<?, G>, N extends Named> implements EquivalentWalker<G, N> {
         @Override
         public G previous(G peer) {
             return peer.previous().orNull();
@@ -186,7 +186,7 @@ public final class Equivalents {
     }
 
     /** base for walkers that group {@link AtRule}s together */
-    private abstract static class AtRuleBase<N extends Named> implements EquivalentWalker<AtRule, N> {
+    public abstract static class AtRuleBase<N extends Named> implements EquivalentWalker<AtRule, N> {
         @Override
         public AtRule previous(AtRule peer) {
             Optional<Statement> previous = peer.previous();
@@ -300,7 +300,7 @@ public final class Equivalents {
                     String unprefixedExpr = unprefixed.rawExpression().isPresent() ? unprefixed.rawExpression().get().content() : "";
                     String peerExpr = peer.rawExpression().isPresent() ? peer.rawExpression().get().content() : "";
                     if (unprefixedExpr.equals(peerExpr)) {
-                    return peer;
+                        return peer;
                     }
                 }
             }

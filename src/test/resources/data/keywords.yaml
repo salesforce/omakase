@@ -43,6 +43,7 @@ keywords:
   - field
   - fill
   - fixed
+  - flex
   - fuchsia
   - gray
   - green
@@ -58,6 +59,7 @@ keywords:
   - inline-axis
   - inline-block
   - inline-box
+  - inline-flex
   - inline-grid
   - inline-table
   - inset

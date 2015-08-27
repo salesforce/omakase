@@ -25,6 +25,8 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
+import java.io.IOException;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -107,8 +109,8 @@ public final class RawFunction extends AbstractSyntax {
     }
 
     @Override
-    public void write(StyleWriter writer, StyleAppendable appendable) {
-        throw new UnsupportedOperationException("write not supported for " + RawFunction.class);
+    public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        appendable.append(name).append('(').append(args).append(')');
     }
 
     @Override

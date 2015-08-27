@@ -21,6 +21,7 @@ import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
@@ -118,6 +119,10 @@ public final class Prefixer implements DependentPlugin {
     // declaration handlers
     private static final Handler<Declaration> STANDARD_PROPERTY = new HandleProperty();
     private static final Handler<Declaration> TRANSITION = new HandleTransition();
+    private static final Handler<Declaration> FLEX_ORDER = new HandleFlexOrder();
+
+    // keyword handlers
+    private static final Handler<KeywordValue> FLEX = new HandleFlexValue();
 
     // function handlers
     private static final Handler<FunctionValue> STANDARD_FUNCTION = new HandleFunction();
@@ -228,7 +233,7 @@ public final class Prefixer implements DependentPlugin {
     public void declaration(Declaration declaration) {
         // don't automatically trigger refinement on every declaration just to check if a prefix is needed.
         if (!declaration.isRefined() || declaration.isPrefixed()) return; // skip stuff already prefixed
-        run(declaration, TRANSITION, STANDARD_PROPERTY);
+        run(declaration, TRANSITION, FLEX_ORDER, STANDARD_PROPERTY);
     }
 
     /**
@@ -240,6 +245,17 @@ public final class Prefixer implements DependentPlugin {
     @Rework
     public void function(FunctionValue function) {
         run(function, STANDARD_FUNCTION);
+    }
+
+    /**
+     * Subscription method - do not invoke directly.
+     *
+     * @param keyword
+     *     The keyword instance.
+     */
+    @Rework
+    public void keyword(KeywordValue keyword) {
+        run(keyword, FLEX);
     }
 
     /**

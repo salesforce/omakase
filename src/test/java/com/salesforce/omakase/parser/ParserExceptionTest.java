@@ -126,11 +126,7 @@ public class ParserExceptionTest {
         String msg = new ParserException(syntax, "test exception").getMessage();
         assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
             "at line 5, column 2, caused by\n" +
-            "Selector {\n" +
-            "  line: 5\n" +
-            "  col: 5\n" +
-            "  raw: RawSyntax{line=5, col=5, content=#id}\n" +
-            "}");
+            "#id (selector)");
     }
 
     @Test

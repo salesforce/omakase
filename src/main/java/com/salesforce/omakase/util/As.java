@@ -16,8 +16,11 @@
 
 package com.salesforce.omakase.util;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.writer.StyleWriter;
+import com.salesforce.omakase.writer.WriterMode;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -56,6 +59,25 @@ public final class As {
      */
     public static As string(Object object) {
         return new As(object);
+    }
+
+    /**
+     * Creates a simple toString representation of the given {@link Syntax} unit, based on how it would be output in CSS.
+     *
+     * @param syntax
+     *     The unit.
+     *
+     * @return The toString representation.
+     */
+    public static String simpleString(Syntax syntax) {
+        StringBuilder builder = new StringBuilder(64);
+        builder.append(StyleWriter.writeSingle(syntax, WriterMode.INLINE));
+        builder.append(" (");
+        String name = syntax.getClass().getSimpleName();
+        name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name);
+        builder.append(name);
+        builder.append(")");
+        return builder.toString();
     }
 
     /**

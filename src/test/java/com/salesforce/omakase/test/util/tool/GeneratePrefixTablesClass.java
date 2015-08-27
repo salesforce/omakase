@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.PrefixTables;
 import com.salesforce.omakase.data.Property;
 import freemarker.template.TemplateException;
@@ -58,12 +59,13 @@ public class GeneratePrefixTablesClass {
         Map types = (Map)yaml.load(Tools.readFile("/data/prefixable.yaml"));
 
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
-        List<NameInfo> functions = loadGeneric((Map)types.get("functions"));
-        List<NameInfo> atRules = loadGeneric((Map)types.get("at-rules"));
-        List<NameInfo> selectors = loadGeneric((Map)types.get("selectors"));
-
         Map nonStandard = (Map)types.get("non-standard");
         properties.addAll(readNonStandardProperties((Map)nonStandard.get("properties")));
+
+        List<KeywordInfo> keywords = loadKeywords((Map)types.get("keywords"));
+        List<NameInfo> atRules = loadGeneric((Map)types.get("at-rules"));
+        List<NameInfo> selectors = loadGeneric((Map)types.get("selectors"));
+        List<NameInfo> functions = loadGeneric((Map)types.get("functions"));
 
         // write out the new class source
         SourceWriter writer = new SourceWriter();
@@ -72,9 +74,10 @@ public class GeneratePrefixTablesClass {
         writer.classToWrite(PrefixTables.class);
         writer.template("prefix-tables-class.ftl");
         writer.data("properties", properties);
-        writer.data("functions", functions);
+        writer.data("keywords", keywords);
         writer.data("atRules", atRules);
         writer.data("selectors", selectors);
+        writer.data("functions", functions);
 
         writer.write();
     }
@@ -97,6 +100,7 @@ public class GeneratePrefixTablesClass {
         return info;
     }
 
+    /** read (not load) non standard properties */
     private List<PropertyInfo> readNonStandardProperties(Map<String, List<String>> properties) {
         List<PropertyInfo> info = Lists.newArrayList();
 
@@ -119,13 +123,31 @@ public class GeneratePrefixTablesClass {
         return info;
     }
 
-    /** load information on all the prefixable functions */
+    /** load information on all the prefixable keywords */
+    private List<KeywordInfo> loadKeywords(Map<String, List<String>> categories) throws IOException {
+        List<KeywordInfo> info = Lists.newArrayList();
+
+        for (Map.Entry<String, List<String>> category : categories.entrySet()) {
+            for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
+                // loop through each keyword name in the category
+                for (String keyword : category.getValue()) {
+                    Keyword kw = Keyword.lookup(keyword);
+                    assert kw != null : String.format("keyword '%s' not found in the Keyword enum", keyword);
+                    info.add(new KeywordInfo(kw, entry.getKey(), entry.getValue()));
+                }
+            }
+        }
+
+        return info;
+    }
+
+    /** load information on generic prefixable data */
     private List<NameInfo> loadGeneric(Map<String, List<String>> categories) throws IOException {
         List<NameInfo> info = Lists.newArrayList();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
             for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
-                // loop through each property name in the category
+                // loop through each name in the category
                 for (String function : category.getValue()) {
                     info.add(new NameInfo(function, entry.getKey(), entry.getValue()));
                 }
@@ -221,6 +243,19 @@ public class GeneratePrefixTablesClass {
 
         public String getProperty() {
             return property.name();
+        }
+    }
+
+    public static final class KeywordInfo extends Info {
+        private final Keyword keyword;
+
+        public KeywordInfo(Keyword keyword, Browser browser, Double version) {
+            super(browser, version);
+            this.keyword = keyword;
+        }
+
+        public String getKeyword() {
+            return keyword.name();
         }
     }
 

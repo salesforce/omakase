@@ -53,6 +53,8 @@ public class RawSelectorSequenceParserTest extends AbstractParserTest<RawSelecto
             "*:hover, ::before",
             "p div, .classname",
             ".-anc",
+            "[hidden]",
+            "[href^=\"#\"]",
             "a, :before",
             "/*comment*/ .abc, .abc",
             ".abc,/*comment*/.abc",

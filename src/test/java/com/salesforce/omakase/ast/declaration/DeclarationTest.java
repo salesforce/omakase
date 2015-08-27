@@ -17,7 +17,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
@@ -26,7 +25,6 @@ import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
@@ -69,7 +67,7 @@ public class DeclarationTest {
     @Test
     public void setPropertyName() {
         Declaration d = new Declaration(Property.MARGIN, NumericalValue.of(5, "px"));
-        d.propertyName(PropertyName.using(Property.PADDING));
+        d.propertyName(PropertyName.of(Property.PADDING));
         assertThat(d.propertyName().name()).isEqualTo("padding");
     }
 
@@ -81,6 +79,14 @@ public class DeclarationTest {
     }
 
     @Test
+    public void setPropertyNameUsingString() {
+        Declaration d = new Declaration(Property.ORDER, NumericalValue.of(5));
+        d.propertyName("-webkit-order");
+        assertThat(d.propertyName().name()).isEqualTo("-webkit-order");
+        assertThat(d.propertyName().prefix().get()).isEqualTo(Prefix.WEBKIT);
+    }
+
+    @Test
     public void getPropertyNameWhenUnrefined() {
         assertThat(fromRaw.propertyName().name()).isEqualTo("display");
     }
@@ -89,6 +95,11 @@ public class DeclarationTest {
     public void getPropertyNameWhenRefined() {
         assertThat(fromRaw.propertyName().name()).isEqualTo("display");
         assertThat(fromRaw.propertyName().name()).isEqualTo("display");
+    }
+
+    @Test
+    public void getName() {
+        assertThat(fromRaw.propertyName().name()).isEqualTo(fromRaw.name());
     }
 
     @Test
@@ -192,13 +203,13 @@ public class DeclarationTest {
     @Test
     public void isPropertyWithAnotherPropertyNameTrue() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        assertThat(d.isProperty(PropertyName.using(Property.DISPLAY))).isTrue();
+        assertThat(d.isProperty(PropertyName.of(Property.DISPLAY))).isTrue();
     }
 
     @Test
     public void isPropertyWithAnotherPropertyNameFalse() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        assertThat(d.isProperty(PropertyName.using(Property.COLOR))).isFalse();
+        assertThat(d.isProperty(PropertyName.of(Property.COLOR))).isFalse();
     }
 
     @Test
@@ -216,7 +227,7 @@ public class DeclarationTest {
     @Test
     public void isPropertyTrue() {
         Declaration d = new Declaration(Property.DISPLAY, PropertyValue.of(KeywordValue.of(Keyword.NONE)));
-        assertThat(d.isProperty(PropertyName.using(Property.DISPLAY))).isTrue();
+        assertThat(d.isProperty(PropertyName.of(Property.DISPLAY))).isTrue();
     }
 
     @Test
@@ -243,14 +254,28 @@ public class DeclarationTest {
     public void isPropertyIgnorePrefixForPNTrue() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         d.propertyName().prefix(Prefix.MOZ);
-        assertThat(d.isPropertyIgnorePrefix(PropertyName.using("display"))).isTrue();
+        assertThat(d.isPropertyIgnorePrefix(PropertyName.of("display"))).isTrue();
     }
 
     @Test
     public void isPropertyIgnorePrefixForPNFalse() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
         d.propertyName().prefix(Prefix.MOZ);
-        assertThat(d.isPropertyIgnorePrefix(PropertyName.using("margin"))).isFalse();
+        assertThat(d.isPropertyIgnorePrefix(PropertyName.of("margin"))).isFalse();
+    }
+
+    @Test
+    public void isPropertyIgnorePrefixForStringTrue() {
+        Declaration d = new Declaration(Property.ORDER, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.WEBKIT);
+        assertThat(d.isPropertyIgnorePrefix("order")).isTrue();
+    }
+
+    @Test
+    public void isPropertyIgnorePrefixForStringFalse() {
+        Declaration d = new Declaration(Property.ORDER, KeywordValue.of(Keyword.NONE));
+        d.propertyName().prefix(Prefix.WEBKIT);
+        assertThat(d.isPropertyIgnorePrefix("ordinal")).isFalse();
     }
 
     @Test
