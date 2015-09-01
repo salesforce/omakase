@@ -1149,4 +1149,23 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void flexShrink() {
+        String original = ".test {flex-shrink:0}";
+        String expected = ".test {-webkit-flex-shrink:0; -ms-flex-negative:0; flex-shrink:0}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexShrinkRemoval() {
+        String original = ".test {-webkit-flex-shrink:-1; -ms-flex-shrink:-1; flex-shrink:-1; -moz-flex-shrink: -1}";
+        String expected = ".test {flex-shrink:-1}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
