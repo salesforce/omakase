@@ -31,7 +31,7 @@ import com.salesforce.omakase.util.Equivalents;
  *
  * @author nmcwilliams
  */
-public class HandleFlexBasis extends HandleProperty {
+final class HandleFlexBasis extends HandleProperty {
     @Override
     protected boolean applicable(Declaration instance, SupportMatrix support) {
         return instance.isProperty(Property.FLEX_BASIS);

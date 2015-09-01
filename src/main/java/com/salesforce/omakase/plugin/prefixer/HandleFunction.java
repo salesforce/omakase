@@ -76,6 +76,18 @@ final class HandleFunction extends AbstractHandlerSimple<FunctionValue, Declarat
         return Equivalents.prefixes(subject(instance), instance, Equivalents.FUNCTION_VALUES);
     }
 
+//    @Override
+//    protected void copy(Declaration original, Prefix prefix, SupportMatrix support) {
+//        if (!original.isPrefixed() || original.propertyName().prefix().get() == prefix) {
+//            super.copy(original, prefix, support);
+//        }
+//    }
+//    for (FunctionValue fv : Values.filter(FunctionValue.class, original.propertyValue())) {
+//        if (Prefixes.parsePrefix(fv.name()).isPresent()) {
+//            return;
+//        }
+//    }
+
     @Override
     protected void prefix(Declaration copied, Prefix prefix, SupportMatrix support) {
         // general functions

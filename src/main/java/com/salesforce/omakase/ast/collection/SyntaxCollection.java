@@ -213,6 +213,16 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     SyntaxCollection<P, T> clear();
 
     /**
+     * Replaces <b>all</b> existing units with the given unit.
+     *
+     * @param unit
+     *     Replace all existing (if any) units with this one.
+     *
+     * @return this, for chaining.
+     */
+    SyntaxCollection<P, T> replaceExistingWith(T unit);
+
+    /**
      * Replaces <b>all</b> existing units with the given units.
      *
      * @param units

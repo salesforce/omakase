@@ -1206,4 +1206,71 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void flexPropOne() {
+        String original = ".test {flex:2}";
+        String expected = ".test {-webkit-box-flex:2; -webkit-flex:2; -moz-box-flex:2; -ms-flex:2; flex:2}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropOne_Auto() {
+        String original = ".test {flex:auto}"; /* flex-basis, 1 1 auto */
+        String expected = ".test {-webkit-box-flex:1; -webkit-flex:auto; -moz-box-flex:1; -ms-flex:auto; flex:auto}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropOne_None() {
+        String original = ".test {flex:none}"; /* 0 0 auto */
+        String expected = ".test {-webkit-box-flex:0; -webkit-flex:none; -moz-box-flex:0; -ms-flex:none; flex:none}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropOne_Basis() {
+        String original = ".test {flex:2em}";
+        String expected = ".test {-webkit-flex:2em; -ms-flex:2em; flex:2em}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropTwo_GrowBasis() {
+        String original = ".test {flex:2 100px}";
+        String expected = ".test {-webkit-box-flex:2; -webkit-flex:2 100px; -moz-box-flex:2; -ms-flex:2 100px; flex:2 100px}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropTwo_GrowShrink() {
+        String original = ".test {flex:2 1}";
+        String expected = ".test {-webkit-box-flex:2; -webkit-flex:2 1; -moz-box-flex:2; -ms-flex:2 1; flex:2 1}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropThree() {
+        String original = ".test {flex:2 1 10%}";
+        String expected = ".test {-webkit-box-flex:2; -webkit-flex:2 1 10%; -moz-box-flex:2; -ms-flex:2 1 10%; flex:2 1 10%}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexPropRemoval() {
+        String original = ".test {-webkit-box-flex:2; -webkit-flex:2 1; -moz-box-flex:2; -ms-flex:2 1; flex:2 1}";
+        String expected = ".test {flex:2 1}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

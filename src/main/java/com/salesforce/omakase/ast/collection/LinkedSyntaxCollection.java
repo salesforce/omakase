@@ -252,6 +252,11 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     @Override
+    public SyntaxCollection<P, T> replaceExistingWith(T unit) {
+        return clear().append(unit);
+    }
+
+    @Override
     public SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units) {
         return clear().appendAll(units);
     }

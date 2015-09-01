@@ -455,6 +455,13 @@ public class LinkedSyntaxCollectionTest {
         assertThat(collection).containsExactly(child1, child2);
     }
 
+
+    @Test
+    public void replaceExistinWithSingle() {
+        collection.append(child3);
+        collection.replaceExistingWith(child1);
+        assertThat(collection).containsExactly(child1);
+    }
     @Test
     public void removeUnitInCollection() {
         collection.append(child1);

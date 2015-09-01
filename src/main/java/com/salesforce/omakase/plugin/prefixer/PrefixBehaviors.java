@@ -61,4 +61,10 @@ final class PrefixBehaviors {
      * is implemented with different syntax in 2012 spec (e.g. IE10).
      */
     public static final PrefixBehavior FLEX_FINAL_HYBRID = FLEX_WRAP;
+
+    /**
+     * support for the flex property, this is just like flex_final except it adds IE10 which has this prefixed (but standard
+     * property name, not a different one).
+     */
+    public static final PrefixBehavior FLEX_PROPERTY = FLEX_WRAP;
 }
