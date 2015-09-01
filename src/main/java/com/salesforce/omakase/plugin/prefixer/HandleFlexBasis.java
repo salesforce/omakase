@@ -27,14 +27,14 @@ import com.salesforce.omakase.util.Equivalents;
 /**
  * Flexbox support.
  * <p/>
- * Handles the flex-grow property.
+ * Handles the flex-basis property.
  *
  * @author nmcwilliams
  */
-final class HandleFlexGrow extends HandleProperty {
+public class HandleFlexBasis extends HandleProperty {
     @Override
     protected boolean applicable(Declaration instance, SupportMatrix support) {
-        return instance.isProperty(Property.FLEX_GROW);
+        return instance.isProperty(Property.FLEX_BASIS);
     }
 
     @Override
@@ -42,8 +42,8 @@ final class HandleFlexGrow extends HandleProperty {
         Equivalents.EquivalentWalker<Declaration, Declaration> walker = new Equivalents.Base<Declaration, Declaration>() {
             @Override
             public Declaration locate(Declaration peer, Declaration unprefixed) {
-                if (peer.isPrefixed() && (peer.isPropertyIgnorePrefix(Property.FLEX_GROW) ||
-                    peer.isPropertyIgnorePrefix("flex-positive"))) {
+                if (peer.isPrefixed() && (peer.isPropertyIgnorePrefix(Property.FLEX_BASIS) ||
+                    peer.isPropertyIgnorePrefix("flex-preferred-size"))) {
                     return peer;
                 }
                 return null;
@@ -62,7 +62,7 @@ final class HandleFlexGrow extends HandleProperty {
     @Override
     protected void prefix(Declaration copied, Prefix prefix, SupportMatrix support) {
         if (prefix == Prefix.MS) {
-            copied.propertyName(PropertyName.of("flex-positive").prefix(prefix));
+            copied.propertyName(PropertyName.of("flex-preferred-size").prefix(prefix));
         } else {
             super.prefix(copied, prefix, support);
         }

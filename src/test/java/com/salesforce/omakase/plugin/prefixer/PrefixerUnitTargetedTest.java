@@ -1187,4 +1187,23 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void flexBasis() {
+        String original = ".test {flex-basis:10em}";
+        String expected = ".test {-webkit-flex-basis:10em; -ms-flex-preferred-size:10em; flex-basis:10em}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexBasisRemoval() {
+        String original = ".test {-webkit-flex-basis:10em; -ms-flex-preferred-size:10em; flex-basis:10em; -moz-flex-basis:10em}";
+        String expected = ".test {flex-basis:10em}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
