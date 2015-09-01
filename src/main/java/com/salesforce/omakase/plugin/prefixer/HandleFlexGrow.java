@@ -27,14 +27,15 @@ import com.salesforce.omakase.util.Equivalents;
 /**
  * Flexbox support.
  * <p/>
- * Handles flex-shrink properties.
+ * Handles the flex-grow property.
  *
  * @author nmcwilliams
  */
-final class HandleFlexShrink extends HandleProperty {
+final class HandleFlexGrow extends HandleProperty {
+
     @Override
     protected boolean applicable(Declaration instance, SupportMatrix support) {
-        return instance.isProperty(Property.FLEX_SHRINK);
+        return instance.isProperty(Property.FLEX_GROW);
     }
 
     @Override
@@ -43,7 +44,7 @@ final class HandleFlexShrink extends HandleProperty {
             @Override
             public Declaration locate(Declaration peer, Declaration unprefixed) {
                 if (peer.isPrefixed() && (peer.isPropertyIgnorePrefix(Property.FLEX_GROW) ||
-                    peer.isPropertyIgnorePrefix("flex-negative"))) {
+                    peer.isPropertyIgnorePrefix("flex-positive"))) {
                     return peer;
                 }
                 return null;
@@ -62,7 +63,7 @@ final class HandleFlexShrink extends HandleProperty {
     @Override
     protected void prefix(Declaration copied, Prefix prefix, SupportMatrix support) {
         if (prefix == Prefix.MS) {
-            copied.propertyName(PropertyName.of("flex-negative").prefix(prefix));
+            copied.propertyName(PropertyName.of("flex-positive").prefix(prefix));
         } else {
             super.prefix(copied, prefix, support);
         }

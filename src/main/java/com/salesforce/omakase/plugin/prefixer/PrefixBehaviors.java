@@ -49,10 +49,16 @@ final class PrefixBehaviors {
         .put(Browser.SAFARI, 8)
         .put(Browser.IOS_SAFARI, 8.4);
 
-    /** support for flex-wrap and related props */
-    public static final PrefixBehavior FLEX_WRAPPING = new PrefixBehavior()
+    /** support for flex-wrap */
+    public static final PrefixBehavior FLEX_WRAP = new PrefixBehavior()
         .put(Browser.CHROME, 28) // 21 - 28
         .put(Browser.SAFARI, 8) // 6.1 - 8
         .put(Browser.IOS_SAFARI, 8.4) // 7.1 - 8.4
         .put(Browser.IE, 10); // conflicting info, but it appears IE10 supports it prefixed (tested it myself)
+
+    /**
+     * basically like the final spec + 2012 IE10 spec. This is for stuff not implemented in the 2009 spec (e.g., moz prefix) but
+     * is implemented with different syntax in 2012 spec (e.g. IE10).
+     */
+    public static final PrefixBehavior FLEX_FINAL_HYBRID = FLEX_WRAP;
 }

@@ -36,7 +36,7 @@ final class HandleFlexWrap extends HandleProperty {
 
     @Override
     protected void copy(Declaration original, Prefix prefix, SupportMatrix support) {
-        if (PrefixBehaviors.FLEX_WRAPPING.matches(support, prefix)) {
+        if (PrefixBehaviors.FLEX_WRAP.matches(support, prefix)) {
             super.copy(original, prefix, support);
         }
     }

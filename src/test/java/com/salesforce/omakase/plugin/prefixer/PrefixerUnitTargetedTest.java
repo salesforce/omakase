@@ -1160,8 +1160,27 @@ public class PrefixerUnitTargetedTest {
 
     @Test
     public void flexShrinkRemoval() {
-        String original = ".test {-webkit-flex-shrink:-1; -ms-flex-shrink:-1; flex-shrink:-1; -moz-flex-shrink: -1}";
-        String expected = ".test {flex-shrink:-1}";
+        String original = ".test {-webkit-flex-shrink:1; -ms-flex-negative:1; flex-shrink:1; -moz-flex-shrink: 1}";
+        String expected = ".test {flex-shrink:1}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexGrow() {
+        String original = ".test {flex-grow:2}";
+        String expected = ".test {-webkit-flex-grow:2; -ms-flex-positive:2; flex-grow:2}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexGrowRemoval() {
+        String original = ".test {-webkit-flex-grow:4; -ms-flex-positive:4; flex-grow:4; -moz-flex-grow:4}";
+        String expected = ".test {flex-grow:4}";
 
         Prefixer prefixer = flexSetupNone();
         prefixer.prune(true);
