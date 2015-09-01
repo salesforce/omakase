@@ -31,7 +31,7 @@ final class PrefixBehaviors {
     private PrefixBehaviors() {}
 
     // ----- FLEXBOX -----
-    // 2009
+    /** flexbox 2009 behavior */
     public static final PrefixBehavior FLEX_2009 = new PrefixBehavior()
         .put(Browser.CHROME, 20)
         .put(Browser.SAFARI, 6)
@@ -39,13 +39,20 @@ final class PrefixBehaviors {
         .put(Browser.ANDROID, 4.3)
         .put(Browser.FIREFOX, 21);
 
-    // 2012 (IE10)
+    /** flexbox 2012 (2011?) behavior (IE10) */
     public static final PrefixBehavior FLEX_2012 = new PrefixBehavior()
         .put(Browser.IE, 10);
 
-    // final
+    /** standard, final flexbox spec with prefix */
     public static final PrefixBehavior FLEX_FINAL = new PrefixBehavior()
         .put(Browser.CHROME, 28)
         .put(Browser.SAFARI, 8)
         .put(Browser.IOS_SAFARI, 8.4);
+
+    /** support for flex-wrap and related props */
+    public static final PrefixBehavior FLEX_WRAPPING = new PrefixBehavior()
+        .put(Browser.CHROME, 28) // 21 - 28
+        .put(Browser.SAFARI, 8) // 6.1 - 8
+        .put(Browser.IOS_SAFARI, 8.4) // 7.1 - 8.4
+        .put(Browser.IE, 10); // conflicting info, but it appears IE10 supports it prefixed (tested it myself)
 }

@@ -1130,4 +1130,23 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(true);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void flexWrap() {
+        String original = ".test {flex-wrap:wrap}";
+        String expected = ".test {-webkit-flex-wrap:wrap; -ms-flex-wrap:wrap; flex-wrap:wrap}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexWrapRemoval() {
+        String original = ".test {-webkit-flex-wrap:wrap; -ms-flex-wrap:wrap; flex-wrap:wrap; -moz-flex-wrap: wrap}";
+        String expected = ".test {flex-wrap:wrap}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
