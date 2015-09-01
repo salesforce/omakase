@@ -33,6 +33,14 @@ import java.util.Set;
  * Flexbox support.
  * <p/>
  * Handles special needs of <code>display:flex</code> and <code>display:inline-flex</code>
+ * <p/>
+ * <pre>
+ * Useful links:
+ * https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes
+ * https://msdn.microsoft.com/en-us/library/dn265027(v=vs.85).aspx
+ * http://caniuse.com/#search=flexbox
+ * http://www.flexboxin5.com/
+ * </pre>
  *
  * @author nmcwilliams
  */

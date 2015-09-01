@@ -44,6 +44,8 @@ keywords:
   - fill
   - fixed
   - flex
+  - flex-start
+  - flex-end
   - fuchsia
   - gray
   - green
@@ -123,8 +125,11 @@ keywords:
   - silver
   - small-caps
   - solid
+  - space-around
+  - space-between
   - square
   - start
+  - stretch
   - stroke
   - sub
   - super

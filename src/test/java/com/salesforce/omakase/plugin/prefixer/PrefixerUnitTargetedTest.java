@@ -1273,4 +1273,64 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void alignContentStart() {
+        String original = ".test {align-content:flex-start}";
+        String expected = ".test {-webkit-align-content:flex-start; -ms-flex-line-pack:start; align-content:flex-start}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignContentEnd() {
+        String original = ".test {align-content:flex-end}";
+        String expected = ".test {-webkit-align-content:flex-end; -ms-flex-line-pack:end; align-content:flex-end}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignContentCenter() {
+        String original = ".test {align-content:center}";
+        String expected = ".test {-webkit-align-content:center; -ms-flex-line-pack:center; align-content:center}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignContentSpaceBetween() {
+        String original = ".test {align-content:space-between}";
+        String expected = ".test {-webkit-align-content:space-between; -ms-flex-line-pack:justify; align-content:space-between}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignContentSpaceAround() {
+        String original = ".test {align-content:space-around}";
+        String expected = ".test {-webkit-align-content:space-around; -ms-flex-line-pack:distribute; " +
+            "align-content:space-around}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignContentStretch() {
+        String original = ".test {align-content:stretch}";
+        String expected = ".test {-webkit-align-content:stretch; -ms-flex-line-pack:stretch; align-content:stretch}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignContentRemoval() {
+        String original = ".test {-webkit-align-content:flex-start; -ms-flex-line-pack:start; align-content:flex-start}";
+        String expected = ".test {align-content:flex-start}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

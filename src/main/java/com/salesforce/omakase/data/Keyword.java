@@ -172,6 +172,12 @@ public enum Keyword {
     /** CSS keyword named 'flex' */
     FLEX("flex"),
 
+    /** CSS keyword named 'flex-start' */
+    FLEX_START("flex-start"),
+
+    /** CSS keyword named 'flex-end' */
+    FLEX_END("flex-end"),
+
     /** CSS keyword named 'fuchsia' */
     FUCHSIA("fuchsia"),
 
@@ -409,11 +415,20 @@ public enum Keyword {
     /** CSS keyword named 'solid' */
     SOLID("solid"),
 
+    /** CSS keyword named 'space-around' */
+    SPACE_AROUND("space-around"),
+
+    /** CSS keyword named 'space-between' */
+    SPACE_BETWEEN("space-between"),
+
     /** CSS keyword named 'square' */
     SQUARE("square"),
 
     /** CSS keyword named 'start' */
     START("start"),
+
+    /** CSS keyword named 'stretch' */
+    STRETCH("stretch"),
 
     /** CSS keyword named 'stroke' */
     STROKE("stroke"),
