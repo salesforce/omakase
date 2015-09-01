@@ -31,14 +31,14 @@ import com.salesforce.omakase.util.Values;
 /**
  * Flexbox support.
  * <p/>
- * Handles the align-content property.
+ * Handles the align-self property.
  *
  * @author nmcwilliams
  */
-public class HandleAlignContent extends HandleProperty {
+public class HandleFlexAlignSelf extends HandleProperty {
     @Override
     protected boolean applicable(Declaration instance, SupportMatrix support) {
-        return instance.isProperty(Property.ALIGN_CONTENT);
+        return instance.isProperty(Property.ALIGN_SELF);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class HandleAlignContent extends HandleProperty {
         Equivalents.EquivalentWalker<Declaration, Declaration> walker = new Equivalents.Base<Declaration, Declaration>() {
             @Override
             public Declaration locate(Declaration peer, Declaration unprefixed) {
-                if (peer.isPrefixed() && (peer.isPropertyIgnorePrefix(Property.ALIGN_CONTENT) ||
-                    peer.isPropertyIgnorePrefix("flex-line-pack"))) {
+                if (peer.isPrefixed() && (peer.isPropertyIgnorePrefix(Property.ALIGN_SELF) ||
+                    peer.isPropertyIgnorePrefix("flex-item-align"))) {
                     return peer;
                 }
                 return null;
@@ -66,7 +66,7 @@ public class HandleAlignContent extends HandleProperty {
     @Override
     protected void prefix(Declaration copied, Prefix prefix, SupportMatrix support) {
         if (prefix == Prefix.MS) {
-            copied.propertyName(PropertyName.of("flex-line-pack").prefix(prefix));
+            copied.propertyName(PropertyName.of("flex-item-align").prefix(prefix));
 
             // some keyword values are changed
             Optional<KeywordValue> kwValue = Values.asKeyword(copied.propertyValue());
@@ -77,10 +77,6 @@ public class HandleAlignContent extends HandleProperty {
                         kwValue.get().keyword("start");
                     } else if (kw.get() == Keyword.FLEX_END) {
                         kwValue.get().keyword("end");
-                    } else if (kw.get() == Keyword.SPACE_AROUND) {
-                        kwValue.get().keyword("distribute");
-                    } else if (kw.get() == Keyword.SPACE_BETWEEN) {
-                        kwValue.get().keyword("justify");
                     }
                 }
             }
