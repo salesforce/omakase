@@ -1367,9 +1367,44 @@ public class PrefixerUnitTargetedTest {
     }
 
     @Test
-    public void alignRemoval() {
+    public void alignSelfRemoval() {
         String original = ".test {-webkit-align-self:center; -ms-flex-item-align:center; align-self:center}";
         String expected = ".test {align-self:center}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignItemsStart() {
+        String original = ".test {align-items:flex-start}";
+        String expected = ".test {-webkit-align-items:flex-start; -ms-flex-align:start; align-items:flex-start}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignItemsEnd() {
+        String original = ".test {align-items:flex-end}";
+        String expected = ".test {-webkit-align-items:flex-end; -ms-flex-align:end; align-items:flex-end}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignItemsCenter() {
+        String original = ".test {align-items:center}";
+        String expected = ".test {-webkit-align-items:center; -ms-flex-align:center; align-items:center}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void alignRemoval() {
+        String original = ".test {-webkit-align-items:center; -ms-flex-align:center; align-items:center}";
+        String expected = ".test {align-items:center}";
 
         Prefixer prefixer = flexSetupNone();
         prefixer.prune(true);

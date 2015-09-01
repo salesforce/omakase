@@ -35,7 +35,7 @@ import com.salesforce.omakase.util.Values;
  *
  * @author nmcwilliams
  */
-public class HandleFlexAlignSelf extends HandleProperty {
+final class HandleFlexAlignSelf extends HandleProperty {
     @Override
     protected boolean applicable(Declaration instance, SupportMatrix support) {
         return instance.isProperty(Property.ALIGN_SELF);
