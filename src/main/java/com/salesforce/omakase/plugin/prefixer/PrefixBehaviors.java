@@ -29,9 +29,11 @@ import com.salesforce.omakase.data.PrefixTables;
  */
 final class PrefixBehaviors {
     private PrefixBehaviors() {}
-//TODO Cleanup
+
     // ----- FLEXBOX -----
-    /** flexbox 2009 behavior */
+    /**
+     * Flexbox 2009 behavior.
+     */
     public static final PrefixBehavior FLEX_2009 = new PrefixBehavior()
         .put(Browser.CHROME, 20)
         .put(Browser.SAFARI, 6)
@@ -39,45 +41,32 @@ final class PrefixBehaviors {
         .put(Browser.ANDROID, 4.3)
         .put(Browser.FIREFOX, 21);
 
-    /** flexbox 2012 (2011?) behavior (IE10) */
-    public static final PrefixBehavior FLEX_2012 = new PrefixBehavior()
+    /**
+     * Flexbox 2011 (aka 2012, aka tweener) behavior (basically, IE10).
+     */
+    public static final PrefixBehavior FLEX_2011 = new PrefixBehavior()
         .put(Browser.IE, 10);
 
-    /** standard, final flexbox spec with prefix */
+    /**
+     * Standard, final flexbox spec with prefix.
+     */
     public static final PrefixBehavior FLEX_FINAL = new PrefixBehavior()
         .put(Browser.CHROME, 28)
         .put(Browser.SAFARI, 8)
         .put(Browser.IOS_SAFARI, 8.4);
 
-    /** support for flex-wrap */
-    public static final PrefixBehavior FLEX_WRAP = new PrefixBehavior()
-        .put(Browser.CHROME, 28) // 21 - 28
-        .put(Browser.SAFARI, 8) // 6.1 - 8
-        .put(Browser.IOS_SAFARI, 8.4) // 7.1 - 8.4
-        .put(Browser.IE, 10); // conflicting info, but it appears IE10 supports it prefixed (tested it myself)
+    /**
+     * Standard, final flexbox spec with prefix. Same as {@link #FLEX_FINAL} but includes IE10.
+     */
+    public static final PrefixBehavior FLEX_FINAL_PLUS = new PrefixBehavior()
+        .put(Browser.CHROME, 28)
+        .put(Browser.SAFARI, 8)
+        .put(Browser.IOS_SAFARI, 8.4)
+        .put(Browser.IE, 10);
 
     /**
-     * basically like the final spec + 2012 IE10 spec. This is for stuff not implemented in the 2009 spec (e.g., moz prefix) but
-     * is implemented with different syntax in 2012 spec (e.g. IE10).
+     * Standard, final flexbox spec with prefix. This is similar to {@link #FLEX_FINAL_PLUS}, except in this case IE10 doesn't use
+     * the final spec property name/behavior but the 2011 one. So this is most accurately thought of as final + 2011.
      */
-    public static final PrefixBehavior FLEX_FINAL_HYBRID = FLEX_WRAP;
-
-    /**
-     * support for the flex property, this is just like flex_final except it adds IE10 which has this prefixed (but standard
-     * property name, not a different one).
-     */
-    public static final PrefixBehavior FLEX_PROPERTY = FLEX_WRAP;
-
-    /**
-     * support for the flex-flow property, this is just like flex_final except it adds IE10 which has this prefixed (but standard
-     * property name, not a different one).
-     */
-    public static final PrefixBehavior FLEX_FLOW = FLEX_WRAP;
-
-    /**
-     * support for the flex-direction property, this is just like flex_final except it adds IE10 which has this prefixed (but
-     * standard
-     * property name, not a different one).
-     */
-    public static final PrefixBehavior FLEX_DIRECTION = FLEX_WRAP;
+    public static final PrefixBehavior FLEX_FINAL_HYBRID = FLEX_FINAL_PLUS;
 }

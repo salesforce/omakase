@@ -114,7 +114,7 @@ final class HandleFlexProp extends AbstractHandler<Declaration, Declaration> {
             }
         }
 
-        if (PrefixBehaviors.FLEX_PROPERTY.matches(support, prefix)) {
+        if (PrefixBehaviors.FLEX_FINAL_PLUS.matches(support, prefix)) {
             Declaration copy = original.copy();
             copy.propertyName().prefix(prefix);
             original.prepend(copy);

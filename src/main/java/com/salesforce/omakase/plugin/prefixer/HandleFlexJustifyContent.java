@@ -90,7 +90,7 @@ final class HandleFlexJustifyContent extends AbstractHandler<Declaration, Declar
             original.prepend(copy);
         }
 
-        if (PrefixBehaviors.FLEX_2012.matches(support, prefix)) {
+        if (PrefixBehaviors.FLEX_2011.matches(support, prefix)) {
             PropertyName newName = PropertyName.of("flex-pack").prefix(prefix);
             Declaration copy = original.copy().propertyName(newName);
 

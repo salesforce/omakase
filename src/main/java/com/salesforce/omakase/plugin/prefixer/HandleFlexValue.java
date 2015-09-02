@@ -115,7 +115,7 @@ final class HandleFlexValue extends AbstractHandler<KeywordValue, Declaration> {
             original.prepend(copy);
         }
 
-        if (PrefixBehaviors.FLEX_2012.matches(support, prefix)) {
+        if (PrefixBehaviors.FLEX_2011.matches(support, prefix)) {
             Declaration copy = replaceKeyword(original.copy(), prefix, "flexbox");
             original.prepend(copy);
         }

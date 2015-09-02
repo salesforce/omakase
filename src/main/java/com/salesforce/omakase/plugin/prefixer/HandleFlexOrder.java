@@ -90,7 +90,7 @@ final class HandleFlexOrder extends AbstractHandler<Declaration, Declaration> {
             original.prepend(copy);
         }
 
-        if (PrefixBehaviors.FLEX_2012.matches(support, prefix)) {
+        if (PrefixBehaviors.FLEX_2011.matches(support, prefix)) {
             PropertyName newName = PropertyName.of("flex-order").prefix(prefix);
             Declaration copy = original.copy().propertyName(newName);
             original.prepend(copy);

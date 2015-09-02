@@ -298,7 +298,7 @@ public final class Prefixer implements DependentPlugin {
 
     /**
      * Creates a new instance of the {@link Prefixer} plugin with default browser version support levels: IE7+, latest versions of
-     * Safari, IE Mobile and Opera Mini, last 5 versions of Firefox and Chrome, last 4 versions of IOS Safari and last 3 versions
+     * Safari, IE Mobile and Opera Mini, last 5 versions of Firefox and Chrome, last 6 versions of IOS Safari and last 3 versions
      * of Android Browser.
      *
      * @return The new {@link Prefixer} instance.
@@ -308,7 +308,7 @@ public final class Prefixer implements DependentPlugin {
      */
     public static Prefixer defaultBrowserSupport() {
         SupportMatrix support = new SupportMatrix()
-            .last(IOS_SAFARI, 4)
+            .last(IOS_SAFARI, 6)
             .last(FIREFOX, 5)
             .last(ANDROID, 3)
             .last(CHROME, 5)

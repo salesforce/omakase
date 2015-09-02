@@ -39,6 +39,7 @@ final class HandleFlexGrow extends HandleProperty {
 
     @Override
     protected Multimap<Prefix, Declaration> equivalents(final Declaration instance) {
+        // this won't remove or rearrange box-flex properties
         Equivalents.EquivalentWalker<Declaration, Declaration> walker = new Equivalents.Base<Declaration, Declaration>() {
             @Override
             public Declaration locate(Declaration peer, Declaration unprefixed) {
@@ -54,18 +55,23 @@ final class HandleFlexGrow extends HandleProperty {
 
     @Override
     protected void copy(Declaration original, Prefix prefix, SupportMatrix support) {
-        if (PrefixBehaviors.FLEX_FINAL_HYBRID.matches(support, prefix)) {
-            super.copy(original, prefix, support);
+        if (PrefixBehaviors.FLEX_2009.matches(support, prefix)) {
+            // add box-flex here, as it means the same thing (it's not shorthand in 2009)
+            PropertyName newName = PropertyName.of("box-flex").prefix(prefix);
+            Declaration copy = original.copy().propertyName(newName);
+            original.prepend(copy);
         }
-    }
 
-    @Override
-    protected void prefix(Declaration copied, Prefix prefix, SupportMatrix support) {
-        // TODO moz-box-flex
-        if (prefix == Prefix.MS) {
-            copied.propertyName(PropertyName.of("flex-positive").prefix(prefix));
-        } else {
-            super.prefix(copied, prefix, support);
+        if (PrefixBehaviors.FLEX_2011.matches(support, prefix)) {
+            PropertyName newName = PropertyName.of("flex-positive").prefix(prefix);
+            Declaration copy = original.copy().propertyName(newName);
+            original.prepend(copy);
+        }
+
+        if (PrefixBehaviors.FLEX_FINAL.matches(support, prefix)) {
+            Declaration copy = original.copy();
+            copy.propertyName().prefix(prefix);
+            original.prepend(copy);
         }
     }
 }

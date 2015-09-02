@@ -36,7 +36,7 @@ final class HandleFlexFlow extends HandleProperty {
 
     @Override
     protected void copy(Declaration original, Prefix prefix, SupportMatrix support) {
-        if (PrefixBehaviors.FLEX_FLOW.matches(support, prefix)) {
+        if (PrefixBehaviors.FLEX_FINAL_PLUS.matches(support, prefix)) {
             super.copy(original, prefix, support);
         }
     }

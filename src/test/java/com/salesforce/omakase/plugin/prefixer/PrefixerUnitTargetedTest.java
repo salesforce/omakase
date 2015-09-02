@@ -1172,7 +1172,7 @@ public class PrefixerUnitTargetedTest {
     @Test
     public void flexGrow() {
         String original = ".test {flex-grow:2}";
-        String expected = ".test {-webkit-flex-grow:2; -ms-flex-positive:2; flex-grow:2}";
+        String expected = ".test {-webkit-box-flex:2; -webkit-flex-grow:2; -moz-box-flex:2; -ms-flex-positive:2; flex-grow:2}";
 
         assertThat(process(original, flexSetup())).isEqualTo(expected);
     }
