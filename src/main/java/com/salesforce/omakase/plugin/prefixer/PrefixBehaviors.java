@@ -29,7 +29,7 @@ import com.salesforce.omakase.data.PrefixTables;
  */
 final class PrefixBehaviors {
     private PrefixBehaviors() {}
-
+//TODO Cleanup
     // ----- FLEXBOX -----
     /** flexbox 2009 behavior */
     public static final PrefixBehavior FLEX_2009 = new PrefixBehavior()
@@ -73,4 +73,11 @@ final class PrefixBehaviors {
      * property name, not a different one).
      */
     public static final PrefixBehavior FLEX_FLOW = FLEX_WRAP;
+
+    /**
+     * support for the flex-direction property, this is just like flex_final except it adds IE10 which has this prefixed (but
+     * standard
+     * property name, not a different one).
+     */
+    public static final PrefixBehavior FLEX_DIRECTION = FLEX_WRAP;
 }

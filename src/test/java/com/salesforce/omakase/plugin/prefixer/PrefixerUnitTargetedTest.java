@@ -1487,4 +1487,78 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void flexDirectionRow() {
+        String original = ".test {flex-direction:row}";
+        String expected = ".test {-webkit-box-orient:horizontal; -webkit-box-direction:normal; " +
+            "-webkit-flex-direction:row; -moz-box-orient:horizontal; -moz-box-direction:normal; " +
+            "-ms-flex-direction:row; flex-direction:row}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexDirectionRowReverse() {
+        String original = ".test {flex-direction:row-reverse}";
+        String expected = ".test {-webkit-box-orient:horizontal; -webkit-box-direction:reverse; " +
+            "-webkit-flex-direction:row-reverse; -moz-box-orient:horizontal; -moz-box-direction:reverse; " +
+            "-ms-flex-direction:row-reverse; flex-direction:row-reverse}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexDirectionColumn() {
+        String original = ".test {flex-direction:column}";
+        String expected = ".test {-webkit-box-orient:vertical; -webkit-box-direction:normal; " +
+            "-webkit-flex-direction:column; -moz-box-orient:vertical; -moz-box-direction:normal; " +
+            "-ms-flex-direction:column; flex-direction:column}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexDirectionColumnReverse() {
+        String original = ".test {flex-direction:column-reverse}";
+        String expected = ".test {-webkit-box-orient:vertical; -webkit-box-direction:reverse; " +
+            "-webkit-flex-direction:column-reverse; -moz-box-orient:vertical; -moz-box-direction:reverse; " +
+            "-ms-flex-direction:column-reverse; flex-direction:column-reverse}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexDirectionUnset() {
+        String original = ".test {flex-direction:unset}";
+        String expected = ".test {-webkit-flex-direction:unset; -ms-flex-direction:unset; flex-direction:unset}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexDirectionRemoval() {
+        String original = ".test {-webkit-box-orient:vertical; -webkit-box-direction:reverse; " +
+            "-webkit-flex-direction:column-reverse; -moz-box-orient:vertical; -moz-box-direction:reverse; " +
+            "-ms-flex-direction:column-reverse; flex-direction:column-reverse}";
+        String expected = ".test {flex-direction:column-reverse}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexDirectionRemovalPartial() {
+        String original = ".test {-webkit-box-direction:reverse; " +
+            "-webkit-flex-direction:column-reverse; -moz-box-orient:vertical; " +
+            "-ms-flex-direction:column-reverse; flex-direction:column-reverse}";
+        String expected = ".test {flex-direction:column-reverse}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }

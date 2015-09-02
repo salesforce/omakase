@@ -124,6 +124,9 @@ public enum Keyword {
     /** CSS keyword named 'column' */
     COLUMN("column"),
 
+    /** CSS keyword named 'column-reverse' */
+    COLUMN_REVERSE("column-reverse"),
+
     /** CSS keyword named 'combo-box' */
     COMBO_BOX("combo-box"),
 
@@ -384,6 +387,12 @@ public enum Keyword {
 
     /** CSS keyword named 'round' */
     ROUND("round"),
+
+    /** CSS keyword named 'row' */
+    ROW("row"),
+
+    /** CSS keyword named 'row-reverse' */
+    ROW_REVERSE("row-reverse"),
 
     /** CSS keyword named 'rows' */
     ROWS("rows"),

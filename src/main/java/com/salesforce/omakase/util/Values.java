@@ -114,7 +114,7 @@ public final class Values {
      * @return The keyword value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
      * above.
      */
-    public static Optional<Keyword> asKeywordEnum(PropertyValue value) {
+    public static Optional<Keyword> asKeywordConstant(PropertyValue value) {
         Optional<KeywordValue> keywordValue = asKeyword(value);
         if (!keywordValue.isPresent()) return Optional.absent();
         return keywordValue.get().asKeyword();

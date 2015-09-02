@@ -28,6 +28,7 @@ keywords:
   - circle
   - collapse
   - column
+  - column-reverse
   - combo-box
   - condensed
   - continuous
@@ -115,6 +116,8 @@ keywords:
   - ridge
   - right
   - round
+  - row
+  - row-reverse
   - rows
   - rtl
   - scroll

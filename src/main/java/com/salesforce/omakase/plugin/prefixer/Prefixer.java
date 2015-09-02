@@ -130,6 +130,7 @@ public final class Prefixer implements DependentPlugin {
     private static final Handler<Declaration> FLEX_ALIGN_ITEMS = new HandleFlexAlignItems();
     private static final Handler<Declaration> FLEX_JUSTIFY_CONTENT = new HandleFlexJustifyContent();
     private static final Handler<Declaration> FLEX_FLOW = new HandleFlexFlow();
+    private static final Handler<Declaration> FLEX_DIRECTION = new HandleFlexDirection();
 
     // keyword handlers
     private static final Handler<KeywordValue> FLEX = new HandleFlexValue();
@@ -244,8 +245,8 @@ public final class Prefixer implements DependentPlugin {
         // don't automatically trigger refinement on every declaration just to check if a prefix is needed.
         if (!declaration.isRefined() || declaration.isPrefixed()) return; // skip stuff already prefixed
 
-        run(declaration, TRANSITION, FLEX_ORDER, FLEX_WRAP, FLEX_GROW, FLEX_SHRINK, FLEX_BASIS, FLEX_PROP,
-            FLEX_ALIGN_CONTENT, FLEX_ALIGN_SELF, FLEX_ALIGN_ITEMS, FLEX_JUSTIFY_CONTENT, FLEX_FLOW, STANDARD_PROPERTY);
+        run(declaration, TRANSITION, FLEX_PROP, FLEX_FLOW, FLEX_DIRECTION, FLEX_ALIGN_ITEMS, FLEX_JUSTIFY_CONTENT, FLEX_ORDER,
+            FLEX_WRAP, FLEX_ALIGN_CONTENT, FLEX_ALIGN_SELF, FLEX_GROW, FLEX_SHRINK, FLEX_BASIS, STANDARD_PROPERTY);
     }
 
     /**
