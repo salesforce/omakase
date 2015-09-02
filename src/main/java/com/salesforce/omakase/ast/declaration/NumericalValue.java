@@ -111,7 +111,7 @@ public final class NumericalValue extends AbstractTerm {
      */
     public NumericalValue value(int value) {
         this.raw = Integer.toString(Math.abs(value));
-        if (value < 0) { // TESTME
+        if (value < 0) {
             explicitSign = Optional.of(Sign.NEGATIVE);
         } else {
             explicitSign = Optional.absent();
@@ -135,7 +135,7 @@ public final class NumericalValue extends AbstractTerm {
         fmt.setMinimumIntegerDigits(1);
         fmt.setMaximumFractionDigits(340);
         this.raw = fmt.format(Math.abs(value));
-        if (value < 0) { // TESTME
+        if (value < 0) {
             explicitSign = Optional.of(Sign.NEGATIVE);
         } else {
             explicitSign = Optional.absent();
@@ -145,6 +145,9 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Gets the numerical value as a string.
+     * <p/>
+     * Note that if the value is negative, it will not be shown here, see {@link #explicitSign()}, or for mathematical
+     * operations see {@link #intValue()} or {@link #doubleValue()}.
      * <p/>
      * For math operations, {@link #doubleValue()} is available instead.
      *

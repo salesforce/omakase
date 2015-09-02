@@ -100,17 +100,42 @@ public class NumericalValueTest {
         assertThat(numerical.value()).isEqualTo("0.5");
     }
 
-//    @Test
-//    public void errorsOnNegativeIntegerValue() {
-//        exception.expect(IllegalArgumentException.class);
-//        numerical = new NumericalValue(-5);
-//    }
-//
-//    @Test
-//    public void errorsOnNegativeDoubleValue() {
-//        exception.expect(IllegalArgumentException.class);
-//        numerical = new NumericalValue(-5.5);
-//    }
+    @Test
+    public void changeValueFromPositiveToPositive() {
+        numerical = NumericalValue.of(5);
+        numerical.value(numerical.intValue() + 1);
+        assertThat(numerical.value()).isEqualTo("6");
+        assertThat(numerical.intValue()).isEqualTo(6);
+        assertThat(numerical.explicitSign().isPresent()).isFalse();
+    }
+
+    @Test
+    public void changeValueFromPositiveToNegative() {
+        numerical = NumericalValue.of(5);
+        numerical.value(-1);
+        assertThat(numerical.value()).isEqualTo("1");
+        assertThat(numerical.intValue()).isEqualTo(-1);
+        assertThat(numerical.doubleValue()).isEqualTo(-1.0);
+        assertThat(numerical.explicitSign().get()).isEqualTo(NumericalValue.Sign.NEGATIVE);
+    }
+
+    @Test
+    public void changeValueFromNegativeToNegative() {
+        numerical = NumericalValue.of(-5.5);
+        numerical.value(numerical.doubleValue() + 1);
+        assertThat(numerical.value()).isEqualTo("4.5");
+        assertThat(numerical.doubleValue()).isEqualTo(-4.5);
+        assertThat(numerical.explicitSign().get()).isEqualTo(NumericalValue.Sign.NEGATIVE);
+    }
+
+    @Test
+    public void changeValueFromNegativeToPositive() {
+        numerical = NumericalValue.of(-10);
+        numerical.value(12);
+        assertThat(numerical.value()).isEqualTo("12");
+        assertThat(numerical.intValue()).isEqualTo(12);
+        assertThat(numerical.explicitSign().isPresent()).isFalse();
+    }
 
     @Test
     public void getDoubleValue() {
