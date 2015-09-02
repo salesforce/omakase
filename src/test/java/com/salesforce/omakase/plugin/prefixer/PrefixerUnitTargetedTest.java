@@ -1411,4 +1411,61 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void justifyContentFlexStart() {
+        String original = ".test {justify-content:flex-start}";
+        String expected = ".test {-webkit-box-pack:start; -webkit-justify-content:flex-start; " +
+            "-moz-box-pack:start; -ms-flex-pack:start; justify-content:flex-start}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void justifyContentFlexEnd() {
+        String original = ".test {justify-content:flex-end}";
+        String expected = ".test {-webkit-box-pack:end; -webkit-justify-content:flex-end; " +
+            "-moz-box-pack:end; -ms-flex-pack:end; justify-content:flex-end}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void justifyContentCenter() {
+        String original = ".test {justify-content:center}";
+        String expected = ".test {-webkit-box-pack:center; -webkit-justify-content:center; " +
+            "-moz-box-pack:center; -ms-flex-pack:center; justify-content:center}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void justifyContentSpaceBetween() {
+        String original = ".test {justify-content:space-between}";
+        String expected = ".test {-webkit-box-pack:justify; -webkit-justify-content:space-between; " +
+            "-moz-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void justifyContentSpaceAround() {
+        String original = ".test {justify-content:space-around}";
+        String expected = ".test {-webkit-justify-content:space-around; -ms-flex-pack:distribute; " +
+            "justify-content:space-around}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void justifyContentRemoval() {
+        String original = ".test {-webkit-box-pack:justify; -webkit-justify-content:space-between; " +
+            "-moz-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between}";
+        String expected = ".test {justify-content:space-between}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
