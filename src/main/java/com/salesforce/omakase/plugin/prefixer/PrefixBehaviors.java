@@ -67,4 +67,10 @@ final class PrefixBehaviors {
      * property name, not a different one).
      */
     public static final PrefixBehavior FLEX_PROPERTY = FLEX_WRAP;
+
+    /**
+     * support for the flex-flow property, this is just like flex_final except it adds IE10 which has this prefixed (but standard
+     * property name, not a different one).
+     */
+    public static final PrefixBehavior FLEX_FLOW = FLEX_WRAP;
 }

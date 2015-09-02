@@ -1468,4 +1468,23 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    @Test
+    public void flexFlow() {
+        String original = ".test {flex-flow:row nowrap}";
+        String expected = ".test {-webkit-flex-flow:row nowrap; -ms-flex-flow:row nowrap; flex-flow:row nowrap}";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
+
+    @Test
+    public void flexFlowRemoval() {
+        String original = ".test {-webkit-flex-flow:row nowrap; -ms-flex-flow:row nowrap; flex-flow:row nowrap}";
+        String expected = ".test {flex-flow:row nowrap}";
+
+        Prefixer prefixer = flexSetupNone();
+        prefixer.prune(true);
+        prefixer.rearrange(false);
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
