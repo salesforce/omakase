@@ -1561,4 +1561,12 @@ public class PrefixerUnitTargetedTest {
         prefixer.rearrange(false);
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    // @Test bah, this is broken
+    public void flexInsideTransition() {
+        String original = ".test {transition:flex-basis 10ms}";
+        String expected = "";
+
+        assertThat(process(original, flexSetup())).isEqualTo(expected);
+    }
 }
