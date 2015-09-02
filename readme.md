@@ -251,7 +251,7 @@ Map<String, String> variations = new HashMap<String, String>();
 variations.put("default", writer.write());
 
 for (String condition : collector.foundConditions()) {
-    conditionals.manager().replaceTrueConditions(condition);
+    conditionals.config().replaceTrueConditions(condition);
     variations.put(condition, writer.write());
 }
 ```
@@ -294,7 +294,9 @@ compared to quoted:
 
 _experimental!_
 
-The `Prefixer` plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules and function names and automatically prepend prefixed-equivalents based on the specified level of browser support. For example:
+The `Prefixer` plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules
+function and keyword names, and automatically prepend prefixed-equivalents based on the specified level of browser support. For
+example:
 
 ```css
 .class {
@@ -321,7 +323,8 @@ Prefixer prefixer = Prefixer.defaultBrowserSupport();
 Omakase.source(input).use(prefixer).process();
 ```
 
-The default browser version support includes the last four versions of iOS Safari, last two versions of Chrome and Firefox, last three of Android, IE 7+, and the latest versions of Safari, IE Mobile and Opera Mini.
+The default browser version support includes the last six versions of iOS Safari, last five versions of Chrome and Firefox, last
+three of Android, IE 7+, and the latest versions of Safari, IE Mobile and Opera Mini.
 
 You can specify an alternative set of browsers to support as well:
 
@@ -390,8 +393,20 @@ Prefixer prefixer = Prefixer.defaultBrowserSupport().rearrange(true);
 
 Here's a list of what's currently supported:
 
+    At Rule
+    ----------------------------
+    keyframes
+
+    Selector
+    ----------------------------
+    placeholder
+    selection
+
     Property
     ----------------------------
+    align-content
+    align-items
+    align-self
     animation
     animation-delay
     animation-direction
@@ -429,7 +444,16 @@ Here's a list of what's currently supported:
     column-span
     column-width
     columns
+    flex
+    flex-basis
+    flex-direction
+    flex-flow
+    flex-grow
+    flex-shrink
+    flex-wrap
     hyphens
+    justify-content
+    order
     perspective
     perspective-origin
     tab-size
@@ -443,33 +467,28 @@ Here's a list of what's currently supported:
     transition-timing-function
     user-select
 
+    Keyword
+    ----------------------------
+    flex
+    inline-flex
+
     Function
     ----------------------------
     calc
     linear-gradient
     repeating-linear-gradient
 
-    At Rule
-    ----------------------------
-    keyframes
-
-    Selector
-    ----------------------------
-    placeholder
-    selection
 
 You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the "Scripts" section below.
 
-#### PrefixPruner
+#### PrefixCleaner
 
-TODO explain this more.
-
-Pending further explanation, it's usually a good idea to add the `PrefixPruner` plugin after the `Prefixer` plugin:
+It's usually a good idea to add the `PrefixCleaner` plugin after the `Prefixer` plugin:
 
 ```java
 Prefixer prefixer = Prefixer.defaultBrowserSupport();
-PrefixPruner pruning = PrefixPruner.prunePrefixedAtRules;
-Omakase.source(input).use(prefixer).use(pruning).process();
+PrefixCleaner cleaner = PrefixCleaner.mismatchedPrefixedUnits();
+Omakase.source(input).use(prefixer).use(cleaner).process();
 ```
 
 This will remove prefixed declarations inside of prefixed at rules, where the declaration's prefix doesn't match the at-rules prefix.
