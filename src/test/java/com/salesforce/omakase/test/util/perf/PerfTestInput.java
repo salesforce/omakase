@@ -226,7 +226,17 @@ public final class PerfTestInput {
             "\n" +
             ".class2 {\n" +
             "\twidth: calc(50% - 2px);\n" +
-            "}\n")
+            "}\n"+
+            ".test {\n" +
+            "  display: flex;\n" +
+            "  flex-wrap: wrap;\n" +
+            "  justify-content: center;\n" +
+            "  align-items: center;\n" +
+            "}\n" +
+            "\n" +
+            ".test div {\n" +
+            "  flex: 2 1 200px;\n" +
+            "}")
 
         .build();
 }
