@@ -33,27 +33,34 @@ import static com.salesforce.omakase.util.Prefixes.PrefixPair;
 /**
  * The property name within a {@link Declaration}.
  * <p/>
- * This class is vendor prefix aware, which means that you can check if it {@link #isPrefixed()}, get the {@link
- * #unprefixedName()}, or add/replace the prefix with {@link #prefix(Prefix)} method.
+ * This class is vendor prefix aware, which means that you can check if it {@link #isPrefixed()}, get the {@link #unprefixed()},
+ * or add/replace the prefix with {@link #prefix(Prefix)} method.
  * <p/>
  * Use {@link #name()} to get the full property name, including the prefix if it is present.
  * <p/>
  * The name of this property is immutable. If seeking to change the property name of a Declaration, see {@link
- * Declaration#propertyName(Property)}, {@link Declaration#propertyName(String)}, and related methods.
+ * Declaration#propertyName(Property)}, {@link Declaration#propertyName(String)}, and related methods (but this is generally
+ * discouraged, as many plugins check and depend on the property name-- in some cases it might be better to replace the whole
+ * declaration).
  *
  * @author nmcwilliams
  */
 public final class PropertyName extends AbstractSyntax implements Named {
     private static final char STAR = '*';
+    private static final char PREFIX_START = '-';
 
-    private final String name;
-    private Optional<Prefix> prefix;
+    private Prefix prefix;
     private boolean starHack;
+
+    private final Property cached;
+    private final String unprefixed;
 
     /** private -- use a constructor method for new instances */
     @SuppressWarnings("AssignmentToMethodParameter")
     private PropertyName(int line, int column, String name) {
         super(line, column);
+
+        name = name.toLowerCase(); // for output consistency and Property enum lookup
 
         // the IE7 "star hack" is not part of the CSS syntax, but it still needs to be handled
         if (name.charAt(0) == STAR) {
@@ -61,106 +68,25 @@ public final class PropertyName extends AbstractSyntax implements Named {
             name = name.substring(1);
         }
 
-        if (name.charAt(0) == '-') {
+        if (name.charAt(0) == PREFIX_START) {
             PrefixPair pair = Prefixes.splitPrefix(name);
-            this.prefix = pair.prefix();
-            this.name = pair.unprefixed();
+            this.prefix = pair.prefix().orNull();
+            this.unprefixed = pair.unprefixed();
+            this.cached = Property.lookup(pair.unprefixed());
         } else {
-            this.prefix = Optional.absent();
-            this.name = name;
+            this.prefix = null;
+            this.unprefixed = name;
+            this.cached = Property.lookup(name);
         }
     }
 
-    /**
-     * Gets the full property name, including the prefix if present.
-     *
-     * @return The full property name.
-     */
-    @Override
-    public String name() {
-        return prefix.isPresent() ? prefix.get() + name : name;
-    }
+    /** private -- use a constructor method for new instances */
+    private PropertyName(int line, int column, Property property) {
+        super(line, column);
 
-    /**
-     * Gets the unprefixed property name.
-     *
-     * @return The unprefixed property name.
-     */
-    public String unprefixedName() {
-        return name;
-    }
-
-    /**
-     * Gets whether this property name is prefixed.
-     *
-     * @return True if this property name is prefixed.
-     */
-    public boolean isPrefixed() {
-        return prefix.isPresent();
-    }
-
-    /**
-     * Gets whether this {@link PropertyName} has the given {@link Prefix}.
-     *
-     * @param prefix
-     *     Match against this prefix.
-     *
-     * @return True if this {@link PropertyName} has the given {@link Prefix}.
-     */
-    public boolean hasPrefix(Prefix prefix) {
-        return this.prefix.isPresent() && this.prefix.get() == prefix;
-    }
-
-    /**
-     * Gets the prefix, if present.
-     *
-     * @return The prefix, or {@link Optional#absent()} if no prefix exists.
-     */
-    public Optional<Prefix> prefix() {
-        return prefix;
-    }
-
-    /**
-     * Sets the prefix for this property name. This will overwrite any currently specified prefix.
-     *
-     * @param prefix
-     *     The {@link Prefix}.
-     *
-     * @return this, for chaining.
-     */
-    public PropertyName prefix(Prefix prefix) {
-        this.prefix = Optional.fromNullable(prefix);
-        return this;
-    }
-
-    /**
-     * Removes the current prefix from this property name.
-     *
-     * @return this, for chaining.
-     */
-    public PropertyName removePrefix() {
-        prefix = Optional.absent();
-        return this;
-    }
-
-    /**
-     * TODO cache? Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown
-     * property or a prefixed property).
-     *
-     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or it's unknown.
-     */
-    public Optional<Property> asProperty() {
-        return isPrefixed() ? Optional.<Property>absent() : Optional.fromNullable(Property.lookup(name));
-    }
-
-    /**
-     * Gets matching {@link Property} instance, if one exists (it may not exist if this is an unknown property.) This ignores the
-     * prefix.
-     *
-     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is unknown.
-     */
-    public Optional<Property> asPropertyIgnorePrefix() {
-        return Optional.fromNullable(Property.lookup(name));
+        this.prefix = null;
+        this.cached = property;
+        this.unprefixed = property.toString();
     }
 
     /**
@@ -186,21 +112,112 @@ public final class PropertyName extends AbstractSyntax implements Named {
     }
 
     /**
+     * Gets the full property name, including the prefix if present.
+     *
+     * @return The full property name.
+     */
+    @Override
+    public String name() {
+        return prefix != null ? prefix + unprefixed : unprefixed;
+    }
+
+    /**
+     * Gets the unprefixed property name.
+     *
+     * @return The unprefixed property name.
+     */
+    public String unprefixed() {
+        return unprefixed;
+    }
+
+    /**
+     * Gets whether this property name is prefixed.
+     *
+     * @return True if this property name is prefixed.
+     */
+    public boolean isPrefixed() {
+        return prefix != null;
+    }
+
+    /**
+     * Gets whether this {@link PropertyName} has the given {@link Prefix}.
+     *
+     * @param prefix
+     *     Match against this prefix.
+     *
+     * @return True if this {@link PropertyName} has the given {@link Prefix}.
+     */
+    public boolean hasPrefix(Prefix prefix) {
+        return this.prefix != null && this.prefix == prefix;
+    }
+
+    /**
+     * Gets the prefix, if present.
+     *
+     * @return The prefix, or {@link Optional#absent()} if no prefix exists.
+     */
+    public Optional<Prefix> prefix() {
+        return Optional.fromNullable(prefix);
+    }
+
+    /**
+     * Sets the prefix for this property name. This will overwrite any currently specified prefix.
+     *
+     * @param prefix
+     *     The {@link Prefix}.
+     *
+     * @return this, for chaining.
+     */
+    public PropertyName prefix(Prefix prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    /**
+     * Removes the current prefix from this property name.
+     *
+     * @return this, for chaining.
+     */
+    public PropertyName removePrefix() {
+        prefix = null;
+        return this;
+    }
+
+    /**
+     * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a
+     * prefixed property).
+     *
+     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or it's unknown.
+     */
+    public Optional<Property> asProperty() {
+        return prefix == null ? Optional.fromNullable(cached) : Optional.<Property>absent();
+    }
+
+    /**
+     * Gets matching {@link Property} instance, if one exists (it may not exist if this is an unknown property.) This ignores the
+     * prefix.
+     *
+     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is unknown.
+     */
+    public Optional<Property> asPropertyIgnorePrefix() {
+        return Optional.fromNullable(cached);
+    }
+
+    /**
      * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given string.
      *
      * @param name
      *     Match against this property name.
      *
-     * @return True if this {@link PropertyName} has a name that equals the given string.
+     * @return True if this {@link PropertyName} has a name that equals the given string, including the prefix if present.
      */
     public boolean matches(String name) {
-        if (name == null) return false;
-        return name().equals(name);
+        return name != null && name().equals(name);
     }
 
     /**
-     * TODO if caching Property then update this. Gets whether this {@link PropertyName} has a {@link #name()} that equals the
-     * given {@link Property}.
+     * Gets whether this {@link PropertyName} has a {@link #name()} that equals the given {@link Property}. If this {@link
+     * PropertyName} is prefixed then this will always return false.
      *
      * @param property
      *     Match against this property.
@@ -208,8 +225,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @return True if this {@link PropertyName} has a name that equals the given {@link Property}.
      */
     public boolean matches(Property property) {
-        if (property == null) return false;
-        return name().equals(property.toString());
+        return property != null && prefix == null && property == cached;
     }
 
     /**
@@ -225,7 +241,6 @@ public final class PropertyName extends AbstractSyntax implements Named {
     }
 
     /**
-     * TODO fix this if caching Property
      * Same as {@link #matches(Property)}, except this ignores the prefix.
      *
      * @param property
@@ -234,7 +249,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @return True if this {@link PropertyName} has a name that equals the given {@link Property}, ignoring the prefix.
      */
     public boolean matchesIgnorePrefix(Property property) {
-        return name.equals(property.toString());
+        return property != null && property == cached;
     }
 
     /**
@@ -243,10 +258,10 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @param other
      *     Match against this property name.
      *
-     * @return True if both {@link PropertyName}s have equal {@link #unprefixedName()}s.
+     * @return True if both {@link PropertyName}s have equal {@link #unprefixed()}s.
      */
     public boolean matchesIgnorePrefix(PropertyName other) {
-        return unprefixedName().equals(other.unprefixedName());
+        return unprefixed().equals(other.unprefixed());
     }
 
     /**
@@ -258,7 +273,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @return True if this {@link PropertyName} has a name that equals the given string, ignoring the prefix of this property.
      */
     public boolean matchesIgnorePrefix(String name) {
-        return unprefixedName().equals(name);
+        return unprefixed().equals(name);
     }
 
     @Override
@@ -269,6 +284,9 @@ public final class PropertyName extends AbstractSyntax implements Named {
 
     @Override
     public PropertyName copy() {
+        if (cached != null) {
+            return PropertyName.of(cached).prefix(prefix).starHack(starHack).copiedFrom(this);
+        }
         return PropertyName.of(name()).starHack(starHack).copiedFrom(this);
     }
 
@@ -302,9 +320,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @return The new {@link PropertyName} instance.
      */
     public static PropertyName of(int line, int column, String name) {
-        Property recognized = Property.lookup(name.toLowerCase());
-        String nameToUse = recognized != null ? recognized.toString() : name.toLowerCase();
-        return new PropertyName(line, column, nameToUse);
+        return new PropertyName(line, column, name);
     }
 
     /**
@@ -316,22 +332,6 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @return The new {@link PropertyName} instance.
      */
     public static PropertyName of(Property property) {
-        return of(-1, -1, property);
-    }
-
-    /**
-     * Creates a new {@link PropertyName} instance from the given {@link Property}, line, and column numbers.
-     *
-     * @param line
-     *     The line number.
-     * @param column
-     *     The column number.
-     * @param property
-     *     The {@link Property}.
-     *
-     * @return The new {@link PropertyName} instance.
-     */
-    public static PropertyName of(int line, int column, Property property) {
-        return new PropertyName(line, column, property.toString());
+        return new PropertyName(-1, -1, property);
     }
 }

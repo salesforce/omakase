@@ -59,12 +59,12 @@ public class PropertyNameTest {
 
     @Test
     public void unprefixedNameWhenPrefixIsPresent() {
-        assertThat(prefixed.unprefixedName()).isEqualTo(NAME);
+        assertThat(prefixed.unprefixed()).isEqualTo(NAME);
     }
 
     @Test
     public void unprefixedNameWhenPrefixIsAbsent() {
-        assertThat(unprefixed.unprefixedName()).isEqualTo(NAME);
+        assertThat(unprefixed.unprefixed()).isEqualTo(NAME);
     }
 
     @Test
@@ -134,6 +134,21 @@ public class PropertyNameTest {
     }
 
     @Test
+    public void asPropertyIgnorePrefixHasPrefix() {
+        assertThat(prefixed.asPropertyIgnorePrefix().get()).isSameAs(Property.BORDER_RADIUS);
+    }
+
+    @Test
+    public void asPropertyIgnorePrefixDoesntHavePrefix() {
+        assertThat(unprefixed.asPropertyIgnorePrefix().get()).isSameAs(Property.BORDER_RADIUS);
+    }
+
+    @Test
+    public void asPropertyIgnorPrefixAbsentWhenUnknown() {
+        assertThat(PropertyName.of("-webkit-blah").asPropertyIgnorePrefix().isPresent()).isFalse();
+    }
+
+    @Test
     public void matchesIgnorePrefixTrueWhenPrefixed() {
         assertThat(prefixed.matchesIgnorePrefix(Property.BORDER_RADIUS)).isTrue();
     }
@@ -159,7 +174,6 @@ public class PropertyNameTest {
         PropertyName pn2 = PropertyName.of("-moz-border-radius");
         assertThat(pn1.matchesIgnorePrefix(pn2)).isTrue();
     }
-
 
     @Test
     public void matchesIgnorePrefixTrueWhenPrefixedString() {
@@ -206,11 +220,6 @@ public class PropertyNameTest {
     @Test
     public void constructorMethodPropertyOnly() {
         assertThat(PropertyName.of(Property.COLOR).name()).isEqualTo(Property.COLOR.toString());
-    }
-
-    @Test
-    public void constructorMethodPropertyAndPosition() {
-        assertThat(PropertyName.of(5, 5, Property.DISPLAY).line()).isEqualTo(5);
     }
 
     @Test
@@ -285,9 +294,24 @@ public class PropertyNameTest {
         name.comments(Lists.newArrayList("test"));
 
         PropertyName copy = name.copy();
-        assertThat(copy.unprefixedName()).isEqualTo(name.unprefixedName());
+        assertThat(copy.unprefixed()).isEqualTo(name.unprefixed());
         assertThat(copy.prefix().get()).isEqualTo(name.prefix().get());
         assertThat(copy.hasStarHack()).isEqualTo(name.hasStarHack());
         assertThat(copy.comments()).hasSameSizeAs(name.comments());
+    }
+
+    @Test
+    public void copyFromUnknownProperty() {
+        PropertyName name = PropertyName.of("blah");
+        assertThat(name.isPrefixed()).isFalse();
+        assertThat(name.hasStarHack()).isFalse();
+        name.comments(Lists.newArrayList("test"));
+
+        PropertyName copy = name.copy();
+        assertThat(copy.unprefixed()).isEqualTo(name.unprefixed());
+        assertThat(copy.prefix().isPresent()).isEqualTo(name.prefix().isPresent());
+        assertThat(copy.hasStarHack()).isEqualTo(name.hasStarHack());
+        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+        assertThat(copy.asProperty().isPresent()).isFalse();
     }
 }

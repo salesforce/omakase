@@ -33,8 +33,6 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Prefix;
 
 /**
- * TESTME
- * <p/>
  * Utilities for finding prefixed equivalents.
  *
  * @author nmcwilliams

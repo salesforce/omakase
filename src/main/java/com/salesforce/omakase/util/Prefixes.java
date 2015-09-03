@@ -83,11 +83,11 @@ public final class Prefixes {
 
     /** Represents a name with an optional vendor {@link Prefix}. */
     public static final class PrefixPair {
-        private final Optional<Prefix> prefix;
+        private final Prefix prefix;
         private final String unprefixed;
 
         private PrefixPair(Prefix prefix, String unprefixed) {
-            this.prefix = Optional.fromNullable(prefix);
+            this.prefix = prefix;
             this.unprefixed = unprefixed;
         }
 
@@ -97,7 +97,7 @@ public final class Prefixes {
          * @return The {@link Prefix}, or {@link Optional#absent()} if a prefix was not present.
          */
         public Optional<Prefix> prefix() {
-            return prefix;
+            return Optional.fromNullable(prefix);
         }
 
         /**

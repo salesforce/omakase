@@ -116,8 +116,7 @@ public final class KeywordValue extends AbstractTerm implements Named {
     }
 
     /**
-     * TODO cache? Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown
-     * keyword).
+     * Gets the exact matching {@link Keyword} instance, if one exists (it may not exist if this is an unknown keyword).
      *
      * @return The {@link Keyword}.
      */
