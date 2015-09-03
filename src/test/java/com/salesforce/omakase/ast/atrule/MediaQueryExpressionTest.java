@@ -86,12 +86,12 @@ public class MediaQueryExpressionTest {
     }
 
     @Test
-    public void propagatesBroadcastToTerms() {
+    public void doesntPropagateBroadcastToTerms() {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
         exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
         exp.propagateBroadcast(broadcaster);
-        assertThat(broadcaster.find(NumericalValue.class).isPresent()).isTrue();
+        assertThat(broadcaster.find(NumericalValue.class).isPresent()).isFalse();
     }
 
     @Test

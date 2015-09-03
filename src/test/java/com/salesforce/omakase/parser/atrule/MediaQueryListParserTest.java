@@ -90,8 +90,8 @@ public class MediaQueryListParserTest extends AbstractParserTest<MediaQueryListP
     public void matchesExpectedBroadcastCount() {
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("(color)", 3),
-            withExpectedResult("(min-width:800px)", 4),
-            withExpectedResult("(min-aspect-ratio: 1/1)", 6)
+            withExpectedResult("(min-width:800px)", 3),
+            withExpectedResult("(min-aspect-ratio: 1/1)", 3)
         ));
 
         for (ParseResult<Integer> result : results) {

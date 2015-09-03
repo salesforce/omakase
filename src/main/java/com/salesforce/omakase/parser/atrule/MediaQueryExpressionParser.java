@@ -67,7 +67,7 @@ public final class MediaQueryExpressionParser extends AbstractParser {
         if (source.optionallyPresent(Tokens.COLON)) {
             source.skipWhitepace();
 
-            QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+            QueryableBroadcaster qb = new QueryableBroadcaster(); // no need to broadcast the terms
             ParserFactory.termSequenceParser().parse(source, qb, refiner);
 
             Iterable<PropertyValueMember> terms = qb.filter(PropertyValueMember.class);

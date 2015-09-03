@@ -19,11 +19,8 @@ package com.salesforce.omakase.test;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.plugin.PostProcessingPlugin;
+import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 import com.salesforce.omakase.test.goldfile.Goldfile;
 import com.salesforce.omakase.test.util.QuickWriter;
@@ -53,33 +50,20 @@ public final class Debug {
     private static void withPlugins(String source) throws IOException {
         StyleWriter writer = StyleWriter.verbose();
 
+        Prefixer prefixer = Prefixer.customBrowserSupport();
+        prefixer.support().all(Browser.FIREFOX);
+        prefixer.support().all(Browser.CHROME);
+        prefixer.support().all(Browser.SAFARI);
+        prefixer.support().all(Browser.IOS_SAFARI);
+
         Omakase.source(source)
             .use(writer)
             .use(new StandardValidation())
-            .use(new PostProcessingPlugin() {
-                int declarations = 0;
-                int keywords = 0;
-
-                @Observe
-                public void declaration(Declaration d) {
-                    declarations++;
-                }
-
-                @Observe
-                public void keyword(KeywordValue k) {
-                    keywords++;
-                }
-
-                @Override
-                public void postProcess(PluginRegistry registry) {
-                    System.out.println("Declarations: " + declarations);
-                    System.out.println("Keywords: " + keywords);
-                }
-            })
+            .use(prefixer)
             .process();
 
         System.out.println();
-        // writer.writeTo(System.out);
+        writer.writeTo(System.out);
     }
 
     private static void writeAllModes(String source) throws IOException {
