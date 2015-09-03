@@ -16,6 +16,8 @@
 
 package com.salesforce.omakase.test.goldfile;
 
+import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;
@@ -56,9 +58,12 @@ public abstract class AbstractGoldfileTest {
     public void goldfile() throws IOException {
         StyleWriter writer = new StyleWriter(mode);
         applyAdditionalWriterConfig(writer);
-        Goldfile.test(name(), writer, autoRefine);
+        Goldfile.test(name(), writer, autoRefine, plugins());
     }
 
     /** add any additional settings to the writer */
     protected void applyAdditionalWriterConfig(StyleWriter writer) {}
+
+    /** add any additional plugins to run */
+    protected Iterable<Plugin> plugins() {return ImmutableList.of();}
 }

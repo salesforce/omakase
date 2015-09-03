@@ -19,6 +19,7 @@ package com.salesforce.omakase.test.goldfile;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
@@ -56,7 +57,7 @@ public final class Goldfile {
      *     If there is a problem with teh files.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void test(String name, StyleWriter writer, boolean autoRefine) throws IOException {
+    public static void test(String name, StyleWriter writer, boolean autoRefine, Iterable<Plugin> plugins) throws IOException {
         // grab the source to parse
         File sourceFile = sourceFile(name);
         assertThat(sourceFile.exists()).describedAs("Source file not found: " + sourceFile.getPath()).isTrue();
@@ -76,6 +77,7 @@ public final class Goldfile {
         request.use(writer);
         request.use(new StandardValidation(false));
         request.use(new UnquotedIEFilterPlugin());
+        request.use(plugins);
 
         // do the parsing and get results
         request.process();
@@ -93,7 +95,7 @@ public final class Goldfile {
         }
 
         String msg = String.format("Goldfile did not match expected value." +
-            "The expected file has been (re)written with the actual results to %s", expectedFile.getPath());
+            " The expected file has been (re)written with the actual results to %s", expectedFile.getPath());
         assertThat(result).describedAs(msg).isEqualTo(expected);
     }
 

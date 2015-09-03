@@ -1,0 +1,10 @@
+.container {display:-webkit-box; display:-webkit-flex; display:-moz-box; display:-ms-flexbox; display:flex; width:100%; -webkit-flex-flow:row nowrap; -ms-flex-flow:row nowrap; flex-flow:row nowrap; -webkit-box-pack:start; -webkit-justify-content:flex-start; -moz-box-pack:start; -ms-flex-pack:start; justify-content:flex-start; -webkit-align-items:flex-start; -ms-flex-align:start; align-items:flex-start; padding:10px; margin:0 20px; background:#ffe5a7}
+span.container {display:-webkit-inline-box; display:-webkit-inline-flex; display:-moz-inline-box; display:-ms-inline-flexbox; display:inline-flex}
+.container.wrapped {-webkit-flex-wrap:wrap; -ms-flex-wrap:wrap; flex-wrap:wrap}
+.container.end-align {-webkit-box-pack:end; -webkit-justify-content:flex-end; -moz-box-pack:end; -ms-flex-pack:end; justify-content:flex-end}
+.container.centered {text-align:center; -webkit-box-pack:center; -webkit-justify-content:center; -moz-box-pack:center; -ms-flex-pack:center; justify-content:center; -webkit-align-items:center; -ms-flex-align:center; align-items:center; padding:30px}
+.container.reversed {-webkit-box-orient:horizontal; -webkit-box-direction:reverse; -webkit-flex-direction:row-reverse; -moz-box-orient:horizontal; -moz-box-direction:reverse; -ms-flex-direction:row-reverse; flex-direction:row-reverse}
+.container>div {padding:10px}
+.special {-webkit-box-flex:2; -webkit-flex:2 1 auto; -moz-box-flex:2; -ms-flex:2 1 auto; flex:2 1 auto}
+#mark {-webkit-box-ordinal-group:2; -webkit-order:1; -moz-box-ordinal-group:2; -ms-flex-order:1; order:1; color:#3333aa; border:1px solid #886; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px}
+#mark2 {-webkit-box-ordinal-group:3; -webkit-order:2; -moz-box-ordinal-group:3; -ms-flex-order:2; order:2; -webkit-flex-basis:50%; -ms-flex-preferred-size:50%; flex-basis:50%}

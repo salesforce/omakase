@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  width: 100%;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  padding: 10px;
+  margin: 0 20px;
+  background: #ffe5a7;
+}
+
+span.container {
+  display: inline-flex;
+  display: -moz-inline-box;
+}
+
+.container.wrapped {
+  flex-wrap: wrap;
+}
+
+.container.end-align {
+  justify-content: flex-end;
+}
+
+.container.centered {
+  text-align: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.container.reversed {
+  flex-direction: row-reverse;
+}
+
+.container > div {
+  padding: 10px;
+}
+
+.special {
+  flex: 2 1 auto;
+}
+
+#mark {
+  order: 1;
+  color: #3333aa;
+  border: 1px solid #886;
+  border-radius: 3px;
+}
+
+#mark2 {
+  order: 2;
+  flex-basis: 50%;
+}
