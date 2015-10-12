@@ -108,6 +108,7 @@ properties:
   - drop-initial-value
   - elevation
   - empty-cells
+  - fill
   - filter
   - fit
   - fit-position

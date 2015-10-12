@@ -356,6 +356,9 @@ public enum Property {
     /** CSS property named 'empty-cells' */
     EMPTY_CELLS("empty-cells"),
 
+    /** CSS property named 'fill' */
+    FILL("fill"),
+
     /** CSS property named 'filter' */
     FILTER("filter"),
 
