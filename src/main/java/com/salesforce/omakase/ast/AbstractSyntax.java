@@ -290,7 +290,12 @@ public abstract class AbstractSyntax implements Syntax {
         // uncomment this for an object-based toString
         //return As.string(this).fields().toString();
 
-        return As.simpleString(this);
+        return toString(true);
+    }
+
+    @Override
+    public final String toString(boolean includeUnitType) {
+        return As.simpleString(this, includeUnitType);
     }
 
     /** utility to ensure the comments list is created before using it */

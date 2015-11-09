@@ -66,17 +66,21 @@ public final class As {
      *
      * @param syntax
      *     The unit.
+     * @param includeUnitType
+     *     Specify true to append in parenthesis the syntax type (e.g., 'pseudo-element-selector').
      *
      * @return The toString representation.
      */
-    public static String simpleString(Syntax syntax) {
+    public static String simpleString(Syntax syntax, boolean includeUnitType) {
         StringBuilder builder = new StringBuilder(64);
         builder.append(StyleWriter.writeSingle(syntax, WriterMode.INLINE));
-        builder.append(" (");
-        String name = syntax.getClass().getSimpleName();
-        name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name);
-        builder.append(name);
-        builder.append(")");
+        if (includeUnitType) {
+            builder.append(" (");
+            String name = syntax.getClass().getSimpleName();
+            name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name);
+            builder.append(name);
+            builder.append(")");
+        }
         return builder.toString();
     }
 

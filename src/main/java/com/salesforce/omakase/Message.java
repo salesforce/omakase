@@ -61,7 +61,7 @@ public enum Message {
         " or selector sequence. (While the CSS specification does allow comments here," +
         " it could result in unexpected behavior after minification and removal of the comment.)"),
     MISSING_COMMENT_CLOSE("Unclosed comment"),
-    PSEUDO_ELEMENT_LAST("Pseudo elements must be last in the selector sequence"),
+    PSEUDO_ELEMENT_LAST("Only pseudo-classes are allowed after the pseudo-element '%s'"),
     ONE_PARAM("Methods annotated with @PreProcess, @Observe or @Rework must have exactly " +
         "one parameter (the Syntax type): on method %s"),
     TWO_PARAMS("Methods annotated with @Validate must have exactly two parameters" +

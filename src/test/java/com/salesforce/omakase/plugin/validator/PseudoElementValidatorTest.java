@@ -17,7 +17,6 @@
 package com.salesforce.omakase.plugin.validator;
 
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.Message;
 import com.salesforce.omakase.error.ErrorLevel;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.fillSelector;
@@ -34,7 +33,9 @@ public class PseudoElementValidatorTest extends SimpleValidatorTest<PseudoElemen
             fillSelector(".class::before"),
             fillSelector(".class:after"),
             fillSelector(".class1, class2:before, class3:after"),
-            fillSelector("#id>.class + #id2 a:hover::before")
+            fillSelector("#id>.class + #id2 a:hover::before"),
+            fillSelector(".test div::before:hover"),
+            fillSelector("*::before:hover")
         );
     }
 
@@ -47,15 +48,16 @@ public class PseudoElementValidatorTest extends SimpleValidatorTest<PseudoElemen
             fillSelector(".class::selection .class2"),
             fillSelector(".class:before > .class2"),
             fillSelector("#id1, .class:before .class2, class3"),
-            fillSelector("*::before:hover"),
+            fillSelector("*::before:hover::after"),
             fillSelector("p div p div p p p:before .class1 + class2:hover"),
-            fillSelector("a:hover::before .class:before")
+            fillSelector("a:hover::before .class:before"),
+            fillSelector(".test div::before:hover a")
         );
     }
 
     @Override
     public String failureMessage() {
-        return Message.PSEUDO_ELEMENT_LAST.message();
+        return "Only pseudo-classes are allowed after the pseudo-element";
     }
 
     @Override

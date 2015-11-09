@@ -16,11 +16,13 @@
 
 package com.salesforce.omakase.plugin.validator;
 
+import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
@@ -52,8 +54,16 @@ public class PseudoElementValidator implements DependentPlugin {
      */
     @Validate
     public void validate(PseudoElementSelector selector, ErrorManager em) {
+        // Selectors Level 3 spec does not allow anything after the pseudo.
+        // Selectors Level 4 draft now allows it to be followed by a "user-action pseudo class"
         if (!selector.isLast()) {
-            em.report(ErrorLevel.FATAL, selector, Message.PSEUDO_ELEMENT_LAST.message());
+            Optional<SelectorPart> next = selector.next();
+            while (next.isPresent()) {
+                if (next.get().type() != SelectorPartType.PSEUDO_CLASS_SELECTOR) {
+                    em.report(ErrorLevel.FATAL, selector, Message.PSEUDO_ELEMENT_LAST.message(selector.toString(false)));
+                }
+                next = next.get().next();
+            }
         }
     }
 }
