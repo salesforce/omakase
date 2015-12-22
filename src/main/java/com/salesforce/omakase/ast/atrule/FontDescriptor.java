@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.SupportMatrix;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
@@ -37,7 +36,6 @@ import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.parser.refiner.FontFaceRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -45,7 +43,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
 
 /**

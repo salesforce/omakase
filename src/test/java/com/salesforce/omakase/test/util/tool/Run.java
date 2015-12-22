@@ -127,6 +127,8 @@ public class Run {
                 new GeneratePrefixEnum().run();
                 new GenerateKeywordEnum().run();
                 new GeneratePropertyEnum().run();
+                System.out.println("If output does not reflect expected changes, try a mvn clean install first to recompile " +
+                    "any changed code");
             } else if (update) {
                 new GeneratePrefixEnum().run();
                 new GenerateKeywordEnum().run();

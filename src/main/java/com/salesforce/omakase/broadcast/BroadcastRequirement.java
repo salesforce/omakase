@@ -55,7 +55,7 @@ public enum BroadcastRequirement {
 
     private final String description;
 
-    private BroadcastRequirement(String description) {
+    BroadcastRequirement(String description) {
         this.description = description;
     }
 

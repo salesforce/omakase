@@ -54,7 +54,7 @@ public enum AttributeMatchType implements Writable, ConstantEnum {
 
     private final String matcher;
 
-    private AttributeMatchType(String matcher) {
+    AttributeMatchType(String matcher) {
         this.matcher = matcher;
     }
 

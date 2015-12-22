@@ -35,7 +35,6 @@ package com.salesforce.omakase.data;
  * <p/>
  * See class com.salesforce.omakase.test.util.tool.GeneratePrefixEnum for instructions on updating.
  */
-@SuppressWarnings("UnusedDeclaration")
 public enum Prefix {
     /** prefix '-webkit-' */
     WEBKIT("-webkit-"),

@@ -44,9 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Responsible for sending an event ({@link Broadcastable}) to registered listeners.
@@ -164,7 +163,7 @@ public final class Emitter {
 
         if (subscriptions == null) {
             Map<Class<?>, Set<Subscription>> map = (phase == SubscriptionPhase.PROCESS) ? processors : validators;
-            TreeSet<Subscription> tree = Sets.newTreeSet(); // tree set important for maintaining plugin registration order
+            Set<Subscription> tree = Sets.newTreeSet(); // tree set important for maintaining plugin registration order
 
             for (Class<?> klass : hierarchy(event.getClass())) {
                 Set<Subscription> matching = map.get(klass);
