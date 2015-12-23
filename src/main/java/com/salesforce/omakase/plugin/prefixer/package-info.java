@@ -25,6 +25,6 @@
  */
 
 /**
- * Other misc plugins.
+ * Plugins related to automatic vendor prefixing.
  */
-package com.salesforce.omakase.plugin.misc;
+package com.salesforce.omakase.plugin.prefixer;

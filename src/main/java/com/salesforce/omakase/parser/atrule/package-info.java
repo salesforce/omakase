@@ -25,6 +25,6 @@
  */
 
 /**
- * Other misc plugins.
+ * At-rule parsers.
  */
-package com.salesforce.omakase.plugin.misc;
+package com.salesforce.omakase.parser.atrule;

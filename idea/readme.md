@@ -28,24 +28,27 @@ Import the project into IntelliJ:
 2. Select the top-level omakase folder
 3. ok
 
-Ensure that your project is using Java 1.7 or above, e.g., 
+Go through the prompts choosing the options as you see fit (most defaults are fine).
+Choose the 1.7 SDK.
+
+Ensure that your project is using Java 1.7 or above, e.g.,
 
 1. Right-click on the omakase module in the Project view
 2. Choose Module Settings
 3. Select the Sources tab
 4. Under Language Level, choose 7.0
-5. Click on Project Settings in the left-most panel
+5. Click on Project, under Project Settings in the left-most panel
 6. Project SDK should be 1.7
-7. Project language level should be 7.0
+7. Project language level should be SDK Default, or 7
 
 Settings
 --------
 
-These settings will ensure you have the correct code style, formatting, indentation, inspections etc... 
+These settings will ensure you have the correct code style, formatting, indentation, inspections etc...
 
 *IMPORTANT*: it's possible that importing these settings may change general options that are not specific to the Omakase module as well. This may be important to you if you use IntelliJ for other projects. Beware! (I've done my best to not export any settings that might do this).
 
-1. file -> import settings -> choose idea/settings.jar
+1. file -> import settings -> choose idea/settings.jar (restart editor)
 2. preferences -> editor -> code style -> choose scheme 'Omakase'
 3. ok
 
@@ -102,7 +105,7 @@ POSSIBILITY OF SUCH DAMAGE.
     2. 'Prefix each line' *selected*
     3. 'Before other comments' *selected*
     4. 'Add blank line after' *selected*
-9. ok 
+9. ok
 
 Dictionaries
 ------------
@@ -136,4 +139,3 @@ Optional
 Reload
 ------
 Reload IDEA after making these changes.
-

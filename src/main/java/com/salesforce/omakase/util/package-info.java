@@ -25,6 +25,6 @@
  */
 
 /**
- * Other misc plugins.
+ * Utilities and helpers.
  */
-package com.salesforce.omakase.plugin.misc;
+package com.salesforce.omakase.util;

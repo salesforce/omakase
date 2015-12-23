@@ -68,8 +68,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p/>
  *     inline.writeTo(System.out);
  * </pre></code>
- * For more usage information, see the readme.md file, or check out (link). Please note that the parser does not currently support
- * the following:
+ * For more usage information, see the readme.md file. Please note that the parser does not currently support the following:
  * <p/>
  * {@code cdo and cdc, escaping (in most cases)}
  *

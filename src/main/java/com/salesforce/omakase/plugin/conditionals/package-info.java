@@ -25,6 +25,6 @@
  */
 
 /**
- * Other misc plugins.
+ * Plugins related to the custom syntax for conditionals.
  */
-package com.salesforce.omakase.plugin.misc;
+package com.salesforce.omakase.plugin.conditionals;

@@ -25,6 +25,6 @@
  */
 
 /**
- * Single-character Tokens used by Parsers.
+ * Single-character Tokens used by parsers.
  */
 package com.salesforce.omakase.parser.token;

@@ -25,6 +25,6 @@
  */
 
 /**
- * Other misc plugins.
+ * Contains the standard Omakase Java annotations.
  */
-package com.salesforce.omakase.plugin.misc;
+package com.salesforce.omakase.broadcast.annotation;
