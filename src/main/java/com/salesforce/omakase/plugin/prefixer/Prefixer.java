@@ -27,7 +27,7 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;

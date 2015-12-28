@@ -34,7 +34,7 @@ import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.QuotationMode;
 import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;

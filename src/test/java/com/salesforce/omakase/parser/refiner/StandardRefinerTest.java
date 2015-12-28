@@ -38,7 +38,7 @@ import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -128,7 +128,7 @@ public class StandardRefinerTest {
         assertThat(qb.all()).hasSize(1);
         assertThat(Iterables.get(qb.all(), 0)).isInstanceOf(GenericFunctionValue.class);
     }
-    
+
     @Test
     public void refinedUrlFunctionValue() {
         RawFunction raw = new RawFunction(5, 2, "url", "one.png");

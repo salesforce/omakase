@@ -35,7 +35,7 @@ import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;

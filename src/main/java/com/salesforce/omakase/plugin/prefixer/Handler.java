@@ -26,7 +26,7 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.util.SupportMatrix;
 
 /**
  * Handles prefixing a type of AST object.

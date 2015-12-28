@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.CssAnnotation;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
@@ -46,7 +47,6 @@ import com.salesforce.omakase.util.CssAnnotations;
 import com.salesforce.omakase.util.Values;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,79 +58,62 @@ import java.util.Set;
  * @author david.brady
  */
 public final class DirectionFlipPlugin implements DependentPlugin {
-    /*
-     * Set of properties that are flipped directly to another property.
-     */
-    private static final Map<Property, Property> PROPERTIES_THAT_FLIP = new ImmutableMap.Builder<Property, Property>()
-        .put(Property.BORDER_BOTTOM_LEFT_RADIUS, Property.BORDER_BOTTOM_RIGHT_RADIUS)
-        .put(Property.BORDER_BOTTOM_RIGHT_RADIUS, Property.BORDER_BOTTOM_LEFT_RADIUS)
+    private static final Map<Property, Property> PROPERTIES = new ImmutableMap.Builder<Property, Property>()
+        .put(Property.LEFT, Property.RIGHT)
+        .put(Property.RIGHT, Property.LEFT)
+
         .put(Property.BORDER_LEFT, Property.BORDER_RIGHT)
         .put(Property.BORDER_LEFT_COLOR, Property.BORDER_RIGHT_COLOR)
         .put(Property.BORDER_LEFT_STYLE, Property.BORDER_RIGHT_STYLE)
         .put(Property.BORDER_LEFT_WIDTH, Property.BORDER_RIGHT_WIDTH)
+
         .put(Property.BORDER_RIGHT, Property.BORDER_LEFT)
         .put(Property.BORDER_RIGHT_COLOR, Property.BORDER_LEFT_COLOR)
         .put(Property.BORDER_RIGHT_STYLE, Property.BORDER_LEFT_STYLE)
         .put(Property.BORDER_RIGHT_WIDTH, Property.BORDER_LEFT_WIDTH)
+
         .put(Property.BORDER_TOP_LEFT_RADIUS, Property.BORDER_TOP_RIGHT_RADIUS)
         .put(Property.BORDER_TOP_RIGHT_RADIUS, Property.BORDER_TOP_LEFT_RADIUS)
-        .put(Property.LEFT, Property.RIGHT)
+        .put(Property.BORDER_BOTTOM_LEFT_RADIUS, Property.BORDER_BOTTOM_RIGHT_RADIUS)
+        .put(Property.BORDER_BOTTOM_RIGHT_RADIUS, Property.BORDER_BOTTOM_LEFT_RADIUS)
+
+        .put(Property.PADDING_LEFT, Property.PADDING_RIGHT)
+        .put(Property.PADDING_RIGHT, Property.PADDING_LEFT)
         .put(Property.MARGIN_LEFT, Property.MARGIN_RIGHT)
         .put(Property.MARGIN_RIGHT, Property.MARGIN_LEFT)
         .put(Property.NAV_LEFT, Property.NAV_RIGHT)
         .put(Property.NAV_RIGHT, Property.NAV_LEFT)
-        .put(Property.PADDING_LEFT, Property.PADDING_RIGHT)
-        .put(Property.PADDING_RIGHT, Property.PADDING_LEFT)
-        .put(Property.RIGHT, Property.LEFT)
+
         .build();
 
-    /*
-     * Set of keywords that are flipped directly to another keyword
-     */
-    private static final Map<Keyword, Keyword> KEYWORDS_THAT_FLIP = new ImmutableMap.Builder<Keyword, Keyword>()
-        .put(Keyword.E_RESIZE, Keyword.W_RESIZE)
-        .put(Keyword.LEFT, Keyword.RIGHT)
+    private static final Map<Keyword, Keyword> KEYWORDS = new ImmutableMap.Builder<Keyword, Keyword>()
         .put(Keyword.LTR, Keyword.RTL)
-        .put(Keyword.NE_RESIZE, Keyword.NW_RESIZE)
-        .put(Keyword.NESW_RESIZE, Keyword.NWSE_RESIZE)
-        .put(Keyword.NW_RESIZE, Keyword.NE_RESIZE)
-        .put(Keyword.NWSE_RESIZE, Keyword.NESW_RESIZE)
-        .put(Keyword.RIGHT, Keyword.LEFT)
         .put(Keyword.RTL, Keyword.LTR)
+        .put(Keyword.LEFT, Keyword.RIGHT)
+        .put(Keyword.RIGHT, Keyword.LEFT)
+
+        .put(Keyword.E_RESIZE, Keyword.W_RESIZE)
+        .put(Keyword.W_RESIZE, Keyword.E_RESIZE)
+        .put(Keyword.NE_RESIZE, Keyword.NW_RESIZE)
+        .put(Keyword.NW_RESIZE, Keyword.NE_RESIZE)
+        .put(Keyword.NESW_RESIZE, Keyword.NWSE_RESIZE)
+        .put(Keyword.NWSE_RESIZE, Keyword.NESW_RESIZE)
         .put(Keyword.SE_RESIZE, Keyword.SW_RESIZE)
         .put(Keyword.SW_RESIZE, Keyword.SE_RESIZE)
-        .put(Keyword.W_RESIZE, Keyword.E_RESIZE)
+
         .build();
 
-    /*
-     * Set of properties that have flippable percentage values.
-     */
-    private static final Set<Property> PROPERTIES_WITH_FLIPPABLE_PERCENTAGE =
-        ImmutableSet.of(
-            Property.BACKGROUND,
-            Property.BACKGROUND_POSITION,
-            Property.BACKGROUND_POSITION_X);
+    private static final Set<Property> FLIP_PERCENTAGE = ImmutableSet.of(
+        Property.BACKGROUND,
+        Property.BACKGROUND_POSITION,
+        Property.BACKGROUND_POSITION_X);
 
-    /*
-     * Set of properties whose property values may flip if they match the
-     * four-part pattern.
-     */
-    private static final Set<Property> FOUR_PART_PROPERTIES_THAT_SHOULD_FLIP =
-        ImmutableSet.of(
-            Property.BORDER_COLOR,
-            Property.BORDER_STYLE,
-            Property.BORDER_WIDTH,
-            Property.PADDING);
-
-    /*
-     * Set of properties that indicate if a four part property should not
-     * be flipped.
-     */
-    private static final Set<Keyword> LEFT_RIGHT_CENTER =
-        ImmutableSet.of(
-            Keyword.LEFT,
-            Keyword.RIGHT,
-            Keyword.CENTER);
+    private static final Set<Property> FOUR_TERM_PROPERTIES = ImmutableSet.of(
+        Property.PADDING,
+        Property.MARGIN,
+        Property.BORDER_COLOR,
+        Property.BORDER_STYLE,
+        Property.BORDER_WIDTH);
 
     @Override
     public void dependencies(PluginRegistry registry) {
@@ -138,36 +121,9 @@ public final class DirectionFlipPlugin implements DependentPlugin {
     }
 
     /**
-     * Flips property names and/or property values.
-     *
-     * @param declaration
-     *     Declaration to be flipped.
+     * Checks for a {@link CssAnnotation} indicating not to flip anything.
      */
-    @Rework
-    public void rework(Declaration declaration) {
-        if (hasNoFlip(declaration)) {
-            return;
-        }
-
-        Optional<Property> optionalProperty = declaration.propertyName().asPropertyIgnorePrefix();
-
-        if (!optionalProperty.isPresent()) {
-            return;
-        }
-
-        // flip the property name
-        Property property = optionalProperty.get();
-        handleFlippablePropertyName(declaration, property);
-
-        // flip property values
-        // Careful!  If a handler depends on the changes a previous handler made,
-        // it won't be able to use the property or property value we've grabbed above.
-        if (handleFlippableFourPartProperties(declaration, property)) return;
-        if (handleFlippablePercentages(declaration, property)) return;
-        handleFlippableBorderRadius(declaration, property);
-    }
-
-    private boolean hasNoFlip(Declaration declaration) {
+    private boolean noFlip(Declaration declaration) {
         return declaration.hasAnnotation(CssAnnotations.NOFLIP);
     }
 
@@ -178,28 +134,74 @@ public final class DirectionFlipPlugin implements DependentPlugin {
      *     keywordValue to be flipped.
      */
     @Rework
-    public void rework(KeywordValue keywordValue) {
-        if (hasNoFlip(keywordValue.parent().declaration())) {
-            return;
-        }
-        Optional<Keyword> optionalKeyword = keywordValue.asKeyword();
-        if (optionalKeyword.isPresent()) {
-            Keyword keyword = optionalKeyword.get();
-            if (KEYWORDS_THAT_FLIP.containsKey(keyword)) {
-                keywordValue.keyword(KEYWORDS_THAT_FLIP.get(keyword));
-            }
+    public void keywords(KeywordValue keywordValue) {
+        if (noFlip(keywordValue.parent().declaration())) return;
+
+        Optional<Keyword> keyword = keywordValue.asKeyword();
+        if (keyword.isPresent() && KEYWORDS.containsKey(keyword.get())) {
+            keywordValue.keyword(KEYWORDS.get(keyword.get()));
         }
     }
 
-    private boolean handleFlippablePropertyName(Declaration declaration, Property property) {
-        if (PROPERTIES_THAT_FLIP.containsKey(property)) {
-            declaration.propertyName(PROPERTIES_THAT_FLIP.get(property));
+    /**
+     * Flips property names and/or property values.
+     *
+     * @param declaration
+     *     Declaration to be flipped.
+     */
+    @Rework
+    public void declaration(Declaration declaration) {
+        if (noFlip(declaration)) return;
+
+        Optional<Property> property = declaration.propertyName().asPropertyIgnorePrefix();
+        if (!property.isPresent()) return;
+
+        // flip the property name
+        if (PROPERTIES.containsKey(property.get())) {
+            declaration.propertyName(PROPERTIES.get(property.get()));
+        }
+
+        // flip property values
+        // Careful!  If a handler depends on the changes a previous handler made,`
+        // it won't be able to use the property or property value we've grabbed above.
+        if (handleFourTerms(declaration, property.get())) return;
+        if (handlePercentages(declaration, property.get())) return;
+        handleBorderRadius(declaration, property.get());
+    }
+
+    private boolean handleFourTerms(Declaration declaration, Property property) {
+        // for patterns such as 1 2 3 4, swap 2 and 4
+        if (FOUR_TERM_PROPERTIES.contains(property) && declaration.propertyValue().countTerms() == 4) {
+            ImmutableList<Term> terms = declaration.propertyValue().terms();
+            declaration.propertyValue(PropertyValue.ofTerms(OperatorType.SPACE, terms.get(0), terms.get(3), terms.get(2), terms.get(1)));
             return true;
         }
         return false;
     }
 
-    private boolean handleFlippableBorderRadius(Declaration declaration, Property property) {
+    private boolean handlePercentages(Declaration declaration, Property property) {
+        if (FLIP_PERCENTAGE.contains(property)) {
+            for (Term term : declaration.propertyValue().terms()) {
+                // can't handle left, right, or center yet
+                if (term instanceof KeywordValue) {
+                    Keyword keyword = ((KeywordValue)term).asKeyword().orNull();
+                    if (keyword == Keyword.LEFT || keyword == Keyword.CENTER || keyword == Keyword.RIGHT) return false;
+                }
+
+                // flip the first percentage
+                if (term instanceof NumericalValue) {
+                    NumericalValue numerical = (NumericalValue)term;
+                    if (numerical.unit().isPresent() && numerical.unit().get().equals("%")) {
+                        numerical.value(100 - numerical.doubleValue());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean handleBorderRadius(Declaration declaration, Property property) {
         if (Property.BORDER_RADIUS == property) {
             List<PropertyValue> split = Values.split(OperatorType.SLASH, declaration.propertyValue());
             List<PropertyValue> join = new ArrayList<>();
@@ -214,49 +216,6 @@ public final class DirectionFlipPlugin implements DependentPlugin {
         return false;
     }
 
-    private boolean handleFlippablePercentages(Declaration declaration, Property property) {
-        if (PROPERTIES_WITH_FLIPPABLE_PERCENTAGE.contains(property)) {
-            Iterator<Term> originalTermIter = declaration.propertyValue().terms().iterator();
-            PropertyValue replacement = new PropertyValue();
-            boolean flipped = false;
-            while (originalTermIter.hasNext()) {
-                Term term = originalTermIter.next();
-                // we never flip if the term list includes left, right, or center
-                if (isLeftRightCenter(term)) {
-                    return false;
-                }
-                // flip the first percentage we see
-                if (!flipped) {
-                    Term flippedTerm = flipPercentage(term);
-                    if (flippedTerm != term) {
-                        term = flippedTerm;
-                        flipped = true;
-                    }
-                }
-
-                replacement.append(term.copy());
-                if (originalTermIter.hasNext()) {
-                    replacement.append(OperatorType.SPACE);
-                }
-            }
-            // only
-            if (flipped) {
-                declaration.propertyValue(replacement);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean handleFlippableFourPartProperties(Declaration declaration, Property property) {
-        ImmutableList<Term> terms = declaration.propertyValue().terms();
-        if (FOUR_PART_PROPERTIES_THAT_SHOULD_FLIP.contains(property) && terms.size() == 4) {
-            declaration.propertyValue(PropertyValue.ofTerms(OperatorType.SPACE, terms.get(0), terms.get(3), terms.get(2), terms.get(1)));
-            return true;
-        }
-        return false;
-    }
-
     /*
      * If a border radius has 2, 3, or 4 terms, they'll be flipped using these patterns:
      *
@@ -265,8 +224,6 @@ public final class DirectionFlipPlugin implements DependentPlugin {
      *     <li>a b c => b a b c</li>
      *     <li>a b c d => b a d c</li>
      * </ul>
-     *
-     * Otherwise, the terms aren't flipped at all
      */
     private PropertyValue flipBorderRadiusSet(PropertyValue value) {
         List<Term> terms = value.terms();
@@ -283,30 +240,4 @@ public final class DirectionFlipPlugin implements DependentPlugin {
             return value;
         }
     }
-
-    private boolean isLeftRightCenter(Term term) {
-        if (term instanceof KeywordValue) {
-            Optional<Keyword> keyword = ((KeywordValue)term).asKeyword();
-            return keyword.isPresent() && LEFT_RIGHT_CENTER.contains(keyword.get());
-        } else {
-            return false;
-        }
-    }
-
-    /*
-     * If the term passed in is a percentage, the value for that term will be subtracted
-     * from 100 and returned as a new term.  Otherwise, this returns the passed in term.
-     */
-    private Term flipPercentage(Term term) {
-        if (term instanceof NumericalValue) {
-            NumericalValue numericalValue = (NumericalValue)term;
-            if (numericalValue.unit().isPresent() && numericalValue.unit().get().equals("%")) {
-                NumericalValue newValue = new NumericalValue(100 - numericalValue.doubleValue());
-                newValue.unit("%");
-                return newValue;
-            }
-        }
-        return term;
-    }
-
 }

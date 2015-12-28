@@ -34,7 +34,7 @@ import com.google.common.collect.Table;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.test.util.tool.GeneratePrefixTablesClass for instructions on updating.
+ * See class com.salesforce.omakase.tools.GeneratePrefixTablesClass for instructions on updating.
  */
 @SuppressWarnings("AutoBoxing")
 public final class PrefixTables {

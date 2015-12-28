@@ -30,7 +30,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -78,6 +78,15 @@ public class PropertyValueTest {
 
         assertThat(val.members()).hasSize(3);
         assertThat(val.terms()).containsExactly(n1, n2);
+    }
+
+    @Test
+    public void countTerms() {
+        NumericalValue n1 = NumericalValue.of(1);
+        NumericalValue n2 = NumericalValue.of(2);
+        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+
+        assertThat(val.countTerms()).isEqualTo(2);
     }
 
     @Test

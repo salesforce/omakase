@@ -26,7 +26,7 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.data.Prefix;
 

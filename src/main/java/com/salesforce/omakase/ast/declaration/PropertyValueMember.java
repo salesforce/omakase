@@ -36,4 +36,11 @@ import com.salesforce.omakase.ast.collection.Groupable;
 public interface PropertyValueMember extends Groupable<PropertyValue, PropertyValueMember> {
     @Override
     PropertyValueMember copy();
+
+    /**
+     * Returns true if this member is an instance of {@link Term}.
+     *
+     * @return True if this member is a term.
+     */
+    boolean isTerm();
 }

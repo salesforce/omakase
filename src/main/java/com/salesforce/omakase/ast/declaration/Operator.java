@@ -82,6 +82,11 @@ public final class Operator extends AbstractGroupable<PropertyValue, PropertyVal
     }
 
     @Override
+    public boolean isTerm() {
+        return false;
+    }
+
+    @Override
     protected Operator self() {
         return this;
     }

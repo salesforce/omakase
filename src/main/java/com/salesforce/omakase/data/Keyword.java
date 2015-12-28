@@ -43,7 +43,7 @@ import java.util.Map;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.test.util.tool.GenerateKeywordEnum for instructions on updating.
+ * See class com.salesforce.omakase.tools.GenerateKeywordEnum for instructions on updating.
  */
 @SuppressWarnings("SpellCheckingInspection")
 public enum Keyword {

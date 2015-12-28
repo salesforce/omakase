@@ -31,6 +31,7 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.util.SupportMatrix;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

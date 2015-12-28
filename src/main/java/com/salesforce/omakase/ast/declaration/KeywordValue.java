@@ -51,6 +51,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 @Description(value = "individual keyword value", broadcasted = REFINED_DECLARATION)
 public final class KeywordValue extends AbstractTerm implements Named {
     private String keyword;
+    private Keyword cached;
 
     /**
      * Constructs a new {@link KeywordValue} instance.
@@ -131,7 +132,10 @@ public final class KeywordValue extends AbstractTerm implements Named {
      * @return The {@link Keyword}.
      */
     public Optional<Keyword> asKeyword() {
-        return Optional.fromNullable(Keyword.lookup(keyword));
+        if (cached == null) {
+            cached = Keyword.lookup(keyword);
+        }
+        return Optional.fromNullable(cached);
     }
 
     @Override

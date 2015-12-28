@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.test.functional.StatusChangingBroadcaster;
+import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;

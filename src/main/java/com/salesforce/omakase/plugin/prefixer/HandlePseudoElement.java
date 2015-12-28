@@ -27,7 +27,7 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.collect.Multimap;
-import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;

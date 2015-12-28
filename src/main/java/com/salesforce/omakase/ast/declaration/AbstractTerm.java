@@ -51,6 +51,11 @@ public abstract class AbstractTerm extends AbstractGroupable<PropertyValue, Prop
     }
 
     @Override
+    public boolean isTerm() {
+        return true;
+    }
+
+    @Override
     protected Term self() {
         return this;
     }

@@ -26,7 +26,7 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.SupportMatrix;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;

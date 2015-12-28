@@ -32,7 +32,7 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.test.goldfile.Goldfile;
+import com.salesforce.omakase.goldfile.Goldfile;
 import com.salesforce.omakase.test.util.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
 

@@ -124,8 +124,8 @@ public final class PropertyValue extends AbstractSyntax {
     }
 
     /**
-     * Gets the definitive list of {@link Term}s currently in this {@link PropertyValue} (as opposed to {@link #members()} which
-     * returns both terms and operators).
+     * Gets the list of {@link Term}s currently in this {@link PropertyValue} (as opposed to {@link #members()} which returns both
+     * terms and operators).
      *
      * @return List of all {@link Term}s.
      */
@@ -137,6 +137,20 @@ public final class PropertyValue extends AbstractSyntax {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Does a quick count of the number of {@link Term}s (does not include operators) within this {@link PropertyValue}. This is
+     * faster than {@link #terms()} as it does not build and return a list.
+     *
+     * @return The number of {@link Term}s.
+     */
+    public int countTerms() {
+        int count = 0;
+        for (PropertyValueMember member : members) {
+            if (member.isTerm()) count += 1;
+        }
+        return count;
     }
 
     /**
@@ -164,9 +178,8 @@ public final class PropertyValue extends AbstractSyntax {
      * @see Term#textualValue()
      */
     public Optional<String> singleTextualValue() {
-        ImmutableList<Term> terms = terms();
-        if (terms.size() == 1) {
-            return Optional.of(terms.get(0).textualValue());
+        if (countTerms() == 1) {
+            return Optional.of(terms().get(0).textualValue());
         }
         return Optional.absent();
     }

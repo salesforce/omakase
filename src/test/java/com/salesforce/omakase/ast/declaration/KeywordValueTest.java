@@ -73,6 +73,19 @@ public class KeywordValueTest {
     }
 
     @Test
+    public void asKeywordPresent() {
+        value = new KeywordValue(Keyword.BLOCK);
+        assertThat(value.asKeyword().get()).isSameAs(Keyword.BLOCK);
+        assertThat(value.asKeyword().get()).isSameAs(Keyword.BLOCK);
+    }
+
+    @Test
+    public void asKeywordAbsent() {
+        value = new KeywordValue("foo");
+        assertThat(value.asKeyword().isPresent()).isFalse();
+    }
+
+    @Test
     public void writeVerbose() throws IOException {
         value = KeywordValue.of("absolute");
         StyleWriter writer = StyleWriter.verbose();
@@ -96,6 +109,6 @@ public class KeywordValueTest {
     @Test
     public void copy() {
         value = KeywordValue.of(Keyword.INLINE_BLOCK);
-        assertThat(((KeywordValue)value.copy()).asKeyword().get()).isSameAs(Keyword.INLINE_BLOCK);
+        assertThat(value.copy().asKeyword().get()).isSameAs(Keyword.INLINE_BLOCK);
     }
 }

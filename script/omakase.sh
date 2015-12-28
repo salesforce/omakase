@@ -31,4 +31,4 @@ if [ ! -d "target/dependency" ]; then
 fi
 
 
-java -Xms512m -Xmx4G -cp target/dependency/*:target/classes:target/test-classes com.salesforce.omakase.test.util.tool.Run "$@"
+java -Xms512m -Xmx4G -cp target/dependency/*:target/classes:target/test-classes com.salesforce.omakase.tools.Run "$@"

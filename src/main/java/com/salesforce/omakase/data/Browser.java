@@ -34,7 +34,7 @@ import java.util.List;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.test.util.tool.GenerateBrowserEnum for instructions on updating.
+ * See class com.salesforce.omakase.tools.GenerateBrowserEnum for instructions on updating.
  */
 @SuppressWarnings("AutoBoxing")
 public enum Browser {

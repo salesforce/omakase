@@ -36,7 +36,7 @@ import java.util.Map;
  * <p/>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
  * <p/>
- * See class com.salesforce.omakase.test.util.tool.GeneratePropertyEnum for instructions on updating.
+ * See class com.salesforce.omakase.tools.GeneratePropertyEnum for instructions on updating.
  */
 public enum Property {
     /** CSS property named 'align-content' */
