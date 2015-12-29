@@ -24,28 +24,60 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.salesforce.omakase.perf;
+body {
+  background: blue;
+  margin: 20px 10px;
+}
 
-import com.salesforce.omakase.Omakase;
+a:link {
+  color: blue;
+  text-decoration: none;
+}
 
-/**
- * Omakase, full mode.
- *
- * @author nmcwilliams
- */
-public final class OmakaseFull implements PerfTestParser {
-    @Override
-    public String code() {
-        return "full";
-    }
+a:hover {
+  text-decoration: underline;
+}
 
-    @Override
-    public String name() {
-        return "omakase[full]";
-    }
+.class {
+  color: #000;
+  background-color: #f3f3f3;
+  text-align: center;
+  padding: 4px;
+  border: 1px dashed #fff;
+  line-height: 1.65em;
+  margin: 20px auto 12px;
+  width: 50%;
+}
 
-    @Override
-    public void parse(String input) {
-        Omakase.source(input).use(PluginSet.normal()).process();
-    }
+.class .class .class {
+  font-family: 'Century Schoolbook', 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
+  display: inline-block;
+}
+
+#id {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+#id p + p {
+  margin: 8px 0;
+}
+
+#id p:first-child {
+  margin-top: 0;
+}
+
+.something-something,
+.something-something-something,
+.one-more-for-good-measure {
+  font-weight: bold;
+  display: block;
+}
+
+input[type="text"] {
+  padding: 10px;
+}
+
+.left {
+  float: left;
 }

@@ -24,7 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.salesforce.omakase.perf;
+package com.salesforce.omakase.tools.perf;
 
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Rule;
@@ -32,9 +32,10 @@ import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.HexColorValue;
 import com.salesforce.omakase.ast.declaration.RawFunction;
-import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
@@ -66,12 +67,12 @@ public final class PluginSet {
                 public void observe(Declaration d) {}
             })
             .add(new Plugin() {
-                @Observe
-                public void observe(Declaration d) {}
+                @Rework
+                public void rework(Declaration d) {}
             })
             .add(new Plugin() {
-                @Observe
-                public void observe(Declaration d) {}
+                @Rework
+                public void rework(Declaration d) {}
             })
             .add(new Plugin() {
                 @Observe
@@ -95,7 +96,7 @@ public final class PluginSet {
             })
             .add(new Plugin() {
                 @Validate
-                public void observe(IdSelector s, ErrorManager em) {}
+                public void observe(Selector s, ErrorManager em) {}
             })
             .add(new Plugin() {
                 @Validate

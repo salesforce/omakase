@@ -24,7 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.salesforce.omakase.perf;
+package com.salesforce.omakase.tools.perf;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
@@ -32,23 +32,31 @@ import com.salesforce.omakase.plugin.prefixer.PrefixCleaner;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
 
 /**
- * Omakase, testing auto prefixer.
- *
- * @author nmcwilliams
+ * Perf tests for Omakase.
  */
-public final class OmakaseFullPrefixer implements PerfTestParser {
-    @Override
-    public String code() {
-        return "prefixer";
-    }
-
+final class OmakasePerf extends PerfTest {
     @Override
     public String name() {
-        return "omakase[prefixer]";
+        return "omakase";
     }
 
     @Override
-    public void parse(String input) {
+    public void parseLight(String input) {
+        Omakase.source(input).process(); // note: no plugins or auto refinement
+    }
+
+    @Override
+    public void parseNormal(String input) {
+        Omakase.source(input).use(PluginSet.normal()).process();
+    }
+
+    @Override
+    public void parseHeavy(String input) {
+        Omakase.source(input).use(PluginSet.normal()).process();
+    }
+
+    @Override
+    public void parsePrefixHeavy(String input) {
         Prefixer prefixer = Prefixer.customBrowserSupport();
         prefixer.support().all(Browser.CHROME);
         prefixer.support().all(Browser.FIREFOX);
@@ -61,4 +69,3 @@ public final class OmakaseFullPrefixer implements PerfTestParser {
         Omakase.source(input).use(PluginSet.normal()).use(prefixer).use(pruner).process();
     }
 }
-

@@ -24,13 +24,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.salesforce.omakase.perf;
+package com.salesforce.omakase.tools.perf;
 
 @SuppressWarnings("ALL")
-public interface PerfTestParser {
-    String code();
+abstract class PerfTest {
+    public abstract String name();
 
-    String name();
+    /** @see {@link Mode#LIGHT} */
+    public abstract void parseLight(String input);
 
-    void parse(String input);
+    /** @see {@link Mode#NORMAL} */
+    public abstract void parseNormal(String input);
+
+    /** @see {@link Mode#HEAVY} */
+    public abstract void parseHeavy(String input);
+
+    /** @see {@link Mode#PREFIX_HEAVY} */
+    public abstract void parsePrefixHeavy(String input);
+
+    public void parse(Mode mode) {
+        parse(mode, mode.source());
+    }
+
+    public void parse(Mode mode, String input) {
+        switch (mode) {
+        case LIGHT:
+            parseLight(input);
+            break;
+        case NORMAL:
+            parseNormal(input);
+            break;
+        case HEAVY:
+            parseHeavy(input);
+            break;
+        case PREFIX_HEAVY:
+            parsePrefixHeavy(input);
+            break;
+        }
+    }
 }

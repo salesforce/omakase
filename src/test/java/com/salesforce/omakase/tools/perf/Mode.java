@@ -24,28 +24,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.salesforce.omakase.perf;
+package com.salesforce.omakase.tools.perf;
 
 import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.tools.Tools;
+import com.salesforce.omakase.writer.StyleWriter;
 
-/**
- * Omakase, thin mode (no plugins or refinement, just high-level parsing).
- *
- * @author nmcwilliams
- */
-public final class OmakaseThin implements PerfTestParser {
-    @Override
-    public String code() {
-        return "thin";
+import java.io.IOException;
+
+@SuppressWarnings("ALL")
+enum Mode {
+    /**
+     * A simple collection of styles, with the minimum amount of parsing possible (e.g., omakase in 1-phase only).
+     */
+    LIGHT("light.css"),
+    /**
+     * A simple colleciton of styles, with normal parsing.
+     */
+    NORMAL("light.css"),
+
+    /**
+     * The kitchen-sink of styles, with normal parsing.
+     */
+    HEAVY("heavy.css"),
+
+    /**
+     * The kitchen-sink of styles, with auto prefixer behavior turned on.
+     */
+    PREFIX_HEAVY("heavy.css");
+
+    private String source;
+
+    Mode(String path) {
+        try {
+            StyleWriter writer = StyleWriter.verbose();
+            Omakase.source(Tools.readFile("/perftest/" + path)).use(writer).process();
+            this.source = writer.write();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @Override
-    public String name() {
-        return "omakase[thin]";
-    }
-
-    @Override
-    public void parse(String input) {
-        Omakase.source(input).process();
+    public String source() {
+        return source;
     }
 }

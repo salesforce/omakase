@@ -26,7 +26,8 @@
 
 package com.salesforce.omakase.tools;
 
-import com.salesforce.omakase.perf.PerfTest;
+import com.salesforce.omakase.tools.perf.RunPerfTest;
+import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -35,6 +36,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Omakase CLI. See script/omakase.sh.
@@ -48,11 +51,8 @@ public class Run {
     @Option(name = "-b", aliases = "--build", usage = "build the project")
     private boolean build;
 
-    @Option(name = "-p", aliases = "--perf", usage = "performance test (ex. \"-p full\", \"-p full-heavy\")", metaVar = "<mode-input>")
-    private String perf;
-
-    @Option(name = "-q", aliases = "--perfhelp", usage = "more details on running perf tests")
-    private boolean perfHelp;
+    @Option(name = "-p", aliases = "--perf", usage = "performance test", metaVar = "<args>")
+    private boolean perf;
 
     @Option(name = "-d", aliases = "--deploy", usage = "build and deploy jars (requires additional setup, see deploy.md)")
     private boolean deploy;
@@ -60,7 +60,7 @@ public class Run {
     @Option(name = "-u", aliases = "--update", usage = "regenerate data enum, data class and prefixes source files")
     private boolean update;
 
-    @Option(name = "-l", aliases = "--update-local", usage = "regenerate keyword, property and prefix enums only (no prefix data)")
+    @Option(name = "-l", aliases = "--local-only", usage = "only regenerate local data, no prefix data (used with -u option)")
     private boolean local;
 
     @Option(name = "-s", aliases = {"--syntax", "--sub"}, usage = "print the subscribable syntax table")
@@ -77,6 +77,9 @@ public class Run {
 
     @Option(name = "-h", aliases = "--help", usage = "print this help message")
     private boolean help;
+
+    @Argument
+    private List<String> arguments = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         new Run().cli(args);
@@ -95,36 +98,12 @@ public class Run {
                 if (!exec("mvn clean install")) {
                     System.out.println("\n" + Colors.red("build was not successful!"));
                 }
-            } else if (perf != null) {
-                PerfTest.main(new String[]{perf});
-            } else if (perfHelp) {
-                System.out.println("\nHelp With Running Performance Tests:\n");
-
-                System.out.println("The perf test args take the format of " +
-                    Colors.yellow("[parserMode]") + "-" + Colors.lightBlue("[source]"));
-
-                System.out.println("\nFor example:\n\n" +
-                    "    omakase -p " + Colors.yellow("full" + "-" + Colors.lightBlue("heavy") + "\n\n") +
-                    "means run the \"Omakase Full\" parser configuration with the \"heavy\" CSS source code\n");
-
-                System.out.println("\n" + Colors.grey("Parser Configuration Options:"));
-                System.out.println("thin (Omakase, in minimal parsing mode)");
-                System.out.println("full (Omakase, in full parsing mode)");
-                System.out.println("prefixer (Omakase, in full parsing mode with auto prefixer turned on)");
-
-                System.out.println("\n" + Colors.grey("Source Options:"));
-                System.out.println("simple (a small amount of basic CSS)");
-                System.out.println("button (CSS for a button widget)");
-                System.out.println("heavy (a large amount of CSS)");
-
-                System.out.println("\n" + Colors.grey("Examples:"));
-                System.out.println("omakase -p thin-button");
-                System.out.println("omakase -p thin-heavy");
-                System.out.println("omakase -p prefixer-simple");
-                System.out.println("omakase -p prefixer-heavy");
-
-                System.out.println("\nNote that there are additional parser configurations in the perf-test git branch.");
-                System.out.println("See PerfTestInput.java for the CSS sources.");
+            } else if (perf) {
+                if (arguments.isEmpty()) {
+                    RunPerfTest.printUsage();
+                } else {
+                    RunPerfTest.run(arguments);
+                }
             } else if (deploy) {
                 if (!exec("mvn deploy")) {
                     System.out.println("\n" + Colors.red("could not deploy to the internal aura maven repo"));
@@ -133,31 +112,31 @@ public class Run {
                 } else if (!exec("mvn deploy -P sfdc")) {
                     System.out.println("\n" + Colors.red("could not deploy to the sfdc nexus repo"));
                 }
-            } else if (local) {
-                new GeneratePrefixEnum().run();
-                new GenerateKeywordEnum().run();
-                new GeneratePropertyEnum().run();
-                System.out.println("If output does not reflect expected changes, try a mvn clean install first to recompile " +
-                    "any changed code");
             } else if (update) {
                 new GeneratePrefixEnum().run();
                 new GenerateKeywordEnum().run();
                 new GeneratePropertyEnum().run();
-                boolean updated = new GenerateBrowserEnum().run();
 
-                if (updated) {
-                    System.out.println("Browser.java was updated. Forcing recompilation of sources...");
-                    if (!exec("mvn compile test-compile")) {
-                        System.out.println("\n" + Colors.red("error regenerating java sources"));
+                if (!local) {
+                    boolean updated = new GenerateBrowserEnum().run();
+
+                    if (updated) {
+                        System.out.println("Browser.java was updated. Forcing recompilation of sources...");
+                        if (!exec("mvn compile test-compile")) {
+                            System.out.println("\n" + Colors.red("error regenerating java sources"));
+                        }
+                        System.out.println(Colors.yellow("Browser.java was updated and recompiled. \n" +
+                            "Please run this command again to ensure changes are picked up. \n" +
+                            "(Updated prefix data will not occur unless you do this!)"));
+                        System.exit(0);
                     }
-                    System.out.println(Colors.yellow("Browser.java was updated and recompiled. \n" +
-                        "Please run this command again to ensure changes are picked up. \n" +
-                        "(Updated prefix data will not occur unless you do this!)"));
-                    System.exit(0);
-                }
 
-                new GeneratePrefixTablesClass().run();
-                System.out.println(Colors.yellow("all data generated successfully"));
+                    new GeneratePrefixTablesClass().run();
+                }
+                System.out.println(Colors.yellow("all data generated successfully!"));
+
+                System.out.println("\nIf output does not reflect expected changes, try a mvn clean install first to recompile " +
+                    "any changed code");
             } else if (sub) {
                 new PrintSubscribableSyntaxTable().run();
             } else if (prefixedDef) {
