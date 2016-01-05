@@ -126,7 +126,7 @@ When registering plugins there are important details to keep in mind:
 
 #### SyntaxTree
 
-The `SyntaxTree` plugin is an extremely simple plugin that only grabs and stores a reference to the parsed `Stylesheet` object. It's an easy way for you to get access to the `Stylesheet` object without you having to write a custom plugin.
+The `SyntaxTree` plugin is an extremely simple plugin that only grabs and stores a reference to the parsed `Stylesheet` object. It's an easy way for you to get access to the `Stylesheet` object without having to write a custom plugin.
 
 ```java
 SyntaxTree tree = new SyntaxTree();
@@ -328,7 +328,7 @@ This is cumulative, so you can also add extra support to the defaults instead.
 
 To manually update the prefix data, see the [Scripts](#scripts) section below. Updating is a one-line shell command, and after an update the processed CSS automatically reflects any changes right away. This can be more efficient than using a mixin to handle vendor prefixes, as you would have to constantly check each prefixable property, selector, etc... to see if a prefix is still required.
 
-Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register an `AutoRefiner` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the [AutoRefiner](#AutoRefiner) section above for more information.
+Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register an `AutoRefiner` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the [AutoRefiner](#autorefiner) section above for more information.
 
 ##### Pruning
 
@@ -801,7 +801,7 @@ Iterable<PropertyValueMember> members = queryable.filter(PropertyValueMember.cla
 
 For a full example of a `FunctionRefiner` see `UrlRefiner`. For a full example of an `AtRuleRefiner` see `ConditionalsRefiner` and related classes.
 
-Note that generally speaking, by simply utilizing a parser from parser factory, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser, and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
+Note that generally speaking, by simply utilizing a parser from ParserFactory, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser, and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
 
 #### Base plugin
 
@@ -1208,7 +1208,7 @@ Writers are fairly simple... they are responsible for taking the parsed `SyntaxT
 Error managers are responsible for dealing with errors during processing, including parser errors or errors generated from a validator plugin.
 
 ### Refiners
-**Key Classes** `Refiner` `RefinerStrategy` `StandardRefinerStrategy`
+**Key Classes** `Refiner` `StandardRefiner`
 
 These classes handle refinement of selectors, declarations, at-rules and functions. These are also what handles custom CSS syntax.
 
