@@ -3,65 +3,55 @@ Omakase
 
 Fast, Java-based, plugin-oriented CSS3+ parser.
 
-Omakase (お任せ o-ma-ka-say) is a Japanese phrase that means "I'll leave it to you" (from Japanese "to entrust"). In Japan it can be used at any restaurant.
+Omakase (お任せ o-_ma_-ka-say) has very few dependencies and doesn't need to execute Ruby or JavaScript code. It runs entirely in Java.
 
 Features
 --------
 
-The two main goals of Omakase are speed and flexibility.
+Omakase can work as a parser, preprocessor, linter, minifier or all four. It gives you an AST that can be modified and validated.
 
-### Focus on speed
+### Super fast
+Omakase is engineered for speed. Compared to other Java-based, modern CSS parsers, Omakase parses ~300 lines of code up to 3x faster and ~1000 lines up to 5x faster. For very large files (over 10k lines) Omakase can potentially save hundreds of ms.
 
-Omakase is written with runtime usage needs in mind. While most CSS tools are intended to be used on the command line or at build time, Omakase takes into consideration the additional sensitivities of runtime-level performance.
+### Flexible
+Omakase is plugin-oriented, which means you can create plugins to modify, add, remove, validate or lint any aspect of the CSS.
 
-Part of the speed gains come from a 2-level parsing strategy. The first level separates the source code into selectors, declarations and at-rules only. The (optional or targeted) second level breaks each unit down further, for example into class selectors, type selectors, id selectors, etc... The second level can be conditionally applied to certain selectors, declarations and at-rules or all of them depending on applicability.
+Plugins can also be used to extend the CSS grammar and syntax. This allows you to create common features like variables,  mixins and nesting using whatever format you like. In fact much of the built-in functionality uses plugins.
 
-### Focus on flexibility
+### Awesome bundled plugins
+Omakase bundles several plugins, most notably:
 
-Omakase is a network of *plugins*. Plugins can subscribe to specific CSS syntax units to perform custom validation and/or rework any part of the CSS. The plugin framework is so flexible that much of the library-provided functionality and APIs are written using the same plugin infrastructure.
+- [automatic vendor prefixing](#prefixer) (supported by [caniuse.com](https://github.com/Fyrd/caniuse))
+- [conditional blocks](#conditionals)
+- [RTL direction flipping](#directionflip)
 
 ### Better error messaging
-
 Omakase is built 100% solely for parsing CSS, which means that the error messages are often more specific and easier to understand than from other parsers created from generic parser generators.
 
-### Awesome standard plugins
+### Easier programmatic usage
+Omakase is focused on runtime usage, and provides special features to make runtime parsing even faster, namely a 2-level parsing strategy. The first level separates the source into selectors, declarations and at-rules only. The (optional) second level breaks each unit down further, for example into class selectors, type selectors, id selectors, etc... This allows you to do a full pass during build time, but during runtime only parse the aspects of CSS that need to be reworked. This speed improvement is on top of the general performance numbers mentioned above.
 
-Omakase comes with some neat plugins out of the box, including:
+You can also parse snippets of CSS on-the-fly, such as a single selector or declaration value.
 
-- **Conditionals** - conditional if-style blocks
-- **Prefixer** - automatic vendor prefixing
-- **DirectionFlip** - automatic RTL support
+How to download
+---------------
 
-These and more are described below.
+Build jars from source by cloning this project locally and running `mvn install` from the project root (must have Java and Maven installed).
 
-### Built-in support for custom syntax
-
-You can easily specify custom syntax for functions, at-rules, declarations and selectors. See the "Extending the CSS syntax" below for more information.
-
-### Interactive shell
-
-This project includes an interactive shell, which allows you to write CSS input and evaluate the processed output in real-time. It even has automatic support for Sublime Text and TextMate. See the Interactive Shell section below more information.
+Or you can download a jar from [releases]. Note that no dependencies are included in the release jars. The two main dependencies are Guava and slf4j-api. See the pom.xml file for more details. Only the non-test dependencies are required for usage.
 
 Usage
 -----
 
-Omakase can be used as a parser, a preprocessor, a linter, or all three.
-
-### Basic usage
-
-Parsing is simple. All parsing starts with the `Omakase` class. The CSS source is specified using the `#source(CharSequence)` method, optional plugins are then registered, and finally parsing begins with a call to `#process()`. An example of the most basic form of parsing is as follows:
+All parsing starts with the `Omakase` class. The CSS source is specified using the `#source(CharSequence)` method, optional plugins are then registered, and then parsing is performed with a call to `#process()`. An example of the most basic form of parsing is as follows:
 
 ```java
 Omakase.source(input).process();
 ```
 
-However this is not very useful in and of itself. Usually you will register various plugins according to your needs.
+You will almost always include one or more plugins, however. For example, plugins are used for output/minification, automatic vendor prefixing, modifications to the AST, custom linting, and more.
 
-The most basic principle to understand when using Omakase is that nearly everything is organized into a set of _plugins_. Need to output the processed code in compressed or dev mode format? Register a `StyleWriter` plugin. Want to enable built-in validations? Register a `StandardValidation` plugin. Want to add your own custom rework, validation and linting? Create and register the applicable plugins.
-
-This loosely-coupled architecture allows us to achieve better performance and caters to the pattern of parsing a CSS source over and over with different configurations as opposed to parsing just once (which other libraries might necessitate for performance cost reasons).
-
-Note that only one instance of a plugin can be registered and that plugins will be executed in the order that they are registered. Thus, order can be extremely important for rework operations.
+Note that only one instance of a plugin can be registered per parsing operation.
 
 ### Output
 
@@ -82,7 +72,7 @@ StringBuilder builder = new StringBuilder();
 String out = verbose.writeTo(builder);
 ```
 
-By default, CSS is written out in _inline_ mode. Other availables modes include _verbose_ and _compressed_. Verbose mode will output newlines, spaces, comments, etc... Inline mode will write each rule on a single line. Compressed mode will eliminate as many characters as possible, including newlines, spaces, etc...
+By default, CSS is written out in _inline_ mode. Other available modes include _verbose_ and _compressed_. Verbose mode will output newlines, spaces, comments, etc... Inline mode will write each rule on a single line. Compressed mode will eliminate as many characters as possible, including newlines, spaces, etc...
 
 ```java
 StyleWriter verbose = StyleWriter.verbose();
@@ -97,14 +87,14 @@ Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyw
 String output = StyleWriter.writeSingle(declaration);
 ```
 
-If you need to honor any specified *CustomWriter* overrides (explained below) then use the alternative instance-method instead:
+If you are using *CustomWriter* overrides (explained below) then use the instance-method instead:
 
 ```java
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-writer.writeSnippet(declaration); // will honor any specified overrides
+writer.writeSnippet(declaration);
 ```
 
-You can also override how any individual syntax unit is written. For more information see the "Custom writers" section below.
+You can also override how any individual syntax unit is written. For more information see the [Custom writers](#custom-writers) section below.
 
 ### Validation
 
@@ -116,11 +106,11 @@ All validation is written and registered as plugins. To enable the standard vali
 Omakase.source(input).use(new StandardValidation()).process();
 ```
 
-This auto-refines every selector, declaration and at-rule (see the "AutoRefiner" section below for more information on auto-refinement) and registers the standard list of built-in validators.
+This auto-refines every selector, declaration and at-rule (see the [AutoRefiner](#autorefiner) section below for more information on auto-refinement) and registers the standard list of built-in validators.
 
 Keep in mind that validation methods will always be invoked after rework methods, but otherwise they will be executed in the order that the plugin class was registered.
 
-You can also add your own custom validators. For examples see the "Custom validation" section below.
+You can also add your own custom validators. For examples see the [Custom validation](#custom-validation) section below.
 
 Note that basic CSS grammar is verified independently of any plugins as part of the core parser.
 
@@ -132,7 +122,7 @@ When registering plugins there are important details to keep in mind:
 - Subscription methods will be executed in the order that its plugin class was registered.
 - All `@Rework` subscription methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
 
-### Library-provided Plugins
+### Bundled plugins
 
 #### SyntaxTree
 
@@ -164,9 +154,9 @@ AutoRefiner refinement = new AutoRefiner().all();
 Omakase.source(input).use(refinement).process();
 ```
 
-You may be wondering when you *wouldn't* want auto refinement. The main use-case is when you need to perform dynamic substitions in the CSS. You first parse the CSS with auto-refinement (automatically done when a StandardValidation plugin is added). This ensures you actually have valid CSS. You can store this preprocessed source code in memory or on the filesystem.
+You may be wondering when you *wouldn't* want auto refinement. The main use-case is when you need to perform dynamic substitutions in the CSS at runtime. You first parse the CSS with auto-refinement (either with AutoRefiner, or StandardValidation which automatically includes AutoRefiner). This ensures you actually have valid CSS. You can store this preprocessed source code in memory or on the filesystem.
 
-During runtime, you can parse the CSS again to perform the dynamic substitions. However this time, since you have already ensured that the CSS is valid, there is no need to parse more than what is necessary to perform the dynamic substitions. You can simply refine only those selectors or declarations that you need and nothing more. This will result in faster parsing performance and can be the difference in making runtime-level CSS modifications viable. 
+During runtime, you can parse the CSS again to perform the dynamic substitutions. However this time, since you have already ensured that the CSS is valid, there is no need to parse more than what is necessary to perform the dynamic substitions. You can simply refine only those selectors or declarations that you need and nothing more. This will result in faster parsing performance and can be the difference in making runtime-level CSS modifications viable.
 
 #### Conditionals
 
@@ -228,7 +218,7 @@ You can also use logical negation and logical or operators in the CSS:
 }
 ```
 
-Finally, if you would like to enable conditions and validate them but hold off on actually evaluating them, you can specify `passthroughMode` as true:
+Finally, if you would like to enable conditionals and validate them but hold off on actually evaluating them, you can specify `passthroughMode` as true:
 
 ```java
 new Conditionals("ie7").config().passthroughMode(true);
@@ -292,11 +282,8 @@ compared to quoted:
 
 #### Prefixer
 
-_experimental!_
-
 The `Prefixer` plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules
-function and keyword names, and automatically prepend prefixed-equivalents based on the specified level of browser support. For
-example:
+function and keyword names, and automatically prepend prefixed-equivalents based on the specified level of browser support. For example:
 
 ```css
 .class {
@@ -339,15 +326,15 @@ Omakase.source(input).use(prefixing).process();
 
 This is cumulative, so you can also add extra support to the defaults instead.
 
-To manually update the prefix data, see the "Scripts" section below. Updating is a one-line shell command, and after an update the processed CSS automatically reflects any changes right away. This can be more efficient than using a mixin to handle vendor prefixes, as you would have to constantly check each prefixable property, selector, etc... to see if a prefix is still required.
+To manually update the prefix data, see the [Scripts](#scripts) section below. Updating is a one-line shell command, and after an update the processed CSS automatically reflects any changes right away. This can be more efficient than using a mixin to handle vendor prefixes, as you would have to constantly check each prefixable property, selector, etc... to see if a prefix is still required.
 
-Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register an `AutoRefiner` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the "AutoRefiner" section above for more information.
+Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register an `AutoRefiner` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the [AutoRefiner](#AutoRefiner) section above for more information.
 
 ##### Pruning
 
 The `Prefixer` plugin works well with existing CSS that is already littered with various vendor prefixes. By default, if a prefix is already present then it will be preserved as-is. That is, a duplicate prefix will not be added. This allows you to turn on and use the plugin right away without having to clean up your CSS file. It can even be a way for you to specify a value for the prefixed declaration that differs from the unprefixed one.
 
-On the other hand, in many cases it will be more performant to actually have all unecessary prefixes removed. You can do this with the `prune` method.
+On the other hand, in many cases it will be more performant to actually have all unnecessary prefixes removed. You can do this with the `prune` method.
 
 For example, take the following:
 
@@ -479,7 +466,7 @@ Here's a list of what's currently supported:
     repeating-linear-gradient
 
 
-You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the "Scripts" section below.
+You can view this yourself from the command line, as well as which of these will actually be auto-prefixed by default, by using the `omakase --prefixed-all` command. See the [Scripts](#scripts) section below.
 
 #### PrefixCleaner
 
@@ -491,17 +478,36 @@ PrefixCleaner cleaner = PrefixCleaner.mismatchedPrefixedUnits();
 Omakase.source(input).use(prefixer).use(cleaner).process();
 ```
 
-This will remove prefixed declarations inside of prefixed at rules, where the declaration's prefix doesn't match the at-rules prefix.
+This will remove prefixed declarations inside of prefixed at rules, where the declaration's prefix doesn't match the at-rule's prefix.
+
+#### DirectionFlip
+
+This plugin will handle flipping certain property names and values from left-to-right to right-to-left.
+
+```java
+DirectionFlipPlugin rtl = new DirectionFlipPlugin();
+Omakase.source(source).use(rtl).process();
+```
+
+It flips property names such as `left` and `border-left` to `right` and `border-right`. It also rearranges certain values like padding, margin and border-radius shorthand so that the right and left units are swapped.
+
+If you need to prevent certain declarations from being flipped, you can use a CSS annotation like so:
+
+```css
+.button {
+  /* @noflip */ padding-left: 10px;
+}
+```
 
 ### Creating custom plugins
 
-In addition to the standard library plugins, you can create and register your own custom plugins as well. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules.
+In addition to the standard library plugins, you can create and register your own custom plugins. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules. You can also use plugins to extend the CSS syntax and grammar.
 
 Plugins are essentially plain java objects that implement one of the _plugin interfaces_ and define one or more _subscription methods_ to a particular AST object (e.g., `Selector` or `Declaration`). The subscription method does the actual rework or validation as appropriate.
 
 Plugins are registered exactly the same as as any of the standard built-in plugins such as `StyleWriter` or `AutoRefiner`.
 
-See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
+See the [Subscribable Syntax Units](#subscribable-syntax-units) section below for the definitive list of all subscribable AST objects.
 
 #### Plugin interfaces
 
@@ -517,9 +523,9 @@ Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
 
 #### Custom rework
 
-The term _rework_ refers to the process of changing the processed CSS source code, e.g., changing a class name, adding a declaration, removing a rule, etc... Omakase's rework capabilities allow you to easily change nearly any aspect of the CSS. You can add, change or remove selectors, add, change or remove declarations, add, change or remove rules, and... you get the picture.
+The term _rework_ refers to the process of changing the processed CSS source code, e.g., changing a class name, adding a declaration, removing a rule, etc... Omakase allows you to easily change nearly any aspect of the CSS. You can add, change or remove selectors, add, change or remove declarations, add, change or remove rules, and... you get the picture.
 
-Each AST object contains setters and getters for working with its values. In addition there are several utility classes to make everything as convenient as possible. For Omakase, reworking the CSS tree is a first-class operation and is fully supported.
+Each AST object contains setters and getters for working with its values. In addition, there are several utility classes to make everything as convenient as possible. For Omakase, reworking the CSS tree is a first-class operation and is fully supported.
 
 Here is an example of a simple rework operation to prefix every selector with a class name called "myPrefix":
 
@@ -544,7 +550,7 @@ Notice the following details:
 
 This is the general pattern of performing rework. The class adds as many methods as desired, each with the `@Rework` annotation and a single argument which is the type of syntax unit to rework. The method will be automatically invoked by the framework, allowing you to perform any operations on the given unit.
 
-For more advanced examples on performing rework see the `ReworkTest.java` class.
+For more advanced examples on performing rework see the [ReworkTest.java](src/test/java/com/salesforce/omakase/functional/ReworkTest.java) class.
 
 ##### Dynamic AST creation and modification
 
@@ -573,8 +579,8 @@ myClassSelector.name("the-new-name");
 
 // check if a selector has a particular (class|id|type) simple selector
 if (Selectors.hasClassSelector(selector, "myClass")) {...}
-if (Selectors.hasClassSelector(selector, "myId")) {...}
-if (Selectors.hasClassSelector(selector, "div")) {...}
+if (Selectors.hasIdSelector(selector, "myId")) {...}
+if (Selectors.hasTypeSelector(selector, "div")) {...}
 
 // find the first matching (class|id|type) simple selector
 Optional<ClassSelector> button = Selectors.findClassSelector(selector, "button");
@@ -589,17 +595,17 @@ if(Selectors.hasTypeSelector(Selectors.adjoining(selector1), "div")) {...}
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
 
 // another example
-PropertyName name = PropertyName.using("new-prop");
+PropertyName name = PropertyName.of("new-prop");
 Declaration declaration = new Declaration(name, KeywordValue.of("blah"));
 
 // another example
 NumericalValue val1 = NumericalValue.of(1, "px");
 NumericalValue val2 = NumericalValue.of(5, "px");
-PropertyValue value = TermList.ofValues(OperatorType.SPACE, val1, val2);
+PropertyValue value = PropertyValue.ofTerms(OperatorType.SPACE, val1, val2);
 Declaration declaration = new Declaration(Property.MARGIN, value);
 
 // another example
-PropertyName prop = PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
+PropertyName prop = PropertyName.of(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
 Declaration declaration = new Declaration(prop, KeywordValue.of(Keyword.NONE));
 
 // append a declaration to a rule
@@ -609,7 +615,7 @@ rule.declarations().append(myNewDeclaration);
 Rule rule = new Rule();
 rule.selectors().append(new Selector(new ClassSelector("new")));
 rule.declarations().append(new Declaration(Property.COLOR, HexColorValue.of("#fff")));
-rule.declarations().append(new Declaration(Property.FONT_SIZE, NumericalValue.of(1).decimalValue(5).unit("em")));
+rule.declarations().append(new Declaration(Property.FONT_SIZE, NumericalValue.of(1.5).unit("em")));
 
 // check if a declaration is for a specific property name
 if (declaration.isProperty(Property.DISPLAY)) {...}
@@ -632,21 +638,21 @@ if (keyword.isPresent()) {
     keyword.get().keyword(Keyword.NONE);
 }
 
-// remove (detach) a selector, declaration, rule, etc...
-someSelector.detach();
-someDeclaration.detach();
-someRule.detach();
+// remove (destroy) a selector, declaration, rule, etc...
+someSelector.destroy();
+someDeclaration.destroy();
+someRule.destroy();
 
 // for more examples see the many unit tests
 ```
 
-Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscriptions interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins. You can remove any unit from the tree by calling `detach`. Note that doing this will prevent that unit from being delivered to any subsequent subscription methods.
+Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscription methods interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins. You can remove any unit from the tree by calling `#destroy`. Note that doing this will prevent that unit from being delivered to any subsequent subscription methods. Destroyed units cannot be added back to the tree, but they can be cloned with `#copy`.
 
 There are other utilities for working with units in the following utility classes:
 
 - Selectors.java
-- Values.java
 - Declarations.java
+- Values.java
 - Actions.java
 - Parsers.java
 
@@ -666,7 +672,7 @@ public class Validations implements Plugin {
 
         Optional<NumericalValue> number = Values.asNumerical(declaration.propertyValue());
 
-        if (number.isPresent() && number.get().unit().equals("px")) {
+        if (number.isPresent() && number.get().unit().isPresent() && number.get().unit().get().equals("px")) {
             em.report(ErrorLevel.FATAL, declaration, "Font sizes must use relative units");
         }
     }
@@ -679,10 +685,10 @@ public class Validations implements Plugin {
 
         if (propertyName.isPrefixed()) {
             boolean found = false;
-            String expected = propertyName.unprefixedName();
+            String expected = propertyName.unprefixed();
 
             // go through each declaration in the block, looking for one with the unprefixed name
-            for (Declaration d : declaration.group().get()) {
+            for (Declaration d : declaration.group() {
                 if (d.isProperty(expected)) {
                     found = true;
                     break;
@@ -703,9 +709,7 @@ Keep in mind that all validators run after the rework phase has been completed. 
 
 As mentioned above, many plugins, especially ones with `@Rework`, will need to register dependencies on other plugins.
 
-You  will have a dependency on `AutoRefiner` in cases where you have subscriptions to syntax unit types more specific than `Selector`, `Declaration` or `AtRule`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the "Subscribable Syntax Units" section below.
-
-If your plugin only needs refined selector units then `AutoRefiner#selectors()` will suffice, or `AutoRefiner#declarations()` for declarations. To nab everything then you can use `AutoRefiner#all()`.
+You  may want a dependency on `AutoRefiner` in cases where you have subscriptions to syntax unit types more specific than `Selector`, `Declaration` or `AtRule`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the [Subscribable Syntax Units](#subscribable-syntax-units) section below.
 
 Here is an example of a plugin with dependencies:
 
@@ -758,7 +762,7 @@ Subscribing to an interface type will allow you to receive all instances of that
 
 Within a particular class, the more specifically-typed subscription will be delivered before the more generally-typed subscriptions. For example, in a class with subscriptions to `ClassSelector`, `SimpleSelector` and `Syntax`, the methods will always be invoked in that exact order.
 
-See the "Subscribable Syntax Units" section below for the definitive list of all subscribable AST objects.
+See the [Subscribable Syntax Units](#subscribable-syntax-units) section below for the definitive list of all subscribable AST objects.
 
 #### Observe
 
@@ -775,16 +779,16 @@ Omakase provides a powerful mechanism for extending the standard CSS syntax. You
 - Custom selectors
 - Custom declarations
 
-To get started you must implement the `SyntaxPlugin` interface. This has a single method which requires you to return an instance of a `RefinerStrategy` (it's usually safe to create your instance once and store it statically). There are several `RefinerStrategy` options based on what you would like to customize:
+To get started you must implement the `SyntaxPlugin` interface. This has a single method which requires you to return an instance of a `Refiner` (it's usually safe to create your instance once and store it statically). There are several `Refiner` options based on what you would like to customize:
 
-- **FunctionRefinerStrategy** - for custom functions
-- **AtRuleRefinerStrategy** - for custom at-rule syntax
-- **SelectorRefinerStrategy** - for custom selector syntax
-- **DeclarationRefinerStrategy** for custom declaration syntax
+- **FunctionRefiner** - for custom functions
+- **AtRuleRefiner** - for custom at-rule syntax
+- **SelectorRefiner** - for custom selector syntax
+- **DeclarationRefiner** for custom declaration syntax
 
-The `RefinerStrategy` you return must implement one or more of these interfaces. Your `SyntaxPlugin` instance is registered just like any other plugn.
+The `RefinerStrategy` you return must implement one or more of these interfaces. Your `SyntaxPlugin` instance is registered just like any other plugin.
 
-See the various *RefinerStrategy interfaces for more instructions on implementing their methods. The general idea is that these custom refiners work in a chain. Whenever an `AtRule`, `Selector`, `Declaration` or `RawFunction` is refined, it gets passed through the chain of registered custom `RefinerStrategy` objects. If the first custom `RefinerStrategy` determines that the given object is not applicable, it returns false and the object is passed on to the next refiner. Finally, if no custom refiners handle the object then the `StandardRefiner` will be used.
+See the various *Refiner interfaces for more instructions on implementing their methods. The general idea is that these custom refiners work in a chain. Whenever an `AtRule`, `Selector`, `Declaration` or `RawFunction` is refined, it gets passed through the chain of registered custom `Refiner` objects. If the first custom `Refiner` determines that the given object is not applicable, it returns false and the object is passed on to the next refiner. Finally, if no custom refiners handle the object then the `StandardRefiner` will be used.
 
 For any non-trivial custom syntax you will most likely be required to parse the raw content. You can utilize the `Source` class as a parsing utility. More importantly, nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on `ParserFactory` and `Parsers`. For example, here is how you would parse a raw string into a list of terms and operators:
 
@@ -792,10 +796,10 @@ For any non-trivial custom syntax you will most likely be required to parse the 
 Source source = new Source(rawContent, xyz.line(), xyz.column());
 QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 ParserFactory.termSequenceParser().parse(source, queryable, refiner);
-Iterable<TermListMember> members = queryable.filter(TermListMember.class);
+Iterable<PropertyValueMember> members = queryable.filter(PropertyValueMember.class);
 ```
 
-For a full example of a `FunctionRefinerStrategy` see `UrlFunctionRefinerStrategy` and related classes. For a full example of a `AtRuleRefinerStrategy` see `ConditionalsRefinerStrategy` and related classes.
+For a full example of a `FunctionRefiner` see `UrlRefiner`. For a full example of an `AtRuleRefiner` see `ConditionalsRefiner` and related classes.
 
 Note that generally speaking, by simply utilizing a parser from parser factory, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser, and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
 
@@ -1014,7 +1018,7 @@ To get started, you must first run the omakase setup script. Under the omakase p
 
     script/setup.sh
 
-This will enable the `omakase` command from within this project folder. See the Scripts section below for more information. Once this is done, you can start up the interactive shell by typing in the terminal:
+This will enable the `omakase` command from within this project folder. See the [Scripts](#scripts) section below for more information. Once this is done, you can start up the interactive shell by typing in the terminal:
 
     omakase --interactive
 
@@ -1056,14 +1060,12 @@ You can test that this is working by simply typing `subl` in the terminal. It sh
 
 TextMate requires the `mate` command. In TextMate 2 you can install this by going to Preferences -> Terminal -> Click the Install button. Again you can test this if the `mate` command in terminal opens up TextMate.
 
-Development and Contribution
-----------------------------
+Development
+-----------
 
 Before checking anything in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of the `idea` or `eclipse` folders.
 
 As of right now the (strongly) preferred IDE for contribution is IntelliJ IDEA. This is mainly because the existing source code and style closely conforms to the idea settings included in the project. If you use eclipse or something else then be sure to following the existing coding conventions manually if need be.
-
-Once you get everything set up, read the "Architecture" section (found below) so you can start to get an idea of how things work and are organized.
 
 ### Building
 
@@ -1099,7 +1101,7 @@ The important takeaway is that **all** unit tests must be written using fest ass
 
 There are several enums such as `Keyword.java` and `Browser.java` that contain values that will inevitably need to be updated. Most of these are stored in data files under `src/test/resources/data/`.
 
-You can use a script to regenerate the java source files (see below) after updating, or you can directly run the main method on the classes under `src/test/.../omakase/test/util/tool`.
+You can use a [script](#scripts) to regenerate the java source files after updating, or you can directly run the main method on the classes.
 
 ### Scripts
 
@@ -1113,20 +1115,20 @@ This will setup links to the omakase CLI script. Now you can run the `omakase` c
 
     ~/dev/omakase > omakase
 
-      Usage: omakase [options]
+    Usage: omakase [options]
 
-      Options:
+    Options:
 
-        -b (--build)                  build the project
-        -d (--deploy)                 build and deploy jars (requires additional setup, see deploy.md)
-        -g (--generate, --gen)        regenerate all data enum and data class source files
-        -h (--help)                   print this help message
-        -i (--interactive, --shell)   interactive shell
-        -p (--perf) <mode-input>      performance test (ex. "-p full", "-p full-heavy")
-        -s (--syntax, --sub)          print the subscribable syntax table
-        -u (--update)                 update and regenerate the prefix data only
-        -v (--prefixed-def)           print what is auto-prefixed by Prefixer.defaultBrowserSupport()
-        -w (--prefixed-all)           print all properties, at-rules, etc...that are supported by Prefixer
+      -b (--build)                  build the project
+      -d (--deploy)                 build and deploy jars (requires additional setup, see deploy.md)
+      -h (--help)                   print this help message
+      -i (--interactive, --shell)   interactive shell
+      -l (--local-only)             only regenerate local data, no prefix data (used with -u option)
+      -p (--perf) <args>            performance test
+      -s (--syntax, --sub)          print the subscribable syntax table
+      -u (--update)                 regenerate data enum, data class and prefixes source files
+      -v (--prefixed-def)           print what is auto-prefixed by Prefixer.defaultBrowserSupport()
+      -w (--prefixed-all)           print all properties, at-rules, etc...that are supported by Prefixer
 
 For example, updating the prefix info:
 
@@ -1138,18 +1140,14 @@ Printing the subscribable syntax table:
 
 Running the performance test:
 
-    omakase -p full
-    omakase -p thin
-    omakase -p full-button
-    omakase -p prefixer-heavy
-
+    omakase -p
 
 Architecture
 ------------
 
 Omakase is a CSS parser built from the ground up. Unlike other open-source CSS parsers it is not built on a parser generator such as JavaCC or Antlr. Instead, it relies on many small and simple java objects that know how to consume various parts of CSS syntax.
 
-The main motivation behind building a new parser over utilizing an existing library include achieving better runtime performance and better support for dynamically reworking CSS trees.
+The main motivation behind building a new parser over utilizing an existing library include achieving better runtime performance, the ability to extend the grammar, better error messaging, etc...
 
 The project requires _Java 7_, _git_ and _maven_. The general architecture of the project can be summarized as follows:
 
@@ -1162,7 +1160,7 @@ The project requires _Java 7_, _git_ and _maven_. The general architecture of th
 7. **Refiners** - Handles standard and custom refinement of AST objects.
 
 ### Parsers
-**Key Classes** `Token` `Tokens` `Stream` `Parser` `ParserFactory`
+**Key Classes** `Token` `Tokens` `Source` `Parser` `ParserFactory`
 
 Parsers are simple java objects that know how to parse specific aspects of CSS syntax. Parsers do not maintain any state, and only one instance of each parser is instantiated and stored in `ParserFactory`.
 
@@ -1173,8 +1171,6 @@ The second level occurs individually per instance, e.g., each particular `Select
 It's important to understand that the second level may or may not be executed or may only be executed on certain instances. Also the second level for one selector instance may occur at a different time than another selector instance.
 
 This process allows us to be more specific about what actually gets parsed. For example, on a first parsing pass we may want to parse and validate everything, but on a second pass we may not care about fully parsing selectors anymore. This pinpointed level of detail allows for better performance, especially important in production scenarios.
-
-(However, even when doing away with this separation and always parsing and refining everything every time, Omakase still executes faster than other leading open-source CSS parsers.)
 
 When a `Parser` has successfully parsed some content, it will construct the appropriate AST object and give it to the `Broadcaster`. Ultimately, the `Broadcaster` will pass the AST object to the registered subscription methods for that particular AST object type.
 
@@ -1190,7 +1186,7 @@ AST objects generally contain little to no validation logic. Most validation is 
 
 A `Plugin` subscribes to one or more AST objects (one per method) to perform rework or validation. Methods on the plugin are annotated with `@Rework` or `@Validate` annotations as appropriate. These methods are known as subscription methods. Each subscription method is subscribed to one particular AST object type via its parameter. This parameter is how we know which methods to invoke when various AST objects are sent to be broadcasted.
 
-Plugins are registered during parser setup via `Omakase#request` or `Omakase#add`. Plugins can and often do have dependencies on each other, which can be registered by implementing the `DependentPlugin` interface.
+Plugins are registered during parser setup via `Omakase#use`. Plugins can and often do have dependencies on each other, which can be registered by implementing the `DependentPlugin` interface.
 
 The general Omakase philosophy is that much of the internal logic as well as all of the consumer logic is organized into a set of plugins.
 
@@ -1216,14 +1212,9 @@ Error managers are responsible for dealing with errors during processing, includ
 
 These classes handle refinement of selectors, declarations, at-rules and functions. These are also what handles custom CSS syntax.
 
-### Notes
-
-Omakase is *not* explicitly designed for full thread-safety. That is, while many core classes have been written to be thread-safe, it is not recommended to try to share AST objects (anything that extends from `Syntax`) between threads. If you are doing a parse operation and working with the resultant AST objects within a single thread then everything should be fine.
-
 ### Dependencies Graph
 
 To view statistics on dependencies, run:
 
     mvn project-info-reports:dependencies
     open target/site/dependencies.html
-
