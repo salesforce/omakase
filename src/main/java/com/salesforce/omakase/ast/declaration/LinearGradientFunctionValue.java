@@ -31,6 +31,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.util.Args;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -176,7 +177,9 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        appendable.append(name()).append('(').append(args).append(')');
+        appendable.append(name()).append('(');
+        appendable.append(writer.isVerbose() ? args : Args.clean(args));
+        appendable.append(')');
     }
 
     @Override

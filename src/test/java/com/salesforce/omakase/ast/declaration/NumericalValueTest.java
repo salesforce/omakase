@@ -245,36 +245,48 @@ public class NumericalValueTest {
     public void writeWithIntegerOnly() throws IOException {
         numerical = NumericalValue.of(10);
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("10");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("10");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("10");
     }
 
     @Test
     public void writeWithIntegerAndUnit() throws IOException {
         numerical = NumericalValue.of(10, "px");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("10px");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("10px");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("10px");
     }
 
     @Test
     public void writeWithIntegerAndDecimal() throws IOException {
         numerical = new NumericalValue(1, 1, "5.5");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("5.5");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("5.5");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("5.5");
     }
 
     @Test
     public void writeWithIntegerDecimcalAndUnit() throws IOException {
         numerical = NumericalValue.of(10.3).unit("em");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("10.3em");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("10.3em");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("10.3em");
     }
 
     @Test
     public void writeWithIntegerDecimcalAndUnitFromString() throws IOException {
         numerical = NumericalValue.of("10.3", "em");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("10.3em");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("10.3em");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("10.3em");
     }
 
     @Test
     public void writeWithNegativeSign() throws IOException {
         numerical = NumericalValue.of(10).explicitSign(NumericalValue.Sign.NEGATIVE);
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("-10");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("-10");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("-10");
     }
 
     @Test
@@ -287,24 +299,121 @@ public class NumericalValueTest {
     public void writeIntegerOnlyAndZeroValue() throws IOException {
         numerical = NumericalValue.of(0);
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
     }
 
     @Test
-    public void writeHasDecimalAndIntegerHasZeroValue() throws IOException {
+    public void writeHasDecimalAndLeadingZero() throws IOException {
         numerical = NumericalValue.of(0.4);
-        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo(".4");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0.4");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo(".4");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo(".4");
     }
 
     @Test
-    public void writeHasDecimalAndIntegerHasZeroValueFromString() throws IOException {
+    public void writeHasDecimalAndLeadingZeroFromString() throws IOException {
         numerical = new NumericalValue(1, 1, "0.4");
-        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo(".4");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0.4");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo(".4");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo(".4");
     }
 
     @Test
-    public void writeWithDecimalAndUnitAndIntegerHasZeroValue() throws IOException {
+    public void writeHasDecimalAndUnitAndLeadingZeroValue() throws IOException {
         numerical = NumericalValue.of(0.4).unit("rem");
-        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo(".4rem");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0.4rem");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo(".4rem");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo(".4rem");
+    }
+
+    @Test
+    public void writeHasMultipleLeadingZeros() throws Exception {
+        numerical = new NumericalValue(1, 1, "0000.4");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0000.4");
+        // this is not so much deliberate as just acceptable
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0000.4");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0000.4");
+    }
+
+    @Test
+    public void writeHasLeadingZeroAndDecimalZero() throws Exception {
+        numerical = new NumericalValue(1, 1, "0.0");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0.0");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeHasLeadingZeroAndMultipleDecimalZeros() throws Exception {
+        numerical = new NumericalValue(1, 1, "0.0000");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0.0000");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeHasLeadingZeroAndDecimalZeroAndUnit() throws Exception {
+        numerical = new NumericalValue(1, 1, "0.0").unit("px");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0.0px");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeHasMultipleZeros() throws Exception {
+        numerical = new NumericalValue(1, 1, "0000");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0000");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeHasMultipleZerosAndUnit() throws Exception {
+        numerical = new NumericalValue(1, 1, "0000").unit("rem");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0000rem");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeHasMultipleZerosEmptyLeading() throws Exception {
+        numerical = new NumericalValue(1, 1, ".00");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo(".00");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeHasSingleZeroAndUnit() throws Exception {
+        numerical = new NumericalValue(1, 1, "0").unit("px");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0px");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0");
+    }
+
+    @Test
+    public void writeZeroWithTimeUnit() throws Exception {
+        numerical = new NumericalValue(1, 1, "0").unit("s");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0s");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0s");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0s");
+    }
+
+    @Test
+    public void writeZeroWithAngleUnit() throws Exception {
+        numerical = new NumericalValue(1, 1, "00").unit("deg");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("00deg");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0deg");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0deg");
+    }
+
+    @Test
+    public void writeZeroWithUnknownUnit() throws Exception {
+        numerical = new NumericalValue(1, 1, "0").unit("xxx");
+        assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("0xxx");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("0xxx");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("0xxx");
     }
 
     @Test
@@ -317,24 +426,32 @@ public class NumericalValueTest {
     public void writeLargeValueFromDoubleTrailingZeroes() {
         numerical = NumericalValue.of(10000000000.100000000000);
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("10000000000.1");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("10000000000.1");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("10000000000.1");
     }
 
     @Test
     public void writeLargeValueFromStringTrailingZeroes() {
         numerical = NumericalValue.of("10000000000.100000000000");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("10000000000.100000000000");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("10000000000.100000000000");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("10000000000.100000000000");
     }
 
     @Test
     public void writeValueWithLeadingZeroInDecimal() {
         numerical = NumericalValue.of(1.083, "px");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("1.083px");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("1.083px");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("1.083px");
     }
 
     @Test
     public void writeValueWithLeadingZeroInDecimalFromString() {
         numerical = new NumericalValue(1, 1, "1.083");
         assertThat(StyleWriter.verbose().writeSnippet(numerical)).isEqualTo("1.083");
+        assertThat(StyleWriter.inline().writeSnippet(numerical)).isEqualTo("1.083");
+        assertThat(StyleWriter.compressed().writeSnippet(numerical)).isEqualTo("1.083");
     }
 
     @Test

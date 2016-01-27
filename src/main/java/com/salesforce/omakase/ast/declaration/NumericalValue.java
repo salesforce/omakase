@@ -26,7 +26,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -36,17 +38,18 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * A numerical value (e.g., 1 or 1px or 3.5em).
- * <p/>
+ * <p>
  * The unit is optional and is any keyword directly following the number value, such as px, em, or ms. The sign is also optional,
  * and is only defined if explicitly included in the source. In other words, in "5px" the sign will <b>not</b> be {@link
  * Sign#POSITIVE} but {@link Optional#absent()}.
- * <p/>
+ * <p>
  * To dynamically create a {@link NumericalValue} use on of the constructor methods, for example:
  * <pre>
  * <code>NumericalValue number = NumericalValue.of(10, "px");</code>
@@ -58,9 +61,12 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 @Subscribable
 @Description(value = "individual numerical value", broadcasted = REFINED_DECLARATION)
 public final class NumericalValue extends AbstractTerm {
+    private static final CharMatcher ZERO = CharMatcher.is('0');
+    private static final Set<String> DISCARDABLE_UNITS = ImmutableSet.of("px", "em", "rem"); // can only contain distance units
+
     private String raw;
-    private Optional<String> unit = Optional.absent();
-    private Optional<Sign> explicitSign = Optional.absent();
+    private String unit;
+    private Sign explicitSign;
 
     /** Represents the sign of the number (+/-) */
     public enum Sign {
@@ -101,7 +107,7 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Constructs a new {@link NumericalValue} instance (used for dynamically created {@link Syntax} units).
-     * <p/>
+     * <p>
      * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
      *
      * @param value
@@ -122,16 +128,16 @@ public final class NumericalValue extends AbstractTerm {
     public NumericalValue value(int value) {
         this.raw = Integer.toString(Math.abs(value));
         if (value < 0) {
-            explicitSign = Optional.of(Sign.NEGATIVE);
+            explicitSign = Sign.NEGATIVE;
         } else {
-            explicitSign = Optional.absent();
+            explicitSign = null;
         }
         return this;
     }
 
     /**
      * Sets the numerical value with a decimal point.
-     * <p/>
+     * <p>
      * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
      *
      * @param value
@@ -146,19 +152,19 @@ public final class NumericalValue extends AbstractTerm {
         fmt.setMaximumFractionDigits(340);
         this.raw = fmt.format(Math.abs(value));
         if (value < 0) {
-            explicitSign = Optional.of(Sign.NEGATIVE);
+            explicitSign = Sign.NEGATIVE;
         } else {
-            explicitSign = Optional.absent();
+            explicitSign = null;
         }
         return this;
     }
 
     /**
      * Gets the numerical value as a string.
-     * <p/>
-     * Note that if the value is negative, it will not be shown here, see {@link #explicitSign()}, or for mathematical
-     * operations see {@link #intValue()} or {@link #doubleValue()}.
-     * <p/>
+     * <p>
+     * Note that if the value is negative, it will not be shown here, see {@link #explicitSign()}, or for mathematical operations
+     * see {@link #intValue()} or {@link #doubleValue()}.
+     * <p>
      * For math operations, {@link #doubleValue()} is available instead.
      *
      * @return The numerical value.
@@ -169,7 +175,7 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Gets the numerical value as a double.
-     * <p/>
+     * <p>
      * Note that this may result in an exception if the current string value is too large for a double. This performs a
      * calculation so cache the result if using more than once.
      *
@@ -182,7 +188,7 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Gets the numerical value as an integer. Usually you should use {@link #doubleValue()} instead unless you are ok with
-     * discarding any present floating point value. This performs a calculation so cache the result if using more than once.
+     * discarding any present decimal value. This performs a calculation so cache the result if using more than once.
      *
      * @return The int value.
      */
@@ -200,7 +206,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return this, for chaining.
      */
     public NumericalValue unit(String unit) {
-        this.unit = Optional.fromNullable(unit);
+        this.unit = unit;
         return this;
     }
 
@@ -210,7 +216,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return The unit, or {@link Optional#absent()} if not set.
      */
     public Optional<String> unit() {
-        return unit;
+        return Optional.fromNullable(unit);
     }
 
     /**
@@ -222,7 +228,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return this, for chaining.
      */
     public NumericalValue explicitSign(Sign sign) {
-        this.explicitSign = Optional.fromNullable(sign);
+        this.explicitSign = sign;
         return this;
     }
 
@@ -232,7 +238,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return The sign, or {@link Optional#absent()} if not set.
      */
     public Optional<Sign> explicitSign() {
-        return explicitSign;
+        return Optional.fromNullable(explicitSign);
     }
 
     /**
@@ -241,7 +247,7 @@ public final class NumericalValue extends AbstractTerm {
      * @return True if a sign is present and the sign is negative, false otherwise.
      */
     public boolean isNegative() {
-        return explicitSign.isPresent() && explicitSign.get() == Sign.NEGATIVE;
+        return explicitSign == Sign.NEGATIVE;
     }
 
     /**
@@ -253,14 +259,14 @@ public final class NumericalValue extends AbstractTerm {
     public String textualValue() {
         StringBuilder builder = new StringBuilder();
 
-        if (explicitSign.isPresent()) {
-            builder.append(explicitSign.get().symbol);
+        if (explicitSign != null) {
+            builder.append(explicitSign.symbol);
         }
 
         builder.append(raw);
 
-        if (unit.isPresent()) {
-            builder.append(unit.get());
+        if (unit != null) {
+            builder.append(unit);
         }
 
         return builder.toString();
@@ -268,32 +274,43 @@ public final class NumericalValue extends AbstractTerm {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // sign
-        if (explicitSign.isPresent()) {
-            appendable.append(explicitSign.get().symbol);
+        if (explicitSign != null) {
+            appendable.append(explicitSign.symbol);
         }
 
-        // number. omit leading 0 integer values when there is only a decimal, e.g., "0.5" => ".5"
-        boolean leadingZero = raw.length() > 2 && raw.charAt(0) == '0' && raw.charAt(1) == '.';
-        appendable.append(leadingZero ? raw.substring(1) : raw);
+        String num = raw;
+        boolean potentiallyDiscardUnit = false;
 
-        // unit
-        if (unit.isPresent()) {
-            appendable.append(unit.get());
+        if (!writer.isVerbose()) {
+            // - omit leading 0 integer values when there is only a decimal, e.g., "0.5" => ".5"
+            if (num.length() > 2 && num.charAt(0) == '0' && num.charAt(1) == '.') {
+                num = num.substring(1);
+            }
+            // - after a zero length, the unit identifier is optional (for distance units only!) e.g., 0px => 0
+            if (ZERO.matchesAllOf(num.charAt(0) == '.' ? num.substring(1) : num)) {
+                num = "0";
+                potentiallyDiscardUnit = true;
+            }
+        }
+
+        appendable.append(num);
+
+        if (unit != null && (!potentiallyDiscardUnit || !DISCARDABLE_UNITS.contains(unit))) {
+            appendable.append(unit);
         }
     }
 
     @Override
     public NumericalValue copy() {
         NumericalValue copy = new NumericalValue(-1, -1, raw).copiedFrom(this);
-        if (unit.isPresent()) copy.unit(unit.get());
-        if (explicitSign.isPresent()) copy.explicitSign(explicitSign.get());
+        if (unit != null) copy.unit(unit);
+        if (explicitSign != null) copy.explicitSign(explicitSign);
         return copy;
     }
 
     /**
      * Creates a new {@link NumericalValue} instance with the given integer value.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>NumericalValue.of(10)</code>
@@ -310,9 +327,9 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Creates a new {@link NumericalValue} instance with the given double value.
-     * <p/>
+     * <p>
      * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>NumericalValue.of(10.5)</code>
@@ -330,7 +347,7 @@ public final class NumericalValue extends AbstractTerm {
     /**
      * Creates a new {@link NumericalValue} instance with the given raw value. Generally this should not be preferred unless using
      * one of the other constructor methods would result in precision errors.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>NumericalValue.of("1000000000.0000000009")</code>
@@ -348,7 +365,7 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Creates a new {@link NumericalValue} instance with the given integer value and unit.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>NumericalValue.of(10, "px")</code>
@@ -367,9 +384,9 @@ public final class NumericalValue extends AbstractTerm {
 
     /**
      * Creates a new {@link NumericalValue} instance with the given double value and unit.
-     * <p/>
+     * <p>
      * Please note that large integer or floating-point values may result in unexpected precision and/or rounding errors.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>NumericalValue.of(10.5, "px")</code>
@@ -389,7 +406,7 @@ public final class NumericalValue extends AbstractTerm {
     /**
      * Creates a new {@link NumericalValue} instance with the given raw value. Generally this should not be preferred unless using
      * one of the other constructor methods would result in precision errors.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>NumericalValue.of("1000000000.0000000009", "px")</code>

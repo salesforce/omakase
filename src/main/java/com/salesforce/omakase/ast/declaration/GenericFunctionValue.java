@@ -30,6 +30,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.parser.declaration.FunctionValueParser;
+import com.salesforce.omakase.util.Args;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -140,8 +141,9 @@ public class GenericFunctionValue extends AbstractTerm implements FunctionValue 
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
-        // for args (compression here is tricky, probably sufficient to reduce repeating whitespace)
-        appendable.append(name).append('(').append(args).append(')');
+        appendable.append(name).append('(');
+        appendable.append(writer.isVerbose() ? args : Args.clean(args));
+        appendable.append(')');
     }
 
     @Override

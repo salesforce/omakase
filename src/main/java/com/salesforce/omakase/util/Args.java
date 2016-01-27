@@ -31,6 +31,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.RawFunction;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Utilities for dealing with arguments, particular from {@link RawFunction} instances.
@@ -38,6 +39,9 @@ import java.util.List;
  * @author nmcwilliams
  */
 public final class Args {
+    private static final Pattern NEWLINES = Pattern.compile("\\r|\\n");
+    private static final Pattern WHITESPACE = Pattern.compile("\\s+");
+
     private Args() {}
 
     /**
@@ -190,5 +194,20 @@ public final class Args {
         if (raw.charAt(0) != '"' || raw.charAt(raw.length() - 1) != '"') return raw;
         boolean entirelyQuoted = raw.indexOf('"', 1) == raw.length() - 1;
         return entirelyQuoted ? raw.substring(1, raw.length() - 1).trim() : raw;
+    }
+
+    /**
+     * Removes newlines and repeating whitespace from arguments.
+     *
+     * @param originalArgs
+     *     The original arguments.
+     *
+     * @return The formatted arguments.
+     */
+    public static String clean(String originalArgs) {
+        String formatted = originalArgs;
+        formatted = NEWLINES.matcher(formatted).replaceAll("");
+        formatted = WHITESPACE.matcher(formatted).replaceAll(" ");
+        return formatted.trim();
     }
 }
