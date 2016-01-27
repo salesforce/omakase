@@ -3,7 +3,7 @@
 .searchResults .chatterlisticon img, .homeTab .bPageTitle .thumbnail_visible, .feedcontainer .feeditemusericon {height:45px; width:45px}
 .feedcontainer .feeditemcommentphoto img {width:30px; height:30px}
 .thumbnailPanel .thumbnailTable.guests img {border-color:#f07e05}
-.fileTypeIcon img.filePrivateIcon {position:absolute; width:8px; height:8px; top:19px; left:20px; background:#fff url(/img/chatter/chatter_photo_icons.png?v=182-1); background-position:0px -57px}
+.fileTypeIcon img.filePrivateIcon {position:absolute; width:8px; height:8px; top:19px; left:20px; background:#fff url(/img/chatter/chatter_photo_icons.png?v=182-1); background-position:0 -57px}
 .expandoFeedContainer {background-color:#f3f3ec; clear:both; width:100%}
 .expandoFeedContainer .feedpage {padding-left:10px; width:817px}
 .feedpage .feedmain {float:left; padding-bottom:5px; width:546px}
@@ -17,7 +17,7 @@
 .currentStatusUserName a {font-size:.72em; font-weight:normal}
 .actionsOnHoverEnabled .feeditemcomment {position:relative}
 .actionsOnHoverEnabled .feeditembody {padding-right:40px}
-.cxallfeedactions .bookmarked {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -524px; width:16px; height:16px; display:block; position:absolute; right:-5px; top:0px}
+.cxallfeedactions .bookmarked {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -524px; width:16px; height:16px; display:block; position:absolute; right:-5px; top:0}
 .actionsOnHoverEnabled .feedDeleteLink, .actionsOnHoverEnabled .commentDeleteLink {background-image:url("/img/feeds/x_sprite.png"); width:9px; height:8px; display:block; border:4px solid #fff; text-indent:-999em; position:absolute; right:2px; top:0}
 .actionsOnHoverEnabled .commentDeleteLink {border:4px solid #fbfbfb; top:2px}
 .actionsOnHoverEnabled a.feedDeleteLink:hover, .actionsOnHoverEnabled a.commentDeleteLink:hover {background-position:0 -8px}
@@ -52,9 +52,9 @@
 .feedcontainer .feeditemextras .feedItemExtrasMetaText a:hover {color:#015ba7; text-decoration:none}
 .feedcontainer .feedArrow, .feedcontainer .feeditemcomments {background:none; padding:0; margin:0; border-top:1px solid #f3f3f3}
 .feedcontainer .feeditemcomment, .feedcontainer .feedcommentsshowmore, .feedcontainer .feeditemcommentplaceholder, .feedcontainer .feeditemlike {background:#fbfbfb; border-bottom:1px solid #f3f3f3}
-.feedcontainer .feeditemlike .like-icon, .feedcontainer .commentlike .like-icon {display:inline-block; margin-right:3px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -424px; width:16px; height:16px}
-.feedcontainer .showmorecommentscontainer .comment-icon {vertical-align:bottom; display:inline-block; margin-right:3px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -344px; width:16px; height:16px}
-.feedcontainer .commentlike .small-like-icon {display:inline-block; vertical-align:bottom; margin-right:6px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -424px; width:16px; height:16px}
+.feedcontainer .feeditemlike .like-icon, .feedcontainer .commentlike .like-icon {display:inline-block; margin-right:3px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -424px; width:16px; height:16px}
+.feedcontainer .showmorecommentscontainer .comment-icon {vertical-align:bottom; display:inline-block; margin-right:3px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -344px; width:16px; height:16px}
+.feedcontainer .commentlike .small-like-icon {display:inline-block; vertical-align:bottom; margin-right:6px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -424px; width:16px; height:16px}
 .feedcontainer .feedcommentsshowmore, .feedcontainer .feeditemlike {padding:6px 10px}
 .feedcontainer .feeditemcomment {padding:10px}
 .feedcontainer .feeditemcomment {padding-bottom:4px}
@@ -83,8 +83,8 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {padding-top:15px
 .feedcontainer .feeditemclientinfo {margin-left:4px}
 .feedcontainer .feeditem a.feeditemtimestamp:hover, .feedcontainer .pollviewfooter a:hover {color:#015ba7}
 .feedcontainer .feeditemlinkpost {padding-left:20px}
-.feedclearfloat {clear:both; height:0; font-size:.01em; line-height:0px}
-.feeddata {height:0; font-size:0; line-height:0px}
+.feedclearfloat {clear:both; height:0; font-size:.01em; line-height:0}
+.feeddata {height:0; font-size:0; line-height:0}
 .feedcontainer .linkPostLinkContainer a {font-size:1.1em; font-weight:normal}
 .feedcontainer .feedSearchHighlight {font-weight:bold; background-color:#fef49b}
 .feedcontainer a.feedMessageMentionSelfHighlight {background-color:#fef49b}
@@ -139,7 +139,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {padding-top:15px
 .cxshowmorefeeditemscontainer a {margin-top:12px; font-size:.92em; font-weight:700; color:#333; text-decoration:none; display:block; border:1px solid #d4dadc; text-align:center; padding:4px 0; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; text-decoration:none; background:url("/img/alohaSkin/btn_sprite.png") repeat-x scroll right top #e8e8e9}
 .cxshowmorefeeditemscontainer a:hover {text-decoration:none; color:#333; background-position:right -30px}
 .cxshowmorefeeditemscontainer a:active {background-position:right -60px}
-.videoLinkPostOuterContainer {padding:4px 0px 5px; position:relative}
+.videoLinkPostOuterContainer {padding:4px 0 5px; position:relative}
 .videoImages {position:relative; width:140px; height:97px; float:left}
 .videoLinkPostOuterContainer iframe {z-index:1}
 .videoImages .thumbnail {padding-right:10px; position:absolute; top:0; left:0; height:97px; width:130px; cursor:pointer}
@@ -153,8 +153,8 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {padding-top:15px
 .guestUserMessageHeader {font-size:1.2em; padding:5px; font-weight:bold; color:#222}
 .guestUserMessageContent {font-size:1.0em; padding:5px; padding-left:50px; color:#222}
 .guestUserMessageFooter {font-size:1.0em; padding:5px; padding-left:50px; color:#008040}
-.guestUserMessage .lockIcon {background:url("/img/chatterservice/lock24.png") no-repeat; padding-left:35px; padding-right:0px; padding-top:11px; padding-bottom:11px}
-.feedcontainer .newFeedItemsMessage {background-color:#ffffdc; border-color:#fceeb4; border-style:solid; border-width:1px; color:#000000; cursor:pointer; line-height:23px; margin:4px 3px 20px 0px; padding:0 14px; whitespace:normal; -moz-border-radius:5px 5px 5px 5px; text-align:center}
+.guestUserMessage .lockIcon {background:url("/img/chatterservice/lock24.png") no-repeat; padding-left:35px; padding-right:0; padding-top:11px; padding-bottom:11px}
+.feedcontainer .newFeedItemsMessage {background-color:#ffffdc; border-color:#fceeb4; border-style:solid; border-width:1px; color:#000000; cursor:pointer; line-height:23px; margin:4px 3px 20px 0; padding:0 14px; whitespace:normal; -moz-border-radius:5px 5px 5px 5px; text-align:center}
 .feedcontainer .newFeedItemsMessageHover {border-color:#e9eded; background:url(/img/chatter/feedupdate_bgGradient.png) repeat-x scroll 0 0}
 .feedcontainer .newFeedItemsMessage a {cursor:pointer}
 .chatterexpando {border:transparent; -moz-border-radius-bottomleft:5px; -moz-border-radius-bottomright:5px; -webkit-border-bottom-right-radius:5px; -webkit-border-bottom-left-radius:5px; border-bottom-left-radius:5px; border-bottom-right-radius:5px; border-top:1px solid #fff; background:#fff; width:100%}
@@ -182,7 +182,7 @@ a:hover .contentActionLabel, a:hover .contentTitleLink {text-decoration:underlin
 #contentCommentDropdown .contentCommentMenuItem a.contentCommentLink {margin-top:1px; margin-bottom:1px; padding-left:5px; padding-right:5px; font-size:1em; line-height:23px; font-weight:normal; text-decoration:none; color:#015ba7; display:block}
 #contentCommentDropdown .contentCommentMenuItem a.contentCommentLink:hover {text-decoration:none; color:#015ba7; border-radius:9px; -moz-border-radius:9px; -webkit-border-radius:9px; background-color:#cfeef8; height:23px}
 .contentActionMenuItem a:hover .contentActionLabel, .contentActionMenuItem .followUnfollowElement a:hover {text-decoration:none}
-.contentActionMenuItem .contentActionLabel {font-size:1em; padding:0px 5px}
+.contentActionMenuItem .contentActionLabel {font-size:1em; padding:0 5px}
 .contentActionMenuItem>.contentActionLink {white-space:nowrap; text-decoration:none}
 .contentActionMenuItem>.contentActionLink>img {margin-top:9px}
 .contentActionMenu>.upload.hover {border-top:none}
@@ -225,10 +225,10 @@ body .userProfileHoverUserBlock .userProfileHoverPageBlock .userProfileHoverBody
 .chatterUserGuestBadge, .chatterGroupGuestBadge, .nonTailBreadCrumbGuestBadge {color:#888; font-weight:normal}
 .chatterGroupGuestBadge, .nonTailBreadCrumbGuestBadge {display:inline-block; *display:inline}
 .PeopleListPage .chatterUserGuestBadge {display:inline}
-.nonTailBreadCrumbGuestBadge {margin-left:0px; margin-right:5px}
+.nonTailBreadCrumbGuestBadge {margin-left:0; margin-right:5px}
 .sendPrivateMessage a:hover {text-decoration:none}
 .sendPrivateMessage a:hover span {text-decoration:underline}
-.sendPrivateMessage img {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -364px; width:16px; height:16px; vertical-align:middle}
+.sendPrivateMessage img {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -364px; width:16px; height:16px; vertical-align:middle}
 .feedcontainer .dbrdCmpLabel {padding:2px; font-size:.92em}
 .feedcontainer a.dbrdCmpViewLink img {height:16px; width:16px; background-repeat:no-repeat; background-color:transparent; background-position:0 -2px; background-image:url(/img/chatterfiles/chatterfiles16_sprite.png)}
 .feedcontainer img.dbrdThumbnail {width:140px; border:1px solid transparent}
@@ -259,7 +259,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .chatterListOverlay .entitySelect, .entitySelect option {width:100px}
 .chatterListOverlay .overlayListTable td {border-bottom:1px solid #ededed; vertical-align:top}
 .chatterListOverlay .overlayListPhoto {width:36px; padding-right:10px}
-.chatterListOverlay .overlayListName {padding-left:0px}
+.chatterListOverlay .overlayListName {padding-left:0}
 .chatterListOverlay .entityTable .overlayListName {vertical-align:middle}
 .chatterListOverlay .overlayListLink {white-space:nowrap}
 .chatterListOverlay .overlayList {border-top:1px solid #e0e3e5; border-bottom:1px solid #e0e3e5}
@@ -271,7 +271,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .externalGroupAdminMailToLink {width:240px; margin-bottom:10px}
 .externalGroupAdminMailToLink a {color:#015ba7; text-decoration:none}
 .chatterListOverlay .externalInvite a:hover {text-decoration:underline}
-.overlayList.groupList {margin-top:0px}
+.overlayList.groupList {margin-top:0}
 .displayName a, .memberDisplayName a {color:#015ba7; text-decoration:none; font-weight:bold}
 .displayName a:hover {text-decoration:underline}
 .groupList .memberCount {color:#7d7d84}
@@ -351,7 +351,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .sharedWithListWizard .chatterListOverlay .sharingOptionRadio {margin:9px 45px}
 .sharedWithListWizard .notificationEmailPanel .sendEmailOptionLabel, .sharedWithListWizard .notificationEmailPanel .wallPostLabel {padding-left:0}
 .sharedWithListWizard .maxSharedWithPeopleCntMsg {color:#ea9800; padding:5px 8px}
-#shareWithEntityForm .chatterListOverlay .overlayListPhoto img {margin-bottom:0px}
+#shareWithEntityForm .chatterListOverlay .overlayListPhoto img {margin-bottom:0}
 #selectedPeopleToShareList {border-bottom:1px solid #ededed}
 #selectedPeopleToShareList.noBottomBorder {border-bottom:0}
 #selectedPeopleToShareList .shareWithCompanyShortName {color:#015ba7}
@@ -360,8 +360,8 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .sharedWithNoGroupMembershipMessage img {background-position:0 -200px; width:16px; height:16px; margin-right:10px; vertical-align:bottom}
 .sharedWithListOverlayPanel a:hover .permissionLabel {text-decoration:underline; cursor:hand}
 .sharedWithListOverlayPanel .tinyDownArrowIcon, .sharedWithPermissionDropdown .tinyDownArrowIcon, .chatterFileDetailActionListPanel .tinyDownArrowIcon, .sharedWithOptionPanel .sharedWithStatusBar a .tinyDownArrowIcon, .sharedWithOptionPanel .sharedWithStatusBar a:hover .tinyDownArrowIcon {padding-right:15px; height:10px}
-.sharedWithListOverlayPanel .tinyDownArrowIcon, .sharedWithPermissionDropdown .tinyDownArrowIcon, .chatterFileDetailActionListPanel .tinyDownArrowIcon, .sharedWithOptionPanel .sharedWithStatusBar a:hover .tinyDownArrowIcon {background-position:0px -186px}
-.sharedWithOptionPanel .sharedWithStatusBar a .tinyDownArrowIcon {background-position:0px -168px}
+.sharedWithListOverlayPanel .tinyDownArrowIcon, .sharedWithPermissionDropdown .tinyDownArrowIcon, .chatterFileDetailActionListPanel .tinyDownArrowIcon, .sharedWithOptionPanel .sharedWithStatusBar a:hover .tinyDownArrowIcon {background-position:0 -186px}
+.sharedWithOptionPanel .sharedWithStatusBar a .tinyDownArrowIcon {background-position:0 -168px}
 .chatterFileDetailActionListPanel .tinyDownArrowIcon {margin-bottom:5px}
 .FileDetailPage .contentActionMenuItem {padding-left:0}
 .FileDetailPage .dropdownPanel {border:1px solid #b6b6b6; -moz-border-radius:5px; radius:5px; -moz-box-shadow:0 2px 5px #a0a6ab}
@@ -371,7 +371,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .sharedWithPermissionDropdown .tinyDownArrowIcon {height:11px; margin-left:-3px}
 .sharedWithOptionPanel .sharedWithStatusBar a .tinyDownArrowIcon {float:right}
 .sharedWithListOverlayPanel .permissionActionLink {white-space:nowrap; float:left}
-.sharedWithListOverlayPanel a:hover .tinyDownArrowIcon {background-position:0px -186px}
+.sharedWithListOverlayPanel a:hover .tinyDownArrowIcon {background-position:0 -186px}
 .permissionActionLinkPanel {padding-top:8px}
 .permissionActionLinkPanel a {color:#222; text-decoration:none; width:81%}
 .permissionLabelPanel .permissionLabel {padding-left:10px; color:#015ba7}
@@ -443,11 +443,11 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .bodyForDocViewerPanel {overflow-x:hidden; overflow-y:hidden}
 .overlayDialog.docViewerOverlay {position:absolute}
 .feedPostEntityDetails {padding-top:6px; padding-bottom:6px}
-.feedPostTemplateDetails {padding-top:2px; padding-bottom:0px}
+.feedPostTemplateDetails {padding-top:2px; padding-bottom:0}
 .approvalPostTable .approvalDetailsLabel {font-size:91%; font-weight:bold; color:#4a4a56; padding-left:12px}
 .approvalPostTable .labelCell {text-align:right; vertical-align:top}
 .approvalPostTable .labelCellTpl {text-align:right; vertical-align:top; width:120px}
-.approvalPostTable .approvalDetails {color:#222222; padding-left:0px}
+.approvalPostTable .approvalDetails {color:#222222; padding-left:0}
 .approvalPostTable .valueCell {padding-left:13px; padding-right:12px}
 .feedPostEntityDetails .Pending {font-weight:bold; color:#bfa704}
 .feedPostEntityDetails .Approved {font-weight:bold; color:#08a705}
@@ -463,7 +463,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .overlayPanel {width:450px; height:120px; background-position:center center}
 .overlayPanel .msgIcon {float:left}
 .overlayPanel .messageText {margin-left:30px}
-.spinner {border:none; background-color:#fff; background-image:url(/img/dataCategories/spinner.gif); background-position:0px 0px; width:16px; height:16px; background-position:center center; background-repeat:no-repeat; width:450px; height:120px}
+.spinner {border:none; background-color:#fff; background-image:url(/img/dataCategories/spinner.gif); background-position:0 0; width:16px; height:16px; background-position:center center; background-repeat:no-repeat; width:450px; height:120px}
 .nextApproverOverlay .nextApproverPrompt {margin-top:5px; text-align:center}
 .nextApproverOverlay .nextApproverWrapper {position:relative}
 .nextApproverOverlay .requiredInput {margin-top:10px; margin-bottom:10px}
@@ -480,7 +480,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .caseEventBody, .caseCommentEventBody {display:block; margin:6px 0 6px 3px}
 .caseEventRow, .caseCommentEventRow, .bestReplyIndicator {display:block; margin-left:28px}
 .communityAnswerEventRow {margin-left:44px}
-.caseChangeStatusEventBody {display:block; margin-top:3px; margin-left:0px}
+.caseChangeStatusEventBody {display:block; margin-top:3px; margin-left:0}
 .caseEventLabel {color:#7d7d84; padding-right:3px}
 .caseEventIcon, .caseCommentEventIcon, .replyOwnerIcon, .replyEventIcon {float:left}
 .replyOwnerIcon {margin-right:10px}
@@ -510,7 +510,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {border:1px solid #015ba7; padding:0}
 .caseEventActionRow {padding:8px 0 2px 0}
 .caseOriginalCommentContents {color:#7d7d84}
 .chatterShowHideFeed {font-size:.95em}
-.chatterShowHideFeed .innerLink img {display:inline-block; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -264px; width:16px; height:16px}
+.chatterShowHideFeed .innerLink img {display:inline-block; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -264px; width:16px; height:16px}
 .chatterShowHideFeed a {font-weight:normal; color:#015ba7; text-decoration:none}
 .chatterShowHideFeed a:hover .linkText {text-decoration:underline}
 .feedToggleGuidedTourContainer {padding:0 15px 15px}
@@ -542,7 +542,7 @@ div.chatterShowHideFeed span.showFeedLink a:hover .linkText, div.chatterShowHide
 .checkedMenu .checkedMenuMenu a:hover {background-color:#e3f3ff}
 .checkedMenu span.checkedMenuLabel {cursor:default; font-size:.9em; white-space:nowrap}
 .publisherWrapper {position:relative}
-.publishercontainer input[type=text] {padding:7px; border:1px solid #c7ccce; -moz-border-radius:3px; border-radius:3px; background-image:url(/img/chatter/innershadow-normal.png); background-position:0px 0px; width:0px; height:0px; width:407px; height:auto; background-color:#fff; background-repeat:repeat-x}
+.publishercontainer input[type=text] {padding:7px; border:1px solid #c7ccce; -moz-border-radius:3px; border-radius:3px; background-image:url(/img/chatter/innershadow-normal.png); background-position:0 0; width:0; height:0; width:407px; height:auto; background-color:#fff; background-repeat:repeat-x}
 .publishercontainer {line-height:normal; padding-top:10px; max-width:640px; overflow:visible; position:relative; padding-bottom:20px; padding-right:10px}
 .publishercontainer .customPanel label {color:#222; font-weight:bold; height:30px; line-height:30px; display:inline-block}
 .publishercontainer .clear {clear:both}
@@ -552,9 +552,9 @@ div.chatterShowHideFeed span.showFeedLink a:hover .linkText, div.chatterShowHide
 .publishercontainer .publisherFeedItemTypeChoices a.publisherattach.withArrowAttached {color:#393939}
 .publishercontainer .publisherFeedItemTypeChoices.ishidden {display:none}
 .publishercontainer li.publisherFeedItemTypeChoice {display:inline; height:14px; margin-right:13px}
-.publishercontainer .publisherattach span.pArrow {position:absolute; bottom:-11px; left:50%; margin-left:-8px; display:none; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -203px; width:13px; height:9px; z-index:2}
+.publishercontainer .publisherattach span.pArrow {position:absolute; bottom:-11px; left:50%; margin-left:-8px; display:none; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -203px; width:13px; height:9px; z-index:2}
 .publishercontainer .withArrowAttached span.pArrow {display:block}
-.publishercontainer.chattertextareahaserror .publisherattachTextPost span.pArrow, .publishercontainer.chattertextareahaserror .publisherattachPollPost span.pArrow {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -177px; width:13px; height:9px}
+.publishercontainer.chattertextareahaserror .publisherattachTextPost span.pArrow, .publishercontainer.chattertextareahaserror .publisherattachPollPost span.pArrow {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -177px; width:13px; height:9px}
 a.cxcontentcommentaction {float:left}
 .publishercontainer a.publisherattach {height:16px; display:inline-block; position:relative}
 .truncateLabelWrapper {max-width:118px; white-space:nowrap}
@@ -564,17 +564,17 @@ span.truncateLabel {max-width:85px; white-space:nowrap; overflow-x:hidden; displ
 .publishercontainer a.publisherattach span, a.cxcontentcommentaction span {margin-left:5px; line-height:16px; vertical-align:top}
 a.publisherattach img {position:relative; left:2px; width:16px; height:16px}
 img.applygrayscale {-webkit-filter:grayscale(100%); filter:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); filter:gray}
-.publishercontainer a.publisherattachTextPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -944px; width:16px; height:16px}
-.publishercontainer a.publisherattachContentPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -804px; width:16px; height:16px; background-repeat:no-repeat}
-.publishercontainer a.publisherattachLinkPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -824px; width:16px; height:16px}
-.publishercontainer a.publisherattachPollPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -844px; width:16px; height:16px}
-.publishercontainer a.vfpublisherextension img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -964px; width:16px; height:16px}
-.publishercontainer a.canvaspublisherextension img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -784px; width:16px; height:16px}
+.publishercontainer a.publisherattachTextPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -944px; width:16px; height:16px}
+.publishercontainer a.publisherattachContentPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -804px; width:16px; height:16px; background-repeat:no-repeat}
+.publishercontainer a.publisherattachLinkPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -824px; width:16px; height:16px}
+.publishercontainer a.publisherattachPollPost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -844px; width:16px; height:16px}
+.publishercontainer a.vfpublisherextension img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -964px; width:16px; height:16px}
+.publishercontainer a.canvaspublisherextension img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -784px; width:16px; height:16px}
 .publishercontainer a.publisherextensionStaticResource img.publishericon {width:16px; height:16px}
 .publishercontainer .publishersharebutton {float:right; margin:0 0 6px 0}
 .publishercontainer.externalGroup .alignCenter .publisherTextAreaInner {border-left:1px solid #fe8b20; border-right:1px solid #fe8b20}
 .publishercontainer.externalGroup .alignTop .publisherTextAreaInner {border:1px solid #fe8b20; border-bottom:1px solid #c7ccce}
-.publishercontainer.externalGroup .publisherattach .pArrow {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -138px; width:13px; height:9px}
+.publishercontainer.externalGroup .publisherattach .pArrow {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -138px; width:13px; height:9px}
 .publishercontainer .externalGroupWarning {text-align:right; padding-top:10px}
 .publishercontainer .contentPublisherSlideDown table.postInput {width:500px}
 .publishertextarea a.isMention:hover, .cxnewcommenttext a.isMention:hover {text-decoration:none}
@@ -602,11 +602,11 @@ img.applygrayscale {-webkit-filter:grayscale(100%); filter:url("data:image/svg+x
 .publisherAC_box .publisherAC_profilePic {margin-left:10px; margin-right:8px; vertical-align:top}
 .publisherAC_box .publisherAC_expanded {background:transparent url(/img/feeds/arrow_sprite.png) no-repeat scroll 0 -8px; border:0; height:8px; width:9px; margin-left:5px}
 .publishercontainer .publishertextarea {color:#999; border:none; resize:none; width:100%; overflow:hidden; background-color:#fff; line-height:16px; -webkit-line-break:after-white-space; word-wrap:break-word; outline-style:none; height:48px; display:block}
-.publishercontainer .publisherTextAreaInner {background-image:url(/img/chatter/innershadow-normal.png); background-position:0px 0px; width:0px; height:0px; width:auto; height:auto; background-color:#fff; background-repeat:repeat-x; position:relative; border:1px solid #c7ccce; padding:7px 7px 6px 7px}
-.publishercontainer .grayborder {background-image:url(/img/chatter/innershadow-normal.png); background-position:0px 0px; width:0px; height:0px; width:auto; height:auto; background-repeat:repeat-x; border:1px solid #c7ccce; padding:9px; -moz-border-radius:3px; border-radius:3px}
+.publishercontainer .publisherTextAreaInner {background-image:url(/img/chatter/innershadow-normal.png); background-position:0 0; width:0; height:0; width:auto; height:auto; background-color:#fff; background-repeat:repeat-x; position:relative; border:1px solid #c7ccce; padding:7px 7px 6px 7px}
+.publishercontainer .grayborder {background-image:url(/img/chatter/innershadow-normal.png); background-position:0 0; width:0; height:0; width:auto; height:auto; background-repeat:repeat-x; border:1px solid #c7ccce; padding:9px; -moz-border-radius:3px; border-radius:3px}
 .publisherWrapper {border-top-left-radius:3px; border-top-right-radius:3px}
 .publishercontainer .alignTop .publisherTextAreaInner {border-top-left-radius:3px; border-top-right-radius:3px}
-.publishercontainer .customPanel {border:1px solid #c7ccce; background-image:url(/img/chatter/innershadow-normal.png); background-position:0px 0px; width:0px; height:0px; background-color:#fff; background-repeat:repeat-x; width:auto; height:auto}
+.publishercontainer .customPanel {border:1px solid #c7ccce; background-image:url(/img/chatter/innershadow-normal.png); background-position:0 0; width:0; height:0; background-color:#fff; background-repeat:repeat-x; width:auto; height:auto}
 .publishercontainer.externalGroup .customPanel {border:1px #da7600 solid; border-bottom:none}
 .publishercontainer .customPanel.alignTop {border-bottom:0; border-top-left-radius:3px; border-top-right-radius:3px; -moz-border-radius:3px 3px 0 0}
 .publishercontainer .customPanel.alignCenter {border-top:0; border-bottom:1px solid #c7ccce}
@@ -650,7 +650,7 @@ img.applygrayscale {-webkit-filter:grayscale(100%); filter:url("data:image/svg+x
 .zen .publisherTypeOverflow .pArrow .withArrowAttached {display:block}
 .zen .publisherTypeOverflow .publisherArrowContainer {width:20px; float:left; position:relative}
 .zen .publisherTypeOverflow .zen-options {position:relative; top:-13px; left:-5px; padding-top:10px; padding-bottom:10px; min-width:10px; max-width:300px; width:auto; overflow:visible; border-radius:0 0 2px 2px; border-color:#dadada; border-top:none; z-index:2; box-shadow:none; -moz-box-shadow:none; -webkit-box-shadow:none}
-.zen .publisherTypeOverflow.zen-select .zen-trigger b.zen-selectArrow {border:0; float:none; position:relative; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1582px; width:7px; height:5px; background-repeat:no-repeat; top:0px; margin-left:1px}
+.zen .publisherTypeOverflow.zen-select .zen-trigger b.zen-selectArrow {border:0; float:none; position:relative; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1582px; width:7px; height:5px; background-repeat:no-repeat; top:0; margin-left:1px}
 .zen .publisherTypeOverflow.zen-select {margin-left:3px}
 .zen .publisherTypeOverflow.withArrowAttached span.pArrow {display:block; position:absolute}
 .zen .publisherTypeOverflow.withArrowAttached.zen-open span.pArrow {display:none}
@@ -751,17 +751,17 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .feedcontainer .checkedMenu a.checkedMenuButton span {padding:0}
 .zen .comboMenu {position:relative}
 .feedcontainer .comboMenu {position:relative}
-.zen .comboMenu .zen-select {top:0px; left:10px}
-.zen .comboMenu.feedsupermenu .zen-select {top:0px; left:16px}
+.zen .comboMenu .zen-select {top:0; left:10px}
+.zen .comboMenu.feedsupermenu .zen-select {top:0; left:16px}
 .zen .comboMenu.feedsupermenu {padding-bottom:20px}
 .zen .nonFeedSuccess {padding:10px; margin-bottom:20px; opacity:0; display:none}
 .zen .nonFeedSuccessContent {margin-left:34px}
 .zen .leftImage {float:left}
 .zen .nonFeedSuccessTitle {font-size:14px; font-weight:bold; color:#222}
 .zen .nonFeedSuccessMessage {font-size:12px; font-weight:normal; color:#222}
-.zen .comboMenu.feedsupermenu.nosearch .zen-select {margin-left:0px; left:0px; padding-left:0px}
+.zen .comboMenu.feedsupermenu.nosearch .zen-select {margin-left:0; left:0; padding-left:0}
 .zen .comboMenu.feedsupermenu.shift .zen-select {left:200px}
-.zen .comboMenu.feedsupermenu.nosearch.shift .zen-select {left:0px}
+.zen .comboMenu.feedsupermenu.nosearch.shift .zen-select {left:0}
 .searchLowerMainContent .feedsScopeMessage {font-size:1em}
 .zen .comboMenu.feedsupermenu #filterDisplay, .zen .comboMenu.feedsupermenu #sortDisplay {padding-left:5px; padding-right:5px}
 .zen .comboMenu .zen-smlineSep {color:#cccccc; float:left; margin-top:5px; margin-left:10px}
@@ -770,7 +770,7 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .zen .comboMenu .zen-select {float:left; width:auto; display:inline-block; border:none}
 .zen .comboMenu .zen-trigger {top:0; margin:0; font-size:1em; padding:6px 12px}
 .zen .comboMenu a.zen-trigger {color:rgb(136, 136, 136); text-align:left; text-decoration:none; background-color:none; border-radius:3px; border:transparent 1px solid; box-shadow:none}
-.zen .comboMenu a.zen-trigger:hover, .zen .comboMenu a.zen-trigger:active {-webkit-transition:all .2s ease-in-out .2s; -moz-transition:all .2s ease-in-out .2s; -o-transition:all .2s ease-in-out .2s; transition:all .2s ease-in-out .2s; background-color:#fbfbfb; box-shadow:0px 1px 0px rgba(255, 255, 255, 0.5) inset; border:#c1c1c1 1px solid; border-radius:3px; color:#222}
+.zen .comboMenu a.zen-trigger:hover, .zen .comboMenu a.zen-trigger:active {-webkit-transition:all .2s ease-in-out .2s; -moz-transition:all .2s ease-in-out .2s; -o-transition:all .2s ease-in-out .2s; transition:all .2s ease-in-out .2s; background-color:#fbfbfb; box-shadow:0 1px 0 rgba(255, 255, 255, 0.5) inset; border:#c1c1c1 1px solid; border-radius:3px; color:#222}
 .zen .comboMenu #sortDisplay, .zen .comboMenu #filterDisplay {color:#015ba7}
 .zen .comboMenu.feedsupermenu .zen-select, .zen .comboMenu.feedsupermenu.menuhidden .zen-smlineSep {visibility:visible}
 .zen .comboMenu.feedsupermenu.menuhidden .zen-select, .zen .comboMenu.feedsupermenu.menuhidden .zen-smlineSep {visibility:hidden}
@@ -779,11 +779,11 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .zen .zen-listView .comboMenu .zen-select .zen-options {top:35px}
 .zen .comboMenu .zen-select.zen-open {display:inline-block; -webkit-transition:all .3s ease-in-out .3s; -moz-transition:all .3s ease-in-out .3s; -o-transition:all .3s ease-in-out .3s; transition:all .3s ease-in-out .3s}
 .zen .comboMenu .zen-select.zen-open .zen-trigger {background-color:#fbfbfb; border:1px solid #c1c1c1}
-.zen .comboMenu .zen-select .zen-options h4 {color:rgb(139,139,139); display:block; font-size:.9em; font-weight:normal; padding-top:10px; padding-right:1px; padding-bottom:15px; padding-left:35px; text-transform:uppercase; margin:0px}
+.zen .comboMenu .zen-select .zen-options h4 {color:rgb(139,139,139); display:block; font-size:.9em; font-weight:normal; padding-top:10px; padding-right:1px; padding-bottom:15px; padding-left:35px; text-transform:uppercase; margin:0}
 .zen .comboMenu .zen-select .zen-options a {display:block; font-weight:normal; text-align:left; text-decoration:none; color:#222222; padding-top:9px; padding-right:14px; padding-bottom:9px; padding-left:35px}
 .zen .comboMenu .zen-select .zen-options a:hover, .zen .comboMenu .zen-select .zen-options a:focus {background-color:#f4f4f4; color:#015ba7; outline:medium none; text-decoration:none; -webkit-transition:background-color .15s ease-in-out .1s; -moz-transition:background-color .15s ease-in-out .1s; -o-transition:background-color .15s ease-in-out .1s; transition:background-color .15s ease-in-out .1s}
 .zen .comboMenu .zen-options li {border:1px solid transparent}
-.zen .comboMenu .zen-options li.zen-checked .zen-visualization {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1633px; width:9px; height:9px; margin-top:10px; margin-left:13px; position:absolute; transition:background .15s ease-in-out .1s; height:9px}
+.zen .comboMenu .zen-options li.zen-checked .zen-visualization {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1633px; width:9px; height:9px; margin-top:10px; margin-left:13px; position:absolute; transition:background .15s ease-in-out .1s; height:9px}
 .cxallfeedactions .feeditemActionMenu .zen-options, .feedcommentactions .commentActionMenu .zen-options {left:auto; right:0}
 .cxallfeedactions .zen-options a {color:#015ba7; font-size:.9em; margin-left:3px; margin-right:3px; padding:5px 6px; text-decoration:none; word-wrap:normal}
 .feedcontainer .cxfeedtitle {padding-top:5px}
@@ -791,13 +791,13 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .cxallfeedactions .feeditemActionMenu .zen-options, .feedcommentactions .commentActionMenu .zen-options, .feedmainandrightbar .feedrightbar .zen-options {right:auto; left:-20px; padding:10px 0 10px 0}
 .cxallfeedactions .feeditemActionMenu .zen-options a, .feedcommentactions .commentActionMenu .zen-options a {font-size:1.1em; color:#222; padding:7px 20px 7px 20px; margin:0; line-height:13px; white-space:nowrap}
 .feedmainandrightbar .feedrightbar .zen-options .followUnfollowElement {padding:8px 20px 6px 20px}
-.cxallfeedactions .feeditemActionMenu .zen-options, .feedcommentactions .commentActionMenu .zen-options, .feedmainandrightbar .feedrightbar .zen-options {border:1px solid #e2e2e2; border-radius:3px; -webkit-box-shadow:0px 2px 4px rgba(0, 0, 0, 0.2); -moz-box-shadow:0px 2px 4px rgba(0, 0, 0, 0.2); box-shadow:0px 2px 4px rgba(0, 0, 0, 0.2); top:17px}
+.cxallfeedactions .feeditemActionMenu .zen-options, .feedcommentactions .commentActionMenu .zen-options, .feedmainandrightbar .feedrightbar .zen-options {border:1px solid #e2e2e2; border-radius:3px; -webkit-box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); -moz-box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); top:17px}
 .feedrightbar .zen-options .followUnfollowElement .zen-mediaBody a, .feedrightbar .zen-options .followUnfollowElement a.zen-img {display:inline; padding:0; color:#015ba7; vertical-align:baseline}
 .feedrightbar .zen-options .followUnfollowElement .zen-mediaBody {line-height:normal}
 .feedrightbar .zen-options .followUnfollowElement .zen-media {line-height:22px}
 .followUnfollowElement .followUnfollowNetworkName {color:#7d7d84; padding-left:3px}
 .feedmainandrightbar .feedrightbar .zen-options {top:25px}
-.cxhover .zen-select .zen-trigger.feeditemActionMenuButton, .cxhover .cxallfeedactions .feeditemActionMenuButton, .feeditemcomment.cxhover .feedcommentactions .commentActionMenuButton, .cxhover .zen-select .zen-trigger.commentActionMenuButton {border:1px solid #bfbfbf; background:#f8f8f8; background:-moz-linear-gradient(#f8f8f8, #eeeeee); background:-webkit-linear-gradient(#f8f8f8, #eeeeee); background:-ms-linear-gradient(#f8f8f8, #eeeeee); -webkit-box-shadow:inset 0px 1px 0px rgba(255, 255, 255, 0.1),0px 1px 0px rgba(0, 0, 0, 0.1); -moz-box-shadow:inset 0px 1px 0px rgba(255, 255, 255, 0.1),0px 1px 0px rgba(0, 0, 0, 0.1); box-shadow:inset 0px 1px 0px rgba(255, 255, 255, 0.1),0px 1px 0px rgba(0, 0, 0, 0.1)}
+.cxhover .zen-select .zen-trigger.feeditemActionMenuButton, .cxhover .cxallfeedactions .feeditemActionMenuButton, .feeditemcomment.cxhover .feedcommentactions .commentActionMenuButton, .cxhover .zen-select .zen-trigger.commentActionMenuButton {border:1px solid #bfbfbf; background:#f8f8f8; background:-moz-linear-gradient(#f8f8f8, #eeeeee); background:-webkit-linear-gradient(#f8f8f8, #eeeeee); background:-ms-linear-gradient(#f8f8f8, #eeeeee); -webkit-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.1),0 1px 0 rgba(0, 0, 0, 0.1); -moz-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.1),0 1px 0 rgba(0, 0, 0, 0.1); box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.1),0 1px 0 rgba(0, 0, 0, 0.1)}
 .cxhover .feedcommentactions .commentActionMenuButton, .feeditemcomment.cxhover .zen-trigger.commentActionMenuButton {visibility:visible}
 .cxallfeedactions .feeditemActionMenu .zen-options a:hover, .cxallfeedactions .feeditemActionMenu .zen-options a:focus, .cxallfeedactions .feeditemActionMenu .zen-options a:active, .feedcommentactions .commentActionMenu .zen-options a:hover, .feedcommentactions .commentActionMenu .zen-options a:focus, .feedcommentactions .commentActionMenu .zen-options a:active, .feedrightbar .zen-options .followUnfollowElement.active {background-color:#ececec; color:#222}
 .feedrightbar .zen-options .followUnfollowElement a:hover {background-color:transparent}
@@ -809,13 +809,13 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .feeditemZIndex {z-index:200; position:relative}
 .feedcontainer .zen-select .feeditemActionMenuButton, .feedcontainer .zen-select .commentActionMenuButton {display:block; background-color:#f8f8f8; border:1px solid #e2e2e2; padding:5px 4px 5px 4px; border-radius:3px}
 .feedcontainer .zen-select .commentActionMenuButton {visibility:hidden}
-.cxallfeedactions .zen-select .zen-trigger.feeditemActionMenuButton:active, .cxallfeedactions .zen-select .zen-trigger.commentActionMenuButton:active {background-color:#f8f8f8; border:1px solid #bfbfbf; border-radius:3px; -webkit-box-shadow:inset 0px 2px 2px rgba(0, 0, 0, 0.1); -moz-box-shadow:inset 0px 2px 2px rgba(0, 0, 0, 0.1); box-shadow:inset 0px 2px 2px rgba(0, 0, 0, 0.1)}
-.feeditemActionMenu .feeditemActionMenuButton b, .commentActionMenu .commentActionMenuButton b {display:block; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1384px; width:5px; height:3px}
-.feeditemActionMenuIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1384px; width:5px; height:3px; margin:2px}
-.cxhover .feeditemActionMenuButton b, .feeditemActionMenuButton:active b, .cxhover .commentActionMenuButton b, .commentActionMenuButton:active b {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1377px; width:5px; height:3px}
+.cxallfeedactions .zen-select .zen-trigger.feeditemActionMenuButton:active, .cxallfeedactions .zen-select .zen-trigger.commentActionMenuButton:active {background-color:#f8f8f8; border:1px solid #bfbfbf; border-radius:3px; -webkit-box-shadow:inset 0 2px 2px rgba(0, 0, 0, 0.1); -moz-box-shadow:inset 0 2px 2px rgba(0, 0, 0, 0.1); box-shadow:inset 0 2px 2px rgba(0, 0, 0, 0.1)}
+.feeditemActionMenu .feeditemActionMenuButton b, .commentActionMenu .commentActionMenuButton b {display:block; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1384px; width:5px; height:3px}
+.feeditemActionMenuIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1384px; width:5px; height:3px; margin:2px}
+.cxhover .feeditemActionMenuButton b, .feeditemActionMenuButton:active b, .cxhover .commentActionMenuButton b, .commentActionMenuButton:active b {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1377px; width:5px; height:3px}
 .linkPostLinkContainer a.linkPostLink img, .richPost .thumbnail.default img, a.cxcontentcommentaction img {position:relative}
-.linkPostLinkContainer a.linkPostLink img, .richPost .thumbnail.default img {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -864px; width:16px; height:16px; top:-2px}
-a.cxcontentcommentaction img {top:1px; left:3px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -804px; width:16px; height:16px}
+.linkPostLinkContainer a.linkPostLink img, .richPost .thumbnail.default img {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -864px; width:16px; height:16px; top:-2px}
+a.cxcontentcommentaction img {top:1px; left:3px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -804px; width:16px; height:16px}
 .feeditem .pollfieldset legend, .feeditem .pollfieldset .pollquestion {width:100%}
 .rechatClear {clear:both}
 .rechatTitle {float:left}
@@ -841,7 +841,7 @@ a.rechatSuccessLink {word-wrap:break-word; text-decoration:underline}
 .rechatLinkTargetContainer a:hover {text-decoration:underline}
 input.rechatUrlCls {width:100%; padding:0; border:none; height:23px}
 .urlBox {margin-top:10px; padding:4px; border:1px solid #959595; height:23px}
-.rechatCompanyIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -284px; width:16px; height:16px; margin-right:5px; vertical-align:middle; display:inline-block}
+.rechatCompanyIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -284px; width:16px; height:16px; margin-right:5px; vertical-align:middle; display:inline-block}
 .rechatSecureLinkContainer {margin-top:12px; font-style:italic; font-size:.9em; padding:5px; border:1px solid #f8e38e; background:#ffffdc}
 .rechatWithGroup {border-left:1px solid #dedede; border-right:1px solid #dedede; vertical-align:middle; height:48px}
 .rechatRecipientSelector a.remove {background:transparent url(/img/feeds/follow_sprite.png) no-repeat 0 -54px; height:15px; width:15px; float:right}
@@ -889,7 +889,7 @@ input.rechatRecipientInput.focus {width:142px}
 .postTo .postToText {display:inline-block; vertical-align:top; margin-right:3px}
 .postTo .postToTextTarget {font-weight:bold; max-width:360px; overflow-x:hidden; white-space:nowrap; display:inline-block; vertical-align:top; position:relative}
 .postTo .postToTextTarget.community {max-width:240px}
-.postTo .postToTextTarget .nameFadeOut {left:340px; top:4px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1167px; width:20px; height:22px}
+.postTo .postToTextTarget .nameFadeOut {left:340px; top:4px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1167px; width:20px; height:22px}
 .postTo .postToTextTarget.community .nameFadeOut {left:220px}
 .postTo.postToEntity .postToTextTarget {font-weight:normal}
 .postTo .communityText, .postTo .companyText {color:#7d7d84; padding-left:3px; font-weight:normal}
@@ -904,22 +904,22 @@ input.rechatRecipientInput.focus {width:142px}
 .zen .postToDropdown .zen-select {display:inline-block; width:100%; margin:0; border:0; z-index:1}
 .zen .postToDropdown .zen-select .zen-options {width:auto; top:-1px; left:-10px; right:inherit; border:1px solid #c7ccce; border-bottom:0}
 .zen .postToDropdown .zen-select .zen-options a {padding:0; padding-left:9px; padding-right:9px; color:#015ba7; border-bottom:1px solid #c7ccce; white-space:nowrap}
-.zen .postToDropdown .zen-select .zen-selectArrow {border:0; float:none; position:absolute; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1573px; width:7px; height:5px; background-repeat:no-repeat; top:8px; right:0}
+.zen .postToDropdown .zen-select .zen-selectArrow {border:0; float:none; position:absolute; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1573px; width:7px; height:5px; background-repeat:no-repeat; top:8px; right:0}
 .zen .postToDropdown .zen-select .zen-trigger {color:#015ba7; text-decoration:none; margin-right:13px; white-space:nowrap; overflow-x:hidden}
 .groupSelection {position:relative; height:30px; display:none; padding-left:8px}
-.groupSelection input.groupSelectionInput, .groupSelection .groupRecipient {font-size:1em; margin:0; background-image:url(/img/chatter/innershadow-normal.png); background-position:0px 0px; width:0px; height:0px; background-repeat:repeat-x; background-color:#fff; height:22px; padding:3px; width:203px; -moz-border-radius:3px; border-radius:3px; line-height:22px}
+.groupSelection input.groupSelectionInput, .groupSelection .groupRecipient {font-size:1em; margin:0; background-image:url(/img/chatter/innershadow-normal.png); background-position:0 0; width:0; height:0; background-repeat:repeat-x; background-color:#fff; height:22px; padding:3px; width:203px; -moz-border-radius:3px; border-radius:3px; line-height:22px}
 .groupSelection input.groupSelectionInput {color:#999; display:inline-block}
 .groupSelection input.groupSelectionInput.hasFocus {color:#222}
 .groupSelection .groupRecipient {display:none; position:relative}
 .groupSelection .groupIconContainer {position:absolute; top:5px; left:7px}
 .groupSelection img.groupIcon {width:20px; height:20px}
-.groupIconContainer .groupPrivateIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -74px; width:12px; height:12px; background-repeat:no-repeat; position:absolute; top:7px; left:8px; border-bottom:1px solid #d4dadc; border-right:1px solid #d4dadc; display:none; background-color:white}
+.groupIconContainer .groupPrivateIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -74px; width:12px; height:12px; background-repeat:no-repeat; position:absolute; top:7px; left:8px; border-bottom:1px solid #d4dadc; border-right:1px solid #d4dadc; display:none; background-color:white}
 .privateGroup .groupIconContainer .groupPrivateIcon {display:inline}
 .groupSelection .groupInfo {padding-left:35px; overflow:hidden; white-space:nowrap; line-height:22px; width:145px; display:inline-block}
 .groupSelection a.removeGroup {background:transparent url(/img/feeds/follow_sprite.png) no-repeat 0 -54px; height:15px; width:15px; position:absolute; top:7px; right:8px}
 .groupSelection a.removeGroup:hover {background:transparent url(/img/feeds/follow_sprite.png) no-repeat 0 -75px}
 .groupSelection .groupSelectionInput, .groupSelection .groupRecipient, .groupSelection .autoCompleteBox, .groupSelection .autoCompleteBoxScrolling {border:1px solid #c7ccce}
-.groupSelection .nameFadeOut {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1193px; width:20px; height:22px; right:25px; top:4px}
+.groupSelection .nameFadeOut {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1193px; width:20px; height:22px; right:25px; top:4px}
 .influence-widget {font-size:1em; color:#7d7d84; margin:10px 0 0}
 .hoverInfo .influence-widget {margin:8px 0 0 0}
 .influence-bar, .influence-header {width:99%; overflow:hidden}
@@ -934,7 +934,7 @@ input.rechatRecipientInput.focus {width:142px}
 .influence-bar .observer.highlight {background:url("/img/chatter/influenceGradient.png") 0 0}
 .influence-bar .active.highlight {background:url("/img/chatter/influenceGradient.png") 0 24px}
 .influence-bar .top.highlight {background:url("/img/chatter/influenceGradient.png") 0 12px}
-.influence-bar .marker {background:url("/img/chatter/youdot.png") no-repeat 0 0px; width:12px; height:12px; position:relative; left:50%; margin-left:-6px}
+.influence-bar .marker {background:url("/img/chatter/youdot.png") no-repeat 0 0; width:12px; height:12px; position:relative; left:50%; margin-left:-6px}
 .influence-header {margin:0 0 3px}
 .influence-extra {position:absolute; overflow:hidden; clip:rect(0 0 0 0); height:1px; width:1px; margin:1px; padding:0; border:0}
 .topicOfInfluence {color:#7d7d84; margin-left:0}
@@ -955,9 +955,9 @@ input.ghostText {color:#999; font-size:1em}
 .publisherpollchoiceinput {display:inline-block; width:410px}
 .publisherpollchoice .errorMsg {text-align:center}
 .pollfieldset legend {font-weight:400}
-.visibilityicon {text-decoration:none; cursor:pointer; position:absolute; top:50%; margin-top:-7px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1004px; width:16px; height:16px}
-a.iconParent.disable:hover .visibilityicon, a.visibilityicon.disable:hover {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1004px; width:16px; height:16px; cursor:default}
-a.iconParent:hover .visibilityicon, a.visibilityicon:hover {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -984px; width:16px; height:16px}
+.visibilityicon {text-decoration:none; cursor:pointer; position:absolute; top:50%; margin-top:-7px; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1004px; width:16px; height:16px}
+a.iconParent.disable:hover .visibilityicon, a.visibilityicon.disable:hover {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1004px; width:16px; height:16px; cursor:default}
+a.iconParent:hover .visibilityicon, a.visibilityicon:hover {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -984px; width:16px; height:16px}
 .visibilityWidgetParent {position:relative; margin:0; padding:0}
 .visibilityWidgetParent .iconParent {display:block; height:30px; width:16px; position:relative}
 .visibilityWidgetParent div.visibilityHelpContainer {width:300px; position:absolute; right:-150px; top:18px; z-index:1000}
@@ -978,9 +978,9 @@ a.chatterFollowUnfollowAction {display:inline-block}
 a.chatterFollowUnfollowAction div.toolkit-el-mask {opacity:.50; width:100%; height:100%; background-color:#cccccc}
 a.chatterFollowUnfollowAction, img.chatterFollowUnfollowAction {height:15px; width:15px; vertical-align:text-top}
 a.chatterFollowUnfollowAction {background:transparent url(/img/feeds/follow_sprite.png) no-repeat 0 0}
-.publishercontainer a.publisherattachRypplePost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -904px; width:16px; height:16px}
+.publishercontainer a.publisherattachRypplePost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -904px; width:16px; height:16px}
 .publisherThanksContainer {padding:3px}
-#chatterRyppleThanksPost {padding-bottom:0px}
+#chatterRyppleThanksPost {padding-bottom:0}
 .thanksBadgeTitle {padding-top:15px}
 .badgeNameText {font-size:1em; font-weight:bold; color:#105ba7; line-height:15px}
 .oauthMessage {margin-top:8px; margin-bottom:20px}
@@ -992,32 +992,32 @@ a.chatterFollowUnfollowAction {background:transparent url(/img/feeds/follow_spri
 .thanksFeed {float:clear; min-height:75px}
 #thanksRecipientContainer {padding:2px 2px; cursor:text}
 #thanksRecipient {overflow:hidden; line-height:22px}
-#thanksRecipient .item {overflow:hidden; line-height:16px; text-decoration:none; white-space:nowrap; border:1px solid #d4dadc; background:#eff7fa; color:#222; padding:0px 5px; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px}
+#thanksRecipient .item {overflow:hidden; line-height:16px; text-decoration:none; white-space:nowrap; border:1px solid #d4dadc; background:#eff7fa; color:#222; padding:0 5px; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px}
 #thanksRecipient .guestItem {background:#fff6e8; color:#f07e05}
 #thanksRecipient .invalid {background-color:#ffedef; border-color:#ff6678}
-#thanksRecipient span {float:left; padding:2px 0px}
+#thanksRecipient span {float:left; padding:2px 0}
 .rypple-thanksRecipientRemove {float:right; margin-top:6px; margin-right:2px; margin-left:5px; height:8px}
 .rypple-thanksRecipientRemove a.remove, .rypple-thanksRecipientRemove a.remove img {display:block; width:8px; height:8px}
 .rypple-thanksRecipientRemove a.remove img {background:transparent url(/img/chatter/message_item_x.png) no-repeat scroll left top}
 .rypple-thanksRecipientRemove a.remove:hover img {background-position:0 50%}
-#thanksRecipient input {border:0px; padding:0px; margin:0px; height:21px; background-image:none}
-#thanksRecipient input:focus {border:0px; outline:none}
+#thanksRecipient input {border:0; padding:0; margin:0; height:21px; background-image:none}
+#thanksRecipient input:focus {border:0; outline:none}
 .publisherBadge {width:75px; height:75px; margin:0 auto; cursor:default; display:block; cursor:pointer}
 .changeBadge {margin-top:4px; text-align:center}
 .changeBadge a, .changeBadge a:hover, .changeBadge a:active, .listitem .ryppleBadgeInner a, .listitem .ryppleBadgeInner a:hover, .listitem .ryppleBadgeInner a:active {color:#015ba7; font-family:Arial; font-weight:normal}
 .publishercontainer #showingrypplethanks {padding-top:0; max-width:none; padding:0; margin:0; min-height:0}
-.thanksContainer {margin-top:0px; width:100%; position:relative; border-bottom:1px solid #c7ccce; border-top:1px solid #c7ccce; padding:0}
+.thanksContainer {margin-top:0; width:100%; position:relative; border-bottom:1px solid #c7ccce; border-top:1px solid #c7ccce; padding:0}
 .thanksContainer .publisherTextAreaPlaceholder {float:left; width:78%}
 .thanksContainer .publisherTextAreaContainer {border-left:1px solid #c7ccce}
 .thanksContainer .publisherTextAreaContainer .publisherTextAreaInner {border:0; border-radius:0; background:none; min-height:108px}
 .chattertextareahaserror .thanksContainer .publisherTextAreaInner {background-color:#fce8e8; border:0!important}
-.thanksContainer #publishereditablearea {border:0px; background-image:none; width:100%}
+.thanksContainer #publishereditablearea {border:0; background-image:none; width:100%}
 .thanksContainer .chattermessagecontainer {border:0; border-top:1px solid #c7ccce}
 .badgeContainer {position:relative; width:22%; height:95px; padding:9px 0 6px 0; float:left; background-color:white; text-align:center}
-.changeBadgeAnchor {background-color:transparent; border-bottom-color:#2d6a91; border-bottom-left-radius:0px; border-bottom-right-radius:0px; border-collapse:separate; border-left-color:#2d6a91; border-right-color:#2d6a91; border-top-color:#2d6a91; border-top-left-radius:0px; border-top-right-radius:0px; color:#2d6a91; cursor:pointer; display:block; float:left; font-size:.917em; font-weight:bold; height:13px; line-height:normal; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; min-height:0px; outline-color:#2d6a91; outline-style:none; outline-width:0px; padding-bottom:0px; padding-left:0px; padding-right:0px; padding-top:0px; text-align:center; text-decoration:none; white-space:normal; width:95px}
-.allowdeny {background-image:url(images/bg-rypple.png); background-repeat:repeat-x; background-color:#005688; margin:0px auto}
+.changeBadgeAnchor {background-color:transparent; border-bottom-color:#2d6a91; border-bottom-left-radius:0; border-bottom-right-radius:0; border-collapse:separate; border-left-color:#2d6a91; border-right-color:#2d6a91; border-top-color:#2d6a91; border-top-left-radius:0; border-top-right-radius:0; color:#2d6a91; cursor:pointer; display:block; float:left; font-size:.917em; font-weight:bold; height:13px; line-height:normal; margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; min-height:0; outline-color:#2d6a91; outline-style:none; outline-width:0; padding-bottom:0; padding-left:0; padding-right:0; padding-top:0; text-align:center; text-decoration:none; white-space:normal; width:95px}
+.allowdeny {background-image:url(images/bg-rypple.png); background-repeat:repeat-x; background-color:#005688; margin:0 auto}
 .rypplelogo {margin-top:20px}
-.rypplecenter {width:980px; margin:0px auto}
+.rypplecenter {width:980px; margin:0 auto}
 .rypplemain {margin-top:10px; height:auto; background:#ffffff}
 .rypplemain-content {padding-top:20px; padding-right:80px; padding-bottom:20px; padding-left:80px}
 .rypplemain-logo {position:absolute}
@@ -1030,8 +1030,8 @@ a.selectBadge {color:#015ba7; text-transform:none; text-decoration:none; font-si
 .badgeSelectionDescription {display:block; padding-top:3px}
 .badgeSmallImage {width:75px; height:75px; border:1px; cursor:pointer}
 .badgeLargeImage {width:128px; height:128px; border:1px}
-.container {width:470px; background:#f5f5f5; background:-moz-linear-gradient(top,  #f5f5f5 0%, #fdfdfd 5%, #ffffff 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(5%,#fdfdfd), color-stop(100%,#ffffff)); background:-webkit-linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-o-linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-ms-linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%)}
-.container1 {width:470px; height:280px; background:#f5f5f5; background:-moz-linear-gradient(top,  #f5f5f5 0%, #fdfdfd 5%, #ffffff 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(5%,#fdfdfd), color-stop(100%,#ffffff)); background:-webkit-linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-o-linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-ms-linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:linear-gradient(top,  #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); overflow:scroll}
+.container {width:470px; background:#f5f5f5; background:-moz-linear-gradient(top, #f5f5f5 0%, #fdfdfd 5%, #ffffff 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(5%,#fdfdfd), color-stop(100%,#ffffff)); background:-webkit-linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-o-linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-ms-linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%)}
+.container1 {width:470px; height:280px; background:#f5f5f5; background:-moz-linear-gradient(top, #f5f5f5 0%, #fdfdfd 5%, #ffffff 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(5%,#fdfdfd), color-stop(100%,#ffffff)); background:-webkit-linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-o-linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:-ms-linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); background:linear-gradient(top, #f5f5f5 0%,#fdfdfd 5%,#ffffff 100%); overflow:scroll}
 .ryppleBadgeList .listitem-img {margin-bottom:4px; display:block; padding:20px 20px 0}
 .badgeLeft {width:130px; float:left; padding-right:20px; padding-left:20px; padding-top:20px}
 .rightBadge {margin-top:32px; float:left; width:300px}
@@ -1055,7 +1055,7 @@ a.selectBadge {color:#015ba7; text-transform:none; text-decoration:none; font-si
 #formatting-container {-webkit-user-select:none; -khtml-user-select:none; -ms-user-select:none; -o-user-select:none; user-select:none; height:29px; line-height:29px; padding-left:5px; background-color:#f5f6f6; border:1px solid #cacaca}
 .NotePost .customPanel #formatting-container {border-left:none; border-right:none; padding-left:8px}
 #formatting-container .format-button {background-repeat:repeat-x; display:inline-block; height:24px}
-#formatting-container .format {background-position:center center; background-repeat:no-repeat; cursor:pointer; display:inline-block; height:16px; padding:0px 6px; vertical-align:middle; width:16px; padding-right:0}
+#formatting-container .format {background-position:center center; background-repeat:no-repeat; cursor:pointer; display:inline-block; height:16px; padding:0 6px; vertical-align:middle; width:16px; padding-right:0}
 #formatting-container a.bold {background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAAAk0lEQVQ4y2P4%2F%2F8%2FAyWYYRgZwMjICMLaQLwGB54OxGJQdTgNAGEnIF4PxTpQsQgoP4IYA%2FSAeAsU60HFoqD8KGIM0AfinTiwPjEGGADxfij2gPLjofzlQMxFyAAjID4KxUa4xDAMAAGoYj8gPgPFJlBxZDEVXAZwArEzED%2FEgxuAWBKI%2BXEZIArEUgQwdgOGbl4AAJNd31sYL2AKAAAAAElFTkSuQmCC)}
 #formatting-container a.bold.active, #formatting-container a.bold:active, #formatting-container a.bold:hover {background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAAAmklEQVQ4y2P4%2F%2F8%2FAyWYYRgZwMDIwcCQ9kQbiNfgwNOBWAysDoixGwAxxAmI10OxDlQsAsqPIMYAPSDeAsV6ULEoKD%2BKGAP0gXgnDqxPjAEGQLwfij2g%2FHgofzkQcxEywAiIj0KxES4xTANAAKLYD4jPQLEJWBxVTAW7AWlPOIHYGYgf4sENQCwJxPy4DBAFYikCGLsBQzcvAAA7TUZ%2BIXrEnAAAAABJRU5ErkJggg%3D%3D)}
 #formatting-container a.italic {background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAAAeUlEQVQ4y2P4%2F%2F8%2FAyWYYRgawMjICMPaQLwGDWuTYgAI6wDxeiDugYmRaoAeEG8BYl1yDUgD4g3IYqQasBWIM8k1wAiIjwKxIUwMBAgaAAJQDUuA%2BAyQa8KABIgxwBaIH6JhdyAWB2J2YgzgBmJJIJZCw8QZMPTyAgDoITXZ03ISrgAAAABJRU5ErkJggg%3D%3D)}
@@ -1068,11 +1068,11 @@ a.selectBadge {color:#015ba7; text-transform:none; text-decoration:none; font-si
 #formatting-container a.link.active, #formatting-container a.link:active, #formatting-container a.link:hover {background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAABC0lEQVQ4y63TzUoCURjG8bkSUegGbKsykRi4SNcSyDAwbdy4tq3LcCNBN6CClKa3U1GUuIl20UZq%2Br%2FwLIZG5oNa%2FMBzPO8z59MJw9D5i0yD3MvXBqaY4DhXAAUBwohvdDMFMNBX0TN6uMAndnATAxhQxBceUIr0jxU6Swto49G%2BhGucqX%2BkgPneAP4ooIUKqrhTwRXKeFP7JBZAp4cPrbmGWw1eoomN2uexTbTOyIYdYaG2hdTxonAvdow2HQ3e2jnjRu2V2raUU1ve3otkG6KCAQ70e61im1Er8SbakahoqPahpn2voyymBbi6HO%2Foo4MnhfqZ3oJdz19X1gS5HpPWPNHDafzba0zyA3Kprw7uOsaEAAAAAElFTkSuQmCC)}
 .NotePost .customPanel {border-top-left-radius:3px; border-top-right-radius:3px; padding:0}
 .NotePost .noteTitleContainer {padding:5px}
-.publishercontainer a.publisherattachNotePost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -884px; width:16px; height:16px}
+.publishercontainer a.publisherattachNotePost img.publishericon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -884px; width:16px; height:16px}
 .NotePost input[type=text].noteTitleInput {background-image:none; border:0; width:95%; font-size:1.5em; color:#222}
 .noteBodyContainer .publisherTextAreaContainer .publisherTextAreaInner {border-left:0; border-top:1px solid #c7ccce; border-right:0; border-bottom:0; border-radius:0; background:none; min-height:108px}
 .noteTitleInput {display:inline-block; width:410px; padding:10px 8px; border:0}
-.NotePost .customPanel .noteBodyContainer #editor {width:auto; height:250px; background-color:#fff; background-repeat:repeat-x; position:relative; padding:0px 0px 0px 0px}
+.NotePost .customPanel .noteBodyContainer #editor {width:auto; height:250px; background-color:#fff; background-repeat:repeat-x; position:relative; padding:0 0 0 0}
 .NotePost .customPanel .noteBodyContainer #editor iframe {border:none}
 #notes-save-container {color:#888; float:right; line-height:34px; margin-right:230px}
 .notesDetailPage .twocolumn {width:969px; padding-bottom:50px; margin-top:2px}
@@ -1091,19 +1091,19 @@ a.selectBadge {color:#015ba7; text-transform:none; text-decoration:none; font-si
 .notesDetailPage .chatterFileDetailFollowUnfollowLinks {margin-bottom:24px}
 .notesDetailPage #fileSharedWithSummaryPanel {margin-bottom:5px}
 #editor-container {border-left:1px solid #cacaca; border-right:1px solid #cacaca; border-bottom:1px solid #cacaca; height:600px; position:relative}
-#editor {background-color:white; height:100%; margin:0px; min-height:400px}
+#editor {background-color:white; height:100%; margin:0; min-height:400px}
 #editor iframe {border:none; min-height:400px}
 .link-tooltip {display:none}
 .button-group {-webkit-border-radius:3px; -moz-border-radius:3px; -o-border-radius:3px; -ms-border-radius:3px; -khtml-border-radius:3px; border-radius:3px; border:1px solid #adadad; display:inline-block; height:27px}
-.button-group>.button {border:none; -webkit-border-radius:0px; -moz-border-radius:0px; -o-border-radius:0px; -ms-border-radius:0px; -khtml-border-radius:0px; border-radius:0px}
+.button-group>.button {border:none; -webkit-border-radius:0; -moz-border-radius:0; -o-border-radius:0; -ms-border-radius:0; -khtml-border-radius:0; border-radius:0}
 #noteTitle {background:none; border:none; font-size:1.5em; outline:none; width:717px; padding:10px; border-top:1px solid #cacaca; border-left:1px solid #cacaca; border-right:1px solid #cacaca; display:inline-block; border-top-left-radius:3px; border-top-right-radius:3px; width:717px}
 .notesDetailPage span#noteTitle {border-bottom:1px solid #cacaca}
-input[type=text]#noteTitle {background-image:url(/img/chatter/innershadow-normal.png); background-position:0px 0px; width:0px; height:0px; background-position:0px 0px; background-repeat:repeat-x; height:auto; width:717px}
-div#taskCreatePanel {padding-left:10px; padding-right:10px; padding-bottom:10px; -moz-border-radius:3px 3px 0px 0px; border-top-left-radius:3px; border-top-right-radius:3px}
+input[type=text]#noteTitle {background-image:url(/img/chatter/innershadow-normal.png); background-position:0 0; width:0; height:0; background-position:0 0; background-repeat:repeat-x; height:auto; width:717px}
+div#taskCreatePanel {padding-left:10px; padding-right:10px; padding-bottom:10px; -moz-border-radius:3px 3px 0 0; border-top-left-radius:3px; border-top-right-radius:3px}
 input#taskCreatePanel_due {width:237px}
 div#taskCreatePanel_due_date_wrapper {width:237px; position:relative}
 input#taskCreatePanel_sub {width:498px}
-.publishercontainer .ActivityEvent div.errorMsg {color:#c00000; padding-top:6px; padding-bottom:2px; padding-left:0px; width:auto}
+.publishercontainer .ActivityEvent div.errorMsg {color:#c00000; padding-top:6px; padding-bottom:2px; padding-left:0; width:auto}
 .publishercontainer .customPanel .taskCreateFieldDiv label {height:auto; line-height:normal; padding-top:7px; padding-bottom:2px}
 .recommend a {color:#015ba7; text-decoration:none}
 .recommend .recElementName {font-weight:bold}
@@ -1136,7 +1136,7 @@ input#taskCreatePanel_sub {width:498px}
 .recommend .recBox .recDismissImage {margin-top:2px}
 .recommend .arrow-img {width:0; height:0; border:5px solid transparent}
 .recommend .expandedExplanation .blueLink {float:none}
-.recommend .mruIcon {padding-right:0px; margin-left:1px; vertical-align:middle}
+.recommend .mruIcon {padding-right:0; margin-left:1px; vertical-align:middle}
 .recommend ul {padding:0; margin:0}
 .recommend li {margin:0}
 .recommend .recExpl ul>li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; list-style-type:none}
@@ -1156,13 +1156,13 @@ input#taskCreatePanel_sub {width:498px}
 .recBox .topicElement .suggested span, .recBox .topicElement .selected a, .recBox .topicElement .new .done, .recBox .topicElement .used .skip {display:none}
 .recBox .topicElement .selected img {padding-right:5px}
 .recBox .topicElement .suggestion {padding-top:2px; word-wrap:break-word}
-.recBox .topicElement .suggestion p {padding-top:0px}
+.recBox .topicElement .suggestion p {padding-top:0}
 .recBox .success .todoList {background:none repeat scroll 0 0 #edfff1; border:2px solid #9bebb3}
 .recBox .success .todoList p {padding:0 0 0 0}
 .topicsContainer {padding-bottom:10px}
 .recBox .topicElement .suggestions {padding:10px 0}
 .topicSpinner {width:100%; height:60px; background:transparent url(/sfc/images/spinner_large.gif) center no-repeat}
-body .quickActionPanel {border-bottom:1px solid #c7ccce; margin-top:11px; padding-top:0px; padding-left:5px; padding-right:5px; padding-bottom:5px; white-space:normal}
+body .quickActionPanel {border-bottom:1px solid #c7ccce; margin-top:11px; padding-top:0; padding-left:5px; padding-right:5px; padding-bottom:5px; white-space:normal}
 body div.quickActionPanel .bPageBlock {padding:0; margin-bottom:0; border-width:0}
 .publishercontainer .quickActionPanel .mouseOverInfoOuter, .publishercontainer .quickActionPanel .pbHeader {display:none}
 body .publishercontainer .quickActionPanel .quickActionForm, .publishercontainer .quickActionPanel .pbError {background-color:#ffffff}
@@ -1192,21 +1192,21 @@ body .publishercontainer .quickActionPanel .quickActionForm, .publishercontainer
 .publishercontainer .quickActionPanel table.multiSelectPicklistTable>tbody>tr>td {height:0}
 .publishercontainer .quickActionPanel table.multiSelectPicklistTable>tbody>tr.multiSelectPicklistRow>td {height:100%}
 .publishercontainer .quickActionPanel .multiSelectPicklistTable .multiSelectPicklistCell {width:24px}
-.publishercontainer .quickActionPanel .quickActionReadOnlyElement, .publishercontainer .quickActionPanel textarea, .publishercontainer .quickActionPanel select, .publishercontainer .quickActionPanel .zen-select, .publishercontainer .quickActionPanel input[type=text] {border:1px solid #c7ccce; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; width:100%; padding:7px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; margin:0px}
-.publishercontainer .quickActionPanel .zen-options {left:0px; right:0px}
+.publishercontainer .quickActionPanel .quickActionReadOnlyElement, .publishercontainer .quickActionPanel textarea, .publishercontainer .quickActionPanel select, .publishercontainer .quickActionPanel .zen-select, .publishercontainer .quickActionPanel input[type=text] {border:1px solid #c7ccce; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; width:100%; padding:7px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; margin:0}
+.publishercontainer .quickActionPanel .zen-options {left:0; right:0}
 .publishercontainer .quickActionPanel .quickActionReadOnlyElement {padding-top:0; padding-bottom:0; background:#fbfbfb; color:#999; line-height:28px; min-height:30px}
 .publishercontainer .quickActionPanel textarea, .publishercontainer .quickActionPanel input[type=text] {background:#fff; -moz-box-shadow:0 1px 1px rgba(208, 213, 214, 0.5) inset; -webkit-box-shadow:0 1px 1px rgba(208, 213, 214, 0.5) inset; box-shadow:0 1px 1px rgba(208, 213, 214, 0.5) inset}
 .publishercontainer .quickActionPanel textarea {height:100px; overflow:auto}
 .publishercontainer .quickActionPanel input[type=text] {height:30px}
-.publishercontainer .quickActionPanel input[type=checkbox] {width:14px; height:14px; background-image:-moz-linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73% ); background-image:-webkit-linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73% ); background-image:-ms-linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73% ); background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0.46, rgb(254, 254, 254) ), color-stop(0.73, rgb(248, 247, 247) ) ); background-image:linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73% )}
-.publishercontainer .quickActionPanel select, .publishercontainer .quickActionPanel .zen-select {font-family:'Arial','Helvetica',san-serif; color:#222; font-padding:10px; height:30px; padding-top:6px; padding-bottom:6px; background-image:-moz-linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58% ); background-image:-webkit-linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58% ); background-image:-ms-linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58% ); background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0.16, rgb(255, 255, 255) ), color-stop(0.58, rgb(243, 243, 243) ) ); background-image:linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58% )}
+.publishercontainer .quickActionPanel input[type=checkbox] {width:14px; height:14px; background-image:-moz-linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73%); background-image:-webkit-linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73%); background-image:-ms-linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73%); background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0.46, rgb(254, 254, 254) ), color-stop(0.73, rgb(248, 247, 247) )); background-image:linear-gradient(top, rgb(254, 254, 254) 46%, rgb(248, 247, 247) 73%)}
+.publishercontainer .quickActionPanel select, .publishercontainer .quickActionPanel .zen-select {font-family:'Arial','Helvetica',san-serif; color:#222; font-padding:10px; height:30px; padding-top:6px; padding-bottom:6px; background-image:-moz-linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58%); background-image:-webkit-linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58%); background-image:-ms-linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58%); background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0.16, rgb(255, 255, 255) ), color-stop(0.58, rgb(243, 243, 243) )); background-image:linear-gradient(top, rgb(255, 255, 255) 16%, rgb(243, 243, 243) 58%)}
 .socialProviderItem img {display:block; width:30px}
-.socialPubContentField {margin:0px; resize:none; width:100%; background:#fff; word-wrap:break-word; outline-style:none; overflow:hidden; border:0; height:72px}
+.socialPubContentField {margin:0; resize:none; width:100%; background:#fff; word-wrap:break-word; outline-style:none; overflow:hidden; border:0; height:72px}
 .socialPubCharCount.charLimit {color:red}
 .socialPubContentMsg {float:left; display:inline; padding-left:6px; color:red}
 .socialPubCharCount {display:block; width:100%; text-align:right; position:absolute; top:-24px}
 .socialPubButtonBox {float:right}
-.publishercontainer .quickActionPanel .zen-select.socialPubSelectBox {margin:0px; padding-top:0px}
+.publishercontainer .quickActionPanel .zen-select.socialPubSelectBox {margin:0; padding-top:0}
 .publishercontainer .socialPublisherContainer .quickActionPanel .quickActionField {overflow:visible}
 .chatterlvthirdcolumn .todoListBox {margin-bottom:10px}
 .todoList {background:url("/img/chatter/wtdNowGradientbg.png") repeat-x 0 0 scroll; background-color:#ffe5a7}
@@ -1239,16 +1239,16 @@ body .publishercontainer .quickActionPanel .quickActionForm, .publishercontainer
 .richPost .inlinePlayer iframe {z-index:1}
 .richPost .title a {font-weight:700; display:block}
 .richPost .provider a {color:#7d7d84; margin-bottom:10px}
-.richPost .provider .embedlyIcon {position:relative; top:-1px; display:inline-block; text-indent:-999em; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -404px; width:16px; height:16px; margin-left:5px}
+.richPost .provider .embedlyIcon {position:relative; top:-1px; display:inline-block; text-indent:-999em; background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -404px; width:16px; height:16px; margin-left:5px}
 .richPost .content {display:table-cell}
 .richPost .full {margin-left:0}
 .richPost .desc {max-width:260px}
 .richPost .full .desc {max-width:none}
-.feedSearch {position:absolute; left:0px; top:0px}
+.feedSearch {position:absolute; left:0; top:0}
 .feedSearch.feedSearchOpen {box-shadow:0 2px 2px #eee inset}
 .feedSearch a:hover, .feedSearch a {text-decoration:none}
 .feedSearchForm {display:none; border:none}
-a.feedSearchOpenButton {display:inline-block; vertical-align:top; height:12px; border:none; background:none; cursor:pointer; padding-left:6px; padding-top:3px; padding-right:7px; padding-bottom:2px; margin:1px 0px}
+a.feedSearchOpenButton {display:inline-block; vertical-align:top; height:12px; border:none; background:none; cursor:pointer; padding-left:6px; padding-top:3px; padding-right:7px; padding-bottom:2px; margin:1px 0}
 .comboMenu .zen-searchBox input {color:#000}
 .feedSearch.feedSearchOpen .feedSearchForm {display:block}
 .feedSearch.feedSearchOpen .feedSearchClosedButton {display:none}
@@ -1406,7 +1406,7 @@ a:focus .feedSearchIcon {background-position:0 -32px}
 .multifile-upload-button-hover {background:#99ccff}
 .multifile-upload-button-focus {outline:1px dotted black}
 .singleProgress, .overallProgress {border:1px solid #cfd4d6; background-color:#fff; padding:1px; margin-bottom:-4px; display:inline-block}
-.singleProgress span, .overallProgress span {display:block; width:0px; height:11px; background-color:#a4dcef}
+.singleProgress span, .overallProgress span {display:block; width:0; height:11px; background-color:#a4dcef}
 .singleProgress {width:200px}
 .overallProgress {width:330px; display:none; margin:4px 0 2px}
 .multifile-upload-list {list-style:none; padding:0}
@@ -1515,7 +1515,7 @@ a:focus .feedSearchIcon {background-position:0 -32px}
 #folderNavigationMutton .zen-select {border:medium none; display:inline}
 #folderNavigationMutton .zen-options, #folderNavigationMutton .zen-select {left:0; right:auto}
 #folderNavigationMutton .zen-trigger {display:inline-block; font-size:1.62em; font-weight:100; cursor:pointer; white-space:nowrap; text-overflow:ellipsis; max-width:400px; overflow:hidden}
-#folderNavigationMutton .zen-trigger .zen-selectArrow {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1582px; width:7px; height:5px; background-repeat:no-repeat; border:0 none; height:5px; width:7px; margin-top:9px}
+#folderNavigationMutton .zen-trigger .zen-selectArrow {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1582px; width:7px; height:5px; background-repeat:no-repeat; border:0 none; height:5px; width:7px; margin-top:9px}
 #folderNavigationMutton .zen-options {background-color:#ffffff; border:1px solid #e2e2e2; border-radius:3px 3px 3px 3px; box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); margin-top:2px; font-size:1.1em; padding:10px 0; white-space:nowrap}
 #folderNavigationMutton .zen-options a {display:block; color:#222222; font-size:1.1em; line-height:13px; margin:0; padding:7px 20px; white-space:nowrap; word-wrap:normal; padding:7px 17px; text-overflow:ellipsis; max-width:600px; overflow:hidden}
 #folderNavigationMutton .zen-options a:hover, #folderNavigationMutton .zen-options a:focus {background-color:#ececec}
@@ -1545,8 +1545,8 @@ a:focus .feedSearchIcon {background-position:0 -32px}
 .chatterbox_onboarding_download .group:after {clear:both}
 .chatterbox_onboarding_download .group {zoom:1}
 #chatterbox_onboarding_download_button, #chatterbox_onboarding_download_button_chatter, #chatterbox_onboarding_download_button_chatterbox {position:absolute; bottom:1.75em; left:0; bottom:30px; display:inline-block; height:2.75em; background-color:#f29724; border:1px solid #c56900; border-radius:4px; padding:0 1.25em; margin:0; color:#ffffff; text-shadow:0 -1px 0 rgba(0, 0, 0, 0.2); font-size:1.3em; font-weight:bold; line-height:2.75em; cursor:pointer; text-decoration:none; white-space:nowrap}
-a.chatterbox_onboarding_download_button:hover {background:#f9ae54; background:-moz-linear-gradient(top,  #f9ae54 1%, #eb8a0a 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(1%,#f9ae54), color-stop(100%,#eb8a0a)); background:-webkit-linear-gradient(top,  #f9ae54 1%,#eb8a0a 100%); background:-o-linear-gradient(top,  #f9ae54 1%,#eb8a0a 100%); background:-ms-linear-gradient(top,  #f9ae54 1%,#eb8a0a 100%); background:linear-gradient(to bottom,  #f9ae54 1%,#eb8a0a 100%); filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9ae54', endColorstr='#eb8a0a',GradientType=0 ); box-shadow:0 2px 2px rgba(0,0,0,0.3); text-decoration:none}
-a.chatterbox_onboarding_download_button:active {background:#d57900; background:-moz-linear-gradient(top,  #d57900 0%, #ec9322 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#d57900), color-stop(100%,#ec9322)); background:-webkit-linear-gradient(top,  #d57900 0%,#ec9322 100%); background:-o-linear-gradient(top,  #d57900 0%,#ec9322 100%); background:-ms-linear-gradient(top,  #d57900 0%,#ec9322 100%); background:linear-gradient(to bottom,  #d57900 0%,#ec9322 100%); filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#d57900', endColorstr='#ec9322',GradientType=0 ); -ms-filter:"progid:DXImageTransform.Microsoft.gradient( startColorstr='#d57900', endColorstr='#ec9322',GradientType=0 )"; box-shadow:inset 0 1px 1px rgba(0,0,0,0.3); text-decoration:none}
+a.chatterbox_onboarding_download_button:hover {background:#f9ae54; background:-moz-linear-gradient(top, #f9ae54 1%, #eb8a0a 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(1%,#f9ae54), color-stop(100%,#eb8a0a)); background:-webkit-linear-gradient(top, #f9ae54 1%,#eb8a0a 100%); background:-o-linear-gradient(top, #f9ae54 1%,#eb8a0a 100%); background:-ms-linear-gradient(top, #f9ae54 1%,#eb8a0a 100%); background:linear-gradient(to bottom, #f9ae54 1%,#eb8a0a 100%); filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9ae54', endColorstr='#eb8a0a',GradientType=0 ); box-shadow:0 2px 2px rgba(0,0,0,0.3); text-decoration:none}
+a.chatterbox_onboarding_download_button:active {background:#d57900; background:-moz-linear-gradient(top, #d57900 0%, #ec9322 100%); background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#d57900), color-stop(100%,#ec9322)); background:-webkit-linear-gradient(top, #d57900 0%,#ec9322 100%); background:-o-linear-gradient(top, #d57900 0%,#ec9322 100%); background:-ms-linear-gradient(top, #d57900 0%,#ec9322 100%); background:linear-gradient(to bottom, #d57900 0%,#ec9322 100%); filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#d57900', endColorstr='#ec9322',GradientType=0 ); -ms-filter:"progid:DXImageTransform.Microsoft.gradient( startColorstr='#d57900', endColorstr='#ec9322',GradientType=0 )"; box-shadow:inset 0 1px 1px rgba(0,0,0,0.3); text-decoration:none}
 .chatterbox_onboarding_download_label_win, .chatterbox_onboarding_download_label_mac {padding-left:17px}
 .chatterbox_onboarding_download_label_win {background:url(/img/filesync/chatterbox_onboarding_download_sprite.png) no-repeat 0 0}
 .chatterbox_onboarding_download_button_label .chatterbox_onboarding_download_label_win {background:url(/img/filesync/chatterbox_onboarding_download_sprite.png) no-repeat 0 -26px}
@@ -1557,12 +1557,12 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 .chatterbox_onboarding_download_instructions_1 {padding-right:10px; width:180px}
 .chatterbox_onboarding_download_instructions_2 {padding-left:20px; padding-right:40px; width:180px}
 .chatterbox_onboarding_download_instructions_3 {padding-left:20px; width:190px}
-.chatterbox_onboarding_download_os_win .chatterbox_onboarding_download_instructions_1 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_win.png) no-repeat -30px 0px}
-.chatterbox_onboarding_download_os_win .chatterbox_onboarding_download_instructions_2 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_win.png) no-repeat -226px 0px}
-.chatterbox_onboarding_download_os_win .chatterbox_onboarding_download_instructions_3 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_win.png) no-repeat -496px 0px}
-.chatterbox_onboarding_download_os_mac .chatterbox_onboarding_download_instructions_1 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_mac.png) no-repeat -30px 0px}
-.chatterbox_onboarding_download_os_mac .chatterbox_onboarding_download_instructions_2 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_mac.png) no-repeat -226px 0px}
-.chatterbox_onboarding_download_os_mac .chatterbox_onboarding_download_instructions_3 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_mac.png) no-repeat -496px 0px}
+.chatterbox_onboarding_download_os_win .chatterbox_onboarding_download_instructions_1 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_win.png) no-repeat -30px 0}
+.chatterbox_onboarding_download_os_win .chatterbox_onboarding_download_instructions_2 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_win.png) no-repeat -226px 0}
+.chatterbox_onboarding_download_os_win .chatterbox_onboarding_download_instructions_3 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_win.png) no-repeat -496px 0}
+.chatterbox_onboarding_download_os_mac .chatterbox_onboarding_download_instructions_1 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_mac.png) no-repeat -30px 0}
+.chatterbox_onboarding_download_os_mac .chatterbox_onboarding_download_instructions_2 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_mac.png) no-repeat -226px 0}
+.chatterbox_onboarding_download_os_mac .chatterbox_onboarding_download_instructions_3 {background:transparent url(/img/filesync/chatterbox_onboarding_download_instructions_mac.png) no-repeat -496px 0}
 .chatterFilesTabPage .rightContent .fileSyncDowloadAndFeedbackHeaderDiv {font-size:1em; right:0; position:absolute}
 .chatterPage .mainContent .chatterListViewHeader .fileSyncDowloadAndFeedbackHeaderDiv {position:absolute; top:-15px; right:0; font-size:1em}
 .FileTabPage .fileSyncDowloadAndFeedbackHeaderDiv {top:20px}
@@ -1586,13 +1586,13 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 .topicsOnRecordPage .topicInput {padding:0}
 .topicsEditor {line-height:16px}
 .topics a:hover {text-decoration:underline}
-.topicsOnRecordPage .topics .confirm {margin-top:0px}
+.topicsOnRecordPage .topics .confirm {margin-top:0}
 .topicsOnRecordPage .topics .success>div {margin-top:3px}
 .topicsOnRecordPage .topics .success {height:23px; line-height:18px}
 .topicsOnRecordPage {float:left}
 .topicsOnRecordPage {width:50%}
 .topicsOnRecordPage .topics .editLink {margin-left:5px}
-.topicsOnRecordPage .topics {margin-top:0px; margin-bottom:0px}
+.topicsOnRecordPage .topics {margin-top:0; margin-bottom:0}
 .topics {color:#888888; font-size:.92em; margin-top:8px; margin-bottom:13px}
 .feeditem .topics {margin-right:-16px}
 .topics a {color:#015ba7; font-weight:normal; text-decoration:none}
@@ -1605,12 +1605,12 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 .topics .extra {display:none}
 .topicsEditor, .topics .highlight {background-color:#ffffdc; border-bottom:1px solid #fceeb4; border-top:1px solid #fceeb4}
 .topicsEditor {padding:10px 0 10px 10px}
-.topicInput {background-color:#ffffff; border:1px solid #959595; float:left; overflow:hidden; padding:2px 0px; box-shadow:inset 0 0 1px #e7eaea; -moz-box-shadow:inset 0 0 1px #e7eaea; -webkit-box-shadow:inset 0 0 1px #e7eaea}
+.topicInput {background-color:#ffffff; border:1px solid #959595; float:left; overflow:hidden; padding:2px 0; box-shadow:inset 0 0 1px #e7eaea; -moz-box-shadow:inset 0 0 1px #e7eaea; -webkit-box-shadow:inset 0 0 1px #e7eaea}
 .topics .topicsEditor .topicEditDone {float:right; margin-right:10px; margin-bottom:0; margin-top:0; font-size:1em; height:28px}
 .relatedTopic, .hotTopics .topic {list-style:none; margin-left:0; margin-top:5px; margin-bottom:5px}
 .topics .topicInput .topic {background-color:#ffffff; border-radius:3px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.09); padding:4px 10px; margin-left:5px; margin-top:5px; margin-bottom:5px; float:left; border:1px solid #dedfe7; list-style:none; color:#5d5d5d; max-width:90%}
 .topics .topicInput .topic.selected, .topics .topicInput .topicHover, .hotTopics .topic.selected {background-color:#e5ecf2; border:1px solid #dedfe7}
-.topicInput .input {border:0px; padding:5px; margin:7px 0 0; float:left; outline:none; resize:none; width:30px; overflow:hidden}
+.topicInput .input {border:0; padding:5px; margin:7px 0 0; float:left; outline:none; resize:none; width:30px; overflow:hidden}
 .topicLabel {position:absolute; overflow:hidden; clip:rect(0 0 0 0); height:1px; width:1px; margin:1px; padding:0; border:0}
 .topicInput .ghost {color:#999; width:300px}
 .topics .delete {background:transparent url(/img/feeds/x_sprite.png) no-repeat; height:8px; width:9px; margin-left:10px}
@@ -1638,8 +1638,8 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 .topicsAc .autoCompleteRow, .topicsAc .autoCompleteHoverRow, .topicsAc .autoCompleteSelectedRow, .topicsAc .nosuggestions {font-size:1.05em; padding:6px 10px; height:auto; overflow:hidden}
 .topicsAc .nosuggestions {color:#999}
 .topicsAc .loadingsuggestions {height:20px}
-.topicsAc .loadingsuggestions>img {background-image:url(/img/dataCategories/spinner.gif); background-position:0px 0px; width:16px; height:16px; margin-left:45%}
-.topicsAc .line {border-top:1px solid #e9ebec; margin:10px 0; height:0px}
+.topicsAc .loadingsuggestions>img {background-image:url(/img/dataCategories/spinner.gif); background-position:0 0; width:16px; height:16px; margin-left:45%}
+.topicsAc .line {border-top:1px solid #e9ebec; margin:10px 0; height:0}
 .topicsAc {margin-top:-1px; color:#222; position:absolute}
 .topicsAc a.autoCompleteRowLink:hover {text-decoration:none}
 .topicsAc .autoCompleteHoverRow, .topicsAc .autoCompleteSelectedRow {background-color:#c4e7f3; border:1px solid #c4e7f3}
@@ -1657,39 +1657,39 @@ a.chatterbox_onboarding_download_button:active {background:#d57900; background:-
 .chatter-avatar {display:block; position:relative; border:none!important}
 .chatter-avatarInline {display:inline-block}
 .chatter-avatar img {border:none!important}
-.chatter-avatar .chatter-avatarStyle {position:absolute; top:0px; left:0px; z-index:1; background:url(/img/chatter/avatar-sprite.png?v=182-1) 0px -9999px no-repeat}
+.chatter-avatar .chatter-avatarStyle {position:absolute; top:0; left:0; z-index:1; background:url(/img/chatter/avatar-sprite.png?v=182-1) 0 -9999px no-repeat}
 .chatter-avatarFull .chatter-photo {width:200px}
 .chatter-avatarRegular, .chatter-avatarRegular .chatter-photo, .chatter-avatarRegular .chatter-avatarStyle {width:45px; height:45px}
 .chatter-avatarMedium, .chatter-avatarMedium .chatter-photo, .chatter-avatarMedium .chatter-avatarStyle {width:30px; height:30px}
 .chatter-avatarSmall, .chatter-avatarSmall .chatter-photo, .chatter-avatarSmall .chatter-avatarStyle {width:20px; height:20px}
 .chatter-avatarTiny, .chatter-avatarTiny .chatter-photo, .chatter-avatarTiny .chatter-avatarStyle {width:16px; height:16px}
 .chatter-avatarWithIcon {margin-bottom:2px}
-.chatter-avatarRegular .chatter-avatarStyle {background-position:0px -159px}
-.chatter-avatarMedium .chatter-avatarStyle {background-position:0px -206px}
-.chatter-avatarSmall .chatter-avatarStyle {background-position:0px -361px}
-.chatter-avatarTiny .chatter-avatarStyle {background-position:0px -238px}
-.chatter-avatarRegular.chatter-externalIndicator .chatter-avatarStyle {background-position:0px -62px}
-.chatter-avatarMedium.chatter-externalIndicator .chatter-avatarStyle {background-position:0px -109px}
-.chatter-avatarSmall.chatter-externalIndicator .chatter-avatarStyle {background-position:0px -340px}
-.chatter-avatarTiny.chatter-externalIndicator .chatter-avatarStyle {background-position:0px -141px}
-.chatter-avatarFull.chatter-externalIndicator .chatter-avatarStyle {background-position:0px 0px; width:19px; height:19px; top:-1px; left:-1px}
-.chatter-avatar .chatter-photoInfoIcon {width:12px; height:12px; position:absolute; bottom:0px; right:0px; background-color:#fff; background-repeat:no-repeat; background-image:url(/img/chatter/chatter_photo_icons.png?v=182-1); z-index:10}
+.chatter-avatarRegular .chatter-avatarStyle {background-position:0 -159px}
+.chatter-avatarMedium .chatter-avatarStyle {background-position:0 -206px}
+.chatter-avatarSmall .chatter-avatarStyle {background-position:0 -361px}
+.chatter-avatarTiny .chatter-avatarStyle {background-position:0 -238px}
+.chatter-avatarRegular.chatter-externalIndicator .chatter-avatarStyle {background-position:0 -62px}
+.chatter-avatarMedium.chatter-externalIndicator .chatter-avatarStyle {background-position:0 -109px}
+.chatter-avatarSmall.chatter-externalIndicator .chatter-avatarStyle {background-position:0 -340px}
+.chatter-avatarTiny.chatter-externalIndicator .chatter-avatarStyle {background-position:0 -141px}
+.chatter-avatarFull.chatter-externalIndicator .chatter-avatarStyle {background-position:0 0; width:19px; height:19px; top:-1px; left:-1px}
+.chatter-avatar .chatter-photoInfoIcon {width:12px; height:12px; position:absolute; bottom:0; right:0; background-color:#fff; background-repeat:no-repeat; background-image:url(/img/chatter/chatter_photo_icons.png?v=182-1); z-index:10}
 .chatter-avatarMedium .chatter-photoInfoIcon {width:10px; height:10px}
 .chatter-avatarSmall .chatter-photoInfoIcon, .chatter-avatarTiny .chatter-photoInfoIcon {width:8px; height:8px}
-.chatter-avatarRegular .chatter-ownerIcon {background-position:0px 0px}
-.chatter-avatarMedium .chatter-ownerIcon {background-position:0px -13px}
-.chatter-avatarSmall .chatter-ownerIcon, .chatter-avatarTiny .chatter-ownerIcon {background-position:0px -24px}
-.chatter-avatarRegular .chatter-privateIcon {background-position:0px -33px}
-.chatter-avatarMedium .chatter-privateIcon {background-position:0px -46px}
-.chatter-avatarSmall .chatter-privateIcon, .chatter-avatarTiny .chatter-privateIcon {background-position:0px -57px}
-div.feeditemaux div.taskIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0px -1084px; width:16px; height:16px; float:left; margin:2px 10px 0px 0px; width:16px; height:16px}
+.chatter-avatarRegular .chatter-ownerIcon {background-position:0 0}
+.chatter-avatarMedium .chatter-ownerIcon {background-position:0 -13px}
+.chatter-avatarSmall .chatter-ownerIcon, .chatter-avatarTiny .chatter-ownerIcon {background-position:0 -24px}
+.chatter-avatarRegular .chatter-privateIcon {background-position:0 -33px}
+.chatter-avatarMedium .chatter-privateIcon {background-position:0 -46px}
+.chatter-avatarSmall .chatter-privateIcon, .chatter-avatarTiny .chatter-privateIcon {background-position:0 -57px}
+div.feeditemaux div.taskIcon {background-image:url(/img/chatter/sprites/sprite_images/chattersupersprite.png?v=186-5); background-position:0 -1084px; width:16px; height:16px; float:left; margin:2px 10px 0 0; width:16px; height:16px}
 div.feeditemaux div.taskInnerContent {float:left}
 div.feeditemaux div.taskDetails span.feeditemseparatingdot {margin-left:5px; margin-right:5px}
 div.feeditemaux div.taskNameAndDueDate {padding-top:1px}
 div.feeditemaux div.taskNameAndDueDate a.taskName {font-weight:bold; font-family:Arial; font-size:1em; color:#015ba7}
 div.feeditemaux div.taskDetails {margin-top:3px; color:#888888}
 div.feeditemaux div.taskNameAndDueDate span.taskDueDate {font-style:italic; font-family:Arial; font-size:1em; color:#888888; text-transform:capitalize; margin-left:10px}
-div.feeditemaux span.insufficientPrivileges {font-style:italic; font-family:Arial; font-size:1em; color:#888888; margin:3px 0px 3px 0px}
+div.feeditemaux span.insufficientPrivileges {font-style:italic; font-family:Arial; font-size:1em; color:#888888; margin:3px 0 3px 0}
 div.feeditemaux div.taskInnerContent div.taskDetails {font-family:Arial; font-size:.917em}
 div.feeditemaux div.taskInnerContent div.taskDetails a:link, div.feeditemaux div.taskInnerContent div.taskDetails a:visited, div.feeditemaux div.taskInnerContent div.taskDetails a:active {text-decoration:none; color:#888888}
 div.feeditemaux div.taskInnerContent div.taskDetails a:hover {text-decoration:underline; color:#015ba7}

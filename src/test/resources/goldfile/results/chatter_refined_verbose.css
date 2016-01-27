@@ -86,7 +86,7 @@
 }
 
 .currentStatusUserName a {
-  font-size: .72em;
+  font-size: 0.72em;
   font-weight: normal;
 }
 
@@ -174,7 +174,7 @@
 
 .contentdetails .lastUpdated {
   color: #999;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .contentdetails a.syncIcon img {
@@ -215,7 +215,7 @@
 }
 
 .contentdetails .sync .toolkit-el-mask {
-  opacity: .2;
+  opacity: 0.2;
   filter: Alpha(opacity=20);
   background: #fff;
 }
@@ -239,7 +239,7 @@
 
 .feedcontainer .feeditemfooter, .feedcontainer .feedcommentfooter {
   display: block;
-  font-size: .92em;
+  font-size: 0.92em;
   line-height: 13px;
   margin: 8px 0;
 }
@@ -255,7 +255,7 @@
 
 .feedcontainer .feeditemextras .feedItemExtrasMetaText {
   color: #888888;
-  font-size: .92em;
+  font-size: 0.92em;
 }
 
 .feedcontainer .feeditemextras .feedItemExtrasMetaText a {
@@ -485,7 +485,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
   position: absolute;
   top: 0;
   left: 0;
-  -moz-opacity: .5;
+  -moz-opacity: 0.5;
   opacity: .50;
   filter: alpha(opacity=50);
   width: 100%;
@@ -612,7 +612,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
 .selectedFileDetailsContainer .title .size {
   font-weight: normal;
   color: #888;
-  font-size: .84em;
+  font-size: 0.84em;
 }
 
 .selectedFileDetailsContainer .title {
@@ -632,7 +632,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
   white-space: normal;
   padding: 5px 0;
   color: #888;
-  font-size: .92em;
+  font-size: 0.92em;
 }
 
 .feeditemcomment .externalGroupWarning {
@@ -729,7 +729,7 @@ body.detailPage .feedpage .feedcontainer .singlefeeditemheader {
 
 .cxshowmorefeeditemscontainer a {
   margin-top: 12px;
-  font-size: .92em;
+  font-size: 0.92em;
   font-weight: 700;
   color: #333;
   text-decoration: none;
@@ -956,7 +956,7 @@ a:hover .contentActionLabel, a:hover .contentTitleLink {
 
 .feedcontainer span.fileSize, .postInput span.fileSize {
   color: #999;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .postInput div.uploadFileSizeLimit {
@@ -1277,7 +1277,7 @@ body .userProfileHoverUserBlock .userProfileHoverPageBlock .userProfileHoverBody
 
 .feedcontainer .dbrdCmpLabel {
   padding: 2px;
-  font-size: .92em;
+  font-size: 0.92em;
 }
 
 .feedcontainer a.dbrdCmpViewLink img {
@@ -1335,7 +1335,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .dbrdThumbnailSubtitle {
-  font-size: .92em;
+  font-size: 0.92em;
   color: #7d7d84;
 }
 
@@ -1393,7 +1393,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 
 .chatterListOverlay .titleSpan {
   color: #4a4a56;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .chatterListOverlay .boldTitleSpan {
@@ -1401,7 +1401,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .chatterListOverlay select {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .chatterListOverlay .cancelButton, .modalOverlay .buttonBar {
@@ -1567,7 +1567,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .sharedWithListOverlayPanel .pageHelpIconPanel .helpLink, .chatterFilesTabPageHeader .pageHelpIconPanel .helpLink, .actionProgressPanel .pageHelpIconPanel .helpLink {
-  font-size: .9em;
+  font-size: 0.9em;
   padding-right: 5px;
 }
 
@@ -1832,7 +1832,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 #shareWithEntityForm .overlayOwnerSpan {
-  font-size: .92em;
+  font-size: 0.92em;
   background: #ffffcc url(/img/msg_icons/info16.gif) 2px 2px no-repeat;
   border: 1px solid #ccc;
   padding-top: 3px;
@@ -1878,7 +1878,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 
 #sharedWithInputBox_autoCompleteBoxId .ugAC_userRole {
   color: #4a4a56;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .sharedWithListWizard .chatterListOverlay .overlayScrollList {
@@ -2347,7 +2347,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .publicLinkValueDiv .messageTable .messageText {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .publicLinkValueDiv .publicLinkValueInput {
@@ -2677,7 +2677,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .caseEventAction, .caseCommentEventAction {
-  font-size: .92em;
+  font-size: 0.92em;
   font-weight: normal;
 }
 
@@ -2686,14 +2686,14 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .caseCommentEventOriginalPostBy {
-  font-size: .92em;
+  font-size: 0.92em;
 }
 
 .caseEventUnavailable {
   color: #7b797b;
   font-style: italic;
   font-weight: normal;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .caseCommentPostEventIcon img {
@@ -2783,7 +2783,7 @@ a.dbrdThumbnail-a:hover .dbrdThumbnail {
 }
 
 .chatterShowHideFeed {
-  font-size: .95em;
+  font-size: 0.95em;
 }
 
 .chatterShowHideFeed .innerLink img {
@@ -2908,7 +2908,7 @@ div.chatterShowHideFeed span.showFeedLink a:hover .linkText, div.chatterShowHide
   padding-left: 3px;
   display: inline;
   color: #015ba7;
-  font-size: .9em;
+  font-size: 0.9em;
   white-space: nowrap;
 }
 
@@ -2959,7 +2959,7 @@ div.chatterShowHideFeed span.showFeedLink a:hover .linkText, div.chatterShowHide
 .checkedMenu .checkedMenuMenu a, .checkedMenu .checkedMenuMenu input.theOption {
   color: #015ba7;
   display: block;
-  font-size: .9em;
+  font-size: 0.9em;
   margin-left: 12px;
   padding: 5px 6px;
   text-decoration: none;
@@ -2973,7 +2973,7 @@ div.chatterShowHideFeed span.showFeedLink a:hover .linkText, div.chatterShowHide
 
 .checkedMenu span.checkedMenuLabel {
   cursor: default;
-  font-size: .9em;
+  font-size: 0.9em;
   white-space: nowrap;
 }
 
@@ -3257,7 +3257,7 @@ img.applygrayscale {
 }
 
 .publisherAC_box .autoCompleteRow {
-  padding-top: .1em;
+  padding-top: 0.1em;
   padding-left: 10px;
   padding-right: 10px;
   height: auto;
@@ -3315,8 +3315,8 @@ img.applygrayscale {
   background-color: #f2f5f7;
   font-size: 100%;
   padding-left: 10px;
-  padding-top: .2em;
-  padding-bottom: .1em;
+  padding-top: 0.2em;
+  padding-bottom: 0.1em;
 }
 
 .publisherAC_box .publisherAC_title_selected {
@@ -3329,8 +3329,8 @@ img.applygrayscale {
   cursor: pointer;
   background-color: #c6e1ff;
   border: 1px solid #99ccff;
-  margin-top: .3em;
-  padding-top: .2em;
+  margin-top: 0.3em;
+  padding-top: 0.2em;
 }
 
 .publisherAC_box .publisherAC_clickableTitle {
@@ -3349,8 +3349,8 @@ img.applygrayscale {
 }
 
 .publisherAC_box .publisherAC_hr {
-  margin-top: .3em;
-  padding-top: .2em;
+  margin-top: 0.3em;
+  padding-top: 0.2em;
 }
 
 .publisherAC_box .publisherAC_profilePic {
@@ -3906,7 +3906,7 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .contentPublisherSlideDown .requiredLegendContainer {
   display: none;
   height: 18px;
-  font-size: .9em;
+  font-size: 0.9em;
   margin-top: 5px;
   margin-right: 10px;
 }
@@ -4164,7 +4164,7 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 }
 
 .feedtitle .alignright a {
-  font-size: .85em;
+  font-size: 0.85em;
 }
 
 .feedcontainer .feedtitle .thisupdatespanarrow {
@@ -4324,10 +4324,10 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 }
 
 .zen .comboMenu a.zen-trigger:hover, .zen .comboMenu a.zen-trigger:active {
-  -webkit-transition: all .2s ease-in-out .2s;
-  -moz-transition: all .2s ease-in-out .2s;
-  -o-transition: all .2s ease-in-out .2s;
-  transition: all .2s ease-in-out .2s;
+  -webkit-transition: all 0.2s ease-in-out 0.2s;
+  -moz-transition: all 0.2s ease-in-out 0.2s;
+  -o-transition: all 0.2s ease-in-out 0.2s;
+  transition: all 0.2s ease-in-out 0.2s;
   background-color: #fbfbfb;
   box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5) inset;
   border: #c1c1c1 1px solid;
@@ -4371,10 +4371,10 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
   width: 200px;
   z-index: 1000;
   box-shadow: 0 0 2px #ececec;
-  -webkit-transition: all .2s ease-in-out .2s;
-  -moz-transition: all .2s ease-in-out .2s;
-  -o-transition: all .2s ease-in-out .2s;
-  transition: all .2s ease-in-out .2s;
+  -webkit-transition: all 0.2s ease-in-out 0.2s;
+  -moz-transition: all 0.2s ease-in-out 0.2s;
+  -o-transition: all 0.2s ease-in-out 0.2s;
+  transition: all 0.2s ease-in-out 0.2s;
 }
 
 .zen .zen-listView .comboMenu .zen-select .zen-options {
@@ -4383,10 +4383,10 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 
 .zen .comboMenu .zen-select.zen-open {
   display: inline-block;
-  -webkit-transition: all .3s ease-in-out .3s;
-  -moz-transition: all .3s ease-in-out .3s;
-  -o-transition: all .3s ease-in-out .3s;
-  transition: all .3s ease-in-out .3s;
+  -webkit-transition: all 0.3s ease-in-out 0.3s;
+  -moz-transition: all 0.3s ease-in-out 0.3s;
+  -o-transition: all 0.3s ease-in-out 0.3s;
+  transition: all 0.3s ease-in-out 0.3s;
 }
 
 .zen .comboMenu .zen-select.zen-open .zen-trigger {
@@ -4397,7 +4397,7 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 .zen .comboMenu .zen-select .zen-options h4 {
   color: rgb(139,139,139);
   display: block;
-  font-size: .9em;
+  font-size: 0.9em;
   font-weight: normal;
   padding-top: 10px;
   padding-right: 1px;
@@ -4424,10 +4424,10 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
   color: #015ba7;
   outline: medium none;
   text-decoration: none;
-  -webkit-transition: background-color .15s ease-in-out .1s;
-  -moz-transition: background-color .15s ease-in-out .1s;
-  -o-transition: background-color .15s ease-in-out .1s;
-  transition: background-color .15s ease-in-out .1s;
+  -webkit-transition: background-color 0.15s ease-in-out 0.1s;
+  -moz-transition: background-color 0.15s ease-in-out 0.1s;
+  -o-transition: background-color 0.15s ease-in-out 0.1s;
+  transition: background-color 0.15s ease-in-out 0.1s;
 }
 
 .zen .comboMenu .zen-options li {
@@ -4442,7 +4442,7 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
   margin-top: 10px;
   margin-left: 13px;
   position: absolute;
-  transition: background .15s ease-in-out .1s;
+  transition: background 0.15s ease-in-out 0.1s;
   height: 9px;
 }
 
@@ -4453,7 +4453,7 @@ a.zen-trigger:hover .publisherTypeOverflowSelected .publisherattachtext, a.zen-t
 
 .cxallfeedactions .zen-options a {
   color: #015ba7;
-  font-size: .9em;
+  font-size: 0.9em;
   margin-left: 3px;
   margin-right: 3px;
   padding: 5px 6px;
@@ -4778,7 +4778,7 @@ input.rechatUrlCls {
 .rechatSecureLinkContainer {
   margin-top: 12px;
   font-style: italic;
-  font-size: .9em;
+  font-size: 0.9em;
   padding: 5px;
   border: 1px solid #f8e38e;
   background: #ffffdc;
@@ -5406,7 +5406,7 @@ ul.pollchoices li input, ul.pollchoices li label {
 }
 
 .pollvotecount, .pollviewtogglelink, .pollresultsrefreshlink {
-  font-size: .92em;
+  font-size: 0.92em;
 }
 
 .publisherpollchoices {
@@ -5812,7 +5812,7 @@ a.chatterFollowUnfollowAction {
   cursor: pointer;
   display: block;
   float: left;
-  font-size: .917em;
+  font-size: 0.917em;
   font-weight: bold;
   height: 13px;
   line-height: normal;
@@ -5991,7 +5991,7 @@ a.selectBadge {
 
 .skillPink {
   padding: 5px 10px 5px 10px;
-  font-size: .917em;
+  font-size: 0.917em;
   color: #4a4a4a;
   margin: 0 5px;
 }
@@ -6263,12 +6263,12 @@ a.selectBadge {
 }
 
 .notesDetailPage .twocolumn .headerContent .helpLinkElement {
-  font-size: .9em;
+  font-size: 0.9em;
   text-decoration: none;
 }
 
 .notesDetailPage .twocolumn .headerContent .videoLinkElement {
-  font-size: .9em;
+  font-size: 0.9em;
   text-decoration: none;
 }
 
@@ -6438,7 +6438,7 @@ input#taskCreatePanel_sub {
 .recommend .blueLink {
   float: right;
   line-height: 1.4em;
-  font-size: .92em;
+  font-size: 0.92em;
   white-space: nowrap;
 }
 
@@ -7043,7 +7043,7 @@ body .publishercontainer .quickActionPanel .quickActionForm, .publishercontainer
 }
 
 .todoElement .dismiss {
-  font-size: .9em;
+  font-size: 0.9em;
   margin-top: 14px;
 }
 
@@ -7346,7 +7346,7 @@ a:focus .feedSearchIcon {
 .chatterFileDetailActionListPanel .fileSizeLabel {
   vertical-align: top;
   color: #7d7d84;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .chatterFileDetailActionListPanel img {
@@ -7639,7 +7639,7 @@ a:focus .feedSearchIcon {
 }
 
 .chatterHover .online {
-  background-position: 0 .5px;
+  background-position: 0 0.5px;
 }
 
 .chatterHover .away {
@@ -7697,7 +7697,7 @@ a:focus .feedSearchIcon {
   text-align: center;
   border-radius: 3px;
   display: inline;
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .chatterFileListBlock .publishToLibBadgePanel {
@@ -7842,7 +7842,7 @@ a:focus .feedSearchIcon {
   color: #222222;
   padding: 2px 5px 1px;
   text-decoration: none;
-  font-size: .92em;
+  font-size: 0.92em;
   display: inline-block;
   margin: 1px 0;
 }
@@ -8130,7 +8130,7 @@ a:focus .feedSearchIcon {
   width: 16px;
   height: 16px;
   vertical-align: middle;
-  margin-right: .4em;
+  margin-right: 0.4em;
 }
 
 .multifile-upload-type .sprite-doctype-ai-16 {
@@ -8380,7 +8380,7 @@ a:focus .feedSearchIcon {
 }
 
 .multifile-upload-size, .multifile-upload-cancel {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .multifile-upload-cancel {
@@ -8403,13 +8403,13 @@ a:focus .feedSearchIcon {
 
 .fileMultiUploadOverlay .chatterListOverlay {
   margin-top: 30px;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .fileMultiUploadOverlay .maximumSizeLabelSpan {
   display: inline-block;
   color: #a8a8a8;
-  font-size: .9em;
+  font-size: 0.9em;
   float: left;
   margin-top: 4px;
 }
@@ -8505,7 +8505,7 @@ a:focus .feedSearchIcon {
 
 .fileMultiUploadOverlay .fileSizeLabel {
   color: #7d7d84;
-  font-size: .9em;
+  font-size: 0.9em;
   margin-top: 5px;
 }
 
@@ -8660,7 +8660,7 @@ a:focus .feedSearchIcon {
 .chatterbox_onboarding_download {
   color: #3e4041;
   position: relative;
-  margin: .5em 2.5em 1.25em 2.5em;
+  margin: 0.5em 2.5em 1.25em 2.5em;
 }
 
 .chatterbox_onboarding_download_bkground {
@@ -8669,9 +8669,9 @@ a:focus .feedSearchIcon {
 
 .overlayDialog .chatterbox_onboarding_download h2, .chatterbox_onboarding_download h2 {
   font-size: 2.8em;
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
   margin-left: -3px;
-  letter-spacing: -.03em;
+  letter-spacing: -0.03em;
   font-weight: bold;
   color: #53b9cd;
 }
@@ -8725,7 +8725,7 @@ a:focus .feedSearchIcon {
   position: absolute;
   left: 0;
   font-size: 1em;
-  bottom: -.7em;
+  bottom: -0.7em;
   color: #7d7d84;
 }
 
@@ -8925,7 +8925,7 @@ a.chatterbox_onboarding_download_button:active {
   text-align: center;
   width: 400px;
   height: inherit;
-  margin: .5em .5em 1.25em;
+  margin: 0.5em 0.5em 1.25em;
 }
 
 .chatterbox_onboarding_mobile_download_bkground .chatterDownloadIcon {
@@ -9038,7 +9038,7 @@ a.chatterbox_onboarding_download_button:active {
 
 .topics {
   color: #888888;
-  font-size: .92em;
+  font-size: 0.92em;
   margin-top: 8px;
   margin-bottom: 13px;
 }
@@ -9263,7 +9263,7 @@ a.chatterbox_onboarding_download_button:active {
   margin: 0;
   padding: 0;
   text-align: left;
-  line-height: .8em;
+  line-height: 0.8em;
   clear: both;
   font-weight: normal;
 }
@@ -9313,7 +9313,7 @@ a.chatterbox_onboarding_download_button:active {
 }
 
 .hotTopicActions a {
-  font-size: .9em;
+  font-size: 0.9em;
   line-height: 1.4em;
   position: absolute;
   right: 0;
@@ -9628,7 +9628,7 @@ div.feeditemaux span.insufficientPrivileges {
 
 div.feeditemaux div.taskInnerContent div.taskDetails {
   font-family: Arial;
-  font-size: .917em;
+  font-size: 0.917em;
 }
 
 div.feeditemaux div.taskInnerContent div.taskDetails a:link, div.feeditemaux div.taskInnerContent div.taskDetails a:visited, div.feeditemaux div.taskInnerContent div.taskDetails a:active {
