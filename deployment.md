@@ -12,7 +12,7 @@ Quick Tips
 1. ensure all relevant changes are committed and pushed
 2. bump the version number in pom.xml, commit and push
 2. tag the version number in git, and push the new tag
-    1. > git tag -a x.x.x
+    1. > git tag -a vx.x.x (e.g., v0.6.0)
     2. > git push --tags <repo>
 3. the jars must be deploy to **three** repositories:
     1. Internal aura maven repo
