@@ -19,8 +19,9 @@ Quick Tips
     2. External aura maven repo
     3. Internal sfdc maven repo
 4. simplest way to do this is `omakase --deploy`
-5. as of now, also need to check in jars to p4. download them from nexus, along with the pom file, and also update the version 
-in core pom.xml.
+5. check in jars to p4
+    1. run `blt --build update-repository-filter`
+    2. add jars and relevant files to p4 changelist, and shelve
 
 Version Numbering
 -----------------
