@@ -212,8 +212,8 @@ You can also use logical negation and logical or operators in the CSS:
 }
 
 @if (ie8 || ie9 || ie10) {
-  .button {
-    marign: 7px;
+  .button {                                                                           
+    margin: 7px;
   }
 }
 ```
