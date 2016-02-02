@@ -52,8 +52,8 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
     private static final Pattern SIMPLE_VALUE = Pattern.compile("[a-zA-Z][a-zA-Z0-9-_]*");
 
     private String attribute;
-    private Optional<AttributeMatchType> matchType = Optional.absent();
-    private Optional<String> value = Optional.absent();
+    private AttributeMatchType matchType;
+    private String value;
 
     /**
      * Creates a new instance with the given line and column numbers.
@@ -119,8 +119,8 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
         checkNotNull(matchType, "matchType cannot be null");
         checkNotNull(value, "value cannot be null");
 
-        this.matchType = Optional.of(matchType);
-        this.value = Optional.of(value);
+        this.matchType = matchType;
+        this.value = value;
 
         return this;
     }
@@ -132,8 +132,8 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
      * @return this, for chaining.
      */
     public AttributeSelector matchAll() {
-        matchType = Optional.absent();
-        value = Optional.absent();
+        matchType = null;
+        value = null;
         return this;
     }
 
@@ -143,7 +143,7 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
      * @return The {@link AttributeMatchType}, or {@link Optional#absent()} if not specified.
      */
     public Optional<AttributeMatchType> matchType() {
-        return matchType;
+        return Optional.fromNullable(matchType);
     }
 
     /**
@@ -152,7 +152,7 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
      * @return The match value, or {@link Optional#absent()} if not specified.
      */
     public Optional<String> value() {
-        return value;
+        return Optional.fromNullable(value);
     }
 
     @Override
@@ -169,13 +169,13 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
         appendable.append(attribute);
 
         //  the match and value if present
-        if (matchType.isPresent()) {
+        if (matchType != null) {
             // match type
-            writer.writeInner(matchType.get(), appendable);
+            writer.writeInner(matchType, appendable);
 
             // the value. In simple cases where we know quotes aren't needed we omit them.
             // This could be handled better...
-            final String val = value.get();
+            final String val = value;
             if (SIMPLE_VALUE.matcher(val).matches()) {
                 appendable.append(val);
             } else {
@@ -190,8 +190,8 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
     @Override
     public AttributeSelector copy() {
         AttributeSelector copy = new AttributeSelector(attribute).copiedFrom(this);
-        if (matchType.isPresent()) {
-            copy.match(matchType.get(), value.get());
+        if (matchType != null) {
+            copy.match(matchType, value);
         }
         return copy;
     }

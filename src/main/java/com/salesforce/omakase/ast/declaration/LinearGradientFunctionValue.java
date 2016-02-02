@@ -52,7 +52,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 public final class LinearGradientFunctionValue extends AbstractTerm implements FunctionValue {
     private String args;
     private boolean repeating;
-    private Optional<Prefix> prefix = Optional.absent();
+    private Prefix prefix;
 
     /**
      * Constructs a new instance of a {@link LinearGradientFunctionValue}.
@@ -134,7 +134,7 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
      * @return this, for chaining.
      */
     public LinearGradientFunctionValue prefix(Prefix prefix) {
-        this.prefix = Optional.fromNullable(prefix);
+        this.prefix = prefix;
         return this;
     }
 
@@ -144,7 +144,7 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
      * @return The prefix, or {@link Optional#absent()} if no prefix exists.
      */
     public Optional<Prefix> prefix() {
-        return prefix;
+        return Optional.fromNullable(prefix);
     }
 
     /**
@@ -160,8 +160,8 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
     @Override
     public String name() {
         StringBuilder builder = new StringBuilder(32);
-        if (prefix.isPresent()) {
-            builder.append(prefix.get());
+        if (prefix != null) {
+            builder.append(prefix);
         }
         return builder.append(unprefixedName()).toString();
     }

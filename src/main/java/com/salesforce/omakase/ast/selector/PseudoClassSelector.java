@@ -53,7 +53,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
 @Description(value = "pseudo class selector segment", broadcasted = REFINED_SELECTOR)
 public final class PseudoClassSelector extends AbstractSelectorPart implements SimpleSelector, Named {
     private String name;
-    private Optional<String> args = Optional.absent();
+    private String args;
 
     /**
      * Constructs a new {@link PseudoClassSelector} instance with the given name and optional args.
@@ -73,7 +73,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
     public PseudoClassSelector(int line, int column, String name, String args) {
         super(line, column);
         this.name = name;
-        this.args = Optional.fromNullable(args);
+        this.args = args;
     }
 
     /**
@@ -130,7 +130,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
      * @return this, for chaining.
      */
     public PseudoClassSelector args(String args) {
-        this.args = Optional.fromNullable(args);
+        this.args = args;
         return this;
     }
 
@@ -140,7 +140,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
      * @return The arguments, or {@link Optional#absent()} if not specified.
      */
     public Optional<String> args() {
-        return args;
+        return Optional.fromNullable(args);
     }
 
     @Override
@@ -152,13 +152,13 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append(':').append(name);
 
-        if (args.isPresent()) {
-            appendable.append('(').append(args.get()).append(')');
+        if (args != null) {
+            appendable.append('(').append(args).append(')');
         }
     }
 
     @Override
     public PseudoClassSelector copy() {
-        return new PseudoClassSelector(name, args.orNull()).copiedFrom(this);
+        return new PseudoClassSelector(name, args).copiedFrom(this);
     }
 }

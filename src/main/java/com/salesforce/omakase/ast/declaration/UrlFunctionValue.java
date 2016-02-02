@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Subscribable
 @Description(value = "url function", broadcasted = BroadcastRequirement.REFINED_DECLARATION)
 public final class UrlFunctionValue extends AbstractTerm implements FunctionValue {
-    private Optional<QuotationMode> quotationMode = Optional.absent();
+    private QuotationMode quotationMode;
     private String url;
 
     /**
@@ -112,7 +112,7 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
      * @return this, for chaining.
      */
     public UrlFunctionValue quotationMode(QuotationMode quotationMode) {
-        this.quotationMode = Optional.fromNullable(quotationMode);
+        this.quotationMode = quotationMode;
         return this;
     }
 
@@ -122,7 +122,7 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
      * @return The quotation mode, or {@link Optional#absent()} if not present.
      */
     public Optional<QuotationMode> quotationMode() {
-        return quotationMode;
+        return Optional.fromNullable(quotationMode);
     }
 
     /**
@@ -143,14 +143,14 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append("url(");
-        if (quotationMode.isPresent()) {
-            appendable.append(quotationMode.get() == QuotationMode.DOUBLE ? '"' : '\'');
+        if (quotationMode != null) {
+            appendable.append(quotationMode == QuotationMode.DOUBLE ? '"' : '\'');
         }
 
         appendable.append(url);
 
-        if (quotationMode.isPresent()) {
-            appendable.append(quotationMode.get() == QuotationMode.DOUBLE ? '"' : '\'');
+        if (quotationMode != null) {
+            appendable.append(quotationMode == QuotationMode.DOUBLE ? '"' : '\'');
         }
 
         appendable.append(')');
@@ -158,6 +158,6 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
 
     @Override
     public UrlFunctionValue copy() {
-        return new UrlFunctionValue(url).quotationMode(quotationMode.orNull()).copiedFrom(this);
+        return new UrlFunctionValue(url).quotationMode(quotationMode).copiedFrom(this);
     }
 }
