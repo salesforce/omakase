@@ -97,53 +97,6 @@ public class CommentTest {
     }
 
     @Test
-    public void getAnnotationPresentNoArgs() {
-        Comment c = new Comment("@test");
-        CssAnnotation a = c.annotation("test").get();
-        assertThat(a.arguments()).isEmpty();
-    }
-
-    @Test
-    public void getAnnotationPresentMultipleArgs() {
-        Comment c = new Comment("@test one two");
-        CssAnnotation a = c.annotation("test").get();
-        assertThat(a.arguments()).contains("one", "two");
-    }
-
-    @Test
-    public void getAnnotationAbsentNoAnnotation() {
-        Comment c = new Comment("test");
-        assertThat(c.annotation("test").isPresent()).isFalse();
-    }
-
-    @Test
-    public void getAnnotationAbsentDifferentAnnotation() {
-        Comment c = new Comment("@test2");
-        assertThat(c.annotation("test").isPresent()).isFalse();
-    }
-
-    @Test
-    public void errorsIfTooManyArgs() {
-        Comment c = new Comment("@test a b c d e f");
-        exception.expect(OmakaseException.class);
-        c.hasAnnotation("test");
-    }
-
-    @Test
-    public void errorsIfAnnotationMixedWithComment() {
-        Comment c = new Comment("@test arg. This is used to specify that...");
-        exception.expect(OmakaseException.class);
-        c.hasAnnotation("test");
-    }
-
-    @Test
-    public void errorsIfMultipleAnnotationsInSameBlock() {
-        Comment c = new Comment("@test @test");
-        exception.expect(OmakaseException.class);
-        c.hasAnnotation("test");
-    }
-
-    @Test
     public void getAnnotationPresent() {
         Comment c = new Comment("@test");
         assertThat(c.annotation().get().name()).isEqualTo("test");
@@ -153,6 +106,39 @@ public class CommentTest {
     public void getAnnotationAbsent() {
         Comment c = new Comment("test");
         assertThat(c.annotation().isPresent()).isFalse();
+    }
+
+    @Test
+    public void getAnnotationByNamePresentNoArgs() {
+        Comment c = new Comment("@test");
+        CssAnnotation a = c.annotation("test").get();
+        assertThat(a.rawArgs().isPresent()).isFalse();
+    }
+    @Test
+    public void getAnnotationByNamePresentWithSpacesNoArgs() {
+        Comment c = new Comment("  @test  ");
+        CssAnnotation a = c.annotation("test").get();
+        assertThat(a.name()).isEqualTo("test");
+        assertThat(a.rawArgs().isPresent()).isFalse();
+    }
+
+    @Test
+    public void getAnnotationByNamePresentMultipleArgs() {
+        Comment c = new Comment("@test one two");
+        CssAnnotation a = c.annotation("test").get();
+        assertThat(a.rawArgs().get()).isEqualTo("one two");
+    }
+
+    @Test
+    public void getAnnotationByNameAbsentNoAnnotation() {
+        Comment c = new Comment("test");
+        assertThat(c.annotation("test").isPresent()).isFalse();
+    }
+
+    @Test
+    public void getAnnotationByNameAbsentDifferentAnnotation() {
+        Comment c = new Comment("@test2");
+        assertThat(c.annotation("test").isPresent()).isFalse();
     }
 
     @Test

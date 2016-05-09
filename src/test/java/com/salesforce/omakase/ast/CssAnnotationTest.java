@@ -26,9 +26,15 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.base.CaseFormat;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.EnumSet;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Fail.fail;
 
 /**
  * Unit tests for {@link CssAnnotation}.
@@ -37,76 +43,215 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class CssAnnotationTest {
+    @org.junit.Rule
+    public final ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void testName() {
+    public void getName() {
         CssAnnotation a = new CssAnnotation("test");
         assertThat(a.name()).isEqualTo("test");
     }
 
     @Test
-    public void argumentWhenNoArgs() {
+    public void getRawArgsNotPresent() {
         CssAnnotation a = new CssAnnotation("test");
-        assertThat(a.argument().isPresent()).isFalse();
+        assertThat(a.rawArgs().isPresent()).isFalse();
     }
 
     @Test
-    public void argumentWhenOneArg() {
-        CssAnnotation a = new CssAnnotation("test", "one");
-        assertThat(a.argument().get()).isEqualTo("one");
+    public void getRawArgsPresent() {
+        CssAnnotation a = new CssAnnotation("test", "foo");
+        assertThat(a.rawArgs().get()).isEqualTo("foo");
     }
 
     @Test
-    public void argumentWhenMultipleArgs() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two");
-        assertThat(a.argument().get()).isEqualTo("one");
-    }
-
-    @Test
-    public void argumentAtIndexInBounds() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two");
-        assertThat(a.argument(1).get()).isEqualTo("two");
-    }
-
-    @Test
-    public void argumentAtIndexOutOfBounds() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two");
-        assertThat(a.argument(2).isPresent()).isFalse();
-    }
-
-    @Test
-    public void argumentAtIndexNoArgs() {
+    public void getSpaceSeparatedNoArgs() {
         CssAnnotation a = new CssAnnotation("test");
-        assertThat(a.argument(2).isPresent()).isFalse();
+        assertThat(a.spaceSeparatedArgs().isEmpty());
     }
 
     @Test
-    public void allArgumentsNoArgsPresent() {
+    public void getSpaceSeparatedSingleArg() {
+        CssAnnotation a = new CssAnnotation("test", "foo");
+        assertThat(a.spaceSeparatedArgs()).containsExactly("foo");
+    }
+
+    @Test
+    public void getSpaceSeparatedMultipleArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo bar baz");
+        assertThat(a.spaceSeparatedArgs()).containsExactly("foo", "bar", "baz");
+    }
+
+    @Test
+    public void getCommaSeparatedNoArgs() {
         CssAnnotation a = new CssAnnotation("test");
-        assertThat(a.arguments()).isEmpty();
+        assertThat(a.commaSeparatedArgs().isEmpty());
     }
 
     @Test
-    public void allArgumentsArgsPresent() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two");
-        assertThat(a.arguments()).contains("one", "two");
+    public void getCommaSeparatedSingleArg() {
+        CssAnnotation a = new CssAnnotation("test", "foo");
+        assertThat(a.commaSeparatedArgs()).containsExactly("foo");
     }
 
     @Test
-    public void hasArgumentFalseNoArgs() {
+    public void getCommaSeparatedMultipleArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo, bar,baz,bip,  ");
+        assertThat(a.commaSeparatedArgs()).containsExactly("foo", "bar", "baz", "bip");
+    }
+
+    @Test
+    public void getKeyValueNoArgs() {
         CssAnnotation a = new CssAnnotation("test");
-        assertThat(a.hasArgument("one")).isFalse();
+        assertThat(a.keyValueArgs(' ').isEmpty());
     }
 
     @Test
-    public void hasArgumentFalseDifferentArg() {
-        CssAnnotation a = new CssAnnotation("test", "a");
-        assertThat(a.hasArgument("one")).isFalse();
+    public void getKeyValueSpacesEmptyArgs() {
+        CssAnnotation a = new CssAnnotation("test", " ");
+        assertThat(a.keyValueArgs(' ').isEmpty());
+
+        a = new CssAnnotation("test", "");
+        assertThat(a.keyValueArgs(' ').isEmpty());
     }
 
     @Test
-    public void hasArgumentTrue() {
-        CssAnnotation a = new CssAnnotation("test", "one");
-        assertThat(a.hasArgument("one")).isTrue();
+    public void getKeyValueSpacesSingleArg() {
+        CssAnnotation a = new CssAnnotation("test", "foo bar");
+        ImmutableMap<String, String> map = a.keyValueArgs(' ');
+        assertThat(map).hasSize(1);
+        assertThat(map.get("foo")).isEqualTo("bar");
+    }
+
+    @Test
+    public void getKeyValueSpacesMultiArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo bar, baz boo, bim bop");
+        ImmutableMap<String, String> map = a.keyValueArgs(' ');
+        assertThat(map).hasSize(3);
+        assertThat(map.get("foo")).isEqualTo("bar");
+        assertThat(map.get("baz")).isEqualTo("boo");
+        assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    @Test
+    public void getKeyValueSpacesImpliedNameOnly() {
+        CssAnnotation a = new CssAnnotation("test", "foo");
+        ImmutableMap<String, String> map = a.keyValueArgs(' ');
+        assertThat(map).hasSize(1);
+        assertThat(map.get("name")).isEqualTo("foo");
+    }
+
+    @Test
+    public void getKeyValueSpacesImpliedNameMultiArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo, baz boo, bim bop");
+        ImmutableMap<String, String> map = a.keyValueArgs(' ');
+        assertThat(map).hasSize(3);
+        assertThat(map.get("name")).isEqualTo("foo");
+        assertThat(map.get("baz")).isEqualTo("boo");
+        assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    @Test
+    public void getKeyValueEqualsSingleArg() {
+        CssAnnotation a = new CssAnnotation("test", "foo=bar");
+        ImmutableMap<String, String> map = a.keyValueArgs('=');
+        assertThat(map).hasSize(1);
+        assertThat(map.get("foo")).isEqualTo("bar");
+    }
+
+    @Test
+    public void getKeyValueEqualsMultiArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo=bar, baz=boo, bim=bop");
+        ImmutableMap<String, String> map = a.keyValueArgs('=');
+        assertThat(map).hasSize(3);
+        assertThat(map.get("foo")).isEqualTo("bar");
+        assertThat(map.get("baz")).isEqualTo("boo");
+        assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    @Test
+    public void getKeyValueEqualsMultiArgsSpaceAround() {
+        CssAnnotation a = new CssAnnotation("test", "foo = bar, baz = boo, bim = bop");
+        ImmutableMap<String, String> map = a.keyValueArgs('=');
+        assertThat(map).hasSize(3);
+        assertThat(map.get("foo")).isEqualTo("bar");
+        assertThat(map.get("baz")).isEqualTo("boo");
+        assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    @Test
+    public void getKeyValuEqualsImpliedNameOnly() {
+        CssAnnotation a = new CssAnnotation("test", "foo");
+        ImmutableMap<String, String> map = a.keyValueArgs('=');
+        assertThat(map).hasSize(1);
+        assertThat(map.get("name")).isEqualTo("foo");
+    }
+
+    @Test
+    public void getKeyValuEqualsImpliedNameMultipleArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo, baz=boo, bim=bop");
+        ImmutableMap<String, String> map = a.keyValueArgs('=');
+        assertThat(map).hasSize(3);
+        assertThat(map.get("name")).isEqualTo("foo");
+        assertThat(map.get("baz")).isEqualTo("boo");
+        assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    @Test
+    public void getKeyValueColonMultiArgs() {
+        CssAnnotation a = new CssAnnotation("test", "foo:bar, baz:boo, bim:bop");
+        ImmutableMap<String, String> map = a.keyValueArgs(':');
+        assertThat(map).hasSize(3);
+        assertThat(map.get("foo")).isEqualTo("bar");
+        assertThat(map.get("baz")).isEqualTo("boo");
+        assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    public enum TestEnum {FOO, BAR, BAZ_QUX}
+
+    @Test
+    public void getFromEnumNoArgs() {
+        CssAnnotation a = new CssAnnotation("test");
+        assertThat(a.fromEnum(TestEnum.class)).isEmpty();
+    }
+
+    @Test
+    public void getFromEnumOneArg() {
+        CssAnnotation a = new CssAnnotation("test", "bar");
+        EnumSet<TestEnum> set = a.fromEnum(TestEnum.class);
+        assertThat(set).containsExactly(TestEnum.BAR);
+    }
+
+    @Test
+    public void getFromEnumMultiArgsLowerCamel() {
+        CssAnnotation a = new CssAnnotation("test", "bar bazQux");
+        EnumSet<TestEnum> set = a.fromEnum(TestEnum.class);
+        assertThat(set).containsExactly(TestEnum.BAR, TestEnum.BAZ_QUX);
+    }
+
+    @Test
+    public void getFromEnumMultiArgsTitleCase() {
+        CssAnnotation a = new CssAnnotation("test", "BAR BAZ_QUX");
+        EnumSet<TestEnum> set = a.fromEnum(TestEnum.class);
+        assertThat(set).containsExactly(TestEnum.BAR, TestEnum.BAZ_QUX);
+    }
+
+    @Test
+    public void getFromEnumNoMatchThrowsError() {
+        CssAnnotation a = new CssAnnotation("test", "bar baz");
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Invalid");
+        EnumSet<TestEnum> set = a.fromEnum(TestEnum.class);
+    }
+
+    public enum TestEnum2 {foo, bar_um}
+
+    @Test
+    public void getFromEnumCustomCastFormat() {
+        CssAnnotation a = new CssAnnotation("test", "foo barUm");
+        EnumSet<TestEnum2> set = a.fromEnum(TestEnum2.class, CaseFormat.LOWER_UNDERSCORE, CaseFormat.LOWER_CAMEL);
+        assertThat(set).containsExactly(TestEnum2.foo, TestEnum2.bar_um);
     }
 
     @Test
@@ -144,7 +289,7 @@ public class CssAnnotationTest {
 
     @Test
     public void toStringWithArgs() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two", "three");
+        CssAnnotation a = new CssAnnotation("test", "one two three");
         assertThat(a.toString()).isEqualTo("@test one two three");
     }
 
@@ -164,14 +309,14 @@ public class CssAnnotationTest {
 
     @Test
     public void equalsTrueWithArgs() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two");
-        CssAnnotation b = new CssAnnotation("test", "one", "two");
+        CssAnnotation a = new CssAnnotation("test", "one two");
+        CssAnnotation b = new CssAnnotation("test", "one two");
         assertThat(a).isEqualTo(b);
     }
 
     @Test
     public void equalsFalseWithArgs() {
-        CssAnnotation a = new CssAnnotation("test", "one", "two");
+        CssAnnotation a = new CssAnnotation("test", "one two");
         CssAnnotation b = new CssAnnotation("test", "one");
         CssAnnotation c = new CssAnnotation("test");
         assertThat(a).isNotEqualTo(b);

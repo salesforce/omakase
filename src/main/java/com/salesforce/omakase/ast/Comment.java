@@ -28,6 +28,7 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.salesforce.omakase.error.OmakaseException;
 import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -42,14 +43,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents a CSS comment.
- * <p/>
+ * <p>
  * By default, comments are not written out. You can control this behavior with {@link StyleWriter#writeAllComments(boolean)}.
  */
 
 public final class Comment implements Writable {
-    private static final String MSG = "CSS annotation comments have a maximum of three args, only one annotation per comment, " +
-        "and annotations cannot be mixed with regular text comments -- in comment '%s'";
-
     private final String content;
 
     private boolean checked;
@@ -88,12 +86,11 @@ public final class Comment implements Writable {
 
     /**
      * Checks if this comment has a {@link CssAnnotation} with the given name.
-     * <p/>
-     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * <p>
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
-     * <p/>
-     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
-     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * <p>
+     * Only one annotation per comment block is allowed.
      *
      * @param name
      *     Check for an annotation with this name.
@@ -107,7 +104,7 @@ public final class Comment implements Writable {
 
     /**
      * Checks if this comment has a {@link CssAnnotation} that equals the given one.
-     * <p/>
+     * <p>
      * This will be true if the both the name and the args match exactly. See {@link CssAnnotation#equals(Object)}. If you only
      * care about matching the comment name, see {@link #hasAnnotation(String)} instead.
      *
@@ -123,12 +120,11 @@ public final class Comment implements Writable {
 
     /**
      * Gets the {@link CssAnnotation} with the given name, if there is one.
-     * <p/>
-     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * <p>
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
-     * <p/>
-     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
-     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * <p>
+     * Only one annotation per comment block is allowed.
      *
      * @param name
      *     Get the annotation with this name.
@@ -142,12 +138,11 @@ public final class Comment implements Writable {
 
     /**
      * Gets the {@link CssAnnotation} within this comment, if there is one.
-     * <p/>
-     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * <p>
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
-     * <p/>
-     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
-     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * <p>
+     * Only one annotation per comment block is allowed.
      *
      * @return The {@link CssAnnotation}, or {@link Optional#absent()} if not found.
      */
@@ -191,22 +186,11 @@ public final class Comment implements Writable {
         checked = true;
 
         String trimmed = content.trim();
-        if (trimmed.charAt(0) != '@') return;
-
-        String name = null;
-        List<String> args = null;
-        for (String string : Splitter.on(' ').omitEmptyStrings().split(trimmed.substring(1))) {
-            if (name == null) {
-                name = string;
-            } else {
-                if (string.indexOf('@') > -1) throw new OmakaseException(String.format(MSG, content));
-                if (args == null) args = new ArrayList<>();
-                args.add(string);
-            }
+        if (trimmed.length() > 2 && trimmed.charAt(0) == '@') {
+            String[] split = trimmed.substring(1).split(" ", 2);
+            String name = split[0];
+            String args = split.length > 1 ? split[1] : null;
+            annotation = new CssAnnotation(name, args);
         }
-
-        if (name == null) return;
-        if (args != null && args.size() > 5) throw new OmakaseException(String.format(MSG, content));
-        annotation = new CssAnnotation(name, args);
     }
 }

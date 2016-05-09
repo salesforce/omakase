@@ -210,11 +210,10 @@ public interface Syntax extends Writable, Broadcastable {
     /**
      * Checks if this unit has a CSS comment annotation with the given name.
      * <p/>
-     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
      * <p/>
-     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
-     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * Only one annotation per comment block is allowed.
      * <p/>
      * Any comments that precede this unit in the source code will be checked for the annotation. However in the case of the
      * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
@@ -251,11 +250,10 @@ public interface Syntax extends Writable, Broadcastable {
     /**
      * Gets the {@link CssAnnotation} with the given name from the comments associated with this unit, if there is one.
      * <p/>
-     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
      * <p/>
-     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
-     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * Only one annotation per comment block is allowed.
      * <p/>
      * Any comments that precede this unit in the source code will be checked for the annotation. However in the case of the
      * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
@@ -271,11 +269,10 @@ public interface Syntax extends Writable, Broadcastable {
     /**
      * Gets all {@link CssAnnotation}s from the comments associated with this unit.
      * <p/>
-     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+     * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
      * <p/>
-     * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block.
-     * CSS comment annotations can have optional arguments, separated by spaces, with a maximum of five arguments allowed.
+     * Only one annotation per comment block is allowed.
      * <p/>
      * Any comments that precede this unit in the source code will be checked for the annotation.However in the case of the
      * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the

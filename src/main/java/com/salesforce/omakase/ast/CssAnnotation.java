@@ -26,55 +26,64 @@
 
 package com.salesforce.omakase.ast;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.error.OmakaseException;
 
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents a CSS annotation comment.
- * <p/>
- * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]*", for
+ * <p>
+ * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
  * example "@noparse", "@browser ie7", "@something arg1 arg2 arg3", etc...
- * <p/>
- * CSS comment annotations cannot be mixed with textual comments and there can be at most one annotation per comment block. CSS
- * comment annotations can have optional arguments, separated by spaces.
- * <p/>
- * Units will be associated with the CSS annotation comments that directly precede them. More than one CSS annotation comment is
- * allowed.
+ * <p>
+ * There are methods to support various types of arg formats, including space-separated, comma-separated and enum-based. More
+ * complex, custom formats can manually be parsed via the {@link CssAnnotation#rawArgs()} method.
+ * <p>
+ * Syntax units are associated with the CSS  comments that directly precede them. More than one CSS annotation comment is allowed.
+ * See the main readme for more information on comments.
  *
  * @author nmcwilliams
  */
 public final class CssAnnotation {
     private final String name;
-    private final ImmutableList<String> arguments;
+    private final String args;
 
     private Comment cached;
 
     /**
-     * Creates a new {@link CssAnnotation} instance with the given arguments (or no arguments).
+     * Creates a new {@link CssAnnotation} with the given name.
      *
      * @param name
-     *     The name of the annotation.
-     * @param arguments
-     *     Optional list of arguments.
+     *     The annotation name.
      */
-    public CssAnnotation(String name, String... arguments) {
-        this(name, ImmutableList.copyOf(arguments));
+    public CssAnnotation(String name) {
+        this(name, null);
     }
 
     /**
-     * Creates a new {@link CssAnnotation} instance with the given arguments.
+     * Creates a new {@link CssAnnotation} instance with the given name and arguments.
      *
      * @param name
      *     The name of the annotation.
-     * @param arguments
-     *     List of arguments.
+     * @param args
+     *     Optional arguments (automatically trimmed).
      */
-    public CssAnnotation(String name, Iterable<String> arguments) {
-        this.name = name;
-        this.arguments = arguments == null ? ImmutableList.<String>of() : ImmutableList.copyOf(arguments);
+    public CssAnnotation(String name, String args) {
+        this.name = checkNotNull(name, "name cannot be null");
+        this.args = args != null ? args.trim() : null;
     }
 
     /**
@@ -87,49 +96,164 @@ public final class CssAnnotation {
     }
 
     /**
-     * Gets the first (or only) argument of the annotation.
+     * Returns the raw, unprocessed args.
      *
-     * @return The first argument, or {@link Optional#absent()} if the annotation does not have any arguments.
+     * @return The raw, unprocessed args, or {@link Optional#absent()} if not present.
      */
-    public Optional<String> argument() {
-        return argument(0);
+    public Optional<String> rawArgs() {
+        return Optional.fromNullable(args);
     }
 
     /**
-     * Gets the argument at the given index.
+     * Parses the arguments using spaces as the delimiter. Results will be trimmed and will not contain any empty strings.
+     * <p>
+     * For example, given the following css annotation:
+     * <pre><code>
+     *     {@code @}foo one two three four
+     * </code></pre>
+     * The arguments returned will be a list with values "one", "two", "three", and "four".
      *
-     * @param index
-     *     Retrieve the argument at this index, starting at 0.
-     *
-     * @return The argument at the given index, or {@link Optional#absent()} if annotation does not contain an argument at the
-     * given index.
+     * @return The parsed list of arguments, or an empty list if no arguments are present.
      */
-    public Optional<String> argument(int index) {
-        return (index >= arguments.size()) ? Optional.<String>absent() : Optional.fromNullable(arguments.get(index));
-    }
-
-    /**
-     * Gets the list of all arguments.
-     *
-     * @return The list of all arguments.
-     */
-    public ImmutableList<String> arguments() {
-        return arguments;
-    }
-
-    /**
-     * Gets whether the given argument is present.
-     *
-     * @param argument
-     *     Check for this argument.
-     *
-     * @return True if the given argument is present.
-     */
-    public boolean hasArgument(String argument) {
-        for (String arg : arguments) {
-            if (arg.equals(argument)) return true;
+    public ImmutableList<String> spaceSeparatedArgs() {
+        if (args != null) {
+            Iterable<String> split = Splitter.on(" ").omitEmptyStrings().trimResults().split(args);
+            return ImmutableList.copyOf(split);
         }
-        return false;
+        return ImmutableList.of();
+    }
+
+    /**
+     * Parses the arguments using commas as the delimiter. Results will be trimmed and will not contain any empty strings.
+     * <p>
+     * For example, given the following css annotation:
+     * <pre><code>
+     *     {@code @}foo one, two, three, four
+     * </code></pre>
+     * The arguments returned will be a list with values "one", "two", "three", and "four".
+     *
+     * @return The parsed list of arguments, or an empty list if no arguments are present.
+     */
+    public ImmutableList<String> commaSeparatedArgs() {
+        if (args != null) {
+            return ImmutableList.copyOf(Splitter.on(",").omitEmptyStrings().trimResults().split(args));
+        }
+        return ImmutableList.of();
+    }
+
+    /**
+     * Parsers the arguments for key value pairs. Results will be trimmed and will not contain any empty strings.
+     * <p>
+     * The key value pairs are separated by commas. For example, given any of the following css annotations:
+     * <pre><code>
+     *     {@code @}foo bar=baz, bim=bop, bip=beep
+     *     {@code @}foo bar = baz, bim = bop, bip = beep
+     *     {@code @}foo bar:baz, bim:bop, bip:beep
+     *     {@code @}foo bar baz, bim bop, bip beep
+     * </code></pre>
+     * The arguments returned will be a map with values {"bar"="baz", "bim"="bop", "bip"="beep"}.
+     * <p>
+     * Optionally, the first arg may omit the key, and it will be placed in the map under "name". For example:
+     * <pre><code>
+     *     {@code @}foo bar, bim bop, bip beep
+     * </code></pre>
+     * The arguments returned will be a map with values {"name"="bar", "bim"="bop", "bip"="boop"}
+     *
+     * @param keyValueSeparator
+     *     The character separating key-value pairs, usually ' ', '=' or ':'. Spaces around this character are allowed.
+     *
+     * @return The parsed map of arguments, or an empty map if no arguments are present.
+     */
+    public ImmutableMap<String, String> keyValueArgs(char keyValueSeparator) {
+        if (args != null && !args.isEmpty()) {
+            String toParse = args;
+
+            // check for implied name
+            int firstComma = toParse.indexOf(',');
+            int firstDelimiter = toParse.indexOf(keyValueSeparator);
+
+            if ((firstComma == -1 && firstDelimiter == -1) || (firstComma != -1 && firstComma < firstDelimiter)) {
+                toParse = "name" + keyValueSeparator + toParse;
+            }
+
+            try {
+                return ImmutableMap.copyOf(
+                    Splitter.on(",")
+                        .omitEmptyStrings()
+                        .trimResults()
+                        .withKeyValueSeparator(Splitter.on(keyValueSeparator).trimResults())
+                        .split(toParse));
+            } catch (IllegalArgumentException e) {
+                throw new OmakaseException("unable to parse CSS comment annotation: '" + args + "'", e);
+            }
+
+        }
+        return ImmutableMap.of();
+    }
+
+    /**
+     * Same as {@link CssAnnotation#fromEnum(Class)}, except this method only works with enums that use TITLE_CASE, and
+     * annotations that either use TITLE_CASE or lowerCamel.
+     *
+     * @param enumClass
+     *     The enum class.
+     * @param <E>
+     *     The enum type.
+     *
+     * @return The set of enum values found, or an empty set if no arguments are present.
+     */
+    public <E extends Enum<E>> EnumSet<E> fromEnum(Class<E> enumClass) {
+        if (args != null) {
+            CaseFormat fmt = Character.isLowerCase(args.charAt(0)) ? CaseFormat.LOWER_CAMEL : CaseFormat.UPPER_UNDERSCORE;
+            return fromEnum(enumClass, CaseFormat.UPPER_UNDERSCORE, fmt);
+        }
+        return EnumSet.noneOf(enumClass);
+    }
+
+    /**
+     * Parses the arguments with allowed values from the given enum.
+     * <p>
+     * The values must be space-separated and any value not present in the enum will result in an error. For example, with the
+     * enum {ONE, TWO, THREE}, the following:
+     * <pre><code>
+     *     {@code @}foo one two
+     * </code></pre>
+     * would return a map containing ONE and TWO.
+     * <p>
+     * The names must be an exact match, however they will be normalized using the given CaseFormats.
+     *
+     * @param enumClass
+     *     The enum class.
+     * @param enumFormat
+     *     The format of the enum.
+     * @param annotationFormat
+     *     The format used by the css annotations.
+     * @param <E>
+     *     The enum type.
+     *
+     * @return The set of enum values found, or an empty set if no arguments are present.
+     *
+     * @throws IllegalArgumentException
+     *     for annotation arguments without a matching enum entry.
+     */
+    public <E extends Enum<E>> EnumSet<E> fromEnum(Class<E> enumClass, CaseFormat enumFormat, CaseFormat annotationFormat) {
+        if (args != null) {
+            EnumSet<E> set = EnumSet.noneOf(enumClass);
+
+            for (String arg : Splitter.on(' ').trimResults().omitEmptyStrings().split(args)) {
+                String normalized = annotationFormat.to(enumFormat, arg);
+                try {
+                    E match = Enum.valueOf(enumClass, normalized);
+                    set.add(match);
+                } catch (IllegalArgumentException e) {
+                    String msg = "Invalid CSS annotation argument '%s', must be one of '%s'";
+                    throw new IllegalArgumentException(String.format(msg, arg, Arrays.toString(enumClass.getEnumConstants())), e);
+                }
+            }
+
+            return set;
+        }
+        return EnumSet.noneOf(enumClass);
     }
 
     /**
@@ -155,32 +279,23 @@ public final class CssAnnotation {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("@").append(name);
-        if (!arguments.isEmpty()) {
-            builder.append(' ').append(Joiner.on(" ").skipNulls().join(arguments));
+        if (args != null) {
+            builder.append(' ').append(args);
         }
         return builder.toString();
     }
 
-    /**
-     * Tests equality using the name and arguments fields. That is, if the name is equal and the arguments (or lack of arguments)
-     * are equal (based on contents of the list) then this will return true.
-     *
-     * @param object
-     *     Compare to this object.
-     *
-     * @return True if both the name is equal and arguments are equal.
-     */
     @Override
     public boolean equals(Object object) {
         if (object instanceof CssAnnotation) {
             CssAnnotation other = (CssAnnotation)object;
-            return Objects.equals(name, other.name) && Objects.equals(arguments, other.arguments);
+            return Objects.equals(name, other.name) && Objects.equals(args, other.args);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, arguments);
+        return Objects.hash(name, args);
     }
 }

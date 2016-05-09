@@ -897,7 +897,7 @@ Comments can be used for _annotation directives_. For example:
 
 In this example, the `@noflip` annotation is used to provide information to the `DirectionFlip` plugin regarding not flipping that particular declaration value.
 
-CSS comment annotations start with `@` + the name of the annotation. Annotations can take optional space-delimited arguments, up to a maximum of five. There can be at most one annotation per CSS comment block. For example:
+CSS comment annotations start with `@` + the name of the annotation. They can also have arguments. There can be at most one annotation per CSS comment block, although multiple annotation comment blocks are allowed. For example:
 
 ```css
 .class {
@@ -913,33 +913,49 @@ Any number of custom annotations can be utilized by your plugins. To check for a
 public class MyPlugin implements Plugin {
     @Rework
     public void rework(Declaration declaration) {
-        // check for the presence of a marker annotation
-        if (declaration.hasAnnotation("myAnnotation")) {
+        // read /* @markerAnnotation */
+        if (declaration.hasAnnotation("markerAnnotation")) {
             // do something
         }
 
-        // check for an annotation with arguments
-        Optional<CssAnnotation> annotation = declaration.annotation("myAnnotation");
+        // read /* @browser ie7 */
+        Optional<CssAnnotation> annotation = declaration.annotation("browser");
         if (annotation.isPresent()) {
-            // check for a required argument
-            Optional<String> arg = annotation.get().argument();
-            if (!arg.isPresent()) {
-                throw new RuntimeException("missing required argument");
-            }
-
-            // do something
+            System.out.println(annotation.get().rawArgs());
         }
 
-        // check for any annotation
+        // read /* @bug b-123456, b-123457 */
+        Optional<CssAnnotation> annotation = declaration.annotation("bug");
+        if (annotation.isPresent()) {
+            ImmutableList<String> bugNumbers = annotation.get().commaSeparatedArgs();
+        }
+
+        // read /* @bug b-123456 b-123457 */
+        Optional<CssAnnotation> annotation = declaration.annotation("bug");
+        if (annotation.isPresent()) {
+            ImmutableList<String> bugNumbers = annotation.get().spaceSeparatedArgs();
+        }
+
+        // read /* @details author=nathan, since=2.0 */
+        Optional<CssAnnotation> annotation = declaration.annotation("details");
+        if (annotation.isPresent()) {
+            ImmutableMap<String, String> map = annotation.get().keyValueArgs('=');
+            String author = map.get("author");
+        }
+
+        // print all annotations
         for (CssAnnotation annotation : declaration.annotations()) {
             System.out.println(annotation.name());
-            System.out.println(annotation.arguments());
+            System.out.println(annotation.rawArgs());
         }
     }
 }
 ```
 
-If you happen to have your hands on a specific `Comment` instance, it has similar convenience methods as well.
+The `CssAnnotation` class contains many powerful methods to parse various arg formats including space-delimited,
+comma-delimited, key-value pairs and enum constants.
+
+If you happen to have your hands on a specific `Comment` instance, it has convenience methods as well.
 
 #### Orphaned comments
 

@@ -52,7 +52,7 @@ public class OmakaseException extends RuntimeException {
      * @param cause
      *     The cause of the exception.
      */
-    protected OmakaseException(String message, Throwable cause) {
+    public OmakaseException(String message, Throwable cause) {
         super(message, cause);
     }
 
