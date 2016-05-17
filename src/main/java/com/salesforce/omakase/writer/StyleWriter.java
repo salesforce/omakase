@@ -26,26 +26,30 @@
 
 package com.salesforce.omakase.writer;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.util.As;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 
 import static com.google.common.base.Preconditions.*;
 
 /**
  * The main class for writing processed CSS content.
- * <p/>
- * To use, add an instance of this class to the Omakase request.
- * <p/>
+ * <p>
+ * For usage add an instance of this class to {@link Omakase.Request#use(Plugin...)}.
+ * <p>
  * Examples:
  * <pre><code>
  * StyleWriter verbose = StyleWriter.verbose();
@@ -63,20 +67,19 @@ import static com.google.common.base.Preconditions.*;
  * verbose.writeTo(System.out);
  * </code></pre>
  * <pre><code>
- * String classSelector = StyleWriter.writeSingle(new ClassSelector("test"));
+ * String classSelector = StyleWriter.inline().writeSingle(new ClassSelector("test"));
  * </code></pre>
- * <p/>
+ * <p>
  * Unless otherwise specified, {@link WriterMode#INLINE} will be used.
- * <p/>
+ * <p>
  * By default this will not write out CSS comments, however you can change that behavior with {@link #writeAllComments(boolean)}.
  *
  * @author nmcwilliams
  */
 public final class StyleWriter implements DependentPlugin {
-    private final Map<Class<? extends Writable>, CustomWriter<?>> overrides = new HashMap<>();
-
-    private SyntaxTree tree;
     private WriterMode mode;
+    private SyntaxTree tree;
+    private Multimap<Class<? extends Writable>, CustomWriter<?>> overrides;
 
     private boolean writeAllComments;
     private boolean writeAnnotatedComments;
@@ -236,9 +239,29 @@ public final class StyleWriter implements DependentPlugin {
      *
      * @return this, for chaining.
      */
-    public <T extends Writable> StyleWriter override(Class<T> writable, CustomWriter<T> writer) {
+    public <T extends Writable> StyleWriter addCustomWriter(Class<T> writable, CustomWriter<T> writer) {
+        if (overrides == null) {
+            overrides = ArrayListMultimap.create();
+        }
         overrides.put(writable, writer);
         return this;
+    }
+
+    /**
+     * Writes the entire processed stylesheet to a string.
+     *
+     * @return The CSS output.
+     */
+    public String write() {
+        checkState(tree != null, "syntax tree not set (did you add this writer before parsing?)");
+
+        StyleAppendable appendable = new StyleAppendable();
+        try {
+            writeInner(tree.stylesheet(), appendable);
+        } catch (IOException e) {
+            throw new AssertionError("Using a StringBuilder shouldn't cause an IOException.", e);
+        }
+        return appendable.toString();
     }
 
     /**
@@ -251,51 +274,22 @@ public final class StyleWriter implements DependentPlugin {
      *     If an I/O error occurs.
      */
     public void writeTo(Appendable appendable) throws IOException {
-        writeTo(new StyleAppendable(appendable));
-    }
-
-    /**
-     * Writes the entire processed stylesheet to the given {@link StyleAppendable}.
-     *
-     * @param appendable
-     *     Write the processed CSS source code to this appendable.
-     *
-     * @throws IOException
-     *     If an I/O error occurs.
-     */
-    public void writeTo(StyleAppendable appendable) throws IOException {
         checkNotNull(appendable, "appendable cannot be null");
-        checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
-        writeInner(tree.stylesheet(), appendable);
-    }
-
-    /**
-     * Writes the entire processed stylesheet to a string.
-     *
-     * @return The CSS output.
-     */
-    public String write() {
-        checkState(tree != null, "syntax tree not set (did you include this writer in the request?)");
-
-        StyleAppendable appendable = new StyleAppendable();
-        try {
-            writeTo(appendable);
-        } catch (IOException e) {
-            throw new AssertionError("Using a StringBuilder shouldn't cause an IOException.", e);
-        }
-        return appendable.toString();
+        checkState(tree != null, "syntax tree not set (did you add this writer before parsing?)");
+        writeInner(tree.stylesheet(), new StyleAppendable(appendable));
     }
 
     /**
      * Writes the given syntax unit to the given {@link StyleAppendable}, taking into account any {@link CustomWriter} overrides
      * specified on this {@link StyleWriter}.
-     * <p/>
+     * <p>
      * Note that the unit will only be written if {@link Writable#isWritable()} returns true. This may be false if the unit is
-     * detached, for example.
-     * <p/>
+     * detached/destroyed, for example.
+     * <p>
      * This is usually used within implementations of {@link Writable#write(StyleWriter, StyleAppendable)} to write inner units.
-     * To write a single, isolated object use {@link #writeSnippet(Writable)} instead.
-     * <p/>
+     * To write a single, arbitrary syntax unit use {@link #writeSingle(Writable)} instead. Do <em>not</em> call this method from
+     * within a {@link CustomWriter}.
+     * <p>
      * This will automatically handle writing out comments and orphaned comments if the given writable is a {@link Syntax} unit,
      * if applicable according to the current options.
      *
@@ -310,63 +304,95 @@ public final class StyleWriter implements DependentPlugin {
      *     If an I/O error occurs.
      */
     public <T extends Writable> void writeInner(T writable, StyleAppendable appendable) throws IOException {
+        writeInner(writable, appendable, true);
+    }
+
+    /**
+     * Writes the given syntax unit to the given {@link StyleAppendable}.
+     * <p>
+     * Note that the unit will only be written if {@link Writable#isWritable()} returns true. This may be false if the unit is
+     * detached/destroyed, for example.
+     * <p>
+     * This method can be used by {@link CustomWriter}s to write out the unit as normal. To write a single, isolated object use
+     * {@link #writeSingle(Writable)} instead.
+     * <p>
+     * This will automatically handle writing out comments and orphaned comments if the given writable is a {@link Syntax} unit,
+     * if applicable according to the current options.
+     *
+     * @param writable
+     *     The unit to write.
+     * @param appendable
+     *     Write the unit's output to this {@link StyleAppendable}.
+     * @param useOverrides
+     *     If true, custom writers can alter the output behavior. Must always be false if calling this method from a custom
+     *     writer.
+     * @param <T>
+     *     Type of the unit to write.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     */
+    public <T extends Writable> void writeInner(T writable, StyleAppendable appendable, boolean useOverrides) throws IOException {
         incrementDepth();
 
         Class<? extends Writable> klass = writable.getClass();
-        Syntax syntax = (writable instanceof Syntax) ? (Syntax)writable : null;
 
-        if (overrides.containsKey(klass)) {
-            // cast is safe as long as the map is guarded by #override
-            @SuppressWarnings("unchecked")
-            CustomWriter<T> custom = (CustomWriter<T>)overrides.get(klass);
-            custom.write(writable, this, appendable);
-        } else if (writable.isWritable()) {
-            // write comments
-            if (syntax != null && !syntax.writesOwnComments()) {
-                appendComments(syntax.comments(), appendable);
+        if (writable.isWritable()) {
+            boolean handled = false;
+
+            if (useOverrides && overrides != null && overrides.containsKey(klass)) {
+                Collection<CustomWriter<?>> writers = overrides.get(klass);
+                Iterator<CustomWriter<?>> iterator = writers.iterator();
+
+                while (!handled && iterator.hasNext()) {
+                    // cast is safe as long as the map is guarded by #override
+                    @SuppressWarnings("unchecked")
+                    CustomWriter<T> writer = (CustomWriter<T>)iterator.next();
+                    handled = writer.write(writable, this, appendable);
+                }
             }
 
-            // write the object
-            writable.write(this, appendable);
+            if (!handled) {
+                if (writable instanceof Syntax) {
+                    Syntax syntax = (Syntax)writable;
+                    if (!syntax.writesOwnComments()) {
+                        appendComments(syntax.comments(), appendable);
+                    }
+                    syntax.write(this, appendable);
+                    if (!syntax.writesOwnOrphanedComments()) {
+                        appendComments(syntax.orphanedComments(), appendable);
+                    }
+                } else {
+                    writable.write(this, appendable);
+                }
 
-            // write orphaned comments
-            if (syntax != null && !syntax.writesOwnOrphanedComments()) {
-                appendComments(syntax.orphanedComments(), appendable);
+                // keep track of how many syntax units written at this depth
+                stack.peek().incrementPeerCountAtDepth();
             }
-
-            // keep track of how many syntax units written at this depth
-            stack.peek().incrementPeerCountAtDepth();
         }
 
         decrementDepth();
     }
 
     /**
-     * Writes the given syntax unit, taking into account any {@link CustomWriter} overrides specified on this {@link
-     * StyleWriter}.
-     * <p/>
-     * <b>Important:</b> This method is for writing disjoint units only. Examples would be for usage in test classes or in cases
-     * where you are operating on a single CSS snippet as opposed to a whole CSS source. If you are implementing a syntax unit's
-     * write method then most of the time the method you want to use is {@link #writeInner(Writable, StyleAppendable)}, passing in
-     * the same {@link StyleAppendable} that you were given.
-     * <p/>
-     * The difference between this and {@link #writeSingle(Writable)} is that this is a non-static method that takes into account
-     * any given {@link CustomWriter} overrides.
-     * <p/>
-     * As this is for writing individual units, it bypasses the {@link Writable#isWritable()} check.
+     * The easiest way to get the output of a single {@link Writable} instance.
+     * <p>
+     * This method is for writing disjoint units only. Examples would be for usage in test classes or in cases where you are
+     * operating on a single, isolated CSS unit as opposed to a whole CSS source.
+     * <p>
+     * If you are implementing {@link Writable#write(StyleWriter, StyleAppendable)} then most of the time the method you want to
+     * use is {@link #writeInner(Writable, StyleAppendable)}, passing in the same {@link StyleAppendable} that you were given.
      *
      * @param writable
-     *     The unit to write.
-     * @param <T>
-     *     Type of the unit to write.
+     *     The {@link Writable} instance, e.g., a {@link Syntax} unit.
      *
      * @return The output CSS code for the given unit.
      */
-    public <T extends Writable> String writeSnippet(T writable) {
+    public String writeSingle(Writable writable) {
         StyleAppendable appendable = new StyleAppendable();
 
         try {
-            writeInner(writable, appendable);
+            writeInner(writable, appendable, true);
         } catch (IOException e) {
             // we don't expect an IO error because we know our appendable is using a string builder.
             throw new AssertionError("unexpected IO error");
@@ -376,8 +402,34 @@ public final class StyleWriter implements DependentPlugin {
     }
 
     /**
+     * Utility method for assisting with writing comments.
+     *
+     * @param comments
+     *     The comments to write.
+     * @param appendable
+     *     Write the unit's output to this {@link StyleAppendable}.
+     *
+     * @throws IOException
+     *     If an I/O error occurs.
+     * @see Syntax#writesOwnComments()
+     * @see Syntax#writesOwnOrphanedComments()
+     */
+    public void appendComments(Iterable<Comment> comments, StyleAppendable appendable) throws
+        IOException {
+        for (Comment comment : comments) {
+            if (shouldWriteAllComments()) {
+                writeInner(comment, appendable);
+            } else if (shouldWriteAnnotatedComments() && comment.annotation().isPresent()) {
+                writeInner(comment, appendable);
+            } else if (shouldWriteBangComments() && comment.startsWithBang()) {
+                writeInner(comment, appendable);
+            }
+        }
+    }
+
+    /**
      * Increments the stack depth.
-     * <p/>
+     * <p>
      * This is usually handled automatically internally, however you may want to call this when writing out inner objects at an
      * artificially deeper depth level. If you do so, be sure to call {@link #decrementDepth()} at the end.
      *
@@ -390,7 +442,7 @@ public final class StyleWriter implements DependentPlugin {
 
     /**
      * Decrements the stack depth.
-     * <p/>
+     * <p>
      * This is usually handled automatically internally. See {@link #incrementDepth()} for details on when you may want to use
      * this manually.
      *
@@ -413,10 +465,10 @@ public final class StyleWriter implements DependentPlugin {
 
     /**
      * Gets whether no peer units have been written out at the current depth level.
-     * <p/>
+     * <p>
      * The depth level is incremented every time {@link #writeInner(Writable, StyleAppendable)} inner is called. For example, two
      * rules within a stylesheet are at the same depth level, two selectors within a rule, two declarations within a rule, etc...
-     * <p/>
+     * <p>
      * This is usually used when something should be written only for the first unit in a collection, or conversely for all units
      * but the first.
      *
@@ -456,62 +508,6 @@ public final class StyleWriter implements DependentPlugin {
      */
     public static StyleWriter compressed() {
         return new StyleWriter(WriterMode.COMPRESSED);
-    }
-
-    /**
-     * A shortcut to {@link #writeSnippet(Writable)} that doesn't use any {@link CustomWriter} overrides. This also bypasses the
-     * {@link Writable#isWritable()} check. {@link WriterMode#INLINE} is used as a default.
-     * <p/>
-     * This is the simplest way to get the output of a single {@link Writable} instance.
-     *
-     * @param writable
-     *     The {@link Writable} instance, e.g., a {@link Syntax} unit.
-     *
-     * @return The output CSS code for the given unit.
-     */
-    public static String writeSingle(Writable writable) {
-        return writeSingle(writable, WriterMode.INLINE);
-    }
-
-    /**
-     * A shortcut to {@link #writeSnippet(Writable)} that doesn't use any {@link CustomWriter} overrides. This also bypasses the
-     * {@link Writable#isWritable()} check.
-     *
-     * @param writable
-     *     The {@link Writable} instance, e.g., a {@link Syntax} unit.
-     * @param mode
-     *     The {@link WriterMode}.
-     *
-     * @return The output CSS code for the given unit.
-     */
-    public static String writeSingle(Writable writable, WriterMode mode) {
-        return new StyleWriter(mode).writeSnippet(writable);
-    }
-
-    /**
-     * Utility method for assisting with writing comments.
-     *
-     * @param comments
-     *     The comments to write.
-     * @param appendable
-     *     Write the unit's output to this {@link StyleAppendable}.
-     *
-     * @throws IOException
-     *     If an I/O error occurs.
-     * @see Syntax#writesOwnComments()
-     * @see Syntax#writesOwnOrphanedComments()
-     */
-    public void appendComments(Iterable<Comment> comments, StyleAppendable appendable) throws
-        IOException {
-        for (Comment comment : comments) {
-            if (shouldWriteAllComments()) {
-                writeInner(comment, appendable);
-            } else if (shouldWriteAnnotatedComments() && comment.annotation().isPresent()) {
-                writeInner(comment, appendable);
-            } else if (shouldWriteBangComments() && comment.startsWithBang()) {
-                writeInner(comment, appendable);
-            }
-        }
     }
 
     /** used to help keep track of how many inner units are written at a certain depth. */

@@ -85,31 +85,31 @@ public class GenericFunctionValueTest {
     @Test
     public void writeVerbose() throws IOException {
         value = new GenericFunctionValue("url", "home.png");
-        assertThat(StyleWriter.verbose().writeSnippet(value)).isEqualTo("url(home.png)");
+        assertThat(StyleWriter.verbose().writeSingle(value)).isEqualTo("url(home.png)");
     }
 
     @Test
     public void writeInline() throws IOException {
         value = new GenericFunctionValue("url", "home.png");
-        assertThat(StyleWriter.inline().writeSnippet(value)).isEqualTo("url(home.png)");
+        assertThat(StyleWriter.inline().writeSingle(value)).isEqualTo("url(home.png)");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         value = GenericFunctionValue.of("url", "home.png");
-        assertThat(StyleWriter.compressed().writeSnippet(value)).isEqualTo("url(home.png)");
+        assertThat(StyleWriter.compressed().writeSingle(value)).isEqualTo("url(home.png)");
     }
 
     @Test
     public void writeCompressedWhitespace() throws IOException {
         value = GenericFunctionValue.of("url", "  hello   world \n\n NYC ");
-        assertThat(StyleWriter.compressed().writeSnippet(value)).isEqualTo("url(hello world NYC)");
+        assertThat(StyleWriter.compressed().writeSingle(value)).isEqualTo("url(hello world NYC)");
     }
 
     @Test
     public void writeEmptyArgs() throws IOException {
         value = new GenericFunctionValue("xyz", "");
-        assertThat(StyleWriter.verbose().writeSnippet(value)).isEqualTo("xyz()");
+        assertThat(StyleWriter.verbose().writeSingle(value)).isEqualTo("xyz()");
     }
 
     @Test

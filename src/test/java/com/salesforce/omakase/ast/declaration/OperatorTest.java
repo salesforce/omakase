@@ -49,7 +49,7 @@ public class OperatorTest {
     @Test
     public void testWrite() throws IOException {
         Operator operator = new Operator(OperatorType.COMMA);
-        assertThat(StyleWriter.compressed().writeSnippet(operator)).isEqualTo(",");
+        assertThat(StyleWriter.compressed().writeSingle(operator)).isEqualTo(",");
     }
 
     @Test

@@ -114,8 +114,7 @@ public class FontFaceBlockTest {
             "  font-weight: bold;\n" +
             "}";
 
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(block)).isEqualTo(expected);
+        assertThat(StyleWriter.verbose().writeSingle(block)).isEqualTo(expected);
     }
 
     @Test
@@ -137,8 +136,7 @@ public class FontFaceBlockTest {
 
         String expected = " {font-family:MyFont; src:url(MyFont.ttf); font-weight:bold}";
 
-        StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(block)).isEqualTo(expected);
+        assertThat(StyleWriter.inline().writeSingle(block)).isEqualTo(expected);
     }
 
     @Test
@@ -160,14 +158,13 @@ public class FontFaceBlockTest {
 
         String expected = "{font-family:MyFont;src:url(MyFont.ttf);font-weight:bold}";
 
-        StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(block)).isEqualTo(expected);
+        assertThat(StyleWriter.compressed().writeSingle(block)).isEqualTo(expected);
     }
 
     @Test
     public void testCopy() {
         block.fontDescriptors().append(descriptor);
-        FontFaceBlock copy = (FontFaceBlock)block.copy();
+        FontFaceBlock copy = block.copy();
         assertThat(copy.fontDescriptors()).hasSameSizeAs(block.fontDescriptors());
     }
 }

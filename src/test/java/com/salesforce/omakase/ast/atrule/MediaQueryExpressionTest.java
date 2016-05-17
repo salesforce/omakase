@@ -79,20 +79,20 @@ public class MediaQueryExpressionTest {
     public void writeVerboseTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("min-resolution");
         exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "dpi")));
-        assertThat(StyleWriter.verbose().writeSnippet(exp)).isEqualTo("(min-resolution: 300dpi)");
+        assertThat(StyleWriter.verbose().writeSingle(exp)).isEqualTo("(min-resolution: 300dpi)");
     }
 
     @Test
     public void writeVerboseNoTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("color");
-        assertThat(StyleWriter.verbose().writeSnippet(exp)).isEqualTo("(color)");
+        assertThat(StyleWriter.verbose().writeSingle(exp)).isEqualTo("(color)");
     }
 
     @Test
     public void writeCompressedTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
         exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
-        assertThat(StyleWriter.compressed().writeSnippet(exp)).isEqualTo("(max-width:300px)");
+        assertThat(StyleWriter.compressed().writeSingle(exp)).isEqualTo("(max-width:300px)");
     }
 
     @Test

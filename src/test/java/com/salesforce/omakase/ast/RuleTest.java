@@ -262,7 +262,7 @@ public class RuleTest {
 
         assertThat(rule.annotations()).containsExactly(new CssAnnotation("test"));
     }
-    
+
     @Test
     public void callingDestroyAlsoDestroysChildren() {
         Rule rule = new Rule();
@@ -276,7 +276,7 @@ public class RuleTest {
         assertThat(s.isDestroyed()).isTrue();
         assertThat(d.isDestroyed()).isTrue();
     }
-    
+
 
     @Test
     public void propagatesBroadcast() {
@@ -368,7 +368,7 @@ public class RuleTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
 
-        assertThat(StyleWriter.verbose().writeSnippet(rule)).isEqualTo(".class, #id {\n  display: none;\n  margin: 5px;\n}");
+        assertThat(StyleWriter.verbose().writeSingle(rule)).isEqualTo(".class, #id {\n  display: none;\n  margin: 5px;\n}");
     }
 
     @Test
@@ -379,7 +379,7 @@ public class RuleTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
 
-        assertThat(StyleWriter.inline().writeSnippet(rule)).isEqualTo(".class, #id {display:none; margin:5px}");
+        assertThat(StyleWriter.inline().writeSingle(rule)).isEqualTo(".class, #id {display:none; margin:5px}");
     }
 
     @Test
@@ -390,7 +390,7 @@ public class RuleTest {
         rule.declarations().append(new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE)));
         rule.declarations().append(new Declaration(Property.MARGIN, NumericalValue.of(5, "px")));
 
-        assertThat(StyleWriter.compressed().writeSnippet(rule)).isEqualTo(".class,#id{display:none;margin:5px}");
+        assertThat(StyleWriter.compressed().writeSingle(rule)).isEqualTo(".class,#id{display:none;margin:5px}");
     }
 
     @Test
@@ -406,7 +406,7 @@ public class RuleTest {
 
         rule.destroy();
 
-        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSingle(stylesheet)).isEqualTo("");
     }
 
     @Test
@@ -423,7 +423,7 @@ public class RuleTest {
 
         selector.destroy();
 
-        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class2, .class3 {display:none}");
+        assertThat(StyleWriter.inline().writeSingle(stylesheet)).isEqualTo(".class2, .class3 {display:none}");
     }
 
     @Test
@@ -440,7 +440,7 @@ public class RuleTest {
 
         selector2.destroy();
 
-        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class1, .class3 {display:none}");
+        assertThat(StyleWriter.inline().writeSingle(stylesheet)).isEqualTo(".class1, .class3 {display:none}");
     }
 
     @Test
@@ -457,7 +457,7 @@ public class RuleTest {
 
         selector3.destroy();
 
-        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class1, .class2 {display:none}");
+        assertThat(StyleWriter.inline().writeSingle(stylesheet)).isEqualTo(".class1, .class2 {display:none}");
     }
 
     @Test
@@ -472,7 +472,7 @@ public class RuleTest {
 
         selector.destroy();
 
-        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSingle(stylesheet)).isEqualTo("");
     }
 
     @Test
@@ -489,7 +489,7 @@ public class RuleTest {
 
         declaration.destroy();
 
-        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo(".class {\n  margin: 2px;\n  margin: 3px;\n}");
+        assertThat(StyleWriter.verbose().writeSingle(stylesheet)).isEqualTo(".class {\n  margin: 2px;\n  margin: 3px;\n}");
     }
 
     @Test
@@ -506,7 +506,7 @@ public class RuleTest {
 
         declaration2.destroy();
 
-        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo(".class {\n  margin: 1px;\n  margin: 3px;\n}");
+        assertThat(StyleWriter.verbose().writeSingle(stylesheet)).isEqualTo(".class {\n  margin: 1px;\n  margin: 3px;\n}");
     }
 
     @Test
@@ -523,7 +523,7 @@ public class RuleTest {
 
         declaration3.destroy();
 
-        assertThat(StyleWriter.inline().writeSnippet(stylesheet)).isEqualTo(".class {margin:1px; margin:2px}");
+        assertThat(StyleWriter.inline().writeSingle(stylesheet)).isEqualTo(".class {margin:1px; margin:2px}");
     }
 
     @Test
@@ -535,7 +535,7 @@ public class RuleTest {
         rule.selectors().append(new Selector(new IdSelector("id")));
         stylesheet.append(rule);
 
-        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSingle(stylesheet)).isEqualTo("");
     }
 
     @Test
@@ -550,6 +550,6 @@ public class RuleTest {
 
         declaration.destroy();
 
-        assertThat(StyleWriter.verbose().writeSnippet(stylesheet)).isEqualTo("");
+        assertThat(StyleWriter.verbose().writeSingle(stylesheet)).isEqualTo("");
     }
 }

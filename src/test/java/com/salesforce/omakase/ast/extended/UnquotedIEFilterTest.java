@@ -54,12 +54,12 @@ public class UnquotedIEFilterTest {
     @Test
     public void write() throws IOException {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        assertThat(StyleWriter.compressed().writeSnippet(ief)).isEqualTo(FILTER);
+        assertThat(StyleWriter.compressed().writeSingle(ief)).isEqualTo(FILTER);
     }
 
     @Test
     public void copy() {
         UnquotedIEFilter ief = new UnquotedIEFilter(1, 1, FILTER);
-        assertThat(((UnquotedIEFilter)ief.copy()).content()).isEqualTo(ief.content());
+        assertThat(ief.copy().content()).isEqualTo(ief.content());
     }
 }

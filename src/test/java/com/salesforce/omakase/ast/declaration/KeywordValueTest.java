@@ -89,21 +89,21 @@ public class KeywordValueTest {
     public void writeVerbose() throws IOException {
         value = KeywordValue.of("absolute");
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(value)).isEqualTo("absolute");
+        assertThat(writer.writeSingle(value)).isEqualTo("absolute");
     }
 
     @Test
     public void writeInline() throws IOException {
         value = KeywordValue.of(Keyword.ABSOLUTE);
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(value)).isEqualTo("absolute");
+        assertThat(writer.writeSingle(value)).isEqualTo("absolute");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         value = KeywordValue.of(Keyword.INLINE_BLOCK);
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(value)).isEqualTo("inline-block");
+        assertThat(writer.writeSingle(value)).isEqualTo("inline-block");
     }
 
     @Test

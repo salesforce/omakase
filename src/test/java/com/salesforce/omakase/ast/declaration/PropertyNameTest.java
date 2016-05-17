@@ -208,13 +208,13 @@ public class PropertyNameTest {
     @Test
     public void writeForPropertyWithPrefix() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(prefixed)).isEqualTo(PREFIX + NAME);
+        assertThat(writer.writeSingle(prefixed)).isEqualTo(PREFIX + NAME);
     }
 
     @Test
     public void writeForPropertyWithoutPrefix() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(unprefixed)).isEqualTo(NAME);
+        assertThat(writer.writeSingle(unprefixed)).isEqualTo(NAME);
     }
 
     @Test
@@ -286,8 +286,7 @@ public class PropertyNameTest {
     @Test
     public void starHackIsWrittenWithStar() throws IOException {
         PropertyName name = PropertyName.of(STARHACK_NAME);
-        StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(name)).isEqualTo(STARHACK_NAME);
+        assertThat(StyleWriter.compressed().writeSingle(name)).isEqualTo(STARHACK_NAME);
     }
 
     @Test

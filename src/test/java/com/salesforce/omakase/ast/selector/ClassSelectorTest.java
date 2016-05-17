@@ -59,12 +59,12 @@ public class ClassSelectorTest {
     public void write() throws IOException {
         ClassSelector cs = new ClassSelector("test");
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(cs)).isEqualTo(".test");
+        assertThat(writer.writeSingle(cs)).isEqualTo(".test");
     }
 
     @Test
     public void copy() {
         ClassSelector cs = new ClassSelector("test");
-        assertThat(((ClassSelector)cs.copy()).name()).isEqualTo("test");
+        assertThat(cs.copy().name()).isEqualTo("test");
     }
 }

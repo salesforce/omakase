@@ -61,7 +61,6 @@ public class RawSyntaxTest {
     @Test
     public void writeVerbose() throws IOException {
         RawSyntax r = new RawSyntax(5, 5, ".class > #id");
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(r)).isEqualTo(".class > #id");
+        assertThat(StyleWriter.verbose().writeSingle(r)).isEqualTo(".class > #id");
     }
 }

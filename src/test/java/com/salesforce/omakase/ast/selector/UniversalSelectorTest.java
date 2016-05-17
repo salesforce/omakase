@@ -49,7 +49,7 @@ public class UniversalSelectorTest {
 
     @Test
     public void write() throws IOException {
-        assertThat(StyleWriter.compressed().writeSnippet(new UniversalSelector())).isEqualTo("*");
+        assertThat(StyleWriter.inline().writeSingle(new UniversalSelector())).isEqualTo("*");
     }
 
     @Test

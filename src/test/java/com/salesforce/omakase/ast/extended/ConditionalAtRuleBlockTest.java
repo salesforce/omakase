@@ -149,7 +149,7 @@ public class ConditionalAtRuleBlockTest {
 
         conditionals.add(IE7);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, CONFIG, null);
-        assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo(".test{display:none}");
+        assertThat(StyleWriter.compressed().writeSingle(b)).isEqualTo(".test{display:none}");
     }
 
     @Test
@@ -162,7 +162,7 @@ public class ConditionalAtRuleBlockTest {
         conditionals.add(IE7);
         ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
-        assertThat(StyleWriter.verbose().writeSnippet(b)).isEqualTo("@if(ie7) {\n.test {\n  display: none;\n}\n}");
+        assertThat(StyleWriter.verbose().writeSingle(b)).isEqualTo("@if(ie7) {\n.test {\n  display: none;\n}\n}");
     }
 
     @Test
@@ -175,7 +175,7 @@ public class ConditionalAtRuleBlockTest {
         conditionals.add(new Conditional("webkit", false));
         ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
-        assertThat(StyleWriter.inline().writeSnippet(b)).isEqualTo("@if(webkit) {\n.test {display:none}\n}");
+        assertThat(StyleWriter.inline().writeSingle(b)).isEqualTo("@if(webkit) {\n.test {display:none}\n}");
     }
 
     @Test
@@ -188,7 +188,7 @@ public class ConditionalAtRuleBlockTest {
         conditionals.add(IE7);
         ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
-        assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo("@if(ie7){.test{display:none}}");
+        assertThat(StyleWriter.compressed().writeSingle(b)).isEqualTo("@if(ie7){.test{display:none}}");
     }
 
     @Test
@@ -203,7 +203,7 @@ public class ConditionalAtRuleBlockTest {
         conditionals.add(new Conditional("ie9", false));
         ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
-        assertThat(StyleWriter.verbose().writeSnippet(b)).isEqualTo("@if(ie7 || ie8 || ie9) {\n.test {\n  display: none;\n}\n}");
+        assertThat(StyleWriter.verbose().writeSingle(b)).isEqualTo("@if(ie7 || ie8 || ie9) {\n.test {\n  display: none;\n}\n}");
     }
 
     @Test
@@ -217,7 +217,7 @@ public class ConditionalAtRuleBlockTest {
         conditionals.add(new Conditional("ie10", true));
         ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
-        assertThat(StyleWriter.inline().writeSnippet(b)).isEqualTo("@if(ie7 || !ie10) {\n.test {display:none}\n}");
+        assertThat(StyleWriter.inline().writeSingle(b)).isEqualTo("@if(ie7 || !ie10) {\n.test {display:none}\n}");
     }
 
     @Test
@@ -232,7 +232,7 @@ public class ConditionalAtRuleBlockTest {
         conditionals.add(new Conditional("ie9", false));
         ConditionalsConfig config = new ConditionalsConfig().passthroughMode(true);
         ConditionalAtRuleBlock b = new ConditionalAtRuleBlock(-1, -1, conditionals, statements, config, null);
-        assertThat(StyleWriter.compressed().writeSnippet(b)).isEqualTo("@if(ie7||!ie8||ie9){.test{display:none}}");
+        assertThat(StyleWriter.compressed().writeSingle(b)).isEqualTo("@if(ie7||!ie8||ie9){.test{display:none}}");
     }
 
     @Test

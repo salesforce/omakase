@@ -92,32 +92,32 @@ public class MediaQueryListTest {
     @Test
     public void writeWithOneQuery() throws IOException {
         list.queries().append(q1);
-        assertThat(StyleWriter.verbose().writeSnippet(list)).isEqualTo("only screen and (min-width: 800px)");
+        assertThat(StyleWriter.verbose().writeSingle(list)).isEqualTo("only screen and (min-width: 800px)");
     }
 
     @Test
     public void writeWithMultipleQueries() throws IOException {
         list.queries().append(q1).append(q2);
-        assertThat(StyleWriter.verbose().writeSnippet(list)).isEqualTo("only screen and (min-width: 800px), screen and (color)");
+        assertThat(StyleWriter.verbose().writeSingle(list)).isEqualTo("only screen and (min-width: 800px), screen and (color)");
     }
 
     @Test
     public void writeCompressedMultipleQueries() throws IOException {
         list.queries().append(q1).append(q2);
-        assertThat(StyleWriter.compressed().writeSnippet(list)).isEqualTo("only screen and (min-width:800px),screen and (color)");
+        assertThat(StyleWriter.compressed().writeSingle(list)).isEqualTo("only screen and (min-width:800px),screen and (color)");
     }
 
     @Test
     public void handlesDetachedQueriesCorrectly() throws IOException {
         list.queries().append(q1).append(q2);
         q2.destroy();
-        assertThat(StyleWriter.verbose().writeSnippet(list)).isEqualTo("only screen and (min-width: 800px)");
+        assertThat(StyleWriter.verbose().writeSingle(list)).isEqualTo("only screen and (min-width: 800px)");
     }
 
     @Test
     public void testCopy() {
         list.queries().append(q1).append(q2);
-        MediaQueryList copy = (MediaQueryList)list.copy();
+        MediaQueryList copy = list.copy();
         assertThat(copy.queries()).hasSize(2);
     }
 }

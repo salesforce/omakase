@@ -135,42 +135,42 @@ public class SelectorTest {
     public void writeVerboseRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.refine();
-        assertThat(StyleWriter.verbose().writeSnippet(selector)).isEqualTo(".class > #id");
+        assertThat(StyleWriter.verbose().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.refine();
-        assertThat(StyleWriter.inline().writeSnippet(selector)).isEqualTo(".class>#id");
+        assertThat(StyleWriter.inline().writeSingle(selector)).isEqualTo(".class>#id");
     }
 
     @Test
     public void writeCompressedRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.refine();
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo(".class>#id");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo(".class>#id");
     }
 
     @Test
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
-        assertThat(StyleWriter.verbose().writeSnippet(selector)).isEqualTo(".class > #id");
+        assertThat(StyleWriter.verbose().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
-        assertThat(StyleWriter.inline().writeSnippet(selector)).isEqualTo(".class > #id");
+        assertThat(StyleWriter.inline().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
         selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo(".class > #id");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test

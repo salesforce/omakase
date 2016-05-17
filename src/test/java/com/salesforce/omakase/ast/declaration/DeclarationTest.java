@@ -335,24 +335,21 @@ public class DeclarationTest {
     public void writeVerboseRefined() throws IOException {
         PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(d)).isEqualTo("margin: 1px 2px");
+        assertThat(StyleWriter.verbose().writeSingle(d)).isEqualTo("margin: 1px 2px");
     }
 
     @Test
     public void writeInlineRefined() throws IOException {
         PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
-        StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(d)).isEqualTo("margin:1px 2px");
+        assertThat(StyleWriter.inline().writeSingle(d)).isEqualTo("margin:1px 2px");
     }
 
     @Test
     public void writeCompressedRefined() throws IOException {
         PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
-        StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(d)).isEqualTo("margin:1px 2px");
+        assertThat(StyleWriter.compressed().writeSingle(d)).isEqualTo("margin:1px 2px");
     }
 
     @Test
@@ -361,8 +358,7 @@ public class DeclarationTest {
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
         Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
 
-        StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(d)).isEqualTo("border: 1px solid red");
+        assertThat(StyleWriter.verbose().writeSingle(d)).isEqualTo("border: 1px solid red");
     }
 
     @Test
@@ -371,8 +367,7 @@ public class DeclarationTest {
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
         Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
 
-        StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
+        assertThat(StyleWriter.inline().writeSingle(d)).isEqualTo("border:1px solid red");
     }
 
     @Test
@@ -381,8 +376,7 @@ public class DeclarationTest {
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
         Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
 
-        StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(d)).isEqualTo("border:1px solid red");
+        assertThat(StyleWriter.compressed().writeSingle(d)).isEqualTo("border:1px solid red");
     }
 
     @Test

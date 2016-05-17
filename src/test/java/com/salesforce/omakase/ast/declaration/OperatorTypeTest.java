@@ -53,19 +53,19 @@ public class OperatorTypeTest {
     @Test
     public void writeComa() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(OperatorType.COMMA)).isEqualTo(",");
+        assertThat(writer.writeSingle(OperatorType.COMMA)).isEqualTo(",");
     }
 
     @Test
     public void writeSlash() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(OperatorType.SLASH)).isEqualTo("/");
+        assertThat(writer.writeSingle(OperatorType.SLASH)).isEqualTo("/");
     }
 
     @Test
     public void writeSpace() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(OperatorType.SPACE)).isEqualTo(" ");
+        assertThat(writer.writeSingle(OperatorType.SPACE)).isEqualTo(" ");
     }
 }
 

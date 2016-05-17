@@ -77,21 +77,21 @@ public class UnicodeRangeValueTest {
     public void writeVerbose() {
         range = new UnicodeRangeValue(5, 10, "u+0025-00ff");
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(range)).isEqualTo("u+0025-00ff");
+        assertThat(writer.writeSingle(range)).isEqualTo("u+0025-00ff");
     }
 
     @Test
     public void writeInline() {
         range = new UnicodeRangeValue(5, 10, "u+0025-00ff");
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(range)).isEqualTo("u+0025-00ff");
+        assertThat(writer.writeSingle(range)).isEqualTo("u+0025-00ff");
     }
 
     @Test
     public void writeCompressed() {
         range = new UnicodeRangeValue(5, 10, "u+0025-00ff");
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(range)).isEqualTo("u+0025-00ff");
+        assertThat(writer.writeSingle(range)).isEqualTo("u+0025-00ff");
     }
 
     @Test
@@ -99,7 +99,7 @@ public class UnicodeRangeValueTest {
         range = new UnicodeRangeValue(5, 10, "u+ff0");
         range.comments(Lists.newArrayList("test"));
 
-        UnicodeRangeValue copy = (UnicodeRangeValue)range.copy();
+        UnicodeRangeValue copy = range.copy();
         assertThat(copy.value()).isEqualTo(range.value());
         assertThat(copy.comments()).hasSameSizeAs(range.comments());
     }

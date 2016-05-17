@@ -53,12 +53,12 @@ public class GenericAtRuleExpressionTest {
 
     @Test
     public void write() {
-        assertThat(StyleWriter.writeSingle(new GenericAtRuleExpression("test"))).isEqualTo("test");
+        assertThat(StyleWriter.inline().writeSingle(new GenericAtRuleExpression("test"))).isEqualTo("test");
     }
 
     @Test
     public void copy() {
         GenericAtRuleExpression expr = new GenericAtRuleExpression("test");
-        assertThat(((GenericAtRuleExpression)expr.copy()).expression()).isEqualTo("test");
+        assertThat(expr.copy().expression()).isEqualTo("test");
     }
 }

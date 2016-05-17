@@ -83,7 +83,7 @@ public final class As {
      */
     public static String simpleString(Syntax syntax, boolean includeUnitType) {
         StringBuilder builder = new StringBuilder(64);
-        builder.append(StyleWriter.writeSingle(syntax, WriterMode.INLINE));
+        builder.append(StyleWriter.inline().writeSingle(syntax));
         if (includeUnitType) {
             builder.append(" (");
             String name = syntax.getClass().getSimpleName();

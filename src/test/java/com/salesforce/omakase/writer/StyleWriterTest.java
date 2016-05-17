@@ -32,6 +32,7 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import org.junit.Test;
@@ -128,26 +129,73 @@ public class StyleWriterTest {
     @Test
     public void writeUnitHasOverride() {
         StyleWriter writer = StyleWriter.compressed();
-        SampleCustomWriter sample = new SampleCustomWriter();
-        writer.override(Selector.class, sample);
+        CustomSelectorWriter1 sample = new CustomSelectorWriter1();
+        writer.addCustomWriter(Selector.class, sample);
         Omakase.source(".test{color:red}").use(writer).process();
         writer.write();
         assertThat(sample.called).isTrue();
     }
 
     @Test
-    public void writeUnitAsSnippetHasOverride() throws IOException {
+    public void writeUnitHasSingleOverride() throws IOException {
         StyleWriter writer = StyleWriter.compressed();
-        SampleCustomWriter sample = new SampleCustomWriter();
-        writer.override(Selector.class, sample);
-        writer.writeSnippet(new Selector(new ClassSelector("test")));
-        assertThat(sample.called).isTrue();
+
+        CustomSelectorWriter1 selectorWriter = new CustomSelectorWriter1();
+        writer.addCustomWriter(Selector.class, selectorWriter);
+
+        writer.writeSingle(new Selector(new ClassSelector("test")));
+
+        assertThat(selectorWriter.called).isTrue();
+    }
+
+    @Test
+    public void writeUnitHasMultipleOverridesForSameType() {
+        StyleWriter writer = StyleWriter.compressed();
+
+        CustomSelectorWriter1 selectorWriter1 = new CustomSelectorWriter1();
+        CustomSelectorWriter2 selectorWriter2 = new CustomSelectorWriter2();
+        writer.addCustomWriter(Selector.class, selectorWriter1);
+        writer.addCustomWriter(Selector.class, selectorWriter2);
+
+        writer.writeSingle(new Selector(new ClassSelector("test")));
+
+        assertThat(selectorWriter1.called).isTrue();
+        assertThat(selectorWriter2.called).isFalse();
+    }
+
+    @Test
+    public void writeUnitHasMultipleOverridesForDifferentTypes() {
+        StyleWriter writer = StyleWriter.compressed();
+
+        CustomDeclarationWriter declarationWriter = new CustomDeclarationWriter();
+        CustomSelectorWriter1 selectorWriter = new CustomSelectorWriter1();
+        writer.addCustomWriter(Declaration.class, declarationWriter);
+        writer.addCustomWriter(Selector.class, selectorWriter);
+
+        writer.writeSingle(new Selector(new ClassSelector("test")));
+
+        assertThat(declarationWriter.called).isFalse();
+        assertThat(selectorWriter.called).isTrue();
+    }
+
+    @Test
+    public void writeUnitHasOverrideThatDoesNothing() {
+        StyleWriter writer = StyleWriter.compressed();
+
+        CustomSelectorWriterDoesNothing selectorWriter1 = new CustomSelectorWriterDoesNothing();
+        CustomSelectorWriter2 selectorWriter2 = new CustomSelectorWriter2();
+        writer.addCustomWriter(Selector.class, selectorWriter1);
+        writer.addCustomWriter(Selector.class, selectorWriter2);
+
+        writer.writeSingle(new Selector(new ClassSelector("test")));
+
+        assertThat(selectorWriter2.called).isTrue();
     }
 
     @Test
     public void writeSingle() {
         ClassSelector s = new ClassSelector("test");
-        assertThat(StyleWriter.writeSingle(s)).isEqualTo(".test");
+        assertThat(StyleWriter.inline().writeSingle(s)).isEqualTo(".test");
     }
 
     private static final class Level1 extends AbstractSyntax {
@@ -207,12 +255,40 @@ public class StyleWriterTest {
         StyleWriter.verbose().writeInner(new Level1(), new StyleAppendable());
     }
 
-    public static final class SampleCustomWriter implements CustomWriter<Selector> {
+    public static final class CustomSelectorWriter1 implements CustomWriter<Selector> {
         boolean called;
 
         @Override
-        public void write(Selector unit, StyleWriter writer, StyleAppendable appendable) throws IOException {
+        public boolean write(Selector unit, StyleWriter writer, StyleAppendable appendable) throws IOException {
             called = true;
+            return true;
+        }
+    }
+
+    public static final class CustomSelectorWriter2 implements CustomWriter<Selector> {
+        boolean called;
+
+        @Override
+        public boolean write(Selector unit, StyleWriter writer, StyleAppendable appendable) throws IOException {
+            called = true;
+            return true;
+        }
+    }
+
+    public static final class CustomSelectorWriterDoesNothing implements CustomWriter<Selector> {
+        @Override
+        public boolean write(Selector unit, StyleWriter writer, StyleAppendable appendable) throws IOException {
+            return false;
+        }
+    }
+
+    public static final class CustomDeclarationWriter implements CustomWriter<Declaration> {
+        boolean called;
+
+        @Override
+        public boolean write(Declaration unit, StyleWriter writer, StyleAppendable appendable) throws IOException {
+            called = true;
+            return true;
         }
     }
 }

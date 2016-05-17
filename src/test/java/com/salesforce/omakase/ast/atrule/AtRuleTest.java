@@ -309,39 +309,39 @@ public class AtRuleTest {
     public void writeUnrefined() throws IOException {
         AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(ar)).isEqualTo("@media all and (max-width: 800px) {\n  p { color: red;}\n}");
+        assertThat(writer.writeSingle(ar)).isEqualTo("@media all and (max-width: 800px) {\n  p { color: red;}\n}");
     }
 
     @Test
     public void writeUnrefinedNoBlockCharset() {
         AtRule ar = new AtRule(5, 5, "charset", new RawSyntax(5, 5, "\"UTF8\""), null, refiner);
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(ar)).isEqualTo("@charset \"UTF8\";");
+        assertThat(writer.writeSingle(ar)).isEqualTo("@charset \"UTF8\";");
     }
 
     @Test
     public void writeUnrefinedNoBlockImport() {
         AtRule ar = new AtRule(5, 5, "import", new RawSyntax(5, 5, "url(xyz.css)"), null, refiner);
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(ar)).isEqualTo("@import url(xyz.css);");
+        assertThat(writer.writeSingle(ar)).isEqualTo("@import url(xyz.css);");
     }
 
     @Test
     public void writeCustomExpressionOnly() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), null);
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test (custom)");
+        assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("@test (custom)");
     }
 
     @Test
     public void writeCustomBlockOnly() throws IOException {
         AtRule ar = new AtRule("test", null, new CustomBlock());
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test{custom}");
+        assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("@test{custom}");
     }
 
     @Test
     public void writeCustomExpressionAndBlock() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("@test (custom){custom}");
+        assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("@test (custom){custom}");
     }
 
     @Test
@@ -354,7 +354,7 @@ public class AtRuleTest {
     public void shouldWriteNameFalse() throws IOException {
         AtRule ar = new AtRule("test", new CustomExpression(), new CustomBlock());
         ar.shouldWriteName(false);
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("(custom){custom}");
+        assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("(custom){custom}");
     }
 
     @Test
@@ -386,7 +386,7 @@ public class AtRuleTest {
         assertThat(ar.shouldWriteName()).isFalse();
         assertThat(ar.isRefined()).isTrue();
         assertThat(ar.expression().get()).isInstanceOf(MetadataExpression.class);
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
+        assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("");
     }
 
     @Test
@@ -398,7 +398,7 @@ public class AtRuleTest {
         assertThat(ar.shouldWriteName()).isFalse();
         assertThat(ar.isRefined()).isTrue();
         assertThat(ar.expression().get()).isSameAs(expr);
-        assertThat(StyleWriter.compressed().writeSnippet(ar)).isEqualTo("");
+        assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("");
     }
 
     public static final class CustomExpression extends AbstractAtRuleMember implements AtRuleExpression {

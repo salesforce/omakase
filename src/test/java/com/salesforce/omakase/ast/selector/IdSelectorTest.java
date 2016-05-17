@@ -57,7 +57,7 @@ public class IdSelectorTest {
     @Test
     public void write() throws IOException {
         IdSelector id = new IdSelector(1, 1, "test");
-        assertThat(StyleWriter.compressed().writeSnippet(id)).isEqualTo("#test");
+        assertThat(StyleWriter.compressed().writeSingle(id)).isEqualTo("#test");
     }
 
     @Test

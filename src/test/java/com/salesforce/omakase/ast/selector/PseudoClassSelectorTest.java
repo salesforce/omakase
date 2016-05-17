@@ -101,13 +101,13 @@ public class PseudoClassSelectorTest {
     @Test
     public void write() throws IOException {
         PseudoClassSelector s = new PseudoClassSelector("hover");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":hover");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo(":hover");
     }
 
     @Test
     public void writeWithArgs() throws IOException {
         PseudoClassSelector s = new PseudoClassSelector("nth-child", "2n+1");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":nth-child(2n+1)");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo(":nth-child(2n+1)");
     }
 
     @Test

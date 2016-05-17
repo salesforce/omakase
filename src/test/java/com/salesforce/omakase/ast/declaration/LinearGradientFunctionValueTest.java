@@ -110,13 +110,13 @@ public class LinearGradientFunctionValueTest {
     @Test
     public void testWrite() {
         function = new LinearGradientFunctionValue("to top, red, #fcc");
-        assertThat(StyleWriter.writeSingle(function)).isEqualTo("linear-gradient(to top, red, #fcc)");
+        assertThat(StyleWriter.inline().writeSingle(function)).isEqualTo("linear-gradient(to top, red, #fcc)");
     }
 
     @Test
     public void testWriteWhenRepeating() {
         function = new LinearGradientFunctionValue("red, yellow").repeating(true);
-        assertThat(StyleWriter.writeSingle(function)).isEqualTo("repeating-linear-gradient(red, yellow)");
+        assertThat(StyleWriter.inline().writeSingle(function)).isEqualTo("repeating-linear-gradient(red, yellow)");
     }
 
     @Test

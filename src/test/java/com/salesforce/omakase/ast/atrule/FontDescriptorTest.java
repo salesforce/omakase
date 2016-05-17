@@ -146,19 +146,19 @@ public class FontDescriptorTest {
     @Test
     public void writeVerbose() {
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(descriptor)).isEqualTo("font-family: \"My Font\"");
+        assertThat(writer.writeSingle(descriptor)).isEqualTo("font-family: \"My Font\"");
     }
 
     @Test
     public void writeInline() {
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(descriptor)).isEqualTo("font-family:\"My Font\"");
+        assertThat(writer.writeSingle(descriptor)).isEqualTo("font-family:\"My Font\"");
     }
 
     @Test
     public void writeCompressed() {
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(descriptor)).isEqualTo("font-family:\"My Font\"");
+        assertThat(writer.writeSingle(descriptor)).isEqualTo("font-family:\"My Font\"");
     }
 
     @Test

@@ -57,31 +57,31 @@ public class PseudoElementSelectorTest {
     @Test
     public void write() throws IOException {
         PseudoElementSelector s = new PseudoElementSelector("selection");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo("::selection");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo("::selection");
     }
 
     @Test
     public void writeBefore() throws IOException {
         PseudoElementSelector s = new PseudoElementSelector("before");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":before");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo(":before");
     }
 
     @Test
     public void writeAfter() throws IOException {
         PseudoElementSelector s = new PseudoElementSelector("after");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":after");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo(":after");
     }
 
     @Test
     public void writeFirstLine() throws IOException {
         PseudoElementSelector s = new PseudoElementSelector("first-line");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":first-line");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo(":first-line");
     }
 
     @Test
     public void writeFirstLetter() throws IOException {
         PseudoElementSelector s = new PseudoElementSelector("first-letter");
-        assertThat(StyleWriter.compressed().writeSnippet(s)).isEqualTo(":first-letter");
+        assertThat(StyleWriter.compressed().writeSingle(s)).isEqualTo(":first-letter");
     }
 
     @Test

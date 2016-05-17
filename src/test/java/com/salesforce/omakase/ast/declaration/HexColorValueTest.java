@@ -95,21 +95,21 @@ public class HexColorValueTest {
     public void writeVerbose() throws IOException {
         value = HexColorValue.of("fff");
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(value)).isEqualTo("#fff");
+        assertThat(writer.writeSingle(value)).isEqualTo("#fff");
     }
 
     @Test
     public void writeInline() throws IOException {
         value = HexColorValue.of("#fff");
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(value)).isEqualTo("#fff");
+        assertThat(writer.writeSingle(value)).isEqualTo("#fff");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         value = HexColorValue.of("a1f3f2");
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(value)).isEqualTo("#a1f3f2");
+        assertThat(writer.writeSingle(value)).isEqualTo("#a1f3f2");
     }
 
     @Test

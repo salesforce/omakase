@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.error.OmakaseException;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -55,21 +54,21 @@ public class CommentTest {
     public void writeVerbose() throws IOException {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(c)).isEqualTo("/* test */");
+        assertThat(writer.writeSingle(c)).isEqualTo("/* test */");
     }
 
     @Test
     public void writeInline() throws IOException {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(c)).isEqualTo("/* test */");
+        assertThat(writer.writeSingle(c)).isEqualTo("/* test */");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         Comment c = new Comment(" test ");
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(c)).isEqualTo("/* test */");
+        assertThat(writer.writeSingle(c)).isEqualTo("/* test */");
     }
 
     @Test

@@ -36,6 +36,7 @@ import static org.fest.assertions.api.Assertions.*;
 /**
  * Unit tests for {@link Conditional}.
  */
+@SuppressWarnings("JavaDoc")
 public class ConditionalTest {
     ConditionalsConfig config;
 
@@ -84,12 +85,12 @@ public class ConditionalTest {
     @Test
     public void testWriteWithNegation() {
         Conditional conditional = new Conditional("foo", true);
-        assertThat(StyleWriter.inline().writeSnippet(conditional)).isEqualTo("!foo");
+        assertThat(StyleWriter.inline().writeSingle(conditional)).isEqualTo("!foo");
     }
 
     @Test
     public void testWriteWithoutNegation() {
         Conditional conditional = new Conditional("foo", false);
-        assertThat(StyleWriter.inline().writeSnippet(conditional)).isEqualTo("foo");
+        assertThat(StyleWriter.inline().writeSingle(conditional)).isEqualTo("foo");
     }
 }

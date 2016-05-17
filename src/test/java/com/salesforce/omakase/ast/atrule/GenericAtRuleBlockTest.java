@@ -92,25 +92,25 @@ public class GenericAtRuleBlockTest {
     @Test
     public void writeVerbose() throws IOException {
         GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
-        assertThat(StyleWriter.verbose().writeSnippet(block)).isEqualTo(" {\n  .test {\n    display: none;\n  }\n}");
+        assertThat(StyleWriter.verbose().writeSingle(block)).isEqualTo(" {\n  .test {\n    display: none;\n  }\n}");
     }
 
     @Test
     public void writeInline() throws IOException {
         GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
-        assertThat(StyleWriter.inline().writeSnippet(block)).isEqualTo(" {\n  .test {display:none}\n}");
+        assertThat(StyleWriter.inline().writeSingle(block)).isEqualTo(" {\n  .test {display:none}\n}");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
-        assertThat(StyleWriter.compressed().writeSnippet(block)).isEqualTo("{.test{display:none}}");
+        assertThat(StyleWriter.compressed().writeSingle(block)).isEqualTo("{.test{display:none}}");
     }
 
     @Test
     public void copy() {
         GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
-        GenericAtRuleBlock copy = (GenericAtRuleBlock)block.copy();
+        GenericAtRuleBlock copy = block.copy();
         assertThat(copy.statements()).hasSameSizeAs(block.statements());
     }
 }

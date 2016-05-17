@@ -465,13 +465,13 @@ public class LinkedSyntaxCollectionTest {
         assertThat(collection).containsExactly(child1, child2);
     }
 
-
     @Test
     public void replaceExistinWithSingle() {
         collection.append(child3);
         collection.replaceExistingWith(child1);
         assertThat(collection).containsExactly(child1);
     }
+
     @Test
     public void removeUnitInCollection() {
         collection.append(child1);
@@ -502,6 +502,23 @@ public class LinkedSyntaxCollectionTest {
         collection.append(child1).append(child2);
         assertThat(collection.clear()).isEmpty();
     }
+
+    @Test
+    public void destroyAll() {
+        collection.append(child1).append(child2).append(child3);
+        assertThat(collection).hasSize(3);
+        assertThat(child1.isDestroyed()).isFalse();
+        assertThat(child2.isDestroyed()).isFalse();
+        assertThat(child3.isDestroyed()).isFalse();
+
+        collection.destroyAll();
+
+        assertThat(collection).isEmpty();;
+        assertThat(child1.isDestroyed()).isTrue();
+        assertThat(child2.isDestroyed()).isTrue();
+        assertThat(child3.isDestroyed()).isTrue();
+    }
+
 
     @Test
     public void parent() {

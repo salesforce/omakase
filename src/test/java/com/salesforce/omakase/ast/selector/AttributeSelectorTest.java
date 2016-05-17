@@ -109,48 +109,48 @@ public class AttributeSelectorTest {
     @Test
     public void writeWhenAttributeOnly() throws IOException {
         selector = new AttributeSelector("class");
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class]");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo("[class]");
     }
 
     @Test
     public void writeWhenAtributeAndMatchTypeAndMatchValue() throws IOException {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.PREFIXMATCH, "prefix");
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=prefix]");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo("[class^=prefix]");
     }
 
     @Test
     public void writeWhenAtributeAndMatchTypeAndMatchValue2() throws IOException {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.PREFIXMATCH, "abc123-_123");
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=abc123-_123]");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo("[class^=abc123-_123]");
     }
 
     @Test
     public void writeWhenValueShouldBeQuoted() throws IOException {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.PREFIXMATCH, "with spaces");
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=\"with spaces\"]");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo("[class^=\"with spaces\"]");
     }
 
     @Test
     public void writeWhenValueShouldBeQuoted2() throws IOException {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.PREFIXMATCH, "1number");
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=\"1number\"]");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo("[class^=\"1number\"]");
     }
 
     @Test
     public void writeWhenValueShouldBeQuoted3() throws IOException {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.PREFIXMATCH, "%^&$");
-        assertThat(StyleWriter.compressed().writeSnippet(selector)).isEqualTo("[class^=\"%^&$\"]");
+        assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo("[class^=\"%^&$\"]");
     }
 
     @Test
     public void copyNoMatchTypeorMatchValue() {
         selector = new AttributeSelector("class");
-        AttributeSelector copy = (AttributeSelector)selector.copy();
+        AttributeSelector copy = selector.copy();
         assertThat(copy.attribute()).isEqualTo("class");
         assertThat(copy.matchType().isPresent()).isFalse();
         assertThat(copy.value().isPresent()).isFalse();
@@ -161,7 +161,7 @@ public class AttributeSelectorTest {
         selector = new AttributeSelector("class");
         selector.match(AttributeMatchType.EQUALS, "test");
 
-        AttributeSelector copy = (AttributeSelector)selector.copy();
+        AttributeSelector copy = selector.copy();
         assertThat(copy.attribute()).isEqualTo("class");
         assertThat(copy.matchType().get()).isSameAs(AttributeMatchType.EQUALS);
         assertThat(copy.value().get()).isEqualTo("test");

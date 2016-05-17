@@ -62,7 +62,7 @@ public class RawFunctionTest {
 
     @Test
     public void write() {
-        String out = StyleWriter.writeSingle(new RawFunction(1, 1, "name", "args args"));
+        String out = StyleWriter.inline().writeSingle(new RawFunction(1, 1, "name", "args args"));
         assertThat(out).isEqualTo("name(args args)");
     }
 

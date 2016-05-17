@@ -73,24 +73,24 @@ public class StringValueTest {
     public void writeVerbose() throws IOException {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.verbose();
-        assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
+        assertThat(writer.writeSingle(s)).isEqualTo("'xyz'");
 
         s.content(QuotationMode.DOUBLE, "xyz");
-        assertThat(writer.writeSnippet(s)).isEqualTo("\"xyz\"");
+        assertThat(writer.writeSingle(s)).isEqualTo("\"xyz\"");
     }
 
     @Test
     public void writeInline() throws IOException {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.inline();
-        assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
+        assertThat(writer.writeSingle(s)).isEqualTo("'xyz'");
     }
 
     @Test
     public void writeCompressed() throws IOException {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSnippet(s)).isEqualTo("'xyz'");
+        assertThat(writer.writeSingle(s)).isEqualTo("'xyz'");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class StringValueTest {
         StringValue s = StringValue.of(QuotationMode.SINGLE, "xyz");
         s.comments(Lists.newArrayList("test"));
 
-        StringValue copy = (StringValue)s.copy();
+        StringValue copy = s.copy();
         assertThat(copy.content()).isEqualTo(s.content());
         assertThat(copy.mode()).isSameAs(s.mode());
         assertThat(copy.comments()).hasSameSizeAs(s.comments());

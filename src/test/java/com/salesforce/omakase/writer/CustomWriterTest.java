@@ -44,7 +44,7 @@ public class CustomWriterTest {
     @Test
     public void testCustomWriter() {
         StyleWriter writer = StyleWriter.compressed();
-        writer.override(Selector.class, new TestCustomWriter());
+        writer.addCustomWriter(Selector.class, new TestCustomWriter());
         Omakase.source(".class{color:red}").use(writer).process();
 
         assertThat(writer.write()).isEqualTo("CUSTOM.class{color:red}");
@@ -52,9 +52,10 @@ public class CustomWriterTest {
 
     public static final class TestCustomWriter implements CustomWriter<Selector> {
         @Override
-        public void write(Selector selector, StyleWriter writer, StyleAppendable appendable) throws IOException {
+        public boolean write(Selector selector, StyleWriter writer, StyleAppendable appendable) throws IOException {
             appendable.append("CUSTOM");
             selector.write(writer, appendable);
+            return true;
         }
     }
 }

@@ -66,7 +66,7 @@ public class StylesheetTest {
         sheet.append(rule);
         assertThat(sheet.statements()).hasSize(1);
 
-        assertThat(StyleWriter.compressed().writeSnippet(rule)).isEqualTo(".class{display:none}");
+        assertThat(StyleWriter.compressed().writeSingle(rule)).isEqualTo(".class{display:none}");
     }
 
     @Test

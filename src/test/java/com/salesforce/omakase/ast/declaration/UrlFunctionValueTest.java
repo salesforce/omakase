@@ -78,20 +78,20 @@ public class UrlFunctionValueTest {
     public void writeSingleQuotes() throws IOException {
         UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
         url.quotationMode(QuotationMode.SINGLE);
-        assertThat(StyleWriter.verbose().writeSnippet(url)).isEqualTo("url('/images/one.png')");
+        assertThat(StyleWriter.verbose().writeSingle(url)).isEqualTo("url('/images/one.png')");
     }
 
     @Test
     public void writeDoubleQuotes() throws IOException {
         UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
         url.quotationMode(QuotationMode.DOUBLE);
-        assertThat(StyleWriter.verbose().writeSnippet(url)).isEqualTo("url(\"/images/one.png\")");
+        assertThat(StyleWriter.verbose().writeSingle(url)).isEqualTo("url(\"/images/one.png\")");
     }
 
     @Test
     public void writeNoQuotes() throws IOException {
         UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
-        assertThat(StyleWriter.verbose().writeSnippet(url)).isEqualTo("url(/images/one.png)");
+        assertThat(StyleWriter.verbose().writeSingle(url)).isEqualTo("url(/images/one.png)");
     }
 
     @Test
@@ -100,7 +100,7 @@ public class UrlFunctionValueTest {
         url.quotationMode(QuotationMode.DOUBLE);
         url.comments(Lists.newArrayList("test"));
 
-        UrlFunctionValue copy = (UrlFunctionValue)url.copy();
+        UrlFunctionValue copy = url.copy();
         assertThat(copy.url()).isSameAs(url.url());
         assertThat(copy.quotationMode().get()).isSameAs(url.quotationMode().get());
         assertThat(copy.comments()).hasSameSizeAs(url.comments());
@@ -111,7 +111,7 @@ public class UrlFunctionValueTest {
         UrlFunctionValue url = new UrlFunctionValue("/images/one.png");
         url.comments(Lists.newArrayList("test"));
 
-        UrlFunctionValue copy = (UrlFunctionValue)url.copy();
+        UrlFunctionValue copy = url.copy();
         assertThat(copy.url()).isSameAs(url.url());
         assertThat(copy.quotationMode().isPresent()).isEqualTo(false);
         assertThat(copy.comments()).hasSameSizeAs(url.comments());

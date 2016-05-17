@@ -140,7 +140,7 @@ public class PropertyValueTest {
         NumericalValue n2 = NumericalValue.of(2);
         PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
 
-        assertThat(StyleWriter.compressed().writeSnippet(val)).isEqualTo("1 2");
+        assertThat(StyleWriter.compressed().writeSingle(val)).isEqualTo("1 2");
     }
 
     @Test
@@ -150,7 +150,7 @@ public class PropertyValueTest {
         PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
         val.important(true);
 
-        assertThat(StyleWriter.verbose().writeSnippet(val)).isEqualTo("1 2 !important");
+        assertThat(StyleWriter.verbose().writeSingle(val)).isEqualTo("1 2 !important");
     }
 
     @Test
@@ -160,7 +160,7 @@ public class PropertyValueTest {
         PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
         val.important(true);
 
-        assertThat(StyleWriter.compressed().writeSnippet(val)).isEqualTo("1 2!important");
+        assertThat(StyleWriter.compressed().writeSingle(val)).isEqualTo("1 2!important");
     }
 
     @Test

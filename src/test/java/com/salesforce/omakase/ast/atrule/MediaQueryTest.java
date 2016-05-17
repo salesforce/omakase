@@ -143,51 +143,51 @@ public class MediaQueryTest {
     @Test
     public void writeWithRestriction() throws IOException {
         mq.type("screen").restriction(MediaRestriction.NOT);
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("not screen");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("not screen");
     }
 
     @Test
     public void writeWithTypeOnly() throws IOException {
         mq.type("screen");
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("screen");
     }
 
     @Test
     public void writeWithTypeAndExpression() throws IOException {
         mq.type("screen").expressions().append(exp1);
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (min-width:800px)");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("screen and (min-width:800px)");
     }
 
     @Test
     public void writeWithRestrictionTypeAndMultipleExpressions() throws IOException {
         mq.type("screen").restriction(MediaRestriction.ONLY).expressions().append(exp1).append(exp2);
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("only screen and (min-width:800px) and (color)");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("only screen and (min-width:800px) and (color)");
     }
 
     @Test
     public void writeWhenRestrictionAndTypeIsAll() throws IOException {
         mq.type("all").restriction(MediaRestriction.NOT);
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("not all");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("not all");
     }
 
     @Test
     public void writeWhenNoRestrictionAndTypeIsAll() throws IOException {
         mq.type("all").expressions().append(exp2);
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("(color)");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("(color)");
     }
 
     @Test
     public void properHandlingWhenFirstExpressionIsDetached() throws IOException {
         mq.type("screen").expressions().append(exp1).append(exp2);
         exp1.destroy();
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (color)");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("screen and (color)");
     }
 
     @Test
     public void properHandlingWhenLastExpressionIsDetached() throws IOException {
         mq.type("screen").expressions().append(exp1).append(exp2);
         exp2.destroy();
-        assertThat(StyleWriter.compressed().writeSnippet(mq)).isEqualTo("screen and (min-width:800px)");
+        assertThat(StyleWriter.compressed().writeSingle(mq)).isEqualTo("screen and (min-width:800px)");
     }
 
     @Test

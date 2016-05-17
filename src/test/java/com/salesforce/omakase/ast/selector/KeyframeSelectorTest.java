@@ -53,11 +53,11 @@ public class KeyframeSelectorTest {
 
     @Test
     public void write() {
-        assertThat(StyleWriter.writeSingle(new KeyframeSelector("75%"))).isEqualTo("75%");
+        assertThat(StyleWriter.inline().writeSingle(new KeyframeSelector("75%"))).isEqualTo("75%");
     }
 
     @Test
     public void copy() {
-        assertThat(((KeyframeSelector)new KeyframeSelector("70%").copy()).keyframe()).isEqualTo("70%");
+        assertThat(new KeyframeSelector("70%").copy().keyframe()).isEqualTo("70%");
     }
 }

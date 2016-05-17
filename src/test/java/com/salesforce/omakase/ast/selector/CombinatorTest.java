@@ -63,25 +63,25 @@ public class CombinatorTest {
     @Test
     public void writeDescendant() throws IOException {
         Combinator c = Combinator.descendant();
-        assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo(" ");
+        assertThat(StyleWriter.compressed().writeSingle(c)).isEqualTo(" ");
     }
 
     @Test
     public void writeChild() throws IOException {
         Combinator c = Combinator.child();
-        assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo(">");
+        assertThat(StyleWriter.compressed().writeSingle(c)).isEqualTo(">");
     }
 
     @Test
     public void writeAdjacent() throws IOException {
         Combinator c = Combinator.adjacent();
-        assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo("+");
+        assertThat(StyleWriter.compressed().writeSingle(c)).isEqualTo("+");
     }
 
     @Test
     public void writeGeneral() throws IOException {
         Combinator c = Combinator.general();
-        assertThat(StyleWriter.compressed().writeSnippet(c)).isEqualTo("~");
+        assertThat(StyleWriter.compressed().writeSingle(c)).isEqualTo("~");
     }
 
     @Test

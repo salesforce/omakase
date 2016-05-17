@@ -66,12 +66,12 @@ public class TypeSelectorTest {
     @Test
     public void write() throws IOException {
         TypeSelector ts = new TypeSelector(1, 1, "p");
-        assertThat(StyleWriter.compressed().writeSnippet(ts)).isEqualTo("p");
+        assertThat(StyleWriter.compressed().writeSingle(ts)).isEqualTo("p");
     }
 
     @Test
     public void copy() {
         TypeSelector ts = new TypeSelector(1, 1, "p");
-        assertThat(((TypeSelector)ts.copy()).name()).isEqualTo(ts.name());
+        assertThat(ts.copy().name()).isEqualTo(ts.name());
     }
 }
