@@ -306,16 +306,6 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     @Override
-    public Optional<Rule> asRule() {
-        return Optional.absent();
-    }
-
-    @Override
-    public Optional<AtRule> asAtRule() {
-        return Optional.of(this);
-    }
-
-    @Override
     protected AtRule self() {
         return this;
     }

@@ -27,9 +27,11 @@
 package com.salesforce.omakase.util;
 
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Stylesheet;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.declaration.Declaration;
 
@@ -47,12 +49,12 @@ public final class Declarations {
     /**
      * Finds all {@link Declaration}s within the given {@link StatementIterable} (e.g., a {@link Stylesheet} or {@link
      * AtRuleBlock}).
-     * <p/>
+     * <p>
      * By default this will recurse into any inner/child {@link StatementIterable}s as well, including their {@link Declaration}s.
      * If you only want {@link Declaration}s one level deep, call {@link #within(StatementIterable, boolean)} with false.
-     * <p/>
+     * <p>
      * This is optimized to not copy each {@link Declaration} into a new collection, but returns lazy {@link Iterable} instead.
-     * <p/>
+     * <p>
      * Examples:
      * <pre><code>
      * for (Declaration declaration : Declarations.within(atRule.block().get())) {
@@ -77,9 +79,9 @@ public final class Declarations {
     /**
      * Finds all {@link Declaration}s within the given {@link StatementIterable} (e.g., a {@link Stylesheet} or {@link
      * AtRuleBlock}).
-     * <p/>
+     * <p>
      * This is optimized to not copy each {@link Declaration} into a new collection, but returns lazy {@link Iterable} instead.
-     * <p/>
+     * <p>
      * Examples:
      * <pre><code>
      * for (Declaration declaration : Declarations.within(atRule.block().get(), true)) {
@@ -105,10 +107,10 @@ public final class Declarations {
         List<Iterable<Declaration>> iterables = new ArrayList<>();
 
         for (Statement statement : parent.statements()) {
-            if (statement.asRule().isPresent()) {
-                iterables.add(statement.asRule().get().declarations());
-            } else if (recurse && statement.asAtRule().isPresent() && statement.asAtRule().get().block().isPresent()) {
-                iterables.add(within(statement.asAtRule().get().block().get(), recurse));
+            if (statement instanceof Rule) {
+                iterables.add(((Rule)statement).declarations());
+            } else if (recurse && statement instanceof AtRule && ((AtRule)statement).block().isPresent()) {
+                iterables.add(within(((AtRule)statement).block().get(), recurse));
             }
         }
 

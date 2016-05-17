@@ -176,15 +176,19 @@ public final class Equivalents {
         @Override
         public Rule previous(Rule peer) {
             Optional<Statement> previous = peer.previous();
-            if (!previous.isPresent() || !previous.get().asRule().isPresent()) return null;
-            return previous.get().asRule().get();
+            if (previous.isPresent() && previous.get() instanceof Rule) {
+                return (Rule)previous.get();
+            }
+            return null;
         }
 
         @Override
         public Rule next(Rule peer) {
             Optional<Statement> next = peer.next();
-            if (!next.isPresent() || !next.get().asRule().isPresent()) return null;
-            return next.get().asRule().get();
+            if (next.isPresent() && next.get() instanceof Rule) {
+                return (Rule)next.get();
+            }
+            return null;
         }
 
         @Override
@@ -198,15 +202,19 @@ public final class Equivalents {
         @Override
         public AtRule previous(AtRule peer) {
             Optional<Statement> previous = peer.previous();
-            if (!previous.isPresent() || !previous.get().asAtRule().isPresent()) return null;
-            return previous.get().asAtRule().get();
+            if (previous.isPresent() && previous.get() instanceof AtRule) {
+                return (AtRule)previous.get();
+            }
+            return null;
         }
 
         @Override
         public AtRule next(AtRule peer) {
             Optional<Statement> next = peer.next();
-            if (!next.isPresent() || !next.get().asAtRule().isPresent()) return null;
-            return next.get().asAtRule().get();
+            if (next.isPresent() && next.get() instanceof AtRule) {
+                return (AtRule)next.get();
+            }
+            return null;
         }
 
         @Override

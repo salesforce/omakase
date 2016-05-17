@@ -97,18 +97,6 @@ public class AtRuleTest {
     }
 
     @Test
-    public void asRule() {
-        Statement ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
-        assertThat(ar.asRule().isPresent()).isFalse();
-    }
-
-    @Test
-    public void asAtRule() {
-        Statement ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
-        assertThat(ar.asAtRule().isPresent()).isTrue();
-    }
-
-    @Test
     public void customExpressionOnly() {
         CustomExpression expression = new CustomExpression();
         AtRule ar = new AtRule("test", expression, null);

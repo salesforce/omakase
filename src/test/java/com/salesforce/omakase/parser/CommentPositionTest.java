@@ -66,7 +66,7 @@ public class CommentPositionTest {
         AutoRefiner refinement = new AutoRefiner().all();
         Omakase.source(SRC).use(refinement).use(syntaxTree).process();
         this.stylesheet = syntaxTree.stylesheet();
-        this.rule = Iterables.get(stylesheet.statements(), 0).asRule().get();
+        this.rule = (Rule)Iterables.get(stylesheet.statements(), 0);
     }
 
     @Test

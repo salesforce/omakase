@@ -43,14 +43,14 @@ import java.util.List;
 
 /**
  * A distinct unit of syntax within CSS.
- * <p/>
+ * <p>
  * {@link Syntax} objects are used to represent the individual pieces of content of the parsed CSS source, and are the primary
  * objects used to construct the AST (Abstract Syntax Tree). Not all {@link Syntax} objects have content directly associated with
  * them. Some are used to represent the logical grouping of content, such as the {@link Rule}.
- * <p/>
+ * <p>
  * Each unit has a particular line and column indicating where it was parsed within the source, except for dynamically created
  * units. You can check {@link #hasSourcePosition()} to see if a unit is dynamically created.
- * <p/>
+ * <p>
  * It's important to remember that <em>unrefined</em> Syntax objects, unless validation is performed, may actually contain invalid
  * CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled with custom validation to
  * ensure correct usage. See {@link Refinable} for more information.
@@ -84,7 +84,7 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Gets whether this unit has a source location specified.
-     * <p/>
+     * <p>
      * This will be true for units within the original parsed source and false for dynamically created units.
      *
      * @return True if this unit has a source location specified.
@@ -93,10 +93,10 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Performs a deep copy of the instance.
-     * <p/>
+     * <p>
      * This includes any inner syntax units, for example the selectors inside of a rule. This also carries over the comments and
      * orphaned comments.
-     * <p/>
+     * <p>
      * Keep in mind that copying is generally not preferred. Particularly, it is generally better to parse the source again than
      * to copy a {@link Stylesheet}. Copying a specific syntax unit may be appropriate when duplicating the terms in a declaration
      * or the selector parts in a selector.
@@ -117,7 +117,7 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Adds the given comment to this unit.
-     * <p/>
+     * <p>
      * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
      * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
      * Declaration} itself instead of the property name or value inside of it.
@@ -131,7 +131,7 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Adds the given {@link Comment} to this unit.
-     * <p/>
+     * <p>
      * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
      * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
      * Declaration} itself instead of the property name or value inside of it.
@@ -145,7 +145,7 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Adds the given comments to this unit.
-     * <p/>
+     * <p>
      * Note that in the case of {@link Selector}s, it is preferred to add comments to the {@link Selector} object itself instead
      * of the individual {@link SimpleSelector}s inside of it. Likewise, it is preferred to add a comment to the {@link
      * Declaration} itself instead of the property name or value inside of it.
@@ -169,9 +169,10 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Gets all comments <em>associated</em> with this {@link Syntax} unit.
-     * <p/>
-     * A unit is associated with all comments that directly precede it. However in the case of the <em>first</em> {@link
-     * SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the comment instead.
+     * <p>
+     * A unit is associated with all comments that directly precede it. However in the case of comments at the start of a {@link
+     * Rule}, the first {@link Selector} will contain the comment, not the Rule or the {@link SimpleSelector}. For more info, see
+     * the main readme file.
      *
      * @return The list of comments. Never returns null.
      */
@@ -199,7 +200,7 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Gets all orphaned comments (comments that appear after or at the end of the unit).
-     * <p/>
+     * <p>
      * A comment is considered <em>orphaned</em> if it does not appear before a logically associated unit. For example, comments
      * at the end of a stylesheet or declaration block.
      *
@@ -209,15 +210,16 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Checks if this unit has a CSS comment annotation with the given name.
-     * <p/>
+     * <p>
      * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
-     * <p/>
+     * <p>
      * Only one annotation per comment block is allowed.
-     * <p/>
-     * Any comments that precede this unit in the source code will be checked for the annotation. However in the case of the
-     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
-     * annotation instead. For more information see the main readme file.
+     * <p>
+     * A unit is associated with all comments that directly precede it. However in the case of comments at the start of a {@link
+     * Rule}, the first {@link Selector} will contain the comment, not the Rule or the {@link SimpleSelector}. For convenience,
+     * the Rule <em>will</em> check the comments on the first Selector for annotation getter methods (which includes this method).
+     * For more info, see the main readme file.
      *
      * @param name
      *     Check for an annotation with this name.
@@ -228,17 +230,22 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Checks if this unit has a CSS comment with a {@link CssAnnotation} that equals the given one.
-     * <p/>
+     * <p>
+     * A unit is associated with all comments that directly precede it. However in the case of comments at the start of a {@link
+     * Rule}, the first {@link Selector} will contain the comment, not the Rule or the {@link SimpleSelector}. For convenience,
+     * the Rule <em>will</em> check the comments on the first Selector for annotation getter methods though, including this
+     * method. For more info, see the main readme file.
+     * <p>
      * This is most useful in tangent with the {@link #annotate(CssAnnotation)} method. You can annotate many syntax units using
      * that method and then subsequently check for the annotation using this method, reusing the same instance in all cases for
      * efficiency.
-     * <p/>
+     * <p>
      * The annotation must match according to the rules defined in {@link CssAnnotation#equals(Object)}.
-     * <p/>
-     * In additional to dynamically added annotations, this will also match against regular comments from the source file. Any
-     * comments that precede this unit in the source code will be checked for the annotation. However in the case of the
-     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
-     * annotation instead. For more information see the main readme file.
+     * <p>
+     * A unit is associated with all comments that directly precede it. However in the case of comments at the start of a {@link
+     * Rule}, the first {@link Selector} will contain the comment, not the Rule or the {@link SimpleSelector}. For convenience,
+     * the Rule <em>will</em> check the comments on the first Selector for annotation getter methods (which includes this method).
+     * For more info, see the main readme file.
      *
      * @param annotation
      *     Check for a {@link CssAnnotation} that equals this one.
@@ -249,15 +256,16 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Gets the {@link CssAnnotation} with the given name from the comments associated with this unit, if there is one.
-     * <p/>
+     * <p>
      * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
-     * <p/>
+     * <p>
      * Only one annotation per comment block is allowed.
-     * <p/>
-     * Any comments that precede this unit in the source code will be checked for the annotation. However in the case of the
-     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
-     * annotation instead. For more information see the main readme file.
+     * <p>
+     * A unit is associated with all comments that directly precede it. However in the case of comments at the start of a {@link
+     * Rule}, the first {@link Selector} will contain the comment, not the Rule or the {@link SimpleSelector}. For convenience,
+     * the Rule <em>will</em> check the comments on the first Selector for annotation getter methods (which includes this method).
+     * For more info, see the main readme file.
      *
      * @param name
      *     Get the annotation with this name.
@@ -268,15 +276,16 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Gets all {@link CssAnnotation}s from the comments associated with this unit.
-     * <p/>
+     * <p>
      * CSS comment annotations are CSS comments that contain an annotation in the format of "@annotationName [optionalArgs]", for
      * example "@noparse", "@browser ie7", etc...
-     * <p/>
+     * <p>
      * Only one annotation per comment block is allowed.
-     * <p/>
-     * Any comments that precede this unit in the source code will be checked for the annotation.However in the case of the
-     * <em>first</em> {@link SimpleSelector} within a {@link Selector}, it is the {@link Selector} that will contain the
-     * annotation instead. For more information see the main readme file.
+     * <p>
+     * A unit is associated with all comments that directly precede it. However in the case of comments at the start of a {@link
+     * Rule}, the first {@link Selector} will contain the comment, not the Rule or the {@link SimpleSelector}. For convenience,
+     * the Rule <em>will</em> check the comments on the first Selector for annotation getter methods (which includes this method).
+     * For more info, see the main readme file.
      *
      * @return All found {@link CssAnnotation}s.
      */
@@ -284,11 +293,11 @@ public interface Syntax extends Writable, Broadcastable {
 
     /**
      * Appends the given {@link CssAnnotation} to this unit.
-     * <p/>
+     * <p>
      * A {@link Comment} will be created and appended to this unit using the normal CSS comment annotation syntax. This means if
      * CSS comments are written out then they will include this annotation. The comment will also be returned by normal comment
      * retrieval methods such as {@link #comments()}.
-     * <p/>
+     * <p>
      * You can subsequently check for this annotation again using the {@link #hasAnnotation(CssAnnotation)} method. This might be
      * useful in plugins that dynamically annotate syntax units and then subsequently check for the annotation later on, as using
      * both of these methods can efficiently reuse the same {@link CssAnnotation} instance.
@@ -301,6 +310,10 @@ public interface Syntax extends Writable, Broadcastable {
     /**
      * Same as {@link #annotate(CssAnnotation)}, except only if {@link #hasAnnotation(CssAnnotation)} is false for the given
      * annotation.
+     * <p>
+     * Note that if using this method on a {@link Rule} that comments at the start of a Rule are usually associated with the
+     * {@link Selector}, and this method will not check the Selector when determining if the annotation is present. Thus you
+     * should only call this method on a Rule if you are sure the annotation was manually added to the Rule.
      *
      * @param annotation
      *     Add this annotation.
@@ -310,7 +323,7 @@ public interface Syntax extends Writable, Broadcastable {
     /**
      * Specifies whether this object will handle writing its own comments, instead of the automatic behavior of the {@link
      * StyleWriter}.
-     * <p/>
+     * <p>
      * If returning true, be sure to check {@link StyleWriter#shouldWriteAllComments()} to determine if comments should actually
      * be written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains this logic
      * and is the preferable way to handle it.
@@ -322,7 +335,7 @@ public interface Syntax extends Writable, Broadcastable {
     /**
      * Specifies whether this object will handle writing its own orphaned comments, instead of the automatic behavior of the
      * {@link StyleWriter}.
-     * <p/>
+     * <p>
      * If returning true, be sure to check {@link StyleWriter#shouldWriteAllComments()} to determine if comments should actually
      * be written out or not. The {@link StyleWriter#appendComments(Iterable, StyleAppendable)} utility method contains this logic
      * and is the preferable way to handle it.

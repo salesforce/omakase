@@ -27,7 +27,6 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -40,25 +39,27 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS Rule.
- * <p/>
+ * <p>
  * You might be looking for a "DeclarationBlock" class. Currently such a class serves no purpose, and all ordered declarations are
  * contained inside of a {@link SyntaxCollection} within this class instead.
- * <p/>
+ * <p>
  * Note that if a {@link Rule} does not have any selectors or declarations (or all of it's selectors and declarations are
  * <em>detached</em>) then the rule will not be printed out.
- * <p/>
+ * <p>
  * Comments that appear in the original CSS source "before" the rule are actually going to be added to the first {@link Selector}
- * instead of the rule.
- * <p/>
+ * instead of the rule. However, for convenience, the getter annotation-related methods will include results from the first
+ * selector (getter methods for pure comments will not do this).
+ * <p>
  * Any comments that appear after the semi-colon of the last rule are considered orphaned comments and can be retrieved via {@link
  * #orphanedComments()}. Note that any comments before the semi-colon (or if the last declaration does not end with a semi-colon)
  * are attributed as orphaned comments on the {@link Declaration} instead.
- * <p/>
+ * <p>
  * Example of a dynamically created rule:
  * <pre><code>
  * Rule rule = new Rule();
@@ -119,18 +120,33 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
     }
 
     @Override
-    public Optional<Rule> asRule() {
-        return Optional.of(this);
-    }
-
-    @Override
-    public Optional<AtRule> asAtRule() {
-        return Optional.absent();
-    }
-
-    @Override
     protected Rule self() {
         return this;
+    }
+
+    @Override
+    public boolean hasAnnotation(String name) {
+        return super.hasAnnotation(name) || (!selectors.isEmpty() && selectors.first().get().hasAnnotation(name));
+    }
+
+    @Override
+    public boolean hasAnnotation(CssAnnotation annotation) {
+        return super.hasAnnotation(annotation) || (!selectors.isEmpty() && selectors.first().get().hasAnnotation(annotation));
+    }
+
+    @Override
+    public Optional<CssAnnotation> annotation(String name) {
+        Optional<CssAnnotation> annotation = super.annotation(name);
+        return annotation.or(selectors.isEmpty() ? Optional.<CssAnnotation>absent() : selectors.first().get().annotation(name));
+    }
+
+    @Override
+    public List<CssAnnotation> annotations() {
+        List<CssAnnotation> annotations = super.annotations();
+        if (!selectors.isEmpty()) {
+            annotations.addAll(selectors.first().get().annotations());
+        }
+        return annotations;
     }
 
     @Override

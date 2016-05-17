@@ -27,6 +27,7 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.collect.Multimap;
+import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -68,7 +69,7 @@ final class HandlePseudoElement extends AbstractHandlerSimple<PseudoElementSelec
     @Override
     protected void prefix(Statement copied, Prefix prefix, SupportMatrix support) {
         // find the pseudo selector
-        Rule rule = copied.asRule().get();
+        Rule rule = (Rule)copied;
 
         // rename pseudo element selectors that need the prefix
         for (Selector selector : rule.selectors()) {

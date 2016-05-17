@@ -108,7 +108,7 @@ final class HandlePlaceholder extends AbstractHandler<PseudoElementSelector, Sta
     @Override
     protected void copy(Statement original, Prefix prefix, SupportMatrix support) {
         // make the copy
-        Rule copy = original.copy().asRule().get();
+        Rule copy = (Rule)original.copy();
 
         // special cases-- we need to switch the names/and or to a pseudo class for certain vendors
         for (Selector selector : copy.selectors()) {

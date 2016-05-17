@@ -41,7 +41,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link SyntaxTree}.
- * <p/>
+ * <p>
  * This contains some tests that strictly speaking aren't necessarily testing {@link SyntaxTree} itself. This is due to leftovers
  * from refactoring... but meh, doesn't hurt to keep them for now.
  */
@@ -81,7 +81,7 @@ public class SyntaxTreeTest {
 
     @Test
     public void selectorsOrder() {
-        Rule rule = Iterables.get(stylesheet.statements(), 6).asRule().get();
+        Rule rule = (Rule)Iterables.get(stylesheet.statements(), 6);
         assertThat(rule.selectors()).hasSize(2);
         assertThat(rule.selectors().first().get().raw().get().content()).isEqualTo("#div1");
         assertThat(rule.selectors().last().get().raw().get().content()).isEqualTo("#div2");
@@ -89,7 +89,7 @@ public class SyntaxTreeTest {
 
     @Test
     public void declarationsOrder() {
-        Rule rule = Iterables.get(stylesheet.statements(), 2).asRule().get();
+        Rule rule = (Rule)Iterables.get(stylesheet.statements(), 2);
         assertThat(rule.declarations()).hasSize(3);
         assertThat(Iterables.get(rule.declarations(), 0).rawPropertyName().get().content()).isEqualTo("color");
         assertThat(Iterables.get(rule.declarations(), 1).rawPropertyName().get().content()).isEqualTo("font-size");
@@ -98,7 +98,7 @@ public class SyntaxTreeTest {
 
     @Test
     public void ruleOrphanedComments() {
-        Rule rule = Iterables.get(stylesheet.statements(), 6).asRule().get();
+        Rule rule = (Rule)Iterables.get(stylesheet.statements(), 6);
         assertThat(rule.orphanedComments()).isNotEmpty();
     }
 

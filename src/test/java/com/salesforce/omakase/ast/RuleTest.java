@@ -66,15 +66,201 @@ public class RuleTest {
     }
 
     @Test
-    public void asRuleAlwaysPresent() {
+    public void hasAnnotationByNameRuleFalseSelectorFalse() {
         Rule rule = new Rule();
-        assertThat(rule.asRule().isPresent()).isTrue();
+        assertThat(rule.hasAnnotation("test")).isFalse();
     }
 
     @Test
-    public void asAtRuleAlwaysAbsent() {
+    public void hasAnnotationByNameRuleTrueSelectorFalse() {
         Rule rule = new Rule();
-        assertThat(rule.asAtRule().isPresent()).isFalse();
+        rule.comment("@test");
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        rule.selectors().append(sel);
+
+        assertThat(rule.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationByNameRuleFalseSelectorTrue() {
+        Rule rule = new Rule();
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        sel.comment("@test");
+        rule.selectors().append(sel);
+
+        assertThat(rule.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationByNameRuleTrueSelectorTrue() {
+        Rule rule = new Rule();
+        rule.comment("@test");
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        sel.comment("@test");
+        rule.selectors().append(sel);
+
+        assertThat(rule.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationByNameTrueNoSelectorsPresent() {
+        Rule rule = new Rule();
+        rule.comment("@test");
+        assertThat(rule.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationByNameFalseNoSelectorsPresent() {
+        Rule rule = new Rule();
+        assertThat(rule.hasAnnotation("test")).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationByObjectRuleFalseSelectorFalse() {
+        CssAnnotation annotation = new CssAnnotation("test");
+        Rule rule = new Rule();
+        assertThat(rule.hasAnnotation(annotation)).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationByObjectRuleTrueSelectorFalse() {
+        CssAnnotation annotation = new CssAnnotation("test");
+
+        Rule rule = new Rule();
+        rule.annotate(annotation);
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        rule.selectors().append(sel);
+
+        assertThat(rule.hasAnnotation(annotation)).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationByObjectRuleFalseSelectorTrue() {
+        CssAnnotation annotation = new CssAnnotation("test");
+
+        Rule rule = new Rule();
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        sel.annotate(annotation);
+        rule.selectors().append(sel);
+
+        assertThat(rule.hasAnnotation(annotation)).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationByObjectNoSelectorsPresent() {
+        CssAnnotation annotation = new CssAnnotation("test");
+
+        Rule rule = new Rule();
+        rule.annotate(annotation);
+
+        assertThat(rule.hasAnnotation(annotation)).isTrue();
+    }
+
+    @Test
+    public void getAnnotationByNameRuleFalseSelectorFalse() {
+        Rule rule = new Rule();
+        assertThat(rule.annotation("test").isPresent()).isFalse();
+    }
+
+    @Test
+    public void getAnnotationByNameRuleTrueSelectorFalse() {
+        Rule rule = new Rule();
+        rule.comment("@test");
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        rule.selectors().append(sel);
+
+        assertThat(rule.annotation("test").get().name()).isEqualTo("test");
+    }
+
+    @Test
+    public void getAnnotationByNameRuleFalseSelectorTrue() {
+        Rule rule = new Rule();
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        sel.comment("@test");
+        rule.selectors().append(sel);
+
+        assertThat(rule.annotation("test").isPresent()).isTrue();
+    }
+
+    @Test
+    public void getAnnotationByNameRuleTrueSelectorTrue() {
+        Rule rule = new Rule();
+        rule.comment("@test foo");
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        sel.comment("@test bar");
+        rule.selectors().append(sel);
+
+        assertThat(rule.annotation("test").get().rawArgs().get()).isEqualTo("foo");
+    }
+
+    @Test
+    public void getAnnotationByNameNoSelectorsPresent() {
+        Rule rule = new Rule();
+        rule.comment("@test foo");
+
+        assertThat(rule.annotation("test").isPresent()).isTrue();
+    }
+
+    @Test
+    public void getAllAnnotationsRuleFalseSelectorFalse() {
+        Rule rule = new Rule();
+        assertThat(rule.annotations()).isEmpty();
+    }
+
+    @Test
+    public void getAllAnnotationsRuleTrueSelectorFalse() {
+        Rule rule = new Rule();
+        rule.comment("@test");
+        rule.comment("@test2");
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        rule.selectors().append(sel);
+
+        assertThat(rule.annotations()).containsExactly(new CssAnnotation("test"), new CssAnnotation("test2"));
+    }
+
+    @Test
+    public void getAllAnnotationsRuleFalseSelectorTrue() {
+        Rule rule = new Rule();
+
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        sel.comment("@test");
+        sel.comment("@test2");
+        rule.selectors().append(sel);
+
+        assertThat(rule.annotations()).containsExactly(new CssAnnotation("test"), new CssAnnotation("test2"));
+    }
+
+    @Test
+    public void getAllAnnotationsRuleTrueSelectorTrue() {
+        Rule rule = new Rule();
+        rule.comment("@test");
+        rule.comment("@test2");
+
+        Selector sel = new Selector(new ClassSelector("name"));
+        rule.selectors().append(sel);
+        rule.comment("@test3");
+        rule.comment("@test4");
+
+        assertThat(rule.annotations()).containsExactly(new CssAnnotation("test"), new CssAnnotation("test2"), new CssAnnotation
+            ("test3"), new CssAnnotation("test4"));
+    }
+
+    @Test
+    public void getAllAnnotationsNoSelectorsPresent() {
+        Rule rule = new Rule();
+        rule.comment("@test");
+
+        assertThat(rule.annotations()).containsExactly(new CssAnnotation("test"));
     }
 
     @Test
@@ -103,7 +289,7 @@ public class RuleTest {
         rule.selectors().append(s);
         rule.declarations().append(d);
 
-        Rule copy = (Rule)rule.copy();
+        Rule copy = rule.copy();
         assertThat(copy.selectors()).hasSize(1);
         assertThat(copy.declarations()).hasSize(1);
     }

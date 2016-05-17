@@ -64,7 +64,7 @@ final class HandleAtRule extends AbstractHandlerSimple<AtRule, Statement> {
 
     @Override
     protected void prefix(Statement copied, Prefix prefix, SupportMatrix support) {
-        AtRule atRule = copied.asAtRule().get();
+        AtRule atRule = (AtRule)copied;
         atRule.name(prefix + atRule.name());
     }
 }

@@ -42,22 +42,6 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Subscribable
 @Description(value = "rule or at-rule", broadcasted = AUTOMATIC)
 public interface Statement extends Groupable<StatementIterable, Statement> {
-    /**
-     * Gets this statement as an {@link Rule}, if possible. This is an alternative to using an <pre>instanceof</pre> check.
-     *
-     * @return An {@link Optional} containing this object if it is an instance of an {@link Rule}, or {@link Optional#absent()}
-     *         otherwise.
-     */
-    Optional<Rule> asRule();
-
-    /**
-     * Gets this statement as an {@link AtRule}, if possible. This is an alternative to using an <pre>instanceof</pre> check.
-     *
-     * @return An {@link Optional} containing this object if it is an instance of an {@link AtRule}, or {@link Optional#absent()}
-     *         otherwise.
-     */
-    Optional<AtRule> asAtRule();
-
     @Override
     Statement copy();
 }
