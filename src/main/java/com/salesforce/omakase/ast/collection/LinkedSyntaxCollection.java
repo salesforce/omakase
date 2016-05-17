@@ -49,7 +49,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Standard (default) implementation of the {@link SyntaxCollection}.
- * <p/>
+ * <p>
  * This uses a linked-node approach optimized for random lookups, insertions and removals. Uniqueness is maintained like a set and
  * prevents duplicates. Appending or prepending an existing unit will simply move it's position.
  *
@@ -262,16 +262,6 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     @Override
-    public SyntaxCollection<P, T> replaceExistingWith(T unit) {
-        return clear().append(unit);
-    }
-
-    @Override
-    public SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units) {
-        return clear().appendAll(units);
-    }
-
-    @Override
     public SyntaxCollection<P, T> remove(T unit) {
         Node<T> removed = lookup.remove(unit.id());
 
@@ -290,6 +280,23 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     public SyntaxCollection<P, T> clear() {
         for (T unit : this) remove(unit);
         return this;
+    }
+
+    @Override
+    public SyntaxCollection<P, T> replaceExistingWith(T unit) {
+        return clear().append(unit);
+    }
+
+    @Override
+    public SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units) {
+        return clear().appendAll(units);
+    }
+
+    @Override
+    public void destroyAll() {
+        for (T unit : this) {
+            unit.destroy();
+        }
     }
 
     @Override

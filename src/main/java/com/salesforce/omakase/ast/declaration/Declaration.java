@@ -53,7 +53,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS declaration.
- * <p/>
+ * <p>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
  * grammar validation. See the notes on {@link Refinable} and in the readme.
  *
@@ -78,7 +78,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     /**
      * Creates a new instance of a {@link Declaration} with the given rawProperty (property name) and rawValue (property value).
      * The property name and value can be further refined or validated by calling {@link #refine()}.
-     * <p/>
+     * <p>
      * Note that it is called "raw" because at this point we haven't verified that either are actually valid CSS. Hence really
      * anything can technically be in there and we can't be sure it is proper formed until {@link #refine()} has been called.
      *
@@ -98,9 +98,9 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and {@link PropertyValue}.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code NumericalValue px10 = NumericalValue.of(10, "px");
@@ -108,7 +108,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
      *   PropertyValue value = PropertyValue.ofTerms(OperatorType.SPACE, px10, em5);
      *   new Declaration(Property.BORDER_RADIUS, value)}
      * </pre>
-     * <p/>
+     * <p>
      * If there is only a single value then use {@link #Declaration(Property, Term)} instead.
      *
      * @param propertyName
@@ -122,9 +122,9 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Creates a new instance of a {@link Declaration} with the given {@link Property} and single {@link Term} value.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code new Declaration(Property.ZOOM, NumericalValue.of(1));}
@@ -141,9 +141,9 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and single {@link Term} value.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code PropertyName name = PropertyName.using("new-prop");}
@@ -161,9 +161,9 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Creates a new instance of a {@link Declaration} with the given {@link PropertyName} and {@link PropertyValue}.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code PropertyName prop = PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT);
@@ -252,7 +252,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Gets whether this {@link Declaration} has the given property name. Prefer to use {@link #isProperty(Property)} instead.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>if (declaration.isProperty("border-radius") {...}</code>
@@ -269,7 +269,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Gets whether this {@link Declaration} has the given {@link Property} name.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>if (declaration.isProperty(Property.BORDER_RADIUS)) {...}</code>
@@ -401,7 +401,7 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
 
     /**
      * Similar to {@link #parent()}, except this will return the parent's containing {@link AtRule}.
-     * <p/>
+     * <p>
      * This is only applicable for declarations directly within a {@link Rule}, directly within an {@link AtRuleBlock}, directly
      * within an {@link AtRule}.
      *
@@ -503,5 +503,13 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     @Override
     public Declaration copy() {
         return new Declaration(propertyName().copy(), propertyValue().copy()).copiedFrom(this);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (this.propertyValue != null) {
+            propertyValue.members().destroyAll();
+        }
     }
 }

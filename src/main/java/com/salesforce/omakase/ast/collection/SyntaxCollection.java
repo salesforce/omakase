@@ -151,7 +151,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
 
     /**
      * Prepends the specified unit before the given index unit.
-     * <p/>
+     * <p>
      * The index unit must be present within this collection. If the unit to prepend already exists in this collection it will be
      * moved.
      *
@@ -189,7 +189,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
 
     /**
      * Appends the specified unit after the given index unit.
-     * <p/>
+     * <p>
      * The index unit must be present within this collection. If the unit to append already exists in this collection it will be
      * moved.
      *
@@ -241,6 +241,11 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * @return this, for chaining.
      */
     SyntaxCollection<P, T> replaceExistingWith(Iterable<T> units);
+
+    /**
+     * Calls {@link Groupable#destroy()} on all units.
+     */
+    void destroyAll();
 
     /**
      * Gets the parent {@link Syntax} unit that owns this collection.

@@ -262,6 +262,21 @@ public class RuleTest {
 
         assertThat(rule.annotations()).containsExactly(new CssAnnotation("test"));
     }
+    
+    @Test
+    public void callingDestroyAlsoDestroysChildren() {
+        Rule rule = new Rule();
+        Selector s = new Selector(new ClassSelector("name"));
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        rule.selectors().append(s);
+        rule.declarations().append(d);
+
+        rule.destroy();
+        assertThat(rule.isDestroyed()).isTrue();
+        assertThat(s.isDestroyed()).isTrue();
+        assertThat(d.isDestroyed()).isTrue();
+    }
+    
 
     @Test
     public void propagatesBroadcast() {

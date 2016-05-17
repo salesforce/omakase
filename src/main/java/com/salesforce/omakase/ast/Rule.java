@@ -214,4 +214,11 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
         }
         return copy;
     }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        selectors.destroyAll();
+        declarations.destroyAll();
+    }
 }

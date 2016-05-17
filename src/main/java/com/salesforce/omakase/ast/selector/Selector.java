@@ -52,7 +52,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS selector.
- * <p/>
+ * <p>
  * {@link Selector}s are lists of {@link SelectorPart}s. Individual {@link Selector}s are separated by commas. For example, in
  * <pre>
  * {@code .class, .class #id}
@@ -64,7 +64,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  * </pre>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
  * grammar validation. See the notes on {@link Refinable}.
- * <p/>
+ * <p>
  * When dynamically creating selectors, you usually pass in the various {@link SelectorPart}s to the constructor. Example:
  * <pre>
  * {@code Selector selector = new Selector(new ClassSelector("myClass"), Combinator.descendant(), new IdSelector("myId"));}
@@ -84,7 +84,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     /**
      * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
      * individual {@link SelectorPart}s by using {@link #refine()}.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
      *
      * @param raw
@@ -121,7 +121,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     /**
      * Creates a new instance with the given line, number, and parts.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
      *
      * @param line
@@ -137,7 +137,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     /**
      * Creates a new instance with the given line, number, and parts.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
      *
      * @param line
@@ -166,7 +166,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     /**
      * Gets the individual parts of the selector. The selector will be automatically refined if not done so already.
-     * <p/>
+     * <p>
      * <b>Warning:</b> do not call from within a custom {@link Refiner}.
      *
      * @return The list of {@link SelectorPart} members.
@@ -203,7 +203,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
 
     /**
      * Gets whether this selector is used for @keyframes.
-     * <p/>
+     * <p>
      * XXX consider making keyframe selectors disjoint from regular selectors.
      *
      * @return Whether this selector is used for keyframes.
@@ -283,5 +283,11 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
         }
 
         return new Selector(copiedParts).copiedFrom(this);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        parts.destroyAll();
     }
 }

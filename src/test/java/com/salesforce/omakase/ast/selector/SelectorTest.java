@@ -29,11 +29,11 @@ package com.salesforce.omakase.ast.selector;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
@@ -44,7 +44,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /** Unit tests for {@link Selector}. */
 @SuppressWarnings("JavaDoc")
 public class SelectorTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
+    @org.junit.Rule public final ExpectedException exception = ExpectedException.none();
 
     private Selector selector;
 
@@ -117,6 +117,21 @@ public class SelectorTest {
     }
 
     @Test
+    public void callingDestroyAlsoCallsDestroyOnParts() {
+        ClassSelector cs = new ClassSelector("test");
+        IdSelector id = new IdSelector("id");
+        Combinator combinator = Combinator.descendant();
+        selector = new Selector(cs, combinator, id);
+
+        selector.destroy();
+
+        assertThat(selector.isDestroyed()).isTrue();
+        assertThat(cs.isDestroyed()).isTrue();
+        assertThat(id.isDestroyed()).isTrue();
+        assertThat(combinator.isDestroyed()).isTrue();
+    }
+
+    @Test
     public void writeVerboseRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
         selector.refine();
@@ -161,7 +176,7 @@ public class SelectorTest {
     @Test
     public void isWritableWhenAttached() {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        Rule rule = new com.salesforce.omakase.ast.Rule();
         rule.selectors().append(selector);
         assertThat(selector.isWritable()).isTrue();
     }

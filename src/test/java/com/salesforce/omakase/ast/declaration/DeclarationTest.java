@@ -24,7 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.salesforce.omakase.ast.declaration;
+package declaration;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -33,6 +33,12 @@ import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyName;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Keyword;
@@ -382,7 +388,7 @@ public class DeclarationTest {
     @Test
     public void isWritableWhenAttached() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        Rule rule = new Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isTrue();
     }
@@ -392,7 +398,7 @@ public class DeclarationTest {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
         Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
-        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        Rule rule = new Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isTrue();
     }
@@ -400,7 +406,7 @@ public class DeclarationTest {
     @Test
     public void isNotWritableWhenPropertyValueNotWritable() {
         Declaration d = new Declaration(Property.DISPLAY, new PropertyValue());
-        com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
+        Rule rule = new Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isFalse();
     }
@@ -445,5 +451,23 @@ public class DeclarationTest {
         rule.declarations().append(d);
 
         assertThat(d.parentAtRule().isPresent()).isFalse();
+    }
+
+    @Test
+    public void testDestroyWithNoMembers() {
+        Declaration d = new Declaration(PropertyName.of(Property.MARGIN), new PropertyValue());
+        d.destroy();
+        assertThat(d.isDestroyed()).isTrue();
+
+    }
+
+    @Test
+    public void testDestroyAlsoDestroysInnerTerms() {
+        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        Declaration d = new Declaration(Property.MARGIN, terms);
+
+        d.destroy();
+        assertThat(d.isDestroyed()).isTrue();
+        assertThat(d.propertyValue().members().isEmpty());
     }
 }
