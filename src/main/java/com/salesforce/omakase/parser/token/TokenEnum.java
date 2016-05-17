@@ -31,7 +31,7 @@ import com.salesforce.omakase.parser.Source;
 
 /**
  * For Enums that are members of {@link Syntax} units and are associated with a specific {@link Token}.
- * <p/>
+ * <p>
  * In other words, by adding this interface to an Enum it allows a value to be easily parsed to the correct Enum member using
  * {@link Source#optionalFromEnum(Class)}.
  *

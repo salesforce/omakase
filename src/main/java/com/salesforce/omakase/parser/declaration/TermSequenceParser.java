@@ -43,7 +43,7 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Parses a sequence of both {@link Term}s <em>and</em> {@link Operator}s.
- * <p/>
+ * <p>
  * This does not parts importants or broadcast a {@link PropertyValue}.
  *
  * @author nmcwilliams

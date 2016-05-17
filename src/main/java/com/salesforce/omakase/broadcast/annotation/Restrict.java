@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
 
 /**
  * Filter out units that don't match specified criteria.
- * <p/>
+ * <p>
  * This should be used on subscription methods, along with either {@link Rework} or {@link Observe}.
  *
  * @author nmcwilliams
@@ -46,10 +46,10 @@ import java.lang.annotation.Target;
 public @interface Restrict {
     /**
      * Whether {@link Refinable} units <em>without</em> {@link RawSyntax} should be delivered.
-     * <p/>
+     * <p>
      * Raw syntax refers to unrefined source code specified from the parser. Dynamically created units (i.e., created manually
      * through java code) usually will not have raw syntax specified.
-     * <p/>
+     * <p>
      * You should set this as false if you only want to receive units with {@link RawSyntax} specified, or in other words to skip
      * over dynamically created units.
      *
@@ -61,10 +61,10 @@ public @interface Restrict {
 
     /**
      * Whether {@link Refinable} units <em>with</em> {@link RawSyntax} should be delivered.
-     * <p/>
+     * <p>
      * Raw syntax refers to unrefined source code specified from the parser. Dynamically created units (i.e., created manually
      * through java code) usually will not have raw syntax specified.
-     * <p/>
+     * <p>
      * You should set this as false if you only want to receive units that do not have {@link RawSyntax} specified, or in other
      * words only dynamically created units.
      *

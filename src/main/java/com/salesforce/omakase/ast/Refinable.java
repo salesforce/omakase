@@ -33,11 +33,11 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Designates that an {@link Syntax} unit is <em>refinable</em> to a more specified or detailed representation.
- * <p/>
+ * <p>
  * This is primarily used with high-level {@link Syntax} units. CSS is parsed into unrefined {@link Syntax} units for performance
  * reasons, where each unrefined object can be further refined on demand to obtain and work with the more detailed representation
  * as applicable.
- * <p/>
+ * <p>
  * It's important to remember that <em>before being refined</em> refinable objects may actually contain invalid CSS. Simply
  * refining the object will verify it's grammatical compliance, which can be coupled with custom validation to ensure correct
  * usage.
@@ -61,7 +61,7 @@ public interface Refinable<T> {
 
     /**
      * Refines the object to its more specific and detailed state or representation.
-     * <p/>
+     * <p>
      * <b>Important</b>: for implementations, this operation must be <em>idempotent</em>.
      *
      * @return The refined object.

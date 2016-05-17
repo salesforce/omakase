@@ -42,7 +42,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 
 /**
  * Represents a linear-gradient (or repeating-linear-gradient) function.
- * <p/>
+ * <p>
  * Use {@link #repeating(boolean)} if the gradient is a repeating-linear-gradient.
  *
  * @author nmcwilliams
@@ -56,7 +56,7 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
 
     /**
      * Constructs a new instance of a {@link LinearGradientFunctionValue}.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #LinearGradientFunctionValue(String)} instead.
      *
      * @param line

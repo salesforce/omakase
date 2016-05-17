@@ -44,7 +44,7 @@ public class KeyframeSelector extends AbstractSelectorPart {
 
     /**
      * Creates a new instance with the given line and column numbers and keyframe.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #KeyframeSelector(String)} instead.
      *
      * @param line

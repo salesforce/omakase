@@ -55,7 +55,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
 
     /**
      * Creates a new instance with the given line and column numbers, and the {@link CombinatorType}.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #Combinator(CombinatorType)} instead.
      *
      * @param line
@@ -117,7 +117,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
 
     /**
      * Creates a new descendant {@link Combinator} (" "). Usually used when dynamically creating {@link Selector}s.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code new Selector(new IdSelector("name"), Combinator.descendant(), new ClassSelector("myClass"));}
@@ -131,7 +131,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
 
     /**
      * Creates a new child {@link Combinator} (">"). Usually used when dynamically creating {@link Selector}s.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code new Selector(new IdSelector("name"), Combinator.child(), new ClassSelector("myClass"));}
@@ -145,7 +145,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
 
     /**
      * Creates a new adjacent sibling {@link Combinator} ("+"). Usually used when dynamically creating {@link Selector}s.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code new Selector(new IdSelector("name"), Combinator.adjacent(), new ClassSelector("myClass"));}
@@ -159,7 +159,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
 
     /**
      * Creates a new general sibling {@link Combinator} ("~"). Usually used when dynamically creating {@link Selector}s.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code new Selector(new IdSelector("name"), Combinator.general(), new ClassSelector("myClass"));}

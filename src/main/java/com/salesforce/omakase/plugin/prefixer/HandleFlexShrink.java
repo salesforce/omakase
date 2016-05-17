@@ -27,16 +27,16 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.collect.Multimap;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Equivalents;
+import com.salesforce.omakase.util.SupportMatrix;
 
 /**
  * Flexbox support.
- * <p/>
+ * <p>
  * Handles flex-shrink properties.
  *
  * @author nmcwilliams

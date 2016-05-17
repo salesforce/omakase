@@ -40,7 +40,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 
 /**
  * A string value, e.g., "Times New Roman".
- * <p/>
+ * <p>
  * Note that the reason a setter for quotation mode doesn't exist is that it must not be set independent of the content (which
  * could contain incompatible), so use {@link #content(QuotationMode, String)} (and verify the content and quotation mode are
  * compatible) instead.
@@ -56,10 +56,10 @@ public final class StringValue extends AbstractTerm {
 
     /**
      * Constructs a new {@link StringValue} instance.
-     * <p/>
+     * <p>
      * The {@link QuotationMode} is required so that we can preserve the original quotes used in the source. Performance-wise,
      * there is no reason to change it from the original, and also it keeps us from having to mess around with escaping.
-     * <p/>
+     * <p>
      * * If dynamically creating a new instance then use {@link #StringValue(QuotationMode, String)} instead.
      *
      * @param line
@@ -149,7 +149,7 @@ public final class StringValue extends AbstractTerm {
 
     /**
      * Creates a new {@link StringValue} instance using the given {@link QuotationMode} and content.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>StringValue.of("Times new Roman")</code>

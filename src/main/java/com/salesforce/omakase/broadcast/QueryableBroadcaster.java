@@ -80,7 +80,7 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
 
     /**
      * Retrieves all broadcasted events.
-     * <p/>
+     * <p>
      * If using this in a loop, take note that performing a refine action on the filtered object may result in a {@link
      * ConcurrentModificationException}, as the refinement may result in the broadcast of additional syntax units. In this case
      * you could make an immutable copy of the results first.
@@ -93,7 +93,7 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
 
     /**
      * Gets all broadcasted events that are instances of the given class.
-     * <p/>
+     * <p>
      * If using this in a loop, take note that performing a refine action on the filtered object may result in a {@link
      * ConcurrentModificationException}, as the refinement may result in the broadcast of additional syntax units. In this case
      * you could make an immutable copy of the results first.

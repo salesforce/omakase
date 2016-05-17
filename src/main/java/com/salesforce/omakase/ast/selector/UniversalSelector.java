@@ -46,7 +46,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
 public final class UniversalSelector extends AbstractSelectorPart implements SimpleSelector {
     /**
      * Constructs a new {@link UniversalSelector} instance.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #UniversalSelector()} instead.
      *
      * @param line

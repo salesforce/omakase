@@ -34,12 +34,12 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 
 /**
  * Represents an item that appears in a group or chain of other related units, for usage with {@link SyntaxCollection}.
- * <p/>
+ * <p>
  * Note that uniqueness within the same {@link SyntaxCollection} is enforced, which means that if you prepend or append an
  * instance that already exists in the {@link SyntaxCollection} it will be moved. This also means that if you prepend or append an
  * instance to a difference {@link SyntaxCollection} it will be moved out of the original collection as well. If this is not what
  * you want then try looking at {@link Syntax#copy()}.
- * <p/>
+ * <p>
  * To remove a unit from the syntax tree, use {@link #destroy()}. A destroyed unit cannot be placed back in the tree, however it
  * can still be copied. (It cannot be added for multiple reasons, including the fact that destroying a unit short-circuits
  * broadcasting it, which means some validators on it might not have had a chance to run).
@@ -55,7 +55,7 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
     /**
      * Gets whether this unit is the first within its group.
-     * <p/>
+     * <p>
      * Please note, if you are making decisions based on this value then keep in mind that any rework plugins may add or remove
      * new units before or after this one. As such, this usually means it's best that plugins with {@link Rework} methods
      * utilizing this value are registered last.
@@ -66,7 +66,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
 
     /**
      * Gets whether this unit is the last within its group.
-     * <p/>
+     * <p>
      * Please note, if you are making decisions based on this value then keep in mind that any rework plugins may add or remove
      * new units before or after this one. As such, this usually means it's best that plugins with {@link Rework} methods
      * utilizing this value are registered last.
@@ -93,7 +93,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
 
     /**
      * Prepends the given unit before this one.
-     * <p/>
+     * <p>
      * Note that uniqueness within the same {@link SyntaxCollection} is enforced, which means that if you prepend or append an
      * instance that already exists in the {@link SyntaxCollection} it will be moved. This also means that if you prepend or
      * append an instance to a difference {@link SyntaxCollection} it will be moved out of the original collection as well. If
@@ -111,7 +111,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
 
     /**
      * Appends the given unit after this one.
-     * <p/>
+     * <p>
      * Note that uniqueness within the same {@link SyntaxCollection} is enforced, which means that if you prepend or append an
      * instance that already exists in the {@link SyntaxCollection} it will be moved. This also means that if you prepend or
      * append an instance to a difference {@link SyntaxCollection} it will be moved out of the original collection as well. If
@@ -129,7 +129,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
 
     /**
      * Replaces this unit with the given one.
-     * <p/>
+     * <p>
      * Specifically, it prepends the unit to this one, then calls {@link #destroy()} on this unit. Note that {@link #destroy()}
      * basically makes this unit worthless, so do not do anything with it afterwards (like trying to put it back in the tree).
      *
@@ -150,7 +150,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
 
     /**
      * Removes this unit from its collection. Use this method to remove a unit from the syntax tree.
-     * <p/>
+     * <p>
      * Once removed, the unit cannot be re-added to any collection, however it can still be copied. Destroyed units will no longer
      * be broadcasted to any subsequent plugins.
      */
@@ -175,7 +175,7 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
 
     /**
      * Gets the group {@link SyntaxCollection} of this unit.
-     * <p/>
+     * <p>
      * This can be used to find all peers of the unit (e.g., all other declarations in the same rule as this one).
      *
      * @return The group {@link SyntaxCollection}. If working with this term before it has been properly linked then this may

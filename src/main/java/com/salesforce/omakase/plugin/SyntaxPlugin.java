@@ -31,7 +31,7 @@ import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 
 /**
  * A {@link Plugin} that registers a custom {@link Refiner}.
- * <p/>
+ * <p>
  * The {@link Refiner} can be used to customize and extends the standard CSS syntax. See the readme file for more details and
  * examples.
  *

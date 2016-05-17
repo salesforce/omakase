@@ -68,7 +68,7 @@ public final class ParserException extends OmakaseException {
 
     /**
      * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
-     * <p/>
+     * <p>
      * This is normally used by {@link Refiner}s.
      *
      * @param cause
@@ -84,7 +84,7 @@ public final class ParserException extends OmakaseException {
 
     /**
      * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
-     * <p/>
+     * <p>
      * This is normally used by {@link Refiner}s.
      *
      * @param cause

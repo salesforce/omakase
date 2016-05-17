@@ -37,21 +37,21 @@ import java.util.Set;
 
 /**
  * An extension to the standard CSS syntax that allows for conditional at-rules.
- * <p/>
+ * <p>
  * Example of a conditional at-rule:
  * <pre>
  * {@code @}if(ie7) { .test{color:red} }
  * </pre>
- * <p/>
+ * <p>
  * This block will output its inner statements if its condition matches one of the true conditions in the {@link
  * ConditionalsConfig} instance.
- * <p/>
+ * <p>
  * To enable conditionals, register an instance of this plugin during parser setup:
  * <pre>
  * Conditionals conditionals = new Conditionals("ie7");
  * Omakase.source(input).use(conditionals).process();
  * </pre>
- * <p/>
+ * <p>
  * For more information on using and configuring conditionals see the main readme file.
  *
  * @author nmcwilliams

@@ -26,14 +26,14 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.util.SupportMatrix;
 
 /**
  * Flexbox support.
- * <p/>
+ * <p>
  * Handles flex-flow properties.
  *
  * @author nmcwilliams

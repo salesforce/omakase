@@ -51,7 +51,7 @@ public final class ClassSelector extends AbstractSelectorPart implements SimpleS
 
     /**
      * Creates a new instance with the given line and column numbers.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #ClassSelector(String)} instead.
      *
      * @param line

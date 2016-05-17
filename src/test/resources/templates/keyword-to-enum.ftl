@@ -40,9 +40,9 @@ import java.util.Map;
 
 /**
  * Enum of all recognized CSS keywords.
- * <p/>
+ * <p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- * <p/>
+ * <p>
  * See ${generator} for instructions on updating.
  */
 @SuppressWarnings("SpellCheckingInspection")

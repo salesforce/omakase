@@ -73,7 +73,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Creates a new {@link MasterRefiner} instance without a specific {@link Broadcaster} specified.
-     * <p/>
+     * <p>
      * Generally not the constructor to use.
      */
     public MasterRefiner() {
@@ -147,10 +147,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines an {@link AtRule} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, MasterRefiner)} will be used.
-     * <p/>
+     * <p>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
      *
      * @param atRule
@@ -164,10 +164,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines an {@link AtRule} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(AtRule, Broadcaster, MasterRefiner)} will be used.
-     * <p/>
+     * <p>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link AtRule#refine()} instead.
      *
      * @param atRule
@@ -226,10 +226,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines a {@link Selector} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, MasterRefiner)} will be used.
-     * <p/>
+     * <p>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
      *
      * @param selector
@@ -243,10 +243,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines a {@link Selector} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(Selector, Broadcaster, MasterRefiner)} will be used.
-     * <p/>
+     * <p>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Selector#refine()} instead.
      *
      * @param selector
@@ -296,10 +296,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines a {@link Declaration} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, MasterRefiner)} will be used.
-     * <p/>
+     * <p>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
      *
      * @param declaration
@@ -313,10 +313,10 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines a {@link Declaration} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(Declaration, Broadcaster, MasterRefiner)} will be used.
-     * <p/>
+     * <p>
      * <b>Note:</b> Non-library code usually should not call this method directly, but {@link Declaration#refine()} instead.
      *
      * @param declaration
@@ -368,7 +368,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines a {@link GenericFunctionValue} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(RawFunction, Broadcaster, MasterRefiner)} will be used.
      *
@@ -383,7 +383,7 @@ public final class MasterRefiner implements Refiner, RefinerRegistry {
 
     /**
      * Refines a {@link GenericFunctionValue} object.
-     * <p/>
+     * <p>
      * {@link Refiner} objects will be consulted in the registered order. If no {@link Refiner} decides to handle the instance, or
      * if none are registered then {@link StandardRefiner#refine(RawFunction, Broadcaster, MasterRefiner)} will be used.
      *

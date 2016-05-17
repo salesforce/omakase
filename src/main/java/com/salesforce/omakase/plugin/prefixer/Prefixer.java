@@ -27,7 +27,6 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
@@ -37,43 +36,44 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.util.SupportMatrix;
 
 import static com.salesforce.omakase.data.Browser.*;
 
 /**
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and
  * selectors.
- * <p/>
+ * <p>
  * Which vendor prefixes are actually used depends of the browser versions that you want to support. You can manually specify
  * specific browser versions, last N versions, or just the latest browser version by utilizing the {@link SupportMatrix} returned
  * by the {@link #support()} method. In most cases however the default set of browser versions to support is adequate, as achieved
  * by using the {@link #defaultBrowserSupport()} constructor method.
- * <p/>
+ * <p>
  * Browser and prefix data is seamlessly handled via updates from the caniuse.com data. To update to the latest data, see the
  * readme file titled "Scripts".
- * <p/>
+ * <p>
  * This plugin integrates well with existing CSS. If all required prefixes are already present then nothing will be changed by
  * default. You can optionally have unnecessary prefixes removed via the {@link #prune(boolean)} method. You can also optionally
  * have all existing vendor-prefixed declarations rearranged to be <em>before</em> the unprefixed version via the {@link
  * #rearrange(boolean)} method.
- * <p/>
+ * <p>
  * This doesn't automatically refine declarations or other refinables to check if they might need prefixes. This will only handle
  * prefixes if declarations, at-rules, and selectors have already been refined. If you want to ensure that every thing gets
  * checked then register an {@link AutoRefiner}, and call {@link AutoRefiner#all()}, or ensure that a {@link StandardValidation}
  * plugin instance is registered. Both of these must be registered before this plugin. See the main readme doc for more
  * information.
- * <p/>
+ * <p>
  * <b>Important:</b> This is an <em>Experimental</em> plugin. Some rare and uncommon usages of prefixed values, property names,
  * selectors or at-rules may not currently work correctly. Please check the list of what's actually supported in the readme or
  * {@code prefix-info.yaml} file.
- * <p/>
+ * <p>
  * Even if a prefix is supported, there may still be a few edge cases where a particular prefixable value is not automatically
  * handled. If you are using bleeding-edge syntax or prefixable features in a non-typical way then please double check the CSS
  * output for the proper behavior.
- * <p/>
+ * <p>
  * Also note that some very old browser versions utilizing non-standard syntax may not currently be handled. For example, the
  * legacy linear-gradient syntax is not currently handled because several browser versions have passed since it was last used.
- * <p/>
+ * <p>
  * Example usage:
  * <pre><code>
  *     Prefixer prefixing = Prefixer.customBrowserSupport();
@@ -84,12 +84,12 @@ import static com.salesforce.omakase.data.Browser.*;
  *     prefixing.support().browser(Browser.IE, 10);
  *     prefixing.prune(true);
  *     prefixing.rearrange(true);
- * <p/>
+ *
  *     AutoRefiner refinement = new AutoRefiner().all();
- * <p/>
+ *
  *     Omakase.source(cssSource).use(refinement).use(prefixing).process();
  * </code></pre>
- * <p/>
+ * <p>
  * In some cases at-rules scoped by a prefixed name may have non-applicable prefixes added. For example:
  * <pre><code>
  * &#64;keyframes animation {
@@ -98,14 +98,14 @@ import static com.salesforce.omakase.data.Browser.*;
  * }
  * </code></pre>
  * after prefixing could result in
- * <p/>
+ * <p>
  * <pre><code>
  * &#64;-webkit-keyframes animation {
  *     from { -webkit-transform: rotate(0deg); -ms-transform: rotate(0deg); transform: rotate(0deg) }
  *     from { -webkit-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg) }
  * }
  * </code></pre>
- * <p/>
+ * <p>
  * Notice the {@code -ms-transform} is most likely unnecessary as it is within a {@code -webkit-} prefixed at-rule. The {@link
  * PrefixCleaner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. The plugin must be
  * registered <em>after</em> this one:
@@ -169,7 +169,7 @@ public final class Prefixer implements DependentPlugin {
     /**
      * Whether this plugin should rearranged the declarations/at-rules so that the unprefixed version always comes last. Default
      * is false.
-     * <p/>
+     * <p>
      * This only works for at-rules if the at-rules are contiguous.
      *
      * @param rearrange
@@ -194,7 +194,7 @@ public final class Prefixer implements DependentPlugin {
     /**
      * Whether we should remove prefixed declarations/at-rules if they are not required for the supported browser versions.
      * Default is false.
-     * <p/>
+     * <p>
      * This only works for at-rules if the at-rules are contiguous.
      *
      * @param prune

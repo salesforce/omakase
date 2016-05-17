@@ -31,7 +31,7 @@ import com.salesforce.omakase.data.PrefixTables;
 
 /**
  * A collection of {@link PrefixBehavior}s.
- * <p/>
+ * <p>
  * These behaviors contain prefix information for features where {@link PrefixTables} is not enough, e.g., when a feature has
  * multiple and significantly different specs and implementations across browsers.
  *

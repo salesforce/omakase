@@ -39,7 +39,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
 
 /**
  * Represents a CSS type selector (also known as an element type selector).
- * <p/>
+ * <p>
  * Do not use this for universal "*" selectors, but use {@link UniversalSelector} instead.
  *
  * @author nmcwilliams
@@ -51,7 +51,7 @@ public final class TypeSelector extends AbstractSelectorPart implements SimpleSe
 
     /**
      * Constructs a new {@link TypeSelector} instance with the given name.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #TypeSelector(String)} instead.
      *
      * @param line

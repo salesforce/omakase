@@ -24,9 +24,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- j,  * ADD LICENSE
- */
 package com.salesforce.omakase.broadcast;
 
 import com.google.common.collect.ImmutableList;

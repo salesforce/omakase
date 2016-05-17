@@ -32,7 +32,7 @@ import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
  * Base class for {@link TokenFactory}s.
- * <p/>
+ * <p>
  * Subclasses can override methods as appropriate to specify alternative or additional tokens to recognize as various delimiters.
  *
  * @author nmcwilliams

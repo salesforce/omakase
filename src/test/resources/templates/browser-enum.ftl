@@ -31,12 +31,12 @@ import java.util.List;
 
 /**
  * Enum of browsers.
- * <p/>
+ * <p>
  * The *Browser data* in this file is retrieved from caniuse.com and
  * licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0).
- * <p/>
+ * <p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- * <p/>
+ * <p>
  * See ${generator} for instructions on updating.
  */
 @SuppressWarnings("AutoBoxing")

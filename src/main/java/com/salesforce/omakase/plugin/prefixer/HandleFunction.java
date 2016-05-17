@@ -31,7 +31,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
@@ -43,6 +42,7 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.Parsers;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.util.Values;
 
 import java.util.List;

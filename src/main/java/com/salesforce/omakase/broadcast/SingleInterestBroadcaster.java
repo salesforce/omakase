@@ -31,10 +31,10 @@ import com.salesforce.omakase.ast.Status;
 
 /**
  * A {@link Broadcaster} that is interested in only a single broadcast of a particular type.
- * <p/>
+ * <p>
  * Any broadcasts that do not match the expected type will be ignored, and only the <em>first</em> broadcast of the desired type
  * will be stored. All broadcasts, matching or not, will still be passed along to the relay if the relay is specified.
- * <p/>
+ * <p>
  * This is a better performing {@link Broadcaster} over {@link QueryableBroadcaster} as it does not create a new list object. To
  * further this benefit, use the {@link #reset()} as well.
  *

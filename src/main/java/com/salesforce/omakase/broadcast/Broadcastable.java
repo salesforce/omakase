@@ -31,7 +31,7 @@ import com.salesforce.omakase.ast.Syntax;
 
 /**
  * Something that can be broadcasted.
- * <p/>
+ * <p>
  * The most common {@link Broadcastable} is {@link Syntax}. {@link Syntax} units are usually broadcasted upon creation.
  *
  * @author nmcwilliams
@@ -49,7 +49,7 @@ public interface Broadcastable {
 
     /**
      * Gets the current broadcast status of this unit.
-     * <p/>
+     * <p>
      * This primarily determines whether this unit should be broadcasted again, given that each unit should be broadcasted at most
      * once per phase.
      *
@@ -59,10 +59,10 @@ public interface Broadcastable {
 
     /**
      * Broadcasts all unbroadcasted child units using the given {@link Broadcaster}.
-     * <p/>
+     * <p>
      * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
      * itself is broadcasted, this method should be called on the parent unit in o
-     * <p/>
+     * <p>
      * Implementers, generally speaking, should call {@link #propagateBroadcast(Broadcaster)} on child units before propagating
      * itself, to match the broadcasting order of parsed units.
      *

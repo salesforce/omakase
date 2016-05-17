@@ -42,14 +42,14 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 public interface DeclarationRefiner extends Refiner {
     /**
      * Refines a {@link Declaration}.
-     * <p/>
+     * <p>
      * The information in the given {@link Declaration} can be used to determine if the declaration is applicable to your custom
      * syntax (e.g., checking {@link Declaration#rawPropertyValue()}.
-     * <p/>
+     * <p>
      * Utilize the {@link Declaration#rawPropertyValue()} to get the raw, unrefined property value syntax. Note that it is not
      * expected for you to refine the property name, although you can do that if you check the {@link
      * Declaration#rawPropertyName()} method and set the {@link Declaration#propertyName(PropertyName)} as appropriate.
-     * <p/>
+     * <p>
      * Parse the information into a new {@link PropertyValue} object, adding all applicable terms and operators. Be sure to
      * actually apply the new object using the {@link Declaration #propertyValue(PropertyValue)} method.
      *

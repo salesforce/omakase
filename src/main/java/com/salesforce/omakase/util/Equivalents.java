@@ -52,7 +52,7 @@ public final class Equivalents {
 
     /**
      * Finds all peers of the given unit that match the same name, but with a prefix.
-     * <p/>
+     * <p>
      * What constitutes a "peer", and how matches are determined is based on the given {@link EquivalentWalker}.
      *
      * @param peer
@@ -144,7 +144,7 @@ public final class Equivalents {
 
         /**
          * Specifies whether we should walk all peers, or stop when a peer does not match.
-         * <p/>
+         * <p>
          * In other words, return true to evaluate all peers, even when null is returned from {@link #locate(Object, Named)}, and
          * return false to stop walking (in that direction) once {@link #locate(Object, Named)} returns null.
          *
@@ -230,7 +230,7 @@ public final class Equivalents {
 
     /**
      * Finds declarations with prefixed-equivalent property names.
-     * <p/>
+     * <p>
      * For example, given the following css:
      * <pre><code>
      *  .example {
@@ -240,7 +240,7 @@ public final class Equivalents {
      *      border-radius: 3px;
      *  }
      * </code></pre>
-     * <p/>
+     * <p>
      * When given the last declaration in the rule, this will locate both the {@code -webkit-border-radius} and the {@code
      * -moz-border-radius} declarations.
      */
@@ -254,7 +254,7 @@ public final class Equivalents {
 
     /**
      * Finds declarations with prefixed-equivalent function values.
-     * <p/>
+     * <p>
      * For example, given the following css:
      * <pre><code>
      *  .example {
@@ -282,19 +282,19 @@ public final class Equivalents {
 
     /**
      * Finds at-rules with prefixed-equivalent names.
-     * <p/>
+     * <p>
      * For example, given the following css:
      * <pre><code>
      * &#64;-webkit-keyframes {
      *   from { top: 0%}
      *   to { top: 100%}
      * }
-     * <p/>
+     *
      * &#64;keyframes {
      *   from { top: 0%}
      *   to { top: 100%}
      * }
-     * <p/>
+     *
      * &#64;-moz-keyframes {
      *   from { top: 0%}
      *   to { top: 100%}
@@ -302,7 +302,7 @@ public final class Equivalents {
      * </code></pre>
      * When given the middle, unprefixed at-rule, the at-rules before and after it will be returned. Only immediately adjacent
      * at-rules will be considered.
-     * <p/>
+     * <p>
      * Note that this only compares immediately adjacent peers, for as long as a match is found. The first peer that does not
      * match prefix and raw expression content will halt looking in that direction (before and after).
      */
@@ -326,7 +326,7 @@ public final class Equivalents {
 
     /**
      * Finds rules with prefixed-equivalent pseudo element selectors.
-     * <p/>
+     * <p>
      * For example, given the following css:
      * <pre><code>
      * &#64;::-moz-selection {
@@ -338,7 +338,7 @@ public final class Equivalents {
      * </code></pre>
      * When given the second, unprefixed rule, the one before it will be returned. Only immediately adjacent rules will be
      * considered.
-     * <p/>
+     * <p>
      * Note that this only compares immediately adjacent peers, for as long as a match is found. The first peer that does not
      * match will halt looking in that direction (before and after).
      */
@@ -357,7 +357,7 @@ public final class Equivalents {
 
     /**
      * Finds rules with prefixed-equivalent pseudo class selectors.
-     * <p/>
+     * <p>
      * For example, given the following css:
      * <pre><code>
      * &#64;:blah {
@@ -369,7 +369,7 @@ public final class Equivalents {
      * </code></pre>
      * When given the second, unprefixed rule, the one before it will be returned. Only immediately adjacent rules will be
      * considered.
-     * <p/>
+     * <p>
      * Note that this only compares immediately adjacent peers, for as long as a match is found. The first peer that does not
      * match will halt looking in that direction (before and after).
      */

@@ -69,9 +69,9 @@ public final class Parsers {
 
     /**
      * Uses the given parser to parse an instance of the given class at the beginning of the given source.
-     * <p/>
+     * <p>
      * The parser must find and broadcast an instance of the given type, and it must be at the beginning of the source.
-     * <p/>
+     * <p>
      * Example:
      * <pre><code>
      * Parsers.parseSimple("10px solid red", ParserFactory.numericalValueParser(), NumericalValue.class);
@@ -94,9 +94,9 @@ public final class Parsers {
 
     /**
      * Uses the given parser to parse an instance of the given class at the beginning of the given source.
-     * <p/>
+     * <p>
      * The parser must find and broadcast an instance of the given type, and it must be at the beginning of the source.
-     * <p/>
+     * <p>
      * Example:
      * <pre><code>
      * Parsers.parseSimple(source, ParserFactory.numericalValueParser(), NumericalValue.class);

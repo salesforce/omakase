@@ -30,7 +30,6 @@ import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
-import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Syntax;
@@ -52,7 +51,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes, etc...
- * <p/>
+ * <p>
  * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
  * grammar validation. See the notes on {@link Refinable}.
  *
@@ -198,7 +197,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Sets the {@link AtRuleExpression}.
-     * <p/>
+     * <p>
      * Note that custom {@link AtRuleRefiner}s should usually just broadcast a {@link AtRuleExpression} instead of calling this
      * method directly.
      *
@@ -220,7 +219,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     /**
      * Gets the at-rule expression, if present. Note that this attempts refinement on the expression unless a refined expression
      * is already set.
-     * <p/>
+     * <p>
      * <b>Important:</b> do not call this from within a custom refiner! It will result in a StackOverflow error.
      *
      * @return The expression, or {@link Optional#absent()} if not present.
@@ -240,7 +239,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Sets the {@link AtRuleBlock}.
-     * <p/>
+     * <p>
      * Note that custom {@link AtRuleRefiner}s should usually just broadcast an {@link AtRuleBlock} instead of calling this method
      * directly.
      *
@@ -261,7 +260,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Gets the at-rule block, if present. Note that this attempts refinement on the block unless a refined block is already set.
-     * <p/>
+     * <p>
      * <b>Important:</b> do not call this from within a custom refiner! It will result in a StackOverflow error.
      *
      * @return The block, or {@link Optional#absent()} if not present.
@@ -281,7 +280,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     /**
      * Used to indicate this at-rule is for metadata purposes only and should not be written out in the output CSS.
-     * <p/>
+     * <p>
      * This is mainly used for custom syntax that is refined by an {@link AtRuleRefiner}.
      *
      * @return this, for chaining.

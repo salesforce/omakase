@@ -41,7 +41,7 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Parses a single {@link KeyframeSelector} part.
- * <p/>
+ * <p>
  * Note: this parsers a single {@link Selector} as well, which contains the {@link KeyframeSelector} {@link SelectorPart}.
  *
  * @author nmcwilliams

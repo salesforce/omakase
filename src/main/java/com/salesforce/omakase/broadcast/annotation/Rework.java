@@ -37,19 +37,19 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to subscribe to {@link Syntax} objects when the method is expected to change or modify the object or CSS
  * source.
- * <p/>
+ * <p>
  * Examples of rework include adding cache-busters to urls, changing class names, flipping directions for RTL support, etc... It
  * basically represents changing the content.
- * <p/>
+ * <p>
  * The one an only parameter for methods with this annotation should be one of the {@link Syntax} types.
- * <p/>
+ * <p>
  * If the method does not intend to change the content or object, use {@link Observe} instead.
- * <p/>
+ * <p>
  * Inside of a rework method, you can remove a unit from the syntax tree by calling {@link Groupable#destroy()}. Once a unit is
  * destroyed it is no longer broadcasted to any subsequent plugins, including validation. Destroyed units cannot be added to the
  * tree again, however they can still be copied. If you are storing the units in a cache then you will probably want to check
  * {@link Groupable#isDestroyed()} upon later access as the unit may have been destroyed by another plugin.
- * <p/>
+ * <p>
  * See SimpleReworkTest.java for same rework method implementations.
  *
  * @author nmcwilliams

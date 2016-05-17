@@ -39,23 +39,23 @@ import static com.salesforce.omakase.parser.Source.Snapshot;
 
 /**
  * Parses a {@link UnicodeRangeValue}.
- * <p/>
+ * <p>
  * There are three types of allowed values:
- * <p/>
+ * <p>
  * - single codepoint (e.g. {@code U+416})
- * <p/>
+ * <p>
  * - interval range (e.g. {@code U+400-4ff})
- * <p/>
+ * <p>
  * - wildcard range (e.g. {@code U+4??})
- * <p/>
+ * <p>
  * Check out the <a href='http://www.w3.org/TR/CSS21/syndata.html#tokenization (see UNICODE-RANGE)'>grammar</a> and the <a
  * href='http://dev.w3.org/csswg/css-fonts/#urange-value'>textual spec</a>.
- * <p/>
+ * <p>
  * The grammar indicates otherwise, but textual spec says that only trailing '?' are allowed (not mixed in between hexidecimals),
  * and also that '?' is not allowed in ranges. Verified in chrome that this is how they treat it as well, so going with that (even
  * though it makes this parser much more complicated than otherwise). The textual spec also implies that a max of 5 '?' are
  * allowed, not 6, but we won't worry about that for now.
- * <p/>
+ * <p>
  * This does <em>not</em> validate the range of the code points specified (unicode codepoint values must be between 0 and 10FFFF
  * inclusive, end ranges must come after start ranges, etc...). If this is important, a custom validation plugin can be written.
  * However this does validate the length of the code point, {1-6}.

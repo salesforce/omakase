@@ -57,7 +57,7 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
 
     /**
      * Creates a new instance with the given line and column numbers.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #AttributeSelector(String)} instead.
      *
      * @param line

@@ -41,13 +41,13 @@ import java.util.Set;
 /**
  * A validator plugin that will validate the correctness of the syntax and contents of conditional at-rules ({@link
  * ConditionalAtRuleBlock}). This works in tandem with the {@link Conditionals} plugin.
- * <p/>
+ * <p>
  * You can optionally specify a set of allowedConditions. If specified, each condition in the CSS will be checked against this
  * set. If this check fails then an error will be reported.
- * <p/>
+ * <p>
  * Please note that each allowedCondition will be automatically lower-cased for comparison purposes! This aligns with the
  * assumption of all other related conditionals plugins.
- * <p/>
+ * <p>
  * Also note that this will automatically enable the {@link Conditionals} plugin, in passthroughMode (see {@link
  * ConditionalsConfig#passthroughMode(boolean)}) unless a {@link Conditionals} plugin instance was registered before this one.
  *
@@ -73,7 +73,7 @@ public class ConditionalsValidator implements DependentPlugin {
      * Creates a new validator that will validate and refine the conditional at-rule blocks (syntax), and will also confirm that
      * the condition is within the given set of allowed conditions. In other words, an error will be reported if a condition is
      * used in CSS that is not allowed.
-     * <p/>
+     * <p>
      * Please note that each allowedCondition will be automatically lower-cased for comparison purposes. This aligns with the
      * assumption of all other related conditionals plugins.
      *
@@ -87,7 +87,7 @@ public class ConditionalsValidator implements DependentPlugin {
     /**
      * Creates a new validator that will validate and refine the conditional at-rule blocks, and will also confirm that the
      * condition is within the given set of allowed conditions.
-     * <p/>
+     * <p>
      * Please note that each allowedCondition will be automatically lower-cased for comparison purposes. This aligns with the
      * assumption of all other related conditionals plugins.
      *

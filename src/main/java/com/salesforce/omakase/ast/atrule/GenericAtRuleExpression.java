@@ -34,7 +34,7 @@ import java.io.IOException;
 
 /**
  * A generic {@link AtRuleExpression} value.
- * <p/>
+ * <p>
  * This is used for refined {@link AtRule}s (standard or custom) that contain a simple expression.
  *
  * @author nmcwilliams

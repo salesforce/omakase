@@ -44,19 +44,19 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 public interface AtRuleRefiner extends Refiner {
     /**
      * Refines an {@link AtRule}.
-     * <p/>
+     * <p>
      * The information in the given {@link AtRule} can be used to determine if the at-rule is applicable to your custom syntax.
      * Most often you determine this based on the value from {@link AtRule#name()}.
-     * <p/>
+     * <p>
      * Utilize the {@link AtRule#rawExpression()} and {@link AtRule#rawBlock()} methods to get the raw, unrefined syntax. Parse
      * this information into your own {@link AtRuleExpression} and {@link AtRuleBlock} objects and then optionally broadcast them
      * using the given {@link Broadcaster} (if you intend to broadcast your custom AST objects they must be annotated with the
      * {@link Subscribable} annotation and implement {@link Syntax}).
-     * <p/>
+     * <p>
      * Be sure to actually add the objects to the {@link AtRule} using the {@link AtRule#expression(AtRuleExpression)} and {@link
      * AtRule#block(AtRuleBlock)} methods. One or both of these methods should be called (i.e., it's fine if your customized
      * object does not have both).
-     * <p/>
+     * <p>
      * If the actual at-rule name (e.g., "@media") should be discarded then call {@link AtRule#shouldWriteName(boolean)} with
      * false. If the at-rule itself is just for metadata purposes and does not have any associated content to write out then use
      * {@link AtRule#markAsMetadataRule()}.

@@ -56,7 +56,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Handles the registry of plugins (see {@link PluginRegistry}) and also manages the broadcasting of events (see {@link
  * Broadcaster}). Note: this class is not exposed as an API itself.
- * <p/>
+ * <p>
  * All broadcasting events are collected and stored during parsing. After the source is completely parsed, each event is replayed
  * once in each of the two phases: process ({@link Observe} and {@link Rework} annotated methods), then validation ({@link
  * Validate} annotated methods).
@@ -177,7 +177,7 @@ final class Context implements Broadcaster, PluginRegistry {
     /**
      * Creates a new {@link MasterRefiner} instance with the {@link Broadcaster} currently set on this {@link Context} and with
      * the {@link Refiner}s from all registered {@link SyntaxPlugin}s. This will use the {@link StandardTokenFactory}.
-     * <p/>
+     * <p>
      * This should be called <em>after</em> any calls to {@link #broadcaster (Broadcaster)}.
      *
      * @return The {@link MasterRefiner} instance.

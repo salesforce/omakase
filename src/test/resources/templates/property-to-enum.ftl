@@ -33,9 +33,9 @@ import java.util.Map;
 
 /**
  * Enum of all recognized CSS properties. Use {@link #toString()} to get the CSS-output representation.
- * <p/>
+ * <p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- * <p/>
+ * <p>
  * See ${generator} for instructions on updating.
  */
 public enum Property {

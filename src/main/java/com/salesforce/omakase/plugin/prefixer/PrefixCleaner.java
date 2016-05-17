@@ -37,7 +37,7 @@ import com.salesforce.omakase.util.Prefixes;
 
 /**
  * This plugin handles removing unnecessary prefixed units.
- * <p/>
+ * <p>
  * If an at-rule is prefixed, most likely any prefixed declarations within that at-rule with a differing prefix can be removed.
  * This might especially be the case if you are utilizing the {@link Prefixer} plugin, which might automatically create prefixed
  * versions of at-rules that contain unnecessary prefixed declarations. For example:
@@ -48,19 +48,19 @@ import com.salesforce.omakase.util.Prefixes;
  * }
  * </code></pre>
  * after prefixing could result in
- * <p/>
+ * <p>
  * <pre><code>
  * &#64;-webkit-keyframes animation {
  *     from { -webkit-transform: rotate(0deg); -ms-transform: rotate(0deg); transform: rotate(0deg) }
  *     from { -webkit-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg) }
  * }
  * </code></pre>
- * <p/>
+ * <p>
  * Notice the {@code -ms-transform} is most likely unnecessary as it is within a {@code -webkit-} prefixed at-rule. The {@link
  * PrefixCleaner} plugin can be utilized to remove such prefixed declarations inside of prefixed at-rules. Use the {@link
  * #prefixedAtRules()} instance method or the {@link #mismatchedPrefixedUnits()} constructor method to remove these unnecessary
  * prefixes.
- * <p/>
+ * <p>
  * <b>Important:</b> This plugin must be registered <em>after</em> the {@link Prefixer} plugin:
  * <pre><code>
  * Omakase.source(input)
@@ -151,8 +151,8 @@ public final class PrefixCleaner implements Plugin {
     }
 
     /**
-     * NOT IMPLEMENTED: Creates a new {@link PrefixCleaner} that will eliminate all units with prefixes that do not match the given
-     * prefix.
+     * NOT IMPLEMENTED: Creates a new {@link PrefixCleaner} that will eliminate all units with prefixes that do not match the
+     * given prefix.
      *
      * @param prefix
      *     Only keep units with this prefix.

@@ -36,7 +36,7 @@ import java.io.IOException;
 public interface Writable {
     /**
      * Returns whether this unit should actually be written.
-     * <p/>
+     * <p>
      * Usually this should just return true, however some units that are detachable or otherwise potentially invalid should first
      * check their state and respond appropriately.
      *
@@ -46,12 +46,12 @@ public interface Writable {
 
     /**
      * Outputs this {@link Writable}'s string representation.
-     * <p/>
+     * <p>
      * <b>Important notes for implementation:</b>
-     * <p/>
+     * <p>
      * Do not use the {@link StyleWriter} in an attempt to write direct content (Strings, chars, etc...). Use the {@link
      * StyleAppendable}.
-     * <p/>
+     * <p>
      * The {@link StyleWriter} should be used to make decisions based on writer settings (e.g., compressed vs. verbose output
      * mode), as well as for writing inner or child {@link Writable}s. Do <b>not</b> call the this method method directly on inner
      * or child {@link Writable}s! That would bypass any overrides that are set on the {@link StyleWriter}. Use {@link

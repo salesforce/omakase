@@ -28,11 +28,11 @@ package com.salesforce.omakase.data;
 
 /**
  * Enum of vendor prefixes.
- * <p/>
+ * <p>
  * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}.
- * <p/>
+ * <p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- * <p/>
+ * <p>
  * See class com.salesforce.omakase.tools.GeneratePrefixEnum for instructions on updating.
  */
 public enum Prefix {

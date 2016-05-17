@@ -27,18 +27,14 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.error.OmakaseException;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -51,7 +51,7 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
     /**
      * Creates a new {@link UrlFunctionValue} instance. If the url is quoted then use {@link #quotationMode(QuotationMode)} to
      * specify the type of quotes to use.
-     * <p/>
+     * <p>
      * <b>Important:</b> The url should not be wrapped in quotes. Use {@link #quotationMode(QuotationMode)} for that.
      *
      * @param line
@@ -69,7 +69,7 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
     /**
      * Creates a new {@link UrlFunctionValue} instance. If the url is quoted then use {@link #quotationMode(QuotationMode)} to
      * specify the type of quotes to use.
-     * <p/>
+     * <p>
      * <b>Important:</b> The url should not be wrapped in quotes. Use {@link #quotationMode(QuotationMode)} for that.
      *
      * @param url
@@ -81,7 +81,7 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
 
     /**
      * Sets the url (do not include quotes).
-     * <p/>
+     * <p>
      * <b>Important:</b> The url should not be wrapped in quotes. Use {@link #quotationMode(QuotationMode)} for that.
      *
      * @param url

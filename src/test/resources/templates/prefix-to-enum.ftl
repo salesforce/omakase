@@ -28,11 +28,11 @@ package ${package};
 
 /**
  * Enum of vendor prefixes.
- * <p/>
+ * <p>
  * Example: {@code PropertyName.using(Property.BORDER_RADIUS).prefix(Prefix.WEBKIT)}.
- * <p/>
+ * <p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- * <p/>
+ * <p>
  * See ${generator} for instructions on updating.
  */
 public enum Prefix {

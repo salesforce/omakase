@@ -55,7 +55,7 @@ public final class KeywordValue extends AbstractTerm implements Named {
 
     /**
      * Constructs a new {@link KeywordValue} instance.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #KeywordValue(Keyword)} or {@link #KeywordValue(String)} instead.
      *
      * @param line
@@ -165,7 +165,7 @@ public final class KeywordValue extends AbstractTerm implements Named {
 
     /**
      * Creates a new {@link KeywordValue} instance from the given keyword string. Prefer to use {@link #of(Keyword)} over this.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>KeywordValue.of("left");</code>
@@ -182,7 +182,7 @@ public final class KeywordValue extends AbstractTerm implements Named {
 
     /**
      * Creates a new {@link KeywordValue} instance from the given {@link Keyword}.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>KeywordValue.of(Keyword.LEFT);</code>

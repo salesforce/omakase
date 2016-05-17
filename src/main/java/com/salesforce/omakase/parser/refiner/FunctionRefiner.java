@@ -42,12 +42,12 @@ import com.salesforce.omakase.util.Args;
 
 /**
  * Represents a strategy for refining an {@link RawFunction} object.
- * <p/>
+ * <p>
  * This feature allows you to add custom functions. The refiner should read the data in the given {@link RawFunction} and create
  * and broadcast the applicable custom function object.
- * <p/>
+ * <p>
  * Generally your custom function should implement {@link Term} or extend from {@link AbstractTerm}.
- * <p/>
+ * <p>
  * This works in tandem with {@link SyntaxPlugin}s.
  *
  * @author nmcwilliams
@@ -55,20 +55,20 @@ import com.salesforce.omakase.util.Args;
 public interface FunctionRefiner extends Refiner {
     /**
      * Refines a {@link RawFunction}.
-     * <p/>
+     * <p>
      * The information in the given {@link RawFunction} can be used to determine if the function value is applicable to your
      * custom syntax. Most often you determine this based on the value from {@link RawFunction#name()}. Utilize the {@link
      * RawFunction#args()} method to get the raw, unrefined arguments. Note that there are utilities in the {@link Args} helper to
      * assist with common argument string operations.
-     * <p/>
+     * <p>
      * <b>Important:</b> There are two main ways to handle custom functions:
-     * <p/>
+     * <p>
      * 1) The most common way is to immediately convert it to a list of {@link PropertyValueMember}s (e.g., {@link Term}s and
      * {@link Operator}s). To do this, process (and validate) the args, create a new {@link Source} object and then parse the
      * source object using {@link ParserFactory#termSequenceParser()}. Be sure to use the same {@link Broadcaster} instance given
      * as a parameter of this method. This will automatically result in the parsed terms and operators being added in place of
      * where the custom function was found.
-     * <p/>
+     * <p>
      * 2) Alternatively, you can create a custom AST object (that extends {@link AbstractTerm} or implements {@link Term}). Once
      * created, you must broadcast this custom AST object using the same {@link Broadcaster} instance given as a parameter of this
      * method. The main benefit of creating a custom AST object is that you have more control over how it is written out, and you

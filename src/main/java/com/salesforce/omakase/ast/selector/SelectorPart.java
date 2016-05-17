@@ -43,13 +43,13 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
 public interface SelectorPart extends Groupable<Selector, SelectorPart> {
     /**
      * Gets the parent {@link Selector} instance.
-     * <p/>
+     * <p>
      * Take this CSS snippet for example:
-     * <p/>
+     * <p>
      * {@code .class > .class2 #id, p a}
-     * <p/>
+     * <p>
      * There are two {@link Selector}s, The first being {@code .class > .class2 #id}, the second being {@code p a}.
-     * <p/>
+     * <p>
      * For the {@link SelectorPart} {@code #id}, which is an {@link IdSelector}, calling this method will return the first {@link
      * Selector} (with {@code .class > .class2 #id}).
      *

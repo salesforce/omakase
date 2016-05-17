@@ -43,23 +43,23 @@ import java.util.Set;
 
 /**
  * Automatically refines all explicitly requested {@link Refinable} types.
- * <p/>
+ * <p>
  * Generally this is used as a dependency in a {@link DependentPlugin}, when the {@link DependentPlugin} has a subscription to a
  * lower-level {@link Syntax} unit not exposed during the high-level parsing phase. The {@link Refinable} responsible for parsing
  * that syntax unit must be refined before the syntax unit will be exposed. Examples of lower-level {@link Syntax} units include
  * {@link ClassSelector} and {@link IdSelector}. For more information on auto-refinement see the readme file.
- * <p/>
+ * <p>
  * Example:
  * <pre><code> public class MyPlugin implements DependentPlugin {
  *   {@literal @}Override public void before(PluginRegistry registry) {
  *     registry.require(AutoRefiner.class).declarations();
  *   }
- * <p/>
+ *
  *   ...(subscription methods)...
  * }<code></pre>
- * <p/>
- * If you are manually including this with {@link Omakase.Request#use(Plugin...)} then you almost always want to ensure that
- * it is registered  first before any other plugins.
+ * <p>
+ * If you are manually including this with {@link Omakase.Request#use(Plugin...)} then you almost always want to ensure that it is
+ * registered  first before any other plugins.
  *
  * @author nmcwilliams
  */

@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.util.SupportMatrix;
 
 import java.util.EnumMap;
 import java.util.Map;

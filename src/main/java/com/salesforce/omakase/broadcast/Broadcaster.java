@@ -31,7 +31,7 @@ import com.salesforce.omakase.broadcast.emitter.Emitter;
 
 /**
  * Responsible for broadcasting {@link Broadcastable} events (objects), usually newly created {@link Syntax} units.
- * <p/>
+ * <p>
  * Implementations should follow the decorator pattern, allowing for nesting of different broadcasters (like Reader).
  *
  * @author nmcwilliams
@@ -48,7 +48,7 @@ public interface Broadcaster {
 
     /**
      * Broadcasts the given event (object).
-     * <p/>
+     * <p>
      * This also gives the option to <em>propagate</em> the broadcast. Propagation directs the broadcasted unit to also broadcast
      * any of it's child or inner unit members. This should usually be specified as true when broadcasting a dynamically created
      * unit (as opposed to one created internally as a result of parsing the source).

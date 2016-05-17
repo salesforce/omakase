@@ -51,7 +51,7 @@ public final class IdSelector extends AbstractSelectorPart implements SimpleSele
 
     /**
      * Creates a new instance with the given line and column numbers and id name.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #IdSelector(String)} instead.
      *
      * @param line

@@ -30,11 +30,11 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 /**
  * Used to register custom {@link Refiner} strategies.
- * <p/>
+ * <p>
  * An instance of this class is given to all {@link SyntaxPlugin}s at the appropriate time. {@link SyntaxPlugin}s can register
  * custom syntax extensions for various parts of the CSS including functions, at-rules, etc... For more information on creating
  * refiners, see the main readme file.
- * <p/>
+ * <p>
  * If your {@link Refiner} handles more than one type, use {@link #registerMulti(Refiner)}.
  *
  * @author nmcwilliams

@@ -34,9 +34,9 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 /**
  * Represents a strategy for refining a {@link Refinable} object, such as a {@link Selector} or {@link Declaration}, or other
  * "refinable" syntax such as custom functions.
- * <p/>
+ * <p>
  * This feature can be used to extend and customize the standard CSS syntax. See the readme file for more details.
- * <p/>
+ * <p>
  * Library-standard CSS extensions (e.g ., conditionals) are implemented through this functionality as well.
  *
  * @author nmcwilliams

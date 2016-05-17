@@ -46,11 +46,11 @@ import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
- * <p/>
+ * <p>
  * It is <em>not</em> recommended that you override each one of these methods. Note that some methods are more generic
  * subscriptions that will also be covered by their more specific counterparts. For example, a {@link ClassSelector} will be sent
  * to {@link #classSelector(ClassSelector)} and {@link #selectorPart(SelectorPart)}.
- * <p/>
+ * <p>
  * See the notes on {@link Plugin} about invocation order for subscription methods.
  *
  * @author nmcwilliams

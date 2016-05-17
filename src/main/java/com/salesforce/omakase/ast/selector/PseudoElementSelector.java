@@ -57,7 +57,7 @@ public final class PseudoElementSelector extends AbstractSelectorPart implements
 
     /**
      * Constructs a new {@link PseudoElementSelector} selector with the given name.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #PseudoElementSelector(String)} instead.
      *
      * @param line

@@ -31,12 +31,12 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.conditionals.Conditionals;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsCollector;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsValidator;
 import com.salesforce.omakase.plugin.prefixer.PrefixCleaner;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
 import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
 import com.salesforce.omakase.plugin.validator.StandardValidation;
 

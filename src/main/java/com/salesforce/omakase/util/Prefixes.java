@@ -54,7 +54,7 @@ public final class Prefixes {
 
     /**
      * Splits a string into the vendor {@link Prefix} and unprefixed portions.
-     * <p/>
+     * <p>
      * If the string does not contain a prefix then the returned {@link PrefixPair} will return {@link Optional#absent()} from the
      * {@link PrefixPair#prefix()} method.
      *
@@ -77,7 +77,7 @@ public final class Prefixes {
 
     /**
      * Gets the unprefixed portion of the given name.
-     * <p/>
+     * <p>
      * If the name is not prefixed, it will be returned unchanged. If the name is prefixed, the unprefixed part of the name will
      * be returned.
      *

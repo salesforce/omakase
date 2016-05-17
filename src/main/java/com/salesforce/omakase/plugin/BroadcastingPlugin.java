@@ -30,7 +30,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
  * A plugin that needs access to a {@link Broadcaster}.
- * <p/>
+ * <p>
  * In most cases this is not the type of plugin that you want for customized (non-library-provided) plugins. Broadcasting your own
  * events may result in unexpected behavior.
  *

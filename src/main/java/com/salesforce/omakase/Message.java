@@ -28,7 +28,7 @@ package com.salesforce.omakase;
 
 /**
  * Error messages.
- * <p/>
+ * <p>
  * Error messages are gathered in one place like this to keep code less cluttered. It also achieves greater message consistency
  * since all the messages are placed and can be reviewed together.
  *

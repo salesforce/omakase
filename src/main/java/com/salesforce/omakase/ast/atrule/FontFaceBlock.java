@@ -117,7 +117,7 @@ public final class FontFaceBlock extends AbstractAtRuleMember implements AtRuleB
 
         // font descriptors
         for (FontDescriptor descriptor : fontDescriptors) {
-                writer.writeInner(descriptor, appendable);
+            writer.writeInner(descriptor, appendable);
         }
         if (writer.isVerbose()) appendable.append(';');
 

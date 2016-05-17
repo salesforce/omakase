@@ -42,7 +42,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELE
 
 /**
  * Represents a CSS pseudo class selector.
- * <p/>
+ * <p>
  * Note that even though some pseudo elements can be written using the pseudo class format, they are <b>not</b> considered pseudo
  * classes in this parser, but as {@link PseudoElementSelector}s.
  *
@@ -57,7 +57,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
 
     /**
      * Constructs a new {@link PseudoClassSelector} instance with the given name and optional args.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #PseudoClassSelector(String)} or {@link #PseudoClassSelector(String,
      * String)} instead.
      *
@@ -121,7 +121,7 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
 
     /**
      * Specifies the arguments of the pseudo selector (e.g., "2n+1").
-     * <p/>
+     * <p>
      * If null is specified then the arguments will be removed.
      *
      * @param args

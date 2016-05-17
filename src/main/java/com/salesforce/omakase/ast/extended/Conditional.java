@@ -34,7 +34,7 @@ import com.salesforce.omakase.writer.Writable;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents a single condition within a {@link ConditionalAtRuleBlock}.
@@ -80,7 +80,7 @@ public class Conditional implements Writable {
 
     /**
      * Checks whether this conditional is true based on the true conditions in the given ConditionalsConfig instance.
-     * <p/>
+     * <p>
      * If the given config contains a string condition matching this one, this method will return true, otherwise false. If {@link
      * #isLogicalNegation()} is true then this return value is reversed.
      *

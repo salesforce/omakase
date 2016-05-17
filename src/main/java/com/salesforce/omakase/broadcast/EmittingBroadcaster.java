@@ -35,7 +35,7 @@ import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
- * <p/>
+ * <p>
  * Any particular {@link Syntax} unit is actually emitted at most once per phase, based on {@link Syntax#status()}.
  *
  * @author nmcwilliams

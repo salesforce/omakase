@@ -106,7 +106,7 @@ public abstract class AbstractSyntax implements Syntax {
 
     /**
      * This should be called on all copied units. It handles shared logic such as copying comments.
-     * <p/>
+     * <p>
      * Examples:
      * <code><pre>
      *     Rule copy = new Rule().copiedFrom(original);

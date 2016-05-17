@@ -46,21 +46,21 @@ public final class Args {
 
     /**
      * Gets the list of comma-separated arguments in the given string.
-     * <p/>
+     * <p>
      * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>. This does not distinguish
      * between commas inside of quotes or handle escaped commas.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * For example given the following:
      * <pre>
      *     (arg1, arg2)
      * </pre>
-     * <p/>
+     * <p>
      * This will return:
      * <pre>
      *     List[arg1, arg2]
      * </pre>
-     * <p/>
+     * <p>
      * If only iterating over the args, use {@link #iterate(String)} instead.
      *
      * @param raw
@@ -75,7 +75,7 @@ public final class Args {
     /**
      * Gets the list of comma-separated arguments in the given string. This should be used when you are only iterating over the
      * args, i.e., not accessing by index.
-     * <p/>
+     * <p>
      * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>. This does not distinguish
      * between commas inside of quotes or handle escaped commas.
      *
@@ -91,12 +91,12 @@ public final class Args {
     /**
      * Removes the opening and closing parens, only if the first character is a '(' and last character is a ')' (whitespace is
      * trimmed before doing this check). If parens are trimmed then whitespace inside of the parens is trimmed as well.
-     * <p/>
+     * <p>
      * For example given the following:
      * <pre>
      *    (arg1, arg2 )
      * </pre>
-     * <p/>
+     * <p>
      * This will return:
      * <pre>
      *     "arg1, arg2"
@@ -118,12 +118,12 @@ public final class Args {
 
     /**
      * Extracts the args inside of a function literal.
-     * <p/>
+     * <p>
      * For example given the following:
      * <pre>
      *     customFunction(arg1, arg2)
      * </pre>
-     * <p/>
+     * <p>
      * This will return:
      * <pre>
      *     "arg1, arg2"
@@ -143,14 +143,14 @@ public final class Args {
 
     /**
      * Strips matching, encasing quotes (" or ') from the given string.
-     * <p/>
+     * <p>
      * Note that this does not support quote escaping, and it will only strip the quotes if the opening quote is not closed before
      * the end of the string. For example, these will be trimmed:
      * <pre>
      *     "abc def"
      *     'abc def'
      * </pre>
-     * <p/>
+     * <p>
      * however this will not:
      * <pre>
      *     "abc" + 123 + "abc"
@@ -173,13 +173,13 @@ public final class Args {
 
     /**
      * Strips matching double quotes from the given string.
-     * <p/>
+     * <p>
      * Note that this does not support quote escaping, and it will only strip the quotes if the opening quote is not closed before
      * the end of the string. For example, this will be trimmed:
      * <pre>
      *     "abc def"
      * </pre>
-     * <p/>
+     * <p>
      * however this will not:
      * <pre>
      *     "abc" + 123 + "abc"

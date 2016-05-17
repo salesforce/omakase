@@ -33,20 +33,20 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
  * A plugin that is registered during CSS processing to perform rework, validation, and more.
- * <p/>
+ * <p>
  * Plugins are registered during parser setup using {@link Omakase.Request#use(Plugin...)} (and similar methods). Plugins will
  * generally be executed in the order that they are registered.
- * <p/>
+ * <p>
  * Note that when implementing a plugin, not all subscriptions will be received automatically. sometimes an {@link AutoRefiner} is
  * needed.
- * <p/>
+ * <p>
  * Subscription method invocation order follows this pattern:
- * <p/>
+ * <p>
  * {@code @}Rework / {@code @}Observe -> {@code @}Validate.
- * <p/>
+ * <p>
  * In a class hierarchy, the more specific type is received before the more abstract type (e.g., {@link ClassSelector}
  * subscription methods invoked before {@link Syntax} subscription methods).
- * <p/>
+ * <p>
  * For much more information on utilizing or creating plugins please see the main readme file.
  *
  * @author nmcwilliams

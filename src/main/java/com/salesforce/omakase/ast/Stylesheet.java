@@ -42,7 +42,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * The root-level {@link Syntax} object.
- * <p/>
+ * <p>
  * Comments that appear in the original CSS source at the beginning of the stylesheet are actually going to be associated with the
  * first {@link Statement} in the sheet instead. Comments after the last {@link Statement} (or if the sheet is empty) will be
  * placed in the {@link #orphanedComments()} list.

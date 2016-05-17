@@ -33,9 +33,9 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
  * Enables all standard library-provided validations.
- * <p/>
+ * <p>
  * This includes auto-refinement of every {@link Refinable} instance plus:
- * <p/>
+ * <p>
  * {@link PseudoElementValidator}, (more to come).
  *
  * @author nmcwilliams

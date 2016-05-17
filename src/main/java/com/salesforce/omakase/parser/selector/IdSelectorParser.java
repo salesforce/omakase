@@ -38,7 +38,7 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses an {@link IdSelector}.
- * <p/>
+ * <p>
  * #rant The spec conflicts itself with ID selectors. In the actual description of ID selectors it says the name must be an
  * identifier (ident), however in the grammar it is "HASH", which is technically just #(name), where "name" is nmchar+ (think like
  * a hex color value). Just another example of the contradictory information all throughout the CSS "spec". #/rant

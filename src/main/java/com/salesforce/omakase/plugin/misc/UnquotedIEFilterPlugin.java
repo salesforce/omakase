@@ -41,24 +41,24 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
 
 /**
  * This plugin enables unquoted IE proprietary filters.
- * <p/>
+ * <p>
  * For example:
  * <pre>
  * {@code filter: progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3);}
  * </pre>
- * <p/>
+ * <p>
  * See http://msdn.microsoft.com/en-us/library/ms532847(v=vs.85).aspx for more information on filters.
- * <p/>
+ * <p>
  * Note that this is <em>not needed</em> for quoted filters, commonly used with the {@code -ms-filter} property instead of {@code
  * filter}. For example:
  * <pre>
  *  {@code -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)";}
  * </pre>
- * <p/>
+ * <p>
  * Enabling this plugin will allow the parser to "understand" this proprietary syntax. The whole property-value will be output
  * as-is once it discovers that it starts with the special "progid:" prefix. You can subscribe to created {@link UnquotedIEFilter}
  * objects as you would other standard syntax units using {@link Rework}, {@link Validate}, etc...
- * <p/>
+ * <p>
  * Example usage:
  * <pre>
  * <code>Omakase.source(input).use(new UnquotedIEFilterPlugin()).(...).process()</code>

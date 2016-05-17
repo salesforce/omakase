@@ -38,12 +38,12 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 
 /**
  * MS filter junk.
- * <p/>
+ * <p>
  * Example:
  * <pre>
  * {@code filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#444444', EndColorStr='#999999');}
  * </pre>
- * <p/>
+ * <p>
  * Note: this will <em>not</em> be used for filters encased in strings (hence the name "unquoted"), e.g.,
  * <pre>
  * {@code -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#444444', EndColorStr='#999999')";}

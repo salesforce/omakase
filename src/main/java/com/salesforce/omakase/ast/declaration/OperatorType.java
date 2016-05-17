@@ -24,10 +24,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
-
- * ADD LICENSE
- */
 package com.salesforce.omakase.ast.declaration;
 
 import com.salesforce.omakase.parser.token.Token;

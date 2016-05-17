@@ -41,7 +41,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Raw syntax representing a function.
- * <p/>
+ * <p>
  * This is usually just an intermediary object passed to {@link MasterRefiner#refine(RawFunction)}. You can subscribe to this
  * method if you would like to check ALL function-like values (e.g., to modify the raw args) before they are refined into the more
  * specifically-typed function value.

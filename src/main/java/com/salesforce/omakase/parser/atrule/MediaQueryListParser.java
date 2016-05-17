@@ -40,10 +40,10 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parsers a {@link MediaQueryList}.
- * <p/>
+ * <p>
  * In the following example:
  * <pre>{@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
- * <p/>
+ *
  * The media query list comprises of the content {@code all and (min-width: 800px), projection and (color)}.
  *
  * @author nmcwilliams

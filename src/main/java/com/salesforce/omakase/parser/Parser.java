@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Used to parse an aspect of CSS source code.
- * <p/>
+ * <p>
  * {@link Parser}s must <em>not</em> maintain any state or persistence from one parse operation to another. They should be
  * immutable objects.
  *
@@ -42,9 +42,9 @@ public interface Parser {
     /**
      * Parse from the current position of the given source, notifying the given {@link Broadcaster} of any applicable events and
      * data.
-     * <p/>
+     * <p>
      * <b>Important:</b> This method should only be used in limited circumstances. For example, doing partial content parsing.
-     * <p/>
+     * <p>
      * Generally speaking, if you have a {@link MasterRefiner} instance given to you then you should use {@link #parse(Source,
      * Broadcaster, MasterRefiner)} almost always, as it will perform a lot better.
      *
@@ -54,7 +54,7 @@ public interface Parser {
      *     The {@link Broadcaster} to receive any events from the parser.
      *
      * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
-     *         of true does not indicate that the parsed content was actually valid syntax.
+     * of true does not indicate that the parsed content was actually valid syntax.
      */
     boolean parse(Source source, Broadcaster broadcaster);
 
@@ -70,7 +70,7 @@ public interface Parser {
      *     The {@link MasterRefiner} to give to created AST objects.
      *
      * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
-     *         of true does not indicate that the parsed content was actually valid syntax.
+     * of true does not indicate that the parsed content was actually valid syntax.
      */
     boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner);
 

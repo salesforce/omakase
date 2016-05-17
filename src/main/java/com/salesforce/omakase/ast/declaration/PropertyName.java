@@ -42,12 +42,12 @@ import static com.salesforce.omakase.util.Prefixes.PrefixPair;
 
 /**
  * The property name within a {@link Declaration}.
- * <p/>
+ * <p>
  * This class is vendor prefix aware, which means that you can check if it {@link #isPrefixed()}, get the {@link #unprefixed()},
  * or add/replace the prefix with {@link #prefix(Prefix)} method.
- * <p/>
+ * <p>
  * Use {@link #name()} to get the full property name, including the prefix if it is present.
- * <p/>
+ * <p>
  * The name of this property is immutable. If seeking to change the property name of a Declaration, see {@link
  * Declaration#propertyName(Property)}, {@link Declaration#propertyName(String)}, and related methods (but this is generally
  * discouraged, as many plugins check and depend on the property name-- in some cases it might be better to replace the whole
@@ -302,7 +302,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
 
     /**
      * Creates a new {@link PropertyName} instance using the given string. Prefer to use {@link #of(Property)} instead.
-     * <p/>
+     * <p>
      * Please note that the property name will be automatically lower-cased.
      *
      * @param name
@@ -317,7 +317,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
 
     /**
      * Creates a new {@link PropertyName} from with the given String name. Prefer to use {@link #of(Property)} instead.
-     * <p/>
+     * <p>
      * Please note that the property name will be automatically lower-cased.
      *
      * @param name

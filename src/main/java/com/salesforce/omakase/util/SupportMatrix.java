@@ -66,7 +66,7 @@ public final class SupportMatrix {
 
     /**
      * Designate support for the given {@link Browser} and version.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>support.browser(Browser.CHROME, 25);</code>
@@ -85,7 +85,7 @@ public final class SupportMatrix {
 
     /**
      * Designate support for the given {@link Browser} and version.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>support.browser(Browser.SAFARI, 6.1);</code>
@@ -106,7 +106,7 @@ public final class SupportMatrix {
 
     /**
      * Designate support for the latest version of the given {@link Browser}.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>support.browser(Browser.CHROME);</code>
@@ -124,7 +124,7 @@ public final class SupportMatrix {
 
     /**
      * Designate support for the last N number of versions of the given {@link Browser}, counting back from the current version.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>support.browser(Browser.CHROME, 2); // last 2 versions</code>
@@ -384,7 +384,7 @@ public final class SupportMatrix {
     /**
      * Gets whether the given {@link Prefix} is required for the given {@link Property}, according to the supported browser
      * versions.
-     * <p/>
+     * <p>
      * To get the set of all prefixes required by the property, use {@link #prefixesForProperty(Property)} instead.
      *
      * @param prefix
@@ -401,7 +401,7 @@ public final class SupportMatrix {
     /**
      * Gets whether the given {@link Prefix} is required for the given {@link Keyword}, according to the supported browser
      * versions.
-     * <p/>
+     * <p>
      * To get the set of all prefixes required by the keyword, use {@link #prefixesForKeyword(Keyword)} instead.
      *
      * @param prefix

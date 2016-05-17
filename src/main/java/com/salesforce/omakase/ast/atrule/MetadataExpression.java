@@ -31,7 +31,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents an expression that should never be written out.
- * <p/>
+ * <p>
  * This is usually used by custom metadata at-rules, see {@link AtRule#markAsMetadataRule()}.
  *
  * @author nmcwilliams

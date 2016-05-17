@@ -41,14 +41,14 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Represents a media query.
- * <p/>
+ * <p>
  * In the following example:
  * <pre>    {@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
- * <p/>
+ *
  * There are two media queries,
- * <p/>
+ *
  * 1) {@code all and (min-width: 800px)}
- * <p/>
+ *
  * 2) {@code projection and (color)}
  *
  * @author nmcwilliams
@@ -61,7 +61,7 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
 
     /**
      * Constructs a new {@link MediaQuery} instance.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
      */
     public MediaQuery() {

@@ -41,10 +41,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents a media query expression.
- * <p/>
+ * <p>
  * In the following example:
  * <pre>    {@code @}media all and (min-width: 800px) { ... }</pre>
- * <p/>
+ *
  * The expression is <code>(min-width: 800px)</code>
  *
  * @author nmcwilliams
@@ -56,7 +56,7 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
 
     /**
      * Creates a new {@link MediaQueryExpression} instance.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
      *
      * @param feature

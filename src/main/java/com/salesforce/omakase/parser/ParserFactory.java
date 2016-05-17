@@ -51,7 +51,7 @@ import com.salesforce.omakase.parser.selector.*;
 
 /**
  * A cache of {@link Parser} instances.
- * <p/>
+ * <p>
  * Each {@link Parser} that is used should usually only be created once (enabled by this class). This is tenable due to the fact
  * that {@link Parser}s are not allowed to maintain state.
  *
@@ -358,7 +358,7 @@ public final class ParserFactory {
 
     /**
      * Gets the parser to parse a {@link Term} value.
-     * <p/>
+     * <p>
      * This differs from the other term parsers in that it parses just a single {@link Term}.
      *
      * @return The parser instance.
@@ -369,7 +369,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link TermSequenceParser}.
-     * <p/>
+     * <p>
      * This differs from the other term parsers in that it parses a list of both {@link Term}s AND {@link Operator}s, but it does
      * not parse importants or broadcast a {@link PropertyValue}.
      *
@@ -381,7 +381,7 @@ public final class ParserFactory {
 
     /**
      * Gets the {@link PropertyValueParser}.
-     * <p/>
+     * <p>
      * This differs from the other term parsers in that it parses a list of both {@link Term}s AND {@link Operator}s, plus it
      * parses importants and broadcasts a {@link PropertyValue}.
      *

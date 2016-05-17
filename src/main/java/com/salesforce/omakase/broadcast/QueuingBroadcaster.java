@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A broadcaster that queues broadcasts.
- * <p/>
+ * <p>
  * Broadcasts can be paused with {@link #pause()} and resumed with {@link #resume()}. The queue operates on a FIFO basis.
  *
  * @author nmcwilliams
@@ -157,7 +157,7 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
     /**
      * Specifies that the broadcasts matching the given class should always be flushed, regardless of whether the queue is paused
      * or not.
-     * <p/>
+     * <p>
      * Note that the class must be equal-- not an instanceof.
      *
      * @param broadcastable

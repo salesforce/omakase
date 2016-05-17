@@ -38,7 +38,7 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parses a {@link GenericFunctionValue}.
- * <p/>
+ * <p>
  * This does not validate the arguments inside of the parenthesis, but only that the the opening and closing parenthesis are
  * matched.
  *

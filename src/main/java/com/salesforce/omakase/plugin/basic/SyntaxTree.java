@@ -33,7 +33,7 @@ import com.salesforce.omakase.util.As;
 
 /**
  * A plugin that stores the parsed {@link Stylesheet} object.
- * <p/>
+ * <p>
  * Use this plugin when you want to get a reference to the top-level {@link Stylesheet} object outside of your own custom plugin.
  *
  * @author nmcwilliams

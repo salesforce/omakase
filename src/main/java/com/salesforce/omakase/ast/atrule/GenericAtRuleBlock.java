@@ -39,7 +39,7 @@ import java.util.Iterator;
 
 /**
  * A generic wrapper containing a list of statements.
- * <p/>
+ * <p>
  * This is used for refined {@link AtRule}s (standard or custom) that contain a simple list of statements inside the block.
  *
  * @author nmcwilliams

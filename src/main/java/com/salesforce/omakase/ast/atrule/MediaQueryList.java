@@ -40,7 +40,7 @@ import java.io.IOException;
 
 /**
  * Represents a list of media queries.
- * <p/>
+ * <p>
  * In the following example the media query list is everything until the opening curly brace:
  * <pre>    {@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
  *
@@ -54,7 +54,7 @@ public final class MediaQueryList extends AbstractAtRuleMember implements AtRule
 
     /**
      * Constructs a new {@link MediaQueryList} instance.
-     * <p/>
+     * <p>
      * This should be used for dynamically created declarations.
      */
     public MediaQueryList() {

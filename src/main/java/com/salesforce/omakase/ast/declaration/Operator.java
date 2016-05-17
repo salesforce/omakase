@@ -44,7 +44,7 @@ public final class Operator extends AbstractGroupable<PropertyValue, PropertyVal
 
     /**
      * Constructs a new {@link Operator} instance (used for dynamically created {@link Syntax} units).
-     * <p/>
+     * <p>
      * This should be used for dynamically created units.
      *
      * @param type
@@ -56,7 +56,7 @@ public final class Operator extends AbstractGroupable<PropertyValue, PropertyVal
 
     /**
      * Constructs a new {@link Operator} instance.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #Operator(OperatorType)} instead.
      *
      * @param line

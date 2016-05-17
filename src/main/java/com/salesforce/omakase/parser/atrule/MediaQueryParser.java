@@ -43,14 +43,14 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Parsers a {@link MediaQuery}.
- * <p/>
+ * <p>
  * In the following example:
  * <pre>{@code @}media all and (min-width: 800px), projection and (color) { ... }</pre>
- * <p/>
+ *
  * There are two media queries,
- * <p/>
+ *
  * 1) {@code all and (min-width: 800px)}
- * <p/>
+ *
  * 2) {@code projection and (color)}
  *
  * @author nmcwilliams

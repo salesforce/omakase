@@ -28,7 +28,6 @@ package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -39,6 +38,7 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.Selectors;
+import com.salesforce.omakase.util.SupportMatrix;
 
 import java.util.Set;
 

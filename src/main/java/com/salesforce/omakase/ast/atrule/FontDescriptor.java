@@ -43,12 +43,12 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
 
 /**
  * Represents one of the {@link FontFaceBlock} font-descriptors (src, font-weight, font-style, etc...).
- * <p/>
+ * <p>
  * For reasons why this is distinct from {@link Declaration}, see {@link FontFaceRefiner}.
  *
  * @author nmcwilliams
@@ -79,7 +79,7 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     /**
      * Creates a new {@link FontDescriptor} instance using the given {@link Declaration}s {@link PropertyName} and {@link
      * PropertyValue}, as well as comments.
-     * <p/>
+     * <p>
      * Note that this will result in refinement of the {@link Declaration} if not already done so.
      *
      * @param source
@@ -102,7 +102,7 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
 
     /**
      * Gets whether this {@link FontDescriptor} has the given property name. Prefer to use {@link #isProperty(Property)} instead.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>if (descriptor.isProperty("font-family") {...}</code>
@@ -119,7 +119,7 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
 
     /**
      * Gets whether this {@link FontDescriptor} has the given {@link Property} name.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code>if (descriptor.isProperty(Property.FONT_FAMILY)) {...}</code>

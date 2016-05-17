@@ -42,7 +42,7 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
 /**
  * Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last {@link SelectorPart} within a
  * {@link Selector}).
- * <p/>
+ * <p>
  * "A selector is a chain of one or more sequences of simple selectors separated by combinators. <b>One pseudo-element may be
  * appended to the last sequence of simple selectors in a selector.</b>" (http://www.w3 .org/TR/css3-selectors/#selector-syntax).
  *

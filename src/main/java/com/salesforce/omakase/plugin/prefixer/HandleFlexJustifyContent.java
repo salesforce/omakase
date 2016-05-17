@@ -28,7 +28,6 @@ package com.salesforce.omakase.plugin.prefixer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyName;
@@ -36,13 +35,14 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Equivalents;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.util.Values;
 
 import java.util.Set;
 
 /**
  * Flexbox support.
- * <p/>
+ * <p>
  * Handles the justify-content property.
  *
  * @author nmcwilliams

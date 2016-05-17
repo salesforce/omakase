@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.util.SupportMatrix;
 
 /**
  * Base class for {@link Handler} implementations, providing some default copying behavior.

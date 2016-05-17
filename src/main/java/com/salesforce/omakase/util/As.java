@@ -30,7 +30,6 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.writer.StyleWriter;
-import com.salesforce.omakase.writer.WriterMode;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -41,7 +40,7 @@ import java.util.List;
 
 /**
  * Helper for constructing toString() methods...cuz guava's helper just doesn't get the job done.
- * <p/>
+ * <p>
  * Example: <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
  *
  * @author nmcwilliams
@@ -182,7 +181,7 @@ public final class As {
 
     /**
      * Specifies that all fields should be added.
-     * <p/>
+     * <p>
      * Fields with a value of null will not be output. Iterables will be added with {@link #add(String, Iterable)} and {@link
      * #indent()} will automatically be turned on upon the first addition of an iterable. If the object being printed is a {@link
      * Syntax} unit, line, column, and comments information will automatically be added.

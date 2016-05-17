@@ -50,7 +50,7 @@ public final class HexColorValue extends AbstractTerm {
 
     /**
      * Constructs a new instance of a {@link HexColorValue}.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #HexColorValue(String)} instead.
      *
      * @param line
@@ -155,7 +155,7 @@ public final class HexColorValue extends AbstractTerm {
 
     /**
      * Creates a new {@link HexColorValue} instance using the given color (do not include the #).
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * <code> HexColorValue.of("fffeee")</code>

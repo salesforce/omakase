@@ -33,11 +33,11 @@ import com.salesforce.omakase.parser.Parser;
 
 /**
  * A factory for retrieving various {@link Token}s. Mainly used by {@link Parser}s.
- * <p/>
+ * <p>
  * The motivation for using a factory interface for tokens is that it provides the ability for highly-customized input source code
  * grammar. This could be used, for example, to enable newline and whitespace delimited grammar instead of colons, semicolons,
  * brackets, etc...
- * <p/>
+ * <p>
  * Custom token factories will usually extends from {@link BaseTokenFactory}.
  *
  * @author nmcwilliams
@@ -131,7 +131,7 @@ public interface TokenFactory {
     /**
      * Gets the {@link Token} representing an optional special character that may appear before a normal property name in a {@link
      * Declaration}.
-     * <p/>
+     * <p>
      * For example, to enable the star hack the "*" token could be returned. If overriding this method, consider using a {@link
      * CompoundToken} of the super class implementation.
      *

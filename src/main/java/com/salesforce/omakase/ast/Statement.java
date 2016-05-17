@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.broadcast.annotation.Description;

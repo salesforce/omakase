@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Main entry point for the Omakase CSS Parser.
- * <p/>
+ * <p>
  * Example:
  * <code><pre>
  *     StandardValidation validation = new StandardValidation();
@@ -54,7 +54,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <code><pre>
  *     StandardValidation validation = new StandardValidation();
  *     StyleWriter inline = StyleWriter.inline();
- * <p/>
+ * <p>
  *     Omakase.source(input)
  *         .use(validation)
  *         .use(inline)
@@ -65,11 +65,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *             }
  *         })
  *         .process();
- * <p/>
+ * <p>
  *     inline.writeTo(System.out);
  * </pre></code>
  * For more usage information, see the readme.md file. Please note that the parser does not currently support the following:
- * <p/>
+ * <p>
  * {@code cdo and cdc, escaping (in most cases)}
  *
  * @author nmcwilliams
@@ -81,7 +81,7 @@ public final class Omakase {
 
     /**
      * Specifies the CSS source to parse.
-     * <p/>
+     * <p>
      * Omakase calls begin with this method, you then usually add some plugins and then finally end with {@code .process()}
      *
      * @param source
@@ -97,10 +97,10 @@ public final class Omakase {
 
     /**
      * Represents a request to process CSS.
-     * <p/>
+     * <p>
      * This object allows you to add plugins in order to specify the validation, rework, etc... performed on the processed code.
      * See {@link Plugin} for more information.
-     * <p/>
+     * <p>
      * Use {@link #use(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used by
      * default.
      */

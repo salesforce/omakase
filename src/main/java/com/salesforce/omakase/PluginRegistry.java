@@ -34,7 +34,7 @@ import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * Registry of {@link Plugin}s.
- * <p/>
+ * <p>
  * This allows you to require plugins as dependencies and also retrieve registered plugin instances. Note that only one instance
  * of a plugin can be registered.
  *
@@ -43,7 +43,7 @@ import com.salesforce.omakase.plugin.Plugin;
 public interface PluginRegistry {
     /**
      * Registers {@link Plugin} instances to this {@link PluginRegistry}.
-     * <p/>
+     * <p>
      * Only <b>one</b> instance of a {@link Plugin} can be registered to a single {@link PluginRegistry}. This is to make {@link
      * #require(Class)} and {@link #retrieve(Class)} work in a simple way. {@link Plugin}s should be coded with this in mind.
      *
@@ -54,7 +54,7 @@ public interface PluginRegistry {
 
     /**
      * Registers a single {@link Plugin}.
-     * <p/>
+     * <p>
      * Only <b>one</b> instance of a {@link Plugin} can be registered to a single {@link PluginRegistry}. This is to make {@link
      * #require(Class)} and {@link #retrieve(Class)} work in a simple way. {@link Plugin}s should be coded with this in mind.
      *
@@ -65,15 +65,15 @@ public interface PluginRegistry {
 
     /**
      * Specifies that a particular plugin is required as a dependency.
-     * <p/>
+     * <p>
      * If the plugin is already registered then the registered instance will simply be returned. If the plugin is not registered
      * then a new instance will be created, registered, then returned.
-     * <p/>
+     * <p>
      * This method is only for library-provided plugins. To require a custom plugin, use {@link #require(Class, Supplier)}
      * instead.
-     * <p/>
+     * <p>
      * This method is usually used within the {@link DependentPlugin#dependencies(PluginRegistry)} method.
-     * <p/>
+     * <p>
      * Examples:
      * <pre>
      * {@code registry.require(SyntaxTree.class)}
@@ -91,7 +91,7 @@ public interface PluginRegistry {
 
     /**
      * Same as {@link #require(Class)}, except this should be used for custom (non-library-provided) plugins.
-     * <p/>
+     * <p>
      * The {@link Supplier} is used to get an instance if one is not already registered. This method is usually used within the
      * {@link DependentPlugin#dependencies(PluginRegistry)} method.
      *
@@ -108,7 +108,7 @@ public interface PluginRegistry {
 
     /**
      * Specifies that a particular {@link TokenFactory} is required as a dependency.
-     * <p/>
+     * <p>
      * If a {@link TokenFactory} was already required and has the same type, the previously registered instance will simply be
      * returned. Otherwise if a token factory of a different type was registered an exception will be thrown.
      *

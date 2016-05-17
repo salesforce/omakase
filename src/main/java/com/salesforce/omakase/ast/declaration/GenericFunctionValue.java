@@ -53,7 +53,7 @@ public class GenericFunctionValue extends AbstractTerm implements FunctionValue 
 
     /**
      * Constructs a new {@link GenericFunctionValue} instance with the given function name and arguments.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #GenericFunctionValue(String, String)} instead.
      *
      * @param line

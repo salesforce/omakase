@@ -38,21 +38,21 @@ import java.util.List;
 
 /**
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.
- * <p/>
+ * <p>
  * This allows you to extract specific {@link Term} instances from a given {@link PropertyValue} if that {@link Term} is the only
  * member within the list.
- * <p/>
+ * <p>
  * Examples:
  * <pre>
  * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.propertyValue())}
  * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue())}
  * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue())}
  * </pre>
- * <p/>
+ * <p>
  * This also has a convenience function for getting the textual value of a {@link Term} within a {@link PropertyValue}, when you
  * know the {@link PropertyValue} should only have one {@link Term} but you aren't quite sure (or it doesn't quite matter) what
  * specific {@link Term} it is.
- * <p/>
+ * <p>
  * Example:
  * <pre>
  * {@code Optional<String> font = Values.textual(propertyValue); // get font name whether from a string or keyword term}
@@ -67,9 +67,9 @@ public final class Values {
     /**
      * Gets the single {@link HexColorValue} within the given {@link PropertyValue}. The returned {@link Optional} will only be
      * present if the given property value contains only one {@link Term} which is an instance of a {@link HexColorValue}.
-     * <p/>
+     * <p>
      * This allows you to work with {@link HexColorValue} specific methods when getting a {@link Declaration}'s property value.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code HexColorValue color = Value.asHexColor(declaration.getPropertyValue())}
@@ -88,9 +88,9 @@ public final class Values {
     /**
      * Gets the single {@link KeywordValue} within the given {@link PropertyValue}. The returned {@link Optional} will only be
      * present if the given property value contains only one {@link Term} which is an instance of a {@link KeywordValue}.
-     * <p/>
+     * <p>
      * This allows you to work with {@link KeywordValue} specific methods when getting a {@link Declaration}'s property value.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code KeywordValue keyword = Value.asKeyword(declaration.getPropertyValue())}
@@ -108,11 +108,11 @@ public final class Values {
 
     /**
      * Same as {@link #asKeyword(PropertyValue)}, except this returns the specific Keyword enum value (not the syntax unit).
-     * <p/>
+     * <p>
      * Gets the single {@link Keyword} (from a single {@link KeywordValue}) within the given {@link PropertyValue}. The returned
      * {@link Optional} will only be present if the given property value contains only one {@link Term} which is an instance of a
      * {@link KeywordValue} and has a recognized keyword.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code Keyword keyword = Value.asKeywordEnum(declaration.getPropertyValue())}
@@ -133,9 +133,9 @@ public final class Values {
     /**
      * Gets the single {@link NumericalValue} within the given {@link PropertyValue}. The returned {@link Optional} will only be
      * present if the given property value contains only one {@link Term} which is an instance of a {@link NumericalValue}.
-     * <p/>
+     * <p>
      * This allows you to work with {@link NumericalValue} specific methods when getting a {@link Declaration}'s property value.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code NumericalValue number = Value.asNumerical(declaration.getPropertyValue())}
@@ -154,9 +154,9 @@ public final class Values {
     /**
      * Gets the single {@link StringValue} within the given {@link PropertyValue}. The returned {@link Optional} will only be
      * present if the given property value contains only one {@link Term} which is an instance of a {@link StringValue}.
-     * <p/>
+     * <p>
      * This allows you to work with {@link StringValue} specific methods when getting a {@link Declaration}'s property value.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code StringValue string = Value.asString(declaration.getPropertyValue())}
@@ -195,7 +195,7 @@ public final class Values {
 
     /**
      * Filters the terms in the given {@link PropertyValue} to only the ones of the given class type.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code Iterable<FunctionValue> functions = Values.filter(FunctionValue.class, declaration.propertyValue();}
@@ -220,10 +220,10 @@ public final class Values {
 
     /**
      * Splits the {@link PropertyValue} at the given operator.
-     * <p/>
+     * <p>
      * For example, given a {@link PropertyValue} with the following:
      * <pre>{Term}{SPACE}{Term}{SLASH}{Term}{SPACE}{Term}</pre>
-     * <p/>
+     *
      * Calling this method with {@link OperatorType#SLASH} would return a list with two new {@link PropertyValue} instances. The
      * first one would contain the first two terms and space operator, and the second one would contain the last two terms and
      * space operator.

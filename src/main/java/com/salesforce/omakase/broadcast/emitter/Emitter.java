@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Responsible for sending an event ({@link Broadcastable}) to registered listeners.
@@ -64,9 +64,9 @@ public final class Emitter {
 
     /**
      * subscriptions and validators (direct and indirect, i.e., hierarchy, this is important for ordering).
-     * <p/>
+     * <p>
      * For example,
-     * <p/>
+     * <p>
      * <pre><code>
      * // Class1 registered first, then Class2
      * processors.get(SimpleSelector.class) -> Class1#Subscription(SimpleSelector)
@@ -74,7 +74,7 @@ public final class Emitter {
      * processorsCache.get(ClassSelector.cache) -> Class1#Subscription(SimpleSelector), Class2#Subscription(ClassSelector)
      * processorsCache.get(SimpleSelector.cache) -> Class2#Subscription(ClassSelector)
      * </code></pre>
-     * <p/>
+     * <p>
      * ClassSelector is the concrete instance. Thus the event given will have getClass == ClassSelector, and thus when the
      * hierarchy is looked at for the event, ClassSelector will come before SimpleSelector. However since Class1 is registered
      * first, its subscription to SimpleSelector must be invoked before Class2's subscription to ClassSelector.
@@ -105,7 +105,7 @@ public final class Emitter {
 
     /**
      * Registers an instance of an object to receive broadcasted events (usually a {@link Plugin} instance).
-     * <p/>
+     * <p>
      * The methods on the class of the object will be scanned for applicable annotations (e.g., {@link Rework}, {@link Validate}).
      * The methods will be invoked when the matching event is broadcasted in the applicable phase.
      *
@@ -140,7 +140,7 @@ public final class Emitter {
     /**
      * Sends an event to registered subscribers of the given event type (i.e., class), including any subscribers to types within
      * the event's class hierarchy.
-     * <p/>
+     * <p>
      * "Event" here refers to an instance of a {@link Broadcastable}.
      *
      * @param event

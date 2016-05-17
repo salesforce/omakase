@@ -49,7 +49,7 @@ public final class ThrowingErrorManager implements ErrorManager {
 
     /**
      * Creates a new {@link ThrowingErrorManager} instance with the given name.
-     * <p/>
+     * <p>
      * The name is used to provide more meaningful information on what CSS file or resource caused the problem.
      *
      * @param sourceName

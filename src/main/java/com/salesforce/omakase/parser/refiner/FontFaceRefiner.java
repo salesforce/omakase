@@ -41,15 +41,15 @@ import com.salesforce.omakase.parser.Source;
 
 /**
  * Refines font-face at-rules (@font-face).
- * <p/>
+ * <p>
  * For the grammar rules see <a href='http://dev.w3.org/csswg/css-fonts/#font-face-rule'>the spec</a>.
- * <p/>
+ * <p>
  * Inside of the font-face block are <em>font-descriptors</em>. Grammar wise these are pretty much exactly just like {@link
  * Declaration}s, however in the interpreted CSS they have different meanings. For example, a {@code font-family} font-descriptor
  * means something different from a {@code font-family} declaration. We <em>could</em> just treat and broadcast these as
  * declarations, and while there are reasons that would make this beneficial, there are also reasons that would make this
  * undesirable.
- * <p/>
+ * <p>
  * Whether a plugin author listening for a declaration wants to receive font-descriptors as well depends on what they are doing.
  * An example of where you wouldn't want to would be a plugin that counts the number of font-family declarations, or a plugin that
  * automatically changes all font-family declarations to something different for, say, a Japan-localised version of the site.

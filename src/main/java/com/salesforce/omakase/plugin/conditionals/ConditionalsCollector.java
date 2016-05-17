@@ -40,10 +40,10 @@ import java.util.Set;
 /**
  * Collects the set of all found conditions, i.e., the arguments inside of {@link ConditionalAtRuleBlock}s, from the {@link
  * Conditionals} plugin.
- * <p/>
+ * <p>
  * This should be used when you want to determine which conditions are utilized within the source. This automatically enables the
  * {@link Conditionals} plugin.
- * <p/>
+ * <p>
  * <b>Note</b>: The {@link Conditionals} plugin currently <em>lower-cases</em> all conditions for comparison purposes, so usually
  * any arguments passed to methods of this class should be lower-cased as well.
  *
@@ -61,11 +61,11 @@ public final class ConditionalsCollector implements DependentPlugin {
 
     /**
      * Specify true to ignore conditions that are <em>only</em> used with the negation operator (e.g., <code>!ie9</code>).
-     * <p/>
+     * <p>
      * In some cases you may not care about conditions only referenced in this way. For example, if you were using this plugin to
      * determine which permutations to create based on which conditions are referenced, you wouldn't want the conditions only used
      * with negation, as you would not need to generate permutations for those conditions.
-     * <p/>
+     * <p>
      * This method should only be called before parsing has begun.
      *
      * @param excludeNegationOnly

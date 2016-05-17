@@ -40,13 +40,13 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
 
 /**
  * A unicode-range value (e.g., from within a @font-face rule).
- * <p/>
+ * <p>
  * There are three types of allowed values:
- * <p/>
+ * <p>
  * - single codepoint (e.g. {@code U+416})
- * <p/>
+ * <p>
  * - interval range (e.g. {@code U+400-4ff})
- * <p/>
+ * <p>
  * - wildcard range (e.g. {@code U+4??})
  *
  * @author nmcwilliams
@@ -59,7 +59,7 @@ public class UnicodeRangeValue extends AbstractTerm {
 
     /**
      * Constructs a new instance of a {@link UnicodeRangeValue}.
-     * <p/>
+     * <p>
      * If dynamically creating a new instance then use {@link #UnicodeRangeValue(String)} instead.
      *
      * @param line

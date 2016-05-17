@@ -52,16 +52,16 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
 
 /**
  * An extension to the standard CSS syntax that allows for conditional at-rules.
- * <p/>
+ * <p>
  * Example of a conditional at-rule:
  * <pre>
  * {@code @}if(ie7) { .test{color:red} }
  * </pre>
- * <p/>
+ * <p>
  * This block will output its inner statements if its condition is contained within the set of "true" condition strings, as
  * specified by a {@link ConditionalsConfig}. Negation may be specified on conditions using <code>!</code>. Multiple conditions
  * may be specified using <code>||</code>.
- * <p/>
+ * <p>
  * For more information on using and configuring conditionals see the main readme file.
  *
  * @author nmcwilliams
@@ -77,15 +77,15 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
 
     /**
      * Creates a new {@link ConditionalAtRuleBlock} instance with the given conditions, statements and config object.
-     * <p/>
+     * <p>
      * The given config contains the set of strings that are the "true" values/conditions. During output of the CSS source, this
      * block and its contents will only be written out if its condition matches what is in the config (or vice versa if the
      * negation operator is used).
-     * <p/>
+     * <p>
      * Note that this matching is case-sensitive. It is highly recommended to enforce a single case (e.g., lower-case) among the
      * given conditions and set of true conditions in order to ensure matching works properly (by default the various conditionals
      * plugin classes do this automatically).
-     * <p/>
+     * <p>
      * It is acceptable for the given config to change its set of true conditions, allowing the outputting of multiple variations
      * of the CSS source from a single parse operation. For example, set the true conditions, write out the source, change the
      * true conditions, write out the source again, etc.

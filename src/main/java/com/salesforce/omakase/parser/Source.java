@@ -44,7 +44,7 @@ import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
  * A tool for reading a String source one character at a time. Basically a glorified wrapper around a String.
- * <p/>
+ * <p>
  * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of the
  * current line and column positions.
  *
@@ -188,7 +188,7 @@ public final class Source {
 
     /**
      * Gets the current line number.
-     * <p/>
+     * <p>
      * If you want to get the line number from the original source, regardless of whether this is a sub-source or not then you may
      * want to use {@link #originalLine()} instead.
      *
@@ -200,7 +200,7 @@ public final class Source {
 
     /**
      * Gets the current column position.
-     * <p/>
+     * <p>
      * If you want to get the column number from the original source, regardless of whether this is a sub-source or not then you
      * may want to use {@link #originalColumn()} instead.
      *
@@ -232,10 +232,10 @@ public final class Source {
 
     /**
      * Gets the original line, taking into account both the {@link #anchorLine()} and the current {@link #line()}.
-     * <p/>
+     * <p>
      * This should be used when you want to get the real line in the original source, even if this {@link Source} is a sub-source
      * from the original. This is accurate to use even if this source is not a sub-source.
-     * <p/>
+     * <p>
      * If you want the current line within this exact {@link Source} only then use {@link #line()} instead.
      *
      * @return The original line number.
@@ -246,10 +246,10 @@ public final class Source {
 
     /**
      * Gets the original column, taking into account both the {@link #anchorColumn()} and the current {@link #column()}.
-     * <p/>
+     * <p>
      * This should be used when you want to get the real column in the original source, even if this {@link Source} is a
      * sub-source from the original. This is accurate to use even if this source is not a sub-source.
-     * <p/>
+     * <p>
      * If you want the current column within this exact {@link Source} only then use {@link #column()} instead.
      *
      * @return The original column number.
@@ -335,7 +335,7 @@ public final class Source {
 
     /**
      * Advance to the next character. This will automatically update the current line and column number as well.
-     * <p/>
+     * <p>
      * The spec encourages normalizing new lines to a single line feed character, however we choose not to do this preprocessing
      * as it isn't necessary for correct parsing. However by not doing this, if the source does not use LF then the line/column
      * number reported by this source (e.g., in error messages) will be incorrect. This seems acceptable as that information is
@@ -424,7 +424,7 @@ public final class Source {
 
     /**
      * If the current character is whitespace then skip it along with all subsequent whitespace characters.
-     * <p/>
+     * <p>
      * This doesn't match form feed \f as per the spec because... stupid to use that.
      *
      * @return this, for chaining.
@@ -485,7 +485,7 @@ public final class Source {
     /**
      * Similar to {@link #optional(Token)}, except this works with {@link TokenEnum}s, checking each member of the given enum (in
      * the declared order) for a matching token.
-     * <p/>
+     * <p>
      * As with {@link #optional(Token)}, if the current character matches the index will be advanced by one.
      *
      * @param klass
@@ -505,7 +505,7 @@ public final class Source {
     /**
      * Similar to {@link #optional(Token)} and {@link #optionalFromEnum(Class)}, except this works with {@link ConstantEnum}s,
      * checking each member of the given enum (in the declared order) for a matching constant.
-     * <p/>
+     * <p>
      * The main difference between this and {@link #optionalFromEnum(Class)} is that this is for enums that have more than one
      * character to match at a time. Matching a constant as opposed to a single character is less performant, thus if possible
      * enums should implement {@link TokenEnum} over {@link ConstantEnum}.
@@ -560,10 +560,10 @@ public final class Source {
     /**
      * Advances the current character position until the current character matches the given {@link Token}. If the given {@link
      * Token} is never matched then this will advance to the end of the source.
-     * <p/>
+     * <p>
      * This will skip over values inside parenthesis (mainly because ';' can be a valid part of a declaration value, e.g.,
      * data-uris). This will also skip over values inside of strings, but {@link #checkInString} must be turned on.
-     * <p/>
+     * <p>
      * Important: do not pass in {@link Tokens#OPEN_PAREN} or {@link Tokens#CLOSE_PAREN}. Use {@link #chomp(Token)} instead.
      *
      * @param token
@@ -628,10 +628,10 @@ public final class Source {
     /**
      * Similar to {@link #chomp(Token)}, except this expects the value to be enclosed with an opening and closing delimiter {@link
      * Token}.
-     * <p/>
+     * <p>
      * The opening token must be present at the current position of this source or an error will be thrown. In other words, don't
      * call this until you've checked that the opening token is there, and only if you expect it to be properly closed.
-     * <p/>
+     * <p>
      * The closing token will be skipped over if it is preceded by {@link Tokens#ESCAPE} (thus no need to worry about handling
      * escaping).
      *
@@ -701,10 +701,10 @@ public final class Source {
 
     /**
      * Parses all comments at the current position in the source.
-     * <p/>
+     * <p>
      * Comments can be retrieved wth {@link #flushComments()}. That method will return and remove all comments currently in the
      * buffer.
-     * <p/>
+     * <p>
      * This separation into the two methods allows for comments to be collected prematurely without needing to backtrack if the
      * parser later determines it doesn't match. The next parser can still retrieve the comments from the buffer even if another
      * parser triggered the collection of them.
@@ -784,7 +784,7 @@ public final class Source {
 
     /**
      * Returns all CSS comments currently in the buffer.
-     * <p/>
+     * <p>
      * CSS comments are placed into the buffer when {@link #collectComments()} is called. After calling this method the buffer
      * will be emptied.
      *
@@ -803,7 +803,7 @@ public final class Source {
 
     /**
      * Creates a snapshot of the current index, line, column, and other essential state information.
-     * <p/>
+     * <p>
      * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the content
      * does fully match as expected. To revert to the latest snapshot call {@link Snapshot#rollback()} on the snapshot returned
      * from this method.
@@ -818,10 +818,10 @@ public final class Source {
 
     /**
      * Reads a constant string at the current position.
-     * <p/>
+     * <p>
      * If a match is found the source is advanced to the end of the constant value. Otherwise the current position will remain
      * unchanged. The constant must be matched exactly -- case does matter.
-     * <p/>
+     * <p>
      * If possible this method should be avoided as it's less performant than using a {@link Token} based method.
      *
      * @param constant
@@ -850,7 +850,7 @@ public final class Source {
 
     /**
      * Same as {@link #readConstant(String)}, except this version is case-insensitive (and thus less performant).
-     * <p/>
+     * <p>
      * <b>Important:</b> the constant given MUST be lower-cased.
      *
      * @param constant
@@ -864,7 +864,7 @@ public final class Source {
 
     /**
      * Reads an ident token. If a match is found the current position is advanced to the end of the token.
-     * <p/>
+     * <p>
      * future: the spec allows for non ascii and escaped characters here as well.
      *
      * @return The matched token, or {@link Optional#absent()} if not matched.
@@ -943,7 +943,7 @@ public final class Source {
 
     /**
      * Updates the status about whether we are in a string.
-     * <p/>
+     * <p>
      * We are in a string once we encounter an unescaped {@link Tokens#DOUBLE_QUOTE} or {@link Tokens#SINGLE_QUOTE}. We remain in
      * this status until the matching quote symbol is encountered again, unescaped.
      */
@@ -1022,7 +1022,7 @@ public final class Source {
         /**
          * Similar to {@link #rollback()}, but this will also throw a {@link ParserException} with the given message and optional
          * message args.
-         * <p/>
+         * <p>
          * This is a convenience function to combine the common scenario of rolling back before throwing an error so that the
          * error message indicates a more accurate location of where the error occurred.
          *

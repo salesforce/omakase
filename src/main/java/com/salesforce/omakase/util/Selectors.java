@@ -314,7 +314,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link ClassSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findClassSelector(Selector, String)} instead.
      *
      * @param selector
@@ -330,7 +330,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link ClassSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findClassSelector(Iterable, String)} instead.
      *
      * @param parts
@@ -346,7 +346,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link IdSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findIdSelector(Selector, String)} instead.
      *
      * @param selector
@@ -362,7 +362,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link IdSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findIdSelector(Iterable, String)} instead.
      *
      * @param parts
@@ -378,7 +378,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link TypeSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findTypeSelector(Selector, String)} instead.
      *
      * @param selector
@@ -394,7 +394,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link TypeSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findTypeSelector(Iterable, String)} instead.
      *
      * @param parts
@@ -410,7 +410,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link PseudoElementSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findPseudoElementSelector(Selector, String,
      * boolean)} instead.
      *
@@ -429,7 +429,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link PseudoElementSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findPseudoElementSelector(Iterable, String,
      * boolean)} instead.
      *
@@ -448,7 +448,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link PseudoClassSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findPseudoClassSelector(Selector, String, boolean)}
      * instead.
      *
@@ -467,7 +467,7 @@ public final class Selectors {
 
     /**
      * Checks the given parts for a {@link PseudoClassSelector} that matches the given name.
-     * <p/>
+     * <p>
      * If you would like access to the found instance itself then use {@link #findPseudoClassSelector(Iterable, String, boolean)}
      * instead.
      *
@@ -486,19 +486,19 @@ public final class Selectors {
 
     /**
      * Gets the non-combinator {@link SelectorPart}s contiguous to this one.
-     * <p/>
+     * <p>
      * If this part is a {@link Combinator} then this method will return a collection of one, containing only this {@link
      * Combinator} instance itself.
-     * <p/>
+     * <p>
      * If this part is <em>not</em> a {@link Combinator} then this method will return all preceding and subsequent {@link
      * SelectorPart}s up until the first encountered {@link Combinator}. In other words, this will return all parts matching a
      * single element, such as multiple class selectors.
-     * <p/>
+     * <p>
      * For example, in this selector:
      * <pre><code>
      * .test1.test2#test3 .testA.testB#testC
      * </code></pre>
-     * <p/>
+     * <p>
      * If <code>this</code> is ".test2", this method will return the ".test1", ".test2", and "#test3" parts.
      *
      * @param part
@@ -533,7 +533,7 @@ public final class Selectors {
 
     /**
      * Filters the selector parts in the given {@link Selector} to only the ones of the given class type.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code Iterable<ClassSelector> classes = Selectors.filter(ClassSelector.class, selector);}

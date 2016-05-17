@@ -31,10 +31,10 @@ import com.salesforce.omakase.parser.Source;
 /**
  * Very similar to a {@link TokenEnum}, except that this is used for enums that must match more than one character (a constant) as
  * opposed to a single token.
- * <p/>
+ * <p>
  * By adding this interface to an Enum it allows a value to be easily parsed to the correct Enum member using {@link
  * Source#optionalFromConstantEnum(Class)}.
- * <p/>
+ * <p>
  * {@link TokenEnum} should be preferred over this if possible as matching a single token is more performant than matching a
  * constant.
  *
@@ -50,7 +50,7 @@ public interface ConstantEnum {
 
     /**
      * Whether the constant is case-sensitive. Returning true is more performant.
-     * <p/>
+     * <p>
      * <b>Important:</b> if returning false (not case-sensitive), the value from {@link #constant()} must be lower-cased.
      *
      * @return True if the constant is case-sensitive, e.g., must match exactly.

@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * Manages the set of "trueConditions" as used by the {@link Conditionals} plugin and individual {@link ConditionalAtRuleBlock}
  * objects, and other options.
- * <p/>
+ * <p>
  * This can be used to add to or remove from the set of "trueConditions". You can also specify "passthroughMode" as true, which
  * indicates that the {@link ConditionalAtRuleBlock} should write itself out without stripping the actual outer block
  * (<code>@if(...) { ... }</code>) away. This might be useful if you intend to deal with the conditionals as part of a subsequent
