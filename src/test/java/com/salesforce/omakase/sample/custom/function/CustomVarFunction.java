@@ -37,7 +37,7 @@ import java.io.IOException;
 
 /**
  * This is a sample custom AST object representing our custom function. The custom function represents a variable lookup.
- * <p/>
+ * <p>
  * We extend {@link AbstractTerm} because we want this AST object to fit into {@link PropertyValue}s. We implement {@link
  * FunctionValue} so that, among other reasons, we get properly delivered to {@link FunctionValue} subscription methods.
  *

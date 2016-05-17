@@ -35,21 +35,21 @@ import java.io.IOException;
 
 /**
  * An example of using the sample custom selector classes in this package.
- * <p/>
+ * <p>
  * This feature mimics the "placeholder" selector functionality common in CSS preprocessors. Placeholder selectors are written
  * with a special syntax using the format <code>%name</code>. The placeholder has a rule and declarations as normal, however the
  * placeholder is not written out by default.
- * <p/>
+ * <p>
  * Subsequent selectors can "extend" the placeholder. By extending, the placeholder will include that selector in the output.
  * Essentially this is a way of being DRY. Run the example to make this description clearer.
- * <p/>
+ * <p>
  * We give the parser an instance of the {@link PlaceholderSelectorPlugin}. This plugin is a {@link SyntaxPlugin} that registers
  * our {@link PlaceholderSelectorRefiner}. The refiner handles actually parsing the custom selectors, and creates {@link
  * PlaceholderSelector} AST objects. The nature of our new syntax also necessitates creating a custom {@link
  * PlaceholderTokenFactory}, which we use to allow selectors to begin with our special {@code %} symbol.
- * <p/>
+ * <p>
  * Things to try:
- * <p/>
+ * <p>
  * <b>1)</b> Add more placeholders and CSS to utilize it. <b>2)</b> Try adding or making the existing placeholder unused <b>3)</b>
  * Try referencing an invalid placeholder name. <b>4)</b> Try changing <code>.primary</code> to something more complex like
  * <code>.primary > .btn </code>
@@ -75,7 +75,6 @@ public final class SampleUsage {
             ".secondary|button {\n" +
             "  color: #6f9ff1;\n" +
             "}";
-
 
         System.out.println("Sample Custom Selector\n");
 

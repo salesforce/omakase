@@ -31,7 +31,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Conditional}.

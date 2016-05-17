@@ -46,9 +46,9 @@ import java.util.regex.Pattern;
 
 /**
  * Handles updating the {@link Browser} enum.
- * <p/>
+ * <p>
  * Run the main method or use 'script/omakase.sh'.
- * <p/>
+ * <p>
  * Source of this data is from caniuse.com [https://github.com/Fyrd/caniuse]
  *
  * @author nmcwilliams

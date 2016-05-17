@@ -33,7 +33,7 @@ import java.io.IOException;
 
 /**
  * Code generator for the {@link Prefix} enum.
- * <p/>
+ * <p>
  * To modify the list of prefixes, edit the 'src/test/resources/data/prefixes.yaml' file and execute the main method on this class
  * (also available via script/omakase.sh).
  *

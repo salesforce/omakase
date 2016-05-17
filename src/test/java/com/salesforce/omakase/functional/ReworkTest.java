@@ -125,11 +125,11 @@ public class ReworkTest {
 
         /**
          * Sample rework task.
-         * <p/>
+         * <p>
          * In this task we want to prepend a prefixed version of border radius before the unprefixed version, e.g.,
          * -webkit-border-radius before declarations with border-radius. Note that we use the same property value so that if one
          * changes the other will be in sync.
-         * <p/>
+         * <p>
          * We could take this further by 1) only adding the prefixed version if the prefixed version doesn't already exist in the
          * rule (by iterating over declaration.group and checking isProperty(prop)) or 2) adding validation that checks for
          * prefixed declarations and throws an error, stating that the framework will handle it and all vendor prefixes should be
@@ -174,7 +174,7 @@ public class ReworkTest {
 
         /**
          * Sample rework task.
-         * <p/>
+         * <p>
          * This will update classes at the beginning of the selector list named "THIS" with a replacement value.
          */
         @Rework
@@ -197,9 +197,9 @@ public class ReworkTest {
 
         /**
          * Sample rework task.
-         * <p/>
+         * <p>
          * This adds "zoom: 1" after declarations with "display: inline-block", if the browser is IE7.
-         * <p/>
+         * <p>
          * We could take this further by 1) allow prevention of the addition by adding a css comment annotation before the
          * inline-block declaration such as "{@literal @}nozoom", and 2) only adding if a declaration with "zoom: 1" doesn't exist
          * in the declaration block (by checking declaration.group()), or better yet throwing a validation error if it does exist
@@ -229,7 +229,7 @@ public class ReworkTest {
 
         /**
          * Sample rework.
-         * <p/>
+         * <p>
          * When you need to perform multiple reworks on the same syntax unit type and the order is important then you should use
          * inner child methods. If order is not important then multiple methods annotated with {@link Rework} is fine as well.
          *
@@ -244,7 +244,7 @@ public class ReworkTest {
 
         /**
          * Sample rework delegate method.
-         * <p/>
+         * <p>
          * This will add a new rule to the end of the stylesheet. The rule contains a declaration with the border-radius property.
          * This showcases how dynamically created units will be broadcasted to other rework subscription methods (like the one in
          * this class that should prepend a declaration with the webkit prefix).
@@ -270,7 +270,7 @@ public class ReworkTest {
 
         /**
          * Sample rework delegate method.
-         * <p/>
+         * <p>
          * This will add a new rule to the end of the stylesheet. The main purpose is to test that .THIS replacement from above
          * works on dynamically added class selectors.
          */

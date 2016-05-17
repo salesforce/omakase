@@ -231,7 +231,6 @@ public class RuleTest {
     public void getAllAnnotationsRuleFalseSelectorTrue() {
         Rule rule = new Rule();
 
-
         Selector sel = new Selector(new ClassSelector("name"));
         sel.comment("@test");
         sel.comment("@test2");
@@ -276,7 +275,6 @@ public class RuleTest {
         assertThat(s.isDestroyed()).isTrue();
         assertThat(d.isDestroyed()).isTrue();
     }
-
 
     @Test
     public void propagatesBroadcast() {

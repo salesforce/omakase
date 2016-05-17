@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Simply logs the creation or change of {@link Syntax} units. Used for debugging.
- * <p/>
+ * <p>
  * Events are logged at different levels. Update the logging config file as appropriate to filter which levels are shown in the
  * console.
  *

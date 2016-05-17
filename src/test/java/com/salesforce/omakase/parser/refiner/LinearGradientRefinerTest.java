@@ -49,7 +49,7 @@ public class LinearGradientRefinerTest {
     public void setup() {
         linearRefiner = new LinearGradientRefiner();
         broadcaster = new QueryableBroadcaster();
-         refiner = new MasterRefiner(broadcaster).register(linearRefiner);
+        refiner = new MasterRefiner(broadcaster).register(linearRefiner);
     }
 
     @Test

@@ -44,7 +44,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Utility for executing goldfile tests.
- * <p/>
+ * <p>
  * A goldfile test matches an expected input CSS source file to an expected output file.
  *
  * @author nmcwilliams

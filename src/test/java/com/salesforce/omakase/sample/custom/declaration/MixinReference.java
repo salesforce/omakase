@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The custom AST object representing a reference to a mixin (from within a rule).
- * <p/>
+ * <p>
  * Specifically, this is a custom {@link Term} that gets placed within the declaration, as opposed to being a custom declaration
  * itself.
  *

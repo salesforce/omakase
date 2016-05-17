@@ -513,12 +513,12 @@ public class LinkedSyntaxCollectionTest {
 
         collection.destroyAll();
 
-        assertThat(collection).isEmpty();;
+        assertThat(collection).isEmpty();
+        ;
         assertThat(child1.isDestroyed()).isTrue();
         assertThat(child2.isDestroyed()).isTrue();
         assertThat(child3.isDestroyed()).isTrue();
     }
-
 
     @Test
     public void parent() {

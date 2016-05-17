@@ -41,7 +41,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Base test for validation unit tests.
- * <p/>
+ * <p>
  * This will only work if the validator has a no-org constructor.
  */
 @SuppressWarnings("JavaDoc")

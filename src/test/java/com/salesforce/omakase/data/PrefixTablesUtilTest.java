@@ -56,6 +56,7 @@ public class PrefixTablesUtilTest {
     public void isNotPrefixibleKeyword() {
         assertThat(PrefixTablesUtil.isPrefixableKeyword(Keyword.ALL)).isFalse();
     }
+
     @Test
     public void isPrefixableAtRule() {
         assertThat(PrefixTablesUtil.isPrefixableAtRule("keyframes")).isTrue();

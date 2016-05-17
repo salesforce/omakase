@@ -32,7 +32,7 @@ import com.salesforce.omakase.parser.token.TokenFactory;
 
 /**
  * Since we are redefining what is recognized as a valid selector, we have to provide a custom {@link TokenFactory}.
- * <p/>
+ * <p>
  * If our custom syntax did not affect any of the delimiter points (beginning and end of standard AST objects) then we would not
  * need this class.
  *

@@ -35,7 +35,7 @@ import java.io.IOException;
 
 /**
  * Sample class showing how you can subscribe to and work with your custom AST objects.
- * <p/>
+ * <p>
  * This just keeps a count of the number of custom functions that were parsed in the CSS source code.
  *
  * @author nmcwilliams

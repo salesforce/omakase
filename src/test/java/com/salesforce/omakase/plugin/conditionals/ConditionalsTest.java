@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import com.salesforce.omakase.plugin.conditionals.Conditionals;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

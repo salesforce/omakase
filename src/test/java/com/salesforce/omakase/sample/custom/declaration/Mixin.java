@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The custom AST object representing our mixin definition.
- * <p/>
+ * <p>
  * Specifically this is a custom {@link AtRuleExpression} that gets placed into the at-rule (it's not the at-rule itself).
  *
  * @author nmcwilliams

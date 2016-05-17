@@ -36,8 +36,6 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.refiner.Refinement;
-import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
-import com.salesforce.omakase.plugin.conditionals.ConditionalsRefiner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

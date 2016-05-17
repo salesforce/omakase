@@ -179,7 +179,7 @@ public class MediaRefinerTest {
         assertThat(broadcaster.find(com.salesforce.omakase.ast.Rule.class).isPresent()).isTrue();
     }
 
-    private static final class TestExpression  extends AbstractAtRuleMember implements AtRuleExpression {
+    private static final class TestExpression extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 

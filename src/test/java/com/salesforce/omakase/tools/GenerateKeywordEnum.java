@@ -33,7 +33,7 @@ import java.io.IOException;
 
 /**
  * Code generator for the {@link Keyword} enum.
- * <p/>
+ * <p>
  * To modify the list of keywords, edit the 'src/test/resources/data/keywords.yaml' file and execute the main method on this class
  * (also available via script/omakase.sh).
  *

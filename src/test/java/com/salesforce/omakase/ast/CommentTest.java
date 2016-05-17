@@ -113,6 +113,7 @@ public class CommentTest {
         CssAnnotation a = c.annotation("test").get();
         assertThat(a.rawArgs().isPresent()).isFalse();
     }
+
     @Test
     public void getAnnotationByNamePresentWithSpacesNoArgs() {
         Comment c = new Comment("  @test  ");

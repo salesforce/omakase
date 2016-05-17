@@ -27,10 +27,10 @@
 package com.salesforce.omakase.tools;
 
 import com.google.common.collect.Sets;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
+import com.salesforce.omakase.util.SupportMatrix;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;

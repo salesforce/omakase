@@ -27,9 +27,9 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 import org.junit.Test;

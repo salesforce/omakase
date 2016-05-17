@@ -35,7 +35,7 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Since we are redefining what is recognized as a valid declaration, we have to provide a custom {@link TokenFactory}.
- * <p/>
+ * <p>
  * If our custom declaration did not begin with a non-standard symbol (the +) then we wouldn't need this class necessarily.
  *
  * @author nmcwilliams

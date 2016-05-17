@@ -38,8 +38,8 @@ import com.salesforce.omakase.parser.refiner.Refinement;
 import java.util.Map;
 
 /**
- * The refiner handles converting the raw function into either the custom AST object ({@link CustomVarFunction}) or the
- * individual {@link Term}s.
+ * The refiner handles converting the raw function into either the custom AST object ({@link CustomVarFunction}) or the individual
+ * {@link Term}s.
  *
  * @author nmcwilliams
  */

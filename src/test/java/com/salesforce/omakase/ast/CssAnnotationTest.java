@@ -34,7 +34,6 @@ import org.junit.rules.ExpectedException;
 import java.util.EnumSet;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Fail.fail;
 
 /**
  * Unit tests for {@link CssAnnotation}.

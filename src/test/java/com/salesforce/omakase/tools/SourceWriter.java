@@ -44,7 +44,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Code generator for java files.
- * <p/>
+ * <p>
  * An optional source file can be provided to {@link #source(String)}, which will load the given file from
  * 'src/test/resources/data/'. The file given should be in YAML format. If the top-level YAML object is a map, all of the keys in
  * the map will be available in the template. If the top-level YAML object is a list, the list will be made available to the

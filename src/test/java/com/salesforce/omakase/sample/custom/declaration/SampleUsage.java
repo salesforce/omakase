@@ -35,14 +35,14 @@ import java.io.IOException;
 
 /**
  * An example of using the sample custom declaration (and at-rule!) classes in this package.
- * <p/>
+ * <p>
  * This feature mimics the "mixin" functionality common in CSS preprocessors. Mixins are defined in the CSS source using at-rule
  * grammar. Subsequent rules can utilize a custom declaration syntax that includes the mixin into the rule, optionally with
  * parameters. By including the mixin, the mixin's template declarations are copied into the rule.
- * <p/>
+ * <p>
  * <b>CAVEAT:</b> custom declarations are at the edge of what's currently supported. These example classes aren't pristine, but it
  * should at least give an idea of what things are currently possible.
- * <p/>
+ * <p>
  * We give the parser an instance of the {@link MixinPlugin}. This plugin is a {@link SyntaxPlugin} that registers our {@link
  * MixinRefiner}. The refiner handles actually parsing the custom mixin at-rules as well as the custom declaration mixin
  * references. The nature of our new syntax also necessitates creating a custom {@link MixinTokenFactory}, which we use to allow

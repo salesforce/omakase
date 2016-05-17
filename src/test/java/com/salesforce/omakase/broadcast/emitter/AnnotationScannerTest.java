@@ -136,7 +136,6 @@ public class AnnotationScannerTest {
         assertThat(preprocess.restriction().isPresent()).isFalse();
     }
 
-
     @SuppressWarnings("UnusedParameters")
     public static final class AllValid implements Plugin {
         @Observe
