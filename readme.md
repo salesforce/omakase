@@ -84,14 +84,7 @@ In some cases you may want to write out an individual, stand-alone syntax unit:
 
 ```java
 Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-String output = StyleWriter.writeSingle(declaration);
-```
-
-If you are using *CustomWriter* overrides (explained below) then use the instance-method instead:
-
-```java
-Declaration declaration = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-writer.writeSnippet(declaration);
+String output = StyleWriter.inline().writeSingle(declaration);
 ```
 
 You can also override how any individual syntax unit is written. For more information see the [Custom writers](#custom-writers) section below.
@@ -832,24 +825,23 @@ The first step is to create a new class that implements the `CustomWriter` inter
 ```java
 public class MyCustomWriter implements CustomWriter<Selector> {
     @Override
-    public void write(Selector selector, StyleWriter writer, StyleAppendable appendable) throws IOException {
+    public boolean write(Selector selector, StyleWriter writer, StyleAppendable appendable) throws IOException {
         appendable.append("/*CUSTOM OUTPUT*/"); // arbitrary content
-        selector.write(writer, appendable); // the selector content
+        writer.writeInner(selector, appendable, false);
+        return true;
     }
 }
 ```
 
-Inside of the `#write` method you can append any content to the output by using the given `StyleAppendable` as seen above. If you would like to append the default output of the unit as well then call the `Writable#write` method on the unit as also seen above.
+Inside of the `#write` method you can append any content to the output by using the given `StyleAppendable` as seen above. If you would like to append the default output of the unit as well then call the `StyleWriter#writeInner` method, passing false for the last parameter. This method should return true if it has handled the unit, or false to allow subsequent custom writers or the default writer to handle it instead.
 
 Afterwards, register this custom writer with the `StyleWriter` instance:
 
 ```java
 StyleWriter writer = StyleWriter.compressed();
-writer.override(Selector.class, new MyCustomWriter());
+writer.addCustomWriter(Selector.class, new MyCustomWriter());
 Omakase.source(".class{color:red}").use(writer).process();
 ```
-
-You can only register one override per AST object type.
 
 ### Comments and CSS annotations
 
@@ -957,6 +949,8 @@ comma-delimited, key-value pairs and enum constants.
 
 If you happen to have your hands on a specific `Comment` instance, it has convenience methods as well.
 
+When an annotation is placed before a rule, it is associated with first selector instance in the rule, not the rule or the simple selector, as explained above. However for convenience, all of the `has*` and `get*` annotation methods will also check or include results from the first selector when called on a rule instance.
+
 #### Orphaned comments
 
 The term _orphaned comment_ refers to a comment that does not logically precede any particular AST unit. There are four places where orphaned comments can be found, which are at the end of a selector, at the end of a declaration (before the semi-colon), at the end of a rule, and at the end of a stylesheet. Here are some examples:
@@ -971,11 +965,7 @@ The term _orphaned comment_ refers to a comment that does not logically precede 
 /* an orphaned comment */
 ```
 
-Use the `#orphanedComments` method on a `Selector`, `Declaration`, `Rule` or `Stylesheet` to retrieve them. This allows you to do things such as:
-
-- Place an annotation directive in a comment dictating certain processing behavior.
-- Conditionally perform some action on the selector, rule, or stylesheet based on the content of the comment.
-- If for some reason you really need access to every possible comment in the source code then this allows you to get at the ones not associated with an immediately subsequent AST unit.
+Use the `#orphanedComments` method on a `Selector`, `Declaration`, `Rule` or `Stylesheet` to retrieve them.
 
 Subscribable Syntax Units
 -------------------------
