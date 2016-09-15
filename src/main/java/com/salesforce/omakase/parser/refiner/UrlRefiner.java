@@ -49,7 +49,7 @@ public final class UrlRefiner implements FunctionRefiner {
         if (!raw.name().equals(NAME)) return Refinement.NONE;
 
         // check for quotes
-        Source source = new Source(raw.args(), raw.line(), raw.column());
+        Source source = new Source(raw.args().trim(), raw.line(), raw.column());
         QuotationMode mode = null;
 
         if (Tokens.DOUBLE_QUOTE.matches(source.current())) {
