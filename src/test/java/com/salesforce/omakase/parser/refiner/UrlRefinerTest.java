@@ -122,4 +122,15 @@ public class UrlRefinerTest {
         exception.expectMessage("Unexpected content in url after closing quote");
         urlRefiner.refine(functionValue, broadcaster, refiner);
     }
+
+    @Test
+    public void handlesSpaceAroundQuotes() {
+        RawFunction functionValue = new RawFunction(5, 2, "url", " '/imgs/poof.png' ");
+        urlRefiner.refine(functionValue, broadcaster, refiner);
+        UrlFunctionValue value = broadcaster.findOnly(UrlFunctionValue.class).get();
+        assertThat(value.url()).isEqualTo("/imgs/poof.png");
+        assertThat(value.line()).isEqualTo(5);
+        assertThat(value.column()).isEqualTo(2);
+
+    }
 }
