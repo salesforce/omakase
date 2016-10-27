@@ -273,6 +273,7 @@ properties:
   - src
   - stress
   - string-set
+  - stroke
   - tab-size
   - table-layout
   - target

@@ -789,6 +789,9 @@ public enum Property {
     /** CSS property named 'string-set' */
     STRING_SET("string-set"),
 
+    /** CSS property named 'stroke' */
+    STROKE("stroke"),
+
     /** CSS property named 'tab-size' */
     TAB_SIZE("tab-size"),
 
