@@ -792,6 +792,12 @@ public enum Property {
     /** CSS property named 'stroke' */
     STROKE("stroke"),
 
+    /** CSS property named 'stroke-opacity' */
+    STROKE_OPACITY("stroke-opacity"),
+
+    /** CSS property named 'stroke-width' */
+    STROKE_WIDTH("stroke-width"),
+
     /** CSS property named 'tab-size' */
     TAB_SIZE("tab-size"),
 
@@ -815,6 +821,9 @@ public enum Property {
 
     /** CSS property named 'text-align-last' */
     TEXT_ALIGN_LAST("text-align-last"),
+
+    /** CSS property named 'text-anchor' */
+    TEXT_ANCHOR("text-anchor"),
 
     /** CSS property named 'text-decoration' */
     TEXT_DECORATION("text-decoration"),

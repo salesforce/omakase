@@ -274,6 +274,8 @@ properties:
   - stress
   - string-set
   - stroke
+  - stroke-opacity
+  - stroke-width
   - tab-size
   - table-layout
   - target
@@ -282,6 +284,7 @@ properties:
   - target-position
   - text-align
   - text-align-last
+  - text-anchor
   - text-decoration
   - text-emphasis
   - text-height
