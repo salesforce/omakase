@@ -31,12 +31,14 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.raw.StylesheetParser;
+import com.salesforce.omakase.parser.StylesheetParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
@@ -54,31 +56,27 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 @Description(broadcasted = AUTOMATIC)
 public final class Stylesheet extends AbstractSyntax implements StatementIterable {
     private final SyntaxCollection<StatementIterable, Statement> statements;
-    private final transient Broadcaster broadcaster;
 
     /**
      * Constructs a new {@link Stylesheet} instance.
-     *
-     * @param broadcaster
-     *     Used to broadcast new units.
-     */
-    public Stylesheet(Broadcaster broadcaster) {
-        super(1, 1);
-        statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
-        this.broadcaster = broadcaster;
-    }
-
-    /**
-     * Creates a new {@link Stylesheet} <em>with no {@link Broadcaster}</em>. This is only appropriate for dynamically created
-     * stylesheets (no plugins will run).
      */
     public Stylesheet() {
-        this(null);
+        super(1, 1);
+        statements = new LinkedSyntaxCollection<>(this);
     }
 
     @Override
     public SyntaxCollection<StatementIterable, Statement> statements() {
         return statements;
+    }
+
+    /**
+     * Returns just the {@link Rule}s within this {@link Stylesheet} (does not include at-rules or rules within at-rules).
+     *
+     * @return The list of rules.
+     */
+    public List<Rule> rules() {
+        return statements.stream().filter(Rule.class::isInstance).map(Rule.class::cast).collect(Collectors.toList());
     }
 
     /**
@@ -100,6 +98,14 @@ public final class Stylesheet extends AbstractSyntax implements StatementIterabl
     }
 
     @Override
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            statements.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
+    }
+
+    @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         for (Statement statement : statements) {
             writer.writeInner(statement, appendable);
@@ -108,7 +114,7 @@ public final class Stylesheet extends AbstractSyntax implements StatementIterabl
 
     @Override
     public Stylesheet copy() {
-        Stylesheet copy = new Stylesheet(broadcaster).copiedFrom(this);
+        Stylesheet copy = new Stylesheet().copiedFrom(this);
         for (Statement statement : statements) {
             copy.append(statement.copy());
         }

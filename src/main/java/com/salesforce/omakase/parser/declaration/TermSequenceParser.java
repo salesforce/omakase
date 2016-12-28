@@ -28,58 +28,52 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueuingBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
- * Parses a sequence of both {@link Term}s <em>and</em> {@link Operator}s.
+ * Parses a sequence of both {@link Term}s and {@link Operator}s.
  * <p>
  * This does not parts importants or broadcast a {@link PropertyValue}.
  *
  * @author nmcwilliams
  * @see PropertyValueParser
  */
-public final class TermSequenceParser extends AbstractParser {
+public final class TermSequenceParser implements Parser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         // gather comments and skip whitespace
         source.collectComments();
 
-        boolean matchedAny = false;
-        boolean matchedThisTime = false;
+        Parser term = grammar.parser().termParser();
+        Parser operator = grammar.parser().operatorParser();
 
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        // parse the first term
+        boolean foundTerm = term.parse(source, grammar, broadcaster);
+        if (!foundTerm) return false;
 
-        // we want to let RawFunctions through so that they can be altered before refinement
-        queue.alwaysFlush(RawFunction.class);
+        while (foundTerm) {
+            boolean foundWhitespace = source.findComments(true); // term parsers must not skip whitespace at the end
+            boolean foundOperator = operator.parse(source, grammar, broadcaster);
 
-        do {
-            matchedThisTime = ParserFactory.termParser().parse(source, queue, refiner);
-            matchedAny = matchedAny || matchedThisTime;
-        } while (matchedThisTime && !source.eof() && ParserFactory.operatorParser().parse(source, queue, refiner));
+            if (foundWhitespace || foundOperator) {
+                foundTerm = term.parse(source, grammar, broadcaster);
+            } else {
+                foundTerm = false;
+            }
 
-        // check for a trailing operator. if it's a space operator then we want to remove it
-        Broadcastable last = queue.peekLast();
-        if (last instanceof Operator) {
-            if (((Operator)last).type() != OperatorType.SPACE) throw new ParserException(source, Message.TRAILING_OPERATOR, last);
-            queue.reject(last);
+            if (foundOperator && !foundTerm) {
+                throw new ParserException(source, Message.TRAILING_OPERATOR);
+            }
         }
 
-        // flush the queue
-        queue.resume();
-
-        return matchedAny;
+        return true;
     }
 
 }

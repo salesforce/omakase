@@ -26,18 +26,19 @@
 
 package com.salesforce.omakase.parser.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
 
@@ -46,9 +47,10 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
  *
  * @author nmcwilliams
  */
-public final class PseudoSelectorParser extends AbstractParser {
+public final class PseudoSelectorParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         // note: important not to skip whitespace, as it could skip over a descendant combinator
         source.collectComments(false);
 
@@ -91,4 +93,5 @@ public final class PseudoSelectorParser extends AbstractParser {
         broadcaster.broadcast(selector);
         return true;
     }
+
 }

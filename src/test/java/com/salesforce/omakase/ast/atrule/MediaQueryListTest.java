@@ -27,6 +27,7 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
@@ -73,7 +74,7 @@ public class MediaQueryListTest {
         list.queries().append(q1);
 
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        list.propagateBroadcast(qb);
+        list.propagateBroadcast(qb, Status.PARSED);
 
         assertThat(qb.find(MediaQuery.class).get()).isSameAs(q1);
     }

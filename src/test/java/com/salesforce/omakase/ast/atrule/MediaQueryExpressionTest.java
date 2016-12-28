@@ -27,10 +27,8 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -63,10 +61,9 @@ public class MediaQueryExpressionTest {
     public void setTerms() {
         MediaQueryExpression exp = new MediaQueryExpression("min-width");
         NumericalValue t1 = NumericalValue.of(1, "px");
-        Operator o = new Operator(OperatorType.SPACE);
         NumericalValue t2 = NumericalValue.of(1, "px");
-        exp.terms(Lists.<PropertyValueMember>newArrayList(t1, o, t2));
-        assertThat(exp.terms()).containsExactly(t1, o, t2);
+        exp.terms(Lists.newArrayList(t1, t2));
+        assertThat(exp.terms()).containsExactly(t1, t2);
     }
 
     @Test
@@ -78,7 +75,7 @@ public class MediaQueryExpressionTest {
     @Test
     public void writeVerboseTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("min-resolution");
-        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "dpi")));
+        exp.terms(Lists.newArrayList(NumericalValue.of(300, "dpi")));
         assertThat(StyleWriter.verbose().writeSingle(exp)).isEqualTo("(min-resolution: 300dpi)");
     }
 
@@ -91,16 +88,16 @@ public class MediaQueryExpressionTest {
     @Test
     public void writeCompressedTerms() throws IOException {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
-        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
+        exp.terms(Lists.newArrayList(NumericalValue.of(300, "px")));
         assertThat(StyleWriter.compressed().writeSingle(exp)).isEqualTo("(max-width:300px)");
     }
 
     @Test
     public void doesntPropagateBroadcastToTerms() {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
-        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
+        exp.terms(Lists.newArrayList(NumericalValue.of(300, "px")));
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        exp.propagateBroadcast(broadcaster);
+        exp.propagateBroadcast(broadcaster, Status.PARSED);
         assertThat(broadcaster.find(NumericalValue.class).isPresent()).isFalse();
     }
 
@@ -114,7 +111,7 @@ public class MediaQueryExpressionTest {
     @Test
     public void copyWithTerms() {
         MediaQueryExpression exp = new MediaQueryExpression("max-width");
-        exp.terms(Lists.<PropertyValueMember>newArrayList(NumericalValue.of(300, "px")));
+        exp.terms(Lists.newArrayList(NumericalValue.of(300, "px")));
         MediaQueryExpression copy = exp.copy();
         assertThat(copy.terms()).hasSize(1);
     }

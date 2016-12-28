@@ -26,12 +26,16 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.writer.Writable;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * A collection of related {@link Syntax} units.
@@ -80,14 +84,14 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     /**
      * Gets the first unit in the collection.
      *
-     * @return The first unit in the collection, or {@link Optional#absent()} if empty.
+     * @return The first unit in the collection, or an empty {@link Optional} if not present.
      */
     Optional<T> first();
 
     /**
      * Gets the last unit in the collection.
      *
-     * @return The last unit in the collection, or {@link Optional#absent()} if empty.
+     * @return The last unit in the collection, or an empty {@link Optional} if not present.
      */
     Optional<T> last();
 
@@ -97,7 +101,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * @param unit
      *     Get the next unit after this one.
      *
-     * @return The next unit, or {@link Optional#absent()} if not present.
+     * @return The next unit, or an empty {@link Optional} if not present.
      *
      * @throws IllegalArgumentException
      *     if the given unit is not contained within this collection.
@@ -110,7 +114,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * @param unit
      *     Get the unit before this one.
      *
-     * @return The previous unit, or {@link Optional#absent()} if not present.
+     * @return The previous unit, or an empty {@link Optional} if not present.
      *
      * @throws IllegalArgumentException
      *     if the given unit is not contained within this collection.
@@ -125,7 +129,7 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
      * @param <S>
      *     Type of the instance to find.
      *
-     * @return The first instance, or {@link Optional#absent()} if none match.
+     * @return The first instance, or an empty {@link Optional} if not present.
      */
     <S extends T> Optional<S> find(Class<S> klass);
 
@@ -256,11 +260,20 @@ public interface SyntaxCollection<P, T extends Groupable<P, T>> extends Iterable
     P parent();
 
     /**
-     * Calls {@link Syntax#propagateBroadcast(Broadcaster)} on all units within this collection using the given {@link
-     * Broadcaster}.
+     * Calls {@link Broadcastable#propagateBroadcast(Broadcaster, Status)} on all units within this collection using the given
+     * {@link Broadcaster}.
      *
      * @param broadcaster
      *     Propagate using this {@link Broadcaster}.
+     * @param status
+     *     Broadcast units that have this status.
      */
-    void propagateBroadcast(Broadcaster broadcaster);
+    void propagateBroadcast(Broadcaster broadcaster, Status status);
+
+    /**
+     * Returns a {@link Stream} over the contents.
+     *
+     * @return A stream.
+     */
+    Stream<T> stream();
 }

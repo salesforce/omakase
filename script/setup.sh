@@ -47,13 +47,13 @@ echo -e "Setting up the Omakase CLI"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FILE="/usr/local/bin/omakase"
 
-if [ -f $FILE ];
+if [ -f ${FILE} ];
 then
     echo -e "\n'$FILE' is already present and will be replaced.\n"
     rm /usr/local/bin/omakase
 fi
 
 
-ln -s $DIR/omakase.sh /usr/local/bin/omakase
+ln -s ${DIR}/omakase.sh /usr/local/bin/omakase
 
 echo -e "You can now access the ${YELLOW}omakase${NC} command within this directory"

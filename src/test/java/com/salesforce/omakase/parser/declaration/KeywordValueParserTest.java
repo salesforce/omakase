@@ -52,7 +52,6 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
             "--abs",
             "-1afafa",
             "123ABC",
-            "  afafk",
             " 123",
             "-"
         );
@@ -62,6 +61,9 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
     public List<String> validSources() {
         return ImmutableList.of(
             "abc",
+            "   abc",
+            "\nabc",
+            "/*comment*/abc",
             "ABC",
             "AREALLYreallyrealllllllllllllllllllylongKeywo_wor-d",
             "-abc-afakl-afa",
@@ -98,7 +100,7 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
 
     @Override
     public boolean allowedToTrimLeadingWhitespace() {
-        return false;
+        return true;
     }
 
     @Test
@@ -114,7 +116,7 @@ public class KeywordValueParserTest extends AbstractParserTest<KeywordValueParse
             withExpectedResult("-ADA", "-ADA"));
 
         for (ParseResult<String> result : results) {
-            KeywordValue value = result.broadcaster.findOnly(KeywordValue.class).get();
+            KeywordValue value = expectOnly(result.broadcaster, KeywordValue.class);
             assertThat(value.keyword())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);

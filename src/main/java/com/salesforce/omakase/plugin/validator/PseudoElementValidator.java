@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin.validator;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
@@ -37,7 +36,9 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
+
+import java.util.Optional;
 
 /**
  * Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last {@link SelectorPart} within a
@@ -48,10 +49,10 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
  *
  * @author nmcwilliams
  */
-public class PseudoElementValidator implements DependentPlugin {
+public final class PseudoElementValidator implements DependentPlugin {
     @Override
     public void dependencies(PluginRegistry registry) {
-        registry.require(AutoRefiner.class).selectors();
+        registry.require(SelectorPlugin.class);
     }
 
     /**
@@ -70,7 +71,7 @@ public class PseudoElementValidator implements DependentPlugin {
             Optional<SelectorPart> next = selector.next();
             while (next.isPresent()) {
                 if (next.get().type() != SelectorPartType.PSEUDO_CLASS_SELECTOR) {
-                    em.report(ErrorLevel.FATAL, selector, Message.PSEUDO_ELEMENT_LAST.message(selector.toString(false)));
+                    em.report(ErrorLevel.FATAL, selector, Message.fmt(Message.PSEUDO_ELEMENT_LAST, selector.toString(false)));
                 }
                 next = next.get().next();
             }

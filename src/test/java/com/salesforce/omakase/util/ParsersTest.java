@@ -27,7 +27,7 @@
 package com.salesforce.omakase.util;
 
 import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.factory.StandardParserFactory;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -51,11 +51,11 @@ public class ParsersTest {
 
     @Test
     public void parseSimpleAbsent() {
-        assertThat(Parsers.parseSimple("blah", ParserFactory.idSelectorParser(), IdSelector.class).isPresent()).isFalse();
+        assertThat(Parsers.parseSimple("blah", StandardParserFactory.instance().idSelectorParser(), IdSelector.class).isPresent()).isFalse();
     }
 
     @Test
     public void parseSimplePresent() {
-        assertThat(Parsers.parseSimple("#id", ParserFactory.idSelectorParser(), IdSelector.class).isPresent()).isTrue();
+        assertThat(Parsers.parseSimple("#id", StandardParserFactory.instance().idSelectorParser(), IdSelector.class).isPresent()).isTrue();
     }
 }

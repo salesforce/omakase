@@ -30,12 +30,13 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.core.AutoRefine;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -153,7 +154,7 @@ public class BaseValidatorTest<T extends Plugin> {
         ValidationErrorManager em = new ValidationErrorManager();
         Omakase.source(src)
             .use(em)
-            .use(new AutoRefiner().all())
+            .use(AutoRefine.everything())
             .use(new SyntaxTree())
             .use(plugin)
             .process();
@@ -167,7 +168,7 @@ public class BaseValidatorTest<T extends Plugin> {
         ErrorLevel level;
 
         @Override
-        public void report(ErrorLevel level, ParserException exception) {
+        public void report(ParserException exception) {
             this.level = level;
             this.message = exception.getMessage();
         }
@@ -179,7 +180,27 @@ public class BaseValidatorTest<T extends Plugin> {
         }
 
         @Override
+        public void report(SubscriptionException exception) {
+            this.message = exception.getMessage();
+        }
+
+        @Override
         public String getSourceName() {
+            return null;
+        }
+
+        @Override
+        public boolean hasErrors() {
+            return false;
+        }
+
+        @Override
+        public boolean autoSummarize() {
+            return false;
+        }
+
+        @Override
+        public String summarize() {
             return null;
         }
     }

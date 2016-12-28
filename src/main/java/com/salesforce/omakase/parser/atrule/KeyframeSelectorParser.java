@@ -27,17 +27,18 @@
 package com.salesforce.omakase.parser.atrule;
 
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.InterestBroadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Parses a single {@link KeyframeSelector} part.
@@ -47,9 +48,10 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
  * @author nmcwilliams
  * @see KeyframeSelector
  */
-public final class KeyframeSelectorParser extends AbstractParser {
+public final class KeyframeSelectorParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         int line = source.originalLine();
@@ -58,12 +60,12 @@ public final class KeyframeSelectorParser extends AbstractParser {
         KeyframeSelector keyframeSelector = null;
 
         // first try a percentage
-        SingleInterestBroadcaster<NumericalValue> b = SingleInterestBroadcaster.of(NumericalValue.class);
-        ParserFactory.numericalValueParser().parse(source, b, refiner);
+        InterestBroadcaster<NumericalValue> interest = SingleInterestBroadcaster.of(NumericalValue.class);
+        grammar.parser().numericalValueParser().parse(source, grammar, interest);
 
-        if (b.broadcasted().isPresent()) {
+        if (interest.one().isPresent()) {
             // must have the percentage sign
-            NumericalValue numerical = b.broadcasted().get();
+            NumericalValue numerical = interest.one().get();
             if (!numerical.unit().isPresent() || !numerical.unit().get().equals("%")) {
                 throw new ParserException(source, Message.MISSING_PERCENTAGE);
             }
@@ -82,7 +84,8 @@ public final class KeyframeSelectorParser extends AbstractParser {
 
         // create and broadcast the parent selector
         Selector selector = new Selector(line, column, keyframeSelector);
-        selector.propagateBroadcast(broadcaster); // propagate because the original broadcaster wasn't used to parse
+        selector.propagateBroadcast(broadcaster, Status.PARSED); // propagate because the original broadcaster wasn't used to parse
         return true;
     }
+
 }

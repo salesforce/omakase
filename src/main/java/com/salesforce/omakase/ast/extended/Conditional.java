@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  * @see Conditionals
  */
-public class Conditional implements Writable {
+public final class Conditional implements Writable {
     private final String condition;
     private final boolean isLogicalNegation;
 

@@ -28,10 +28,7 @@ package com.salesforce.omakase.plugin.conditionals;
 
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.parser.refiner.RefinerRegistry;
 import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 import java.util.Set;
 
@@ -42,7 +39,6 @@ import java.util.Set;
  * <pre>
  * {@code @}if(ie7) { .test{color:red} }
  * </pre>
- * <p>
  * This block will output its inner statements if its condition matches one of the true conditions in the {@link
  * ConditionalsConfig} instance.
  * <p>
@@ -58,7 +54,7 @@ import java.util.Set;
  * @see ConditionalsConfig
  * @see ConditionalsCollector
  */
-public final class Conditionals implements SyntaxPlugin, DependentPlugin {
+public final class Conditionals implements DependentPlugin {
     private final ConditionalsConfig config = new ConditionalsConfig();
 
     /**
@@ -103,11 +99,6 @@ public final class Conditionals implements SyntaxPlugin, DependentPlugin {
 
     @Override
     public void dependencies(PluginRegistry registry) {
-        registry.require(AutoRefiner.class).atRules();
-    }
-
-    @Override
-    public void registerRefiners(RefinerRegistry registry) {
         registry.register(new ConditionalsRefiner(config));
     }
 

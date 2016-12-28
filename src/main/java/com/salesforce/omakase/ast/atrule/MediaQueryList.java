@@ -26,6 +26,7 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
@@ -58,22 +59,19 @@ public final class MediaQueryList extends AbstractAtRuleMember implements AtRule
      * This should be used for dynamically created declarations.
      */
     public MediaQueryList() {
-        this(-1, -1, null);
+        this(-1, -1);
     }
 
     /**
      * Constructs a new {@link MediaQuery} instance.
-     *
-     * @param line
+     *  @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param broadcaster
-     *     Used for broadcasting.
      */
-    public MediaQueryList(int line, int column, Broadcaster broadcaster) {
+    public MediaQueryList(int line, int column) {
         super(line, column);
-        queries = new LinkedSyntaxCollection<>(this, broadcaster);
+        queries = new LinkedSyntaxCollection<>(this);
     }
 
     /**
@@ -87,9 +85,11 @@ public final class MediaQueryList extends AbstractAtRuleMember implements AtRule
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        queries.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            queries.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override

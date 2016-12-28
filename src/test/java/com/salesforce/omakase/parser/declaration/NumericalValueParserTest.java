@@ -52,8 +52,6 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
     @Override
     public List<String> invalidSources() {
         return ImmutableList.of(
-            "   1",
-            "\n1",
             "abc",
             "px",
             "abc.1234",
@@ -87,6 +85,8 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
             "1.1%",
             "+1px",
             "+1.1em",
+            "   1",
+            "\n1",
             "-.8em");
     }
 
@@ -113,7 +113,7 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
 
     @Override
     public boolean allowedToTrimLeadingWhitespace() {
-        return false;
+        return true;
     }
 
     @Test
@@ -133,7 +133,7 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
         );
 
         for (ParseResult<Double> result : results) {
-            NumericalValue n = result.broadcaster.findOnly(NumericalValue.class).get();
+            NumericalValue n = expectOnly(result.broadcaster, NumericalValue.class);
             assertThat(n.doubleValue()).isEqualTo(result.expected);
         }
     }
@@ -141,42 +141,42 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
     @Test
     public void explicitSignAbsent() {
         List<GenericParseResult> result = parse("1");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
+        NumericalValue n = expectOnly(result.get(0).broadcaster, NumericalValue.class);
         assertThat(n.explicitSign().isPresent()).isFalse();
     }
 
     @Test
     public void explicitSignPositive() {
         List<GenericParseResult> result = parse("+1");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
+        NumericalValue n = expectOnly(result.get(0).broadcaster, NumericalValue.class);
         assertThat(n.explicitSign().get()).isEqualTo(Sign.POSITIVE);
     }
 
     @Test
     public void explicitSignNegative() {
         List<GenericParseResult> result = parse("-1");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
+        NumericalValue n = expectOnly(result.get(0).broadcaster, NumericalValue.class);
         assertThat(n.explicitSign().get()).isEqualTo(Sign.NEGATIVE);
     }
 
     @Test
     public void unitAbsent() {
         List<GenericParseResult> result = parse("1");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
+        NumericalValue n = expectOnly(result.get(0).broadcaster, NumericalValue.class);
         assertThat(n.unit().isPresent()).isFalse();
     }
 
     @Test
     public void unitPresent() {
         List<GenericParseResult> result = parse("1px");
-        NumericalValue n = result.get(0).broadcaster.findOnly(NumericalValue.class).get();
+        NumericalValue n = expectOnly(result.get(0).broadcaster, NumericalValue.class);
         assertThat(n.unit().get()).isEqualTo("px");
     }
 
     @Test
     public void noNumberAfterDecimal() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_DECIMAL.message());
+        exception.expectMessage(Message.EXPECTED_DECIMAL);
         parse("1.");
     }
 }

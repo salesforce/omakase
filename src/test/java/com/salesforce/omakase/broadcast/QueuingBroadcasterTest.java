@@ -26,11 +26,8 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -209,66 +206,5 @@ public class QueuingBroadcasterTest {
         queue.broadcast(u3);
 
         assertThat(queue.size()).isEqualTo(3);
-    }
-
-    @Test
-    public void updatesStatus() {
-        Syntax u1 = new ClassSelector("test1");
-
-        u1.status(Status.UNBROADCASTED);
-        queue.broadcast(u1);
-        assertThat(u1.status()).isSameAs(Status.QUEUED);
-    }
-
-    @Test
-    public void alwaysFlushWhenPausedMatches() {
-        queue.pause();
-
-        ClassSelector u1 = new ClassSelector("test");
-        IdSelector u2 = new IdSelector("test");
-
-        queue.alwaysFlush(IdSelector.class);
-        queue.broadcast(u1);
-        queue.broadcast(u2);
-
-        assertThat(qb.all()).containsExactly(u2);
-    }
-
-    @Test
-    public void alwaysFlushWhenPausedDoesntMatch() {
-        queue.pause();
-
-        ClassSelector u1 = new ClassSelector("test");
-        IdSelector u2 = new IdSelector("test");
-
-        queue.alwaysFlush(PseudoClassSelector.class);
-        queue.broadcast(u1);
-        queue.broadcast(u2);
-
-        assertThat(qb.all()).isEmpty();
-    }
-
-    @Test
-    public void alwaysFlushNotPausedMatches() {
-        ClassSelector u1 = new ClassSelector("test");
-        IdSelector u2 = new IdSelector("test");
-
-        queue.alwaysFlush(IdSelector.class);
-        queue.broadcast(u1);
-        queue.broadcast(u2);
-
-        assertThat(qb.all()).containsExactly(u1, u2);
-    }
-
-    @Test
-    public void alwaysFlushNotPausedDoesntMatch() {
-        ClassSelector u1 = new ClassSelector("test");
-        IdSelector u2 = new IdSelector("test");
-
-        queue.alwaysFlush(PseudoClassSelector.class);
-        queue.broadcast(u1);
-        queue.broadcast(u2);
-
-        assertThat(qb.all()).containsExactly(u1, u2);
     }
 }

@@ -29,10 +29,10 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
@@ -53,7 +53,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParser> {
     @Override
     public List<String> invalidSources() {
-        return ImmutableList.of("$$$", "    ", "\n\n\n", "");
+        return ImmutableList.of("$$$", "    ", "\n\n\n", "","%");
     }
 
     @Override
@@ -65,6 +65,8 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
                 "0, 0",
                 "1px",
                 " 1px 1px",
+                "     1px 1px",
+                "  \n1px 1px",
                 "1px / 1px",
                 "1px, 33px, 40px, 50px",
                 "1em, 3pt #abcabc red red",
@@ -101,6 +103,7 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
                 "1px  1px 1px  /*x*/1px",
                 "1px /*x*/ 1px 1px 1px/*x*/",
                 "/*x*/1px /*x*/ 1px 1px 1px",
+                "/*xxxx   */   /* 1px */ 1px /*x*/ 1px 1px 1px",
                 "linear-gradient(45deg,/*x*/rgba(0,0,0,0.24) 0%,/*)*/rgba(0,0,0,0) 100%)",
                 "U+000-49F",
                 "U+000-49F, U+2000-27FF,\nU+2900-2BFF, U+1D400-1D7FF",
@@ -113,6 +116,12 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
         return ImmutableList.of(
             withExpectedResult("0", 1),
             withExpectedResult("#ffcc11 ", 8),
+            withExpectedResult("#ffcc11   ", 10),
+            withExpectedResult("  round none ", 13),
+            withExpectedResult("  round none ;", 13),
+            withExpectedResult("  round none;", 12),
+            withExpectedResult("  round none }", 13),
+            withExpectedResult("  round none}", 12),
             withExpectedResult("1px 1px $ 1px", 8),
             withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 42),
             withExpectedResult("-1px 1px 0 #222!important", 15)); // doesn't parse !important
@@ -137,27 +146,22 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
         List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
 
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
-        assertThat(broadcasted).hasSize(19);
+        assertThat(broadcasted).hasSize(14);
 
-        assertThat(broadcasted.get(0)).isInstanceOf(RawFunction.class);
-        assertThat(broadcasted.get(1)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(1)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(2)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(3)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(4)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(6)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(5)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(6)).isInstanceOf(GenericFunctionValue.class);
         assertThat(broadcasted.get(7)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(8)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(9)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(10)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(11)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(12)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(13)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(14)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(15)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(16)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(17)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(18)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(broadcasted.get(9)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(10)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(11)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(12)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(13)).isInstanceOf(GenericFunctionValue.class);
     }
 
     @Test
@@ -166,13 +170,13 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("0", 1),
             withExpectedResult("#ffcc11 ", 1),
-            withExpectedResult("1px\n1px !important", 3),
-            withExpectedResult("1px\t1px", 3),
-            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 8), // RawFunction adds each
-            withExpectedResult("-1px 1px 0 #222", 7),
-            withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 17), // RawFunction adds 1 each
+            withExpectedResult("1px\n1px !important", 2),
+            withExpectedResult("1px\t1px", 2),
+            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 6), // RawFunction adds each
+            withExpectedResult("-1px 1px 0 #222", 4),
+            withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 11), // RawFunction adds 1 each
             withExpectedResult("U+000-49F, U+27FF ,  U+29??,   U+1D400-1D7FF", 7),
-            withExpectedResult("-1px 1px 0 #222", 7)));
+            withExpectedResult("-1px 1px 0 #222", 4)));
 
         for (ParseResult<Integer> result : results) {
             assertThat(result.broadcasted)
@@ -224,4 +228,11 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
         assertThat(broadcasted.get(0)).isInstanceOf(RawFunction.class);
         assertThat(broadcasted.get(1)).isInstanceOf(GenericFunctionValue.class);
     }
+
+    @Test
+    public void missingSpaceBetweenTerms() {
+        GenericParseResult result = parse("1px1px1px").get(0);
+        assertThat(result.source.index()).isEqualTo(3);
+    }
+
 }

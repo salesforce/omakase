@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -42,11 +41,14 @@ import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Prefix;
 
+import java.util.Optional;
+
 /**
  * Utilities for finding prefixed equivalents.
  *
  * @author nmcwilliams
  */
+@SuppressWarnings("SpellCheckingInspection")
 public final class Equivalents {
     private Equivalents() {}
 
@@ -95,7 +97,7 @@ public final class Equivalents {
             next = (located != null || walker.walkAll()) ? walker.next(next) : null;
         }
 
-        return multimap == null ? ImmutableMultimap.<Prefix, P>of() : multimap;
+        return multimap == null ? ImmutableMultimap.of() : multimap;
     }
 
     /**
@@ -107,7 +109,6 @@ public final class Equivalents {
      * @param <N>
      *     (N)amed unit. See {@link #prefixes(Object, Named, EquivalentWalker)} for more details.
      */
-    @SuppressWarnings("SpellCheckingInspection")
     public interface EquivalentWalker<P, N extends Named> {
         /**
          * Returns the named unit that is prefixed-equivalent within/of the given peer, or null if the given peer is not
@@ -157,12 +158,12 @@ public final class Equivalents {
     public abstract static class Base<G extends Groupable<?, G>, N extends Named> implements EquivalentWalker<G, N> {
         @Override
         public G previous(G peer) {
-            return peer.previous().orNull();
+            return peer.previous().orElse(null);
         }
 
         @Override
         public G next(G peer) {
-            return peer.next().orNull();
+            return peer.next().orElse(null);
         }
 
         @Override

@@ -26,15 +26,19 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.RawFunction;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
-import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.Source.Snapshot;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parses a {@link GenericFunctionValue}.
@@ -45,12 +49,12 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see GenericFunctionValue
  */
-public final class FunctionValueParser extends AbstractParser {
+public final class FunctionValueParser implements Parser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
-        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        source.collectComments(false);
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        // move past comments and whitespace
+        source.collectComments();
 
         // snapshot the current state before parsing
         Snapshot snapshot = source.snapshot();
@@ -70,13 +74,19 @@ public final class FunctionValueParser extends AbstractParser {
         RawFunction raw = new RawFunction(snapshot.originalLine, snapshot.originalColumn, name.get(), args);
         raw.comments(source.flushComments());
 
-        // we are broadcasting this to allow for plugins to modify the raw args before it gets to the refiners. However
-        // RawFunction is NOT an instance of Term and will not be stored or maintained by the PropertyValue itself. It's
-        // essentially discarded after the refiners deal with it.
-        broadcaster.broadcast(raw);
+        // broadcast it
+        SingleInterestBroadcaster<PropertyValueMember> interest = SingleInterestBroadcaster.of(PropertyValueMember.class);
+        broadcaster.chainBroadcast(raw, interest);
 
-        // a refiner will broadcast the actual function term
-        refiner.refine(raw, broadcaster);
+        if (interest.one().isPresent()) {
+            // a refiner handled it, change status to bypass subsequent refiners
+            raw.status(Status.PARSED);
+        } else {
+            // if nothing handled it then broadcast a generic function
+            GenericFunctionValue generic = new GenericFunctionValue(raw.line(), raw.column(), raw.name(), raw.args());
+            generic.comments(raw);
+            broadcaster.broadcast(generic);
+        }
 
         return true;
     }

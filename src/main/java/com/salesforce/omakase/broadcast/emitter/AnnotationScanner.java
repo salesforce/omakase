@@ -26,6 +26,7 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -33,11 +34,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.Restrict;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 
 import java.lang.reflect.Method;
@@ -51,48 +55,26 @@ import java.util.Set;
  * @author nmcwilliams
  */
 final class AnnotationScanner {
-    private static final Set<String> SKIP = ImmutableSet.of("wait", "equals", "hashCode", "getClass", "notify", "notifyAll",
-        "toString", "dependencies");
+    private static final Set<String> SKIP = ImmutableSet.of(
+        "wait", "equals", "hashCode", "getClass", "notify", "notifyAll", "toString", "dependencies");
 
     /** cache of which methods on a {@link Plugin} are {@link Subscription} methods */
-    private static final LoadingCache<Class<?>, Set<SubscriptionMetadata>> cache = CacheBuilder.newBuilder()
+    private static final LoadingCache<Class<?>, Set<SubscriptionMetadata>> subscriptionCache = CacheBuilder.newBuilder()
         .weakKeys()
         .build(new CacheLoader<Class<?>, Set<SubscriptionMetadata>>() {
             @Override
             public Set<SubscriptionMetadata> load(Class<?> klass) throws Exception {
-                return parse(klass);
+                return readSubscriptionAnnotations(klass);
             }
         });
 
-    /**
-     * Creates subscription objects for each subscribed event on the class of the given instance.
-     *
-     * @param subscriber
-     *     The class with the subscription methods.
-     *
-     * @return A multimap of syntax object (event) to subscription object.
-     */
-    public Multimap<Class<?>, Subscription> scan(Object subscriber) {
-        // linked multimap because we need to maintain insertion order
-        Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
-
-        for (SubscriptionMetadata md : cache.getUnchecked(subscriber.getClass())) {
-            subscriptions.put(md.event, new Subscription(md.phase, subscriber, md.method, md.filter));
-        }
-
-        return subscriptions;
-    }
-
-    private static Set<SubscriptionMetadata> parse(Class<?> klass) {
+    private static Set<SubscriptionMetadata> readSubscriptionAnnotations(Class<?> klass) {
         Set<SubscriptionMetadata> set = new HashSet<>();
 
         for (Method method : klass.getMethods()) {
             if (SKIP.contains(method.getName())) continue;
 
             boolean annotated = false;
-
-            // the restrict annotation
-            final Restrict filter = method.getAnnotation(Restrict.class);
 
             // the observe annotation
             if (method.isAnnotationPresent(Observe.class)) {
@@ -103,7 +85,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS, filter));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS, null));
             }
 
             // the rework annotation
@@ -116,7 +98,7 @@ final class AnnotationScanner {
                 if (params.length != 1) throw new SubscriptionException(Message.ONE_PARAM, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS, filter));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.PROCESS, null));
             }
 
             // the validate annotation
@@ -133,7 +115,34 @@ final class AnnotationScanner {
                 if (!errorManager) throw new SubscriptionException(Message.MISSING_ERROR_MANAGER, method);
 
                 // add the metadata
-                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.VALIDATE, filter));
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.VALIDATE, null));
+            }
+
+            // the refine annotation
+            if (method.isAnnotationPresent(Refine.class)) {
+                if (annotated) throw new SubscriptionException(Message.ANNOTATION_EXCLUSIVE, method);
+                annotated = true;
+
+                Refine refine = method.getAnnotation(Refine.class);
+
+                // must have exactly three parameters
+                Class<?>[] params = method.getParameterTypes();
+                if (params.length != 3) throw new SubscriptionException(Message.THREE_PARAMS, method);
+
+                // first param must be instance of Refinable
+                boolean refinable = Refinable.class.isAssignableFrom(params[0]);
+                if (!refinable) throw new SubscriptionException(Message.MISSING_REFINABLE, method);
+
+                // second param must be Refiner
+                boolean grammar = Grammar.class.isAssignableFrom(params[1]);
+                if (!grammar) throw new SubscriptionException(Message.MISSING_GRAMMAR, method);
+
+                // third param must be Broadcaster
+                boolean broadcaster = Broadcaster.class.isAssignableFrom(params[2]);
+                if (!broadcaster) throw new SubscriptionException(Message.MISSING_BROADCASTER, method);
+
+                // add the metadata
+                set.add(new SubscriptionMetadata(method, params[0], SubscriptionPhase.REFINE, refine.value()));
             }
 
             // this is required for anonymous inner classes
@@ -145,18 +154,37 @@ final class AnnotationScanner {
         return set;
     }
 
+    /**
+     * Creates subscription objects for each subscribed event on the class of the given instance.
+     *
+     * @param subscriber
+     *     The class with the subscription methods.
+     *
+     * @return A multimap of syntax object (event) to subscription object.
+     */
+    public Multimap<Class<?>, Subscription> scanSubscriptions(Object subscriber) {
+        // linked multimap because we need to maintain insertion order
+        Multimap<Class<?>, Subscription> subscriptions = LinkedHashMultimap.create();
+
+        for (SubscriptionMetadata sm : subscriptionCache.getUnchecked(subscriber.getClass())) {
+            subscriptions.put(sm.event, new Subscription(sm.phase, subscriber, sm.method, sm.name));
+        }
+
+        return subscriptions;
+    }
+
     /** data object */
     private static final class SubscriptionMetadata {
         final Method method;
         final Class<?> event;
         final SubscriptionPhase phase;
-        final Restrict filter;
+        final String name;
 
-        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionPhase phase, Restrict filter) {
+        public SubscriptionMetadata(Method method, Class<?> event, SubscriptionPhase phase, String name) {
             this.method = method;
             this.event = event;
             this.phase = phase;
-            this.filter = filter;
+            this.name = Strings.emptyToNull(name);
         }
     }
 }

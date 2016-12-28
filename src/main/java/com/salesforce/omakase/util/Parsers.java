@@ -26,19 +26,22 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.InterestBroadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.factory.StandardParserFactory;
+
+import java.util.Optional;
 
 /**
  * Utilities for working with {@link Parser}s.
  *
  * @author nmcwilliams
- * @see ParserFactory
+ * @see StandardParserFactory
  */
 public final class Parsers {
     private Parsers() {}
@@ -49,7 +52,7 @@ public final class Parsers {
      * @param source
      *     Parse this string.
      *
-     * @return The {@link NumericalValue}, or {@link Optional#absent()} if not found.
+     * @return The {@link NumericalValue}, or an empty {@link Optional} if not present.
      */
     public static Optional<NumericalValue> parseNumerical(String source) {
         return parseNumerical(new Source(source));
@@ -61,10 +64,10 @@ public final class Parsers {
      * @param source
      *     Parse this source.
      *
-     * @return The {@link NumericalValue}, or {@link Optional#absent()} if not found.
+     * @return The {@link NumericalValue}, or an empty {@link Optional} if not present.
      */
     public static Optional<NumericalValue> parseNumerical(Source source) {
-        return parseSimple(source, ParserFactory.numericalValueParser(), NumericalValue.class);
+        return parseSimple(source, StandardParserFactory.instance().numericalValueParser(), NumericalValue.class);
     }
 
     /**
@@ -86,7 +89,7 @@ public final class Parsers {
      * @param <T>
      *     Type of the object to parse.
      *
-     * @return The parsed instance, or {@link Optional#absent()} if not found.
+     * @return The parsed instance, or an empty {@link Optional} if not present.
      */
     public static <T extends Broadcastable> Optional<T> parseSimple(String source, Parser parser, Class<T> klass) {
         return parseSimple(new Source(source), parser, klass);
@@ -111,11 +114,11 @@ public final class Parsers {
      * @param <T>
      *     Type of the object to parse.
      *
-     * @return The parsed instance, or {@link Optional#absent()} if not found.
+     * @return The parsed instance, or an empty {@link Optional} if not present.
      */
     public static <T extends Broadcastable> Optional<T> parseSimple(Source source, Parser parser, Class<T> klass) {
-        SingleInterestBroadcaster<T> broadcaster = SingleInterestBroadcaster.of(klass);
-        parser.parse(source, broadcaster);
-        return broadcaster.broadcasted();
+        InterestBroadcaster<T> broadcaster = SingleInterestBroadcaster.of(klass);
+        parser.parse(source, new Grammar(), broadcaster);
+        return broadcaster.one();
     }
 }

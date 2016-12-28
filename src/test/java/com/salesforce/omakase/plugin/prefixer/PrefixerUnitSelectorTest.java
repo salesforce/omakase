@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ import static org.fest.assertions.api.Assertions.*;
 public class PrefixerUnitSelectorTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
-        Omakase.source(original).use(AutoRefiner.refineEverything()).use(writer).use(prefixer).process();
+        Omakase.source(original).use(AutoRefine.everything()).use(writer).use(prefixer).process();
         return writer.write();
     }
 

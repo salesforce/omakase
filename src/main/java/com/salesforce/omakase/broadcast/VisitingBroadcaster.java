@@ -26,62 +26,62 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A {@link Broadcaster} that will store all received broadcasted events. Replay the broadcasts using {@link #visit()}. The
- * broadcasts can be replayed multiple times.
+ * A broadcaster that can replay the broadcast chain on demand.
  *
  * @author nmcwilliams
  */
 public final class VisitingBroadcaster extends AbstractBroadcaster {
-    private final List<Broadcastable> list = Lists.newArrayListWithExpectedSize(64);
-    private boolean visiting;
+    private Broadcastable target;
+    private boolean locked;
 
     /**
-     * Constructs a new {@link VisitingBroadcaster} instance that will relay all broadcasted events to the given {@link
-     * Broadcaster}.
-     *
-     * @param relay
-     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     * Creates a new {@link VisitingBroadcaster}.
      */
-    public VisitingBroadcaster(Broadcaster relay) {
-        wrap(checkNotNull(relay, "relay cannot be null"));
+    public VisitingBroadcaster() {}
+
+    /**
+     * Creates a new {@link VisitingBroadcaster} and calls {@link #chain(Broadcaster)} on this instance, passing in the
+     * given {@link Broadcaster}.
+     *
+     * @param broadcaster
+     *     Add this broadcaster to the end of the chain.
+     */
+    public VisitingBroadcaster(Broadcaster broadcaster) {
+        chain(broadcaster);
     }
 
     @Override
     public void broadcast(Broadcastable broadcastable) {
-        list.add(broadcastable);
-
-        // update status to prevent a unit from being broadcasted too many times
-        if (broadcastable.status() == Status.UNBROADCASTED) {
-            broadcastable.status(Status.QUEUED);
+        if (!locked) {
+            target = broadcastable;
         }
-
-        // while a visit is in progress, immediately send out any received broadcasts (can occur if a refinement results
-        // in new syntax instances, or rework results in new syntax units being added).
-        if (visiting) {
-            relay.broadcast(broadcastable);
-        }
+        relay(broadcastable);
     }
 
-    /** Replays all broadcasted events. */
-    public void visit() {
-        visiting = true;
+    /**
+     * Calls {@link Broadcastable#propagateBroadcast(Broadcaster, Status)} on the top unit using the given {@link Broadcaster}
+     * and status.
+     * <p>
+     * Once this method is called the target unit is locked in so that subsequent calls will always propagate from the same
+     * starting point.
+     *
+     * @param broadcaster
+     *     Propagate with this broadcaster.
+     * @param status
+     *     Only propagate the broadcast of units with this status.
+     */
+    public void visit(Broadcaster broadcaster, Status status) {
+        checkNotNull(broadcaster, "broadcaster cannot be null");
+        checkNotNull(status, "status cannot be null");
 
-        // make a defensive copy since the list may be modified as a result of this call
-        ImmutableList<Broadcastable> snapshot = ImmutableList.copyOf(list);
-
-        for (Broadcastable broadcastable : snapshot) {
-            relay.broadcast(broadcastable);
+        locked = true;
+        if (target != null) {
+            target.propagateBroadcast(broadcaster, status);
         }
-
-        visiting = false;
     }
 }

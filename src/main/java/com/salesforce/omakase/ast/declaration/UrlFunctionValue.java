@@ -26,14 +26,15 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.plugin.syntax.UrlPlugin;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -41,6 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents a url function value.
  *
  * @author nmcwilliams
+ * @see UrlPlugin
  */
 @Subscribable
 @Description(value = "url function", broadcasted = BroadcastRequirement.REFINED_DECLARATION)
@@ -119,10 +121,10 @@ public final class UrlFunctionValue extends AbstractTerm implements FunctionValu
     /**
      * Gets the quotation mode, if present.
      *
-     * @return The quotation mode, or {@link Optional#absent()} if not present.
+     * @return The quotation mode, or an empty {@link Optional} if not present.
      */
     public Optional<QuotationMode> quotationMode() {
-        return Optional.fromNullable(quotationMode);
+        return Optional.ofNullable(quotationMode);
     }
 
     /**

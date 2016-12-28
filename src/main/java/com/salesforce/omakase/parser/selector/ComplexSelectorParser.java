@@ -26,23 +26,23 @@
 
 package com.salesforce.omakase.parser.selector;
 
-import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.InterestBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.raw.RawSelectorParser;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
+
+import java.util.Optional;
 
 import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
 
 /**
- * Parses refined {@link Selector}s, as opposed to {@link RawSelectorParser}.
+ * Parses refined {@link Selector}s, as opposed to {@link SelectorParser}.
  * <p>
  * This attempts to conform to Selectors level 3 (http://www.w3.org/TR/css3-selectors). Yes, attempts, because the spec is
  * inconsistent, contradictory, and malformed.
@@ -50,36 +50,38 @@ import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_CO
  * @author nmcwilliams
  * @see Selector
  */
-public final class ComplexSelectorParser extends AbstractParser {
+public final class ComplexSelectorParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         // snapshot the current state before parsing
         Source.Snapshot snapshot = source.snapshot();
 
         // setup inner parsers
-        Parser combinator = ParserFactory.combinatorParser();
-        Parser repeatableSelector = ParserFactory.repeatableSelector();
-        Parser typeOrUniversal = ParserFactory.typeOrUniversaleSelectorParser();
+        Parser combinator = grammar.parser().combinatorParser();
+        Parser repeatableSelector = grammar.parser().repeatableSelector();
+        Parser typeOrUniversal = grammar.parser().typeOrUniversaleSelectorParser();
 
         // we queue the broadcasts because we don't want the last unit to be a trailing descendant combinator.
-        QueuingBroadcaster queue = new QueuingBroadcaster(broadcaster).pause();
+        InterestBroadcaster<Combinator> interest = SingleInterestBroadcaster.of(Combinator.class);
+        QueuingBroadcaster queue = interest.chain(new QueuingBroadcaster(broadcaster).pause());
 
         boolean matchedAnything = false;
-        boolean matchedThisTime = false;
+        boolean matchedThisTime;
 
         do {
             matchedThisTime = false;
 
             // try parsing a universal or type selector
-            if (typeOrUniversal.parse(source, queue, refiner)) {
+            if (typeOrUniversal.parse(source, grammar, queue)) {
                 matchedAnything = true;
                 matchedThisTime = true;
             }
 
             // parse remaining selectors in the sequence
-            while (repeatableSelector.parse(source, queue, refiner)) {
+            while (repeatableSelector.parse(source, grammar, queue)) {
                 matchedAnything = true;
                 matchedThisTime = true;
             }
@@ -87,22 +89,24 @@ public final class ComplexSelectorParser extends AbstractParser {
             // check for trailing combinators. If it is a descendant combinator then it was just an extra space so remove it.
             if (matchedAnything && !matchedThisTime) {
                 // find the last combinator
-                Combinator lastCombinator = Iterables.getLast(Iterables.filter(queue.all(), Combinator.class));
-                if (lastCombinator.type() == DESCENDANT_COMBINATOR) {
-                    queue.reject(lastCombinator);
-                } else {
-                    snapshot.rollback(Message.TRAILING_COMBINATOR, lastCombinator.type());
+                Optional<Combinator> lastCombinator = interest.one();
+                if (lastCombinator.isPresent()) {
+                    if (lastCombinator.get().type() == DESCENDANT_COMBINATOR) {
+                        queue.reject(lastCombinator.get());
+                    } else {
+                        snapshot.rollback(Message.TRAILING_COMBINATOR, lastCombinator.get().type());
+                    }
                 }
             } else {
                 // so that if there is a trailing combinator error the source points to the right location
                 snapshot = source.snapshot();
             }
-        } while (combinator.parse(source, queue, refiner));
+        } while (combinator.parse(source, grammar, interest.reset()));
 
         // check for known possible errors
         if (!source.eof()) {
             snapshot = source.snapshot();
-            if (typeOrUniversal.parse(source, queue, refiner)) {
+            if (typeOrUniversal.parse(source, grammar, queue)) {
                 snapshot.rollback(Message.NAME_SELECTORS_NOT_ALLOWED);
             }
         }
@@ -112,4 +116,5 @@ public final class ComplexSelectorParser extends AbstractParser {
 
         return matchedAnything;
     }
+
 }

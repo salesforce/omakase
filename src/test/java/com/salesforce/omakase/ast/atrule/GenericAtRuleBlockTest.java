@@ -29,6 +29,7 @@ package com.salesforce.omakase.ast.atrule;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
@@ -71,15 +72,15 @@ public class GenericAtRuleBlockTest {
 
     @Test
     public void propagatesBroadcast() {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement));
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        block.propagateBroadcast(qb);
+        block.propagateBroadcast(qb, Status.PARSED);
         assertThat(qb.find(Statement.class).get()).isSameAs(statement);
     }
 
     @Test
     public void isWritableWhenHasStatements() {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement));
         assertThat(block.isWritable()).isTrue();
     }
 
@@ -91,25 +92,25 @@ public class GenericAtRuleBlockTest {
 
     @Test
     public void writeVerbose() throws IOException {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement));
         assertThat(StyleWriter.verbose().writeSingle(block)).isEqualTo(" {\n  .test {\n    display: none;\n  }\n}");
     }
 
     @Test
     public void writeInline() throws IOException {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement));
         assertThat(StyleWriter.inline().writeSingle(block)).isEqualTo(" {\n  .test {display:none}\n}");
     }
 
     @Test
     public void writeCompressed() throws IOException {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement));
         assertThat(StyleWriter.compressed().writeSingle(block)).isEqualTo("{.test{display:none}}");
     }
 
     @Test
     public void copy() {
-        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement), null);
+        GenericAtRuleBlock block = new GenericAtRuleBlock(Lists.newArrayList(statement));
         GenericAtRuleBlock copy = block.copy();
         assertThat(copy.statements()).hasSameSizeAs(block.statements());
     }

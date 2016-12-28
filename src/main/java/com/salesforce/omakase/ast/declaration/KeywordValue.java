@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -37,6 +36,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
@@ -135,7 +135,7 @@ public final class KeywordValue extends AbstractTerm implements Named {
         if (cached == null) {
             cached = Keyword.lookup(keyword);
         }
-        return Optional.fromNullable(cached);
+        return Optional.ofNullable(cached);
     }
 
     @Override

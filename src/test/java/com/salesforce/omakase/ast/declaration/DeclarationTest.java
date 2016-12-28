@@ -24,7 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package declaration;
+package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -33,20 +33,15 @@ import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.ast.declaration.OperatorType;
-import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.util.Values;
+import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +64,7 @@ public class DeclarationTest {
     public void setup() {
         rawName = new RawSyntax(2, 3, "display");
         rawValue = new RawSyntax(2, 5, "none");
-        fromRaw = new Declaration(rawName, rawValue, new MasterRefiner(new StatusChangingBroadcaster()));
+        fromRaw = new Declaration(rawName, rawValue);
     }
 
     @Test
@@ -134,43 +129,30 @@ public class DeclarationTest {
     }
 
     @Test
-    public void newPropertyValueIsBroadcasted() {
-        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
-        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
-        d.propertyValue(newValue);
-
-        assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
-        rule.declarations().append(d);
-        assertThat(newValue.status()).isNotSameAs(Status.UNBROADCASTED);
-    }
-
-    @Test
     public void changedPropertyValueIsBroadcasted() {
-        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        rule.declarations().append(d);
+
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        d.propagateBroadcast(qb, Status.PARSED);
 
         PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
-        assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
-
         d.propertyValue(newValue);
-        assertThat(newValue.status()).isSameAs(Status.PROCESSED);
+
+        assertThat(qb.filter(PropertyValue.class)).hasSize(2);
     }
 
     @Test
     public void setPropertyValueDoesntBroadcastAlreadyBroadcasted() {
-        StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
-        Rule rule = new Rule(1, 1, broadcaster);
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        d.status(Status.PROCESSED);
 
-        PropertyValue newValue = PropertyValue.of(KeywordValue.of(Keyword.BLOCK));
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        d.propagateBroadcast(qb, Status.PARSED);
+        assertThat(qb.filter(PropertyValue.class)).hasSize(1);
+
+        PropertyValue newValue = PropertyValue.of(NumericalValue.of(5));
         newValue.status(Status.PROCESSED);
         d.propertyValue(newValue);
-
-        rule.declarations().append(d);
-        assertThat(broadcaster.all).isEmpty();
+        assertThat(qb.filter(PropertyValue.class)).hasSize(1);
     }
 
     @Test
@@ -198,22 +180,30 @@ public class DeclarationTest {
         PropertyValue pv = PropertyValue.of(KeywordValue.of(Keyword.NONE));
         Declaration d = new Declaration(Property.DISPLAY, pv);
 
-        assertThat(pv.status()).isSameAs(Status.UNBROADCASTED);
-        d.propagateBroadcast(new StatusChangingBroadcaster());
-        assertThat(pv.status()).isNotSameAs(Status.UNBROADCASTED);
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        d.propagateBroadcast(qb, Status.PARSED);
+        assertThat(qb.find(PropertyValue.class).get()).isSameAs(pv);
     }
 
     @Test
     public void getPropertyValueWhenUnrefined() {
-        // should automatically refine to the property value)
+        // should be empty!
         assertThat(fromRaw.propertyValue()).isNotNull();
+        assertThat(fromRaw.propertyValue().members()).isEmpty();
     }
 
     @Test
     public void getPropertyValueWhenRefined() {
-        // automatic refinement should not occur since we are already refined, hence should be the same object
-        PropertyValue propertyValue = fromRaw.propertyValue();
-        assertThat(fromRaw.propertyValue()).isSameAs(propertyValue);
+        fromRaw.propertyValue(PropertyValue.of(KeywordValue.of(Keyword.NONE)));
+        assertThat(fromRaw.propertyValue()).isNotNull();
+        assertThat(fromRaw.propertyValue().members()).hasSize(1);
+    }
+
+    @Test
+    public void getPropertyValueWhenDynamicallyCreated() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        assertThat(d.propertyValue()).isNotNull();
+        assertThat(d.propertyValue().members()).hasSize(1);
     }
 
     @Test
@@ -309,12 +299,24 @@ public class DeclarationTest {
 
     @Test
     public void isRefinedTrue() {
-        fromRaw.refine();
+        fromRaw.propertyValue(PropertyValue.of(KeywordValue.of(Keyword.NONE)));
         assertThat(fromRaw.isRefined()).isTrue();
     }
 
     @Test
+    public void isRefinedTrueDynamicallyCreated() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        assertThat(d.isRefined()).isTrue();
+    }
+
+    @Test
     public void isRefinedFalse() {
+        assertThat(fromRaw.isRefined()).isFalse();
+    }
+
+    @Test
+    public void isRefinedFalseButPropertyNameRefined() {
+        fromRaw.propertyName();
         assertThat(fromRaw.isRefined()).isFalse();
     }
 
@@ -325,29 +327,22 @@ public class DeclarationTest {
     }
 
     @Test
-    public void refine() {
-        fromRaw.refine();
-        assertThat(fromRaw.propertyName()).isNotNull();
-        assertThat(fromRaw.propertyValue()).isNotNull();
-    }
-
-    @Test
     public void writeVerboseRefined() throws IOException {
-        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.of(NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         assertThat(StyleWriter.verbose().writeSingle(d)).isEqualTo("margin: 1px 2px");
     }
 
     @Test
     public void writeInlineRefined() throws IOException {
-        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.of(NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         assertThat(StyleWriter.inline().writeSingle(d)).isEqualTo("margin:1px 2px");
     }
 
     @Test
     public void writeCompressedRefined() throws IOException {
-        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.of(NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
         assertThat(StyleWriter.compressed().writeSingle(d)).isEqualTo("margin:1px 2px");
     }
@@ -356,7 +351,7 @@ public class DeclarationTest {
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value);
 
         assertThat(StyleWriter.verbose().writeSingle(d)).isEqualTo("border: 1px solid red");
     }
@@ -365,7 +360,7 @@ public class DeclarationTest {
     public void writeInlineUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value);
 
         assertThat(StyleWriter.inline().writeSingle(d)).isEqualTo("border:1px solid red");
     }
@@ -374,9 +369,37 @@ public class DeclarationTest {
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value);
 
         assertThat(StyleWriter.compressed().writeSingle(d)).isEqualTo("border:1px solid red");
+    }
+
+    @Test
+    public void writeSecondUnitVerbose() throws IOException {
+        Declaration d1 = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        Declaration d2 = new Declaration(Property.MARGIN, NumericalValue.of("5", "px"));
+
+        StyleWriter verbose = StyleWriter.verbose();
+        StyleAppendable appendable = new StyleAppendable();
+
+        verbose.incrementDepth();
+        verbose.writeInner(d1, appendable);
+        verbose.writeInner(d2, appendable);
+        assertThat(appendable.toString()).isEqualTo("display: none;\nmargin: 5px");
+    }
+
+    @Test
+    public void writeSecondUnitInline() throws IOException {
+        Declaration d1 = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        Declaration d2 = new Declaration(Property.MARGIN, NumericalValue.of("5", "px"));
+
+        StyleWriter inline = StyleWriter.inline();
+        StyleAppendable appendable = new StyleAppendable();
+
+        inline.incrementDepth();
+        inline.writeInner(d1, appendable);
+        inline.writeInner(d2, appendable);
+        assertThat(appendable.toString()).isEqualTo("display:none; margin:5px");
     }
 
     @Test
@@ -391,7 +414,7 @@ public class DeclarationTest {
     public void isWritableWhenUnrefinedAndAttached() {
         RawSyntax name = new RawSyntax(2, 3, "border");
         RawSyntax value = new RawSyntax(2, 5, "1px solid red");
-        Declaration d = new Declaration(name, value, new MasterRefiner(new StatusChangingBroadcaster()));
+        Declaration d = new Declaration(name, value);
         Rule rule = new Rule();
         rule.declarations().append(d);
         assertThat(d.isWritable()).isTrue();
@@ -412,21 +435,37 @@ public class DeclarationTest {
 
         Declaration copy = d.copy();
         assertThat(copy.isProperty(Property.MARGIN));
-        assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
+        assertThat(copy.propertyValue().members()).hasSameSizeAs(d.propertyValue().members());
         assertThat(copy.comments()).hasSameSizeAs(d.comments());
     }
 
     @Test
     public void copyUnrefined() {
+        fromRaw.comment("test");
         Declaration copy = fromRaw.copy();
         assertThat(copy.isProperty(Property.DISPLAY));
-        assertThat(copy.propertyValue()).isInstanceOf(PropertyValue.class);
+        assertThat(copy.rawPropertyName()).isNotNull();
+        assertThat(copy.rawPropertyValue()).isNotNull();
+        assertThat(copy.propertyValue().members()).isEmpty();
+        assertThat(copy.comments()).hasSameSizeAs(fromRaw.comments());
+    }
+
+    @Test
+    public void copyUnrefinedPropertyNameRefined() {
+        fromRaw.comment("test");
+        fromRaw.propertyName();
+        Declaration copy = fromRaw.copy();
+        assertThat(copy.isProperty(Property.DISPLAY));
+        assertThat(copy.rawPropertyName()).isNotNull();
+        assertThat(copy.rawPropertyValue()).isNotNull();
+        assertThat(copy.propertyValue().members()).isEmpty();
+        assertThat(copy.comments()).hasSameSizeAs(fromRaw.comments());
     }
 
     @Test
     public void testParentAtRulePresent() {
         Declaration d = new Declaration(Property.COLOR, KeywordValue.of(Keyword.RED));
-        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
+        Rule rule = new Rule(1, 1);
         rule.selectors().append(new Selector(new ClassSelector("test")));
         rule.declarations().append(d);
 
@@ -440,7 +479,7 @@ public class DeclarationTest {
     @Test
     public void testParentAtRuleAbsent() {
         Declaration d = new Declaration(Property.COLOR, KeywordValue.of(Keyword.RED));
-        Rule rule = new Rule(1, 1, new StatusChangingBroadcaster());
+        Rule rule = new Rule(1, 1);
         rule.selectors().append(new Selector(new ClassSelector("test")));
         rule.declarations().append(d);
 
@@ -457,11 +496,28 @@ public class DeclarationTest {
 
     @Test
     public void testDestroyAlsoDestroysInnerTerms() {
-        PropertyValue terms = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
+        PropertyValue terms = PropertyValue.of(NumericalValue.of(1, "px"), NumericalValue.of(2, "px"));
         Declaration d = new Declaration(Property.MARGIN, terms);
 
         d.destroy();
         assertThat(d.isDestroyed()).isTrue();
         assertThat(d.propertyValue().members().isEmpty());
+    }
+
+    @Test
+    public void breakBroadcastIfNeverEmit() {
+        fromRaw.status(Status.NEVER_EMIT);
+        assertThat(fromRaw.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void breakBroadcastIfAlreadyRefined() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        assertThat(d.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void dontBreakBroadcastIfNotRefined() {
+        assertThat(fromRaw.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 }

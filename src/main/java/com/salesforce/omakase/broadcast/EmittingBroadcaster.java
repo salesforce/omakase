@@ -27,51 +27,57 @@
 package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.annotation.Refine;
+import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.broadcast.emitter.Emitter;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The main {@link Broadcaster}, this emits the broadcasted events to registered {@link Plugin} methods.
- * <p>
- * Any particular {@link Syntax} unit is actually emitted at most once per phase, based on {@link Syntax#status()}.
  *
  * @author nmcwilliams
  * @see Emitter
  */
 public final class EmittingBroadcaster extends AbstractBroadcaster {
     private final Emitter emitter = new Emitter();
+
+    private Grammar grammar;
+    private Broadcaster broadcaster;
     private ErrorManager em;
 
     /**
-     * Constructs a new {@link EmittingBroadcaster} instance that will <em>not</em> relay any events to another {@link
-     * Broadcaster}.
-     */
-    public EmittingBroadcaster() {
-        this(null);
-    }
-
-    /**
-     * Constructs a new {@link EmittingBroadcaster} instance that will relay all broadcasted events to the given {@link
-     * Broadcaster}.
+     * Specifies the {@link Grammar} to pass along to {@link Refine} subscription methods.
      *
-     * @param relay
-     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     * @param grammar
+     *     The {@link Grammar} instance.
      */
-    public EmittingBroadcaster(Broadcaster relay) {
-        wrap(relay);
+    public void grammar(Grammar grammar) {
+        this.grammar = checkNotNull(grammar, "grammar cannot be null");
     }
 
     /**
-     * Specifies the {@link ErrorManager} to use.
+     * Specifies the top-level {@link Broadcaster} to pass along to {@link Refine} subscription methods.
+     *
+     * @param broadcaster
+     *     THe {@link Broadcaster} instance.
+     */
+    public void root(Broadcaster broadcaster) {
+        this.broadcaster = checkNotNull(broadcaster, "broadcaster cannot be null");
+    }
+
+    /**
+     * Specifies the {@link ErrorManager} that should be given to {@link Validate} subscription methods.
      *
      * @param em
      *     The {@link ErrorManager} instance.
      */
     public void errorManager(ErrorManager em) {
-        this.em = em;
+        this.em = checkNotNull(em, "error manager cannot be null");
     }
 
     /**
@@ -104,17 +110,14 @@ public final class EmittingBroadcaster extends AbstractBroadcaster {
             broadcastable.status(Status.EMITTING);
 
             // send to listeners
-            emitter.emit(broadcastable, em);
+            emitter.emit(broadcastable, grammar, broadcaster, em);
 
             // update the status
             if (broadcastable.status() != Status.NEVER_EMIT) {
-                broadcastable.status(Status.nextStatusAfterPhase(phase));
-            }
-
-            // pass to relays
-            if (relay != null) {
-                relay.broadcast(broadcastable);
+                broadcastable.status(phase.nextStatus());
             }
         }
+
+        relay(broadcastable);
     }
 }

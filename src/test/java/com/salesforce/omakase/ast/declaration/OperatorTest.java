@@ -47,14 +47,32 @@ public class OperatorTest {
     }
 
     @Test
-    public void testWrite() throws IOException {
+    public void testWriteCommaCompressed() throws IOException {
         Operator operator = new Operator(OperatorType.COMMA);
         assertThat(StyleWriter.compressed().writeSingle(operator)).isEqualTo(",");
     }
 
     @Test
+    public void testWriteCommaVerbose() {
+        Operator operator = new Operator(OperatorType.COMMA);
+        assertThat(StyleWriter.verbose().writeSingle(operator)).isEqualTo(", ");
+    }
+
+    @Test
+    public void testWriteSlashCompressed() {
+        Operator operator = new Operator(OperatorType.SLASH);
+        assertThat(StyleWriter.compressed().writeSingle(operator)).isEqualTo("/");
+    }
+
+    @Test
+    public void testWriteSlashVerbose() {
+        Operator operator = new Operator(OperatorType.SLASH);
+        assertThat(StyleWriter.verbose().writeSingle(operator)).isEqualTo(" / ");
+    }
+
+    @Test
     public void copyTest() {
         Operator operator = new Operator(OperatorType.COMMA);
-        assertThat(((Operator)operator.copy()).type()).isSameAs(operator.type());
+        assertThat(operator.copy().type()).isSameAs(operator.type());
     }
 }

@@ -29,9 +29,8 @@ package com.salesforce.omakase.sample.custom.function;
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
-import com.salesforce.omakase.sample.custom.function.CustomVarRefiner.Mode;
+import com.salesforce.omakase.plugin.core.StandardValidation;
+import com.salesforce.omakase.sample.custom.function.CustomVarPlugin.Mode;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
@@ -42,10 +41,9 @@ import java.util.Map;
  * <p>
  * The custom function represents a variable lookup, using the format <code>custom-var(varName)</code>.
  * <p>
- * We give the parser an instance of the {@link CustomVarPlugin}. This plugin is a {@link SyntaxPlugin} that registers our {@link
- * CustomVarRefiner}. The refiner handles actually parsing the custom function, and creates {@link CustomVarFunction} AST objects.
- * Because we make the AST object {@link Subscribable}, it can be subcribed to like any other standard AST objects, which our
- * {@link CustomVarCounter} plugin demonstrates.
+ * We give the parser an instance of the {@link CustomVarPlugin}. This plugin handles parsing the custom function, and creates
+ * {@link CustomVarFunction} AST objects. Because we make the AST object {@link Subscribable}, it can be subscribed to like any
+ * other standard AST objects, which our {@link CustomVarCounter} plugin demonstrates.
  * <p>
  * This sample usage parses a CSS source twice. The first time we just count the number of times the custom function is used, but
  * we don't resolve anything. The second time we resolve and replace the custom function with the substituted values.
@@ -95,10 +93,10 @@ public final class SampleUsage {
 
         // parse without resolving the vars, but count them
         Omakase.source(input)
-            .use(verbose)
-            .use(validation)
             .use(passthrough)
             .use(counting)
+            .use(verbose)
+            .use(validation)
             .process();
 
         System.out.println("\nOUTPUT (passthrough):\n-------------------------");
@@ -107,9 +105,9 @@ public final class SampleUsage {
 
         // this time resolve the vars
         Omakase.source(input)
+            .use(resolving)
             .use(verbose)
             .use(validation)
-            .use(resolving)
             .process();
 
         System.out.println("\n\n\nOUTPUT (resolved):\n-------------------------");

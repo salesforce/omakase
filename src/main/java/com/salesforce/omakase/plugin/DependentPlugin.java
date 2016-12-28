@@ -26,10 +26,11 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.google.common.base.Supplier;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.syntax.MediaPlugin;
+import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
+
+import java.util.function.Supplier;
 
 /**
  * A {@link Plugin} that has dependencies on other {@link Plugin}s.
@@ -38,13 +39,16 @@ import com.salesforce.omakase.plugin.basic.SyntaxTree;
  */
 public interface DependentPlugin extends Plugin {
     /**
-     * This method will be called just before source code processing begins.
+     * Registers plugin dependencies.
      * <p>
-     * The main purpose of this method is to allow you to specify a dependency on and/or configure another {@link Plugin}. In many
-     * cases a dependency on {@link SyntaxTree} or {@link AutoRefiner} is required. See the comments on {@link Plugin} for more
-     * details.
+     * Any plugins you add to the registry in this method will be ordered before this plugin itself.
      * <p>
-     * The order in which this will be invoked (between plugins) is the same order that the {@link Plugin} was registered.
+     * Keep in mind that only one instance of a plugin can be added in a single parsing operation. You can use {@link
+     * PluginRegistry#require(Class)}, {@link PluginRegistry#require(Class, Supplier)} and {@link
+     * PluginRegistry#retrieve(Class)} to assist in scenarios where a plugin instance may have already been added.
+     * <p>
+     * Dependencies to include can range from refinement dependencies such as {@link SelectorPlugin} and {@link MediaPlugin} to
+     * other custom plugins.
      *
      * @param registry
      *     The {@link PluginRegistry} instance.

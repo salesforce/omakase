@@ -40,7 +40,6 @@ import java.util.Map;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("AutoBoxing")
 final class PrefixBehavior {
     private final EnumMap<Browser, Double> map = new EnumMap<>(Browser.class);
 

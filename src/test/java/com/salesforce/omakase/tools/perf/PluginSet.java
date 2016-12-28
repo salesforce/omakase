@@ -27,20 +27,25 @@
 package com.salesforce.omakase.tools.perf;
 
 import com.google.common.collect.ImmutableList;
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.HexColorValue;
-import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
+import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.plugin.core.StandardValidation;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
 
 /**
  * Sets of plugins for perf tests.
@@ -57,7 +62,6 @@ public final class PluginSet {
     public static Iterable<Plugin> normal() {
         return ImmutableList.<Plugin>builder()
             .add(new SyntaxTree())
-            .add(new StandardValidation())
             .add(new Plugin() {
                 @Observe
                 public void observe(Declaration d) {}
@@ -72,11 +76,23 @@ public final class PluginSet {
             })
             .add(new Plugin() {
                 @Rework
+                public void rework(ClassSelector d) {}
+            })
+            .add(new Plugin() {
+                @Rework
+                public void rework(UrlFunctionValue d) {}
+            })
+            .add(new Plugin() {
+                @Rework
                 public void rework(Declaration d) {}
             })
             .add(new Plugin() {
-                @Observe
-                public void observe(RawFunction r) {}
+                @Rework
+                public void rework(Selector d) {}
+            })
+            .add(new Plugin() {
+                @Refine
+                public void observe(RawFunction r, Grammar grammar, Broadcaster broadcaster) {}
             })
             .add(new Plugin() {
                 @Observe
@@ -102,6 +118,7 @@ public final class PluginSet {
                 @Validate
                 public void observe(AtRule a, ErrorManager em) {}
             })
+            .add(new StandardValidation())
             .build();
     }
 }

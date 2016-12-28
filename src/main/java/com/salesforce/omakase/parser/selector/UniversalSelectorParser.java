@@ -28,9 +28,9 @@ package com.salesforce.omakase.parser.selector;
 
 import com.salesforce.omakase.ast.selector.UniversalSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -38,10 +38,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  *
  * @author nmcwilliams
  */
-public final class UniversalSelectorParser extends AbstractParser {
+public final class UniversalSelectorParser implements Parser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 

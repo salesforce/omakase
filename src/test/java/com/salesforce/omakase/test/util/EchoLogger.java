@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.test.util;
 
-import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -51,12 +50,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class EchoLogger extends BasePlugin {
     private static final Logger logger = LoggerFactory.getLogger(EchoLogger.class);
-
-    @Observe
-    @Override
-    public void refinable(Refinable<?> refinable) {
-        logger.trace("refinable: {}", refinable);
-    }
 
     @Observe
     @Override

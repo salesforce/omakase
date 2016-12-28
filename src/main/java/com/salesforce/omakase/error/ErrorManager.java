@@ -27,26 +27,35 @@
 package com.salesforce.omakase.error;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
 import com.salesforce.omakase.parser.ParserException;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
- * Responsible for handling errors, either from {@link ParserException}s or from syntax validator plugins.
+ * Responsible for handling errors.
+ * <p>
+ * Errors will come from 1) syntax validator plugins, 2) {@link ParserException}s, which are usually thrown by core parsers or
+ * custom refiners, or 3) {@link SubscriptionException}s, which are usually caused by programming errors in plugin subscription
+ * methods.
  *
  * @author nmcwilliams
  */
 public interface ErrorManager {
     /**
-     * Reports an error based on a {@link ParserException}.
+     * Gets the name of the source currently being parsed. If not set this may return null.
      *
-     * @param level
-     *     The {@link ErrorLevel}.
-     * @param exception
-     *     The exception that describes the error.
+     * @return The name of the source currently being parsed.
      */
-    void report(ErrorLevel level, ParserException exception);
+    String getSourceName();
 
     /**
-     * Reports an error message.
+     * Reports an error message. This is usually called from {@link Validate} subscription methods.
+     * <p>
+     * Implementations should <b>not</b> throw or rethrow an exception from this method.
+     * <p>
+     * You can use {@link ErrorUtils#format(Syntax, String)} as a helper.
      *
      * @param level
      *     The {@link ErrorLevel}.
@@ -58,9 +67,50 @@ public interface ErrorManager {
     void report(ErrorLevel level, Syntax cause, String message);
 
     /**
-     * Gets the name of the source currently being parsed. If not available this may return null.
+     * Reports an error based on a {@link ParserException}.
+     * <p>
+     * These are usually thrown by core parsers or custom refiner plugins, which is usually caused by bad CSS source code input.
      *
-     * @return The name of the source currently being parsed.
+     * @param exception
+     *     The exception that describes the error.
      */
-    String getSourceName();
+    void report(ParserException exception);
+
+    /**
+     * Reports an uncaught exception from a subscription method.
+     * <p>
+     * This will occur when a subscription plugin method throws an exception. This usually means there is a programming error in
+     * the plugin, e.g., an NPE. It also might mean the plugin throws an unrelated (to the parser) exception which will results in
+     * an {@link InvocationTargetException} (this should be avoided).
+     * <p>
+     * Check the cause to find the underlying {@link InvocationTargetException}.
+     *
+     * @param exception
+     *     The exception.
+     */
+    void report(SubscriptionException exception);
+
+    /**
+     * Returns true if there were any errors.
+     *
+     * @return True of there were errors.
+     */
+    boolean hasErrors();
+
+    /**
+     * Should return true if {@link #summarize()} should automatically be called at the end of parsing if there are errors and
+     * the result wrapped and thrown by a new {@link ProblemSummaryException}.
+     *
+     * @return True if #{@link #summarize()} should be called automatically.
+     */
+    boolean autoSummarize();
+
+    /**
+     * Returns a summary of errors.
+     * <p>
+     * If there are no errors then this should return an empty string.
+     *
+     * @return True if there were else, otherwise an empty string.
+     */
+    String summarize();
 }

@@ -53,8 +53,6 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
             "123123",
             "fff123",
             "abc",
-            " #123",
-            " abc",
             "~123abc",
             "##ffffff",
             "##123123",
@@ -65,6 +63,8 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
     public List<String> validSources() {
         return ImmutableList.of(
             "#ffffff",
+            "  #ffffff",
+            "/*foo*/#ffffff",
             "#132abc",
             "#999999",
             "#999",
@@ -73,6 +73,7 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
             "#fefefe",
             "#FFF",
             "#F31FaB",
+            " \n#F31FaB",
             "#ABCabc");
     }
 
@@ -97,7 +98,7 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
 
     @Override
     public boolean allowedToTrimLeadingWhitespace() {
-        return false;
+        return true;
     }
 
     @Test
@@ -116,7 +117,7 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
             withExpectedResult("#000", "000"));
 
         for (ParseResult<String> result : results) {
-            HexColorValue hex = result.broadcaster.findOnly(HexColorValue.class).get();
+            HexColorValue hex = expectOnly(result.broadcaster, HexColorValue.class);
             assertThat(hex.color()).isEqualTo(result.expected);
         }
     }

@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -34,6 +33,8 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.util.Declarations;
 import com.salesforce.omakase.util.Prefixes;
+
+import java.util.Optional;
 
 /**
  * This plugin handles removing unnecessary prefixed units.
@@ -64,8 +65,8 @@ import com.salesforce.omakase.util.Prefixes;
  * <b>Important:</b> This plugin must be registered <em>after</em> the {@link Prefixer} plugin:
  * <pre><code>
  * Omakase.source(input)
- *      .add(Prefixer.defaultBrowserSupport())
- *      .add(PrefixCleaner.mismatchedPrefixedUnits())
+ *      .use(Prefixer.defaultBrowserSupport())
+ *      .use(PrefixCleaner.mismatchedPrefixedUnits())
  *      .process()
  * </code></pre>
  * You can also specify the only prefix you want to keep with the {@link #keep(Prefix)} method, and all other prefixed selectors,
@@ -101,7 +102,6 @@ public final class PrefixCleaner implements Plugin {
      *
      * @return this, for chaining.
      */
-    @SuppressWarnings("UnusedParameters")
     public PrefixCleaner keep(Prefix prefix) {
         // this.keeper = checkNotNull(prefix, "prefix cannot be null");
         //return this;
@@ -127,7 +127,7 @@ public final class PrefixCleaner implements Plugin {
      */
     @Rework
     public void atRule(AtRule atRule) {
-        if (prefixedAtRules && atRule.name() != null && atRule.block().isPresent()) {
+        if (prefixedAtRules && atRule.isRefined() && atRule.name() != null && atRule.block().isPresent()) {
             Optional<Prefix> prefix = Prefixes.parsePrefix(atRule.name());
             if (prefix.isPresent()) {
                 for (Declaration declaration : Declarations.within(atRule.block().get())) {

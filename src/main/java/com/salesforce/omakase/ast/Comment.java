@@ -26,13 +26,13 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.util.As;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -124,11 +124,11 @@ public final class Comment implements Writable {
      * @param name
      *     Get the annotation with this name.
      *
-     * @return The {@link CssAnnotation}, or {@link Optional#absent()} if not found.
+     * @return The {@link CssAnnotation}, or an empty {@link Optional} if not found.
      */
     public Optional<CssAnnotation> annotation(String name) {
         checkForAnnotation();
-        return Optional.fromNullable(annotation != null && annotation.name().equals(name) ? annotation : null);
+        return Optional.ofNullable(annotation != null && annotation.name().equals(name) ? annotation : null);
     }
 
     /**
@@ -139,11 +139,11 @@ public final class Comment implements Writable {
      * <p>
      * Only one annotation per comment block is allowed.
      *
-     * @return The {@link CssAnnotation}, or {@link Optional#absent()} if not found.
+     * @return The {@link CssAnnotation}, or an empty {@link Optional} if not found.
      */
     public Optional<CssAnnotation> annotation() {
         checkForAnnotation();
-        return Optional.fromNullable(annotation);
+        return Optional.ofNullable(annotation);
     }
 
     /**

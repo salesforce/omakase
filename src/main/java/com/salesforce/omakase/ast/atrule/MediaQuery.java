@@ -26,7 +26,7 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.google.common.base.Optional;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -36,6 +36,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -55,8 +56,8 @@ import static com.google.common.base.Preconditions.checkState;
  * @see MediaQueryParser
  */
 public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQuery> {
-    private Optional<String> type = Optional.absent();
-    private Optional<MediaRestriction> restriction = Optional.absent();
+    private String type;
+    private MediaRestriction restriction;
     private final SyntaxCollection<MediaQuery, MediaQueryExpression> expressions;
 
     /**
@@ -65,22 +66,19 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
      * This should be used for dynamically created declarations.
      */
     public MediaQuery() {
-        this(-1, -1, null);
+        this(-1, -1);
     }
 
     /**
      * Constructs a new {@link MediaQuery} instance.
-     *
-     * @param line
+     *  @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param broadcaster
-     *     Used for broadcasting.
      */
-    public MediaQuery(int line, int column, Broadcaster broadcaster) {
+    public MediaQuery(int line, int column) {
         super(line, column);
-        this.expressions = new LinkedSyntaxCollection<>(this, broadcaster);
+        this.expressions = new LinkedSyntaxCollection<>(this);
     }
 
     /**
@@ -95,18 +93,18 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
      *     When setting the restriction to null but the type is still present.
      */
     public MediaQuery restriction(MediaRestriction restriction) {
-        this.restriction = Optional.fromNullable(restriction);
-        checkState(!this.restriction.isPresent() || type.isPresent(), "cannot have a restriction without a media type");
+        this.restriction = restriction;
+        checkState(this.restriction == null || type != null, "cannot have a restriction without a media type");
         return this;
     }
 
     /**
      * Gets the media restriction (only|not).
      *
-     * @return The media restriction, or {@link Optional#absent()} if not present.
+     * @return The media restriction, or an empty {@link Optional} if not present.
      */
     public Optional<MediaRestriction> restriction() {
-        return restriction;
+        return Optional.ofNullable(restriction);
     }
 
     /**
@@ -118,17 +116,17 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
      * @return this, for chaining.
      */
     public MediaQuery type(String type) {
-        this.type = type != null ? Optional.of(type.toLowerCase()) : Optional.<String>absent();
+        this.type = type != null ? type.toLowerCase() : null;
         return this;
     }
 
     /**
      * Gets the media type, if present.
      *
-     * @return The media type, or {@link Optional#absent()} if not present.
+     * @return The media type, or an empty {@link Optional} if not present.
      */
     public Optional<String> type() {
-        return type;
+        return Optional.ofNullable(type);
     }
 
     /**
@@ -142,9 +140,11 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        expressions().propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            expressions().propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override
@@ -154,22 +154,22 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
 
     @Override
     public boolean isWritable() {
-        return super.isWritable() && (type.isPresent() || !expressions.isEmptyOrNoneWritable());
+        return super.isWritable() && (type != null || !expressions.isEmptyOrNoneWritable());
     }
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
         // the restriction
-        if (restriction.isPresent()) {
-            writer.writeInner(restriction.get(), appendable);
+        if (restriction != null) {
+            writer.writeInner(restriction, appendable);
             appendable.space();
         }
 
         // the type (if type == all then it can be left out)
         boolean printedType = false;
-        if (restriction.isPresent() || (type.isPresent() && !type.get().equals("all"))) {
+        if (restriction != null || (type != null && !type.equals("all"))) {
             printedType = true;
-            appendable.append(type.get());
+            appendable.append(type);
         }
 
         // the expressions
@@ -187,12 +187,12 @@ public final class MediaQuery extends AbstractGroupable<MediaQueryList, MediaQue
     public MediaQuery copy() {
         MediaQuery copy = new MediaQuery().copiedFrom(this);
 
-        if (type.isPresent()) {
-            copy.type(type.get());
+        if (type != null) {
+            copy.type(type);
         }
 
-        if (restriction.isPresent()) {
-            copy.restriction(restriction.get());
+        if (restriction != null) {
+            copy.restriction(restriction);
         }
 
         for (MediaQueryExpression expression : expressions) {

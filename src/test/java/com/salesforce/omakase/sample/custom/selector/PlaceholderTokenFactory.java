@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.sample.custom.selector;
 
-import com.salesforce.omakase.parser.token.BaseTokenFactory;
+import com.salesforce.omakase.parser.factory.BaseTokenFactory;
 import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.TokenFactory;
+import com.salesforce.omakase.parser.factory.TokenFactory;
 
 /**
  * Since we are redefining what is recognized as a valid selector, we have to provide a custom {@link TokenFactory}.

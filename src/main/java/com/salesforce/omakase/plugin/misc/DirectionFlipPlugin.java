@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin.misc;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -42,13 +41,14 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.syntax.DeclarationPlugin;
 import com.salesforce.omakase.util.CssAnnotations;
 import com.salesforce.omakase.util.Values;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -58,7 +58,7 @@ import java.util.Set;
  * @author david.brady
  */
 public final class DirectionFlipPlugin implements DependentPlugin {
-    private static final Map<Property, Property> PROPERTIES = new ImmutableMap.Builder<Property, Property>()
+    private static final Map<Property, Property> PROPERTIES_TO_FLIP = new ImmutableMap.Builder<Property, Property>()
         .put(Property.LEFT, Property.RIGHT)
         .put(Property.RIGHT, Property.LEFT)
 
@@ -86,7 +86,7 @@ public final class DirectionFlipPlugin implements DependentPlugin {
 
         .build();
 
-    private static final Map<Keyword, Keyword> KEYWORDS = new ImmutableMap.Builder<Keyword, Keyword>()
+    private static final Map<Keyword, Keyword> KEYWORDS_TO_FLIP = new ImmutableMap.Builder<Keyword, Keyword>()
         .put(Keyword.LTR, Keyword.RTL)
         .put(Keyword.RTL, Keyword.LTR)
         .put(Keyword.LEFT, Keyword.RIGHT)
@@ -117,29 +117,26 @@ public final class DirectionFlipPlugin implements DependentPlugin {
 
     @Override
     public void dependencies(PluginRegistry registry) {
-        registry.require(AutoRefiner.class).declarations();
+        registry.require(DeclarationPlugin.class);
     }
 
     /**
      * Checks for a {@link CssAnnotation} indicating not to flip anything.
      */
-    private boolean noFlip(Declaration declaration) {
+    private boolean hasNoFlip(Declaration declaration) {
         return declaration.hasAnnotation(CssAnnotations.NOFLIP);
     }
 
     /**
      * Flips keywords.
      *
-     * @param keywordValue
+     * @param value
      *     keywordValue to be flipped.
      */
     @Rework
-    public void keywords(KeywordValue keywordValue) {
-        if (noFlip(keywordValue.parent().declaration())) return;
-
-        Optional<Keyword> keyword = keywordValue.asKeyword();
-        if (keyword.isPresent() && KEYWORDS.containsKey(keyword.get())) {
-            keywordValue.keyword(KEYWORDS.get(keyword.get()));
+    public void flipKeyword(KeywordValue value) {
+        if (!hasNoFlip(value.declaration())) {
+            value.asKeyword().map(KEYWORDS_TO_FLIP::get).ifPresent(value::keyword);
         }
     }
 
@@ -150,19 +147,17 @@ public final class DirectionFlipPlugin implements DependentPlugin {
      *     Declaration to be flipped.
      */
     @Rework
-    public void declaration(Declaration declaration) {
-        if (noFlip(declaration)) return;
+    public void flipDeclaration(Declaration declaration) {
+        if (hasNoFlip(declaration)) return;
 
         Optional<Property> property = declaration.propertyName().asPropertyIgnorePrefix();
-        if (!property.isPresent()) return;
+        if (!property.isPresent()) return; // must be a known property
 
-        // flip the property name
-        if (PROPERTIES.containsKey(property.get())) {
-            declaration.propertyName(PROPERTIES.get(property.get()));
-        }
+        // flip the property name if applicable
+        property.map(PROPERTIES_TO_FLIP::get).ifPresent(declaration::propertyName);
 
         // flip property values
-        // Careful!  If a handler depends on the changes a previous handler made,`
+        // Careful!  If a handler depends on the changes a previous handler made,
         // it won't be able to use the property or property value we've grabbed above.
         if (handleFourTerms(declaration, property.get())) return;
         if (handlePercentages(declaration, property.get())) return;
@@ -173,7 +168,7 @@ public final class DirectionFlipPlugin implements DependentPlugin {
         // for patterns such as 1 2 3 4, swap 2 and 4
         if (FOUR_TERM_PROPERTIES.contains(property) && declaration.propertyValue().countTerms() == 4) {
             ImmutableList<Term> terms = declaration.propertyValue().terms();
-            declaration.propertyValue(PropertyValue.ofTerms(OperatorType.SPACE, terms.get(0), terms.get(3), terms.get(2), terms.get(1)));
+            declaration.propertyValue(PropertyValue.of(terms.get(0), terms.get(3), terms.get(2), terms.get(1)));
             return true;
         }
         return false;
@@ -184,7 +179,7 @@ public final class DirectionFlipPlugin implements DependentPlugin {
             for (Term term : declaration.propertyValue().terms()) {
                 // can't handle left, right, or center yet
                 if (term instanceof KeywordValue) {
-                    Keyword keyword = ((KeywordValue)term).asKeyword().orNull();
+                    Keyword keyword = ((KeywordValue)term).asKeyword().orElse(null);
                     if (keyword == Keyword.LEFT || keyword == Keyword.CENTER || keyword == Keyword.RIGHT) return false;
                 }
 
@@ -229,13 +224,13 @@ public final class DirectionFlipPlugin implements DependentPlugin {
         List<Term> terms = value.terms();
         switch (terms.size()) {
         case 2:
-            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0));
+            return PropertyValue.of(terms.get(1), terms.get(0));
         case 3:
             // the 2nd term, when flipped, is used in both the first and 3rd positions.  Use a copy of the term for the 3rd.
-            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(1).copy(),
+            return PropertyValue.of(terms.get(1), terms.get(0), terms.get(1).copy(),
                 terms.get(2));
         case 4:
-            return PropertyValue.ofTerms(OperatorType.SPACE, terms.get(1), terms.get(0), terms.get(3), terms.get(2));
+            return PropertyValue.of(terms.get(1), terms.get(0), terms.get(3), terms.get(2));
         default:
             return value;
         }

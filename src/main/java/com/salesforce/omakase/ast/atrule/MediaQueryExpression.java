@@ -100,7 +100,7 @@ public final class MediaQueryExpression extends AbstractGroupable<MediaQuery, Me
      * @return The list of  terms and operators.
      */
     public List<PropertyValueMember> terms() {
-        return terms != null ? terms : Lists.<PropertyValueMember>newArrayList();
+        return terms != null ? terms : new ArrayList<>();
     }
 
     /**

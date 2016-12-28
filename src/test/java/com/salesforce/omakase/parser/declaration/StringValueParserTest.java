@@ -104,7 +104,7 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
             withExpectedResult("'this is a \\'string\\'.'", "this is a \\'string\\'."));
 
         for (ParseResult<String> result : results) {
-            StringValue value = result.broadcaster.findOnly(StringValue.class).get();
+            StringValue value = expectOnly(result.broadcaster, StringValue.class);
             assertThat(value.content())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);

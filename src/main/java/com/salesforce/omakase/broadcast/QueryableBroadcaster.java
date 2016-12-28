@@ -26,77 +26,49 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.Status;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkState;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
- * A {@link Broadcaster} that stores each event for later querying and retrieval.
+ * A broadcaster that stores all received broadcasts for later retrieval.
+ * <p>
+ * This can handle finding broadcasts of all types, but prefer to use one of the {@link TypeInterestBroadcaster}s if you're
+ * only interested in a single type.
  *
  * @author nmcwilliams
  */
 public final class QueryableBroadcaster extends AbstractBroadcaster {
     /** important to maintain broadcast order */
-    private final List<Broadcastable> collected = new ArrayList<>(32);
+    private final List<Broadcastable> collected = new ArrayList<>();
 
     /**
-     * Constructs a new {@link QueryableBroadcaster} instance that will <em>not</em> relay any events to another {@link
-     * Broadcaster}.
+     * Creates a new {@link QueryableBroadcaster}.
      */
-    public QueryableBroadcaster() {
-        this(null);
-    }
+    public QueryableBroadcaster() {}
 
     /**
-     * Constructs a new {@link QueryableBroadcaster} instance that will relay all events to the given {@link Broadcaster}.
+     * Creates a new {@link QueryableBroadcaster} and calls {@link #chain(Broadcaster)} on this instance, passing in the
+     * given {@link Broadcaster}.
      *
-     * @param relay
-     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     * @param broadcaster
+     *     Add this broadcaster to the end of the chain.
      */
-    public QueryableBroadcaster(Broadcaster relay) {
-        wrap(relay);
+    public QueryableBroadcaster(Broadcaster broadcaster) {
+        chain(broadcaster);
     }
 
     @Override
     public void broadcast(Broadcastable broadcastable) {
         collected.add(broadcastable);
-
-        // update status to prevent a unit from being broadcasted too many times
-        if (broadcastable.status() == Status.UNBROADCASTED) {
-            broadcastable.status(Status.QUEUED);
-        }
-
-        if (relay != null) {
-            relay.broadcast(broadcastable);
-        }
-    }
-
-    /**
-     * Retrieves all broadcasted events.
-     * <p>
-     * If using this in a loop, take note that performing a refine action on the filtered object may result in a {@link
-     * ConcurrentModificationException}, as the refinement may result in the broadcast of additional syntax units. In this case
-     * you could make an immutable copy of the results first.
-     *
-     * @return All broadcasted events.
-     */
-    public Iterable<Broadcastable> all() {
-        return Iterables.unmodifiableIterable(collected);
+        relay(broadcastable);
     }
 
     /**
      * Gets all broadcasted events that are instances of the given class.
-     * <p>
-     * If using this in a loop, take note that performing a refine action on the filtered object may result in a {@link
-     * ConcurrentModificationException}, as the refinement may result in the broadcast of additional syntax units. In this case
-     * you could make an immutable copy of the results first.
      *
      * @param <T>
      *     Type of the {@link Broadcastable} unit.
@@ -106,7 +78,7 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      * @return All matching {@link Broadcastable} units that are instances of the given class.
      */
     public <T extends Broadcastable> Iterable<T> filter(Class<T> klass) {
-        return Iterables.filter(collected, klass);
+        return collected.stream().filter(klass::isInstance).map(klass::cast).collect(Collectors.toList());
     }
 
     /**
@@ -117,32 +89,28 @@ public final class QueryableBroadcaster extends AbstractBroadcaster {
      * @param klass
      *     Get the first {@link Broadcastable} unit that is an instance of this class.
      *
-     * @return The first matching {@link Broadcastable} unit that is an instance of the given class, or {@link Optional#absent()}
-     * if not present.
+     * @return The first matching {@link Broadcastable} unit that is an instance of the given class.
      */
-    @SuppressWarnings("unchecked")
     public <T extends Broadcastable> Optional<T> find(Class<T> klass) {
-        // Predicates.instanceOf ensures that this is a safe cast
-        return (Optional<T>)Iterables.tryFind(collected, Predicates.instanceOf(klass));
+        return collected.stream().filter(klass::isInstance).map(klass::cast).findFirst();
     }
 
     /**
-     * Similar to {@link #find(Class)}, except that this verifies at most one broadcasted event to have occurred.
+     * Returns true if any events were received by this broadcaster.
      *
-     * @param <T>
-     *     Type of the {@link Broadcastable} unit.
-     * @param klass
-     *     Get the one and only {@link Broadcastable} unit that is an instance of this class.
-     *
-     * @return The single matching {@link Broadcastable} unit that is an instance of the given class, or {@link Optional#absent()}
-     * if not present.
+     * @return true if any events were received.
      */
-    public <T extends Broadcastable> Optional<T> findOnly(Class<T> klass) {
-        Optional<T> found = find(klass);
-        if (found.isPresent()) {
-            checkState(collected.size() == 1, "expected to find only one broadcasted event");
-        }
-        return found;
+    public boolean hasAny() {
+        return !collected.isEmpty();
+    }
+
+    /**
+     * Retrieves all broadcasted events.
+     *
+     * @return All broadcasted events.
+     */
+    public List<Broadcastable> all() {
+        return ImmutableList.copyOf(collected);
     }
 
     /**

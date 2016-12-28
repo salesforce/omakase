@@ -26,12 +26,13 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
+
+import java.util.Optional;
 
 /**
  * Parses a {@link KeywordValue}.
@@ -39,12 +40,12 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
  * @author nmcwilliams
  * @see KeywordValue
  */
-public final class KeywordValueParser extends AbstractParser {
+public final class KeywordValueParser implements Parser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
-        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        source.collectComments(false);
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        // move past comments and whitespace
+        source.collectComments();
 
         // grab current position before parsing
         int line = source.originalLine();

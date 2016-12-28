@@ -26,15 +26,16 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parses "!important"s at the end of a declaration's property value.
@@ -42,11 +43,11 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see PropertyValue
  */
-public final class ImportantParser extends AbstractParser {
+public final class ImportantParser implements Parser {
     private static final String IMPORTANT = "important";
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         if (!source.optionallyPresent(Tokens.EXCLAMATION)) return false;

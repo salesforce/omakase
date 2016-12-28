@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class PrefixerUnitAtRuleTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();
         Omakase.source(original)
-            .use(AutoRefiner.refineEverything())
+            .use(AutoRefine.everything())
             .use(prefixer)
             .use(PrefixCleaner.mismatchedPrefixedUnits())
             .use(writer)

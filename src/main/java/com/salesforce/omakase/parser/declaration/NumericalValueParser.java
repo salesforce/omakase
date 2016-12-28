@@ -26,16 +26,17 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue.Sign;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parses a {@link NumericalValue}.
@@ -43,11 +44,12 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see NumericalValue
  */
-public final class NumericalValueParser extends AbstractParser {
+public final class NumericalValueParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
-        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        source.collectComments(false);
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        // move past comments and whitespace
+        source.collectComments();
 
         // snapshot the current state before parsing
         Source.Snapshot snapshot = source.snapshot();
@@ -92,7 +94,7 @@ public final class NumericalValueParser extends AbstractParser {
             unit = Optional.of("%");
         } else {
             String string = source.chomp(Tokens.ALPHA);
-            unit = string.isEmpty() ? Optional.<String>absent() : Optional.of(string);
+            unit = string.isEmpty() ? Optional.empty() : Optional.of(string);
         }
 
         if (unit.isPresent()) {
@@ -103,4 +105,5 @@ public final class NumericalValueParser extends AbstractParser {
         numerical.comments(source.flushComments());
         return true;
     }
+
 }

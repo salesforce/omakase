@@ -31,11 +31,10 @@ import com.salesforce.omakase.ast.atrule.MediaQuery;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -48,32 +47,35 @@ import com.salesforce.omakase.parser.token.Tokens;
  *
  * @author nmcwilliams
  */
-public final class MediaQueryListParser extends AbstractParser {
+public final class MediaQueryListParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         int line = source.originalLine();
         int column = source.originalColumn();
 
-        QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+        QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // try parsing a media query
-        if (!ParserFactory.mediaQueryParser().parse(source, qb, refiner)) return false;
+        Parser mediaQueryParser = grammar.parser().mediaQueryParser();
+        if (!mediaQueryParser.parse(source, grammar, queryable)) return false;
 
         // parse the remaining media queries
         while (source.skipWhitepace().optionallyPresent(Tokens.COMMA)) {
             source.skipWhitepace();
-            if (!ParserFactory.mediaQueryParser().parse(source, qb, refiner)) {
+            if (!mediaQueryParser.parse(source, grammar, queryable)) {
                 throw new ParserException(source, Message.TRAILING, Tokens.COMMA.description());
             }
         }
 
         // create the list and broadcast it
-        MediaQueryList list = new MediaQueryList(line, column, broadcaster);
-        list.queries().appendAll(qb.filter(MediaQuery.class));
+        MediaQueryList list = new MediaQueryList(line, column);
+        list.queries().appendAll(queryable.filter(MediaQuery.class));
         broadcaster.broadcast(list);
 
         return true;
     }
+
 }

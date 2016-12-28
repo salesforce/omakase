@@ -28,14 +28,15 @@ package com.salesforce.omakase;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.error.ErrorLevel;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
+import com.salesforce.omakase.error.DefaultErrorManager;
 import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.error.ThrowingErrorManager;
+import com.salesforce.omakase.error.ProblemSummaryException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.token.TokenFactory;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,29 +46,33 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * Example:
  * <code><pre>
- *     StandardValidation validation = new StandardValidation();
  *     StyleWriter verbose = StyleWriter.verbose();
- *     Omakase.source(input).use(validation).use(verbose).process();
+ *     StandardValidation validation = new StandardValidation();
+ *     Omakase.source(input).use(verbose).use(validation).process();
  *     verbose.writeTo(System.out);
  * </pre></code>
  * Example:
  * <code><pre>
  *     StandardValidation validation = new StandardValidation();
  *     StyleWriter inline = StyleWriter.inline();
- * <p>
+ *
  *     Omakase.source(input)
- *         .use(validation)
- *         .use(inline)
  *         .use(new Plugin() {
- *             {@code @}Rework
+ *            {@code @}Rework
  *             public void rework(Selector selector) {
  *                 ...
  *             }
  *         })
+ *         .use(new MyCustomPlugin())
+ *         .use(inline)
+ *         .use(validation)
  *         .process();
- * <p>
+ *
  *     inline.writeTo(System.out);
  * </pre></code>
+ * Unless you are specifically optimizing for performance you should usually add {@link StandardValidation}, and it should
+ * be added after any custom plugins.
+ * <p>
  * For more usage information, see the readme.md file. Please note that the parser does not currently support the following:
  * <p>
  * {@code cdo and cdc, escaping (in most cases)}
@@ -82,13 +87,15 @@ public final class Omakase {
     /**
      * Specifies the CSS source to parse.
      * <p>
-     * Omakase calls begin with this method, you then usually add some plugins and then finally end with {@code .process()}
+     * Omakase calls begin with this method, you then usually add some plugins and then finally end with {@code .process()}.
+     * <p>
+     * Unless you are specifically optimizing for performance you should usually add {@link StandardValidation}, and it should
+     * be added after any custom plugins.
      *
      * @param source
      *     The CSS source code.
      *
-     * @return The processed request (see {@link Request}). Usually you don't need this reference unless you can't inline/chain
-     * the whole call).
+     * @return The processed request (see {@link Request}).
      */
     public static Omakase.Request source(CharSequence source) {
         checkNotNull(source, "source cannot be null");
@@ -96,25 +103,24 @@ public final class Omakase {
     }
 
     /**
-     * Represents a request to process CSS.
+     * Represents a CSS parsing operation.
      * <p>
      * This object allows you to add plugins in order to specify the validation, rework, etc... performed on the processed code.
      * See {@link Plugin} for more information.
      * <p>
-     * Use {@link #use(ErrorManager)} to specify a custom error manager. Otherwise {@link ThrowingErrorManager} is used by
+     * Use {@link #use(ErrorManager)} to specify a custom error manager. Otherwise {@link DefaultErrorManager} is used by
      * default.
      */
     public static final class Request {
         private final Context context;
         private final Source source;
 
-        private TokenFactory tokenFactory;
         private ErrorManager em;
 
         Request(CharSequence source) {
             this.context = new Context();
             this.source = new Source(source.toString());
-            this.em = new ThrowingErrorManager();
+            this.em = new DefaultErrorManager();
         }
 
         /**
@@ -143,7 +149,7 @@ public final class Omakase {
         }
 
         /**
-         * Specifies a custom error manager to use. If not specified, {@link ThrowingErrorManager} is used by default.
+         * Specifies a custom error manager to use. If not specified, {@link DefaultErrorManager} is used by default.
          *
          * @param em
          *     The error manager.
@@ -170,22 +176,29 @@ public final class Omakase {
         }
 
         /**
-         * Processes the CSS source code, invoking registered plugins as applicable. It's  expected that you call this method at
-         * most once. To process difference source code, or to reprocess the same source code under different conditions or
-         * plugins, start new with {@link Omakase#source(CharSequence)}. It's perfectly acceptable to reprocess the result of a
-         * previous parsing operation (e.g., using the output from a {@link StyleWriter}).
+         * Processes the CSS source code, invoking registered plugins as applicable.
+         * <p>
+         * It's expected that you call this method at most once per instance. To process different source code, or to reprocess
+         * the same source code under different conditions or plugins, start new with {@link Omakase#source(CharSequence)}. It's
+         * perfectly acceptable to reprocess the result of a previous parsing operation (e.g., using the output from a {@link
+         * StyleWriter}).
          *
          * @return The {@link PluginRegistry} containing all registered plugins. This allows you to retrieve plugins if applicable
          * for further processing or information retrieval.
          */
         public PluginRegistry process() {
             try {
-                context.errorManager(em);
-                context.before();
-                ParserFactory.stylesheetParser().parse(source, context, context.createRefiner());
+                Grammar grammar = context.before(this.em);
+                grammar.parser().stylesheetParser().parse(source, grammar, context.broadcaster());
                 context.after();
             } catch (ParserException e) {
-                em.report(ErrorLevel.FATAL, e);
+                em.report(e);
+            } catch (SubscriptionException e) {
+                em.report(e);
+            }
+
+            if (em.autoSummarize() && em.hasErrors()) {
+                throw new ProblemSummaryException(em.summarize());
             }
 
             return context;

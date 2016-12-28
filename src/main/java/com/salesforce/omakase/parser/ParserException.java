@@ -30,7 +30,6 @@ import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.error.ErrorUtils;
 import com.salesforce.omakase.error.OmakaseException;
-import com.salesforce.omakase.parser.refiner.Refiner;
 
 /**
  * An error encountered while parsing.
@@ -41,17 +40,45 @@ public final class ParserException extends OmakaseException {
     private static final long serialVersionUID = -8952238331167900360L;
 
     /**
-     * Constructs a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
+     * Constructs a new instance of a {@link ParserException} with the given message and message parameters.
      *
      * @param source
      *     The source containing the source of the error.
      * @param message
      *     The error message.
      * @param args
-     *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
+     *     The {@link String#format(String, Object...)} parameters.
      */
-    public ParserException(Source source, Message message, Object... args) {
-        this(source, message.message(args));
+    public ParserException(Source source, String message, Object... args) {
+        this(source, Message.fmt(message, args));
+    }
+
+    /**
+     * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
+     * <p>
+     * This is normally used by {@link Grammar}s.
+     *
+     * @param cause
+     *     The syntax unit that caused the problem.
+     * @param message
+     *     The error message.
+     */
+    public ParserException(Syntax cause, String message) {
+        super(ErrorUtils.format(cause, message));
+    }
+
+    /**
+     * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
+     *
+     * @param cause
+     *     The syntax unit that caused the problem.
+     * @param message
+     *     The error message.
+     * @param args
+     *     The {@link String#format(String, Object...)} parameters.
+     */
+    public ParserException(Syntax cause, String message, Object... args) {
+        this(cause, Message.fmt(message, args));
     }
 
     /**
@@ -67,38 +94,8 @@ public final class ParserException extends OmakaseException {
     }
 
     /**
-     * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
-     * <p>
-     * This is normally used by {@link Refiner}s.
-     *
-     * @param cause
-     *     The syntax unit that caused the problem.
-     * @param message
-     *     The error message.
-     * @param args
-     *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
-     */
-    public ParserException(Syntax cause, Message message, Object... args) {
-        this(cause, message.message(args));
-    }
-
-    /**
-     * Constructs a new instance of a {@link ParserException} for an error caused by the given {@link Syntax} unit.
-     * <p>
-     * This is normally used by {@link Refiner}s.
-     *
-     * @param cause
-     *     The syntax unit that caused the problem.
-     * @param message
-     *     The error message.
-     */
-    public ParserException(Syntax cause, String message) {
-        super(ErrorUtils.format(cause, message));
-    }
-
-    /**
      * Constructs a new instance of a {@link ParserException} from the given cause. This is usually used to wrap around external
-     * (to Omakase) checked exceptions from custom {@link Refiner} objects.
+     * (to Omakase) checked exceptions from custom {@link Grammar} objects.
      *
      * @param cause
      *     The cause of the exception.

@@ -95,7 +95,7 @@ public class TypeSelectorParserTest extends AbstractParserTest<TypeSelectorParse
             withExpectedResult("somethingnew", "somethingnew"));
 
         for (ParseResult<String> result : results) {
-            TypeSelector selector = result.broadcaster.findOnly(TypeSelector.class).get();
+            TypeSelector selector = expectOnly(result.broadcaster, TypeSelector.class);
             assertThat(selector.name())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);

@@ -26,11 +26,9 @@
 
 package com.salesforce.omakase.parser;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
@@ -38,12 +36,13 @@ import com.salesforce.omakase.parser.token.Tokens;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkPositionIndex;
 import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
- * A tool for reading a String source one character at a time. Basically a glorified wrapper around a String.
+ * A tool for reading a String source one character at a time.
  * <p>
  * This provides methods for navigating through the source, matching against expected {@link Token}s, and keeps track of the
  * current line and column positions.
@@ -260,7 +259,7 @@ public final class Source {
 
     /**
      * Gets whether this a sub-sequence. In other words, this will be true if this source was created from a sub-sequence of a
-     * parent source. This is commonly true for AST objects created through {@link Refinable#refine()} methods.
+     * parent source. This is commonly true for AST objects created through refinement.
      *
      * @return True if either the {@link #anchorLine()} or {@link #anchorColumn()} is greater than 1.
      */
@@ -455,11 +454,11 @@ public final class Source {
      * @param token
      *     The token to match.
      *
-     * @return The parsed character, or {@link Optional#absent()} if not matched.
+     * @return The parsed character, or an empty {@link Optional} if not matched.
      */
     public Optional<Character> optional(Token token) {
         // if the current character doesn't match then don't advance
-        if (!token.matches(current())) return Optional.absent();
+        if (!token.matches(current())) return Optional.empty();
 
         Optional<Character> value = Optional.of(current());
 
@@ -493,13 +492,13 @@ public final class Source {
      * @param <T>
      *     Type of the enum.
      *
-     * @return The matching enum instance, or {@link Optional#absent()} if none match.
+     * @return The matching enum instance, or an empty {@link Optional} if none match.
      */
     public <T extends Enum<T> & TokenEnum> Optional<T> optionalFromEnum(Class<T> klass) {
         for (T member : klass.getEnumConstants()) {
             if (optionallyPresent(member.token())) return Optional.of(member);
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -515,14 +514,14 @@ public final class Source {
      * @param <T>
      *     Type of the enum.
      *
-     * @return The matching enum instance, or {@link Optional#absent()} if none match.
+     * @return The matching enum instance, or an empty {@link Optional} if none match.
      */
     public <T extends Enum<T> & ConstantEnum> Optional<T> optionalFromConstantEnum(Class<T> klass) {
         for (T member : klass.getEnumConstants()) {
             if (readConstant(member.constant())) return Optional.of(member);
             if (!member.caseSensitive() && readConstant(member.constant().toUpperCase())) return Optional.of(member);
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -551,7 +550,7 @@ public final class Source {
      *
      * @return this, for chaining.
      */
-    public Source expect(Token token, Message errorMessage, Object... args) {
+    public Source expect(Token token, String errorMessage, Object... args) {
         if (!token.matches(current())) throw new ParserException(this, errorMessage, args);
         next();
         return this;
@@ -691,7 +690,14 @@ public final class Source {
     }
 
     /**
-     * Same as {@link #collectComments(boolean)}, with a default skipWhitespace value of true.
+     * Parses all comments and whitespace at the current position in the source.
+     * <p>
+     * Comments can be retrieved with {@link #flushComments()}, which will return and remove all comments currently in the
+     * buffer.
+     * <p>
+     * This separation into the two methods allows for comments to be collected prematurely without needing to backtrack if the
+     * parser later determines it doesn't match. The next parser can still retrieve the comments from the buffer even if another
+     * parser triggered the collection of them.
      *
      * @return this, for chaining.
      */
@@ -702,7 +708,7 @@ public final class Source {
     /**
      * Parses all comments at the current position in the source.
      * <p>
-     * Comments can be retrieved wth {@link #flushComments()}. That method will return and remove all comments currently in the
+     * Comments can be retrieved with {@link #flushComments()}, which will return and remove all comments currently in the
      * buffer.
      * <p>
      * This separation into the two methods allows for comments to be collected prematurely without needing to backtrack if the
@@ -742,6 +748,30 @@ public final class Source {
             }
         }
         return this;
+    }
+
+    /**
+     * Parses all comments at the current position in the source.
+     * <p>
+     * Comments can be retrieved with {@link #flushComments()}, which will return and remove all comments currently in the
+     * buffer.
+     * <p>
+     * This separation into the two methods allows for comments to be collected prematurely without needing to backtrack if the
+     * parser later determines it doesn't match. The next parser can still retrieve the comments from the buffer even if another
+     * parser triggered the collection of them.
+     * <p>
+     * This method will return true if anything was parsed. Pass in a value false to only check for comments and not
+     * whitespace, otherwise pass in true.
+     *
+     * @param skipWhitespace
+     *     If we should skip past whitespace before, between and after comments.
+     *
+     * @return True if anything was parsed.
+     */
+    public boolean findComments(boolean skipWhitespace) {
+        int startingIndex = index;
+        collectComments(skipWhitespace);
+        return index != startingIndex;
     }
 
     /**
@@ -793,7 +823,7 @@ public final class Source {
 
     public List<String> flushComments() {
         // gather the comments from the queue
-        List<String> flushed = (comments == null) ? ImmutableList.<String>of() : comments;
+        List<String> flushed = (comments == null) ? ImmutableList.of() : comments;
 
         // reset the queue
         comments = null;
@@ -867,7 +897,7 @@ public final class Source {
      * <p>
      * future: the spec allows for non ascii and escaped characters here as well.
      *
-     * @return The matched token, or {@link Optional#absent()} if not matched.
+     * @return The matched token, or an empty {@link Optional} if not matched.
      */
     public Optional<String> readIdent() {
         final char current = current();
@@ -878,7 +908,7 @@ public final class Source {
             // spec says idents can't start with -- or -[0-9] (www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
             return Optional.of(chomp(NMCHAR));
         } else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
@@ -902,7 +932,7 @@ public final class Source {
             return Optional.of(chompEnclosedValue(DOUBLE_QUOTE, DOUBLE_QUOTE));
         }
 
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override
@@ -1034,7 +1064,7 @@ public final class Source {
          * @throws ParserException
          *     An exception with the given message.
          */
-        public void rollback(Message message, Object... args) {
+        public void rollback(String message, Object... args) {
             rollback();
             throw new ParserException(source, message, args);
         }

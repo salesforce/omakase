@@ -72,7 +72,7 @@ public class MixinReference extends AbstractTerm {
 
     @Override
     public MixinReference copy() {
-        return null;
+        return null; // implement if necessary
     }
 
     @Override

@@ -225,6 +225,7 @@ public class GeneratePrefixTablesClass {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class Info {
         private final Browser browser;
         private final Double version;

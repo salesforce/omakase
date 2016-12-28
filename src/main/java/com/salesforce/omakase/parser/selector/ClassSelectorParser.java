@@ -26,15 +26,16 @@
 
 package com.salesforce.omakase.parser.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parses a {@link ClassSelector}.
@@ -42,10 +43,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see ClassSelector
  */
-public final class ClassSelectorParser extends AbstractParser {
+public final class ClassSelectorParser implements Parser {
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 

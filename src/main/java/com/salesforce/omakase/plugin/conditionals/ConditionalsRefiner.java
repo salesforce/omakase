@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
@@ -35,16 +34,17 @@ import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.annotation.Refine;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.token.Tokens;
+import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Parses {@link AtRule} objects that are {@link ConditionalAtRuleBlock}s.
@@ -53,12 +53,11 @@ import java.util.List;
  * @see ConditionalAtRuleBlock
  * @see Conditionals
  */
-public final class ConditionalsRefiner implements AtRuleRefiner {
-    private static final String IF = "if";
+public final class ConditionalsRefiner implements Plugin {
     private final ConditionalsConfig config;
 
     /**
-     * Creates a new {@link ConditionalsRefiner} instance.
+     * Creates a new {@link ConditionalsRefiner}.
      *
      * @param config
      *     The {@link ConditionalsConfig} instance, to be passed all new {@link ConditionalAtRuleBlock} instances.
@@ -67,11 +66,18 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
         this.config = config;
     }
 
-    @Override
-    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
-        // must be named  "if"
-        if (!atRule.name().equals(IF)) return Refinement.NONE;
-
+    /**
+     * The refiner method.
+     *
+     * @param atRule
+     *     The atRule to refine.
+     * @param grammar
+     *     The grammar.
+     * @param broadcaster
+     *     The broadcaster.
+     */
+    @Refine("if")
+    public void refine(AtRule atRule, Grammar grammar, Broadcaster broadcaster) {
         // the at-rule must have an expression
         if (!atRule.rawExpression().isPresent()) {
             throw new ParserException(atRule, Message.MISSING_CONDITIONAL_EXPRESSION);
@@ -124,8 +130,9 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // parse the inner statements
+        Parser rule = grammar.parser().ruleParser();
         while (!source.eof()) {
-            boolean matched = ParserFactory.ruleParser().parse(source, queryable, refiner);
+            boolean matched = rule.parse(source, grammar, queryable);
             source.skipWhitepace();
 
             // after parsing there should be nothing left in the source
@@ -136,12 +143,11 @@ public final class ConditionalsRefiner implements AtRuleRefiner {
 
         // create the new conditional node and broadcast it
         ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), conditionals,
-            queryable.filter(Statement.class), config, broadcaster);
+            queryable.filter(Statement.class), config);
         broadcaster.broadcast(block);
 
-        // don't print out the name of the at-rule
+        // don't print out the name of the at-rule (the '@if' part. the block will print it out when it's
+        // needed in passthrough mode. A little wonky but heh...)
         atRule.shouldWriteName(false);
-
-        return Refinement.FULL;
     }
 }

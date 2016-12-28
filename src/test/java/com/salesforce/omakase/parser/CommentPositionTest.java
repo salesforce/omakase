@@ -34,8 +34,8 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.core.AutoRefine;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,11 +62,11 @@ public class CommentPositionTest {
 
     @Before
     public void setup() {
-        SyntaxTree syntaxTree = new SyntaxTree();
-        AutoRefiner refinement = new AutoRefiner().all();
-        Omakase.source(SRC).use(refinement).use(syntaxTree).process();
-        this.stylesheet = syntaxTree.stylesheet();
-        this.rule = (Rule)Iterables.get(stylesheet.statements(), 0);
+        SyntaxTree tree = new SyntaxTree();
+        AutoRefine refine = new AutoRefine();
+        Omakase.source(SRC).use(refine).use(tree).process();
+        this.stylesheet = tree.stylesheet();
+        this.rule = stylesheet.rules().get(0);
     }
 
     @Test

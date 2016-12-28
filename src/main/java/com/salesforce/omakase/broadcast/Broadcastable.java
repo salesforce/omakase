@@ -28,19 +28,20 @@ package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 
 /**
  * Something that can be broadcasted.
- * <p>
- * The most common {@link Broadcastable} is {@link Syntax}. {@link Syntax} units are usually broadcasted upon creation.
  *
  * @author nmcwilliams
  * @see Broadcaster
  * @see EmittingBroadcaster
+ * @see Syntax
  */
 public interface Broadcastable {
     /**
-     * Sets the current broadcast status. For internal use only, <strong>do not call directly</strong>.
+     * Sets the current broadcast status. Normally for internal use. Do not call without understanding the implications.
      *
      * @param status
      *     The new status.
@@ -50,26 +51,38 @@ public interface Broadcastable {
     /**
      * Gets the current broadcast status of this unit.
      * <p>
-     * This primarily determines whether this unit should be broadcasted again, given that each unit should be broadcasted at most
-     * once per phase.
+     * This primarily determines whether this unit should be broadcasted again.
      *
      * @return The current broadcast status.
      */
     Status status();
 
     /**
-     * Broadcasts all unbroadcasted child units using the given {@link Broadcaster}.
+     * Broadcasts or rebroadcasts all child units using the given {@link Broadcaster}.
      * <p>
-     * This is primarily used for dynamically created {@link Syntax} units that have child or inner units. When the parent unit
-     * itself is broadcasted, this method should be called on the parent unit in o
+     * The broadcast will only occur for a unit if its {@link Status} matches the given {@link Status}.
      * <p>
-     * Implementers, generally speaking, should call {@link #propagateBroadcast(Broadcaster)} on child units before propagating
-     * itself, to match the broadcasting order of parsed units.
+     * Implementers should call {@link #propagateBroadcast(Broadcaster, Status)} on child units and {@link
+     * SyntaxCollection}s first, then use the broadcaster to broadcast itself. All of this should be wrapped in a check to
+     * ensure the {@link Status} matches.
      *
      * @param broadcaster
      *     Use this {@link Broadcaster} to broadcast all unbroadcasted child units.
-     *
-     * @see Broadcaster#broadcast(Broadcastable, boolean)
+     * @param status
+     *     Broadcast units that have this status.
      */
-    void propagateBroadcast(Broadcaster broadcaster);
+    void propagateBroadcast(Broadcaster broadcaster, Status status);
+
+    /**
+     * Gets whether an in-progress broadcast should be stopped.
+     * <p>
+     * This might be true if a change of state or conditions of the unit result in the broadcast no longer being necessary during
+     * the given {@link SubscriptionPhase}.
+     *
+     * @param phase
+     *     The current {@link SubscriptionPhase}.
+     *
+     * @return True if in-progress broadcasting should be stopped.
+     */
+    boolean breakBroadcast(SubscriptionPhase phase);
 }

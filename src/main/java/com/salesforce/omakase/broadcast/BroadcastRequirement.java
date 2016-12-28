@@ -26,11 +26,7 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 /**
  * Indicates the conditions for an {@link Subscribable} type to be broadcasted.
@@ -38,17 +34,17 @@ import com.salesforce.omakase.plugin.basic.AutoRefiner;
  * @author nmcwilliams
  */
 public enum BroadcastRequirement {
-    /** automatically broadcasted (except for Syntax, where some syntax items are only broadcasted during refinement) */
+    /** automatically broadcasted */
     AUTOMATIC("Automatic"),
 
-    /** refine must be called on {@link Selector}s, e.g., with {@link AutoRefiner#selectors()} */
-    REFINED_SELECTOR("Selector#refine"),
+    /** Selector must be refined */
+    REFINED_SELECTOR("Selector refinement"),
 
-    /** refine must be called on {@link Declaration}s, e.g., with {@link AutoRefiner#declarations()} */
-    REFINED_DECLARATION("Declaration#refine"),
+    /** Declaration must be refined */
+    REFINED_DECLARATION("Declaration refinement"),
 
-    /** refine must be called on {@link AtRule}s, e.g., with {@link AutoRefiner#atRules()} */
-    REFINED_AT_RULE("AtRule#refine"),
+    /** AtRule must be refined */
+    REFINED_AT_RULE("AtRule refinement"),
 
     /** Requires special conditions to be broadcasted */
     SPECIAL("Under certain conditions*");

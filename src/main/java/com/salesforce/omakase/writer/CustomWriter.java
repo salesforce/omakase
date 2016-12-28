@@ -29,7 +29,6 @@ package com.salesforce.omakase.writer;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 import java.io.IOException;
 
@@ -39,8 +38,8 @@ import java.io.IOException;
  * This allows you to override (or augment) the writing of any {@link Syntax} unit.
  * <p>
  * <b>Important</b>: Some syntax units will not have their overrides kick in unless the parent unit is refined. For example, a
- * {@link ClassSelector} override will not be utilized unless {@link Selector#refine()} is called on the parent {@link Selector}.
- * An easy way to handle this is with an {@link AutoRefiner}. See the notes on that class for more information.
+ * {@link ClassSelector} override will not be utilized unless the parent {@link Selector} is refined. See the main readme file
+ * for more information about refinement.
  * <p>
  * <b>Also Important:</b> The write method will only be called if the unit is writable (see {@link Writable#isWritable()}). This
  * may be false if the unit was destroyed/removed.

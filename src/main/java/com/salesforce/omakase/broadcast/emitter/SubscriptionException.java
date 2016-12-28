@@ -28,34 +28,35 @@ package com.salesforce.omakase.broadcast.emitter;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.error.OmakaseException;
-import com.salesforce.omakase.parser.ParserException;
 
 /**
  * An error that occurs while invoking a subscription method.
  *
  * @author nmcwilliams
  */
-public class SubscriptionException extends OmakaseException {
+public final class SubscriptionException extends OmakaseException {
     private static final long serialVersionUID = 7730100425922298149L;
 
     /**
-     * Construct a new instance of a {@link ParserException} with the given {@link Message} and message parameters.
+     * Constructs a new {@link SubscriptionException} with the given message.
      *
-     * @param message
-     *     The error message.
-     * @param args
-     *     The {@link String#format(String, Object...)} parameters to pass to {@link Message#message(Object...)}.
-     */
-    public SubscriptionException(Message message, Object... args) {
-        this(message.message(args));
-    }
-
-    /**
      * @param message
      *     The error message.
      */
     public SubscriptionException(String message) {
         super(message);
+    }
+
+    /**
+     * Construct a new {@link SubscriptionException} with the given message and parameters.
+     *
+     * @param message
+     *     The error message.
+     * @param args
+     *     The {@link String#format(String, Object...)} parameters.
+     */
+    public SubscriptionException(String message, Object... args) {
+        super(Message.fmt(message, args));
     }
 
     /**
@@ -65,12 +66,12 @@ public class SubscriptionException extends OmakaseException {
      *     The underlying cause.
      */
     public SubscriptionException(String message, Throwable cause) {
-        super(message + ":\n  " + findMessage(cause), cause);
+        super(message + ":\n" + findMessage(cause), cause);
     }
 
     private static String findMessage(Throwable cause) {
-        if (cause.getMessage() != null) return cause.getMessage();
+        if (cause.getMessage() != null) return cause.toString();
         if (cause.getCause() != null) return findMessage(cause.getCause());
-        return "(check the cause below)";
+        return "(find the cause below)";
     }
 }

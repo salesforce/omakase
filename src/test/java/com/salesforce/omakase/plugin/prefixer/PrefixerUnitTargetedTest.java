@@ -28,7 +28,7 @@ package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
@@ -50,7 +50,7 @@ public class PrefixerUnitTargetedTest {
     private String process(String original, Prefixer prefixer, WriterMode mode) {
         StyleWriter writer = new StyleWriter(mode);
         Omakase.source(original)
-            .use(AutoRefiner.refineEverything())
+            .use(AutoRefine.everything())
             .use(prefixer)
             .use(PrefixCleaner.mismatchedPrefixedUnits())
             .use(writer)

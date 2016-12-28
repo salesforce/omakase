@@ -30,21 +30,20 @@ import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 
 /**
- * An example of using the sample custom at-rule classes in this package.
+ * An example of using the sample custom at-rule plugin in this package.
  * <p>
  * The custom at-rule allows for a "query token", in the format of <code>@query medium | all and (min-width:800px)</code>.
  * Subsequent media queries can refer to this token, allowing our CSS to be DRY.
  * <p>
- * We give the parser an instance of the {@link QueryTokenPlugin}. This plugin is a {@link SyntaxPlugin} that registers our {@link
- * QueryTokenRefiner}. The refiner handles actually parsing the custom at-rule tokens as well as the media query references to
- * them. Unlike the other samples, no custom AST objects are necessary, although we could have used them if we wanted.
+ * We give the parser an instance of the {@link QueryTokenPlugin}. The plugin handles actually parsing the custom at-rule
+ * tokens as well as the media query references to them. Unlike the other samples, no custom AST objects are necessary, although
+ * we could have used them if we wanted.
  * <p>
  * Note that in this example we are parsing 4 distinct sources (they could be 4 different files on disk). The first file contains
  * the query token definitions for subsequent usage, and the following files utilize them even though they are parsed separately.
@@ -54,7 +53,7 @@ import java.io.IOException;
  * <p>
  * <b>1)</b> Make a query token definition invalid (e.g., remove the pipe). <b>2)</b> Write an additional plugin that subscribes
  * to {@link MediaQueryList}, and note that it gets called with each substituted token. <b>3)</b> Create a QueryToken custom AST
- * object class that is annotated with {@link Subscribable}, and have the refiner create and broadcast those. Write a plugin that
+ * object class that is annotated with {@link Subscribable}, and have the plugin create and broadcast those. Write a plugin that
  * subscribes to the QueryToken AST object (with {@link Validate}) and have it count the number of times the same query token is
  * used, throwing an error if it is above some threshold (this would be an example of css linting).
  *
@@ -128,19 +127,19 @@ public final class SampleUsage {
         QueryTokenPlugin queryTokens = new QueryTokenPlugin();
 
         // parse files
-        Omakase.source(file1).use(validation).use(inline).use(queryTokens).process();
+        Omakase.source(file1).use(inline).use(queryTokens).use(validation).process();
         System.out.println("\nOUTPUT FILE 1:\n--------------------");
         inline.writeTo(System.out);
 
-        Omakase.source(file2).use(validation).use(inline).use(queryTokens).process();
+        Omakase.source(file2).use(inline).use(queryTokens).use(validation).process();
         System.out.println("\n\nOUTPUT FILE 2:\n--------------------");
         inline.writeTo(System.out);
 
-        Omakase.source(file3).use(validation).use(inline).use(queryTokens).process();
+        Omakase.source(file3).use(inline).use(queryTokens).use(validation).process();
         System.out.println("\n\nOUTPUT FILE 3:\n--------------------");
         inline.writeTo(System.out);
 
-        Omakase.source(file4).use(validation).use(inline).use(queryTokens).process();
+        Omakase.source(file4).use(inline).use(queryTokens).use(validation).process();
         System.out.println("\n\nOUTPUT FILE 4:\n--------------------");
         inline.writeTo(System.out);
     }

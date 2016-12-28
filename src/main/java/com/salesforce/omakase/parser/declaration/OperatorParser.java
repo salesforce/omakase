@@ -26,14 +26,14 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parses a single term {@link Operator}.
@@ -41,41 +41,27 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see Operator
  */
-public final class OperatorParser extends AbstractParser {
+public final class OperatorParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
-        // skip comments at the beginning but not whitespace
-        source.collectComments(false);
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        // move past comments and whitespace
+        source.collectComments();
 
         // save off the current position before parsing any content
         int line = source.originalLine();
         int column = source.originalColumn();
 
-        // The presence of a space *could* be the "single space" term operator.
-        // Or it could just be whitespace around another term operator.
-        boolean mightBeSpaceOperator = source.optionallyPresent(Tokens.WHITESPACE);
-
-        // after we've already checked for the single space operator, it's ok to consume comments
-        // and surrounding whitespace.
-        source.collectComments();
-
         // see if there is an actual non-space operator
         Optional<OperatorType> type = source.optionalFromEnum(OperatorType.class);
 
-        // if no operator is parsed and we parsed at least one space then we know it's a single space operator
-        if (mightBeSpaceOperator && !type.isPresent()) {
-            type = Optional.of(OperatorType.SPACE);
-        }
-
         // we didn't parse any operators
         if (!type.isPresent()) return false;
-
-        // skip whitespace now that we know it can't be another space operator.
-        source.skipWhitepace();
 
         // broadcast the parsed operator
         Operator operator = new Operator(line, column, type.get());
         broadcaster.broadcast(operator);
         return true;
     }
+
 }

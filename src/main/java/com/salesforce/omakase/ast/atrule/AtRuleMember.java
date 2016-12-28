@@ -26,8 +26,9 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
+
+import java.util.Optional;
 
 /**
  * Either an {@link AtRuleExpression} or an {@link AtRuleBlock}.
@@ -37,7 +38,7 @@ import com.salesforce.omakase.ast.Syntax;
 public interface AtRuleMember extends Syntax {
     /**
      * Sets the parent {@link AtRule}. Generally this is handled automatically when this block is set on the {@link AtRule}, so it
-     * is not recommended to call this method manually. If you do, results may be unexpected.
+     * is not recommended to call this method manually.
      * <p>
      * Do not use this method to move a block from one parent to another.
      *
@@ -52,9 +53,9 @@ public interface AtRuleMember extends Syntax {
 
     /**
      * Gets the parent {@link AtRule} that owns this property, or absent if not set. This will not be set for dynamically created
-     * property values not yet added to an {@link AtRule} instance.
+     * units not yet added to an {@link AtRule} instance.
      *
-     * @return The parent {@link AtRule}, or {@link Optional#absent()} if not set.
+     * @return The parent {@link AtRule}, or an empty {@link Optional} if not present.
      */
     AtRule parent();
 }

@@ -119,13 +119,13 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
             withExpectedResult("\t.class", SelectorPartType.DESCENDANT_COMBINATOR));
 
         for (ParseResult<SelectorPartType> result : results) {
-            Combinator combinator = result.broadcaster.findOnly(Combinator.class).get();
+            Combinator combinator = expectOnly(result.broadcaster, Combinator.class);
             assertThat(combinator.type()).describedAs(result.source.toString()).isEqualTo(result.expected);
         }
     }
 
     @Test
-    /** overridden because whitespace can be a descendant combinator */
+    /* overridden because whitespace can be a descendant combinator */
     public void correctLineAndColumnNumber() {
         List<GenericParseResult> results = parse(validSources());
         for (GenericParseResult result : results) {

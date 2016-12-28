@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.data.Prefix;
@@ -35,6 +34,7 @@ import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.util.Values;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 /**
  * Handles the special needs of the <code>transition</code> and <code>transition-property</code> properties.
@@ -43,7 +43,7 @@ import java.util.EnumSet;
  * <code>transition: transform 3s;</code>. These property names in the value may need to be prefixed even if the transition
  * property itself doesn't need a prefix.
  * <p>
- * XXX it would be nice if this could also handle removing prefixes and not adding if they already exist!
+ * XXX it would be nice if this could also handle removing prefixes and not adding if they already exist
  *
  * @author nmcwilliams
  */

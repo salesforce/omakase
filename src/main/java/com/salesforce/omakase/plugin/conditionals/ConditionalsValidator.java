@@ -57,7 +57,7 @@ import java.util.Set;
  * @see ConditionalsConfig
  * @see ConditionalAtRuleBlock
  */
-public class ConditionalsValidator implements DependentPlugin {
+public final class ConditionalsValidator implements DependentPlugin {
     private static final String MSG = "Invalid condition '%s'. Must be one of '%s'";
     private final Set<String> allowedConditions;
 
@@ -112,7 +112,7 @@ public class ConditionalsValidator implements DependentPlugin {
     }
 
     /**
-     * Subscription method - do not call directly.
+     * Validation method.
      *
      * @param block
      *     The block to validate.

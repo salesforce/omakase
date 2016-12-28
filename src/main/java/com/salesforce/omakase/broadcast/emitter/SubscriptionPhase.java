@@ -26,14 +26,35 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import com.salesforce.omakase.ast.Status;
+
 /**
- * The difference phases in the processing lifecycle.
+ * The difference phases in the parsing lifecycle.
  *
  * @author nmcwilliams
  */
 public enum SubscriptionPhase {
+    /** During refinement (refine) */
+    REFINE(Status.PARSED),
+
     /** During processing (rework, observe) */
-    PROCESS,
-    /** During validation, after processing is complete */
-    VALIDATE
+    PROCESS(Status.PROCESSED),
+
+    /** During validation, after processing is complete (validate) */
+    VALIDATE(Status.VALIDATED);
+
+    private final Status completionStatus;
+
+    SubscriptionPhase(Status next) {
+        this.completionStatus = next;
+    }
+
+    /**
+     * Gets the associated {@link Status} for items that have completed this phase.
+     *
+     * @return The associated status.
+     */
+    public Status nextStatus() {
+        return completionStatus;
+    }
 }

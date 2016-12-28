@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -35,11 +34,14 @@ import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A distinct unit of syntax within CSS.
@@ -51,9 +53,9 @@ import java.util.List;
  * Each unit has a particular line and column indicating where it was parsed within the source, except for dynamically created
  * units. You can check {@link #hasSourcePosition()} to see if a unit is dynamically created.
  * <p>
- * It's important to remember that <em>unrefined</em> Syntax objects, unless validation is performed, may actually contain invalid
- * CSS. Simply refining the syntax unit will verify it's grammatical compliance, which can be coupled with custom validation to
- * ensure correct usage. See {@link Refinable} for more information.
+ * It's important to remember that in certain parsing configurations some high level units may be in an <em>unrefined</em> state.
+ * This means that only the raw content is available (and may potentially be invalid/inappropriate). You can enforce refinement by
+ * using {@link AutoRefine}, custom refiners, or in other ways. See the main readme file for more information.
  *
  * @author nmcwilliams
  */
@@ -155,7 +157,7 @@ public interface Syntax extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax comments(List<String> comments);
+    Syntax comments(Collection<String> comments);
 
     /**
      * Copies all comments from the given syntax unit.
@@ -186,7 +188,7 @@ public interface Syntax extends Writable, Broadcastable {
      *
      * @return this, for chaining.
      */
-    Syntax orphanedComments(List<String> comments);
+    Syntax orphanedComments(Collection<String> comments);
 
     /**
      * Copies all orphaned comments from the given syntax unit.
@@ -270,7 +272,7 @@ public interface Syntax extends Writable, Broadcastable {
      * @param name
      *     Get the annotation with this name.
      *
-     * @return The {@link CssAnnotation}, or {@link Optional#absent()} if not found.
+     * @return The {@link CssAnnotation}, or an empty {@link Optional} if not found.
      */
     Optional<CssAnnotation> annotation(String name);
 

@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -36,6 +35,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
@@ -137,10 +137,10 @@ public final class PseudoClassSelector extends AbstractSelectorPart implements S
     /**
      * Gets the arguments of the pseudo selector (e.g., "2n+1").
      *
-     * @return The arguments, or {@link Optional#absent()} if not specified.
+     * @return The arguments, or an empty {@link Optional} if not present.
      */
     public Optional<String> args() {
-        return Optional.fromNullable(args);
+        return Optional.ofNullable(args);
     }
 
     @Override

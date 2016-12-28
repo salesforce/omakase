@@ -28,6 +28,10 @@ package com.salesforce.omakase.broadcast.annotation;
 
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.Groupable;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
+import com.salesforce.omakase.plugin.core.AutoRefine;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,15 +39,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to subscribe to {@link Syntax} objects when the method is expected to change or modify the object or CSS
- * source.
+ * Use this annotation to subscribe to {@link Syntax} objects when the method is expected to change or modify the object/source
+ * code.
  * <p>
  * Examples of rework include adding cache-busters to urls, changing class names, flipping directions for RTL support, etc... It
  * basically represents changing the content.
  * <p>
- * The one an only parameter for methods with this annotation should be one of the {@link Syntax} types.
+ * The one and only parameter for methods with this annotation should be one of the {@link Syntax} types. It is generally better
+ * to subscribe the the most specific unit as possible (e.g., {@link UrlFunctionValue} instead of {@link Declaration}), however
+ * note that specific syntax types will not be delivered if the parent type is not refined. See the main readme file for more
+ * information about refinement. Generally, if you are parsing with {@link AutoRefine} or {@link StandardValidation} then all
+ * syntax types will be delivered.
  * <p>
  * If the method does not intend to change the content or object, use {@link Observe} instead.
+ * <p>
+ * All {@link Rework} subscriptions will be delivered <em>after</em> {@link Refine} methods have finished executing.
  * <p>
  * Inside of a rework method, you can remove a unit from the syntax tree by calling {@link Groupable#destroy()}. Once a unit is
  * destroyed it is no longer broadcasted to any subsequent plugins, including validation. Destroyed units cannot be added to the

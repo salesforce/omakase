@@ -150,14 +150,14 @@ public class MediaQueryExpressionParserTest extends AbstractParserTest<MediaQuer
     @Test
     public void errorsIfMissingFeatureName() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_FEATURE.message());
+        exception.expectMessage(Message.MISSING_FEATURE);
         parse("(800px)");
     }
 
     @Test
     public void errorsIfMissingTerms() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_MEDIA_TERMS.message());
+        exception.expectMessage(Message.MISSING_MEDIA_TERMS);
         parse("(max-width: )");
     }
 

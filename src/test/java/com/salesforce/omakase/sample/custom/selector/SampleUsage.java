@@ -27,8 +27,8 @@
 package com.salesforce.omakase.sample.custom.selector;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.plugin.GrammarPlugin;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
@@ -43,8 +43,8 @@ import java.io.IOException;
  * Subsequent selectors can "extend" the placeholder. By extending, the placeholder will include that selector in the output.
  * Essentially this is a way of being DRY. Run the example to make this description clearer.
  * <p>
- * We give the parser an instance of the {@link PlaceholderSelectorPlugin}. This plugin is a {@link SyntaxPlugin} that registers
- * our {@link PlaceholderSelectorRefiner}. The refiner handles actually parsing the custom selectors, and creates {@link
+ * We give the parser an instance of the {@link PlaceholderSelectorPlugin}. This plugin is a {@link GrammarPlugin} that registers
+ * our {@link PlaceholderTokenFactory}. This plugin also handles parsing the custom selectors, and creates {@link
  * PlaceholderSelector} AST objects. The nature of our new syntax also necessitates creating a custom {@link
  * PlaceholderTokenFactory}, which we use to allow selectors to begin with our special {@code %} symbol.
  * <p>
@@ -88,9 +88,9 @@ public final class SampleUsage {
 
         // parse
         Omakase.source(input)
+            .use(placeholders)
             .use(verbose)
             .use(validation)
-            .use(placeholders)
             .process();
 
         System.out.println("\n\nOUTPUT:\n--------------------");

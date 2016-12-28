@@ -27,47 +27,71 @@
 package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.emitter.Emitter;
 
 /**
- * Responsible for broadcasting {@link Broadcastable} events (objects), usually newly created {@link Syntax} units.
- * <p>
- * Implementations should follow the decorator pattern, allowing for nesting of different broadcasters (like Reader).
+ * Responsible for broadcasting {@link Broadcastable} events (usually newly created {@link Syntax} units).
  *
  * @author nmcwilliams
  * @see Emitter
  */
 public interface Broadcaster {
     /**
-     * Broadcasts the given event (object).
+     * Broadcasts the given event (syntax unit).
      *
      * @param broadcastable
-     *     The {@link Broadcastable} unit instance that was created.
+     *     The {@link Broadcastable} syntax unit.
      */
     void broadcast(Broadcastable broadcastable);
 
     /**
-     * Broadcasts the given event (object).
+     * Broadcasts the given event (syntax unit).
      * <p>
-     * This also gives the option to <em>propagate</em> the broadcast. Propagation directs the broadcasted unit to also broadcast
-     * any of it's child or inner unit members. This should usually be specified as true when broadcasting a dynamically created
-     * unit (as opposed to one created internally as a result of parsing the source).
+     * This will first call {@link #chain(Broadcaster)} on this broadcaster with the given broadcasters, so that all given
+     * broadcasters will be at the end of the chain. Then the broadcast occurs. Afterwards all given broadcasters will be cut
+     * from the chain.
      *
      * @param broadcastable
-     *     The {@link Broadcastable} unit instance that was created.
-     * @param propagate
-     *     If {@link Broadcastable#propagateBroadcast(Broadcaster)} should be called on the unit.
-     *
-     * @see Broadcastable#propagateBroadcast(Broadcaster)
+     *     The {@link Broadcastable} syntax unit.
+     * @param first
+     *     The first broadcaster to chain.
+     * @param others
+     *     Optional additional broadcasters to chain.
      */
-    void broadcast(Broadcastable broadcastable, boolean propagate);
+    void chainBroadcast(Broadcastable broadcastable, Broadcaster first, Broadcaster... others);
 
     /**
-     * Specifies an inner {@link Broadcaster} to wrap around. This {@link Broadcaster} will receive broadcasted events after this
-     * one has processed the event.
+     * Specifies an additional {@link Broadcaster} that should receive broadcasted events after this one has processed it.
+     * <p>
+     * If this {@link Broadcaster} is already relaying events to another one then chain will be called on that broadcaster
+     * instead, all the way down the line until the given {@link Broadcaster} is at the bottom of the chain.
+     * <p>
+     * There are two main ways to use this method. The first way is that you create a new {@link Broadcaster} instance, either
+     * passing the original broadcaster to the constructor or calling chain on the new broadcaster. Then you use your new
+     * broadcaster in place of the old one. This puts your new broadcaster at the top of the chain. This way is the easiest, but
+     * doesn't work in some scenarios.
+     * <p>
+     * The second way is that you call branch on the original broadcaster, passing it a newly created one. This results in the new
+     * broadcaster being at the bottom of the chain instead. When doing it this way, you <em>must</em> call {@link
+     * Broadcaster#cut(Broadcaster)} on the original broadcaster before your method returns, after you are finished with the
+     * broadcasting. Otherwise your new broadcaster will be left dangling. However this way is <b>required</b> if the broadcasted
+     * events you need pass through through a {@link Refine} plugin. Those methods will not use a broadcaster you place at the top
+     * of the chain so being at the bottom is required. In this scenario prefer to use {@link #chainBroadcast(Broadcastable,
+     * Broadcaster, Broadcaster...)}, which will take care of the cutting responsibility.
      *
-     * @param relay
+     * @param broadcaster
      *     The inner {@link Broadcaster}.
+     *
+     * @return The same broadcaster instance given to it.
      */
-    void wrap(Broadcaster relay);
+    <T extends Broadcaster> T chain(T broadcaster);
+
+    /**
+     * Cuts the given {@link Broadcaster} from the chain so that it will no long receive additional events.
+     *
+     * @param broadcaster
+     *     The broadcaster to cut.
+     */
+    void cut(Broadcaster broadcaster);
 }

@@ -29,9 +29,10 @@ package com.salesforce.omakase.ast.atrule;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -51,48 +52,46 @@ public class AtRuleTest {
 
     private RawSyntax rawExpression;
     private RawSyntax rawBlock;
-    private MasterRefiner refiner;
 
     @Before
     public void setup() {
         rawExpression = new RawSyntax(1, 1, "all and (max-width: 800px)");
         rawBlock = new RawSyntax(1, 1, "p { color: red;}");
-        refiner = new MasterRefiner(new QueryableBroadcaster());
     }
 
     @Test
     public void getName() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.name()).isEqualTo("media-x");
     }
 
     @Test
     public void getRawExpression() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.rawExpression().get()).isSameAs(rawExpression);
     }
 
     @Test
     public void getRawBlock() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.rawBlock().get()).isSameAs(rawBlock);
     }
 
     @Test
     public void expressionAbsentByDefault() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.expression().isPresent()).isFalse();
     }
 
     @Test
     public void blockAbsentByDefault() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.block().isPresent()).isFalse();
     }
 
     @Test
     public void isRefinedFalse() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.isRefined()).isFalse();
     }
 
@@ -124,7 +123,7 @@ public class AtRuleTest {
 
     @Test
     public void setCustomExpression() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
         CustomExpression expression = new CustomExpression();
         ar.expression(expression);
         assertThat(ar.expression().get()).isSameAs(expression);
@@ -132,20 +131,20 @@ public class AtRuleTest {
 
     @Test
     public void hasRefinedExpressionTrue() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
         CustomExpression expression = new CustomExpression();
-        assertThat(ar.expression(expression).hasRefinedExpression()).isTrue();
+        assertThat(ar.expression(expression).expression().isPresent()).isTrue();
     }
 
     @Test
     public void hasRefinedExpressionFalse() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
-        assertThat(ar.hasRefinedExpression()).isFalse();
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
+        assertThat(ar.expression().isPresent()).isFalse();
     }
 
     @Test
     public void setCustomBlock() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
         CustomBlock block = new CustomBlock();
         ar.block(block);
         assertThat(ar.block().get()).isSameAs(block);
@@ -153,16 +152,16 @@ public class AtRuleTest {
 
     @Test
     public void hasRefinedBlockTrue() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
         CustomBlock block = new CustomBlock();
         ar.block(block);
-        assertThat(ar.block(block).hasRefinedBlock()).isTrue();
+        assertThat(ar.block(block).block().isPresent()).isTrue();
     }
 
     @Test
     public void hasRefinedBlockFalse() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
-        assertThat(ar.hasRefinedBlock()).isFalse();
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
+        assertThat(ar.block().isPresent()).isFalse();
     }
 
     @Test
@@ -179,7 +178,7 @@ public class AtRuleTest {
         CustomExpression expression = new CustomExpression();
         AtRule ar = new AtRule("test", expression, null);
 
-        exception.expect(IllegalStateException.class);
+        exception.expect(IllegalArgumentException.class);
         ar.expression(null);
     }
 
@@ -218,30 +217,21 @@ public class AtRuleTest {
     }
 
     @Test
-    public void propagatesBroadcastToExpression() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+    public void propagatesBroadcastToExpressionAndBlock() {
         CustomExpression expression = new CustomExpression();
-        ar.expression(expression);
-
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        ar.propagateBroadcast(qb);
-        assertThat(qb.find(CustomExpression.class).get()).isSameAs(expression);
-    }
-
-    @Test
-    public void propagatesBroadcastToBlock() {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
         CustomBlock block = new CustomBlock();
-        ar.block(block);
+
+        AtRule ar = new AtRule("test", expression, block);
 
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        ar.propagateBroadcast(qb);
+        ar.propagateBroadcast(qb, Status.PARSED);
+        assertThat(qb.find(CustomExpression.class).get()).isSameAs(expression);
         assertThat(qb.find(CustomBlock.class).get()).isSameAs(block);
     }
 
     @Test
     public void isWritableAlwaysTrueWhenNotRefined() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
         assertThat(ar.isWritable()).isTrue();
     }
 
@@ -307,21 +297,21 @@ public class AtRuleTest {
 
     @Test
     public void writeUnrefined() throws IOException {
-        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock, refiner);
+        AtRule ar = new AtRule(5, 5, "media", rawExpression, rawBlock);
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSingle(ar)).isEqualTo("@media all and (max-width: 800px) {\n  p { color: red;}\n}");
     }
 
     @Test
     public void writeUnrefinedNoBlockCharset() {
-        AtRule ar = new AtRule(5, 5, "charset", new RawSyntax(5, 5, "\"UTF8\""), null, refiner);
+        AtRule ar = new AtRule(5, 5, "charset", new RawSyntax(5, 5, "\"UTF8\""), null);
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSingle(ar)).isEqualTo("@charset \"UTF8\";");
     }
 
     @Test
     public void writeUnrefinedNoBlockImport() {
-        AtRule ar = new AtRule(5, 5, "import", new RawSyntax(5, 5, "url(xyz.css)"), null, refiner);
+        AtRule ar = new AtRule(5, 5, "import", new RawSyntax(5, 5, "url(xyz.css)"), null);
         StyleWriter writer = StyleWriter.verbose();
         assertThat(writer.writeSingle(ar)).isEqualTo("@import url(xyz.css);");
     }
@@ -363,7 +353,7 @@ public class AtRuleTest {
         CustomBlock block = new CustomBlock();
         AtRule ar = new AtRule("test", expression, block);
 
-        AtRule copy = (AtRule)ar.copy();
+        AtRule copy = ar.copy();
         assertThat(copy.name()).isEqualTo("test");
         assertThat(copy.expression().get()).isInstanceOf(CustomExpression.class);
         assertThat(copy.block().get()).isInstanceOf(CustomBlock.class);
@@ -371,8 +361,8 @@ public class AtRuleTest {
 
     @Test
     public void copyNotRefined() {
-        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock, refiner);
-        AtRule copy = (AtRule)ar.copy();
+        AtRule ar = new AtRule(5, 5, "media-x", rawExpression, rawBlock);
+        AtRule copy = ar.copy();
 
         assertThat(copy.name()).isEqualTo("media-x");
         assertThat(copy.rawExpression().isPresent()).isTrue();
@@ -381,7 +371,7 @@ public class AtRuleTest {
 
     @Test
     public void markAsMetadataRule() {
-        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null, refiner);
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
         ar.markAsMetadataRule();
         assertThat(ar.shouldWriteName()).isFalse();
         assertThat(ar.isRefined()).isTrue();
@@ -391,7 +381,7 @@ public class AtRuleTest {
 
     @Test
     public void markAsMetadataRuleDoesntReplaceExistingExpression() {
-        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null, refiner);
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
         CustomExpressionNotWritable expr = new CustomExpressionNotWritable();
         ar.expression(expr);
         ar.markAsMetadataRule();
@@ -399,6 +389,26 @@ public class AtRuleTest {
         assertThat(ar.isRefined()).isTrue();
         assertThat(ar.expression().get()).isSameAs(expr);
         assertThat(StyleWriter.compressed().writeSingle(ar)).isEqualTo("");
+    }
+
+    @Test
+    public void breakBroadcastIfNeverEmit() {
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
+        ar.status(Status.NEVER_EMIT);
+        assertThat(ar.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void breakBroadcastIfAlreadyRefined() {
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
+        ar.expression(new CustomExpression());
+        assertThat(ar.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void dontBreakBroadcastIfNotRefined() {
+        AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
+        assertThat(ar.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 
     public static final class CustomExpression extends AbstractAtRuleMember implements AtRuleExpression {

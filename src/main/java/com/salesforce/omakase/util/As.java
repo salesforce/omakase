@@ -34,7 +34,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -207,17 +206,11 @@ public final class As {
             }
         }
 
-        Collections.sort(fields, new Comparator<Field>() {
-            @Override
-            public int compare(Field o1, Field o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        fields.sort(Comparator.comparing(Field::getName));
 
         try {
             for (Field field : fields) {
-                Object value = null;
-                value = field.get(instance);
+                Object value = field.get(instance);
                 if (value instanceof Iterable) {
                     indent();
                     Iterable<?> iterable = (Iterable<?>)value;

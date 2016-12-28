@@ -30,10 +30,9 @@ import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
  * Parses a {@link PropertyValue}.
@@ -41,9 +40,10 @@ import com.salesforce.omakase.parser.refiner.MasterRefiner;
  * @author nmcwilliams
  * @see PropertyValue
  */
-public final class PropertyValueParser extends AbstractParser {
+public final class PropertyValueParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         // grab the line and column number before parsing anything
@@ -51,24 +51,24 @@ public final class PropertyValueParser extends AbstractParser {
         int column = source.originalColumn();
 
         // parse terms and operators
-        QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
-        ParserFactory.termSequenceParser().parse(source, qb, refiner);
+        QueryableBroadcaster queryable = broadcaster.chain(new QueryableBroadcaster());
+        grammar.parser().termSequenceParser().parse(source, grammar, broadcaster);
+        broadcaster.cut(queryable);
 
         // if no terms were parsed then return false
-        if (qb.count() == 0) return false;
+        if (!queryable.hasAny()) return false;
 
         // create the term list and add the members
-        PropertyValue value = new PropertyValue(line, column, broadcaster);
-        value.members().appendAll(qb.filter(PropertyValueMember.class));
+        PropertyValue value = new PropertyValue(line, column);
+        value.members().appendAll(queryable.filter(PropertyValueMember.class));
 
         // check for !important
-        value.important(ParserFactory.importantParser().parse(source, broadcaster, refiner));
+        value.important(grammar.parser().importantParser().parse(source, grammar, broadcaster));
 
-        // broadcast the new term list. we set propagate as true to allow for custom functions that did not broadcast
-        // their terms during refinement (because it is not desired for the parsed terms to be directly added to this term list)
-        // to have their inner terms broadcasted now.
-        broadcaster.broadcast(value, true);
+        // broadcast the new term list.
+        broadcaster.broadcast(value);
 
         return true;
     }
+
 }

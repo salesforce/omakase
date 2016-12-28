@@ -29,11 +29,10 @@ package com.salesforce.omakase.parser.atrule;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**
@@ -43,21 +42,23 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @see KeyframeSelectorParser
  * @see KeyframeSelector
  */
-public final class KeyframeSelectorSequenceParser extends AbstractParser {
+public final class KeyframeSelectorSequenceParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.collectComments();
 
-        boolean found = ParserFactory.keyframeSelectorParser().parse(source, broadcaster, refiner);
+        boolean found = grammar.parser().keyframeSelectorParser().parse(source, grammar, broadcaster);
         if (!found) return false;
 
         // check for a comma
-        while (source.collectComments().optionallyPresent(refiner.tokenFactory().selectorDelimiter())) {
-            if (!ParserFactory.keyframeSelectorParser().parse(source, broadcaster, refiner)) {
+        while (source.collectComments().optionallyPresent(grammar.token().selectorDelimiter())) {
+            if (!grammar.parser().keyframeSelectorParser().parse(source, grammar, broadcaster)) {
                 throw new ParserException(source, Message.TRAILING, Tokens.COMMA.description());
             }
         }
 
         return true;
     }
+
 }

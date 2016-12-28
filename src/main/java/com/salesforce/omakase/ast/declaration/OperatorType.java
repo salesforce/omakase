@@ -36,7 +36,7 @@ import com.salesforce.omakase.writer.Writable;
 import java.io.IOException;
 
 /**
- * An operator, or separator, between {@link Term}s in a {@link PropertyValue}.
+ * An operator (separator) between {@link Term}s in a {@link PropertyValue}.
  *
  * @author nmcwilliams
  */
@@ -44,9 +44,7 @@ public enum OperatorType implements TokenEnum, Writable {
     /** comma separator */
     COMMA(Tokens.COMMA, ','),
     /** slash separator */
-    SLASH(Tokens.FORWARD_SLASH, '/'),
-    /** white space separator */
-    SPACE(Tokens.WHITESPACE, ' ');
+    SLASH(Tokens.FORWARD_SLASH, '/');
 
     private final Token token;
     private final char symbol;

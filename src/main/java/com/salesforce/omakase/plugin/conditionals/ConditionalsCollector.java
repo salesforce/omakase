@@ -32,7 +32,6 @@ import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -44,8 +43,8 @@ import java.util.Set;
  * This should be used when you want to determine which conditions are utilized within the source. This automatically enables the
  * {@link Conditionals} plugin.
  * <p>
- * <b>Note</b>: The {@link Conditionals} plugin currently <em>lower-cases</em> all conditions for comparison purposes, so usually
- * any arguments passed to methods of this class should be lower-cased as well.
+ * <b>Note</b>: The {@link Conditionals} plugin <em>lower-cases</em> all conditions for comparison purposes, so usually
+ * any arguments passed to methods of this class should be passed in lower-cased as well.
  *
  * @author nmcwilliams
  */
@@ -56,7 +55,6 @@ public final class ConditionalsCollector implements DependentPlugin {
     @Override
     public void dependencies(PluginRegistry registry) {
         registry.require(Conditionals.class);
-        registry.require(AutoRefiner.class).atRules();
     }
 
     /**
@@ -97,8 +95,7 @@ public final class ConditionalsCollector implements DependentPlugin {
      * Gets whether the given condition was found.
      *
      * @param condition
-     *     Check if this condition was found. This should be lower-cased (unless you otherwise knowingly and explicitly arranged
-     *     for parsed conditionals to <em>not</em> be automatically lower-cased in contrast to the default behavior).
+     *     Check if this condition was found. This should be lower-cased.
      *
      * @return True if the given condition was found.
      */

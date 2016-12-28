@@ -26,10 +26,7 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
@@ -44,6 +41,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -51,7 +51,7 @@ import static com.google.common.base.Preconditions.*;
  * Standard (default) implementation of the {@link SyntaxCollection}.
  * <p>
  * This uses a linked-node approach optimized for random lookups, insertions and removals. Uniqueness is maintained like a set and
- * prevents duplicates. Appending or prepending an existing unit will simply move it's position.
+ * prevents duplicates. Appending or prepending an existing unit will simply move its position.
  *
  * @param <P>
  *     Type of the (P)arent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
@@ -60,14 +60,13 @@ import static com.google.common.base.Preconditions.*;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("AutoBoxing")
 public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implements SyntaxCollection<P, T> {
     private final P parent;
     private final Lookup<T> lookup = new Lookup<>();
 
     private Node<T> first;
     private Node<T> last;
-    private Broadcaster broadcaster;
+    private transient Broadcaster propagatingBroadcaster;
 
     /**
      * Creates a new {@link LinkedSyntaxCollection} with no available {@link Broadcaster}.
@@ -76,20 +75,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
      *     The parent that owns this collection. Do not pass null.
      */
     public LinkedSyntaxCollection(P parent) {
-        this(parent, null);
-    }
-
-    /**
-     * Creates a new {@link LinkedSyntaxCollection} using the given {@link Broadcaster} to broadcast new units.
-     *
-     * @param parent
-     *     The parent that owns this collection. Do not pass null.
-     * @param broadcaster
-     *     Used to broadcast new units.
-     */
-    public LinkedSyntaxCollection(P parent, Broadcaster broadcaster) {
         this.parent = parent;
-        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -142,19 +128,19 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
 
     @Override
     public Optional<T> first() {
-        return first == null ? Optional.<T>absent() : Optional.of(first.unit);
+        return first == null ? Optional.empty() : Optional.of(first.unit);
     }
 
     @Override
     public Optional<T> last() {
-        return last == null ? Optional.<T>absent() : Optional.of(last.unit);
+        return last == null ? Optional.empty() : Optional.of(last.unit);
     }
 
     @Override
     public Optional<T> next(T unit) {
         Node<T> node = lookup.get(unit.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
-        if (node.next == null) return Optional.absent();
+        if (node.next == null) return Optional.empty();
         return Optional.of(node.next.unit);
     }
 
@@ -162,15 +148,13 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     public Optional<T> previous(T unit) {
         Node<T> node = lookup.get(unit.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
-        if (node.previous == null) return Optional.absent();
+        if (node.previous == null) return Optional.empty();
         return Optional.of(node.previous.unit);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <S extends T> Optional<S> find(Class<S> klass) {
-        // cast is safe because we ensure S extends T, and the predicate only returns true for types of S.
-        return (Optional<S>)Iterators.tryFind(iterator(), Predicates.instanceOf(klass));
+        return stream().filter(klass::isInstance).map(klass::cast).findFirst();
     }
 
     @Override
@@ -178,13 +162,18 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         checkNotNull(unit, "unit cannot be null");
         checkArgument(!unit.isDestroyed(), "cannot prepend a destroyed unit!");
 
+        // disassociate with old group and associate with this group
+        unit.unlink().group(this);
+
         // create a new node
         first = new Node<>(null, first, unit);
         lookup.put(unit.id(), first);
-        if (last == null) last = first;
+        if (last == null) {
+            last = first;
+        }
 
-        // perform associative actions on the unit
-        associate(unit);
+        // broadcast if it hasn't been already
+        propagateNewUnit(unit);
 
         return this;
     }
@@ -205,14 +194,17 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         Node<T> node = lookup.get(index.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
+        // disassociate with old group and associate with this group
+        unit.unlink().group(this);
+
         // if the index unit is the first unit then delegate to #prepend
         if (node == first || isEmpty()) return prepend(unit);
 
         // create a new node
         lookup.put(unit.id(), new Node<>(node.previous, node, unit));
 
-        // perform associative actions on the unit
-        associate(unit);
+        // broadcast if it hasn't been already
+        propagateNewUnit(unit);
 
         return this;
     }
@@ -222,13 +214,16 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         checkNotNull(unit, "unit cannot be null");
         checkArgument(!unit.isDestroyed(), "cannot append a destroyed unit!");
 
+        // disassociate with old group and associate with this group
+        unit.unlink().group(this);
+
         // create a new node
         last = new Node<>(last, null, unit);
         lookup.put(unit.id(), last);
         if (first == null) first = last;
 
-        // perform associative actions on the unit
-        associate(unit);
+        // broadcast if it hasn't been already
+        propagateNewUnit(unit);
 
         return this;
     }
@@ -249,14 +244,17 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         Node<T> node = lookup.get(index.id());
         if (node == null) throw new IllegalArgumentException("the specified unit does not exist in this collection!");
 
+        // disassociate with old group and associate with this group
+        unit.unlink().group(this);
+
         // if the index unit is the last unit then delegate to #append
         if (node == last || (node.previous == null && node.next == null)) return append(unit);
 
         // create a new node
         lookup.put(unit.id(), new Node<>(node, node.next, unit));
 
-        // perform associative actions on the unit
-        associate(unit);
+        // broadcast if it hasn't been already
+        propagateNewUnit(unit);
 
         return this;
     }
@@ -305,9 +303,17 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        this.broadcaster = broadcaster;  // save a reference so that subsequent appended/prepended units will be broadcasted
-        for (T unit : this) unit.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        // save a reference so that subsequent appended/prepended units will be broadcasted
+        this.propagatingBroadcaster = broadcaster;
+        for (T unit : this) {
+            unit.propagateBroadcast(broadcaster, status);
+        }
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
     @Override
@@ -315,11 +321,10 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
         return As.string(this).add("units", Lists.newArrayList(iterator())).toString();
     }
 
-    private void associate(T unit) {
-        unit.unlink().group(this);
-
-        // broadcast the unit if it hasn't been broadcasted yet.
-        if (broadcaster != null && unit.status() == Status.UNBROADCASTED) unit.propagateBroadcast(broadcaster);
+    private void propagateNewUnit(T unit) {
+        if (propagatingBroadcaster != null) {
+            unit.propagateBroadcast(propagatingBroadcaster, Status.PARSED);
+        }
     }
 
     private void unlink(Node<T> node) {
@@ -330,20 +335,25 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
     }
 
     private static final class Node<E> {
-        Node<E> previous;
-        Node<E> next;
-        final E unit;
+        private Node<E> previous;
+        private Node<E> next;
+        private final E unit;
 
-        Node(Node<E> previous, Node<E> next, E unit) {
+        private Node(Node<E> previous, Node<E> next, E unit) {
             this.unit = unit;
             this.next = next;
             this.previous = previous;
 
-            if (previous != null) previous.next = this;
-            if (next != null) next.previous = this;
+            if (previous != null) {
+                previous.next = this;
+            }
+            if (next != null) {
+                next.previous = this;
+            }
         }
     }
 
+    // todo - move to regular linked list or such
     private static final class Lookup<E extends Syntax> {
         private List<Node<E>> sparse = new ArrayList<>();
         private Map<Integer, Node<E>> dense;
@@ -353,6 +363,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
             // for small collections use an array list, for larger use a map
             if (count < 64) {
                 sparse.add(node);
+                count++;
             } else if (count == 64) {
                 dense = new HashMap<>(128);
                 for (Node<E> n : sparse) {
@@ -360,10 +371,10 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
                 }
                 dense.put(id, node);
                 sparse = null;
+                count++;
             } else {
                 dense.put(id, node);
             }
-            count++;
         }
 
         public Node<E> get(int id) {
@@ -382,6 +393,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
                     Node<E> next = it.next();
                     if (next.unit.id() == id) {
                         it.remove();
+                        count--;
                         return next;
                     }
                 }

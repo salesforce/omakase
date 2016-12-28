@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.parser;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.ConstantEnum;
@@ -39,6 +38,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -602,6 +602,48 @@ public class SourceTest {
     }
 
     @Test
+    public void findCommentsTrueSkipWhitespaceTrue() {
+        Source source = new Source("/*abc d*/ /____ abc");
+        assertThat(source.findComments(true)).isTrue();
+        assertThat(source.index()).isEqualTo(10);
+    }
+
+    @Test
+    public void findCommentsFalseSkipWhitespaceTrue() {
+        Source source = new Source(".a /*abc*/ /____ abc");
+        assertThat(source.findComments(true)).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void findCommentsTrueSkipWhitespaceTrueBecauseOfWhitespace() {
+        Source source = new Source("  .a /*abc*/ /____ abc");
+        assertThat(source.findComments(true)).isTrue();
+        assertThat(source.index()).isEqualTo(2);
+    }
+
+    @Test
+    public void findCommentsTrueSkipWhitespaceOnlyWhitespace() {
+        Source source = new Source("  ");
+        assertThat(source.findComments(true)).isTrue();
+        assertThat(source.index()).isEqualTo(2);
+    }
+
+    @Test
+    public void findCommentsTrueSkipWhitespaceFalse() {
+        Source source = new Source("/*abc d*/ /____ abc");
+        assertThat(source.findComments(false)).isTrue();
+        assertThat(source.index()).isEqualTo(9);
+    }
+
+    @Test
+    public void findCommentsFalseSkipWhitespaceFalse() {
+        Source source = new Source(" /*abc d*/ /____ abc");
+        assertThat(source.findComments(false)).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
     public void correctIndexPositionWhenCommentFound() {
         Source source = new Source("/*abc*/a");
         source.collectComments();
@@ -611,7 +653,7 @@ public class SourceTest {
     @Test
     public void unclosedComment() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_COMMENT_CLOSE.message());
+        exception.expectMessage(Message.MISSING_COMMENT_CLOSE);
         Source source = new Source("/*abc/a");
         source.collectComments();
     }

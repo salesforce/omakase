@@ -27,12 +27,15 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.collect.Maps;
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.Restrict;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,43 +65,61 @@ public class AnnotationScannerTest {
     @Test
     public void findsRework() {
         Map<String, Subscription> map = Maps.newHashMap();
-        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
+        for (Subscription subscription : scanner.scanSubscriptions(new AllValid()).get(ClassSelector.class)) {
             map.put(subscription.method().getName(), subscription);
         }
 
-        Subscription preprocess = map.get("rework");
-        assertThat(preprocess != null).describedAs("expected to find method annotated with @Rework");
-        assertThat(preprocess.phase()).isSameAs(SubscriptionPhase.PROCESS);
+        Subscription subscription = map.get("rework");
+        assertThat(subscription != null).describedAs("expected to find method annotated with @Rework");
+        assertThat(subscription.phase()).isSameAs(SubscriptionPhase.PROCESS);
     }
 
     @Test
     public void errorsIfInvalidRework() {
         exception.expect(Exception.class);
-        scanner.scan(new InvalidRework());
+        scanner.scanSubscriptions(new InvalidRework());
     }
 
     @Test
     public void findsObserve() {
         Map<String, Subscription> map = Maps.newHashMap();
-        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
+        for (Subscription subscription : scanner.scanSubscriptions(new AllValid()).get(ClassSelector.class)) {
             map.put(subscription.method().getName(), subscription);
         }
 
-        Subscription preprocess = map.get("observe");
-        assertThat(preprocess != null).describedAs("expected to find method annotated with @Observe");
-        assertThat(preprocess.phase()).isSameAs(SubscriptionPhase.PROCESS);
+        Subscription subscription = map.get("observe");
+        assertThat(subscription != null).describedAs("expected to find method annotated with @Observe");
+        assertThat(subscription.phase()).isSameAs(SubscriptionPhase.PROCESS);
     }
 
     @Test
     public void errorsIfInvalidObserve() {
         exception.expect(Exception.class);
-        scanner.scan(new InvalidObserve());
+        scanner.scanSubscriptions(new InvalidObserve());
+    }
+
+    @Test
+    public void findsRefine() {
+        Map<String, Subscription> map = Maps.newHashMap();
+        for (Subscription subscription : scanner.scanSubscriptions(new AllValid()).get(RawFunction.class)) {
+            map.put(subscription.method().getName(), subscription);
+        }
+
+        Subscription subscription = map.get("refine");
+        assertThat(subscription != null).describedAs("expected to find method annotated with @Refine");
+        assertThat(subscription.phase()).isSameAs(SubscriptionPhase.REFINE);
+    }
+
+    @Test
+    public void errorsIfInvalidRefine() {
+        exception.expect(Exception.class);
+        scanner.scanSubscriptions(new InvalidRefine());
     }
 
     @Test
     public void findsValidate() {
         Map<String, Subscription> map = Maps.newHashMap();
-        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
+        for (Subscription subscription : scanner.scanSubscriptions(new AllValid()).get(ClassSelector.class)) {
             map.put(subscription.method().getName(), subscription);
         }
 
@@ -110,30 +131,7 @@ public class AnnotationScannerTest {
     @Test
     public void errorsIfInvalidValidate() {
         exception.expect(Exception.class);
-        scanner.scan(new InvalidValidate());
-    }
-
-    @Test
-    public void findsRestrict() {
-        Map<String, Subscription> map = Maps.newHashMap();
-        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
-            map.put(subscription.method().getName(), subscription);
-        }
-
-        Subscription preprocess = map.get("observe2");
-        assertThat(preprocess != null).describedAs("expected to find method annotated with @Restrict");
-        assertThat(preprocess.restriction().isPresent()).isTrue();
-    }
-
-    @Test
-    public void noRestrict() {
-        Map<String, Subscription> map = Maps.newHashMap();
-        for (Subscription subscription : scanner.scan(new AllValid()).get(ClassSelector.class)) {
-            map.put(subscription.method().getName(), subscription);
-        }
-
-        Subscription preprocess = map.get("observe");
-        assertThat(preprocess.restriction().isPresent()).isFalse();
+        scanner.scanSubscriptions(new InvalidValidate());
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -147,9 +145,8 @@ public class AnnotationScannerTest {
         @Validate
         public void validate(ClassSelector cs, ErrorManager em) {}
 
-        @Observe
-        @Restrict(dynamicUnits = false)
-        public void observe2(ClassSelector cs) {}
+        @Refine("foo")
+        public void refine(RawFunction function, Grammar grammar, Broadcaster broadcaster) {}
     }
 
     public static final class InvalidObserve implements Plugin {
@@ -165,5 +162,10 @@ public class AnnotationScannerTest {
     public static final class InvalidValidate implements Plugin {
         @Validate
         public void validate() {}
+    }
+
+    public static final class InvalidRefine implements Plugin {
+        @Refine
+        public void refine() {}
     }
 }

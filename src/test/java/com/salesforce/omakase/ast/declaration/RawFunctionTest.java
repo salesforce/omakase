@@ -26,6 +26,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.salesforce.omakase.ast.RawFunction;
+import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,5 +73,25 @@ public class RawFunctionTest {
     public void copyNotSupported() {
         exception.expect(UnsupportedOperationException.class);
         new RawFunction(1, 1, "name", "args args").copy();
+    }
+
+    @Test
+    public void breakBroadcastIfNeverEmit() {
+        RawFunction raw = new RawFunction(1, 1, "name", "args args");
+        raw.status(Status.NEVER_EMIT);
+        assertThat(raw.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void breakBroadcastIfParsed() {
+        RawFunction raw = new RawFunction(1, 1, "name", "args args");
+        raw.status(Status.PARSED);
+        assertThat(raw.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void dontBreakBroadcastIfNotParsed() {
+        RawFunction raw = new RawFunction(1, 1, "name", "args args");
+        assertThat(raw.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 }

@@ -26,11 +26,19 @@
 
 package com.salesforce.omakase.sample.custom.selector;
 
-import com.google.common.base.Suppliers;
-import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.parser.refiner.RefinerRegistry;
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
+import java.util.Optional;
+import com.salesforce.omakase.Message;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Refine;
+import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.parser.factory.TokenFactory;
+import com.salesforce.omakase.plugin.GrammarPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the actual plugin that gets registered with the parser.
@@ -38,19 +46,51 @@ import com.salesforce.omakase.plugin.SyntaxPlugin;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class PlaceholderSelectorPlugin implements SyntaxPlugin, DependentPlugin {
-    private static final PlaceholderTokenFactory TOKEN_FACTORY = new PlaceholderTokenFactory();
+public class PlaceholderSelectorPlugin implements GrammarPlugin {
+    private final Map<String, PlaceholderSelector> placeholders = new HashMap<>();
 
     @Override
-    public void dependencies(PluginRegistry registry) {
-        // this ensures our token factory is registered, but allows for another plugin to have
-        // registered an instance of the same token factory class already
-        registry.requireTokenFactory(PlaceholderTokenFactory.class, Suppliers.ofInstance(TOKEN_FACTORY));
+    public TokenFactory getTokenFactory() {
+        return new PlaceholderTokenFactory();
     }
 
-    @Override
-    public void registerRefiners(RefinerRegistry registry) {
-        // register our refiner
-        registry.register(new PlaceholderSelectorRefiner());
+    @Refine
+    public void refine(Selector selector, Grammar grammar, Broadcaster broadcaster) {
+        String content = selector.raw().get().content();
+        Source source = new Source(content);
+        source.skipWhitepace();
+
+        if (source.optionallyPresent(PlaceholderTokens.PERCENTAGE)) {
+            // PLACEHOLDER `%name`
+
+            // parse the placeholder name
+            Optional<String> name = source.readIdent();
+            if (!name.isPresent()) throw new ParserException(source, "Expected to find a valid placeholder selector name");
+
+            // nothing else should be after the placeholder selector name
+            if (!source.skipWhitepace().eof()) throw new ParserException(source, Message.UNPARSABLE_SELECTOR);
+
+            // create and broadcast our new placeholder selector
+            PlaceholderSelector placeholder = new PlaceholderSelector(name.get());
+            placeholders.put(placeholder.name(), placeholder);
+            broadcaster.broadcast(placeholder);
+        } else if (content.contains(PlaceholderTokens.PIPE.symbol())) {
+            // PLACEHOLDER REF `.selector|name`
+
+            // parse the normal selectors, they will automatically be broadcasted
+            grammar.parser().complexSelectorParser().parse(source, grammar, broadcaster);
+
+            // parse the reference
+            source.expect(PlaceholderTokens.PIPE);
+            Optional<String> name = source.readIdent();
+            if (!name.isPresent()) throw new ParserException(source, "Expected to find a valid placeholder selector name");
+
+            // there should be nothing left
+            if (!source.skipWhitepace().eof()) throw new ParserException(source, Message.UNPARSABLE_SELECTOR);
+
+            PlaceholderSelector placeholder = placeholders.get(name.get());
+            if (placeholder == null) throw new ParserException(source, "Unknown placeholder selector '" + name.get() + "'");
+            placeholder.addReference(selector);
+        }
     }
 }

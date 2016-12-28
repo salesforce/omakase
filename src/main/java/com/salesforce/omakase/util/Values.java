@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.declaration.*;
@@ -35,6 +34,7 @@ import com.salesforce.omakase.data.Keyword;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.
@@ -47,15 +47,6 @@ import java.util.List;
  * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.propertyValue())}
  * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue())}
  * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue())}
- * </pre>
- * <p>
- * This also has a convenience function for getting the textual value of a {@link Term} within a {@link PropertyValue}, when you
- * know the {@link PropertyValue} should only have one {@link Term} but you aren't quite sure (or it doesn't quite matter) what
- * specific {@link Term} it is.
- * <p>
- * Example:
- * <pre>
- * {@code Optional<String> font = Values.textual(propertyValue); // get font name whether from a string or keyword term}
  * </pre>
  *
  * @author nmcwilliams
@@ -78,7 +69,7 @@ public final class Values {
      * @param value
      *     The value.
      *
-     * @return The hex color value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as
+     * @return The hex color value, or an empty {@link Optional} if the {@link PropertyValue} doesn't match the conditions as
      * stated above.
      */
     public static Optional<HexColorValue> asHexColor(PropertyValue value) {
@@ -99,7 +90,7 @@ public final class Values {
      * @param value
      *     The value.
      *
-     * @return The keyword value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
+     * @return The keyword value, or an empty {@link Optional} if the {@link PropertyValue} doesn't match the conditions as stated
      * above.
      */
     public static Optional<KeywordValue> asKeyword(PropertyValue value) {
@@ -121,13 +112,11 @@ public final class Values {
      * @param value
      *     The value.
      *
-     * @return The keyword value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
+     * @return The keyword value, or an empty {@link Optional} if the {@link PropertyValue} doesn't match the conditions as stated
      * above.
      */
     public static Optional<Keyword> asKeywordConstant(PropertyValue value) {
-        Optional<KeywordValue> keywordValue = asKeyword(value);
-        if (!keywordValue.isPresent()) return Optional.absent();
-        return keywordValue.get().asKeyword();
+        return asKeyword(value).flatMap(KeywordValue::asKeyword);
     }
 
     /**
@@ -144,7 +133,7 @@ public final class Values {
      * @param value
      *     The value.
      *
-     * @return The numerical value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as
+     * @return The numerical value, or an empty {@link Optional} if the {@link PropertyValue} doesn't match the conditions as
      * stated above.
      */
     public static Optional<NumericalValue> asNumerical(PropertyValue value) {
@@ -165,7 +154,7 @@ public final class Values {
      * @param value
      *     The value.
      *
-     * @return The string value, or {@link Optional#absent()} if the {@link PropertyValue} doesn't match the conditions as stated
+     * @return The string value, or an empty {@link Optional} if the {@link PropertyValue} doesn't match the conditions as stated
      * above.
      */
     public static Optional<StringValue> asString(PropertyValue value) {
@@ -182,7 +171,7 @@ public final class Values {
      * @param value
      *     The {@link PropertyValue} that is or contains the {@link Term}.
      *
-     * @return the properly-typed instance, or {@link Optional#absent()} if it doesn't match.
+     * @return the properly-typed instance, or an empty {@link Optional} if it doesn't match.
      */
     public static <T extends Term> Optional<T> as(Class<T> klass, PropertyValue value) {
         ImmutableList<Term> terms = value.terms();
@@ -190,7 +179,7 @@ public final class Values {
             Term term = terms.get(0);
             if (klass.isAssignableFrom(term.getClass())) return Optional.of(klass.cast(term));
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -198,7 +187,7 @@ public final class Values {
      * <p>
      * Example:
      * <pre>
-     * {@code Iterable<FunctionValue> functions = Values.filter(FunctionValue.class, declaration.propertyValue();}
+     * {@code Iterable<FunctionValue> functions = Values.filter(FunctionValue.class, declaration.propertyValue()}
      * </pre>
      *
      * @param klass

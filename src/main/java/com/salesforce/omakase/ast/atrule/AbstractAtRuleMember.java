@@ -30,7 +30,7 @@ import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Syntax;
 
 /**
- * Base class for {@link AtRuleBlock}s.
+ * Base class for {@link AtRuleMember}s.
  *
  * @author nmcwilliams
  */
@@ -38,8 +38,7 @@ public abstract class AbstractAtRuleMember extends AbstractSyntax implements AtR
     private AtRule atRule;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
-    public AbstractAtRuleMember() {
-    }
+    public AbstractAtRuleMember() {}
 
     /**
      * Creates a new instance with the given line and column numbers.

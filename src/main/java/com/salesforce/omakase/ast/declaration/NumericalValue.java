@@ -27,7 +27,6 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
@@ -38,6 +37,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.*;
@@ -48,7 +48,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * <p>
  * The unit is optional and is any keyword directly following the number value, such as px, em, or ms. The sign is also optional,
  * and is only defined if explicitly included in the source. In other words, in "5px" the sign will <b>not</b> be {@link
- * Sign#POSITIVE} but {@link Optional#absent()}.
+ * Sign#POSITIVE} but an empty {@link Optional}.
  * <p>
  * To dynamically create a {@link NumericalValue} use on of the constructor methods, for example:
  * <pre>
@@ -213,10 +213,10 @@ public final class NumericalValue extends AbstractTerm {
     /**
      * Gets the unit.
      *
-     * @return The unit, or {@link Optional#absent()} if not set.
+     * @return The unit, or an empty {@link Optional} if not present.
      */
     public Optional<String> unit() {
-        return Optional.fromNullable(unit);
+        return Optional.ofNullable(unit);
     }
 
     /**
@@ -235,10 +235,10 @@ public final class NumericalValue extends AbstractTerm {
     /**
      * Gets the explicit sign of the number.
      *
-     * @return The sign, or {@link Optional#absent()} if not set.
+     * @return The sign, or an empty {@link Optional} if not present.
      */
     public Optional<Sign> explicitSign() {
-        return Optional.fromNullable(explicitSign);
+        return Optional.ofNullable(explicitSign);
     }
 
     /**

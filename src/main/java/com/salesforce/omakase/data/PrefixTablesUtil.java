@@ -32,13 +32,6 @@ package com.salesforce.omakase.data;
  * @author nmcwilliams
  */
 public final class PrefixTablesUtil {
-    // XXX whether additional caching here improves performance is questionable, and if enabled needs to be made thread-safe
-    // static caches, based on prefix tables data being immutable
-    // private static final Table<Property, Browser, Double> PROPERTY_CACHE = HashBasedTable.create();
-    // private static final Table<String, Browser, Double> KEYWORD_CACHE = HashBasedTable.create();
-    // private static final Table<String, Browser, Double> AT_RULE_CACHE = HashBasedTable.create();
-    // private static final Table<String, Browser, Double> SELECTOR_CACHE = HashBasedTable.create();
-    // private static final Table<String, Browser, Double> FUNCTION_CACHE = HashBasedTable.create();
 
     private PrefixTablesUtil() {}
 

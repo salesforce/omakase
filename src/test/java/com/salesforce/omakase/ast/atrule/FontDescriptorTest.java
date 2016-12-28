@@ -33,8 +33,8 @@ import com.salesforce.omakase.ast.declaration.PropertyName;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.QuotationMode;
 import com.salesforce.omakase.ast.declaration.StringValue;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -107,40 +107,31 @@ public class FontDescriptorTest {
 
     @Test
     public void newPropertyValueIsBroadcasted() {
-        FontFaceBlock block = new FontFaceBlock(1, 1, new StatusChangingBroadcaster());
-
-        PropertyValue newValue = PropertyValue.of(KeywordValue.of("MyFont"));
+        FontFaceBlock block = new FontFaceBlock(1, 1);
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of("NewFont"));
         descriptor.propertyValue(newValue);
-
-        assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
         block.fontDescriptors().append(descriptor);
-        assertThat(newValue.status()).isNotSameAs(Status.UNBROADCASTED);
+
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        block.propagateBroadcast(qb, Status.PARSED);
+
+        assertThat(qb.find(PropertyValue.class).get()).isSameAs(newValue);
     }
 
     @Test
     public void changedPropertyValueIsBroadcasted() {
-        FontFaceBlock block = new FontFaceBlock(1, 1, new StatusChangingBroadcaster());
+        FontFaceBlock block = new FontFaceBlock(1, 1);
+        PropertyValue originalValue = PropertyValue.of(KeywordValue.of("OriginalFont"));
+        descriptor.propertyValue(originalValue);
         block.fontDescriptors().append(descriptor);
 
-        PropertyValue newValue = PropertyValue.of(KeywordValue.of("MyFont"));
-        assertThat(newValue.status()).isSameAs(Status.UNBROADCASTED);
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        block.propagateBroadcast(qb, Status.PARSED);
 
-        descriptor.propertyValue(newValue);
-        assertThat(newValue.status()).isNotSameAs(Status.UNBROADCASTED);
-    }
-
-    @Test
-    public void setPropertyValueDoesntBroadcastAlreadyBroadcasted() {
-        StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
-        FontFaceBlock block = new FontFaceBlock(1, 1, broadcaster);
-        descriptor.status(Status.PROCESSED);
-
-        PropertyValue newValue = PropertyValue.of(KeywordValue.of("MyFont"));
-        newValue.status(Status.PROCESSED);
+        PropertyValue newValue = PropertyValue.of(KeywordValue.of("NewFont"));
         descriptor.propertyValue(newValue);
 
-        block.fontDescriptors().append(descriptor);
-        assertThat(broadcaster.all).isEmpty();
+        assertThat(qb.filter(PropertyValue.class)).hasSize(2);
     }
 
     @Test

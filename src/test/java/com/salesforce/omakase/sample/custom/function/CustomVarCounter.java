@@ -48,14 +48,14 @@ public class CustomVarCounter implements Plugin {
         return details.size();
     }
 
+    @Observe
+    public void observe(CustomVarFunction function) {
+        details.add(function.arg());
+    }
+
     public void summarize(Appendable out) throws IOException {
         out.append(String.format("\n\n%s total custom functions were found in the CSS source code.", details.size()));
         out.append("\n");
         out.append(details.toString());
-    }
-
-    @Observe
-    public void observe(CustomVarFunction function) {
-        details.add(function.arg());
     }
 }

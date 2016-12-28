@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -53,7 +52,7 @@ public interface SelectorPart extends Groupable<Selector, SelectorPart> {
      * For the {@link SelectorPart} {@code #id}, which is an {@link IdSelector}, calling this method will return the first {@link
      * Selector} (with {@code .class > .class2 #id}).
      *
-     * @return The parent, or {@link Optional#absent()} if the parent is not specified.
+     * @return The parent.
      */
     @Override
     Selector parent(); // overridden for docs

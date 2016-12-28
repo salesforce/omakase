@@ -27,14 +27,28 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.NoopBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.error.ThrowingErrorManager;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.error.DefaultErrorManager;
+import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -46,6 +60,17 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings({"UnusedParameters", "JavaDoc"})
 public class EmitterTest {
+    private Grammar grammar;
+    private Broadcaster broadcaster;
+    private ErrorManager em;
+
+    @Before
+    public void setup() {
+        grammar = new Grammar();
+        broadcaster = new NoopBroadcaster();
+        em = new DefaultErrorManager();
+    }
+
     @Test
     public void defaultPhase() {
         Emitter emitter = new Emitter();
@@ -66,7 +91,7 @@ public class EmitterTest {
         emitter.register(plugin);
         emitter.phase(SubscriptionPhase.PROCESS);
 
-        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        emitter.emit(new ClassSelector("test"), grammar, broadcaster, em);
 
         assertThat(plugin.calledClassSelector).isTrue();
         assertThat(plugin.calledSimpleSelector).isTrue();
@@ -79,7 +104,7 @@ public class EmitterTest {
         emitter.register(plugin);
         emitter.register(plugin);
 
-        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        emitter.emit(new ClassSelector("test"), grammar, broadcaster, em);
         assertThat(plugin.count).isEqualTo(1);
     }
 
@@ -99,7 +124,7 @@ public class EmitterTest {
         emitter.register(t4);
         emitter.register(t5);
 
-        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        emitter.emit(new ClassSelector("test"), grammar, broadcaster, em);
         assertThat(list).containsExactly(t1, t2, t3, t4, t5);
     }
 
@@ -113,8 +138,39 @@ public class EmitterTest {
         emitter.register(t1);
         emitter.register(t2);
 
-        emitter.emit(new ClassSelector("test"), new ThrowingErrorManager());
+        emitter.emit(new ClassSelector("test"), grammar, broadcaster, em);
         assertThat(list).containsExactly(t1, t1, t2, t2);
+    }
+
+    @Test
+    public void stopsBroadcastingMidCycle() {
+        Emitter emitter = new Emitter();
+
+        TestMidCycleHelper first = new TestMidCycleHelper();
+        TestMidCycleHelper second = new TestMidCycleHelper();
+
+        emitter.register(first);
+        emitter.register(second);
+
+        TestMidCycleSyntax event = new TestMidCycleSyntax();
+
+        emitter.phase(SubscriptionPhase.REFINE);
+        event.breakBroadcast = false;
+        emitter.emit(event, grammar, broadcaster, em);
+        assertThat(first.refineCalled).isTrue(); // breaks
+        assertThat(second.refineCalled).isFalse();
+
+        emitter.phase(SubscriptionPhase.PROCESS);
+        event.breakBroadcast = false;
+        emitter.emit(event, grammar, broadcaster, em);
+        assertThat(first.refineCalled).isTrue(); // does not break
+        assertThat(second.observeCalled).isTrue();
+
+        emitter.phase(SubscriptionPhase.VALIDATE);
+        event.breakBroadcast = false;
+        emitter.emit(event, grammar, broadcaster, em);
+        assertThat(first.validateCalled).isTrue(); // breaks
+        assertThat(second.validateCalled).isFalse();
     }
 
     public static final class EmitterPlugin implements Plugin {
@@ -225,6 +281,53 @@ public class EmitterTest {
         @Observe
         public void observe(ClassSelector cs) {
             list.add(this);
+        }
+    }
+
+    @Subscribable
+    public static final class TestMidCycleSyntax extends AbstractSyntax implements Refinable {
+        public boolean breakBroadcast;
+
+        @Override
+        public boolean breakBroadcast(SubscriptionPhase phase) {
+            return breakBroadcast;
+        }
+
+        @Override
+        public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        }
+
+        @Override
+        public Syntax copy() {
+            return null;
+        }
+
+        @Override
+        public boolean isRefined() {
+            return false;
+        }
+    }
+
+    public static final class TestMidCycleHelper implements Plugin {
+        boolean refineCalled;
+        boolean observeCalled;
+        boolean validateCalled;
+
+        @Refine
+        public void refine(TestMidCycleSyntax s, Grammar grammar, Broadcaster broadcaster) {
+            this.refineCalled = true;
+            s.breakBroadcast = true;
+        }
+
+        @Observe
+        public void observe(TestMidCycleSyntax s) {
+            this.observeCalled = true;
+        }
+
+        @Validate
+        public void validate(TestMidCycleSyntax s, ErrorManager em) {
+            this.validateCalled = true;
+            s.breakBroadcast = true;
         }
     }
 }

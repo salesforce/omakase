@@ -27,7 +27,7 @@
 package com.salesforce.omakase.test.util;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
+import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
@@ -78,7 +78,7 @@ public final class QuickWriter {
 
         writer = new StyleWriter();
         Omakase.source(input)
-            .use(new AutoRefiner().all())
+            .use(AutoRefine.everything())
             .use(writer)
             .process();
 

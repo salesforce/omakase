@@ -85,7 +85,7 @@ public class GenericFunctionValue extends AbstractTerm implements FunctionValue 
     }
 
     /**
-     * Sets the function name. Note that changing this value will invalidate any previous refinement.
+     * Sets the function name. Note that changing this value conceptually invalidates any previous refinement.
      *
      * @param name
      *     The function name.

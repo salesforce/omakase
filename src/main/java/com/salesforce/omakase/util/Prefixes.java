@@ -26,8 +26,9 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.data.Prefix;
+
+import java.util.Optional;
 
 /**
  * Utilities for working with vendor prefixes.
@@ -43,19 +44,19 @@ public final class Prefixes {
      * @param name
      *     Find the prefix at the start of this string.
      *
-     * @return The {@link Prefix}, or {@link Optional#absent()} if a prefix is not present.
+     * @return The {@link Prefix}, or or an empty {@link Optional} if not present.
      */
     public static Optional<Prefix> parsePrefix(String name) {
         for (Prefix prefix : Prefix.values()) {
             if (name.startsWith(prefix.toString())) return Optional.of(prefix);
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
      * Splits a string into the vendor {@link Prefix} and unprefixed portions.
      * <p>
-     * If the string does not contain a prefix then the returned {@link PrefixPair} will return {@link Optional#absent()} from the
+     * If the string does not contain a prefix then the returned {@link PrefixPair} will return an empty {@link Optional} from the
      * {@link PrefixPair#prefix()} method.
      *
      * @param name
@@ -104,10 +105,10 @@ public final class Prefixes {
         /**
          * Gets the {@link Prefix}.
          *
-         * @return The {@link Prefix}, or {@link Optional#absent()} if a prefix was not present.
+         * @return The {@link Prefix}, or an empty {@link Optional} if not present.
          */
         public Optional<Prefix> prefix() {
-            return Optional.fromNullable(prefix);
+            return Optional.ofNullable(prefix);
         }
 
         /**

@@ -144,11 +144,11 @@ public class MediaQueryParserTest extends AbstractParserTest<MediaQueryParser> {
     @Test
     public void matchesExpectedRestriction() {
         List<ParseResult<MediaRestriction>> results = parseWithExpected(
-            TemplatesHelper.<MediaRestriction>withExpectedResult("(color)", null),
-            TemplatesHelper.<MediaRestriction>withExpectedResult("(min-width:800px)", null),
-            TemplatesHelper.<MediaRestriction>withExpectedResult("all", null),
-            TemplatesHelper.<MediaRestriction>withExpectedResult("all and (min-width:800px)", null),
-            TemplatesHelper.<MediaRestriction>withExpectedResult("  handheld and (orientation: landscape)", null),
+            TemplatesHelper.withExpectedResult("(color)", null),
+            TemplatesHelper.withExpectedResult("(min-width:800px)", null),
+            TemplatesHelper.withExpectedResult("all", null),
+            TemplatesHelper.withExpectedResult("all and (min-width:800px)", null),
+            TemplatesHelper.withExpectedResult("  handheld and (orientation: landscape)", null),
             withExpectedResult("only screen and (max-device-width: 480px)", MediaRestriction.ONLY),
             withExpectedResult("ONLY screen and (max-device-width: 480px)", MediaRestriction.ONLY),
             withExpectedResult("not screen and (color)", MediaRestriction.NOT),
@@ -189,35 +189,35 @@ public class MediaQueryParserTest extends AbstractParserTest<MediaQueryParser> {
     @Test
     public void errorsIfRestrictionAndNoMediaType() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_MEDIA_TYPE.message());
+        exception.expectMessage(Message.MISSING_MEDIA_TYPE);
         parse("only (min-width:800px");
     }
 
     @Test
     public void errorsIfRestrictionAndNoMediaTypeButHasAnd() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_MEDIA_TYPE.message());
+        exception.expectMessage(Message.MISSING_MEDIA_TYPE);
         parse("only and (min-width:800px");
     }
 
     @Test
     public void errorsIfMissingAnd() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_AND.message());
+        exception.expectMessage(Message.MISSING_AND);
         parse("all (min-width:800px)");
     }
 
     @Test
     public void errorsIfTrailingAnd() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.TRAILING_AND.message());
+        exception.expectMessage(Message.TRAILING_AND);
         parse("all and (min-width:800px) and ");
     }
 
     @Test
     public void errorsIfTrailingAndNoExpression() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.TRAILING_AND.message());
+        exception.expectMessage(Message.TRAILING_AND);
         parse("all and ");
     }
 

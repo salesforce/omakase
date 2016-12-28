@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.data.Prefix;
@@ -36,6 +35,7 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.util.Prefixes.PrefixPair;
@@ -80,7 +80,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
 
         if (name.charAt(0) == PREFIX_START) {
             PrefixPair pair = Prefixes.splitPrefix(name);
-            this.prefix = pair.prefix().orNull();
+            this.prefix = pair.prefix().orElse(null);
             this.unprefixed = pair.unprefixed();
             this.cached = Property.lookup(pair.unprefixed());
         } else {
@@ -164,10 +164,10 @@ public final class PropertyName extends AbstractSyntax implements Named {
     /**
      * Gets the prefix, if present.
      *
-     * @return The prefix, or {@link Optional#absent()} if no prefix exists.
+     * @return The prefix, or an empty {@link Optional} if not present.
      */
     public Optional<Prefix> prefix() {
-        return Optional.fromNullable(prefix);
+        return Optional.ofNullable(prefix);
     }
 
     /**
@@ -197,20 +197,20 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * Gets the exact matching {@link Property} instance, if one exists (it may not exist if this is an unknown property or a
      * prefixed property).
      *
-     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is prefixed or it's unknown.
+     * @return The {@link Property}, or an empty {@link Optional} if this {@link PropertyName} is prefixed or it's unknown.
      */
     public Optional<Property> asProperty() {
-        return prefix == null ? Optional.fromNullable(cached) : Optional.<Property>absent();
+        return prefix == null ? Optional.ofNullable(cached) : Optional.empty();
     }
 
     /**
      * Gets matching {@link Property} instance, if one exists (it may not exist if this is an unknown property.) This ignores the
      * prefix.
      *
-     * @return The {@link Property}, or {@link Optional#absent()} if this {@link PropertyName} is unknown.
+     * @return The {@link Property}, or an empty {@link Optional} if this {@link PropertyName} is unknown.
      */
     public Optional<Property> asPropertyIgnorePrefix() {
-        return Optional.fromNullable(cached);
+        return Optional.ofNullable(cached);
     }
 
     /**

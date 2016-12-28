@@ -28,14 +28,12 @@ package com.salesforce.omakase.plugin.conditionals;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
-import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.refiner.Refinement;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,160 +55,127 @@ public class ConditionalsRefinerTest {
     private static final RawSyntax VALID_BLOCK = new RawSyntax(1, 1, "  .class{color:red;\n  margin:10px;}\n\n #id1, " +
         "#id2 { padding: 0}  \n");
 
-    private MasterRefiner refiner;
+    private Grammar grammar;
     private QueryableBroadcaster broadcaster;
-    private ConditionalsRefiner strategy;
+    private ConditionalsRefiner refiner;
 
     @Before
     public void setup() {
-        strategy = new ConditionalsRefiner(new ConditionalsConfig().addTrueConditions("ie7"));
+        grammar = new Grammar();
         broadcaster = new QueryableBroadcaster();
-        refiner = new MasterRefiner(broadcaster).register(strategy);
-    }
-
-    @Test
-    public void returnsFalseForNonMatchingAtRule() {
-        AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "{}"), refiner);
-        assertThat(strategy.refine(ar, broadcaster, refiner)).isSameAs(Refinement.NONE);
-        assertThat(ar.isRefined()).isFalse();
+        refiner = new ConditionalsRefiner(new ConditionalsConfig().addTrueConditions("ie7"));
     }
 
     @Test
     public void ifWithoutExpressionThrowsError() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, null, VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, null, VALID_BLOCK);
 
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_CONDITIONAL_EXPRESSION.message());
-        strategy.refine(ar, broadcaster, refiner);
+        exception.expectMessage(Message.MISSING_CONDITIONAL_EXPRESSION);
+        refiner.refine(ar, grammar, broadcaster);
     }
 
     @Test
     public void ifWithoutBlockThrowsError() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, null, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, null);
 
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_CONDITIONAL_BLOCK.message());
-        strategy.refine(ar, broadcaster, refiner);
+        exception.expectMessage(Message.MISSING_CONDITIONAL_BLOCK);
+        refiner.refine(ar, grammar, broadcaster);
     }
 
     @Test
     public void errorsIfInvalidExpressionSyntax() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "ie7"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "ie7"), VALID_BLOCK);
 
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find opening parenthesis");
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
     }
 
     @Test
     public void errorsIfExtraUnparsableExpressionContent() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie7)$"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie7)$"), VALID_BLOCK);
 
         exception.expect(ParserException.class);
         exception.expectMessage("Unable to parse the remaining content in the conditional at-rule");
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
     }
 
     @Test
     public void errorsIfExtraUnparsableBlockContent() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, new RawSyntax(1, 1, ".class{color:red} $"), refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, new RawSyntax(1, 1, ".class{color:red} $"));
 
         exception.expect(ParserException.class);
         exception.expectMessage("Unable to parse the remaining content in the conditional at-rule");
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
     }
 
     @Test
-    public void whenSuccessfulReturnsTrue() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+    public void whenSuccessfulNoError() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK);
 
-        Refinement result = strategy.refine(ar, broadcaster, refiner);
-        assertThat(result).isSameAs(Refinement.FULL);
+        refiner.refine(ar, grammar, broadcaster);
         assertThat(broadcaster.find(ConditionalAtRuleBlock.class).isPresent()).isTrue();
     }
 
     @Test
-    public void whenSuccessfulAddsBlockToAtRule() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+    public void whenSuccessfulAddsConditionsAndStatements() {
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        assertThat(ar.block().get()).isInstanceOf(ConditionalAtRuleBlock.class);
-
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
         assertThat(block.conditionals().get(0).condition()).isEqualTo("ie7");
         assertThat(block.statements()).hasSize(2);
     }
 
     @Test
-    public void whenSuccessfulBroadcastsTheBlock() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
-
-        strategy.refine(ar, broadcaster, refiner);
-
-        Iterable<ConditionalAtRuleBlock> found = broadcaster.filter(ConditionalAtRuleBlock.class);
-        assertThat(found).hasSize(1);
-    }
-
-    @Test
     public void setsAtRuleToNotPrintOutName() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, VALID_EXPRESSION, VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
         assertThat(ar.shouldWriteName()).isFalse();
     }
 
     @Test
     public void parsedConditionIsLowerCased() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(IE7)"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(IE7)"), VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
         assertThat(block.conditionals().get(0).condition()).isEqualTo("ie7");
     }
 
     @Test
     public void parsedConditionIsTrimmed() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(  ie7 )"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(  ie7 )"), VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
         assertThat(block.conditionals().get(0).condition()).isEqualTo("ie7");
     }
 
     @Test
     public void setsLineAndColumnNumbers() {
-        AtRule ar = new AtRule(5, 2, VALID_NAME, new RawSyntax(5, 3, "(  ie7 )"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(5, 2, VALID_NAME, new RawSyntax(5, 3, "(  ie7 )"), VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
         assertThat(block.line()).isEqualTo(5);
         assertThat(block.column()).isEqualTo(2);
     }
 
     @Test
     public void parsesNegation() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(!ie7)"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(!ie7)"), VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
         Conditional c = block.conditionals().get(0);
         assertThat(c.condition()).isEqualTo("ie7");
         assertThat(c.isLogicalNegation()).isTrue();
@@ -218,12 +183,11 @@ public class ConditionalsRefinerTest {
 
     @Test
     public void parsesLogicalOR() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || ie7)"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || ie7)"), VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
 
         Conditional c1 = block.conditionals().get(0);
         assertThat(c1.condition()).isEqualTo("ie6");
@@ -237,12 +201,11 @@ public class ConditionalsRefinerTest {
     @Test
     public void parsesNegationMixedWithLogicalOR() {
         // no, this condition does not make any sense but hey
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || !IE7 || IE8 || !ie9)"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || !IE7 || IE8 || !ie9)"), VALID_BLOCK);
 
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
 
-        ConditionalAtRuleBlock block = (ConditionalAtRuleBlock)ar.block().get();
+        ConditionalAtRuleBlock block = broadcaster.find(ConditionalAtRuleBlock.class).get();
 
         Conditional c1 = block.conditionals().get(0);
         assertThat(c1.condition()).isEqualTo("ie6");
@@ -263,21 +226,19 @@ public class ConditionalsRefinerTest {
 
     @Test
     public void errorsIfInvalidLogicalOR() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 | ie7)"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 | ie7)"), VALID_BLOCK);
 
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find |");
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
     }
 
     @Test
     public void errorsIfMissingConditionAfterOR() {
-        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || )"), VALID_BLOCK, refiner);
-        new Stylesheet(broadcaster).append(ar);
+        AtRule ar = new AtRule(1, 1, VALID_NAME, new RawSyntax(1, 1, "(ie6 || )"), VALID_BLOCK);
 
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find a valid condition name");
-        strategy.refine(ar, broadcaster, refiner);
+        refiner.refine(ar, grammar, broadcaster);
     }
 }

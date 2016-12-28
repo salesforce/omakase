@@ -27,3 +27,18 @@
 [hidden] {
   color: red;
 }
+
+.this#id, #id2 > .foo {
+  color: red;
+  padding: 10px;
+  font-family: "Times New Roman";
+  /* orphaned */
+}
+
+@media only screen
+and (min-device-width : 375px)
+and (max-device-width : 667px) {
+  .foo {
+    font-size: 13px;
+  }
+}

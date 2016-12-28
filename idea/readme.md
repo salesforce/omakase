@@ -29,17 +29,17 @@ Import the project into IntelliJ:
 3. ok
 
 Go through the prompts choosing the options as you see fit (most defaults are fine).
-Choose the 1.7 SDK.
+Choose the 1.8 SDK.
 
-Ensure that your project is using Java 1.7 or above, e.g.,
+Ensure that your project is using Java 1.8 or above, e.g.,
 
 1. Right-click on the omakase module in the Project view
 2. Choose Module Settings
 3. Select the Sources tab
-4. Under Language Level, choose 7.0
+4. Under Language Level, choose 8.0
 5. Click on Project, under Project Settings in the left-most panel
-6. Project SDK should be 1.7
-7. Project language level should be SDK Default, or 7
+6. Project SDK should be 1.8
+7. Project language level should be SDK Default, or 8
 
 Settings
 --------

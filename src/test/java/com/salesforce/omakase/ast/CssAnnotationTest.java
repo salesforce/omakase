@@ -28,7 +28,7 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.util.EnumSet;

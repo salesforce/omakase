@@ -61,11 +61,5 @@ public class OperatorTypeTest {
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSingle(OperatorType.SLASH)).isEqualTo("/");
     }
-
-    @Test
-    public void writeSpace() throws IOException {
-        StyleWriter writer = StyleWriter.compressed();
-        assertThat(writer.writeSingle(OperatorType.SPACE)).isEqualTo(" ");
-    }
 }
 

@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.ast.selector.*;
 
@@ -34,6 +33,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utilities for working with {@link Selector}s and {@link SelectorPart}s.
@@ -50,7 +50,7 @@ public final class Selectors {
      * @param part
      *     Check if this part is a {@link ClassSelector}.
      *
-     * @return The class selector, or {@link Optional#absent()} if the part is a different type.
+     * @return The class selector, or an empty {@link Optional} if the part is a different type.
      */
     public static Optional<ClassSelector> asClassSelector(SelectorPart part) {
         return as(ClassSelector.class, part);
@@ -62,7 +62,7 @@ public final class Selectors {
      * @param part
      *     Check if this part is a {@link IdSelector}.
      *
-     * @return The id selector, or {@link Optional#absent()} if the part is a different type.
+     * @return The id selector, or an empty {@link Optional} if the part is a different type.
      */
     public static Optional<IdSelector> asIdSelector(SelectorPart part) {
         return as(IdSelector.class, part);
@@ -74,7 +74,7 @@ public final class Selectors {
      * @param part
      *     Check if this part is a {@link TypeSelector}.
      *
-     * @return The type selector, or {@link Optional#absent()} if the part is a different type.
+     * @return The type selector, or an empty {@link Optional} if the part is a different type.
      */
     public static Optional<TypeSelector> asTypeSelector(SelectorPart part) {
         return as(TypeSelector.class, part);
@@ -86,7 +86,7 @@ public final class Selectors {
      * @param part
      *     Check if this part is a {@link PseudoElementSelector}.
      *
-     * @return The pseudo element selector, or {@link Optional#absent()} if the part is a different type.
+     * @return The pseudo element selector, or an empty {@link Optional} if the part is a different type.
      */
     public static Optional<PseudoElementSelector> asPseudoElementSelector(SelectorPart part) {
         return as(PseudoElementSelector.class, part);
@@ -98,7 +98,7 @@ public final class Selectors {
      * @param part
      *     Check if this part is a {@link PseudoClassSelector}.
      *
-     * @return The pseudo element selector, or {@link Optional#absent()} if the part is a different type.
+     * @return The pseudo element selector, or an empty {@link Optional} if the part is a different type.
      */
     public static Optional<PseudoClassSelector> asPseudoClassSelector(SelectorPart part) {
         return as(PseudoClassSelector.class, part);
@@ -114,10 +114,10 @@ public final class Selectors {
      * @param <T>
      *     Check if the part is an instance of this class.
      *
-     * @return the properly-typed instance, or {@link Optional#absent()} if it doesn't match.
+     * @return the properly-typed instance, or an empty {@link Optional} if it doesn't match.
      */
     public static <T extends SelectorPart> Optional<T> as(Class<T> klass, SelectorPart part) {
-        return klass.isInstance(part) ? Optional.of(klass.cast(part)) : Optional.<T>absent();
+        return klass.isInstance(part) ? Optional.of(klass.cast(part)) : Optional.empty();
     }
 
     /**
@@ -129,7 +129,7 @@ public final class Selectors {
      * @param name
      *     Check for a {@link ClassSelector} with this name.
      *
-     * @return The class selector, or {@link Optional#absent()} if not found.
+     * @return The class selector, oran empty {@link Optional} if not found.
      */
     public static Optional<ClassSelector> findClassSelector(Selector selector, String name) {
         return findClassSelector(selector.parts(), name);
@@ -144,14 +144,14 @@ public final class Selectors {
      * @param name
      *     Check for a {@link ClassSelector} with this name.
      *
-     * @return The class selector, or {@link Optional#absent()} if not found.
+     * @return The class selector, or an empty {@link Optional} if not found.
      */
     public static Optional<ClassSelector> findClassSelector(Iterable<SelectorPart> parts, String name) {
         for (SelectorPart part : parts) {
             Optional<ClassSelector> cs = asClassSelector(part);
             if (cs.isPresent() && cs.get().name().equals(name)) return cs;
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -163,7 +163,7 @@ public final class Selectors {
      * @param name
      *     Check for a {@link IdSelector} with this name.
      *
-     * @return The class selector, or {@link Optional#absent()} if not found.
+     * @return The class selector, or an empty {@link Optional} if not found.
      */
     public static Optional<IdSelector> findIdSelector(Selector selector, String name) {
         return findIdSelector(selector.parts(), name);
@@ -178,14 +178,14 @@ public final class Selectors {
      * @param name
      *     Check for a {@link IdSelector} with this name.
      *
-     * @return The id selector, or {@link Optional#absent()} if not found.
+     * @return The id selector, or an empty {@link Optional} if not found.
      */
     public static Optional<IdSelector> findIdSelector(Iterable<SelectorPart> parts, String name) {
         for (SelectorPart part : parts) {
             Optional<IdSelector> id = asIdSelector(part);
             if (id.isPresent() && id.get().name().equals(name)) return id;
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -197,7 +197,7 @@ public final class Selectors {
      * @param name
      *     Check for a {@link TypeSelector} with this name.
      *
-     * @return The class selector, or {@link Optional#absent()} if not found.
+     * @return The class selector, or an empty {@link Optional} if not found.
      */
     public static Optional<TypeSelector> findTypeSelector(Selector selector, String name) {
         return findTypeSelector(selector.parts(), name);
@@ -212,14 +212,14 @@ public final class Selectors {
      * @param name
      *     Check for a {@link TypeSelector} with this name.
      *
-     * @return The type selector, or {@link Optional#absent()} if not found.
+     * @return The type selector, or an empty {@link Optional} if not found.
      */
     public static Optional<TypeSelector> findTypeSelector(Iterable<SelectorPart> parts, String name) {
         for (SelectorPart part : parts) {
             Optional<TypeSelector> type = asTypeSelector(part);
             if (type.isPresent() && type.get().name().equals(name)) return type;
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -234,7 +234,7 @@ public final class Selectors {
      * @param exact
      *     Specify true to match the exact name, false to only check the unprefixed portion.
      *
-     * @return The class selector, or {@link Optional#absent()} if not found.
+     * @return The class selector, or an empty {@link Optional} if not found.
      */
     public static Optional<PseudoElementSelector> findPseudoElementSelector(Selector selector, String name, boolean exact) {
         return findPseudoElementSelector(selector.parts(), name, exact);
@@ -251,7 +251,7 @@ public final class Selectors {
      * @param exact
      *     Specify true to match the exact name, false to only check the unprefixed portion.
      *
-     * @return The type selector, or {@link Optional#absent()} if not found.
+     * @return The type selector, or an empty {@link Optional} if not found.
      */
     public static Optional<PseudoElementSelector> findPseudoElementSelector(Iterable<SelectorPart> parts, String name, boolean exact) {
         for (SelectorPart part : parts) {
@@ -264,7 +264,7 @@ public final class Selectors {
                 }
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -279,7 +279,7 @@ public final class Selectors {
      * @param exact
      *     Specify true to match the exact name, false to only check the unprefixed portion.
      *
-     * @return The class selector, or {@link Optional#absent()} if not found.
+     * @return The class selector, or an empty {@link Optional} if not found.
      */
     public static Optional<PseudoClassSelector> findPseudoClassSelector(Selector selector, String name, boolean exact) {
         return findPseudoClassSelector(selector.parts(), name, exact);
@@ -296,7 +296,7 @@ public final class Selectors {
      * @param exact
      *     Specify true to match the exact name, false to only check the unprefixed portion.
      *
-     * @return The type selector, or {@link Optional#absent()} if not found.
+     * @return The type selector, or an empty {@link Optional} if not found.
      */
     public static Optional<PseudoClassSelector> findPseudoClassSelector(Iterable<SelectorPart> parts, String name, boolean exact) {
         for (SelectorPart part : parts) {
@@ -309,7 +309,7 @@ public final class Selectors {
                 }
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**

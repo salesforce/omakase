@@ -26,9 +26,7 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
@@ -36,6 +34,8 @@ import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Optional;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -104,32 +104,6 @@ public class QueryableBroadcasterTest {
     }
 
     @Test
-    public void findOnlyOneMatch() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        qb.broadcast(sample1);
-        Optional<ClassSelector> found = qb.findOnly(ClassSelector.class);
-        assertThat(found.isPresent()).isTrue();
-        // and no exception
-    }
-
-    @Test
-    public void findOnlyMoreThanOne() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        qb.broadcast(sample1);
-        qb.broadcast(sample1a);
-        exception.expect(IllegalStateException.class);
-        exception.expectMessage("expected to find only one broadcasted event");
-        qb.findOnly(ClassSelector.class);
-    }
-
-    @Test
-    public void findOnlyNoMatches() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        Optional<IdSelector> found = qb.findOnly(IdSelector.class);
-        assertThat(found.isPresent()).isFalse();
-    }
-
-    @Test
     public void all() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         qb.broadcast(sample1);
@@ -149,14 +123,6 @@ public class QueryableBroadcasterTest {
     }
 
     @Test
-    public void updatesStatus() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        sample1.status(Status.UNBROADCASTED);
-        qb.broadcast(sample1);
-        assertThat(sample1.status()).isSameAs(Status.QUEUED);
-    }
-
-    @Test
     public void count() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         qb.broadcast(sample1);
@@ -165,22 +131,27 @@ public class QueryableBroadcasterTest {
         assertThat(qb.count()).isEqualTo(3);
     }
 
-    public static final class InnerBroadcaster implements Broadcaster {
+    @Test
+    public void hasAnyTrue() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        qb.broadcast(sample1);
+        qb.broadcast(sample1a);
+        qb.broadcast(sample1b);
+        assertThat(qb.hasAny()).isTrue();
+    }
+
+    @Test
+    public void hasAnyFalse() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        assertThat(qb.hasAny()).isFalse();
+    }
+
+    public static final class InnerBroadcaster extends AbstractBroadcaster {
         boolean called = false;
 
         @Override
         public void broadcast(Broadcastable broadcastable) {
             called = true;
-        }
-
-        @Override
-        public void broadcast(Broadcastable broadcastable, boolean propagate) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void wrap(Broadcaster relay) {
-            throw new UnsupportedOperationException();
         }
     }
 }

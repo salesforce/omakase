@@ -26,7 +26,7 @@
 
 package com.salesforce.omakase.parser;
 
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.NoopBroadcaster;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
 import org.junit.Test;
@@ -43,8 +43,8 @@ public class CombinationParserTest {
     @Test
     public void parsesEither() {
         CombinationParser c = new CombinationParser(new KeywordValueParser(), new NumericalValueParser());
-        assertThat(c.parse(new Source("red"), new QueryableBroadcaster())).isTrue();
-        assertThat(c.parse(new Source("3px"), new QueryableBroadcaster())).isTrue();
-        assertThat(c.parse(new Source("!"), new QueryableBroadcaster())).isFalse();
+        assertThat(c.parse(new Source("red"), new Grammar(), new NoopBroadcaster())).isTrue();
+        assertThat(c.parse(new Source("3px"), new Grammar(), new NoopBroadcaster())).isTrue();
+        assertThat(c.parse(new Source("!"), new Grammar(), new NoopBroadcaster())).isFalse();
     }
 }

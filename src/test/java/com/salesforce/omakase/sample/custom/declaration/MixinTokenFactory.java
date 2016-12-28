@@ -26,11 +26,11 @@
 
 package com.salesforce.omakase.sample.custom.declaration;
 
-import com.google.common.base.Optional;
-import com.salesforce.omakase.parser.token.BaseTokenFactory;
+import java.util.Optional;
+import com.salesforce.omakase.parser.factory.BaseTokenFactory;
 import com.salesforce.omakase.parser.token.CompoundToken;
 import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.TokenFactory;
+import com.salesforce.omakase.parser.factory.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;
 
 /**

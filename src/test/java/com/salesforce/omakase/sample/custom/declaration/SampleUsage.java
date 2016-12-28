@@ -27,8 +27,8 @@
 package com.salesforce.omakase.sample.custom.declaration;
 
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.plugin.GrammarPlugin;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
@@ -43,7 +43,7 @@ import java.io.IOException;
  * <b>CAVEAT:</b> custom declarations are at the edge of what's currently supported. These example classes aren't pristine, but it
  * should at least give an idea of what things are currently possible.
  * <p>
- * We give the parser an instance of the {@link MixinPlugin}. This plugin is a {@link SyntaxPlugin} that registers our {@link
+ * We give the parser an instance of the {@link MixinPlugin}. This plugin is a {@link GrammarPlugin} that registers our {@link
  * MixinRefiner}. The refiner handles actually parsing the custom mixin at-rules as well as the custom declaration mixin
  * references. The nature of our new syntax also necessitates creating a custom {@link MixinTokenFactory}, which we use to allow
  * declarations to begin with our special {@code +} symbol.
@@ -93,9 +93,9 @@ public final class SampleUsage {
 
         // parse
         Omakase.source(input)
+            .use(mixins)
             .use(verbose)
             .use(validation)
-            .use(mixins)
             .process();
 
         System.out.println("\n\nOUTPUT:\n--------------------");

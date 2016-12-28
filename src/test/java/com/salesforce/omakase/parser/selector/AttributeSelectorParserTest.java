@@ -131,7 +131,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
         );
 
         for (ParseResult<String> result : results) {
-            AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
+            AttributeSelector selector = expectOnly(result.broadcaster, AttributeSelector.class);
             assertThat(selector.attribute())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
@@ -156,7 +156,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
         );
 
         for (ParseResult<AttributeMatchType> result : results) {
-            AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
+            AttributeSelector selector = expectOnly(result.broadcaster, AttributeSelector.class);
             assertThat(selector.matchType().get())
                 .describedAs(result.source.toString())
                 .isSameAs(result.expected);
@@ -166,7 +166,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
     @Test
     public void noMatchTypeWhenAbsent() {
         GenericParseResult result = parse("[foo]").get(0);
-        AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
+        AttributeSelector selector = expectOnly(result.broadcaster, AttributeSelector.class);
         assertThat(selector.matchType().isPresent()).isFalse();
     }
 
@@ -189,7 +189,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
         );
 
         for (ParseResult<String> result : results) {
-            AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
+            AttributeSelector selector = expectOnly(result.broadcaster, AttributeSelector.class);
             assertThat(selector.value().get())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
@@ -199,21 +199,21 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
     @Test
     public void noValueWhenAbsent() {
         GenericParseResult result = parse("[foo]").get(0);
-        AttributeSelector selector = result.broadcaster.findOnly(AttributeSelector.class).get();
+        AttributeSelector selector = expectOnly(result.broadcaster, AttributeSelector.class);
         assertThat(selector.value().isPresent()).isFalse();
     }
 
     @Test
     public void errorsIfNoIdentAfterOpeningBracket() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_NAME.message());
+        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_NAME);
         parse("[");
     }
 
     @Test
     public void errorsIfInvalidIdentAfterOpeningBracket() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_NAME.message());
+        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_NAME);
         parse("[1");
     }
 
@@ -227,7 +227,7 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
     @Test
     public void errorsIfNoValueAfterMatcher() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_MATCH_VALUE.message());
+        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_MATCH_VALUE);
         parse("[href=");
     }
 }

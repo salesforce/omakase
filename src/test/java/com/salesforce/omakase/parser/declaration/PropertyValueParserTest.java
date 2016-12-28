@@ -29,13 +29,13 @@ package com.salesforce.omakase.parser.declaration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
-import com.salesforce.omakase.ast.declaration.RawFunction;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
@@ -138,13 +138,13 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("0", 1),
             withExpectedResult("#ffcc11 ", 1),
-            withExpectedResult("1px\n1px !important", 3),
-            withExpectedResult("1px\t1px", 3),
-            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 8), // RawFunction adds each
-            withExpectedResult("-1px 1px 0 #222", 7),
-            withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 17), // RawFunction adds 1 each
+            withExpectedResult("1px\n1px !important", 2),
+            withExpectedResult("1px\t1px", 2),
+            withExpectedResult("rotateX(80deg) rotateY(0deg) rotateZ(0deg)", 6), // RawFunction adds each
+            withExpectedResult("-1px 1px 0 #222", 4),
+            withExpectedResult("0 1px 3px rgba(0, 0, 0, 0.7),0 1px 0 rgba(0, 0, 0, 0.3)", 11), // RawFunction adds 1 each
             withExpectedResult("U+000-49F, U+27FF ,  U+29??,   U+1D400-1D7FF", 7),
-            withExpectedResult("-1px 1px 0 #222", 7)));
+            withExpectedResult("-1px 1px 0 #222", 4)));
 
         for (ParseResult<Integer> result : results) {
             assertThat(result.broadcasted)
@@ -162,28 +162,23 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
         List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
 
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
-        assertThat(broadcasted).hasSize(20);
+        assertThat(broadcasted).hasSize(15);
 
-        assertThat(broadcasted.get(0)).isInstanceOf(RawFunction.class);
-        assertThat(broadcasted.get(1)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(1)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(2)).isInstanceOf(NumericalValue.class);
         assertThat(broadcasted.get(3)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(4)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(6)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(5)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(6)).isInstanceOf(GenericFunctionValue.class);
         assertThat(broadcasted.get(7)).isInstanceOf(Operator.class);
         assertThat(broadcasted.get(8)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(9)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(10)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(11)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(12)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(13)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(14)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(15)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(16)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(17)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(18)).isInstanceOf(GenericFunctionValue.class);
-        assertThat(broadcasted.get(19)).isInstanceOf(PropertyValue.class);
+        assertThat(broadcasted.get(9)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(10)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(11)).isInstanceOf(NumericalValue.class);
+        assertThat(broadcasted.get(12)).isInstanceOf(RawFunction.class);
+        assertThat(broadcasted.get(13)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(broadcasted.get(14)).isInstanceOf(PropertyValue.class);
     }
 
     @Test
@@ -192,13 +187,11 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
 
         List<Broadcastable> broadcasted = Lists.newArrayList(result.broadcasted);
 
-        assertThat(broadcasted).hasSize(6);
+        assertThat(broadcasted).hasSize(4);
         assertThat(broadcasted.get(0)).isInstanceOf(NumericalValue.class);
-        assertThat(broadcasted.get(1)).isInstanceOf(Operator.class);
+        assertThat(broadcasted.get(1)).isInstanceOf(KeywordValue.class);
         assertThat(broadcasted.get(2)).isInstanceOf(KeywordValue.class);
-        assertThat(broadcasted.get(3)).isInstanceOf(Operator.class);
-        assertThat(broadcasted.get(4)).isInstanceOf(KeywordValue.class);
-        assertThat(broadcasted.get(5)).isInstanceOf(PropertyValue.class);
+        assertThat(broadcasted.get(3)).isInstanceOf(PropertyValue.class);
     }
 
     @Test
@@ -210,25 +203,20 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
         List<PropertyValueMember> members = Lists.newArrayList(val.members());
 
         // the last space should NOT count as an operator. also, multiple spaces should not count as multiple operators
-        assertThat(members).hasSize(17);
+        assertThat(members).hasSize(12);
 
         assertThat(members.get(0)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(1)).isInstanceOf(Operator.class);
+        assertThat(members.get(1)).isInstanceOf(NumericalValue.class);
         assertThat(members.get(2)).isInstanceOf(NumericalValue.class);
         assertThat(members.get(3)).isInstanceOf(Operator.class);
         assertThat(members.get(4)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(5)).isInstanceOf(Operator.class);
-        assertThat(members.get(6)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(7)).isInstanceOf(Operator.class);
-        assertThat(members.get(8)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(members.get(5)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(members.get(6)).isInstanceOf(Operator.class);
+        assertThat(members.get(7)).isInstanceOf(NumericalValue.class);
+        assertThat(members.get(8)).isInstanceOf(NumericalValue.class);
         assertThat(members.get(9)).isInstanceOf(Operator.class);
         assertThat(members.get(10)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(11)).isInstanceOf(Operator.class);
-        assertThat(members.get(12)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(13)).isInstanceOf(Operator.class);
-        assertThat(members.get(14)).isInstanceOf(NumericalValue.class);
-        assertThat(members.get(15)).isInstanceOf(Operator.class);
-        assertThat(members.get(16)).isInstanceOf(GenericFunctionValue.class);
+        assertThat(members.get(11)).isInstanceOf(GenericFunctionValue.class);
     }
 
     @Test

@@ -34,8 +34,8 @@ import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.basic.AutoRefiner;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.plugin.core.AutoRefine;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.util.SupportMatrix;
 
 import static com.salesforce.omakase.data.Browser.*;
@@ -50,7 +50,7 @@ import static com.salesforce.omakase.data.Browser.*;
  * by using the {@link #defaultBrowserSupport()} constructor method.
  * <p>
  * Browser and prefix data is seamlessly handled via updates from the caniuse.com data. To update to the latest data, see the
- * readme file titled "Scripts".
+ * section named "Scripts" in the main readme file.
  * <p>
  * This plugin integrates well with existing CSS. If all required prefixes are already present then nothing will be changed by
  * default. You can optionally have unnecessary prefixes removed via the {@link #prune(boolean)} method. You can also optionally
@@ -59,20 +59,17 @@ import static com.salesforce.omakase.data.Browser.*;
  * <p>
  * This doesn't automatically refine declarations or other refinables to check if they might need prefixes. This will only handle
  * prefixes if declarations, at-rules, and selectors have already been refined. If you want to ensure that every thing gets
- * checked then register an {@link AutoRefiner}, and call {@link AutoRefiner#all()}, or ensure that a {@link StandardValidation}
- * plugin instance is registered. Both of these must be registered before this plugin. See the main readme doc for more
- * information.
+ * checked then register {@link AutoRefine#everything()} or {@link StandardValidation}. Either must be registered before
+ * this plugin. See the main readme doc for more information on refinement.
  * <p>
- * <b>Important:</b> This is an <em>Experimental</em> plugin. Some rare and uncommon usages of prefixed values, property names,
- * selectors or at-rules may not currently work correctly. Please check the list of what's actually supported in the readme or
- * {@code prefix-info.yaml} file.
+ * <b>Important:</b> Check the list of what's actually supported in the readme or {@code prefix-info.yaml} file.
  * <p>
  * Even if a prefix is supported, there may still be a few edge cases where a particular prefixable value is not automatically
  * handled. If you are using bleeding-edge syntax or prefixable features in a non-typical way then please double check the CSS
  * output for the proper behavior.
  * <p>
  * Also note that some very old browser versions utilizing non-standard syntax may not currently be handled. For example, the
- * legacy linear-gradient syntax is not currently handled because several browser versions have passed since it was last used.
+ * legacy linear-gradient syntax is not currently handled because many browser versions have passed since it was last used.
  * <p>
  * Example usage:
  * <pre><code>
@@ -85,7 +82,7 @@ import static com.salesforce.omakase.data.Browser.*;
  *     prefixing.prune(true);
  *     prefixing.rearrange(true);
  *
- *     AutoRefiner refinement = new AutoRefiner().all();
+ *     AutoRefine refinement = AutoRefine.everything();
  *
  *     Omakase.source(cssSource).use(refinement).use(prefixing).process();
  * </code></pre>
@@ -237,7 +234,7 @@ public final class Prefixer implements DependentPlugin {
      */
     @SafeVarargs
     private final <T> void run(T instance, Handler<T>... handlers) {
-        boolean finished = false;
+        boolean finished;
         for (Handler<T> handler : handlers) {
             finished = handler.handle(instance, rearrange, prune, support);
             if (finished) return;

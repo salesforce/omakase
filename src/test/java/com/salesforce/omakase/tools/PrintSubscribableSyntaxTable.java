@@ -33,7 +33,6 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import org.reflections.Reflections;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -48,11 +47,12 @@ public class PrintSubscribableSyntaxTable {
         new PrintSubscribableSyntaxTable().run();
     }
 
+    @SuppressWarnings("Convert2Lambda")
     public void run() {
         Reflections reflections = new Reflections("com.salesforce.omakase.ast");
-        List<Class<?>> list = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class));
+        List<Class<?>> list = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class, true));
 
-        Collections.sort(list, new Comparator<Class<?>>() {
+        list.sort(new Comparator<Class<?>>() {
             @Override
             public int compare(Class<?> class1, Class<?> class2) {
                 return ComparisonChain.start()

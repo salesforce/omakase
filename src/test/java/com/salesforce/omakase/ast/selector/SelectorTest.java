@@ -31,8 +31,9 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
+import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -51,7 +52,7 @@ public class SelectorTest {
     @Test
     public void rawContent() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw);
         assertThat(selector.raw().get()).isSameAs(raw);
     }
 
@@ -74,7 +75,7 @@ public class SelectorTest {
     @Test
     public void appendAllParts() {
         selector = new Selector(new ClassSelector("test"));
-        selector.appendAll(Lists.<SelectorPart>newArrayList(Combinator.descendant(), new IdSelector("test")));
+        selector.appendAll(Lists.newArrayList(Combinator.descendant(), new IdSelector("test")));
         assertThat(selector.parts()).hasSize(3);
     }
 
@@ -82,23 +83,24 @@ public class SelectorTest {
     public void propagatesBroadcasts() {
         ClassSelector cs = new ClassSelector("test");
         selector = new Selector(cs);
-        selector.propagateBroadcast(new StatusChangingBroadcaster());
-        assertThat(cs.status()).isNotSameAs(Status.UNBROADCASTED);
-        assertThat(selector.status()).isNotSameAs(Status.UNBROADCASTED);
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        selector.propagateBroadcast(qb, Status.PARSED);
+        assertThat(qb.find(ClassSelector.class).get()).isSameAs(cs);
+        assertThat(qb.find(Selector.class).get()).isSameAs(selector);
     }
 
     @Test
     public void isRefinedTrue() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
-        selector.refine();
+        selector = new Selector(raw);
+        selector.parts().append(new ClassSelector("class"));
         assertThat(selector.isRefined()).isTrue();
     }
 
     @Test
     public void isRefinedFalse() {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw);
         assertThat(selector.isRefined()).isFalse();
     }
 
@@ -106,14 +108,6 @@ public class SelectorTest {
     public void isRefinedTrueForDynamicallyCreatedUnit() {
         selector = new Selector(new ClassSelector("test"));
         assertThat(selector.isRefined()).isTrue();
-    }
-
-    @Test
-    public void refine() {
-        RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
-        selector.refine();
-        assertThat(selector.parts()).isNotEmpty();
     }
 
     @Test
@@ -134,43 +128,54 @@ public class SelectorTest {
     @Test
     public void writeVerboseRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        selector.refine();
         assertThat(StyleWriter.verbose().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        selector.refine();
         assertThat(StyleWriter.inline().writeSingle(selector)).isEqualTo(".class>#id");
     }
 
     @Test
     public void writeCompressedRefined() throws IOException {
         selector = new Selector(new ClassSelector("class"), Combinator.child(), new IdSelector("id"));
-        selector.refine();
         assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo(".class>#id");
     }
 
     @Test
     public void writeVerboseUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw);
         assertThat(StyleWriter.verbose().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeInlineUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw);
         assertThat(StyleWriter.inline().writeSingle(selector)).isEqualTo(".class > #id");
     }
 
     @Test
     public void writeCompressedUnrefined() throws IOException {
         RawSyntax raw = new RawSyntax(5, 2, ".class > #id");
-        selector = new Selector(raw, new MasterRefiner(new StatusChangingBroadcaster()));
+        selector = new Selector(raw);
         assertThat(StyleWriter.compressed().writeSingle(selector)).isEqualTo(".class > #id");
+    }
+
+    @Test
+    public void writeSecondUnitVerbose() throws IOException {
+        Selector s1 = new Selector(new ClassSelector("foo"));
+        Selector s2 = new Selector(new ClassSelector("bar"));
+
+        StyleWriter verbose = StyleWriter.verbose();
+        StyleAppendable appendable = new StyleAppendable();
+
+        verbose.incrementDepth();
+        verbose.writeInner(s1, appendable);
+        verbose.writeInner(s2, appendable);
+        assertThat(appendable.toString()).isEqualTo(".foo, .bar");
     }
 
     @Test
@@ -190,7 +195,7 @@ public class SelectorTest {
 
     @Test
     public void alwaysWritableWhenAttachedAndUnrefined() {
-        selector = new Selector(new RawSyntax(1, 1, ".test"), new MasterRefiner());
+        selector = new Selector(new RawSyntax(1, 1, ".test"));
         com.salesforce.omakase.ast.Rule rule = new com.salesforce.omakase.ast.Rule();
         rule.selectors().append(selector);
         assertThat(selector.isWritable()).isTrue();
@@ -199,7 +204,6 @@ public class SelectorTest {
     @Test
     public void notWritableWhenNoParts() {
         selector = new Selector();
-        selector.refine();
         assertThat(selector.isWritable()).isFalse();
     }
 
@@ -235,5 +239,24 @@ public class SelectorTest {
     public void keyframeSelectorFalse() {
         selector = new Selector(new ClassSelector("test"));
         assertThat(selector.isKeyframe()).isFalse();
+    }
+
+    @Test
+    public void breakBroadcastIfNeverEmit() {
+        selector = new Selector(new RawSyntax(5, 2, ".class > #id"));
+        selector.status(Status.NEVER_EMIT);
+        assertThat(selector.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void breakBroadcastIfAlreadyRefined() {
+        selector = new Selector(new ClassSelector("test"));
+        assertThat(selector.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+    }
+
+    @Test
+    public void dontBreakBroadcastIfNotRefined() {
+        selector = new Selector(new RawSyntax(5, 2, ".class > #id"));
+        assertThat(selector.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 }

@@ -29,6 +29,7 @@ package com.salesforce.omakase.ast.extended;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.atrule.AbstractAtRuleMember;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
@@ -82,34 +83,29 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
      * block and its contents will only be written out if its condition matches what is in the config (or vice versa if the
      * negation operator is used).
      * <p>
-     * Note that this matching is case-sensitive. It is highly recommended to enforce a single case (e.g., lower-case) among the
-     * given conditions and set of true conditions in order to ensure matching works properly (by default the various conditionals
-     * plugin classes do this automatically).
+     * Note that this matching is case-sensitive (everything should be lower-cased).
      * <p>
      * It is acceptable for the given config to change its set of true conditions, allowing the outputting of multiple variations
      * of the CSS source from a single parse operation. For example, set the true conditions, write out the source, change the
      * true conditions, write out the source again, etc.
-     *
-     * @param line
+     *  @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param config
-     *     The {@link ConditionalsConfig} instance.
      * @param conditionals
-     *     The  list of conditionals.
+ *     The  list of conditionals.
      * @param statements
-     *     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
-     *     set.
-     * @param broadcaster
-     *     The {@link Broadcaster} to use for broadcasting new units.
+*     The inner statements of the block. These will be printed out if the condition is contained within the trueConditions
+*     set.
+     * @param config
+*     The {@link ConditionalsConfig} instance.
      */
     public ConditionalAtRuleBlock(int line, int column, Iterable<Conditional> conditionals, Iterable<Statement> statements,
-        ConditionalsConfig config, Broadcaster broadcaster) {
+        ConditionalsConfig config) {
         super(line, column);
         this.config = checkNotNull(config, "config cannot be null");
         this.conditionals = ImmutableList.copyOf(checkNotNull(conditionals, "conditionals cannot be null"));
-        this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+        this.statements = new LinkedSyntaxCollection<>(this);
         this.statements.appendAll(statements);
     }
 
@@ -185,9 +181,11 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        super.propagateBroadcast(broadcaster);
-        statements.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            statements.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override
@@ -196,6 +194,6 @@ public final class ConditionalAtRuleBlock extends AbstractAtRuleMember implement
         for (Statement statement : statements) {
             copiedStatements.add(statement.copy());
         }
-        return new ConditionalAtRuleBlock(-1, -1, conditionals, copiedStatements, config, null).copiedFrom(this);
+        return new ConditionalAtRuleBlock(-1, -1, conditionals, copiedStatements, config).copiedFrom(this);
     }
 }

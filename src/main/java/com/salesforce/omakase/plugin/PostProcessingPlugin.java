@@ -34,7 +34,7 @@ import com.salesforce.omakase.ast.selector.Selector;
 /**
  * A {@link Plugin} that wishes to be notified when all processing (rework and validation) is completed.
  * <p>
- * Please be aware that as this is post processing, and changes or modifications made to AST objects will not be automatically
+ * Please be aware that as this is post processing, any changes or modifications made to AST objects will not be automatically
  * provided to plugin subscription methods. Post processing is generally best for read-only operations.
  * <p>
  * If you are looking to make modifications after the last rule has been parsed, consider creating a subscription method to {@link
@@ -47,13 +47,11 @@ public interface PostProcessingPlugin extends Plugin {
     /**
      * This method will be called after all processing has completed (rework and validation).
      * <p>
-     * This could be used when the {@link Plugin} must defer it's processing until it is certain that all {@link Selector}s and
+     * This could be used when the {@link Plugin} must defer its processing until it is certain that all {@link Selector}s and
      * {@link Declaration}s within the source are processed.
-     * <p>
-     * The order in which this will be invoked (between plugins) is the same order that the {@link Plugin} was registered.
      *
      * @param registry
-     *     The {@link PluginRegistry} instance.
+     *     The {@link PluginRegistry}.
      */
     void postProcess(PluginRegistry registry);
 }

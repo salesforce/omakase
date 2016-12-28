@@ -127,7 +127,7 @@ public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRange
             withExpectedResult("u+0fa???", "u+0fa???"));
 
         for (ParseResult<String> result : results) {
-            UnicodeRangeValue range = result.broadcaster.findOnly(UnicodeRangeValue.class).get();
+            UnicodeRangeValue range = expectOnly(result.broadcaster, UnicodeRangeValue.class);
             assertThat(range.value()).isEqualTo(result.expected);
         }
     }
@@ -149,21 +149,21 @@ public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRange
     @Test
     public void errorsOnLongLength() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNICODE_LONG.message());
+        exception.expectMessage(Message.UNICODE_LONG);
         parse("u+fffffff");
     }
 
     @Test
     public void errorsIfTooManyWildcards() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNICODE_LONG.message());
+        exception.expectMessage(Message.UNICODE_LONG);
         parse("u+???????");
     }
 
     @Test
     public void errorsIfHexAfterWildcard() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.HEX_AFTER_WILDCARD.message());
+        exception.expectMessage(Message.HEX_AFTER_WILDCARD);
         parse("u+??ff");
     }
 
@@ -177,21 +177,21 @@ public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRange
     @Test
     public void errorsOnLongLengthInEndRange() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNICODE_LONG.message());
+        exception.expectMessage(Message.UNICODE_LONG);
         parse("u+ff0-7777777");
     }
 
     @Test
     public void errorsOnWildcardInFirstRange() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.WILDCARD_NOT_ALLOWED.message());
+        exception.expectMessage(Message.WILDCARD_NOT_ALLOWED);
         parse("u+ff0?-f00");
     }
 
     @Test
     public void errorsOnWildcardInEndRange() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.WILDCARD_NOT_ALLOWED.message());
+        exception.expectMessage(Message.WILDCARD_NOT_ALLOWED);
         parse("u+ff0-f0?0");
     }
 }

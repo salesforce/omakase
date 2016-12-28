@@ -27,15 +27,14 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
-import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.HashMap;
@@ -44,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,32 +55,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class Emitter {
     private static final AnnotationScanner scanner = new AnnotationScanner();
 
-    /** cache of class -> (class + supers). Only supers marked as {@link Subscribable} are stored */
-    private static final Map<Class<?>, List<Class<?>>> hierarchyCache = new HashMap<>(32);
+    /** Cache of class -> (class + supers). Only supers marked as {@link Subscribable} are stored. */
+    private final Map<Class<?>, List<Class<?>>> hierarchyCache = new HashMap<>(32);
 
-    /** subscriptions and validators (direct, specific per type). Segmented separately for perf */
-    private final Map<Class<?>, Set<Subscription>> processors = new HashMap<>(32);
-    private final Map<Class<?>, Set<Subscription>> validators = new HashMap<>(32);
+    /*
+     * Map of (syntax) class (e.g., ClassSelector) to subscription Methods.
+     *
+     * This map only includes direct references (not supers). For example, get(ClassSelector.class) will not return
+     * subscriptions to SimpleSelector. Those will be under the SimpleSelector.class entry.
+     */
+    private final Map<Class<?>, Set<Subscription>> directSubscriptions = new HashMap<>(16);
 
     /**
-     * subscriptions and validators (direct and indirect, i.e., hierarchy, this is important for ordering).
+     * Map of (syntax) class to all applicable subscription Methods.
      * <p>
-     * For example,
+     * This map includes indirect (i.e., super classes / interfaces) of the syntax class, which is important for ordering:
      * <p>
      * <pre><code>
-     * // Class1 registered first, then Class2
-     * processors.get(SimpleSelector.class) -> Class1#Subscription(SimpleSelector)
-     * processors.get(ClassSelector.class) -> Class2#Subscription(ClassSelector)
-     * processorsCache.get(ClassSelector.cache) -> Class1#Subscription(SimpleSelector), Class2#Subscription(ClassSelector)
-     * processorsCache.get(SimpleSelector.cache) -> Class2#Subscription(ClassSelector)
+     * // Class1 registered first and has one subscription to SimpleSelector (which is a super of ClassSelector)
+     * // Class2 registered second and has one subscription to ClassSelector
+     * directSubscriptions.get(SimpleSelector.class) -> Class1#Subscription(SimpleSelector)
+     * directSubscriptions.get(ClassSelector.class) -> Class2#Subscription(ClassSelector)
+     * expandedSubscriptions.get(ClassSelector.class) -> Class1#Subscription(SimpleSelector), Class2#Subscription(ClassSelector)
      * </code></pre>
      * <p>
-     * ClassSelector is the concrete instance. Thus the event given will have getClass == ClassSelector, and thus when the
-     * hierarchy is looked at for the event, ClassSelector will come before SimpleSelector. However since Class1 is registered
-     * first, its subscription to SimpleSelector must be invoked before Class2's subscription to ClassSelector.
+     * When a ClassSelector event is emitted we look at the hierarchy of this class and find that it includes ClassSelector and
+     * SimpleSelector, in that order. However, since Class1 is registered first, its subscription to SimpleSelector must be
+     * invoked before Class2's subscription to ClassSelector.
      */
-    private final Map<Class<?>, Iterable<Subscription>> processorsCache = new HashMap<>();
-    private final Map<Class<?>, Iterable<Subscription>> validatorsCache = new HashMap<>();
+    private final Map<Class<?>, Iterable<Subscription>> expandedSubscriptions = new HashMap<>(32);
 
     private SubscriptionPhase phase = SubscriptionPhase.PROCESS;
 
@@ -113,27 +116,9 @@ public final class Emitter {
      *     Register this object to receive events.
      */
     public void register(Object subscriber) {
-        for (Entry<Class<?>, Subscription> entry : scanner.scan(subscriber).entries()) {
-            Subscription subscription = entry.getValue();
-
-            Set<Subscription> subscriptions;
-
-            // using LinkedHashSets below to main registration order
-            if (subscription.phase() == SubscriptionPhase.PROCESS) {
-                subscriptions = processors.get(entry.getKey());
-                if (subscriptions == null) {
-                    subscriptions = new LinkedHashSet<>(5);
-                    processors.put(entry.getKey(), subscriptions);
-                }
-                subscriptions.add(subscription);
-            } else {
-                subscriptions = validators.get(entry.getKey());
-                if (subscriptions == null) {
-                    subscriptions = new LinkedHashSet<>(5);
-                    validators.put(entry.getKey(), subscriptions);
-                }
-                subscriptions.add(subscription);
-            }
+        for (Entry<Class<?>, Subscription> entry : scanner.scanSubscriptions(subscriber).entries()) {
+            Set<Subscription> set = directSubscriptions.computeIfAbsent(entry.getKey(), k -> new LinkedHashSet<>(8));
+            set.add(entry.getValue());
         }
     }
 
@@ -145,41 +130,61 @@ public final class Emitter {
      *
      * @param event
      *     The event instance.
+     * @param grammar
+     *     The {@link Grammar} instance.
+     * @param broadcaster
+     *     The {@link Broadcaster} that refiners should use.
      * @param em
      *     The {@link ErrorManager} instance.
      */
-    public void emit(Broadcastable event, ErrorManager em) {
+    public void emit(Broadcastable event, Grammar grammar, Broadcaster broadcaster, ErrorManager em) {
         // for each subscribable type in the event's hierarchy, inform each subscription to that type
         for (Subscription subscription : subscriptions(event)) {
-            if (event.status() == Status.NEVER_EMIT) return;
-            subscription.deliver(event, em);
+            if (subscription.phase() == phase) {
+                // checking inside the loop because any subscription method can result in a change of status
+                if (event.breakBroadcast(phase)) {
+                    return; // break out when we no longer need to emit, e.g., for a destroyed unit or already refined
+                }
+
+                switch (phase) {
+                case REFINE:
+                    subscription.refine(event, grammar, broadcaster, em);
+                    break;
+                case PROCESS:
+                    subscription.process(event, em);
+                    break;
+                case VALIDATE:
+                    subscription.validate(event, em);
+                    break;
+                }
+            }
         }
     }
 
-    /** gets all subscriptions (including hierarchy) for the given event's class (see notes above for more details). */
+    /**
+     * Gets all subscriptions (including hierarchy) for the given event's class (irrespective of current phase, see
+     * notes above for more details).
+     */
     private Iterable<Subscription> subscriptions(Broadcastable event) {
-        Map<Class<?>, Iterable<Subscription>> cache = (phase == SubscriptionPhase.PROCESS) ? processorsCache : validatorsCache;
-        Iterable<Subscription> subscriptions = cache.get(event.getClass());
+        Iterable<Subscription> subscriptions = expandedSubscriptions.get(event.getClass());
 
         if (subscriptions == null) {
-            Map<Class<?>, Set<Subscription>> map = (phase == SubscriptionPhase.PROCESS) ? processors : validators;
-            Set<Subscription> tree = Sets.newTreeSet(); // tree set important for maintaining plugin registration order
+            Set<Subscription> tree = new TreeSet<>(); // tree set important for maintaining plugin registration order
 
             for (Class<?> klass : hierarchy(event.getClass())) {
-                Set<Subscription> matching = map.get(klass);
-                if (matching == null || matching.isEmpty()) continue;
-
-                for (Subscription subscription : matching) {
-                    tree.add(subscription);
+                Set<Subscription> matching = directSubscriptions.get(klass);
+                if (matching != null) {
+                    tree.addAll(matching);
                 }
             }
-            subscriptions = Lists.newArrayList(tree);
-            cache.put(event.getClass(), subscriptions);
+            subscriptions = ImmutableList.copyOf(tree);
+            expandedSubscriptions.put(event.getClass(), subscriptions);
         }
+
         return subscriptions;
     }
 
-    /** gets class -> (class + supers) */
+    /** returns class -> (class + supers) */
     private List<Class<?>> hierarchy(Class<?> klass) {
         List<Class<?>> hierarchy = hierarchyCache.get(klass);
 

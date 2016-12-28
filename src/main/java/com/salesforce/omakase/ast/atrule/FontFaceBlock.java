@@ -28,11 +28,12 @@ package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.FontFaceRefiner;
+import com.salesforce.omakase.plugin.syntax.FontFacePlugin;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -44,7 +45,7 @@ import java.util.Iterator;
  *
  * @author nmcwilliams
  * @see FontDescriptor
- * @see FontFaceRefiner
+ * @see FontFacePlugin
  */
 public final class FontFaceBlock extends AbstractAtRuleMember implements AtRuleBlock {
     private final SyntaxCollection<FontFaceBlock, FontDescriptor> fontDescriptors;
@@ -53,22 +54,19 @@ public final class FontFaceBlock extends AbstractAtRuleMember implements AtRuleB
      * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
      */
     public FontFaceBlock() {
-        this(-1, -1, null);
+        this(-1, -1);
     }
 
     /**
      * Constructs a new {@link FontFaceBlock} instance.
-     *
-     * @param line
+     *  @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param broadcaster
-     *     Used to broadcast new units.
      */
-    public FontFaceBlock(int line, int column, Broadcaster broadcaster) {
+    public FontFaceBlock(int line, int column) {
         super(line, column);
-        this.fontDescriptors = new LinkedSyntaxCollection<>(this, broadcaster);
+        this.fontDescriptors = new LinkedSyntaxCollection<>(this);
     }
 
     /**
@@ -92,9 +90,11 @@ public final class FontFaceBlock extends AbstractAtRuleMember implements AtRuleB
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        fontDescriptors.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            fontDescriptors.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override

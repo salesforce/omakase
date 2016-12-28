@@ -71,7 +71,7 @@ public class Mixin extends AbstractAtRuleMember implements AtRuleExpression {
 
     @Override
     public Mixin copy() {
-        return null;
+        return null; // implement if necessary
     }
 
     @Override

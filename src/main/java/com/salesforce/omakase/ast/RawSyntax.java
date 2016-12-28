@@ -26,9 +26,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.parser.raw.RawAtRuleParser;
-import com.salesforce.omakase.parser.raw.RawDeclarationParser;
-import com.salesforce.omakase.parser.raw.RawSelectorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -38,9 +35,6 @@ import java.io.IOException;
  * Represents raw, non-validated content. Usually used by {@link Refinable}s.
  *
  * @author nmcwilliams
- * @see RawDeclarationParser
- * @see RawSelectorParser
- * @see RawAtRuleParser
  */
 public final class RawSyntax extends AbstractSyntax {
     private final String content;

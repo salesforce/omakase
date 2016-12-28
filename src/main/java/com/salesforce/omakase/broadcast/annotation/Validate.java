@@ -27,7 +27,11 @@
 package com.salesforce.omakase.broadcast.annotation;
 
 import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.plugin.core.AutoRefine;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -40,7 +44,12 @@ import java.lang.annotation.Target;
  * The first parameter for methods with this annotation should be one of the {@link Syntax} types. The second parameter should be
  * of type {@link ErrorManager}. This error manager should be used to report any problems during validation.
  * <p>
- * Validation always occurs <em>after</em> {@link Observe} and {@link Rework} subscription methods.. This is based on the
+ * It is generally better to subscribe the the most specific unit as possible (e.g., {@link UrlFunctionValue} instead of {@link
+ * Declaration}), however note that specific syntax types will not be delivered if the parent type is not refined. See the main
+ * readme file for more information about refinement. Generally, if you are parsing with {@link AutoRefine} or {@link
+ * StandardValidation} then all syntax types will be delivered.
+ * <p>
+ * Validation always occurs <em>after</em> {@link Observe} and {@link Rework} subscription methods. This is based on the
  * assumption that validation should happen last, and it prevents validating the same thing over and over as a result of rework or
  * other changes (and also ensures that new or changed units as a result of rework are validated as well).
  * <p>

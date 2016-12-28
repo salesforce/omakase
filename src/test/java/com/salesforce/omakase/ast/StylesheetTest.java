@@ -27,6 +27,8 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.collect.Iterators;
+import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -55,6 +57,20 @@ public class StylesheetTest {
         Stylesheet sheet = new Stylesheet();
         sheet.append(new Rule());
         assertThat(Iterators.size(sheet.iterator())).isEqualTo(1);
+    }
+
+    @Test
+    public void rulesTest() {
+        Stylesheet sheet = new Stylesheet();
+        Rule rule1 = new Rule();
+        Rule rule2 = new Rule();
+        Rule rule3 = new Rule();
+        Rule rule4 = new Rule();
+        AtRule atRule1 = new AtRule("foo", new GenericAtRuleExpression("bar"), null);
+        AtRule atRule2 = new AtRule("foo", new GenericAtRuleExpression("bar"), null);
+
+        sheet.append(rule1).append(atRule1).append(rule2).append(rule3).append(atRule2).append(rule4);
+        assertThat(sheet.rules()).containsExactly(rule1, rule2, rule3, rule4);
     }
 
     @Test

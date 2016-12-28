@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.parser.atrule;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQuery;
@@ -34,12 +33,13 @@ import com.salesforce.omakase.ast.atrule.MediaQueryExpression;
 import com.salesforce.omakase.ast.atrule.MediaRestriction;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parsers a {@link MediaQuery}.
@@ -56,11 +56,11 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see MediaQuery
  */
-public final class MediaQueryParser extends AbstractParser {
+public final class MediaQueryParser implements Parser {
     private static final String AND = "and";
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         // save off position before parsing anything
@@ -86,22 +86,23 @@ public final class MediaQueryParser extends AbstractParser {
         }
 
         snapshot = source.snapshot();
-        QueryableBroadcaster qb = new QueryableBroadcaster(broadcaster);
+        QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // try reading one expression. if there was a type then we must have parsed an 'and' beforehand
-        if (ParserFactory.mediaExpressionParser().parse(source, qb, refiner) && type.isPresent() && !hasAndAfterType) {
+        Parser expressionParser = grammar.parser().mediaExpressionParser();
+        if (expressionParser.parse(source, grammar, queryable) && type.isPresent() && !hasAndAfterType) {
             snapshot.rollback(Message.MISSING_AND);
         }
 
         // read the rest of the expressions
         while (source.skipWhitepace().readConstantCaseInsensitive(AND)) {
             source.expect(Tokens.WHITESPACE).skipWhitepace();
-            if (!ParserFactory.mediaExpressionParser().parse(source, qb, refiner)) {
+            if (!expressionParser.parse(source, grammar, queryable)) {
                 throw new ParserException(source, Message.TRAILING_AND);
             }
         }
 
-        Iterable<MediaQueryExpression> expressions = qb.filter(MediaQueryExpression.class);
+        Iterable<MediaQueryExpression> expressions = queryable.filter(MediaQueryExpression.class);
         boolean hasExpressions = !Iterables.isEmpty(expressions);
 
         // check for a trailing 'and'
@@ -111,9 +112,12 @@ public final class MediaQueryParser extends AbstractParser {
         if (!type.isPresent() && !hasExpressions) return false;
 
         // create and broadcast the media query
-        MediaQuery query = new MediaQuery(line, column, broadcaster);
-        query.type(type.orNull()).restriction(restriction.orNull()).expressions().appendAll(expressions);
+        MediaQuery query = new MediaQuery(line, column);
+        type.ifPresent(query::type);
+        restriction.ifPresent(query::restriction);
+        query.expressions().appendAll(expressions);
         broadcaster.broadcast(query);
         return true;
     }
+
 }

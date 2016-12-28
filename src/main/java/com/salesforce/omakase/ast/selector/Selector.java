@@ -26,11 +26,11 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
@@ -38,15 +38,17 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
+import com.salesforce.omakase.plugin.core.AutoRefine;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
@@ -62,8 +64,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  * 1: {@code .class}
  * 2: {@code .class #id}
  * </pre>
- * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
- * grammar validation. See the notes on {@link Refinable}.
+ * See the notes on {@link Refinable} regarding unrefined selectors.
  * <p>
  * When dynamically creating selectors, you usually pass in the various {@link SelectorPart}s to the constructor. Example:
  * <pre>
@@ -76,27 +77,23 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class Selector extends AbstractGroupable<Rule, Selector> implements Refinable<Selector> {
+public final class Selector extends AbstractGroupable<Rule, Selector> implements Refinable {
     private final SyntaxCollection<Selector, SelectorPart> parts;
     private final RawSyntax raw;
-    private final transient MasterRefiner refiner;
 
     /**
-     * Creates a new instance of a {@link Selector} with the given raw content. This selector can be further refined to the
-     * individual {@link SelectorPart}s by using {@link #refine()}.
+     * Creates a new instance of a {@link Selector} with the given raw content.
      * <p>
      * If dynamically creating a new instance then use {@link #Selector(SelectorPart...)} or {@link #Selector(Iterable)} instead.
-     *
-     * @param raw
+     *  @param raw
      *     The selector content.
-     * @param refiner
-     *     The {@link MasterRefiner} to be used later during refinement of this object.
+     *
      */
-    public Selector(RawSyntax raw, MasterRefiner refiner) {
+    public Selector(RawSyntax raw) {
         super(raw.line(), raw.column());
-        this.refiner = refiner;
         this.raw = raw;
-        this.parts = new LinkedSyntaxCollection<>(this, refiner.broadcaster());
+        this.parts = new LinkedSyntaxCollection<>(this);
+        status(Status.RAW);
     }
 
     /**
@@ -149,7 +146,6 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
      */
     public Selector(int line, int column, Iterable<SelectorPart> parts) {
         super(line, column);
-        this.refiner = null;
         this.raw = null;
         this.parts = new LinkedSyntaxCollection<Selector, SelectorPart>(this).appendAll(parts);
     }
@@ -157,26 +153,30 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     /**
      * Gets the original, raw, non-validated selector content.
      *
-     * @return The raw selector content, or {@link Optional#absent()} if the raw content is not set (e.g., a dynamically created
+     * @return The raw selector content, or an empty {@link Optional} if the raw content is not set (e.g., a dynamically created
      * unit).
      */
     public Optional<RawSyntax> raw() {
-        return Optional.fromNullable(raw);
+        return Optional.ofNullable(raw);
     }
 
     /**
-     * Gets the individual parts of the selector. The selector will be automatically refined if not done so already.
+     * Gets the individual parts of the selector.
      * <p>
-     * <b>Warning:</b> do not call from within a custom {@link Refiner}.
+     * <b>Important:</b> this <b>may not contain</b> any selector parts if this selector is unrefined! See the main readme file
+     * for more information on refinement.
+     * <p>
+     * For basic use cases, to ensure this is always refined and properly set use {@link AutoRefine} or {@link StandardValidation}
+     * during parsing. For reasons why you would <em>not</em> want to do that see the main readme file.
      *
      * @return The list of {@link SelectorPart} members.
      */
     public SyntaxCollection<Selector, SelectorPart> parts() {
-        return refine().parts;
+        return parts;
     }
 
     /**
-     * Appends the given part to this {@link Selector}. The selector will not be automatically refined.
+     * Appends the given part to this {@link Selector}.
      *
      * @param newPart
      *     The part to append.
@@ -189,7 +189,7 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     }
 
     /**
-     * Appends all of the given parts to this {@link Selector}. The selector will not be automatically refined.
+     * Appends all of the given parts to this {@link Selector}.
      *
      * @param newParts
      *     The parts to append.
@@ -221,23 +221,16 @@ public final class Selector extends AbstractGroupable<Rule, Selector> implements
     }
 
     @Override
-    public Selector refine() {
-        if (!isRefined() && refiner != null) {
-            refiner.refine(this);
+    public boolean breakBroadcast(SubscriptionPhase phase) {
+        return super.breakBroadcast(phase) || (phase == SubscriptionPhase.REFINE && isRefined());
+    }
+
+    @Override
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            parts.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
         }
-
-        return this;
-    }
-
-    @Override
-    public boolean containsRawSyntax() {
-        return raw != null;
-    }
-
-    @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        parts.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
     }
 
     @Override

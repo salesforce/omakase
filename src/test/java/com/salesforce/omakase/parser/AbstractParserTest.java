@@ -27,18 +27,20 @@
 package com.salesforce.omakase.parser;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.fest.assertions.api.Assertions.*;
 
@@ -50,7 +52,7 @@ import static org.fest.assertions.api.Assertions.*;
 @SuppressWarnings({"JavaDoc", "unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
-    private final Parser parser;
+    protected final Parser parser;
 
     public AbstractParserTest() {
         try {
@@ -163,7 +165,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
         Source source = new Source(content, 3, 2);
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        parser.parse(source, broadcaster);
+        parser.parse(source, new Grammar(), broadcaster);
 
         @SuppressWarnings("rawtypes")
         Optional<? extends Syntax> syntax = broadcaster.find(mainAstObjectClass());
@@ -176,19 +178,29 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     }
 
     /** helper method */
+    protected <T extends Broadcastable> T parse(Class<T> klass, String source) {
+        SingleInterestBroadcaster<T> interest = new SingleInterestBroadcaster<T>(klass);
+        parser.parse(new Source(source), new Grammar(), interest);
+        if (!interest.one().isPresent()) {
+            fail("did not find expected syntax unit");
+        }
+        return interest.one().get();
+    }
+
+    /** helper method */
     protected List<GenericParseResult> parse(String... sources) {
         return parse(Lists.newArrayList(sources));
     }
 
     /** helper method */
     protected List<GenericParseResult> parse(Iterable<String> sources) {
-        List<GenericParseResult> results = Lists.newArrayList();
+        List<GenericParseResult> results = new ArrayList<>();
 
         for (String source : sources) {
             GenericParseResult result = new GenericParseResult();
             result.broadcaster = new QueryableBroadcaster();
             result.source = new Source(source);
-            result.success = parser.parse(result.source, result.broadcaster);
+            result.success = parser.parse(result.source, new Grammar(), result.broadcaster);
             result.broadcasted = result.broadcaster.all();
             result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
             results.add(result);
@@ -205,13 +217,13 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
 
     /** helper method */
     protected final <R> List<ParseResult<R>> parseWithExpected(Iterable<SourceWithExpectedResult<R>> sources) {
-        List<ParseResult<R>> results = Lists.newArrayList();
+        List<ParseResult<R>> results = new ArrayList<>();
 
         for (SourceWithExpectedResult<R> ts : sources) {
             ParseResult<R> result = new ParseResult<>();
             result.broadcaster = new QueryableBroadcaster();
             result.source = new Source(ts.source);
-            result.success = parser.parse(result.source, result.broadcaster);
+            result.success = parser.parse(result.source, new Grammar(), result.broadcaster);
             result.broadcasted = result.broadcaster.all();
             result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
             result.expected = ts.expected;
@@ -219,6 +231,16 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
 
         return results;
+    }
+
+    protected <T extends Broadcastable> T expectOnly(QueryableBroadcaster broadcaster, Class<T> klass) {
+        String msg = "expected to find exactly one instance of " + klass.getSimpleName();
+
+        if (broadcaster.count() != 1) {
+            fail(msg);
+        }
+
+        return broadcaster.find(klass).orElseThrow(() -> new AssertionError(msg));
     }
 
     /** helper object */

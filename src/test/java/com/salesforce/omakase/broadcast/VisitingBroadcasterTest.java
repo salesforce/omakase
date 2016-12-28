@@ -28,6 +28,7 @@ package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -36,39 +37,40 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class VisitingBroadcasterTest {
     @Test
-    public void doesntRelayRightAway() {
+    public void relaysBroadcasts() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         VisitingBroadcaster vb = new VisitingBroadcaster(qb);
 
         ClassSelector cs = new ClassSelector("class");
+        ClassSelector cs2 = new ClassSelector("class");
         vb.broadcast(cs);
+        vb.broadcast(cs2);
 
-        assertThat(qb.all()).isEmpty();
+        assertThat(qb.all()).containsExactly(cs, cs2);
     }
 
     @Test
     public void visit() {
-        QueryableBroadcaster qb = new QueryableBroadcaster();
-        VisitingBroadcaster vb = new VisitingBroadcaster(qb);
+        VisitingBroadcaster vb = new VisitingBroadcaster();
 
         ClassSelector cs = new ClassSelector("class");
+        Selector selector = new Selector(cs);
+
         vb.broadcast(cs);
-        vb.visit();
+        vb.broadcast(selector);
 
-        assertThat(qb.all()).hasSize(1);
-    }
-
-    @Test
-    public void updatesStatus() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
-        VisitingBroadcaster vb = new VisitingBroadcaster(qb);
+        vb.visit(qb, Status.PARSED);
 
-        ClassSelector cs = new ClassSelector("class");
-        cs.status(Status.UNBROADCASTED);
+        assertThat(qb.all()).hasSize(2);
+        assertThat(qb.all().get(0)).isSameAs(cs);
+        assertThat(qb.all().get(1)).isSameAs(selector);
 
-        vb.broadcast(cs);
+        qb = new QueryableBroadcaster();
+        vb.visit(qb, Status.PARSED);
 
-        qb.broadcast(cs);
-        assertThat(cs.status()).isSameAs(Status.QUEUED);
+        assertThat(qb.all()).hasSize(2);
+        assertThat(qb.all().get(0)).isSameAs(cs);
+        assertThat(qb.all().get(1)).isSameAs(selector);
     }
 }

@@ -29,10 +29,11 @@ package com.salesforce.omakase.test;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.goldfile.Goldfile;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.annotation.Observe;
+import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.core.StandardValidation;
+import com.salesforce.omakase.test.goldfile.Goldfile;
 import com.salesforce.omakase.test.util.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -40,11 +41,10 @@ import java.io.File;
 import java.io.IOException;
 
 /** Temp test for debugging. */
-@SuppressWarnings({"JavaDoc", "UnusedDeclaration", "SpellCheckingInspection"})
 public final class Debug {
     public static final String DEBUG_FILE = "/debug/debug.css";
 
-    public static final String STRING_SRC = "[hidden]{color: red}";
+    public static final String STRING_SRC = ".button {color: red}";
 
     private Debug() {}
 
@@ -52,24 +52,21 @@ public final class Debug {
         File f = new File(Goldfile.class.getResource(DEBUG_FILE).getFile());
         String fileSrc = Files.toString(f, Charsets.UTF_8);
 
-        String source = fileSrc;
-
-        withPlugins(source);
+        withPlugins(STRING_SRC);
     }
 
     private static void withPlugins(String source) throws IOException {
         StyleWriter writer = StyleWriter.verbose();
 
-        Prefixer prefixer = Prefixer.customBrowserSupport();
-        prefixer.support().all(Browser.FIREFOX);
-        prefixer.support().all(Browser.CHROME);
-        prefixer.support().all(Browser.SAFARI);
-        prefixer.support().all(Browser.IOS_SAFARI);
-
         Omakase.source(source)
             .use(writer)
             .use(new StandardValidation())
-            .use(prefixer)
+            .use(new Plugin() {
+                @Observe
+                public void observe(Selector selector) {
+                    System.out.println(selector);
+                }
+            })
             .process();
 
         System.out.println();

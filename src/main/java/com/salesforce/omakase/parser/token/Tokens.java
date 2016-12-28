@@ -27,7 +27,6 @@
 package com.salesforce.omakase.parser.token;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Predicates;
 import com.salesforce.omakase.parser.Source;
 
 import static com.google.common.base.CharMatcher.*;
@@ -148,7 +147,7 @@ public enum Tokens implements Token {
     HYPHEN_OR_DIGIT(is('-').or(inRange('0', '9')), "hyphen or digit"),
 
     /** a token that never matches */
-    NEVER_MATCH(forPredicate(Predicates.alwaysFalse()), "a token that never matches");
+    NEVER_MATCH(forPredicate(c -> false), "a token that never matches");
 
     private final char singleChar;
     private final boolean isSingleChar;

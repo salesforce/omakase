@@ -27,6 +27,7 @@
 package com.salesforce.omakase.ast.declaration;
 
 import com.salesforce.omakase.ast.Named;
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
@@ -39,8 +40,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * hand represent functions that have yet to be refined into the specific function.
  * <p>
  * In other words, subscribe to {@link FunctionValue} if you would like to receive all specific function value instances, and
- * subscribe to {@link RawFunction} if you would like to preprocess a raw function before it gets refined into the specific
- * function.
+ * subscribe to {@link RawFunction} if you would like to refine a standard or custom function.
  *
  * @author nmcwilliams
  * @see GenericFunctionValue

@@ -26,11 +26,12 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -48,7 +49,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class PropertyValueTest {
     @Test
     public void position() {
-        PropertyValue val = new PropertyValue(5, 2, new StatusChangingBroadcaster());
+        PropertyValue val = new PropertyValue(5, 2);
         assertThat(val.line()).isEqualTo(5);
         assertThat(val.column()).isEqualTo(2);
     }
@@ -62,21 +63,20 @@ public class PropertyValueTest {
     public void addMember() {
         NumericalValue number = NumericalValue.of(1);
         HexColorValue hex = HexColorValue.of("#333");
-        Operator operator = new Operator(OperatorType.SPACE);
 
         PropertyValue value = PropertyValue.of(number);
-        value.append(operator).append(hex);
+        value.append(hex);
 
-        assertThat(value.members()).containsExactly(number, operator, hex);
+        assertThat(value.members()).containsExactly(number, hex);
     }
 
     @Test
     public void terms() {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        PropertyValue val = PropertyValue.of(n1, n2);
 
-        assertThat(val.members()).hasSize(3);
+        assertThat(val.members()).hasSize(2);
         assertThat(val.terms()).containsExactly(n1, n2);
     }
 
@@ -84,7 +84,7 @@ public class PropertyValueTest {
     public void countTerms() {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        PropertyValue val = PropertyValue.of(n1, n2);
 
         assertThat(val.countTerms()).isEqualTo(2);
     }
@@ -104,18 +104,71 @@ public class PropertyValueTest {
     }
 
     @Test
-    public void propogatesBroadcastToMembers() {
+    public void testOfTerm() {
+        NumericalValue n1 = NumericalValue.of(1);
+        PropertyValue pv = PropertyValue.of(n1);
+        assertThat(pv.members()).containsExactly(n1);
+    }
+
+    @Test
+    public void testOfMultipleTerms() {
+        NumericalValue n1 = NumericalValue.of(1);
+        NumericalValue n2 = NumericalValue.of(1);
+        PropertyValue pv = PropertyValue.of(n1, n2);
+        assertThat(pv.members()).containsExactly(n1, n2);
+    }
+
+    @Test
+    public void testOfSeparatorAndTerms() {
+        NumericalValue n1 = NumericalValue.of(1);
+        NumericalValue n2 = NumericalValue.of(1);
+        NumericalValue n3 = NumericalValue.of(1);
+        PropertyValue pv = PropertyValue.of(OperatorType.SLASH, n1, n2, n3);
+        assertThat(pv.members()).hasSize(5);
+        assertThat(Iterables.get(pv.members(), 0)).isSameAs(n1);
+        assertThat(Iterables.get(pv.members(), 1)).isInstanceOf(Operator.class);
+        assertThat(Iterables.get(pv.members(), 2)).isSameAs(n2);
+        assertThat(Iterables.get(pv.members(), 3)).isInstanceOf(Operator.class);
+        assertThat(Iterables.get(pv.members(), 4)).isSameAs(n3);
+    }
+
+    @Test
+    public void testofMembers() {
+        NumericalValue n1 = NumericalValue.of(1);
+        NumericalValue n2 = NumericalValue.of(1);
+        NumericalValue n3 = NumericalValue.of(1);
+        Operator o1 = new Operator(OperatorType.SLASH);
+        Operator o2 = new Operator(OperatorType.SLASH);
+        PropertyValue pv = PropertyValue.of(n1, o1, n2, o2, n3);
+        assertThat(pv.members()).hasSize(5);
+        assertThat(Iterables.get(pv.members(), 0)).isSameAs(n1);
+        assertThat(Iterables.get(pv.members(), 1)).isSameAs(o1);
+        assertThat(Iterables.get(pv.members(), 2)).isSameAs(n2);
+        assertThat(Iterables.get(pv.members(), 3)).isSameAs(o2);
+        assertThat(Iterables.get(pv.members(), 4)).isSameAs(n3);
+    }
+
+    @Test
+    public void propagatesBroadcastToMembers() {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         NumericalValue number = NumericalValue.of(1);
         KeywordValue keyword = KeywordValue.of("noen");
 
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, number, keyword);
+        PropertyValue val = PropertyValue.of(number, keyword);
 
-        val.propagateBroadcast(qb);
+        val.propagateBroadcast(qb, Status.PARSED);
 
         assertThat(qb.all()).containsExactly(number, keyword, val);
     }
 
+    @Test
+    public void doesntPropagateItselfWhenNoMembers() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        PropertyValue pv = new PropertyValue();
+        pv.propagateBroadcast(qb, pv.status());
+        assertThat(qb.all()).isEmpty();
+    }
+    
     @Test
     public void isWritableIfHasNonDetachedTerm() {
         PropertyValue val = PropertyValue.of(NumericalValue.of(1));
@@ -124,7 +177,7 @@ public class PropertyValueTest {
 
     @Test
     public void isNotWritableWhenNoTermsAreWritable() {
-        PropertyValue val = PropertyValue.of(new NonWritableTerm());
+        PropertyValue val = PropertyValue.of(new NonWritableTerm(), new NonWritableTerm());
         assertThat(val.isWritable()).isFalse();
     }
 
@@ -138,16 +191,17 @@ public class PropertyValueTest {
     public void writeWhenNotImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        NumericalValue n3 = NumericalValue.of(3);
+        PropertyValue val = PropertyValue.of(n1, n2, n3);
 
-        assertThat(StyleWriter.compressed().writeSingle(val)).isEqualTo("1 2");
+        assertThat(StyleWriter.compressed().writeSingle(val)).isEqualTo("1 2 3");
     }
 
     @Test
     public void writeVerboseWhenImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        PropertyValue val = PropertyValue.of(n1, n2);
         val.important(true);
 
         assertThat(StyleWriter.verbose().writeSingle(val)).isEqualTo("1 2 !important");
@@ -157,10 +211,32 @@ public class PropertyValueTest {
     public void writeCompressedWhenImportant() throws IOException {
         NumericalValue n1 = NumericalValue.of(1);
         NumericalValue n2 = NumericalValue.of(2);
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, n1, n2);
+        PropertyValue val = PropertyValue.of(n1, n2);
         val.important(true);
 
         assertThat(StyleWriter.compressed().writeSingle(val)).isEqualTo("1 2!important");
+    }
+
+    @Test
+    public void writeVerboseWithOperators() {
+        NumericalValue n1 = NumericalValue.of(1);
+        NumericalValue n2 = NumericalValue.of(2);
+        Operator o1 = new Operator(OperatorType.COMMA);
+        PropertyValue val = PropertyValue.of(n1, o1, n2);
+
+        assertThat(StyleWriter.verbose().writeSingle(val)).isEqualTo("1, 2");
+    }
+
+    @Test
+    public void writeCompressedWithOperators() {
+        NumericalValue n1 = NumericalValue.of(1);
+        NumericalValue n2 = NumericalValue.of(1);
+        NumericalValue n3 = NumericalValue.of(2);
+        NumericalValue n4 = NumericalValue.of(2);
+        Operator o1 = new Operator(OperatorType.SLASH);
+        PropertyValue val = PropertyValue.of(n1, n2, o1, n3, n4);
+
+        assertThat(StyleWriter.compressed().writeSingle(val)).isEqualTo("1 1/2 2");
     }
 
     @Test
@@ -179,13 +255,13 @@ public class PropertyValueTest {
 
     @Test
     public void testCopy() {
-        PropertyValue val = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(0), NumericalValue.of(0));
+        PropertyValue val = PropertyValue.of(NumericalValue.of(0), NumericalValue.of(0));
         val.important(true);
         val.comments(Lists.newArrayList("test"));
 
         PropertyValue copy = val.copy();
         assertThat(copy.isImportant()).isTrue();
-        assertThat(copy.members()).hasSize(3);
+        assertThat(copy.members()).hasSize(2);
         assertThat(copy.comments()).hasSize(1);
     }
 
@@ -203,7 +279,7 @@ public class PropertyValueTest {
 
     @Test
     public void textualValueMultipleTerms() {
-        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, NumericalValue.of(1), NumericalValue.of(1));
+        PropertyValue pv = PropertyValue.of(NumericalValue.of(1), NumericalValue.of(1));
         assertThat(pv.singleTextualValue().isPresent()).isFalse();
     }
 

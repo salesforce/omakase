@@ -34,7 +34,7 @@ import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
 import com.salesforce.omakase.util.As;
 
 import java.io.IOException;
@@ -253,7 +253,7 @@ public final class StyleWriter implements DependentPlugin {
      * @return The CSS output.
      */
     public String write() {
-        checkState(tree != null, "syntax tree not set (did you add this writer before parsing?)");
+        checkState(tree != null, "syntax tree not set (did you add this writer plugin before parsing?)");
 
         StyleAppendable appendable = new StyleAppendable();
         try {
@@ -275,7 +275,7 @@ public final class StyleWriter implements DependentPlugin {
      */
     public void writeTo(Appendable appendable) throws IOException {
         checkNotNull(appendable, "appendable cannot be null");
-        checkState(tree != null, "syntax tree not set (did you add this writer before parsing?)");
+        checkState(tree != null, "syntax tree not set (did you add this writer plugin before parsing?)");
         writeInner(tree.stylesheet(), new StyleAppendable(appendable));
     }
 
@@ -395,7 +395,7 @@ public final class StyleWriter implements DependentPlugin {
             writeInner(writable, appendable, true);
         } catch (IOException e) {
             // we don't expect an IO error because we know our appendable is using a string builder.
-            throw new AssertionError("unexpected IO error");
+            throw new AssertionError("Using a StringBuilder shouldn't cause an IOException.", e);
         }
 
         return appendable.toString();

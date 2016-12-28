@@ -27,7 +27,6 @@
 package com.salesforce.omakase.ast;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -36,6 +35,7 @@ import com.salesforce.omakase.error.OmakaseException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -94,10 +94,10 @@ public final class CssAnnotation {
     /**
      * Returns the raw, unprocessed args.
      *
-     * @return The raw, unprocessed args, or {@link Optional#absent()} if not present.
+     * @return The raw, unprocessed args.
      */
     public Optional<String> rawArgs() {
-        return Optional.fromNullable(args);
+        return Optional.ofNullable(args);
     }
 
     /**

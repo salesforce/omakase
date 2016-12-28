@@ -26,16 +26,17 @@
 
 package com.salesforce.omakase.parser.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.AttributeMatchType;
 import com.salesforce.omakase.ast.selector.AttributeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parses an {@link AttributeSelector}.
@@ -43,9 +44,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see AttributeSelector
  */
-public final class AttributeSelectorParser extends AbstractParser {
+public final class AttributeSelectorParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         // note: important not to skip whitespace anywhere in here, as it could skip over a descendant combinator
         source.collectComments(false);
 
@@ -69,7 +71,7 @@ public final class AttributeSelectorParser extends AbstractParser {
         // try to parse the optional match type
 
         Optional<AttributeMatchType> type = source.optionalFromConstantEnum(AttributeMatchType.class);
-        Optional<String> value = Optional.absent();
+        Optional<String> value = Optional.empty();
 
         if (type.isPresent()) {
             // skip whitespace after the match type
@@ -101,4 +103,5 @@ public final class AttributeSelectorParser extends AbstractParser {
         broadcaster.broadcast(selector);
         return true;
     }
+
 }

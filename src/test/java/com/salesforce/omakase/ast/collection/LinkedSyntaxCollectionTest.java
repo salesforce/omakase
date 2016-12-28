@@ -26,14 +26,13 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
@@ -42,6 +41,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -216,10 +216,12 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void prependingUnbroadcastedGetsBroadcasted() {
-        collection.propagateBroadcast(new StatusChangingBroadcaster());
-        assertThat(child1.status()).isSameAs(Status.UNBROADCASTED);
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+
+        collection.propagateBroadcast(qb, Status.PARSED);
+
         collection.prepend(child1);
-        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.find(Child.class).get()).isSameAs(child1);
     }
 
     @Test
@@ -232,12 +234,13 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void forPrependAllEachUnbroadcastedGetsBroadcasted() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+
         collection.append(child3);
-        collection.propagateBroadcast(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(qb, Status.PARSED);
         collection.prependAll(Lists.newArrayList(child2, child1));
 
-        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
-        assertThat(child2.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.all()).containsExactly(child3, child1, child2);
     }
 
     @Test
@@ -281,10 +284,12 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void prependBeforeUnbroadcastedGetsBroadcasted() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+
         collection.append(child1).append(child2);
-        collection.propagateBroadcast(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(qb, Status.PARSED);
         collection.prependBefore(child1, child3);
-        assertThat(child3.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.all()).contains(child1, child3);
     }
 
     @Test
@@ -323,10 +328,11 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void appendingUnbroadcastedGetsBroadcasted() {
-        collection.propagateBroadcast(new StatusChangingBroadcaster());
-        assertThat(child1.status()).isSameAs(Status.UNBROADCASTED);
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+
+        collection.propagateBroadcast(qb, Status.PARSED);
         collection.append(child1);
-        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.all()).contains(child1);
     }
 
     @Test
@@ -340,12 +346,13 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void forAppendAllEachUnbroadcastedGetsBroadcasted() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+
         collection.append(child3);
-        collection.propagateBroadcast(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(qb, Status.PARSED);
         collection.appendAll(Lists.newArrayList(child2, child1));
 
-        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
-        assertThat(child2.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.all()).contains(child2, child1);
     }
 
     @Test
@@ -389,10 +396,12 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void appendAfterUnbroadcastedGetsBroadcasted() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+
         collection.append(child1).append(child2);
-        collection.propagateBroadcast(new StatusChangingBroadcaster());
+        collection.propagateBroadcast(qb, Status.PARSED);
         collection.appendAfter(child1, child3);
-        assertThat(child3.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.all()).contains(child1, child3);
     }
 
     @Test
@@ -420,6 +429,13 @@ public class LinkedSyntaxCollectionTest {
         collection.append(child1).append(child2);
         collection.appendAfter(child2, child1);
         assertThat(collection).containsExactly(child2, child1);
+    }
+
+    @Test
+    public void appendAfterNoChange() {
+        collection.append(child1).append(child2);
+        collection.appendAfter(child1, child2);
+        assertThat(collection).containsExactly(child1, child2);
     }
 
     @Test
@@ -529,18 +545,83 @@ public class LinkedSyntaxCollectionTest {
     @Test
     public void propagatesBroadcast() {
         collection.append(child1);
-        assertThat(child1.status()).isSameAs(Status.UNBROADCASTED);
-        StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
-        collection.propagateBroadcast(broadcaster);
-        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(child1.status()).isSameAs(Status.PARSED);
+
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        collection.propagateBroadcast(qb, Status.PARSED);
+        assertThat(qb.find(Child.class).get()).isSameAs(child1);
     }
 
     @Test
     public void propagateBroadcastSavesTheBroadcaster() {
-        StatusChangingBroadcaster broadcaster = new StatusChangingBroadcaster();
-        collection.propagateBroadcast(broadcaster);
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        collection.propagateBroadcast(qb, Status.PARSED);
+
         collection.append(child1);
-        assertThat(child1.status()).isNotSameAs(Status.UNBROADCASTED);
+        assertThat(qb.find(Child.class).get()).isSameAs(child1);
+    }
+
+    @Test
+    public void appendAlreadyInGroupDense() {
+        // add more than 64 units for dense lookup
+        for (int i = 0; i < 64; i++) {
+            collection.append(new Child(i));
+        }
+        collection.append(child1);
+        collection.append(child2);
+        collection.append(child3);
+
+        collection.append(child3);
+        assertThat(child3.previous().isPresent()).isTrue();
+        assertThat(child3.next().isPresent()).isFalse();
+        assertThat(child3.previous().get()).isSameAs(child2);
+    }
+    
+    @Test
+    public void appendAfterAlreadyInGroupDense() {
+        // add more than 64 units for dense lookup
+        for (int i = 0; i < 64; i++) {
+            collection.append(new Child(i));
+        }
+        collection.append(child1);
+        collection.append(child2);
+        collection.append(child3);
+
+        collection.appendAfter(child1, child3);
+        assertThat(child3.previous().isPresent()).isTrue();
+        assertThat(child3.next().isPresent()).isTrue();
+        assertThat(child3.previous().get()).isSameAs(child1);
+        assertThat(child3.next().get()).isSameAs(child2);
+    }
+
+    @Test
+    public void prependBeforeAlreadyInGroupDense() {
+        // add more than 64 units for dense lookup
+        for (int i = 0; i < 64; i++) {
+            collection.append(new Child(i));
+        }
+        collection.append(child1);
+        collection.append(child2);
+        collection.append(child3);
+
+        collection.prependBefore(child2, child3);
+        assertThat(child3.previous().isPresent()).isTrue();
+        assertThat(child3.next().isPresent()).isTrue();
+        assertThat(child3.previous().get()).isSameAs(child1);
+        assertThat(child3.next().get()).isSameAs(child2);
+    }
+
+    @Test
+    public void appendAfterAlreadyInGroupSparse() {
+        collection.append(child1);
+        collection.append(child2);
+        collection.append(child3);
+
+        collection.appendAfter(child1, child3);
+        assertThat(child3.previous().isPresent()).isTrue();
+        assertThat(child3.next().isPresent()).isTrue();
+        assertThat(child3.previous().get()).isSameAs(child1);
+        assertThat(child3.next().get()).isSameAs(child2);
     }
 
     private static final class Parent {

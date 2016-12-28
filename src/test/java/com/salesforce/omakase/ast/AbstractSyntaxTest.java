@@ -29,6 +29,7 @@ package com.salesforce.omakase.ast;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
@@ -66,6 +67,15 @@ public class AbstractSyntaxTest {
     @Test
     public void defaultIsWritable() {
         assertThat(new TestSyntax().isWritable()).isTrue();
+    }
+
+    @Test
+    public void breakBroadcastIfNeverEmit() {
+        TestSyntax t = new TestSyntax();
+        assertThat(t.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
+
+        t.status(Status.NEVER_EMIT);
+        assertThat(t.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
@@ -156,8 +166,8 @@ public class AbstractSyntaxTest {
     }
 
     @Test
-    public void defaultStatusIsUnbroadcasted() {
-        assertThat(new TestSyntax(10, 10).status()).isSameAs(Status.UNBROADCASTED);
+    public void defaultStatusIsParsed() {
+        assertThat(new TestSyntax(10, 10).status()).isSameAs(Status.PARSED);
     }
 
     @Test
@@ -168,19 +178,24 @@ public class AbstractSyntaxTest {
     }
 
     @Test
-    public void testPropagateBroadcastUnbroadcasted() throws Exception {
+    public void testPropagateBroadcastMatches() throws Exception {
         TestSyntax t = new TestSyntax(10, 15);
+        t.status(Status.RAW);
+
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        t.propagateBroadcast(broadcaster);
+        t.propagateBroadcast(broadcaster, Status.RAW);
+
         assertThat(broadcaster.all()).hasSize(1);
     }
 
     @Test
-    public void testPropagateBroadcastAlreadyBroadcasted() throws Exception {
+    public void testPropagateBroadcastFails() throws Exception {
         TestSyntax t = new TestSyntax(10, 15);
         t.status(Status.PROCESSED);
+
         QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        t.propagateBroadcast(broadcaster);
+        t.propagateBroadcast(broadcaster, Status.RAW);
+
         assertThat(broadcaster.all()).isEmpty();
     }
 

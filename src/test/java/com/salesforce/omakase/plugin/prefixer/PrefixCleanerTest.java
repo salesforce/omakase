@@ -28,9 +28,14 @@ package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
+import com.salesforce.omakase.ast.atrule.AtRuleBlock;
+import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.ConsumingBroadcaster;
 import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.plugin.syntax.KeyframesPlugin;
 import com.salesforce.omakase.util.Declarations;
 import org.junit.Test;
 
@@ -49,13 +54,15 @@ public class PrefixCleanerTest {
         PrefixCleaner pruner = PrefixCleaner.mismatchedPrefixedUnits();
 
         RawSyntax exp = new RawSyntax(-1, -1, "test");
-
         RawSyntax block = new RawSyntax(-1, -1, "from {-webkit-transform:rotate(0deg); -ms-transform:rotate(0deg); -moz-transform:rotate(0deg); " +
             "transform:rotate(0deg)}\n to {-webkit-transform:rotate(360deg); -moz-transform:rotate(0deg); -ms-transform:rotate(0deg); transform:rotate" +
             "(360deg)}\n");
 
-        AtRule ar = new AtRule(-1, -1, "-webkit-keyframes", exp, block, new MasterRefiner());
-        ar.refine();
+        AtRule ar = new AtRule(-1, -1, "-webkit-keyframes", exp, block);
+
+        Broadcaster broadcaster = new ConsumingBroadcaster<>(AtRuleExpression.class, ar::expression);
+        broadcaster.chain(new ConsumingBroadcaster<>(AtRuleBlock.class, ar::block));
+        new KeyframesPlugin().refine(ar, new Grammar(), broadcaster);
 
         pruner.atRule(ar);
 

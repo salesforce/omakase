@@ -100,21 +100,21 @@ public class ImportantParserTest extends AbstractParserTest<ImportantParser> {
     @Test
     public void throwsExceptionIfNoImportantAfterBang() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_IMPORTANT.message());
+        exception.expectMessage(Message.EXPECTED_IMPORTANT);
         parse("!import");
     }
 
     @Test
     public void throwsExceptionIfNoImportantAfterBangPart2() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_IMPORTANT.message());
+        exception.expectMessage(Message.EXPECTED_IMPORTANT);
         parse("!hithere");
     }
 
     @Test
     public void throwsExceptionIfSpaceAfterBang() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_IMPORTANT.message());
+        exception.expectMessage(Message.EXPECTED_IMPORTANT);
         parse("! important");
     }
 

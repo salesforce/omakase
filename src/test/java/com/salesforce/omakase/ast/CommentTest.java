@@ -27,7 +27,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /** Unit tests for {@link Comment}. */
 @SuppressWarnings("JavaDoc")
 public class CommentTest {
-    @org.junit.Rule public final org.junit.rules.ExpectedException exception = ExpectedException.none();
+    @org.junit.Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void content() {

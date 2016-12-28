@@ -26,23 +26,60 @@
 
 package com.salesforce.omakase.broadcast;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Base {@link Broadcaster} class.
  *
  * @author nmcwilliams
  */
 public abstract class AbstractBroadcaster implements Broadcaster {
-    /** inner {@link Broadcaster} */
-    protected Broadcaster relay;
+    /** next {@link Broadcaster} in the chain */
+    protected Broadcaster next;
 
     @Override
-    public void broadcast(Broadcastable broadcastable, boolean propagate) {
+    public void chainBroadcast(Broadcastable broadcastable, Broadcaster first, Broadcaster... broadcasters) {
+        checkNotNull(first, "broadcaster cannot be null");
+
+        chain(first);
+
+        for (Broadcaster broadcaster : broadcasters) {
+            first.chain(broadcaster);
+        }
+
         broadcast(broadcastable);
-        if (propagate) broadcastable.propagateBroadcast(this);
+        cut(first);
     }
 
     @Override
-    public void wrap(Broadcaster relay) {
-        this.relay = relay;
+    public <T extends Broadcaster> T chain(T broadcaster) {
+        if (next != null) {
+            return next.chain(broadcaster);
+        } else {
+            this.next = broadcaster;
+            return broadcaster;
+        }
+    }
+
+    @Override
+    public void cut(Broadcaster broadcaster) {
+        if (next == broadcaster) {
+            next = null;
+        } else if (next != null) {
+            next.cut(broadcaster);
+        }
+    }
+
+    /**
+     * Relays events down the chain to the next {@link Broadcaster}, if one was given via
+     * {@link Broadcaster#chain(Broadcaster)}.
+     *
+     * @param broadcastable
+     *     The event.
+     */
+    protected void relay(Broadcastable broadcastable) {
+        if (next != null) {
+            next.broadcast(broadcastable);
+        }
     }
 }

@@ -28,13 +28,22 @@ package com.salesforce.omakase.parser.declaration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.RawFunction;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.AbstractParserTest;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.test.RespondingBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -55,7 +64,6 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
             "rgba",
             "rgba1 (",
             "rgba\n(1px, 1px, 1px, 1%)",
-            "  url(one.png)",
             "--url(one.png)",
             "-1url(one.png)");
     }
@@ -65,6 +73,8 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
         return ImmutableList
             .of(
                 "url(one.png)",
+                "   url(one.png)",
+                "/*comment*/\nurl(one.png)",
                 "url(/one/one.png)",
                 "url('one/one.png')",
                 "url(\"one.png\")",
@@ -129,7 +139,7 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
 
     @Override
     public boolean allowedToTrimLeadingWhitespace() {
-        return false;
+        return true;
     }
 
     @Test
@@ -222,5 +232,52 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
         exception.expect(ParserException.class);
         exception.expectMessage("Expected to find closing");
         parse("url('afafafafafafafa)");
+    }
+
+    @Test
+    public void broadcastsGenericWhenUnhandled() {
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        parser.parse(new Source("url(foo.png)"), new Grammar(), qb);
+
+        Optional<GenericFunctionValue> found = qb.find(GenericFunctionValue.class);
+        assertThat(found.isPresent()).isTrue();
+        assertThat(found.get().name()).isEqualTo("url");
+        assertThat(found.get().args()).isEqualTo("foo.png");
+    }
+
+    @Test
+    public void doesntBroadcastGenericWhenHandledWithFunction() {
+        UrlFunctionValue url = new UrlFunctionValue("foo.png");
+
+        RespondingBroadcaster<RawFunction> broadcaster = new RespondingBroadcaster<>(RawFunction.class, url);
+        QueryableBroadcaster qb = broadcaster.chain(new QueryableBroadcaster());
+
+        parser.parse(new Source("url(foo.png)"), new Grammar(), broadcaster);
+
+        Optional<UrlFunctionValue> found = qb.find(UrlFunctionValue.class);
+        assertThat(found.isPresent()).isTrue();
+        assertThat(found.get()).isSameAs(url);
+        assertThat(qb.find(GenericFunctionValue.class).isPresent()).isFalse();
+    }
+
+    @Test
+    public void doesntBroadcastGenericWhenHandledWithTerm() {
+        NumericalValue nv = NumericalValue.of("12").unit("px");
+
+        RespondingBroadcaster<RawFunction> broadcaster = new RespondingBroadcaster<>(RawFunction.class, nv);
+        QueryableBroadcaster qb = broadcaster.chain(new QueryableBroadcaster());
+
+        parser.parse(new Source("custom(a)"), new Grammar(), broadcaster);
+        assertThat(qb.find(GenericFunctionValue.class).isPresent()).isFalse();
+    }
+
+    @Test
+    public void changesStatusToParsedWhenHandled() {
+        UrlFunctionValue url = new UrlFunctionValue("foo.png");
+
+        RespondingBroadcaster<RawFunction> broadcaster = new RespondingBroadcaster<>(RawFunction.class, url);
+
+        parser.parse(new Source("url(foo.png)"), new Grammar(), broadcaster);
+        assertThat(broadcaster.unit().get().status()).isSameAs(Status.PARSED);
     }
 }

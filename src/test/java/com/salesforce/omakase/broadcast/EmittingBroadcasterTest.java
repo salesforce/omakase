@@ -26,9 +26,14 @@
 
 package com.salesforce.omakase.broadcast;
 
+import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Test;
 
@@ -47,22 +52,59 @@ public class EmittingBroadcasterTest {
         InnerPlugin ip = new InnerPlugin();
         eb.register(ip);
         eb.phase(SubscriptionPhase.PROCESS);
-        eb.broadcast(new ClassSelector(1, 1, "test"));
+        ClassSelector cs = new ClassSelector(1, 1, "test");
+        eb.broadcast(cs);
         assertThat(ip.called).isTrue();
+        assertThat(cs.status()).isSameAs(Status.PROCESSED);
+    }
+
+    @Test
+    public void doesntEmitForInappropriatePhase() {
+        EmittingBroadcaster eb = new EmittingBroadcaster();
+        InnerPlugin ip = new InnerPlugin();
+        eb.register(ip);
+        eb.phase(SubscriptionPhase.REFINE);
+        eb.broadcast(new ClassSelector(1, 1, "test"));
+        assertThat(ip.called).isFalse();
     }
 
     @Test
     public void relaysToInner() {
-        InnerBroadcaster ib = new InnerBroadcaster();
-        EmittingBroadcaster eb = new EmittingBroadcaster(ib);
+        EmittingBroadcaster eb = new EmittingBroadcaster();
+        InnerBroadcaster ib = eb.chain(new InnerBroadcaster());
 
         eb.broadcast(new ClassSelector(1, 1, "test"));
         assertThat(ib.called).isTrue();
     }
 
+    @Test
+    public void passesGrammarAndBroadcaster() {
+        Grammar grammar = new Grammar();
+        Broadcaster broadcaster = new NoopBroadcaster();
+
+        EmittingBroadcaster eb = new EmittingBroadcaster();
+        eb.grammar(grammar);
+        eb.root(broadcaster);
+
+        InnerPlugin ip = new InnerPlugin();
+        eb.register(ip);
+        eb.phase(SubscriptionPhase.REFINE);
+        eb.broadcast(new Selector(new RawSyntax(-1, -1, "foo")));
+        assertThat(ip.grammar).isSameAs(grammar);
+        assertThat(ip.broadcaster).isSameAs(broadcaster);
+    }
+
     @SuppressWarnings("UnusedParameters")
     public static final class InnerPlugin implements Plugin {
         boolean called = false;
+        private Grammar grammar;
+        private Broadcaster broadcaster;
+
+        @Refine
+        public void refine(Selector selector, Grammar grammar, Broadcaster broadcaster) {
+            this.grammar = grammar;
+            this.broadcaster = broadcaster;
+        }
 
         @Rework
         public void rework(ClassSelector selector) {
@@ -70,22 +112,12 @@ public class EmittingBroadcasterTest {
         }
     }
 
-    public static final class InnerBroadcaster implements Broadcaster {
+    public static final class InnerBroadcaster extends AbstractBroadcaster {
         boolean called = false;
 
         @Override
         public void broadcast(Broadcastable broadcastable) {
             called = true;
-        }
-
-        @Override
-        public void broadcast(Broadcastable broadcastable, boolean propagate) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void wrap(Broadcaster relay) {
-            throw new UnsupportedOperationException();
         }
     }
 }

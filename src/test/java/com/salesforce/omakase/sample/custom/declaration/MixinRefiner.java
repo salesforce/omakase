@@ -26,105 +26,99 @@
 
 package com.salesforce.omakase.sample.custom.declaration;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.RawSyntax;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
-import com.salesforce.omakase.parser.refiner.DeclarationRefiner;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.refiner.Refinement;
 import com.salesforce.omakase.parser.token.Tokens;
+import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * This handles refining the mixins and the declarations that reference them.
  *
  * @author nmcwilliams
  */
-public class MixinRefiner implements AtRuleRefiner, DeclarationRefiner {
+@SuppressWarnings("JavaDoc")
+public class MixinRefiner implements Plugin {
     private final Map<String, Mixin> mixins = new HashMap<>();
 
-    /** handles mixin definitions (at-rule) */
-    @Override
-    public Refinement refine(AtRule atRule, Broadcaster broadcaster, MasterRefiner refiner) {
-        if (atRule.name().equals("mixin")) {
-            // must have an expression, which contains the name and params definition
-            if (!atRule.rawExpression().isPresent()) throw new ParserException(atRule, "missing mixin name and args");
+    @Refine("mixin")
+    public void refine(AtRule atRule, Grammar grammar, Broadcaster broadcaster) {
+        // must have an expression, which contains the name and params definition
+        if (!atRule.rawExpression().isPresent()) throw new ParserException(atRule, "missing mixin name and args");
 
-            // parse the expression
-            Source source = new Source(atRule.rawExpression().get());
-            source.skipWhitepace();
+        // parse the expression
+        Source source = new Source(atRule.rawExpression().get());
+        source.skipWhitepace();
 
-            // parse the name
-            Optional<String> name = source.readIdent();
-            if (!name.isPresent()) throw new ParserException(source, "Expected to find a valid mixin name");
+        // parse the name
+        Optional<String> name = source.readIdent();
+        if (!name.isPresent()) throw new ParserException(source, "Expected to find a valid mixin name");
 
-            // parse the params
-            List<String> params = new ArrayList<>();
-            source.expect(Tokens.OPEN_PAREN);
+        // parse the params
+        List<String> params = new ArrayList<>();
+        source.expect(Tokens.OPEN_PAREN);
 
-            Optional<String> param = Optional.absent();
-            do {
-                param = source.skipWhitepace().readIdent();
-                if (param.isPresent()) {
-                    params.add(param.get());
-                }
-            } while (param.isPresent() && source.skipWhitepace().optionallyPresent(Tokens.COMMA));
+        Optional<String> param;
+        do {
+            param = source.skipWhitepace().readIdent();
+            if (param.isPresent()) {
+                params.add(param.get());
+            }
+        } while (param.isPresent() && source.skipWhitepace().optionallyPresent(Tokens.COMMA));
 
-            source.expect(Tokens.CLOSE_PAREN);
+        source.expect(Tokens.CLOSE_PAREN);
 
-            // should be nothing left in the expression
-            if (!source.skipWhitepace().eof()) throw new ParserException(source, "Unexpected content in mixin def");
+        // should be nothing left in the expression
+        if (!source.skipWhitepace().eof()) throw new ParserException(source, "Unexpected content in mixin def");
 
-            // must have the at-rule block containing the declarations
-            if (!atRule.rawBlock().isPresent()) throw new ParserException(atRule, "missing mixin block");
+        // must have the at-rule block containing the declarations
+        if (!atRule.rawBlock().isPresent()) throw new ParserException(atRule, "missing mixin block");
 
-            // parse the template declarations
-            source = new Source(atRule.rawBlock().get());
+        // parse the template declarations
+        source = new Source(atRule.rawBlock().get());
 
-            // we don't want the template declarations broadcasted past this point, so we use a custom broadcaster that doesn't
-            // wrap the original one
-            QueryableBroadcaster queryable = new QueryableBroadcaster();
-            ParserFactory.rawDeclarationSequenceParser().parse(source, queryable, refiner);
-            Iterable<Declaration> declarations = queryable.filter(Declaration.class);
+        // we don't want the template declarations broadcasted past this point, so we use a custom broadcaster that doesn't
+        // wrap the original one
+        QueryableBroadcaster queryable = new QueryableBroadcaster();
+        grammar.parser().rawDeclarationSequenceParser().parse(source, grammar, queryable);
+        Iterable<Declaration> declarations = queryable.filter(Declaration.class);
 
-            // we don't want anything from the at-rule to actually be written out
-            atRule.markAsMetadataRule();
+        // we don't want anything from the at-rule to actually be written out
+        atRule.markAsMetadataRule();
 
-            // create the new mixin instance (a custom at-rule expression)
-            Mixin mixin = new Mixin(name.get(), params, declarations);
+        // create the new mixin instance (a custom at-rule expression)
+        Mixin mixin = new Mixin(name.get(), params, declarations);
 
-            // save off a reference for later
-            String key = name.get() + params.size();
-            mixins.put(key, mixin);
+        // save off a reference for later
+        String key = name.get() + params.size();
+        mixins.put(key, mixin);
 
-            // broadcast the mixin (and by doing so it will automatically be associated with the at-rule)
-            broadcaster.broadcast(mixin);
-
-            return Refinement.FULL;
-        }
-        return Refinement.NONE;
+        // broadcast the mixin (and by doing so it will automatically be associated with the at-rule)
+        broadcaster.broadcast(mixin);
     }
 
     /** handles mixin references within rules, i.e., the thing that starts with "+" */
-    @Override
-    public Refinement refine(Declaration declaration, Broadcaster broadcaster, MasterRefiner refiner) {
+    @Refine
+    public void refine(Declaration declaration, Grammar grammar, Broadcaster broadcaster) {
         // only check raw declarations
-        if (!declaration.rawPropertyName().isPresent() || !declaration.rawPropertyValue().isPresent()) {
-            return Refinement.NONE;
+        if (declaration.isRefined()) {
+            return;
         }
 
         RawSyntax rawName = declaration.rawPropertyName().get();
@@ -164,10 +158,7 @@ public class MixinRefiner implements AtRuleRefiner, DeclarationRefiner {
             // ...ok, this is certainly a bit of a hack. Declaration certainly needs to be brought up to snuff.
             MixinReference mixinRef = new MixinReference(mixin, mappedParams);
             PropertyValue propertyValue = PropertyValue.of(mixinRef);
-            propertyValue.propagateBroadcast(broadcaster); // this handles broadcasting the inner mixin ref too
-
-            return Refinement.FULL;
+            propertyValue.propagateBroadcast(broadcaster, Status.PARSED); // this handles broadcasting the inner mixin ref too
         }
-        return Refinement.NONE;
     }
 }

@@ -52,9 +52,7 @@ public final class ConditionalsConfig {
      * Gets whether the given condition is "true".
      *
      * @param condition
-     *     Check if this condition is contained within the "trueConditions" set. This should be lower-cased (unless you otherwise
-     *     knowingly and explicitly arranged for parsed conditionals to <em>not</em> be automatically lower-cased in contrast to
-     *     the default behavior).
+     *     Check if this condition is contained within the "trueConditions" set. This should be lower-cased!
      *
      * @return True if the given condition is "true".
      */
@@ -124,7 +122,8 @@ public final class ConditionalsConfig {
     }
 
     /**
-     * Removes the currently set true conditions and adds the given true conditions.
+     * Removes the currently set true conditions and adds the given true conditions. Each string will be automatically lower-cased
+     * for comparison purposes.
      *
      * @param trueConditions
      *     Replace all current true conditions with these.
@@ -136,7 +135,8 @@ public final class ConditionalsConfig {
     }
 
     /**
-     * Removes the currently set true conditions and adds the given true conditions.
+     * Removes the currently set true conditions and adds the given true conditions. Each string will be automatically lower-cased
+     * for comparison purposes.
      *
      * @param trueConditions
      *     Replace all current true conditions with these.

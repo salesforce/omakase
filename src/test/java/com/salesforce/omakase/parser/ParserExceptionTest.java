@@ -29,7 +29,6 @@ package com.salesforce.omakase.parser;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.test.util.TemplatesHelper;
 import org.junit.Test;
 
@@ -131,10 +130,10 @@ public class ParserExceptionTest {
 
     @Test
     public void exceptionForSource() {
-        Syntax syntax = new Selector(new RawSyntax(5, 2, "#id"), new MasterRefiner());
+        Syntax syntax = new Selector(new RawSyntax(5, 2, "#id"));
 
         String msg = new ParserException(syntax, "test exception").getMessage();
-        assertThat(msg).isEqualTo("Omakase CSS Parser - test exception:\n" +
+        assertThat(msg).isEqualTo("test exception:\n" +
             "at line 5, column 2, caused by\n" +
             "#id (selector)");
     }

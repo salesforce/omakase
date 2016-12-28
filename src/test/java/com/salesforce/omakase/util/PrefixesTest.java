@@ -26,11 +26,12 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.data.Prefix;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Optional;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 

@@ -26,19 +26,19 @@
 
 package com.salesforce.omakase.parser.atrule;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQueryExpression;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.ParserFactory;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
+
+import java.util.Optional;
 
 /**
  * Parsers a {@link MediaQueryExpression}.
@@ -51,9 +51,10 @@ import com.salesforce.omakase.parser.token.Tokens;
  * @author nmcwilliams
  * @see MediaQueryExpression
  */
-public final class MediaQueryExpressionParser extends AbstractParser {
+public final class MediaQueryExpressionParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.skipWhitepace();
 
         // grab the current position before parsing anything
@@ -77,10 +78,10 @@ public final class MediaQueryExpressionParser extends AbstractParser {
         if (source.optionallyPresent(Tokens.COLON)) {
             source.skipWhitepace();
 
-            QueryableBroadcaster qb = new QueryableBroadcaster(); // no need to broadcast the terms
-            ParserFactory.termSequenceParser().parse(source, qb, refiner);
+            QueryableBroadcaster queryable = new QueryableBroadcaster(); // no need to broadcast the terms
+            grammar.parser().termSequenceParser().parse(source, grammar, queryable);
 
-            Iterable<PropertyValueMember> terms = qb.filter(PropertyValueMember.class);
+            Iterable<PropertyValueMember> terms = queryable.filter(PropertyValueMember.class);
             if (Iterables.isEmpty(terms)) throw new ParserException(source, Message.MISSING_MEDIA_TERMS);
 
             expression.terms(terms);
@@ -94,4 +95,5 @@ public final class MediaQueryExpressionParser extends AbstractParser {
         broadcaster.broadcast(expression);
         return true;
     }
+
 }

@@ -69,9 +69,6 @@ public enum SelectorPartType {
     /** a general sibling combinator */
     GENERAL_SIBLING_COMBINATOR(true),
 
-    /** a comment that is not associated with another syntax unit */
-    ORPHANED_COMMENT,
-
     /** custom syntax */
     CUSTOM;
 

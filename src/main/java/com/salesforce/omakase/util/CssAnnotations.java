@@ -33,8 +33,8 @@ import com.salesforce.omakase.ast.CssAnnotation;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
 public final class CssAnnotations {
+    /** The "noflip" annotation, for direction flipping */
     public static final String NOFLIP = "noflip";
 
     private CssAnnotations() {}

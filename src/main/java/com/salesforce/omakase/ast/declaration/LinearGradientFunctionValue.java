@@ -26,16 +26,17 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.plugin.syntax.LinearGradientPlugin;
 import com.salesforce.omakase.util.Args;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
@@ -46,6 +47,7 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * Use {@link #repeating(boolean)} if the gradient is a repeating-linear-gradient.
  *
  * @author nmcwilliams
+ * @see LinearGradientPlugin
  */
 @Subscribable
 @Description(value = "linear gradient function", broadcasted = REFINED_DECLARATION)
@@ -141,10 +143,10 @@ public final class LinearGradientFunctionValue extends AbstractTerm implements F
     /**
      * Gets the prefix, if present.
      *
-     * @return The prefix, or {@link Optional#absent()} if no prefix exists.
+     * @return The prefix, or an empty {@link Optional} if not present.
      */
     public Optional<Prefix> prefix() {
-        return Optional.fromNullable(prefix);
+        return Optional.ofNullable(prefix);
     }
 
     /**

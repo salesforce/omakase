@@ -33,9 +33,9 @@ import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.declaration.QuotationMode;
 import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,14 +70,16 @@ public class FontFaceBlockTest {
 
     @Test
     public void testPropagateBroadcast() {
-        assertThat(descriptor.status()).isSameAs(Status.UNBROADCASTED);
-        assertThat(block.status()).isSameAs(Status.UNBROADCASTED);
+        assertThat(descriptor.status()).isSameAs(Status.PARSED);
+        assertThat(block.status()).isSameAs(Status.PARSED);
 
         block.fontDescriptors().append(descriptor);
 
-        block.propagateBroadcast(new StatusChangingBroadcaster());
-        assertThat(descriptor.status()).isNotSameAs(Status.UNBROADCASTED);
-        assertThat(block.status()).isNotSameAs(Status.UNBROADCASTED);
+        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
+        block.propagateBroadcast(broadcaster, Status.PARSED);
+
+        assertThat(broadcaster.find(FontDescriptor.class).get()).isSameAs(descriptor);
+        assertThat(broadcaster.find(FontFaceBlock.class).get()).isSameAs(block);
     }
 
     @Test

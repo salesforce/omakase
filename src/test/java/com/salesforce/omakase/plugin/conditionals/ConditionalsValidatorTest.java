@@ -28,7 +28,8 @@ package com.salesforce.omakase.plugin.conditionals;
 
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.error.FatalException;
+import com.salesforce.omakase.error.ProblemSummaryException;
+import com.salesforce.omakase.parser.ParserException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -47,14 +48,14 @@ public class ConditionalsValidatorTest {
     @Test
     public void validatesBadBlockSyntax() {
         String src = "@if {.class{color:red}}";
-        exception.expect(FatalException.class);
+        exception.expect(ParserException.class);
         Omakase.source(src).use(new ConditionalsValidator()).process();
     }
 
     @Test
     public void validatesBadInnerSyntax() {
         String src = "@if(ie7) {.class{color:red}";
-        exception.expect(FatalException.class);
+        exception.expect(ParserException.class);
         Omakase.source(src).use(new ConditionalsValidator()).process();
     }
 
@@ -68,7 +69,7 @@ public class ConditionalsValidatorTest {
     @Test
     public void errorsIfConditionNotAllowed() {
         String src = "@if(ie8) {.class{color:red}}";
-        exception.expect(FatalException.class);
+        exception.expect(ProblemSummaryException.class);
         exception.expectMessage("Invalid condition");
         Omakase.source(src).use(new ConditionalsValidator("ie7")).process();
     }
@@ -76,7 +77,7 @@ public class ConditionalsValidatorTest {
     @Test
     public void errorsIfSomeConditionsNotAllowed() {
         String src = "@if(ie7 || mobile) {.class{color:red}}";
-        exception.expect(FatalException.class);
+        exception.expect(ProblemSummaryException.class);
         exception.expectMessage("Invalid condition");
         Omakase.source(src).use(new ConditionalsValidator("ie7", "desktop")).process();
     }

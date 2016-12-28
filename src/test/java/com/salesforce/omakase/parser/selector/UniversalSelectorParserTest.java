@@ -80,6 +80,6 @@ public class UniversalSelectorParserTest extends AbstractParserTest<UniversalSel
     @Override
     public void matchesExpectedBroadcastContent() {
         List<GenericParseResult> results = parse("*");
-        results.get(0).broadcaster.findOnly(UniversalSelector.class).get();
+        expectOnly(results.get(0).broadcaster, UniversalSelector.class);
     }
 }

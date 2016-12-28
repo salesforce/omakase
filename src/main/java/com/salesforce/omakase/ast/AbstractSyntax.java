@@ -26,14 +26,17 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.util.As;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,7 +55,7 @@ public abstract class AbstractSyntax implements Syntax {
     private List<Comment> comments;
     private List<Comment> orphanedComments;
 
-    private Status status = Status.UNBROADCASTED;
+    private Status status = Status.PARSED;
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public AbstractSyntax() {
@@ -92,11 +95,6 @@ public abstract class AbstractSyntax implements Syntax {
         return line != -1 && column != -1;
     }
 
-    @Override
-    public boolean isWritable() {
-        return true;
-    }
-
     /**
      * For implementations: do not copy comments or orphaned comments, instead be sure to call {@link #copiedFrom(Syntax)} on the
      * new copy.
@@ -120,6 +118,9 @@ public abstract class AbstractSyntax implements Syntax {
     @SuppressWarnings("unchecked")
     protected final <T extends Syntax> T copiedFrom(T original) {
         this.comments(original).orphanedComments(original);
+        if (original.status() == Status.RAW) {
+            status(Status.RAW);
+        }
         return (T)this;
     }
 
@@ -136,7 +137,7 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public Syntax comments(List<String> comments) {
+    public Syntax comments(Collection<String> comments) {
         if (comments == null || comments.isEmpty()) return this;
 
         getOrCreateComments(comments.size());
@@ -159,11 +160,11 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public ImmutableList<Comment> comments() {
-        return comments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(comments);
+        return comments == null ? ImmutableList.of() : ImmutableList.copyOf(comments);
     }
 
     @Override
-    public Syntax orphanedComments(List<String> comments) {
+    public Syntax orphanedComments(Collection<String> comments) {
         if (comments == null || comments.isEmpty()) return this;
 
         getOrCreateOrphanedComments(comments.size());
@@ -186,55 +187,41 @@ public abstract class AbstractSyntax implements Syntax {
 
     @Override
     public ImmutableList<Comment> orphanedComments() {
-        return orphanedComments == null ? ImmutableList.<Comment>of() : ImmutableList.copyOf(orphanedComments);
+        return orphanedComments == null ? ImmutableList.of() : ImmutableList.copyOf(orphanedComments);
     }
 
     @Override
     public boolean hasAnnotation(String name) {
         if (comments == null) return false;
-
-        for (Comment comment : comments) {
-            if (comment.hasAnnotation(name)) return true;
-        }
-
-        return false;
+        return comments.stream().anyMatch(c -> c.hasAnnotation(name));
     }
 
     @Override
     public boolean hasAnnotation(CssAnnotation annotation) {
         if (comments == null) return false;
-
-        for (Comment comment : comments) {
-            if (comment.hasAnnotation(annotation)) return true;
-        }
-
-        return false;
+        return comments.stream().anyMatch(c -> c.hasAnnotation(annotation));
     }
 
     @Override
     public Optional<CssAnnotation> annotation(String name) {
-        if (comments == null) return Optional.absent();
+        if (comments == null) return Optional.empty();
 
         for (Comment comment : comments) {
             Optional<CssAnnotation> annotation = comment.annotation(name);
             if (annotation.isPresent()) return annotation;
         }
-
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override
     public List<CssAnnotation> annotations() {
-        List<CssAnnotation> found = new ArrayList<>();
+        if (comments == null) return new ArrayList<>();
 
-        if (comments != null) {
-            for (Comment comment : comments) {
-                Optional<CssAnnotation> annotation = comment.annotation();
-                if (annotation.isPresent()) found.add(annotation.get());
-            }
-        }
-
-        return found;
+        return comments.stream()
+            .map(Comment::annotation)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -258,10 +245,20 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        if (this.status == Status.UNBROADCASTED) { // only broadcast ourselves once
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (this.status == status) {
             broadcaster.broadcast(this);
         }
+    }
+
+    @Override
+    public boolean breakBroadcast(SubscriptionPhase phase) {
+        return status == Status.NEVER_EMIT;
+    }
+
+    @Override
+    public boolean isWritable() {
+        return true;
     }
 
     @Override

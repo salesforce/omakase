@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -40,6 +39,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
@@ -80,23 +80,20 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public Rule() {
-        this(-1, -1, null);
+        this(-1, -1);
     }
 
     /**
      * Creates a new {@link Rule} instance with the given line and column numbers.
-     *
-     * @param line
+     *  @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param broadcaster
-     *     Used to broadcast new units.
      */
-    public Rule(int line, int column, Broadcaster broadcaster) {
+    public Rule(int line, int column) {
         super(line, column);
-        selectors = new LinkedSyntaxCollection<>(this, broadcaster);
-        declarations = new LinkedSyntaxCollection<>(this, broadcaster);
+        selectors = new LinkedSyntaxCollection<>(this);
+        declarations = new LinkedSyntaxCollection<>(this);
     }
 
     /**
@@ -126,34 +123,41 @@ public final class Rule extends AbstractGroupable<StatementIterable, Statement> 
 
     @Override
     public boolean hasAnnotation(String name) {
-        return super.hasAnnotation(name) || (!selectors.isEmpty() && selectors.first().get().hasAnnotation(name));
+        return super.hasAnnotation(name) ||
+            (selectors.first().isPresent() && selectors.first().get().hasAnnotation(name));
     }
 
     @Override
     public boolean hasAnnotation(CssAnnotation annotation) {
-        return super.hasAnnotation(annotation) || (!selectors.isEmpty() && selectors.first().get().hasAnnotation(annotation));
+        return super.hasAnnotation(annotation) ||
+            (selectors.first().isPresent() && selectors.first().get().hasAnnotation(annotation));
     }
 
     @Override
     public Optional<CssAnnotation> annotation(String name) {
         Optional<CssAnnotation> annotation = super.annotation(name);
-        return annotation.or(selectors.isEmpty() ? Optional.<CssAnnotation>absent() : selectors.first().get().annotation(name));
+        if (annotation.isPresent()) {
+            return annotation;
+        }
+        return selectors.first().isPresent() ? selectors.first().get().annotation(name) : Optional.empty();
     }
 
     @Override
     public List<CssAnnotation> annotations() {
         List<CssAnnotation> annotations = super.annotations();
-        if (!selectors.isEmpty()) {
+        if (selectors.first().isPresent()) {
             annotations.addAll(selectors.first().get().annotations());
         }
         return annotations;
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        selectors.propagateBroadcast(broadcaster);
-        declarations.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (this.status() == status) {
+            selectors.propagateBroadcast(broadcaster, status);
+            declarations.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override

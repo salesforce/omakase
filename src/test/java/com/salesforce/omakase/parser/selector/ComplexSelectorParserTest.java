@@ -225,7 +225,7 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
     @Test
     public void errorsIfUniversalNotLast() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.NAME_SELECTORS_NOT_ALLOWED.message());
+        exception.expectMessage(Message.NAME_SELECTORS_NOT_ALLOWED);
         parse(".class*");
     }
 
@@ -237,9 +237,22 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
     }
 
     @Test
+    public void errorsIfTrailingCombinator2() {
+        exception.expect(ParserException.class);
+        exception.expectMessage("Trailing combinator");
+        parse(".page .home > .child #id:hover .button .inner + span>").get(0);
+    }
+    @Test
     public void removesTrailingDescendantCombinatorWithoutError() {
         GenericParseResult result = parse(".class ").get(0);
         assertThat(result.broadcasted).hasSize(1);
+        assertThat(Iterables.get(result.broadcasted, 0)).isNotInstanceOf(Combinator.class);
+    }
+
+    @Test
+    public void removesTrailingDescendantCombinatorWithoutError2() {
+        GenericParseResult result = parse(".page .home > .child #id:hover .button .inner + span.class ").get(0);
+        assertThat(result.broadcasted).hasSize(15);
         assertThat(Iterables.get(result.broadcasted, 0)).isNotInstanceOf(Combinator.class);
     }
 }

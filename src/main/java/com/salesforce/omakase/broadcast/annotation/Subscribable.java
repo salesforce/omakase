@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * Indicates that a {@link Syntax} unit can be <em>subscribed to</em> within a {@link Plugin}.
  * <p>
  * Note that just because a {@link Syntax} unit can be subscribed to doesn't mean that it will necessarily be broadcasted. For
- * more information see the readme file.
+ * more information see the readme file regarding refinement.
  *
  * @author nmcwilliams
  */

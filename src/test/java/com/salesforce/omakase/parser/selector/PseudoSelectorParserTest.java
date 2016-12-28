@@ -151,7 +151,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
         ));
 
         for (ParseResult<String> result : results) {
-            PseudoElementSelector selector = result.broadcaster.findOnly(PseudoElementSelector.class).get();
+            PseudoElementSelector selector = expectOnly(result.broadcaster, PseudoElementSelector.class);
             assertThat(selector.name())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
@@ -171,7 +171,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
         ));
 
         for (ParseResult<String> result : results) {
-            PseudoClassSelector selector = result.broadcaster.findOnly(PseudoClassSelector.class).get();
+            PseudoClassSelector selector = expectOnly(result.broadcaster, PseudoClassSelector.class);
             assertThat(selector.name())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
@@ -188,7 +188,7 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
         ));
 
         for (ParseResult<String> result : results) {
-            PseudoClassSelector selector = result.broadcaster.findOnly(PseudoClassSelector.class).get();
+            PseudoClassSelector selector = expectOnly(result.broadcaster, PseudoClassSelector.class);
             assertThat(selector.args().get())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);
@@ -204,14 +204,14 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
     @Test
     public void errorsIfMissingName() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PSEUDO_NAME.message());
+        exception.expectMessage(Message.MISSING_PSEUDO_NAME);
         parse(":");
     }
 
     @Test
     public void errorsIfInvalidName() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PSEUDO_NAME.message());
+        exception.expectMessage(Message.MISSING_PSEUDO_NAME);
         parse(":123hover");
     }
 

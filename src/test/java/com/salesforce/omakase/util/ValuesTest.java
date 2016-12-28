@@ -55,7 +55,7 @@ public class ValuesTest {
 
     @Test
     public void asHexColorNotOnlyOneInPropertyValue() {
-        value = PropertyValue.ofTerms(OperatorType.SPACE, HexColorValue.of("fff"), NumericalValue.of(1));
+        value = PropertyValue.of(HexColorValue.of("fff"), NumericalValue.of(1));
         assertThat(Values.asHexColor(value).isPresent()).isFalse();
     }
 
@@ -73,7 +73,7 @@ public class ValuesTest {
 
     @Test
     public void asKeywordNotOnlyOneInPropertyValue() {
-        value = PropertyValue.ofTerms(OperatorType.SPACE, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
+        value = PropertyValue.of(KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
         assertThat(Values.asKeyword(value).isPresent()).isFalse();
     }
 
@@ -91,7 +91,7 @@ public class ValuesTest {
 
     @Test
     public void asNumericalNotOnlyOneInPropertyValue() {
-        value = PropertyValue.ofTerms(OperatorType.SLASH, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
+        value = PropertyValue.of(OperatorType.SLASH, KeywordValue.of(Keyword.NONE), NumericalValue.of(1));
         assertThat(Values.asNumerical(value).isPresent()).isFalse();
     }
 
@@ -109,7 +109,7 @@ public class ValuesTest {
 
     @Test
     public void asStringNotOnlyOneInPropertyValue() {
-        value = PropertyValue.ofTerms(OperatorType.SPACE, StringValue.of(QuotationMode.DOUBLE, "h"), NumericalValue.of(1));
+        value = PropertyValue.of(StringValue.of(QuotationMode.DOUBLE, "h"), NumericalValue.of(1));
         assertThat(Values.asString(value).isPresent()).isFalse();
     }
 
@@ -119,7 +119,7 @@ public class ValuesTest {
         KeywordValue t2 = KeywordValue.of("solid");
         KeywordValue t3 = KeywordValue.of("red");
 
-        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, t1, t2, t3);
+        PropertyValue pv = PropertyValue.of(t1, t2, t3);
 
         Iterable<KeywordValue> filtered = Values.filter(KeywordValue.class, pv);
         assertThat(filtered).containsExactly(t2, t3);
@@ -131,7 +131,7 @@ public class ValuesTest {
         KeywordValue t2 = KeywordValue.of("solid");
         KeywordValue t3 = KeywordValue.of("red");
 
-        PropertyValue pv = PropertyValue.ofTerms(OperatorType.SPACE, t1, t2, t3);
+        PropertyValue pv = PropertyValue.of(t1, t2, t3);
 
         Iterable<FunctionValue> filtered = Values.filter(FunctionValue.class, pv);
         assertThat(filtered).isEmpty();
@@ -166,9 +166,7 @@ public class ValuesTest {
     public void splitTwoPresent() {
         PropertyValue pv = new PropertyValue();
         pv.append(NumericalValue.of(1));
-        pv.append(OperatorType.SPACE);
         pv.append(NumericalValue.of(2));
-        pv.append(OperatorType.SPACE);
         pv.append(NumericalValue.of(3));
         pv.append(NumericalValue.of(3));
         pv.append(OperatorType.COMMA);
@@ -179,7 +177,7 @@ public class ValuesTest {
 
         List<PropertyValue> split = Values.split(OperatorType.COMMA, pv);
         assertThat(split).hasSize(3);
-        assertThat(split.get(0).members()).hasSize(6);
+        assertThat(split.get(0).members()).hasSize(4);
         assertThat(split.get(1).members()).hasSize(1);
         assertThat(split.get(2).members()).hasSize(2);
     }
@@ -197,7 +195,7 @@ public class ValuesTest {
     public void joinSeveral() {
         PropertyValue pv1 = PropertyValue.of(new NumericalValue(1));
         PropertyValue pv2 = PropertyValue.of(new NumericalValue(2));
-        PropertyValue pv3 = PropertyValue.ofTerms(OperatorType.COMMA, new NumericalValue(3), new NumericalValue(3));
+        PropertyValue pv3 = PropertyValue.of(OperatorType.COMMA, new NumericalValue(3), new NumericalValue(3));
 
         PropertyValue join = Values.join(OperatorType.SLASH, Lists.newArrayList(pv1, pv2, pv3));
         assertThat(join.members()).hasSize(7);

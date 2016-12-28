@@ -26,25 +26,24 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.raw.RawAtRuleParser;
-import com.salesforce.omakase.parser.refiner.AtRuleRefiner;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
-import com.salesforce.omakase.parser.refiner.Refiner;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
+import com.salesforce.omakase.parser.atrule.AtRuleParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.*;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
@@ -52,28 +51,24 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 /**
  * Represents one of the CSS at-rules, such as {@literal @}media, {@literal @}charset, {@literal @}keyframes, etc...
  * <p>
- * It's important to note that the raw members may contain grammatically incorrect CSS. Refining the object will perform basic
- * grammar validation. See the notes on {@link Refinable}.
+ * See the notes on {@link Refinable}.
  *
  * @author nmcwilliams
- * @see RawAtRuleParser
+ * @see AtRuleParser
  */
 @Subscribable
 @Description(broadcasted = AUTOMATIC)
-public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable<AtRule>,
-    Named {
-    private final transient MasterRefiner refiner;
+public final class AtRule extends AbstractGroupable<StatementIterable, Statement> implements Statement, Refinable, Named {
     private String name;
+    private boolean shouldWriteName = true;
 
     // unrefined
     private final RawSyntax rawExpression;
     private final RawSyntax rawBlock;
 
     // refined
-    private Optional<AtRuleExpression> expression;
-    private Optional<AtRuleBlock> block;
-
-    private boolean shouldWriteName = true;
+    private AtRuleExpression expression;
+    private AtRuleBlock block;
 
     /**
      * Constructs a new {@link AtRule} instance.
@@ -88,21 +83,19 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      *     The raw at-rule expression. If no expression is present pass in null.
      * @param rawBlock
      *     The raw at-rule block. If no block is present pass in null.
-     * @param refiner
-     *     The {@link MasterRefiner} to be used later during refinement of this object.
      */
-    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock, MasterRefiner refiner) {
+    public AtRule(int line, int column, String name, RawSyntax rawExpression, RawSyntax rawBlock) {
         super(line, column);
         this.name = name;
         this.rawExpression = rawExpression;
         this.rawBlock = rawBlock;
-        this.expression = Optional.absent();
-        this.block = Optional.absent();
-        this.refiner = refiner;
+        this.expression = null;
+        this.block = null;
+        status(Status.RAW);
     }
 
     /**
-     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     * Creates a new instance with no line or column specified (used for dynamically created {@link Syntax} units).
      *
      * @param name
      *     Name of the at-rule.
@@ -120,9 +113,8 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         this.name = name;
         this.rawExpression = null;
         this.rawBlock = null;
-        this.expression = Optional.fromNullable(expression);
-        this.block = Optional.fromNullable(block);
-        this.refiner = null;
+        this.expression = expression;
+        this.block = block;
 
         if (expression != null) {
             expression.parent(this);
@@ -130,7 +122,6 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         if (block != null) {
             block.parent(this);
         }
-
     }
 
     /**
@@ -152,7 +143,7 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     /**
-     * Specifies whether the name should be written out. This might be specified as false by custom {@link Refiner}s where the
+     * Specifies whether the name should be written out. This might be specified as false by custom refiners where the
      * name of the custom at-rule is not applicable in the final CSS source.
      *
      * @param shouldWriteName
@@ -180,26 +171,23 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     /**
      * Gets the original, raw, non-validated expression if present (e.g., "utf-8", or "all and (min-width: 800px)".
      *
-     * @return The raw expression, or {@link Optional#absent()} if not present.
+     * @return The raw expression, or an empty {@link Optional} if not present.
      */
     public Optional<RawSyntax> rawExpression() {
-        return Optional.fromNullable(rawExpression);
+        return Optional.ofNullable(rawExpression);
     }
 
     /**
      * Gets the original, raw, non-validated at-rule block, if present.
      *
-     * @return The at-rule block, or {@link Optional#absent()} if not present.
+     * @return The at-rule block, or an empty {@link Optional} if not present.
      */
     public Optional<RawSyntax> rawBlock() {
-        return Optional.fromNullable(rawBlock);
+        return Optional.ofNullable(rawBlock);
     }
 
     /**
      * Sets the {@link AtRuleExpression}.
-     * <p>
-     * Note that custom {@link AtRuleRefiner}s should usually just broadcast a {@link AtRuleExpression} instead of calling this
-     * method directly.
      *
      * @param expression
      *     The expression.
@@ -208,40 +196,27 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      */
     public AtRule expression(AtRuleExpression expression) {
         if (expression == null) {
-            checkState(block.isPresent(), "cannot remove / set a null expression when the block is absent");
+            checkArgument(block != null, "cannot remove / set a null expression when the block is absent");
         } else {
             expression.parent(this);
         }
-        this.expression = Optional.fromNullable(expression);
+        this.expression = expression;
         return this;
     }
 
     /**
-     * Gets the at-rule expression, if present. Note that this attempts refinement on the expression unless a refined expression
-     * is already set.
+     * Gets the at-rule expression, if present.
      * <p>
-     * <b>Important:</b> do not call this from within a custom refiner! It will result in a StackOverflow error.
+     * <b>Important:</b> this may be {@link Optional#empty()} if this at-rule is unrefined.
      *
-     * @return The expression, or {@link Optional#absent()} if not present.
+     * @return The expression, or an empty {@link Optional} if not present.
      */
     public Optional<AtRuleExpression> expression() {
-        return refine().expression;
-    }
-
-    /**
-     * Gets whether a refined expression has been set on this at-rule.
-     *
-     * @return True if a refined expression has been set.
-     */
-    public boolean hasRefinedExpression() {
-        return expression.isPresent();
+        return Optional.ofNullable(expression);
     }
 
     /**
      * Sets the {@link AtRuleBlock}.
-     * <p>
-     * Note that custom {@link AtRuleRefiner}s should usually just broadcast an {@link AtRuleBlock} instead of calling this method
-     * directly.
      *
      * @param block
      *     The block.
@@ -250,44 +225,35 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
      */
     public AtRule block(AtRuleBlock block) {
         if (block == null) {
-            checkState(expression.isPresent(), "cannot remove / set a null block when the expression is absent");
+            checkState(expression != null, "cannot remove / set a null block when the expression is absent");
         } else {
             block.parent(this);
         }
-        this.block = Optional.fromNullable(block);
+        this.block = block;
         return this;
     }
 
     /**
-     * Gets the at-rule block, if present. Note that this attempts refinement on the block unless a refined block is already set.
+     * Gets the at-rule block, if present.
      * <p>
-     * <b>Important:</b> do not call this from within a custom refiner! It will result in a StackOverflow error.
+     * <b>Important:</b> this may be {@link Optional#empty()} if this at-rule is unrefined.
      *
-     * @return The block, or {@link Optional#absent()} if not present.
+     * @return The block, or an empty {@link Optional} if not present.
      */
     public Optional<AtRuleBlock> block() {
-        return refine().block;
-    }
-
-    /**
-     * Gets whether a refined block has been set on this at-rule.
-     *
-     * @return True if a refined block has been set.
-     */
-    public boolean hasRefinedBlock() {
-        return block.isPresent();
+        return Optional.ofNullable(block);
     }
 
     /**
      * Used to indicate this at-rule is for metadata purposes only and should not be written out in the output CSS.
      * <p>
-     * This is mainly used for custom syntax that is refined by an {@link AtRuleRefiner}.
+     * This is mainly used for custom syntax.
      *
      * @return this, for chaining.
      */
     public AtRule markAsMetadataRule() {
         shouldWriteName(false);
-        if (!expression.isPresent()) {
+        if (expression == null) {
             expression(MetadataExpression.instance());
         }
         return this;
@@ -295,13 +261,12 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
 
     @Override
     public boolean isRefined() {
-        return expression.isPresent() || block.isPresent();
+        return expression != null || block != null;
     }
 
     @Override
-    public AtRule refine() {
-        if (!isRefined() && refiner != null) refiner.refine(this);
-        return this;
+    public boolean breakBroadcast(SubscriptionPhase phase) {
+        return super.breakBroadcast(phase) || (phase == SubscriptionPhase.REFINE && isRefined());
     }
 
     @Override
@@ -310,19 +275,16 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
     }
 
     @Override
-    public boolean containsRawSyntax() {
-        return rawExpression != null || rawBlock != null;
-    }
-
-    @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        if (expression.isPresent()) {
-            expression.get().propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            if (expression != null) {
+                expression.propagateBroadcast(broadcaster, status);
+            }
+            if (block != null) {
+                block.propagateBroadcast(broadcaster, status);
+            }
+            super.propagateBroadcast(broadcaster, status);
         }
-        if (block.isPresent()) {
-            block.get().propagateBroadcast(broadcaster);
-        }
-        super.propagateBroadcast(broadcaster);
     }
 
     @Override
@@ -335,17 +297,17 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             // could result in invalid css.
 
             // if expression is present, it must be writable
-            if (expression.isPresent() && !expression.get().isWritable()) {
+            if (expression != null && !expression.isWritable()) {
                 return false;
             }
 
             // if block is present, it must be writable
-            if (block.isPresent() && !block.get().isWritable()) {
+            if (block != null && !block.isWritable()) {
                 return false;
             }
 
             // otherwise if we have a writable name, expression or block return true
-            return shouldWriteName || expression.isPresent() || block.isPresent();
+            return shouldWriteName || expression != null || block != null;
         }
         return true;
     }
@@ -361,17 +323,17 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
             // name
             if (shouldWriteName) {
                 appendable.append('@').append(name);
-                appendable.spaceIf(expression.isPresent() && expression.get().isWritable());
+                appendable.spaceIf(expression != null && expression.isWritable());
             }
 
             // expression
-            if (expression.isPresent()) {
-                writer.writeInner(expression.get(), appendable);
+            if (expression != null) {
+                writer.writeInner(expression, appendable);
             }
 
             // block
-            if (block.isPresent()) {
-                writer.writeInner(block.get(), appendable);
+            if (block != null) {
+                writer.writeInner(block, appendable);
             }
 
         } else {
@@ -404,13 +366,13 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         AtRule copy;
 
         if (isRefined()) {
-            AtRuleExpression expressionCopy = expression.isPresent() ? expression.get().copy() : null;
-            AtRuleBlock blockCopy = block.isPresent() ? block.get().copy() : null;
+            AtRuleExpression expressionCopy = expression != null ? expression.copy() : null;
+            AtRuleBlock blockCopy = block != null ? block.copy() : null;
             copy = new AtRule(name, expressionCopy, blockCopy).copiedFrom(this);
         } else {
             RawSyntax expressionCopy = rawExpression != null ? rawExpression.copy() : null;
             RawSyntax blockCopy = rawBlock != null ? rawBlock.copy() : null;
-            copy = new AtRule(-1, -1, name, expressionCopy, blockCopy, refiner).copiedFrom(this);
+            copy = new AtRule(-1, -1, name, expressionCopy, blockCopy).copiedFrom(this);
         }
         copy.shouldWriteName(shouldWriteName);
         return copy;

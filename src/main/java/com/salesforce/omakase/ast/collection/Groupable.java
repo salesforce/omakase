@@ -26,11 +26,12 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.annotation.Rework;
+
+import java.util.Optional;
 
 /**
  * Represents an item that appears in a group or chain of other related units, for usage with {@link SyntaxCollection}.
@@ -40,9 +41,8 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
  * instance to a difference {@link SyntaxCollection} it will be moved out of the original collection as well. If this is not what
  * you want then try looking at {@link Syntax#copy()}.
  * <p>
- * To remove a unit from the syntax tree, use {@link #destroy()}. A destroyed unit cannot be placed back in the tree, however it
- * can still be copied. (It cannot be added for multiple reasons, including the fact that destroying a unit short-circuits
- * broadcasting it, which means some validators on it might not have had a chance to run).
+ * To remove a unit from the syntax tree, use {@link #destroy()}. A destroyed unit cannot be placed back in the tree (among other
+ * reasons because it may have bypassed necessary subscription methods), however it can still be copied.
  *
  * @param <P>
  *     Type of the (P)arent object containing this collection (e.g., {@link SelectorPart}s have {@link Selector}s as the parent).
@@ -76,18 +76,18 @@ public interface Groupable<P, T extends Groupable<P, T>> extends Syntax {
     boolean isLast();
 
     /**
-     * Gets the unit following this one in the same collection, if there is one. This will always return {@link Optional#absent
-     * ()} if this unit has not been added to any collection.
+     * Gets the unit following this one in the same collection, if there is one. This will always return an empty optional if this
+     * unit has not been added to any collection.
      *
-     * @return The next unit, or {@link Optional#absent()} if there isn't one.
+     * @return The next unit, or an empty {@link Optional} if there isn't one.
      */
     Optional<T> next();
 
     /**
-     * Gets the unit preceding this one in the same collection, if there is one. This will always return {@link Optional#absent
-     * ()} if this unit has not been added to any collection.
+     * Gets the unit preceding this one in the same collection, if there is one. This will always return an empty optional if this
+     * unit has not been added to any collection.
      *
-     * @return The previous unit, or {@link Optional#absent()} if there isn't one.
+     * @return The previous unit, or an empty {@link Optional} if there isn't one.
      */
     Optional<T> previous();
 

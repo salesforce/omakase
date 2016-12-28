@@ -27,6 +27,7 @@
 package com.salesforce.omakase.ast;
 
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
  * Contains a list of {@link Statement}s.
@@ -41,4 +42,10 @@ public interface StatementIterable extends Iterable<Statement>, Syntax {
      * @return All statements.
      */
     SyntaxCollection<StatementIterable, Statement> statements();
+
+    /**
+     * Implementations must override this method, ensuring that {@link SyntaxCollection}s are properly handled.
+     */
+    @Override
+    void propagateBroadcast(Broadcaster broadcaster, Status status);
 }

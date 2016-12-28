@@ -37,7 +37,7 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.parser.refiner.FontFaceRefiner;
+import com.salesforce.omakase.plugin.syntax.FontFacePlugin;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -48,20 +48,18 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_R
 
 /**
  * Represents one of the {@link FontFaceBlock} font-descriptors (src, font-weight, font-style, etc...).
- * <p>
- * For reasons why this is distinct from {@link Declaration}, see {@link FontFaceRefiner}.
  *
  * @author nmcwilliams
  * @see FontFaceBlock
- * @see FontFaceRefiner
+ * @see FontFacePlugin
  */
 @Subscribable
 @Description(value = "font descriptor within @font-face", broadcasted = REFINED_AT_RULE)
 public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontDescriptor> implements Named {
-    private transient Broadcaster broadcaster;
-
     private final PropertyName propertyName;
     private PropertyValue propertyValue;
+
+    private transient Broadcaster propagatingBroadcaster;
 
     /**
      * Creates a new {@link FontDescriptor} instance with the given property name and value.
@@ -166,8 +164,8 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
 
         this.propertyValue = checkNotNull(propertyValue, "propertyValue cannot be null");
 
-        if (broadcaster != null && propertyValue.status() == Status.UNBROADCASTED) {
-            propertyValue.propagateBroadcast(broadcaster);
+        if (propagatingBroadcaster != null) {
+            this.propertyValue.propagateBroadcast(propagatingBroadcaster, Status.PARSED);
         }
         return this;
     }
@@ -182,12 +180,12 @@ public final class FontDescriptor extends AbstractGroupable<FontFaceBlock, FontD
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        propertyValue.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
-
-        // necessary for cases when we are already attached but a new property value hasn't been broadcasted.
-        this.broadcaster = broadcaster;
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            this.propagatingBroadcaster = broadcaster;
+            propertyValue.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override

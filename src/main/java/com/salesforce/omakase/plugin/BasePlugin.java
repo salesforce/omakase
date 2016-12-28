@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -37,12 +36,13 @@ import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.ast.declaration.*;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.selector.*;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.plugin.conditionals.Conditionals;
-import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.
@@ -55,7 +55,6 @@ import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("UnusedParameters")
 public class BasePlugin implements Plugin {
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
@@ -65,15 +64,6 @@ public class BasePlugin implements Plugin {
      *     The {@link Syntax} instance.
      */
     public void syntax(Syntax syntax) {}
-
-    /**
-     * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events
-     * for {@link Syntax} units of type {@link Refinable}.
-     *
-     * @param refinable
-     *     The {@link Refinable} instance.
-     */
-    public void refinable(Refinable<?> refinable) {}
 
     /**
      * Override this method and add the {@link Rework}, {@link Observe} or {@link Validate} annotation in order to receive events

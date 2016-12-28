@@ -28,6 +28,7 @@ package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -49,19 +50,17 @@ public final class GenericAtRuleBlock extends AbstractAtRuleMember implements At
 
     /** Creates a new {@link GenericAtRuleBlock} instance with no statements or {@link Broadcaster} specified. */
     public GenericAtRuleBlock() {
-        this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this);
+        this.statements = new LinkedSyntaxCollection<>(this);
     }
 
     /**
      * Creates a new {@link GenericAtRuleBlock} instance.
-     *
-     * @param statements
+     *  @param statements
      *     The inner {@link Statement} objects.
-     * @param broadcaster
-     *     Used for broadcasting new units.
+     *
      */
-    public GenericAtRuleBlock(Iterable<Statement> statements, Broadcaster broadcaster) {
-        this.statements = new LinkedSyntaxCollection<StatementIterable, Statement>(this, broadcaster);
+    public GenericAtRuleBlock(Iterable<Statement> statements) {
+        this.statements = new LinkedSyntaxCollection<>(this);
         this.statements.appendAll(statements);
     }
 
@@ -76,9 +75,11 @@ public final class GenericAtRuleBlock extends AbstractAtRuleMember implements At
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        statements.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            statements.propagateBroadcast(broadcaster, status);
+            super.propagateBroadcast(broadcaster, status);
+        }
     }
 
     @Override

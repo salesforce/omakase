@@ -26,24 +26,24 @@
 
 package com.salesforce.omakase;
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
+import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.token.BaseTokenFactory;
-import com.salesforce.omakase.plugin.BroadcastingPlugin;
+import com.salesforce.omakase.parser.factory.StandardParserFactory;
+import com.salesforce.omakase.parser.factory.StandardTokenFactory;
 import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.GrammarPlugin;
+import com.salesforce.omakase.plugin.ParserPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
-import com.salesforce.omakase.plugin.basic.SyntaxTree;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -95,34 +95,23 @@ public class ContextTest {
     public void requireCustomPluginValid() {
         final TestPlugin tp = new TestPlugin();
 
-        c.require(TestPlugin.class, new Supplier<TestPlugin>() {
-            @Override
-            public TestPlugin get() {
-                return tp;
-            }
-        });
+        c.require(TestPlugin.class, () -> tp);
 
         assertThat(c.retrieve(TestPlugin.class).get()).isSameAs(tp);
     }
 
     @Test
-    public void noErrorIfRequireSameTokenFactory() {
-        CustomTokenFactory custom = new CustomTokenFactory();
-        CustomTokenFactory ret = c.requireTokenFactory(CustomTokenFactory.class, com.google.common.base.Suppliers.ofInstance(custom));
-        assertThat(ret).isSameAs(custom);
-
-        // since already registered, should get the previous instance
-        ret = c.requireTokenFactory(CustomTokenFactory.class, com.google.common.base.Suppliers.ofInstance(new CustomTokenFactory()));
-        assertThat(ret).isSameAs(custom);
+    public void errorsIfRegisterMultipleParserPlugins() {
+        c.register((GrammarPlugin)StandardTokenFactory::instance);
+        exception.expect(IllegalStateException.class);
+        c.register((GrammarPlugin)StandardTokenFactory::instance);
     }
 
     @Test
-    public void errorsIfRequireMultipleTokenFactories() {
-        c.requireTokenFactory(CustomTokenFactory.class, com.google.common.base.Suppliers.ofInstance(new CustomTokenFactory()));
-
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Only one token factory is allowed");
-        c.requireTokenFactory(CustomTokenFactory2.class, com.google.common.base.Suppliers.ofInstance(new CustomTokenFactory2()));
+    public void errorsIfRegistersMultipleGrammarPlugins() {
+        c.register((ParserPlugin)StandardParserFactory::instance);
+        exception.expect(IllegalStateException.class);
+        c.register((ParserPlugin)StandardParserFactory::instance);
     }
 
     @Test
@@ -131,21 +120,11 @@ public class ContextTest {
     }
 
     @Test
-    public void broadcast() {
-        QueryableBroadcaster broadcaster = new QueryableBroadcaster();
-        ClassSelector cs = new ClassSelector("class");
-        c.broadcaster(broadcaster);
-        c.broadcast(cs);
-        assertThat(broadcaster.all()).hasSize(1);
-    }
-
-    @Test
     public void errorManager() {
         TestErrorManager em = new TestErrorManager();
         c.register(new FailingPlugin());
-        c.broadcast(new ClassSelector("class"));
-        c.errorManager(em);
-        c.before();
+        c.broadcaster().broadcast(new ClassSelector("class"));
+        c.before(em);
         c.after();
         assertThat(em.reported).isTrue();
     }
@@ -166,14 +145,6 @@ public class ContextTest {
     }
 
     @Test
-    public void beforeMethodSendsBroadcaster() {
-        TestBroadcastingPlugin tbp = new TestBroadcastingPlugin();
-        c.register(tbp);
-        c.before();
-        assertThat(tbp.broadcasterCalled).isTrue();
-    }
-
-    @Test
     public void afterMethodPhaseOrder() {
         PluginWithObserve observe = new PluginWithObserve();
         PluginWithRework rework = new PluginWithRework();
@@ -181,8 +152,8 @@ public class ContextTest {
 
         c.register(Lists.newArrayList(rework, validate, observe));
 
-        c.before();
-        c.broadcast(new ClassSelector("test"));
+        c.before(new TestErrorManager());
+        c.broadcaster().broadcast(new ClassSelector("test"));
         c.after();
 
         assertThat(observe.order < validate.order).isTrue();
@@ -193,7 +164,7 @@ public class ContextTest {
     public void afterMethodNotifyPostProcessor() {
         TestPostProcessingPlugin tpp = new TestPostProcessingPlugin();
         c.register(tpp);
-        c.before();
+        c.before(new TestErrorManager());
         c.after();
         assertThat(tpp.postProcessCalled).isTrue();
     }
@@ -219,12 +190,7 @@ public class ContextTest {
     public static final class TestDependentPlugin2 implements DependentPlugin {
         @Override
         public void dependencies(PluginRegistry registry) {
-            registry.require(TestDependentPlugin.class, new Supplier<TestDependentPlugin>() {
-                @Override
-                public TestDependentPlugin get() {
-                    return new TestDependentPlugin();
-                }
-            });
+            registry.require(TestDependentPlugin.class, TestDependentPlugin::new);
         }
     }
 
@@ -237,20 +203,11 @@ public class ContextTest {
         }
     }
 
-    public static final class TestBroadcastingPlugin implements BroadcastingPlugin {
-        boolean broadcasterCalled;
-
-        @Override
-        public void broadcaster(Broadcaster broadcaster) {
-            broadcasterCalled = true;
-        }
-    }
-
     public static final class TestErrorManager implements ErrorManager {
         boolean reported;
 
         @Override
-        public void report(ErrorLevel level, ParserException exception) {
+        public void report(ParserException exception) {
             reported = true;
         }
 
@@ -260,13 +217,36 @@ public class ContextTest {
         }
 
         @Override
+        public void report(SubscriptionException exception) {
+            if (exception != null) {
+                throw exception;
+            }
+        }
+
+        @Override
         public String getSourceName() {
+            return null;
+        }
+
+        @Override
+        public boolean hasErrors() {
+            return false;
+        }
+
+        @Override
+        public boolean autoSummarize() {
+            return false;
+        }
+
+        @Override
+        public String summarize() {
             return null;
         }
     }
 
     @SuppressWarnings("StaticNonFinalField") static int num;
 
+    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     public static final class PluginWithObserve implements Plugin {
         int order;
 
@@ -277,6 +257,7 @@ public class ContextTest {
         }
     }
 
+    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     public static final class PluginWithRework implements Plugin {
         int order;
 
@@ -287,6 +268,7 @@ public class ContextTest {
         }
     }
 
+    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     public static final class PluginWithValidate implements Plugin {
         int order;
 
@@ -296,8 +278,4 @@ public class ContextTest {
             order = num++;
         }
     }
-
-    public static final class CustomTokenFactory extends BaseTokenFactory {}
-
-    public static final class CustomTokenFactory2 extends BaseTokenFactory {}
 }

@@ -32,9 +32,9 @@ import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.test.StatusChangingBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -285,13 +285,14 @@ public class RuleTest {
         rule.selectors().append(s);
         rule.declarations().append(d);
 
-        assertThat(s.status() == Status.UNBROADCASTED);
-        assertThat(d.status() == Status.UNBROADCASTED);
+        assertThat(s.status() == Status.RAW);
+        assertThat(d.status() == Status.RAW);
 
-        rule.propagateBroadcast(new StatusChangingBroadcaster());
+        QueryableBroadcaster qb = new QueryableBroadcaster();
+        rule.propagateBroadcast(qb, Status.PARSED);
 
-        assertThat(s.status() != Status.UNBROADCASTED);
-        assertThat(d.status() != Status.UNBROADCASTED);
+        assertThat(qb.find(Selector.class).get()).isSameAs(s);
+        assertThat(qb.find(Declaration.class).get()).isSameAs(d);
     }
 
     @Test
@@ -393,7 +394,7 @@ public class RuleTest {
 
     @Test
     public void writeWhenDetached() throws IOException {
-        Stylesheet stylesheet = new Stylesheet(null);
+        Stylesheet stylesheet = new Stylesheet();
 
         Rule rule = new Rule();
         rule.selectors().append(new Selector(new ClassSelector("class")));

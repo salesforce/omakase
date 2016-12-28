@@ -26,9 +26,12 @@
 
 package com.salesforce.omakase.sample.custom.function;
 
-import com.salesforce.omakase.parser.refiner.FunctionRefiner;
-import com.salesforce.omakase.parser.refiner.RefinerRegistry;
-import com.salesforce.omakase.plugin.SyntaxPlugin;
+import com.salesforce.omakase.ast.RawFunction;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Refine;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Source;
+import com.salesforce.omakase.plugin.Plugin;
 
 import java.util.Map;
 
@@ -38,15 +41,40 @@ import java.util.Map;
  * @author nmcwilliams
  */
 @SuppressWarnings("JavaDoc")
-public class CustomVarPlugin implements SyntaxPlugin {
-    private final FunctionRefiner refiner;
+public class CustomVarPlugin implements Plugin {
+    public enum Mode {PASSTHROUGH, RESOLVE}
 
-    public CustomVarPlugin(CustomVarRefiner.Mode mode, Map<String, String> vars) {
-        this.refiner = new CustomVarRefiner(mode, vars);
+    private final Mode mode;
+    private final Map<String, String> vars;
+
+    public CustomVarPlugin(Mode mode, Map<String, String> vars) {
+        this.mode = mode;
+        this.vars = vars;
     }
 
-    @Override
-    public void registerRefiners(RefinerRegistry registry) {
-        registry.register(refiner);
+    @Refine(CustomVarFunction.NAME)
+    public void refine(RawFunction raw, Grammar grammar, Broadcaster broadcaster) {
+        // do some simple validation
+        String arg = raw.args();
+        if (!arg.matches("[a-zA-Z\\-]+")) {
+            throw new RuntimeException("invalid custom-var arg: " + arg);
+        } else if (!vars.containsKey(arg)) {
+            throw new RuntimeException("unknown custom-var arg: " + arg);
+        }
+
+        if (mode == Mode.PASSTHROUGH) {
+            // don't resolve, just convert to our custom AST object
+            CustomVarFunction function = new CustomVarFunction(arg);
+
+            // by broadcasting, it automatically gets added to the declaration since it is a Term. Also this is what
+            // enables delivery to any subscription methods for the AST object.
+            broadcaster.broadcast(function);
+        } else {
+            // parse the arg to real Term objects. Just by running the built-in parser, the terms will be automatically
+            // broadcasted and thus associated with the declaration. Note that these terms are delivered to any applicable
+            // subscription methods as normal.
+            Source source = new Source(vars.get(arg), raw.line(), raw.column());
+            grammar.parser().termSequenceParser().parse(source, grammar, broadcaster);
+        }
     }
 }

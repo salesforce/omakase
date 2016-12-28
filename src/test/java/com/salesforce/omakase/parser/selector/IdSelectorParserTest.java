@@ -108,7 +108,7 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
             withExpectedResult("#-NAMEname1_aAz234ABCdefafklsjfseuf+.huise____hfie", "-NAMEname1_aAz234ABCdefafklsjfseuf"));
 
         for (ParseResult<String> result : results) {
-            IdSelector selector = result.broadcaster.findOnly(IdSelector.class).get();
+            IdSelector selector = expectOnly(result.broadcaster, IdSelector.class);
             assertThat(selector.name())
                 .describedAs(result.source.toString())
                 .isEqualTo(result.expected);

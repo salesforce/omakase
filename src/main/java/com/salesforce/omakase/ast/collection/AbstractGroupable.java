@@ -26,10 +26,11 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -81,12 +82,12 @@ public abstract class AbstractGroupable<P, T extends Groupable<P, T>> extends Ab
 
     @Override
     public Optional<T> previous() {
-        return group == null ? Optional.<T>absent() : group.previous(self());
+        return group == null ? Optional.empty() : group.previous(self());
     }
 
     @Override
     public Optional<T> next() {
-        return group == null ? Optional.<T>absent() : group.next(self());
+        return group == null ? Optional.empty() : group.next(self());
     }
 
     @Override

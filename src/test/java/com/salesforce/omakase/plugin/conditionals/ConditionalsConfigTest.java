@@ -62,6 +62,13 @@ public class ConditionalsConfigTest {
     }
 
     @Test
+    public void hasConditionFalseBecauseOfCasing() {
+        ConditionalsConfig manager = new ConditionalsConfig();
+        manager.addTrueConditions("IE7"); // automatically lower cased
+        assertThat(manager.hasCondition("IE7")).isFalse();
+    }
+
+    @Test
     public void removeCondition() {
         ConditionalsConfig manager = new ConditionalsConfig().addTrueConditions("ie7");
         assertThat(manager.trueConditions()).hasSize(1);

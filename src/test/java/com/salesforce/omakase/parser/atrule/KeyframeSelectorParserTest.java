@@ -126,7 +126,7 @@ public class KeyframeSelectorParserTest extends AbstractParserTest<KeyframeSelec
     @Test
     public void errorsIfMissingPercentage() {
         exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PERCENTAGE.message());
+        exception.expectMessage(Message.MISSING_PERCENTAGE);
         parse("0");
     }
 }

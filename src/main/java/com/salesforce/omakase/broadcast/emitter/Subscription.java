@@ -26,16 +26,18 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.salesforce.omakase.ast.Refinable;
+import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.broadcast.annotation.Restrict;
+import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.util.As;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Metadata class to wrap the details around a subscription method. For internal use only.
@@ -43,104 +45,97 @@ import java.lang.reflect.Method;
  * @author nmcwilliams
  */
 final class Subscription implements Comparable<Subscription> {
-    @SuppressWarnings("StaticNonFinalField") private static int counter;
+    private static final AtomicInteger counter = new AtomicInteger();
 
     private final SubscriptionPhase phase;
     private final Object subscriber;
     private final Method method;
-    private final Restrict filter;
+    private final String name;
     private final int number;
 
-    Subscription(SubscriptionPhase phase, Object subscriber, Method method, Restrict filter) {
+    Subscription(SubscriptionPhase phase, Object subscriber, Method method, String name) {
         this.phase = phase;
         this.subscriber = subscriber;
         this.method = method;
-        this.filter = filter;
-        this.number = ++counter;
+        this.name = name != null ? name.toLowerCase() : null;
+        this.number = counter.addAndGet(1);
     }
 
-    /**
-     * Gets the {@link SubscriptionPhase} this subscription takes part in.
-     *
-     * @return The {@link SubscriptionPhase}.
-     */
     public SubscriptionPhase phase() {
         return phase;
     }
 
-    /**
-     * Gets the method for the subscription.
-     *
-     * @return The method.
-     */
     public Method method() {
         return method;
     }
 
-    /**
-     * Gets the {@link Restrict} annotation for the subscription method, or {@link Optional#absent()} if not specified.
-     *
-     * @return The {@link Restrict} annotation for the subscription method.
-     */
-    public Optional<Restrict> restriction() {
-        return Optional.fromNullable(filter);
-    }
-
-    /**
-     * Invokes the subscription method.
-     *
-     * @param event
-     *     The event object (e.g., syntax instance).
-     * @param em
-     *     The {@link ErrorManager} instance to use for validation methods.
-     */
-    public void deliver(Broadcastable event, ErrorManager em) {
-        if (filter != null && !filter(event)) return;
+    /** deliver a refine subscription */
+    public void refine(Broadcastable event, Grammar grammar, Broadcaster broadcaster, ErrorManager em) {
+        if (name != null && !filter(event)) return;
 
         try {
-            if (phase == SubscriptionPhase.VALIDATE) {
-                method.invoke(subscriber, event, em);
-            } else {
-                method.invoke(subscriber, event);
-            }
+            method.invoke(subscriber, event, grammar, broadcaster);
         } catch (IllegalArgumentException e) {
-            throw new SubscriptionException("Invalid arguments for subscription method", e);
+            throw new SubscriptionException("CSS Parser plugin 'refine' method does not have expected parameters (3)", e);
         } catch (IllegalAccessException e) {
-            throw new SubscriptionException("Subscription method is not accessible", e);
+            throw new SubscriptionException("CSS Parser plugin 'refine' method is not accessible", e);
         } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof RuntimeException) throw (RuntimeException)e.getCause();
-            throw new SubscriptionException("A problem was encountered while invoking the subscription method", e);
+            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin method during 'refine'");
+        }
+    }
+
+    /** deliver a rework/observe subscription */
+    public void process(Broadcastable event, ErrorManager em) {
+        try {
+            method.invoke(subscriber, event);
+        } catch (IllegalArgumentException e) {
+            throw new SubscriptionException("CSS Parser plugin method does not have expected parameters (1)", e);
+        } catch (IllegalAccessException e) {
+            throw new SubscriptionException("CSS Parser plugin method is not accessible", e);
+        } catch (InvocationTargetException e) {
+            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin method");
+        }
+    }
+
+    /** deliver a validate subscription */
+    public void validate(Broadcastable event, ErrorManager em) {
+        try {
+            method.invoke(subscriber, event, em);
+        } catch (IllegalArgumentException e) {
+            throw new SubscriptionException("CSS Parser plugin 'validate' method does not have expected parameters (2)", e);
+        } catch (IllegalAccessException e) {
+            throw new SubscriptionException("CSS Parser plugin 'validate' method is not accessible", e);
+        } catch (InvocationTargetException e) {
+            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin  method during 'validate'");
         }
     }
 
     /**
-     * Filter out units as requested by the optional {@link Restrict} annotation on the subscription method.
-     *
-     * @param event
-     *     The event object (e.g., syntax instance).
-     *
-     * @return True if the unit should be delivered, false if it should be skipped.
+     * Checks whether the subscription should be delivered based on subscription method restrictions.
+     * <p>
+     * 1. If this subscription is restricted to a certain name (e.g., name of a raw function) then this will return true if the
+     * event is an instance of {@link Named} and the name matches (case insensitive), otherwise it will return false.
+     * <p>
+     * ...Otherwise returns true.
      */
     private boolean filter(Broadcastable event) {
-        if (filter != null) {
-            if (event instanceof Refinable) {
-                // filter out units without raw syntax if requested (e.g., dynamically created units)
-                if (!filter.dynamicUnits() && !((Refinable<?>)event).containsRawSyntax()) {
-                    return false;
-                }
-                // filter out units with raw syntax if requested (e.g., parser created units)
-                if (!filter.rawUnits() && ((Refinable<?>)event).containsRawSyntax()) {
-                    return false;
-                }
-            }
-        }
+        return name == null || (event instanceof Named && ((Named)event).name().toLowerCase().equals(name));
+    }
 
-        return true;
+    /** Handle ITE errors */
+    private void handlePluginError(Throwable t, ErrorManager em, String msg) {
+        if (t.getCause() instanceof ParserException) {
+            em.report((ParserException)t.getCause());
+        } else if (t.getCause() instanceof SubscriptionException) {
+            em.report((SubscriptionException)t.getCause());
+        } else {
+            throw new SubscriptionException(msg, t);
+        }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(subscriber, method);
+        return Objects.hash(subscriber, method);
     }
 
     @Override
@@ -149,7 +144,7 @@ final class Subscription implements Comparable<Subscription> {
             Subscription other = (Subscription)object;
             // must be same instance of the same class (identity)
             // this keeps plugins that are registered twice only stored once in the Emitter
-            return subscriber == other.subscriber && Objects.equal(this.method, other.method);
+            return subscriber == other.subscriber && Objects.equals(this.method, other.method);
         }
         return false;
     }
@@ -161,6 +156,6 @@ final class Subscription implements Comparable<Subscription> {
 
     @Override
     public int compareTo(Subscription o) {
-        return (number < o.number) ? -1 : ((number == o.number) ? 0 : 1);
+        return Integer.compare(number, o.number);
     }
 }

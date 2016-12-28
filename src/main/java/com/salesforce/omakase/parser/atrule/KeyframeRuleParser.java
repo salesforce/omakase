@@ -32,20 +32,20 @@ import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
-import com.salesforce.omakase.parser.ParserFactory;
+import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
+import com.salesforce.omakase.parser.RuleParser;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.raw.RawRuleParser;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
- * Similar to {@link RawRuleParser}, except this only parses {@link KeyframeSelector}s.
+ * Similar to {@link RuleParser}, except this only parses {@link KeyframeSelector}s.
  *
  * @author nmcwilliams
  */
-public final class KeyframeRuleParser extends AbstractParser {
+public final class KeyframeRuleParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.collectComments();
 
         int line = source.originalLine();
@@ -55,16 +55,16 @@ public final class KeyframeRuleParser extends AbstractParser {
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // if there isn't a selector then we aren't a rule
-        if (!ParserFactory.keyframeSelectorSequenceParser().parse(source, queryable, refiner)) return false;
+        if (!grammar.parser().keyframeSelectorSequenceParser().parse(source, grammar, queryable)) return false;
 
         // parse the declaration block
-        source.skipWhitepace().expect(refiner.tokenFactory().declarationBlockBegin());
+        source.skipWhitepace().expect(grammar.token().declarationBlockBegin());
 
         // parse all declarations
-        ParserFactory.rawDeclarationSequenceParser().parse(source, queryable, refiner);
+        grammar.parser().rawDeclarationSequenceParser().parse(source, grammar, queryable);
 
         // create the rule and add selectors and declarations
-        Rule rule = new Rule(line, column, broadcaster);
+        Rule rule = new Rule(line, column);
         rule.selectors().appendAll(queryable.filter(Selector.class));
         rule.declarations().appendAll(queryable.filter(Declaration.class));
 
@@ -72,10 +72,11 @@ public final class KeyframeRuleParser extends AbstractParser {
         rule.orphanedComments(source.collectComments().flushComments());
 
         // parse the end of the block (must be after orphaned comments parsing)
-        source.expect(refiner.tokenFactory().declarationBlockEnd());
+        source.expect(grammar.token().declarationBlockEnd());
 
         // broadcast the rule
         broadcaster.broadcast(rule);
         return true;
     }
+
 }

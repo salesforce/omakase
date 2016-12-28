@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -40,7 +40,9 @@ import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
+import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
@@ -55,7 +57,6 @@ import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECL
  * given to multiple syntax units within different CSS3 modules! So that's why this is not called expression.
  *
  * @author nmcwilliams
- * @author nmcwilliams
  * @see Term
  * @see PropertyValueParser
  * @see PropertyValueMember
@@ -69,22 +70,19 @@ public final class PropertyValue extends AbstractSyntax {
 
     /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
     public PropertyValue() {
-        this(-1, -1, null);
+        this(-1, -1);
     }
 
     /**
      * Constructs a new {@link PropertyValue} instance.
-     *
-     * @param line
+     *  @param line
      *     The line number.
      * @param column
      *     The column number.
-     * @param broadcaster
-     *     Used to broadcast new units.
      */
-    public PropertyValue(int line, int column, Broadcaster broadcaster) {
+    public PropertyValue(int line, int column) {
         super(line, column);
-        members = new LinkedSyntaxCollection<>(this, broadcaster);
+        members = new LinkedSyntaxCollection<>(this);
     }
 
     /**
@@ -140,17 +138,12 @@ public final class PropertyValue extends AbstractSyntax {
     }
 
     /**
-     * Does a quick count of the number of {@link Term}s (does not include operators) within this {@link PropertyValue}. This is
-     * faster than {@link #terms()} as it does not build and return a list.
+     * Does a quick count of the number of {@link Term}s (does not include operators) within this {@link PropertyValue}.
      *
      * @return The number of {@link Term}s.
      */
-    public int countTerms() {
-        int count = 0;
-        for (PropertyValueMember member : members) {
-            if (member.isTerm()) count += 1;
-        }
-        return count;
+    public long countTerms() {
+        return members.stream().filter(PropertyValueMember::isTerm).count();
     }
 
     /**
@@ -170,18 +163,16 @@ public final class PropertyValue extends AbstractSyntax {
      * HexColorValue} will return the hex value without the leading '#' , and so on... See each specific {@link Term}
      * implementation for more details.
      * <p>
-     * <b>Important:</b> if this property value has more than one term then this method will return {@link Optional#absent()}. It
+     * <b>Important:</b> if this property value has more than one term then this method will return an empty {@link Optional}. It
      * will not concatenate term values.
      *
-     * @return The textual content, or {@link Optional#absent()} if there is more than one or no terms present.
+     * @return The textual content, or an empty {@link Optional} if there is more than one or no terms present.
      *
      * @see Term#textualValue()
      */
     public Optional<String> singleTextualValue() {
-        if (countTerms() == 1) {
-            return Optional.of(terms().get(0).textualValue());
-        }
-        return Optional.absent();
+        ImmutableList<Term> terms = terms();
+        return terms.size() == 1 ? Optional.of(terms.get(0).textualValue()) : Optional.empty();
     }
 
     /**
@@ -229,9 +220,13 @@ public final class PropertyValue extends AbstractSyntax {
     }
 
     @Override
-    public void propagateBroadcast(Broadcaster broadcaster) {
-        members.propagateBroadcast(broadcaster);
-        super.propagateBroadcast(broadcaster);
+    public void propagateBroadcast(Broadcaster broadcaster, Status status) {
+        if (status() == status) {
+            members.propagateBroadcast(broadcaster, status);
+            if (!members.isEmpty()) {
+                super.propagateBroadcast(broadcaster, status);
+            }
+        }
     }
 
     @Override
@@ -241,8 +236,11 @@ public final class PropertyValue extends AbstractSyntax {
 
     @Override
     public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {
+        PropertyValueMember previous = null;
         for (PropertyValueMember member : members) {
+            appendable.spaceIf(previous instanceof Term && member instanceof Term);
             writer.writeInner(member, appendable);
+            previous = member;
         }
 
         if (important) {
@@ -268,38 +266,101 @@ public final class PropertyValue extends AbstractSyntax {
      * </pre>
      *
      * @param term
-     *     The value.
+     *     The term.
      *
      * @return The new {@link PropertyValue} instance.
      */
     public static PropertyValue of(Term term) {
-        return new PropertyValue().append(term);
+        return new PropertyValue().append(checkNotNull(term, "term cannot be null"));
     }
 
     /**
-     * Creates a new {@link PropertyValue} with multiple values separated by the given {@link OperatorType}.
+     * Creates a new {@link PropertyValue} with multiple terms. No operators will be placed between the terms.
      * <p>
      * Example:
      * <pre>
      * <code>NumericalValue px10 = NumericalValue.of(10, "px");
      * NumericalValue em5 = NumericalValue.of(5, "em");
-     * PropertyValue value = PropertyValue.ofTerms(OperatorType.SPACE, px10, em5);
+     * PropertyValue value = PropertyValue.of(px10, em5);
+     * </code>
+     * </pre>
+     *
+     * @param term
+     *     The first term.
+     * @param terms
+     *     Additional terms.
+     *
+     * @return The new {@link PropertyValue} instance.
+     */
+    public static PropertyValue of(Term term, Term... terms) {
+        PropertyValue value = new PropertyValue();
+        value.append(checkNotNull(term, "the first term cannot be null"));
+
+        for (Term t : terms) {
+            value.append(checkNotNull(t, "terms cannot be null"));
+        }
+
+        return value;
+    }
+
+    /**
+     * Creates a new {@link PropertyValue} with multiple terms separated by the given {@link OperatorType}.
+     * <p>
+     * Example:
+     * <pre>
+     * <code>NumericalValue px10 = NumericalValue.of(10, "px");
+     * NumericalValue em5 = NumericalValue.of(5, "em");
+     * PropertyValue value = PropertyValue.of(OperatorType.SLASH, px10, em5);
      * </code>
      * </pre>
      *
      * @param separator
      *     The {@link OperatorType} to place in between each {@link Term}.
-     * @param values
-     *     List of member {@link Term}s.
+     * @param term
+     *     The first term.
+     * @param terms
+     *     Additional terms.
      *
      * @return The new {@link PropertyValue} instance.
      */
-    public static PropertyValue ofTerms(OperatorType separator, Term... values) {
+    public static PropertyValue of(OperatorType separator, Term term, Term... terms) {
         PropertyValue value = new PropertyValue();
-        for (int i = 0; i < values.length; i++) {
-            if (i != 0) value.append(separator);
-            value.append(values[i]);
+        value.append(checkNotNull(term, "the first term cannot be null"));
+
+        for (Term t : terms) {
+            value.append(separator);
+            value.append(checkNotNull(t, "terms cannot be null"));
         }
+
+        return value;
+    }
+
+    /**
+     * <p>
+     * Creates a new {@link PropertyValue} with one or more terms and operators.
+     * Example:
+     * <pre>
+     * <code>NumericalValue px10 = NumericalValue.of(10, "px");
+     * NumericalValue em5 = NumericalValue.of(5, "em");
+     * PropertyValue value = PropertyValue.of(px10, OperatorType.SLASH, em5);
+     * </code>
+     * </pre>
+     *
+     * @param term
+     *     The first term.
+     * @param members
+     *     The additional terms and operators.
+     *
+     * @return The new {@link PropertyValue} instance.
+     */
+    public static PropertyValue of(Term term, PropertyValueMember... members) {
+        PropertyValue value = new PropertyValue();
+        value.append(checkNotNull(term, "the first term cannot be null"));
+
+        for (PropertyValueMember member : members) {
+            value.append(checkNotNull(member, "members cannot be null"));
+        }
+
         return value;
     }
 }

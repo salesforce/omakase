@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.Status;
+import com.google.common.collect.Iterables;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,7 +44,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class QueuingBroadcaster extends AbstractBroadcaster {
     private final Deque<Broadcastable> queue = new ArrayDeque<>();
-    private Set<Class<? extends Broadcastable>> alwaysFlush;
     private Set<Broadcastable> rejected;
 
     private State state = State.READY;
@@ -56,25 +54,22 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
     }
 
     /**
-     * Constructs a new {@link QueuingBroadcaster} instance that will relay all events to the given {@link Broadcaster}.
+     * Creates a new {@link QueuingBroadcaster} and calls {@link #chain(Broadcaster)} on this instance, passing in the
+     * given {@link Broadcaster}.
      *
-     * @param relay
-     *     Wrap (decorate) this broadcaster. All broadcasts will be relayed to this one.
+     * @param broadcaster
+     *     Add this broadcaster to the end of the chain. This will receive all broadcasts when the queue is not paused or when it
+     *     resumes.
      */
-    public QueuingBroadcaster(Broadcaster relay) {
-        wrap(checkNotNull(relay, "relay cannot be null"));
+    public QueuingBroadcaster(Broadcaster broadcaster) {
+        chain(checkNotNull(broadcaster, "broadcaster cannot be null"));
     }
 
     @Override
     public void broadcast(Broadcastable broadcastable) {
-        // update status to prevent a unit from being broadcasted too many times
-        if (broadcastable.status() == Status.UNBROADCASTED) {
-            broadcastable.status(Status.QUEUED);
-        }
-
         // broadcast the unit unless the queue is paused
-        if (state == State.READY || (alwaysFlush != null && alwaysFlush.contains(broadcastable.getClass()))) {
-            relay.broadcast(broadcastable);
+        if (state == State.READY) {
+            relay(broadcastable);
         } else {
             queue.addLast(broadcastable);
         }
@@ -129,12 +124,12 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
     }
 
     /**
-     * Gets a <em>copy</em> of all units in the queue. Avoid this method if possible.
+     * Gets a a view of all items in the queue.
      *
-     * @return The copy of all units in the queue.
+     * @return All units in the queue.
      */
     public Iterable<Broadcastable> all() {
-        return ImmutableList.copyOf(queue);
+        return Iterables.unmodifiableIterable(queue);
     }
 
     /**
@@ -148,28 +143,9 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
      */
     public QueuingBroadcaster reject(Broadcastable broadcastable) {
         if (rejected == null) {
-            rejected = Sets.newHashSetWithExpectedSize(3);
+            rejected = new HashSet<>(3);
         }
         rejected.add(broadcastable);
-        return this;
-    }
-
-    /**
-     * Specifies that the broadcasts matching the given class should always be flushed, regardless of whether the queue is paused
-     * or not.
-     * <p>
-     * Note that the class must be equal-- not an instanceof.
-     *
-     * @param broadcastable
-     *     Always flush {@link Broadcastable}s of this class.
-     *
-     * @return this, for chaining.
-     */
-    public QueuingBroadcaster alwaysFlush(Class<? extends Broadcastable> broadcastable) {
-        if (alwaysFlush == null) {
-            alwaysFlush = Sets.newHashSetWithExpectedSize(3);
-        }
-        alwaysFlush.add(broadcastable);
         return this;
     }
 
@@ -181,7 +157,7 @@ public final class QueuingBroadcaster extends AbstractBroadcaster {
 
             // broadcast the unit unless it has been rejected
             if (rejected == null || !rejected.contains(queued)) {
-                relay.broadcast(queued);
+                relay(queued);
             }
         }
 

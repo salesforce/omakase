@@ -39,7 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author nmcwilliams
  */
-public class KeyframeSelector extends AbstractSelectorPart {
+public final class KeyframeSelector extends AbstractSelectorPart {
     private String keyframe;
 
     /**

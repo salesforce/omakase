@@ -26,21 +26,22 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.error.FatalException;
-import com.salesforce.omakase.plugin.misc.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.error.DefaultErrorManager;
+import com.salesforce.omakase.error.ProblemSummaryException;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import com.salesforce.omakase.plugin.validator.StandardValidation;
+import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -85,7 +86,7 @@ public class InteractiveShell {
                     String output = ctx.process();
                     System.out.println(output);
                     System.out.println();
-                } catch (FatalException e) {
+                } catch (ProblemSummaryException e) {
                     System.out.print(Colors.red(e.getMessage()));
                     System.out.println("\n");
                 }
@@ -102,7 +103,7 @@ public class InteractiveShell {
             @Override
             void execute(Context ctx) {
                 on = !on;
-                System.out.print(Colors.grey("continous mode is ") + Colors.red(on ? "on" : "off"));
+                System.out.print(Colors.grey("continuous mode is ") + Colors.red(on ? "on" : "off"));
                 if (on) System.out.print(Colors.grey(" (ctrl+c or !c again to stop)"));
                 System.out.println("\n");
             }
@@ -183,7 +184,7 @@ public class InteractiveShell {
             }
         },
 
-        SUBLIME("!subl", "to use the sublime text editor (subl)") {
+        SUBLIME("!subl", "to use the Sublime Text editor (subl)") {
             @Override
             void execute(final Context ctx) throws IOException, InterruptedException {
                 System.out.println("Sublime Text edit mode. File will be refreshed with results on save.\n");
@@ -196,16 +197,16 @@ public class InteractiveShell {
             }
         },
 
-        MATE("!mate", "to use the textmate editor (mate)") {
+        ATOM("!atom", "to use the Atom editor (atom)") {
             @Override
             void execute(final Context ctx) throws IOException, InterruptedException {
-                System.out.println("Textmate edit mode. File will be refreshed with results on save.\n");
+                System.out.println("Atom edit mode. File will be refreshed with results on save.\n");
 
                 FileWatcher watcher = new FileWatcher(ctx);
                 Timer timer = new Timer(true);
                 timer.schedule(watcher, 0, 50);
 
-                Runtime.getRuntime().exec("mate " + watcher.file() + " --line 2");
+                Runtime.getRuntime().exec("atom " + watcher.file() + ":2");
             }
         };
 
@@ -230,7 +231,7 @@ public class InteractiveShell {
         abstract void execute(Context ctx) throws Exception;
 
         public static Optional<Command> get(String command) {
-            return Optional.fromNullable(map.get(command));
+            return Optional.ofNullable(map.get(command));
         }
     }
 
@@ -269,10 +270,13 @@ public class InteractiveShell {
             if (input.isEmpty()) return "";
 
             Omakase.Request request = Omakase.source(input);
-            request.use(new StandardValidation());
-            request.use(new UnquotedIEFilterPlugin());
+            if (prefixer != null) {
+                request.use(prefixer);
+            }
             request.use(writer);
-            if (prefixer != null) request.use(prefixer);
+            request.use(new UnquotedIEFilterPlugin());
+            request.use(new StandardValidation());
+            request.use(new DefaultErrorManager().rethrow(false));
             request.process();
 
             return writer.write();
@@ -320,10 +324,10 @@ public class InteractiveShell {
                     ctx.buffer = new StringBuilder(input);
 
                     // process the css and place output into the editor
-                    String output = "";
+                    String output;
                     try {
                         output = ctx.process();
-                    } catch (FatalException e) {
+                    } catch (ProblemSummaryException e) {
                         output = e.getMessage();
                     }
 

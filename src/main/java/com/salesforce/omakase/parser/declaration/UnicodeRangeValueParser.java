@@ -29,10 +29,10 @@ package com.salesforce.omakase.parser.declaration;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.UnicodeRangeValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.AbstractParser;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 import com.salesforce.omakase.parser.token.Tokens;
 
 import static com.salesforce.omakase.parser.Source.Snapshot;
@@ -63,11 +63,11 @@ import static com.salesforce.omakase.parser.Source.Snapshot;
  * @author nmcwilliams
  * @see UnicodeRangeValue
  */
-public final class UnicodeRangeValueParser extends AbstractParser {
+public final class UnicodeRangeValueParser implements Parser {
+
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
-        // note: important not to skip whitespace anywhere in here, as it could skip over a space operator
-        source.collectComments(false);
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        source.collectComments();
 
         // grab current position before parsing
         int line = source.originalLine();
@@ -141,4 +141,5 @@ public final class UnicodeRangeValueParser extends AbstractParser {
 
         return false;
     }
+
 }

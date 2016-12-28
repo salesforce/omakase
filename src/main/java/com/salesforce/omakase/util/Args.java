@@ -28,7 +28,7 @@ package com.salesforce.omakase.util;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.RawFunction;
+import com.salesforce.omakase.ast.RawFunction;
 
 import java.util.List;
 import java.util.regex.Pattern;

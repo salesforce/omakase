@@ -27,38 +27,31 @@
 package com.salesforce.omakase.parser;
 
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.refiner.MasterRefiner;
 
 /**
- * Combines two {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then the second parser will
- * be executed.
+ * Combines two or more {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then subsequent
+ * parsers will be tried (until/if one does).
  *
  * @author nmcwilliams
  */
-public final class CombinationParser extends AbstractParser {
-    private final Parser first;
-    private final Parser second;
+public final class CombinationParser implements Parser {
+    private final Parser[] parsers;
 
     /**
-     * Construct a new {@link CombinationParser} instance with the given two {@link Parser}s.
+     * Creates a new instance using the given {@link Parser}s, in order.
      *
-     * @param first
-     *     The first {@link Parser} to try.
-     * @param second
-     *     The second {@link Parser} to try,
+     * @param parsers
+     *     The parsers.
      */
-    public CombinationParser(Parser first, Parser second) {
-        this.first = first;
-        this.second = second;
+    public CombinationParser(Parser... parsers) {
+        this.parsers = parsers;
     }
 
     @Override
-    public boolean parse(Source source, Broadcaster broadcaster) {
-        return first.parse(source, broadcaster) || second.parse(source, broadcaster);
-    }
-
-    @Override
-    public boolean parse(Source source, Broadcaster broadcaster, MasterRefiner refiner) {
-        return first.parse(source, broadcaster, refiner) || second.parse(source, broadcaster, refiner);
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        for (Parser parser : parsers) {
+            if (parser.parse(source, grammar, broadcaster)) return true;
+        }
+        return false;
     }
 }

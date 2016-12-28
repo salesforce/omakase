@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.base.Optional;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
@@ -36,6 +35,7 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
@@ -140,19 +140,19 @@ public final class AttributeSelector extends AbstractSelectorPart implements Sim
     /**
      * Gets the {@link AttributeMatchType} (e.g., "=", "^=", "~=", etc...), if present.
      *
-     * @return The {@link AttributeMatchType}, or {@link Optional#absent()} if not specified.
+     * @return The {@link AttributeMatchType}, or an empty {@link Optional} if not present.
      */
     public Optional<AttributeMatchType> matchType() {
-        return Optional.fromNullable(matchType);
+        return Optional.ofNullable(matchType);
     }
 
     /**
      * Gets the match value, if present.
      *
-     * @return The match value, or {@link Optional#absent()} if not specified.
+     * @return The match value, or an empty {@link Optional} if not present.
      */
     public Optional<String> value() {
-        return Optional.fromNullable(value);
+        return Optional.ofNullable(value);
     }
 
     @Override

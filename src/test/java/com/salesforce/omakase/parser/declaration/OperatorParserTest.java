@@ -50,38 +50,36 @@ public class OperatorParserTest extends AbstractParserTest<OperatorParser> {
             "1",
             "abc",
             ":",
-            "~"
+            "~",
+            " ."
         );
     }
 
     @Override
     public List<String> validSources() {
         return ImmutableList.of(
-            " ",
             ",",
             "/",
             " ,",
             " /",
-            ", ",
-            "/ ",
-            " , ",
-            " / ",
-            "  "
-        );
+            "   ,",
+            "    /",
+            "/*comment*/,");
     }
 
     @Override
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
-            withExpectedResult(" a", 1),
+            withExpectedResult("/a", 1),
             withExpectedResult(",,", 1),
-            withExpectedResult("    ", 4),
-            withExpectedResult(", a", 2),
+            withExpectedResult("//", 1),
+            withExpectedResult(", a", 1),
             withExpectedResult(" ,a", 2),
-            withExpectedResult(" / a", 3),
-            withExpectedResult("/*x*/  ", 7),
-            withExpectedResult("  /*x*/ , 1px", 10),
-            withExpectedResult("/*x*/ /*x*//,", 12));
+            withExpectedResult(" / a", 2),
+            withExpectedResult("/*x*/ , ", 7),
+            withExpectedResult("  /*x*/ , 1px", 9),
+            withExpectedResult("/*x*///*x*//", 6),
+            withExpectedResult("/*x*//*x*//, l", 11));
     }
 
     @Override
@@ -91,28 +89,26 @@ public class OperatorParserTest extends AbstractParserTest<OperatorParser> {
 
     @Override
     public boolean allowedToTrimLeadingWhitespace() {
-        return false;
+        return true;
     }
 
     @Test
     @Override
     public void matchesExpectedBroadcastContent() {
         List<ParseResult<OperatorType>> results = parseWithExpected(
-            withExpectedResult(" ", OperatorType.SPACE),
-            withExpectedResult("    ", OperatorType.SPACE),
             withExpectedResult("  ,", OperatorType.COMMA),
             withExpectedResult("  , ", OperatorType.COMMA),
             withExpectedResult("/", OperatorType.SLASH),
             withExpectedResult(",/", OperatorType.COMMA),
             withExpectedResult(" /,", OperatorType.SLASH),
-            withExpectedResult("/*x*/  ", OperatorType.SPACE),
             withExpectedResult("  /*x*/ , 1px", OperatorType.COMMA),
             withExpectedResult("/*x*/ /*x*//", OperatorType.SLASH),
+            withExpectedResult("/*x*///*x*/,", OperatorType.SLASH),
             withExpectedResult(",   ", OperatorType.COMMA)
         );
 
         for (ParseResult<OperatorType> result : results) {
-            Operator o = result.broadcaster.findOnly(Operator.class).get();
+            Operator o = expectOnly(result.broadcaster, Operator.class);
             assertThat(o.type()).isSameAs(result.expected);
         }
     }
