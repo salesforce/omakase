@@ -38,7 +38,7 @@ How to download
 
 Build jars from source by cloning this project locally and running `mvn install` from the project root (must have Java and Maven installed).
 
-Or you can download a jar from [releases]. Note that no dependencies are included in the release jars. The two main dependencies are Guava and slf4j-api. See the pom.xml file for more details. Only the non-test dependencies are required for usage.
+Or you can download a jar from [releases]. Note that no dependencies are included in the release jars. The only main dependency is Guava. See the pom.xml file for more details.
 
 Usage
 -----
@@ -49,7 +49,9 @@ All parsing starts with the `Omakase` class. The CSS source is specified using t
 Omakase.source(input).process();
 ```
 
-You will almost always include one or more plugins, however. For example, plugins are used for output/minification, automatic vendor prefixing, modifications to the AST, custom linting, and more.
+You will almost always include one or more plugins though. Plugins are used for output/minification, automatic vendor prefixing, modifications to the AST, custom linting, and more.
+
+Unless you are specifically optimizing for performance, you should at least add the `StandardValidation` plugin, and it should be last, after other plugins.
 
 Note that only one instance of a plugin can be registered per parsing operation.
 
@@ -59,7 +61,8 @@ Use the `StyleWriter` plugin to write the processed CSS:
 
 ```java
 StyleWriter verbose = StyleWriter.verbose();
-Omakase.source(input).use(verbose).process();
+StandardValidation validation = new StandardValidation();
+Omakase.source(input).use(verbose).use(validation).process();
 String out = verbose.write();
 ```
 
@@ -67,7 +70,8 @@ You can also write to an `Appendable`
 
 ```java
 StyleWriter verbose = StyleWriter.verbose();
-Omakase.source(input).use(verbose).process();
+StandardValidation validation = new StandardValidation();
+Omakase.source(input).use(verbose).use(validation).process();
 StringBuilder builder = new StringBuilder();
 String out = verbose.writeTo(builder);
 ```
@@ -128,28 +132,23 @@ Stylesheet stylesheet = tree.stylesheet();
 System.out.println("#statements = " + stylesheet.statements().size());
 ```
 
-#### AutoRefiner
+#### AutoRefine
 
-The `AutoRefiner` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`).
+The `AutoRefine` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, `RawFunction` and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`).
 
-It is important to realize that unless refinement occurs, the unrefined syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until `#refine()` is called on that selector instance. The `AutoRefiner` plugin can handle automatically calling the `#refine()` method on any and everything that is refinable, thus enabling this additional level of syntax validation across the board:
-
-```java
-AutoRefiner all = new AutoRefiner().all(); // refine everything
-AutoRefiner selectors = new AutoRefiner().selectors(); // refine all selectors
-AutoRefiner declarations = new AutoRefiner().declarations(); // refine all declarations
-```
-
-Many plugins will automatically register an `AutoRefiner` as a dependency anyway, but it's important to register it yourself if you need to ensure that the unrefined objects are validated:
+Unless refinement occurs the syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until it is refined. The `AutoRefine` plugin can do this automatically:
 
 ```java
-AutoRefiner refinement = new AutoRefiner().all();
-Omakase.source(input).use(refinement).process();
+AutoRefine all = AutoRefine.everything()); // refine everything
+AutoRefiner selectors = AutoRefine.only(Match.SELECTORS); // refine selectors
+AutoRefiner declarations = AutoRefine.only(Match.DECLARATIONS); // refine declarations
 ```
 
-You may be wondering when you *wouldn't* want auto refinement. The main use-case is when you need to perform dynamic substitutions in the CSS at runtime. You first parse the CSS with auto-refinement (either with AutoRefiner, or StandardValidation which automatically includes AutoRefiner). This ensures you actually have valid CSS. You can store this preprocessed source code in memory or on the filesystem.
+`StandardValidation` includes an `AutoRefine` by default, so you usually only need to specifically add `AutoRefine` if you aren't using it.
 
-During runtime, you can parse the CSS again to perform the dynamic substitutions. However this time, since you have already ensured that the CSS is valid, there is no need to parse more than what is necessary to perform the dynamic substitions. You can simply refine only those selectors or declarations that you need and nothing more. This will result in faster parsing performance and can be the difference in making runtime-level CSS modifications viable.
+You may be wondering when you *wouldn't* want auto refinement. The main use-case is during runtime or other performance-sensitive environments.
+
+You first parse the CSS with full refinement. This ensures you actually have valid CSS. You can store this preprocessed source code in memory or on the filesystem. During runtime, you can parse the CSS again to perform dynamic substitutions. However this time, since you have already ensured that the CSS is valid, there is no need to parse more than what is necessary to perform the dynamic substitions. You can simply refine only those selectors or declarations that you need and nothing more. This will result in faster parsing performance. For more information on this see the section on [conditional refinement](#conditional-refinement).
 
 #### Conditionals
 
@@ -272,6 +271,8 @@ compared to quoted:
 ```css
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)";
 ```
+
+This plugin must be registered before `StandardValidation` or `AutoRefine`.
 
 #### Prefixer
 
@@ -506,10 +507,10 @@ See the [Subscribable Syntax Units](#subscribable-syntax-units) section below fo
 
 To get started, a plugin must first implement one or more of the _plugin interfaces_, listed as follows:
 
-- **Plugin** - the most basic plugin; essentially just a marker interface.
-- **SyntaxPlugin** - for plugins that register custom CSS syntax.
+- **Plugin** - the basic plugin.
 - **DependentPlugin** - for plugins that have dependencies on other plugins.
-- **BroadcastingPlugin** - for plugins that need access to a broadcaster.
+- **GrammarPlugin** - for plugins that customize syntax and grammar.
+- **ParserPlugin** - for plugins customize individual parsing behavior.
 - **PostProcessingPlugin** for plugins that need notification after all processing has completed.
 
 Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
@@ -518,7 +519,7 @@ Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
 
 The term _rework_ refers to the process of changing the processed CSS source code, e.g., changing a class name, adding a declaration, removing a rule, etc... Omakase allows you to easily change nearly any aspect of the CSS. You can add, change or remove selectors, add, change or remove declarations, add, change or remove rules, and... you get the picture.
 
-Each AST object contains setters and getters for working with its values. In addition, there are several utility classes to make everything as convenient as possible. For Omakase, reworking the CSS tree is a first-class operation and is fully supported.
+Each AST object contains setters and getters for working with its values. In addition there are several utility classes.
 
 Here is an example of a simple rework operation to prefix every selector with a class name called "myPrefix":
 
@@ -541,9 +542,7 @@ Notice the following details:
 - It has one subscription method with the `@Rework` annotation
 - The subscription method has one argument, which is the AST object to be reworked
 
-This is the general pattern of performing rework. The class adds as many methods as desired, each with the `@Rework` annotation and a single argument which is the type of syntax unit to rework. The method will be automatically invoked by the framework, allowing you to perform any operations on the given unit.
-
-For more advanced examples on performing rework see the [ReworkTest.java](src/test/java/com/salesforce/omakase/functional/ReworkTest.java) class.
+For more advanced examples on performing rework see the [ReworkTest.java](src/test/java/com/salesforce/omakase/test/functional/ReworkTest.java) class.
 
 ##### Dynamic AST creation and modification
 
@@ -623,7 +622,6 @@ if (keyword.isPresent()) {...}
 Optional<HexColorValue> color = Values.asHexColor(value);
 Optional<NumericalValue> number = Values.asNumerical(value);
 Optional<StringValue> string = Values.asString(value);
-Optional<TermList> termList = Values.asTermList(value);
 
 // change a property value
 Optional<KeywordValue> keyword = Values.asKeyword(declaration.propertyValue());
@@ -639,7 +637,9 @@ someRule.destroy();
 // for more examples see the many unit tests
 ```
 
-Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscription methods interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins. You can remove any unit from the tree by calling `#destroy`. Note that doing this will prevent that unit from being delivered to any subsequent subscription methods. Destroyed units cannot be added back to the tree, but they can be cloned with `#copy`.
+Keep in mind that dynamically created units will be automatically delivered to all `@Rework` subscription methods interested in the syntax unit's type, as well as to `@Validate` subscriptions later on. Thus, dynamically created CSS is fully integrated with all of your custom rework and validation plugins.
+
+You can remove any unit from the tree by calling `#destroy`. Note that doing this will prevent that unit from being delivered to any subsequent subscription methods. Destroyed units cannot be added back to the tree, but they can be cloned with `#copy`.
 
 There are other utilities for working with units in the following utility classes:
 
@@ -700,17 +700,14 @@ Keep in mind that all validators run after the rework phase has been completed. 
 
 #### Dependent plugins
 
-As mentioned above, many plugins, especially ones with `@Rework`, will need to register dependencies on other plugins.
-
-You  may want a dependency on `AutoRefiner` in cases where you have subscriptions to syntax unit types more specific than `Selector`, `Declaration` or `AtRule`. For example `ClassSelector`, `IdSeletor`, `HexColorValue`, and so on. All of these requirements are documented for each individual syntax unit type in the [Subscribable Syntax Units](#subscribable-syntax-units) section below.
-
-Here is an example of a plugin with dependencies:
+As mentioned above, many plugins, especially ones with `@Rework`, will need to register dependencies on other plugins. Here is an example of a plugin with dependencies:
 
 ```java
 public class Dependent implements DependentPlugin {
     @Override
     public void dependencies(PluginRegistry registry) {
-        registry.require(AutoRefiner.class).selectors();
+        registry.require(SelectorPlugin.class);
+        registry.require(MyPlugin.class, MyPlugin::new);
     }
 }
 ```
@@ -718,8 +715,6 @@ public class Dependent implements DependentPlugin {
 The `#require` method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case.
 
 You can also require your own custom plugins by using the `#require(Class, Supplier)` method.
-
-There is another, more performant alternative to using `AutoRefiner`. You can instead subscribe to the high-level type, such as `Declaration`. You can check some information on the declaration first, such as `Declaration#isProperty` or check for an annotation on the declaration. If present then you can proceed to call `Declaration#refine`, which will automatically trigger any subscriptions to the more specific syntax unit types parsed within that declaration instance. This way you can avoid unnecessarily refining declarations that you have no interest in.
 
 #### Performing both rework and validation
 
@@ -749,9 +744,9 @@ Omakase.source(input)
 
 #### Subscribing to interfaces
 
-Not only can you subscribe to concrete types such as `ClassSelector` and `IdSelector`, you can also subscribe to higher-level interfaces such as `Statement`, `Refinable`, `SimpleSelector` or even the top-level `Syntax` interface.
+Not only can you subscribe to concrete types such as `ClassSelector` and `IdSelector`, you can also subscribe to higher-level interfaces such as `Statement`, `SimpleSelector` or even the top-level `Syntax` interface.
 
-Subscribing to an interface type will allow you to receive all instances of that type, which can be useful in certain scenarios. For example, `AutoRefiner` only has one subscription to `Refinable` instead of having to add a method for `Declaration`, `Selector`, etc...
+Subscribing to an interface type will allow you to receive all instances of that type, which can be useful in certain scenarios.
 
 Within a particular class, the more specifically-typed subscription will be delivered before the more generally-typed subscriptions. For example, in a class with subscriptions to `ClassSelector`, `SimpleSelector` and `Syntax`, the methods will always be invoked in that exact order.
 
@@ -759,7 +754,7 @@ See the [Subscribable Syntax Units](#subscribable-syntax-units) section below fo
 
 #### Observe
 
-Besides `@Rework` and `@Validate`, there is one more annotation that can be used to make a subscription method.
+Besides `@Rework` and `@Validate`, there is one another annotation that can be used to make a subscription method.
 
 `@Observe` can be used in place of `@Rework` when your intention is to simply utilize information from the AST object and you do not intend to make any changes. In terms of execution order, `@Observe` and `@Rework` are equivalent. Currently the only difference `@Observe` makes is providing a better description of what the method intends to do.
 
@@ -772,39 +767,62 @@ Omakase provides a powerful mechanism for extending the standard CSS syntax. You
 - Custom selectors
 - Custom declarations
 
-To get started you must implement the `SyntaxPlugin` interface. This has a single method which requires you to return an instance of a `Refiner` (it's usually safe to create your instance once and store it statically). There are several `Refiner` options based on what you would like to customize:
-
-- **FunctionRefiner** - for custom functions
-- **AtRuleRefiner** - for custom at-rule syntax
-- **SelectorRefiner** - for custom selector syntax
-- **DeclarationRefiner** for custom declaration syntax
-
-The `RefinerStrategy` you return must implement one or more of these interfaces. Your `SyntaxPlugin` instance is registered just like any other plugin.
-
-See the various *Refiner interfaces for more instructions on implementing their methods. The general idea is that these custom refiners work in a chain. Whenever an `AtRule`, `Selector`, `Declaration` or `RawFunction` is refined, it gets passed through the chain of registered custom `Refiner` objects. If the first custom `Refiner` determines that the given object is not applicable, it returns false and the object is passed on to the next refiner. Finally, if no custom refiners handle the object then the `StandardRefiner` will be used.
-
-For any non-trivial custom syntax you will most likely be required to parse the raw content. You can utilize the `Source` class as a parsing utility. More importantly, nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on `ParserFactory` and `Parsers`. For example, here is how you would parse a raw string into a list of terms and operators:
+Using the `@Refine` annotation, you can subscribe to any `Refinable` syntax unit:
 
 ```java
-Source source = new Source(rawContent, xyz.line(), xyz.column());
-QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
-ParserFactory.termSequenceParser().parse(source, queryable, refiner);
-Iterable<PropertyValueMember> members = queryable.filter(PropertyValueMember.class);
+@Refine
+public void refine(RawFunction function, Grammar grammar, Broadcaster broadcaster) {
+}
 ```
 
-For a full example of a `FunctionRefiner` see `UrlRefiner`. For a full example of an `AtRuleRefiner` see `ConditionalsRefiner` and related classes.
+`@Refine` methods must specify three parameters. The first is the unit to refine. The second is of type `Grammar`, which should be used to access internal parsers and tokens. The third is of type `Broadcaster`, which should be used to _broadcast_ refined syntax units.
 
-Note that generally speaking, by simply utilizing a parser from ParserFactory, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser, and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
+Note that after a subscription method handles a unit it will not be sent to subsequent refiners, so plugins should be registered in appropriate order.
 
-#### Base plugin
+You can optionally specify a string to the `@Refine` annotation, and only units that match that name will be delivered. Here is an example of a custom function:
 
-You can extend the `BasePlugin` class, which comes with a predefined subscription method for each subscribable syntax unit type. Override the particular methods as appropriate for your use case. While this isn't the most preferred implementation option, you may find it easier to consume as a starting point for a custom plugin because you can use your IDE to easily see and override the AST objects that you need.
+```java
+@Refine("myFunction")
+public void refine(RawFunction function, Grammar grammar, Broadcaster broadcaster) {
+  String args = function.args().trim();
+
+  // parse arguments, e.g., lookup a value, perform calculations...
+  // ...
+
+  // turn our parsed string into actual terms
+  Source source = new Source(parsedArgs);
+  grammar.parser().termSequenceParser().parse(source, grammar, broadcaster);
+}
+```
+
+You can utilize the `Source` class as a parsing utility, and nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on the `Grammar` instance and the `Parsers` class.
+
+For a full example of a `FunctionRefiner` see `UrlPlugin`. For a full example of an `AtRuleRefiner` see `ConditionalsPlugin` and related classes. For more detailed examples see the [test samples](src/test/java/com/salesforce/omakase/sample/custom/).
+
+Note that generally speaking, by simply utilizing an internal parser, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
+
+### Conditional Refinement
+
+As mentioned above, most of the time you want to include the `StandardValidation` or `AutoRefine` plugins to ensure that every AST object is refined and delivered to subscription methods. The alternative is to conditionally refine only the units that are necessary.
+
+The easiest way to do this is with `AutoRefine`, where you can specify to only refine selectors, declarations, etc... You can take this further with a custom `@Refine` method that checks the raw content and refines if appropriate:
+
+```java
+@Refine
+public void observe(Selector selector, Grammar grammar, Broadcaster broadcaster) {
+    if (selector.raw().get().content().contains(".foo")) {
+        SelectorPlugin.delegateRefinement(selector, grammar, broadcaster);
+    }
+}
+```
+
+You can delegate refinement to the standard plugin (`SelectorPlugin`, `DeclarationPlugin`, `MediaPlugin`)
 
 ### Custom error handling
 
-The default `ErrorManager` is `ThrowingErrorManager`, which as you could easily guess will throw an exception on the first fatal error that is reported. For warnings it will only log a message.
+The default `ErrorManager` is `DefaultErrorManager`, which will rethrow some errors immediately and log others at the end of parsing. By default all errors will be captured and thrown in a `ProblemSummaryException`.
 
-You can alternatively specify your own `ErrorManager` implementation, for example to store all errors and present them in full at once at the end of parsing. To do so, create a class that implements the `ErrorManager` interface and provide it during parser setup:
+You can alternatively specify your own `ErrorManager` implementation and provide it during parser setup:
 
 ```java
 Omakase.source(input).use(myCustomErrorManager).process();
@@ -975,44 +993,45 @@ Following is the list of all supported syntax types that you can subscribe to in
 <pre>
     Name                           Description                                               Enablement / Dependency     Type
     ----------------------------   -------------------------------------------------------   -------------------------   ---------------
-01: Refinable                      raw syntax that can be further refined                    Automatic                   interface
-02: Statement                      rule or at-rule                                           Automatic                   interface
-03: Syntax                         top level interface for all units                         Under certain conditions*   interface
+01: Statement                      rule or at-rule                                           Automatic                   interface
+02: Syntax                         top level interface for all units                         Under certain conditions*   interface
+03: RawFunction                    a raw function before refinement                          Declaration refinement      class
 04: Rule                           (no description)                                          Automatic                   class
 05: Stylesheet                     (no description)                                          Automatic                   class
 06: AtRule                         (no description)                                          Automatic                   class
-07: MediaQueryList                 full media query string                                   AtRule#refine               class
-08: FunctionValue                  general interface for function terms                      Declaration#refine          interface
-09: Term                           a single segment of a property value                      Declaration#refine          interface
-10: Declaration                    (no description)                                          Automatic                   class
-11: GenericFunctionValue           unknown function value                                    Declaration#refine          class
-12: HexColorValue                  individual hex color value                                Declaration#refine          class
-13: KeywordValue                   individual keyword value                                  Declaration#refine          class
-14: LinearGradientFunctionValue    linear gradient function                                  Declaration#refine          class
-15: NumericalValue                 individual numerical value                                Declaration#refine          class
-16: PropertyValue                  interface for all property values                         Declaration#refine          class
-17: RawFunction                    a raw function before refinement                          Declaration#refine          class
-18: StringValue                    individual string value                                   Declaration#refine          class
-19: UrlFunctionValue               url function                                              Declaration#refine          class
-20: ConditionalAtRuleBlock         conditionals                                              AtRule#refine               class
-21: UnquotedIEFilter               proprietary microsoft filter                              Declaration#refine          class
-22: SelectorPart                   group interface for all selector segments                 Selector#refine             interface
-23: SimpleSelector                 parent interface for simple selectors                     Selector#refine             interface
-24: AttributeSelector              attribute selector segment                                Selector#refine             class
-25: ClassSelector                  class selector segment                                    Selector#refine             class
-26: IdSelector                     id selector segment                                       Selector#refine             class
-27: PseudoClassSelector            pseudo class selector segment                             Selector#refine             class
-28: PseudoElementSelector          pseudo element selector segment                           Selector#refine             class
-29: Selector                       (no description)                                          Automatic                   class
-30: TypeSelector                   type/element selector segment                             Selector#refine             class
-31: UniversalSelector              universal selector segment                                Selector#refine             class
+07: FontDescriptor                 font descriptor within @font-face                         AtRule refinement           class
+08: MediaQueryList                 full media query string                                   AtRule refinement           class
+09: FunctionValue                  general interface for function terms                      Declaration refinement      interface
+10: Term                           a single segment of a property value                      Declaration refinement      interface
+11: Declaration                    (no description)                                          Automatic                   class
+12: GenericFunctionValue           unknown function value                                    Declaration refinement      class
+13: HexColorValue                  individual hex color value                                Declaration refinement      class
+14: KeywordValue                   individual keyword value                                  Declaration refinement      class
+15: LinearGradientFunctionValue    linear gradient function                                  Declaration refinement      class
+16: NumericalValue                 individual numerical value                                Declaration refinement      class
+17: PropertyValue                  interface for all property values                         Declaration refinement      class
+18: StringValue                    individual string value                                   Declaration refinement      class
+19: UnicodeRangeValue              unicode range value                                       Declaration refinement      class
+20: UrlFunctionValue               url function                                              Declaration refinement      class
+21: ConditionalAtRuleBlock         conditionals                                              AtRule refinement           class
+22: UnquotedIEFilter               proprietary microsoft filter                              Declaration refinement      class
+23: SelectorPart                   group interface for all selector segments                 Selector refinement         interface
+24: SimpleSelector                 parent interface for simple selectors                     Selector refinement         interface
+25: AttributeSelector              attribute selector segment                                Selector refinement         class
+26: ClassSelector                  class selector segment                                    Selector refinement         class
+27: IdSelector                     id selector segment                                       Selector refinement         class
+28: PseudoClassSelector            pseudo class selector segment                             Selector refinement         class
+29: PseudoElementSelector          pseudo element selector segment                           Selector refinement         class
+30: Selector                       (no description)                                          Automatic                   class
+31: TypeSelector                   type/element selector segment                             Selector refinement         class
+32: UniversalSelector              universal selector segment                                Selector refinement         class
 
 Generated by PrintSubscribableSyntaxTable.java
 </pre>
 
 **Notes:**
 
-* A subscription to `Syntax` will depend on which concrete syntax classes are enabled. To get _every_ syntax unit then utilize `AutoRefiner#all`.
+* A subscription to `Syntax` will depend on which concrete syntax classes are enabled. To get _every_ syntax unit then utilize `new StandardValidaion()` or `AutoRefine#everything`.
 * Some orphaned comments will only be delivered if selectors and declarations are refined.
 
 Interactive Shell
@@ -1057,14 +1076,14 @@ This will output something like this:
 
     .test {color:red}
 
-For more involved scenarios, you might prefer to use the built in support for Sublime Text and TextMate.
+For more involved scenarios, you might prefer to use the built in support for Sublime Text and ATom.
 
 Sublime Text requires the `subl` command to be installed on your PATH:
 https://www.sublimetext.com/docs/3/osx_command_line.html
 
 You can test that this is working by simply typing `subl` in the terminal. It should open Sublime Text. If not, make sure ~/bin (or wherever you linked to) is on your path.
 
-TextMate requires the `mate` command. In TextMate 2 you can install this by going to Preferences -> Terminal -> Click the Install button. Again you can test this if the `mate` command in terminal opens up TextMate.
+Atom requires the `atom` command. You can install this by going to Menu -> Install Shell Commands. Again you can test this if the `atom` command in terminal opens up Atom.
 
 Development
 -----------
@@ -1078,14 +1097,14 @@ As of right now the (strongly) preferred IDE for contribution is IntelliJ IDEA. 
 The project relies on the following technologies:
 
 1. git (duh)
-2. java 7 (make sure both the IDE and maven are setup to use it)
+2. java 8 (make sure both the IDE and maven are setup to use it)
 3. maven 3+
 
 run `mvn clean install` to get things going from the command line. It should build and run tests successfully. Afterwards you can import the maven project into your IDE (as an existing maven project) and go from there.
 
 ### Dependencies
 
-Non-test dependencies include Google's **Guava** library and **Logback** (used for logging). Dependencies shouldn't really increase beyond that as one of the goals is simplicity and self-containment.
+Non-test dependencies include Google's **Guava** library. Dependencies shouldn't really increase beyond that as one of the goals is simplicity and self-containment.
 
 ### Tests
 
@@ -1155,28 +1174,27 @@ Omakase is a CSS parser built from the ground up. Unlike other open-source CSS p
 
 The main motivation behind building a new parser over utilizing an existing library include achieving better runtime performance, the ability to extend the grammar, better error messaging, etc...
 
-The project requires _Java 7_, _git_ and _maven_. The general architecture of the project can be summarized as follows:
+The project requires _Java 8_, _git_ and _maven_. The general architecture of the project can be summarized as follows:
 
 1. **Parsers** - Small, individual parser objects that process CSS source code.
 2. **AST Objects** - Simple representations of various CSS syntax units.
-3. **Plugins** - Observers that can subscribe to any AST object for rework or validation.
+3. **Plugins** - Observers that can subscribe to any AST object for refinement, rework or validation.
 4. **Broadcasters and Emitter** - The bridge between parsers and plugins.
 5. **Writers** - Outputs parsed CSS code.
 6. **ErrorHandlers** - Manages errors encountered when parsing CSS source code.
-7. **Refiners** - Handles standard and custom refinement of AST objects.
 
 ### Parsers
-**Key Classes** `Token` `Tokens` `Source` `Parser` `ParserFactory`
+**Key Classes** `Token` `Tokens` `Source` `Parser` `BaseParserFactory`, `Grammar`
 
-Parsers are simple java objects that know how to parse specific aspects of CSS syntax. Parsers do not maintain any state, and only one instance of each parser is instantiated and stored in `ParserFactory`.
+Parsers are simple java objects that know how to parse specific aspects of CSS syntax. Parsers do not maintain any state.
 
 Parsers employ a 2-level parsing strategy. The first level will comb through the CSS source and extract the at-rules, selectors and declarations (and no more). Any errors at this grammatical level will be caught immediately (for example, a missing curly bracket to close a rule). However any errors at a more specific level (e.g., within a selector or within a declaration) will not be caught until that particular object is refined.
 
-The second level occurs individually per instance, e.g., each particular `Selector` or `Declaration` instance. When `Refinable#refine` is called on the instance, it will utilize parsers to parse its raw syntax snippet, potentially catching syntax errors along the way.
+The second level occurs individually per instance, e.g., each particular `Selector` or `Declaration` instance.
 
-It's important to understand that the second level may or may not be executed or may only be executed on certain instances. Also the second level for one selector instance may occur at a different time than another selector instance.
+It's important to understand that the second level may or may not be executed or may only be executed on certain instances.
 
-This process allows us to be more specific about what actually gets parsed. For example, on a first parsing pass we may want to parse and validate everything, but on a second pass we may not care about fully parsing selectors anymore. This pinpointed level of detail allows for better performance, especially important in production scenarios.
+This process allows us to be more specific about what actually gets parsed. For example, on a first parsing pass we may want to parse and validate everything, but on a second pass we may not care about fully parsing selectors anymore.
 
 When a `Parser` has successfully parsed some content, it will construct the appropriate AST object and give it to the `Broadcaster`. Ultimately, the `Broadcaster` will pass the AST object to the registered subscription methods for that particular AST object type.
 
@@ -1201,7 +1219,7 @@ The general Omakase philosophy is that much of the internal logic as well as all
 
 A `Broadcaster` is something that handles broadcasts of various AST objects. You can think of this as the _observer_ pattern, or the _event listener_ pattern, where the AST object itself is the event, the plugins are the listeners, and the broadcasters are responsible for receiving the AST objects from the parsers and delivering it to all registered subscriptions.
 
-However, broadcasters do no necessarily deliver the AST objects right away. The `Broadcaster` interface utilizes the _decorator_ pattern (think `Reader`, `BufferedReader`, etc...). That is, broadcasters can be wrapped inside of each other, relaying broadcasters to their inner broadcasters. For example, a `QueingBroadcaster` may be wrapped around an `EmittingBroadcaster`. The `QueingBroadcaster` may hold on to all of its broadcasts until a certain condition has been verified. At the bottom of the chain is almost always the `EmittingBroadcaster`, which is the one responsible for using an `Emitter` to actually invoke the subscription methods.
+However, broadcasters do no necessarily deliver the AST objects right away. The `Broadcaster` interface utilizes a _chain_ pattern. That is, broadcasters can be wrapped inside of each other, relaying broadcasters to the next broadcaster down the chain. Near the bottom of the chain is usually the `EmittingBroadcaster`, which is the one responsible for using an `Emitter` to actually invoke the subscription methods.
 
 ### Writers
 **Key Classes** `Writable` `StyleWriter` `StyleAppendable`
@@ -1212,11 +1230,6 @@ Writers are fairly simple... they are responsible for taking the parsed `SyntaxT
 **Key Classes** `ErrorManager`
 
 Error managers are responsible for dealing with errors during processing, including parser errors or errors generated from a validator plugin.
-
-### Refiners
-**Key Classes** `Refiner` `StandardRefiner`
-
-These classes handle refinement of selectors, declarations, at-rules and functions. These are also what handles custom CSS syntax.
 
 ### Dependencies Graph
 
