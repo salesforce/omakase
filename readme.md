@@ -103,7 +103,7 @@ All validation is written and registered as plugins. To enable the standard vali
 Omakase.source(input).use(new StandardValidation()).process();
 ```
 
-This auto-refines every selector, declaration and at-rule (see the [AutoRefiner](#autorefiner) section below for more information on auto-refinement) and registers the standard list of built-in validators.
+This auto-refines every selector, declaration and at-rule (see the [AutoRefine](#autorefine) section below for more information on refinement) and registers the standard list of built-in validators.
 
 Keep in mind that validation methods will always be invoked after rework methods, but otherwise they will be executed in the order that the plugin class was registered.
 
@@ -144,7 +144,7 @@ AutoRefiner selectors = AutoRefine.only(Match.SELECTORS); // refine selectors
 AutoRefiner declarations = AutoRefine.only(Match.DECLARATIONS); // refine declarations
 ```
 
-`StandardValidation` includes an `AutoRefine` by default, so you usually only need to specifically add `AutoRefine` if you aren't using it.
+Using `StandardValidation` automatically includes `AutoRefine` unless otherwise configured.
 
 You may be wondering when you *wouldn't* want auto refinement. The main use-case is during runtime or other performance-sensitive environments.
 
@@ -322,7 +322,7 @@ This is cumulative, so you can also add extra support to the defaults instead.
 
 To manually update the prefix data, see the [Scripts](#scripts) section below. Updating is a one-line shell command, and after an update the processed CSS automatically reflects any changes right away. This can be more efficient than using a mixin to handle vendor prefixes, as you would have to constantly check each prefixable property, selector, etc... to see if a prefix is still required.
 
-Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register an `AutoRefiner` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the [AutoRefiner](#autorefiner) section above for more information.
+Note that the `Prefixer` plugin will **not** trigger _refinement_ of a selector, declaration or at-rule just to check if a prefix is needed. This means you need to register `AutoRefine` (or `StandardValidation`) if you would like all selectors, declarations, etc... to be considered. See the [AutoRefine](#autorefine) section above for more information.
 
 ##### Pruning
 
@@ -499,7 +499,7 @@ In addition to the standard library plugins, you can create and register your ow
 
 Plugins are essentially plain java objects that implement one of the _plugin interfaces_ and define one or more _subscription methods_ to a particular AST object (e.g., `Selector` or `Declaration`). The subscription method does the actual rework or validation as appropriate.
 
-Plugins are registered exactly the same as as any of the standard built-in plugins such as `StyleWriter` or `AutoRefiner`.
+Plugins are registered exactly the same as as any of the standard built-in plugins such as `StyleWriter` or `AutoRefine`.
 
 See the [Subscribable Syntax Units](#subscribable-syntax-units) section below for the definitive list of all subscribable AST objects.
 
@@ -510,7 +510,7 @@ To get started, a plugin must first implement one or more of the _plugin interfa
 - **Plugin** - the basic plugin.
 - **DependentPlugin** - for plugins that have dependencies on other plugins.
 - **GrammarPlugin** - for plugins that customize syntax and grammar.
-- **ParserPlugin** - for plugins customize individual parsing behavior.
+- **ParserPlugin** - for plugins customize individual parser behavior.
 - **PostProcessingPlugin** for plugins that need notification after all processing has completed.
 
 Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
@@ -718,7 +718,7 @@ You can also require your own custom plugins by using the `#require(Class, Suppl
 
 #### Performing both rework and validation
 
-Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation does not need to be separated out in to multiple classes.
+Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation do not need to be separated out in to multiple classes.
 
 You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework or validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order.
 
@@ -805,7 +805,14 @@ Note that generally speaking, by simply utilizing an internal parser, all parsed
 
 As mentioned above, most of the time you want to include the `StandardValidation` or `AutoRefine` plugins to ensure that every AST object is refined and delivered to subscription methods. The alternative is to conditionally refine only the units that are necessary.
 
-The easiest way to do this is with `AutoRefine`, where you can specify to only refine selectors, declarations, etc... You can take this further with a custom `@Refine` method that checks the raw content and refines if appropriate:
+The easiest way to do this is with `AutoRefine`, where you can specify to only refine selectors, declarations, etc:
+
+```java
+// skip refinement of selectors
+AutoRefine.only(Match.FUNCTIONS, Match.DECLARATIONS, Match.AT_RULES);
+```
+
+You can take this further with a custom `@Refine` method that checks the raw content and refines if appropriate:
 
 ```java
 @Refine
@@ -816,11 +823,13 @@ public void observe(Selector selector, Grammar grammar, Broadcaster broadcaster)
 }
 ```
 
-You can delegate refinement to the standard plugin (`SelectorPlugin`, `DeclarationPlugin`, `MediaPlugin`)
+You can delegate refinement to the standard plugin (`SelectorPlugin`, `DeclarationPlugin`, `MediaPlugin`).
+
+Using these methods you can eliminate unnecessary parsing for large sets of CSS in performance sensitive environments.
 
 ### Custom error handling
 
-The default `ErrorManager` is `DefaultErrorManager`, which will rethrow some errors immediately and log others at the end of parsing. By default all errors will be captured and thrown in a `ProblemSummaryException`.
+The default `ErrorManager` is `DefaultErrorManager`, which will rethrow some errors immediately and log others at the end of parsing.
 
 You can alternatively specify your own `ErrorManager` implementation and provide it during parser setup:
 
@@ -1076,7 +1085,7 @@ This will output something like this:
 
     .test {color:red}
 
-For more involved scenarios, you might prefer to use the built in support for Sublime Text and ATom.
+For more involved scenarios, you might prefer to use the built in support for Sublime Text and Atom.
 
 Sublime Text requires the `subl` command to be installed on your PATH:
 https://www.sublimetext.com/docs/3/osx_command_line.html
@@ -1170,9 +1179,7 @@ Running the performance test:
 Architecture
 ------------
 
-Omakase is a CSS parser built from the ground up. Unlike other open-source CSS parsers it is not built on a parser generator such as JavaCC or Antlr. Instead, it relies on many small and simple java objects that know how to consume various parts of CSS syntax.
-
-The main motivation behind building a new parser over utilizing an existing library include achieving better runtime performance, the ability to extend the grammar, better error messaging, etc...
+Omakase is a CSS parser built from the ground up. Unlike other open-source CSS parsers it is not built on a parser generator such as JavaCC or Antlr. Instead, it relies on many small and simple java objects that know how to consume various parts of CSS syntax, which also allows for easy extenstion of the syntax and grammar by consumers.
 
 The project requires _Java 8_, _git_ and _maven_. The general architecture of the project can be summarized as follows:
 
