@@ -88,7 +88,7 @@ public class GenerateBrowserEnum {
 
         browsers.add(new BrowserInfo("ie", "IE", "Internet Explorer", Prefix.MS, versions(ie, earliest)));
         browsers.add(new BrowserInfo("edge", "EDGE", "Microsoft Edge", Prefix.MS, versions(edge, earliest)));
-        browsers.add(new BrowserInfo("opera", "OPERA", "Opera", Prefix.O, versions(opera, earliest)));
+        browsers.add(new BrowserInfo("opera", "OPERA", "Opera", Prefix.WEBKIT, versions(opera, earliest)));
         browsers.add(new BrowserInfo("chrome", "CHROME", "Google Chrome", Prefix.WEBKIT, versions(chrome, earliest)));
         browsers.add(new BrowserInfo("safari", "SAFARI", "Safari", Prefix.WEBKIT, versions(safari, earliest)));
         browsers.add(new BrowserInfo("firefox", "FIREFOX", "Firefox", Prefix.MOZ, versions(firefox, earliest)));
