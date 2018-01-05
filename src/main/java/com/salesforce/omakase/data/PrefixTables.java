@@ -31,12 +31,12 @@ import com.google.common.collect.Table;
 
 /**
  * Contains the last version of a browser that requires a prefix for various CSS properties.
- * <p/>
+ * <p>
  * The *CSS Prefix data* in this file is retrieved from caniuse.com and
  * licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0).
- * <p/>
+ * <p>
  * THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
- * <p/>
+ * <p>
  * See class com.salesforce.omakase.tools.GeneratePrefixTablesClass for instructions on updating.
  */
 @SuppressWarnings("AutoBoxing")
@@ -90,12 +90,12 @@ public final class PrefixTables {
         builder.put(Property.BORDER_IMAGE_SLICE, Browser.OPERA, 12.1);
         builder.put(Property.BORDER_IMAGE_REPEAT, Browser.OPERA, 12.1);
         builder.put(Property.BORDER_IMAGE_OUTSET, Browser.OPERA, 12.1);
-        builder.put(Property.BORDER_IMAGE, Browser.CHROME, 15.0);
-        builder.put(Property.BORDER_IMAGE_SOURCE, Browser.CHROME, 15.0);
-        builder.put(Property.BORDER_IMAGE_WIDTH, Browser.CHROME, 15.0);
-        builder.put(Property.BORDER_IMAGE_SLICE, Browser.CHROME, 15.0);
-        builder.put(Property.BORDER_IMAGE_REPEAT, Browser.CHROME, 15.0);
-        builder.put(Property.BORDER_IMAGE_OUTSET, Browser.CHROME, 15.0);
+        builder.put(Property.BORDER_IMAGE, Browser.CHROME, 14.0);
+        builder.put(Property.BORDER_IMAGE_SOURCE, Browser.CHROME, 14.0);
+        builder.put(Property.BORDER_IMAGE_WIDTH, Browser.CHROME, 14.0);
+        builder.put(Property.BORDER_IMAGE_SLICE, Browser.CHROME, 14.0);
+        builder.put(Property.BORDER_IMAGE_REPEAT, Browser.CHROME, 14.0);
+        builder.put(Property.BORDER_IMAGE_OUTSET, Browser.CHROME, 14.0);
         builder.put(Property.BORDER_IMAGE, Browser.SAFARI, 5.1);
         builder.put(Property.BORDER_IMAGE_SOURCE, Browser.SAFARI, 5.1);
         builder.put(Property.BORDER_IMAGE_WIDTH, Browser.SAFARI, 5.1);
@@ -120,12 +120,6 @@ public final class PrefixTables {
         builder.put(Property.BORDER_IMAGE_SLICE, Browser.IOS_SAFARI, 5.1);
         builder.put(Property.BORDER_IMAGE_REPEAT, Browser.IOS_SAFARI, 5.1);
         builder.put(Property.BORDER_IMAGE_OUTSET, Browser.IOS_SAFARI, 5.1);
-        builder.put(Property.BORDER_IMAGE, Browser.OPERA_MINI, 8.0);
-        builder.put(Property.BORDER_IMAGE_SOURCE, Browser.OPERA_MINI, 8.0);
-        builder.put(Property.BORDER_IMAGE_WIDTH, Browser.OPERA_MINI, 8.0);
-        builder.put(Property.BORDER_IMAGE_SLICE, Browser.OPERA_MINI, 8.0);
-        builder.put(Property.BORDER_IMAGE_REPEAT, Browser.OPERA_MINI, 8.0);
-        builder.put(Property.BORDER_IMAGE_OUTSET, Browser.OPERA_MINI, 8.0);
         builder.put(Property.BOX_SHADOW, Browser.CHROME, 9.0);
         builder.put(Property.BOX_SHADOW, Browser.SAFARI, 5.0);
         builder.put(Property.BOX_SHADOW, Browser.FIREFOX, 3.6);
@@ -259,26 +253,26 @@ public final class PrefixTables {
         builder.put(Property.BOX_SIZING, Browser.FIREFOX, 28.0);
         builder.put(Property.BOX_SIZING, Browser.ANDROID, 3.0);
         builder.put(Property.BOX_SIZING, Browser.IOS_SAFARI, 4.3);
-        builder.put(Property.COLUMNS, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_WIDTH, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_GAP, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_RULE, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_COUNT, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_RULE_COLOR, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_RULE_WIDTH, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_RULE_STYLE, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_SPAN, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMN_FILL, Browser.OPERA, 34.0);
-        builder.put(Property.COLUMNS, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_WIDTH, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_GAP, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_RULE, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_COUNT, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_RULE_COLOR, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_RULE_WIDTH, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_RULE_STYLE, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_SPAN, Browser.CHROME, 48.0);
-        builder.put(Property.COLUMN_FILL, Browser.CHROME, 48.0);
+        builder.put(Property.COLUMNS, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_WIDTH, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_GAP, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_RULE, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_COUNT, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_RULE_COLOR, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_RULE_WIDTH, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_RULE_STYLE, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_SPAN, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMN_FILL, Browser.OPERA, 36.0);
+        builder.put(Property.COLUMNS, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_WIDTH, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_GAP, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_RULE, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_COUNT, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_RULE_COLOR, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_RULE_WIDTH, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_RULE_STYLE, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_SPAN, Browser.CHROME, 49.0);
+        builder.put(Property.COLUMN_FILL, Browser.CHROME, 49.0);
         builder.put(Property.COLUMNS, Browser.SAFARI, 8.0);
         builder.put(Property.COLUMN_WIDTH, Browser.SAFARI, 8.0);
         builder.put(Property.COLUMN_GAP, Browser.SAFARI, 8.0);
@@ -289,26 +283,26 @@ public final class PrefixTables {
         builder.put(Property.COLUMN_RULE_STYLE, Browser.SAFARI, 8.0);
         builder.put(Property.COLUMN_SPAN, Browser.SAFARI, 8.0);
         builder.put(Property.COLUMN_FILL, Browser.SAFARI, 8.0);
-        builder.put(Property.COLUMNS, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_WIDTH, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_GAP, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_RULE, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_COUNT, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_RULE_COLOR, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_RULE_WIDTH, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_RULE_STYLE, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_SPAN, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMN_FILL, Browser.FIREFOX, 44.0);
-        builder.put(Property.COLUMNS, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_WIDTH, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_GAP, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_RULE, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_COUNT, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_RULE_COLOR, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_RULE_WIDTH, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_RULE_STYLE, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_SPAN, Browser.ANDROID, 47.0);
-        builder.put(Property.COLUMN_FILL, Browser.ANDROID, 47.0);
+        builder.put(Property.COLUMNS, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_WIDTH, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_GAP, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_RULE, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_COUNT, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_RULE_COLOR, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_RULE_WIDTH, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_RULE_STYLE, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_SPAN, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMN_FILL, Browser.FIREFOX, 51.0);
+        builder.put(Property.COLUMNS, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_WIDTH, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_GAP, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_RULE, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_COUNT, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_RULE_COLOR, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_RULE_WIDTH, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_RULE_STYLE, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_SPAN, Browser.ANDROID, 4.4);
+        builder.put(Property.COLUMN_FILL, Browser.ANDROID, 4.4);
         builder.put(Property.COLUMNS, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.COLUMN_WIDTH, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.COLUMN_GAP, Browser.IOS_SAFARI, 8.4);
@@ -416,25 +410,26 @@ public final class PrefixTables {
         builder.put(Property.JUSTIFY_CONTENT, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.ORDER, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.USER_SELECT, Browser.IE, 11.0);
-        builder.put(Property.USER_SELECT, Browser.OPERA, 34.0);
-        builder.put(Property.USER_SELECT, Browser.CHROME, 48.0);
-        builder.put(Property.USER_SELECT, Browser.SAFARI, 9.0);
-        builder.put(Property.USER_SELECT, Browser.FIREFOX, 44.0);
-        builder.put(Property.USER_SELECT, Browser.ANDROID, 47.0);
+        builder.put(Property.USER_SELECT, Browser.EDGE, 16.0);
+        builder.put(Property.USER_SELECT, Browser.OPERA, 40.0);
+        builder.put(Property.USER_SELECT, Browser.CHROME, 53.0);
+        builder.put(Property.USER_SELECT, Browser.SAFARI, 11.0);
+        builder.put(Property.USER_SELECT, Browser.FIREFOX, 57.0);
+        builder.put(Property.USER_SELECT, Browser.ANDROID, 4.4);
         builder.put(Property.USER_SELECT, Browser.IE_MOBILE, 11.0);
-        builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 9.2);
+        builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 11.2);
         builder.put(Property.HYPHENS, Browser.IE, 11.0);
-        builder.put(Property.HYPHENS, Browser.SAFARI, 9.0);
+        builder.put(Property.HYPHENS, Browser.EDGE, 16.0);
+        builder.put(Property.HYPHENS, Browser.SAFARI, 11.0);
         builder.put(Property.HYPHENS, Browser.FIREFOX, 42.0);
-        builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 9.2);
+        builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 11.2);
         builder.put(Property.TAB_SIZE, Browser.OPERA, 12.1);
-        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 44.0);
-        builder.put(Property.TAB_SIZE, Browser.OPERA_MINI, 8.0);
-        builder.put(Property.APPEARANCE, Browser.FIREFOX, 44.0);
-        builder.put(Property.APPEARANCE, Browser.CHROME, 48.0);
-        builder.put(Property.APPEARANCE, Browser.SAFARI, 9.0);
-        builder.put(Property.APPEARANCE, Browser.ANDROID, 47.0);
-        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 9.2);
+        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 57.0);
+        builder.put(Property.APPEARANCE, Browser.FIREFOX, 57.0);
+        builder.put(Property.APPEARANCE, Browser.CHROME, 63.0);
+        builder.put(Property.APPEARANCE, Browser.SAFARI, 11.0);
+        builder.put(Property.APPEARANCE, Browser.ANDROID, 62.0);
+        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 11.2);
 
         PROPERTIES = builder.build();
     }
@@ -478,15 +473,16 @@ public final class PrefixTables {
     static {
         ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
 
-        builder.put("selection", Browser.FIREFOX, 44.0);
+        builder.put("selection", Browser.FIREFOX, 57.0);
         builder.put("placeholder", Browser.IE, 11.0);
-        builder.put("placeholder", Browser.OPERA, 34.0);
-        builder.put("placeholder", Browser.CHROME, 48.0);
-        builder.put("placeholder", Browser.SAFARI, 9.0);
-        builder.put("placeholder", Browser.FIREFOX, 44.0);
-        builder.put("placeholder", Browser.ANDROID, 47.0);
+        builder.put("placeholder", Browser.EDGE, 16.0);
+        builder.put("placeholder", Browser.OPERA, 43.0);
+        builder.put("placeholder", Browser.CHROME, 56.0);
+        builder.put("placeholder", Browser.SAFARI, 10.0);
+        builder.put("placeholder", Browser.FIREFOX, 50.0);
+        builder.put("placeholder", Browser.ANDROID, 4.4);
         builder.put("placeholder", Browser.IE_MOBILE, 11.0);
-        builder.put("placeholder", Browser.IOS_SAFARI, 9.2);
+        builder.put("placeholder", Browser.IOS_SAFARI, 10.2);
 
         SELECTORS = builder.build();
     }

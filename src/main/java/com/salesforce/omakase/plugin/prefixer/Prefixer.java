@@ -304,9 +304,8 @@ public final class Prefixer implements DependentPlugin {
     }
 
     /**
-     * Creates a new instance of the {@link Prefixer} plugin with default browser version support levels: IE7+, latest versions of
-     * Safari, IE Mobile and Opera Mini, last 5 versions of Firefox and Chrome, last 6 versions of IOS Safari and last 3 versions
-     * of Android Browser.
+     * Creates a new instance of the {@link Prefixer} plugin with default browser version support levels: IE10+, latest
+     * versions of Safari and IE Mobile, last 3 versions of Firefox, Chrome, Edge and Android and last 6 versions of IOS Safari.
      *
      * @return The new {@link Prefixer} instance.
      *
@@ -315,18 +314,15 @@ public final class Prefixer implements DependentPlugin {
      */
     public static Prefixer defaultBrowserSupport() {
         SupportMatrix support = new SupportMatrix()
-            .last(IOS_SAFARI, 6)
-            .last(FIREFOX, 5)
+            .last(FIREFOX, 3)
+            .last(CHROME, 3)
+            .last(EDGE, 3)
             .last(ANDROID, 3)
-            .last(CHROME, 5)
-            .browser(IE, 7)
-            .browser(IE, 8)
-            .browser(IE, 9)
             .browser(IE, 10)
             .browser(IE, 11)
             .latest(SAFARI)
-            .latest(IE_MOBILE)
-            .latest(OPERA_MINI);
+            .last(IOS_SAFARI, 6)
+            .latest(IE_MOBILE);
 
         return new Prefixer(support);
     }
