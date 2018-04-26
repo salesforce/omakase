@@ -475,7 +475,6 @@ public class PrefixerUnitTargetedTest {
             "  background: red;\n" +
             "  background: -webkit-linear-gradient(yellow, red);\n" +
             "  background: -moz-linear-gradient(yellow, red);\n" +
-            "  background: -o-linear-gradient(yellow, red);\n" +
             "  background: linear-gradient(yellow, red);\n" +
             "}";
 
@@ -491,7 +490,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(red, green) no-repeat, -webkit-linear-gradient(blue, yellow) no-repeat;\n" +
             "  background: -moz-linear-gradient(red, green) no-repeat, -moz-linear-gradient(blue, yellow) no-repeat;\n" +
-            "  background: -o-linear-gradient(red, green) no-repeat, -o-linear-gradient(blue, yellow) no-repeat;\n" +
             "  background: linear-gradient(red, green) no-repeat, linear-gradient(blue, yellow) no-repeat;\n" +
             "}";
 
@@ -507,7 +505,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(bottom, yellow, red);\n" +
             "  background: -moz-linear-gradient(bottom, yellow, red);\n" +
-            "  background: -o-linear-gradient(bottom, yellow, red);\n" +
             "  background: linear-gradient(to top, yellow, red);\n" +
             "}";
 
@@ -523,7 +520,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(top, yellow, red);\n" +
             "  background: -moz-linear-gradient(top, yellow, red);\n" +
-            "  background: -o-linear-gradient(top, yellow, red);\n" +
             "  background: linear-gradient(to bottom, yellow, red);\n" +
             "}";
 
@@ -539,7 +535,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(left, yellow, red);\n" +
             "  background: -moz-linear-gradient(left, yellow, red);\n" +
-            "  background: -o-linear-gradient(left, yellow, red);\n" +
             "  background: linear-gradient(to right, yellow, red);\n" +
             "}";
 
@@ -555,7 +550,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(right, yellow, red);\n" +
             "  background: -moz-linear-gradient(right, yellow, red);\n" +
-            "  background: -o-linear-gradient(right, yellow, red);\n" +
             "  background: linear-gradient(to left, yellow, red);\n" +
             "}";
 
@@ -571,7 +565,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(bottom left, yellow, red);\n" +
             "  background: -moz-linear-gradient(bottom left, yellow, red);\n" +
-            "  background: -o-linear-gradient(bottom left, yellow, red);\n" +
             "  background: linear-gradient(to top right, yellow, red);\n" +
             "}";
 
@@ -587,7 +580,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(bottom right, yellow, red);\n" +
             "  background: -moz-linear-gradient(bottom right, yellow, red);\n" +
-            "  background: -o-linear-gradient(bottom right, yellow, red);\n" +
             "  background: linear-gradient(to top left, yellow, red);\n" +
             "}";
 
@@ -603,7 +595,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(top left, yellow, red);\n" +
             "  background: -moz-linear-gradient(top left, yellow, red);\n" +
-            "  background: -o-linear-gradient(top left, yellow, red);\n" +
             "  background: linear-gradient(to bottom right, yellow, red);\n" +
             "}";
 
@@ -619,7 +610,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(top right, yellow, red);\n" +
             "  background: -moz-linear-gradient(top right, yellow, red);\n" +
-            "  background: -o-linear-gradient(top right, yellow, red);\n" +
             "  background: linear-gradient(to bottom left, yellow, red);\n" +
             "}";
 
@@ -635,7 +625,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(30deg, yellow, red);\n" +
             "  background: -moz-linear-gradient(30deg, yellow, red);\n" +
-            "  background: -o-linear-gradient(30deg, yellow, red);\n" +
             "  background: linear-gradient(60deg, yellow, red);\n" +
             "}";
 
@@ -651,7 +640,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-linear-gradient(180deg, yellow, red);\n" +
             "  background: -moz-linear-gradient(180deg, yellow, red);\n" +
-            "  background: -o-linear-gradient(180deg, yellow, red);\n" +
             "  background: linear-gradient(-90deg, yellow, red);\n" +
             "}";
 
@@ -667,7 +655,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
             "  background: -moz-repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
-            "  background: -o-repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
             "  background: repeating-linear-gradient(green, yellow 5%, red 15%);\n" +
             "}";
 
@@ -683,7 +670,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-repeating-linear-gradient(left, green, yellow 5%, red 15%);\n" +
             "  background: -moz-repeating-linear-gradient(left, green, yellow 5%, red 15%);\n" +
-            "  background: -o-repeating-linear-gradient(left, green, yellow 5%, red 15%);\n" +
             "  background: repeating-linear-gradient(to right, green, yellow 5%, red 15%);\n" +
             "}";
 
@@ -699,7 +685,6 @@ public class PrefixerUnitTargetedTest {
         String expected = ".test {\n" +
             "  background: -webkit-repeating-linear-gradient(15deg, green, yellow 5%, red 15%);\n" +
             "  background: -moz-repeating-linear-gradient(15deg, green, yellow 5%, red 15%);\n" +
-            "  background: -o-repeating-linear-gradient(15deg, green, yellow 5%, red 15%);\n" +
             "  background: repeating-linear-gradient(75deg, green, yellow 5%, red 15%);\n" +
             "}";
 

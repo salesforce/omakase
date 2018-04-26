@@ -413,23 +413,23 @@ public final class PrefixTables {
         builder.put(Property.USER_SELECT, Browser.EDGE, 16.0);
         builder.put(Property.USER_SELECT, Browser.OPERA, 40.0);
         builder.put(Property.USER_SELECT, Browser.CHROME, 53.0);
-        builder.put(Property.USER_SELECT, Browser.SAFARI, 11.0);
-        builder.put(Property.USER_SELECT, Browser.FIREFOX, 57.0);
+        builder.put(Property.USER_SELECT, Browser.SAFARI, 11.1);
+        builder.put(Property.USER_SELECT, Browser.FIREFOX, 59.0);
         builder.put(Property.USER_SELECT, Browser.ANDROID, 4.4);
         builder.put(Property.USER_SELECT, Browser.IE_MOBILE, 11.0);
-        builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 11.2);
+        builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 11.3);
         builder.put(Property.HYPHENS, Browser.IE, 11.0);
         builder.put(Property.HYPHENS, Browser.EDGE, 16.0);
-        builder.put(Property.HYPHENS, Browser.SAFARI, 11.0);
+        builder.put(Property.HYPHENS, Browser.SAFARI, 11.1);
         builder.put(Property.HYPHENS, Browser.FIREFOX, 42.0);
-        builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 11.2);
+        builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 11.3);
         builder.put(Property.TAB_SIZE, Browser.OPERA, 12.1);
-        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 57.0);
-        builder.put(Property.APPEARANCE, Browser.FIREFOX, 57.0);
-        builder.put(Property.APPEARANCE, Browser.CHROME, 63.0);
-        builder.put(Property.APPEARANCE, Browser.SAFARI, 11.0);
+        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 59.0);
+        builder.put(Property.APPEARANCE, Browser.FIREFOX, 59.0);
+        builder.put(Property.APPEARANCE, Browser.CHROME, 65.0);
+        builder.put(Property.APPEARANCE, Browser.SAFARI, 11.1);
         builder.put(Property.APPEARANCE, Browser.ANDROID, 62.0);
-        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 11.2);
+        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 11.3);
 
         PROPERTIES = builder.build();
     }
@@ -473,7 +473,7 @@ public final class PrefixTables {
     static {
         ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
 
-        builder.put("selection", Browser.FIREFOX, 57.0);
+        builder.put("selection", Browser.FIREFOX, 59.0);
         builder.put("placeholder", Browser.IE, 11.0);
         builder.put("placeholder", Browser.EDGE, 16.0);
         builder.put("placeholder", Browser.OPERA, 43.0);
