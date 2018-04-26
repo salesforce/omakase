@@ -14,10 +14,9 @@ Quick Tips
 2. tag the version number in git, and push the new tag
     1. > git tag -a vx.x.x (e.g., v0.6.0)
     2. > git push --tags <repo>
-3. the jars must be deploy to **three** repositories:
-    1. Internal aura maven repo
-    2. External aura maven repo
-    3. Internal sfdc maven repo
+3. the jars must be deploy to **two** repositories:
+    1. External aura maven repo
+    2. Internal sfdc maven repo
 4. simplest way to do this is `omakase --deploy`
 5. check in jars to p4
     1. run `blt --build update-repository-filter`
@@ -32,7 +31,7 @@ e.g., for Summer '15 to Winter '16:
 
 For subsequent commits in an sfdc release/branch, increase the last number by one.
 e.g., for a patch fix in Winter '16:
-    
+
     0.35.0 to 0.35.1
     0.35.1 to 0.35.2
     0.35.9 to 0.35.10

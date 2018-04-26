@@ -105,11 +105,9 @@ public class Run {
                     RunPerfTest.run(arguments);
                 }
             } else if (deploy) {
-                if (!exec("mvn deploy")) {
-                    System.out.println("\n" + Colors.red("could not deploy to the internal aura maven repo"));
-                } else if (!exec("mvn deploy -P external")) {
+                if (!exec("mvn deploy -P aura-external")) {
                     System.out.println("\n" + Colors.red("could not deploy to the external aura maven repo"));
-                } else if (!exec("mvn deploy -P sfdc")) {
+                } else if (!exec("mvn deploy -P aura-nexus")) {
                     System.out.println("\n" + Colors.red("could not deploy to the sfdc nexus repo"));
                 }
             } else if (update) {
