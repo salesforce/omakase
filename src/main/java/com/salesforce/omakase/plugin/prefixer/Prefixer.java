@@ -317,7 +317,7 @@ public final class Prefixer implements DependentPlugin {
             .last(FIREFOX, 3)
             .last(CHROME, 3)
             .last(EDGE, 3)
-            .last(ANDROID, 3)
+            .latest(ANDROID)
             .browser(IE, 11)
             .latest(SAFARI)
             .last(IOS_SAFARI, 6)
