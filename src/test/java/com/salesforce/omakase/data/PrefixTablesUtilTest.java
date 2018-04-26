@@ -121,7 +121,7 @@ public class PrefixTablesUtilTest {
 
     @Test
     public void lastVersionKeywordIsPrefixedNotPresent() {
-        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.FLEX, Browser.OPERA_MINI)).isEqualTo(-1);
+        assertThat(PrefixTablesUtil.lastVersionKeywordIsPrefixed(Keyword.FLEX, Browser.EDGE)).isEqualTo(-1);
     }
 
     @Test

@@ -31,6 +31,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.primitives.Doubles;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.PrefixTables;
@@ -180,26 +181,31 @@ public class GeneratePrefixTablesClass {
             assert browserSpecific != null : String.format("browser %s not found in downloaded stats", browser);
 
             // find the last browser version that requires a prefix (presence of "x" indicates prefix is required)
-            double lastPrefixed = 0d;
+            double lastPrefixedVersion = 0d;
             for (Map.Entry<String, String> browserVersionPrefixInfo : browserSpecific.entrySet()) {
                 if (browserVersionPrefixInfo.getValue().contains("x")) {
-                    String last = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
-                    if (last.indexOf(".") != last.lastIndexOf(".")) {
+                    String versionString = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
+
+                    if (versionString.indexOf(".") != versionString.lastIndexOf(".")) {
                         // hacky deal with something like Android 4.4.3. Just treat it as 4.4 for now.
-                        last = last.substring(0, last.lastIndexOf("."));
+                        versionString = versionString.substring(0, versionString.lastIndexOf("."));
                     }
-                    lastPrefixed = Math.max(lastPrefixed, Double.parseDouble(last));
+
+                    Double version = Doubles.tryParse(versionString);
+                    if (version != null) { // may be null for non-numeric browser versions such as Safari TP (technical preview).
+                        lastPrefixedVersion = Math.max(lastPrefixedVersion, version);
+                    }
                 }
             }
             // caniuse contains data for future browser releases, however we don't want to keep track of anything
             // past the currently released browser version.
             double currentVersion = browser.versions().get(0);
-            lastPrefixed = Math.min(lastPrefixed, currentVersion);
+            lastPrefixedVersion = Math.min(lastPrefixedVersion, currentVersion);
 
             // if we have a prefix requirement, mark it for each property in the category.
-            if (lastPrefixed > 0) {
-                System.out.println(String.format("- last required with prefix in %s %s", browser, lastPrefixed));
-                allVersions.put(browser, lastPrefixed);
+            if (lastPrefixedVersion > 0) {
+                System.out.println(String.format("- last required with prefix in %s %s", browser, lastPrefixedVersion));
+                allVersions.put(browser, lastPrefixedVersion);
             }
         }
 

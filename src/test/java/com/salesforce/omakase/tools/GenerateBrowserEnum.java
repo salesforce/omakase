@@ -77,6 +77,7 @@ public class GenerateBrowserEnum {
         List<BrowserInfo> browsers = Lists.newArrayList();
 
         Map ie = (Map)agents.get("ie");
+        Map edge = (Map)agents.get("edge");
         Map opera = (Map)agents.get("opera");
         Map chrome = (Map)agents.get("chrome");
         Map safari = (Map)agents.get("safari");
@@ -84,17 +85,16 @@ public class GenerateBrowserEnum {
         Map android = (Map)agents.get("android");
         Map ieMobile = (Map)agents.get("ie_mob");
         Map iosSafari = (Map)agents.get("ios_saf");
-        Map operaMini = (Map)agents.get("op_mini");
 
         browsers.add(new BrowserInfo("ie", "IE", "Internet Explorer", Prefix.MS, versions(ie, earliest)));
-        browsers.add(new BrowserInfo("opera", "OPERA", "Opera", Prefix.O, versions(opera, earliest)));
-        browsers.add(new BrowserInfo("chrome", "CHROME", "Chrome", Prefix.WEBKIT, versions(chrome, earliest)));
+        browsers.add(new BrowserInfo("edge", "EDGE", "Microsoft Edge", Prefix.MS, versions(edge, earliest)));
+        browsers.add(new BrowserInfo("opera", "OPERA", "Opera", Prefix.WEBKIT, versions(opera, earliest)));
+        browsers.add(new BrowserInfo("chrome", "CHROME", "Google Chrome", Prefix.WEBKIT, versions(chrome, earliest)));
         browsers.add(new BrowserInfo("safari", "SAFARI", "Safari", Prefix.WEBKIT, versions(safari, earliest)));
         browsers.add(new BrowserInfo("firefox", "FIREFOX", "Firefox", Prefix.MOZ, versions(firefox, earliest)));
         browsers.add(new BrowserInfo("android", "ANDROID", "Android Browser", Prefix.WEBKIT, versions(android, earliest)));
         browsers.add(new BrowserInfo("ie_mob", "IE_MOBILE", "IE Mobile", Prefix.MS, versions(ieMobile, earliest)));
         browsers.add(new BrowserInfo("ios_saf", "IOS_SAFARI", "Safari on iOS", Prefix.WEBKIT, versions(iosSafari, earliest)));
-        browsers.add(new BrowserInfo("op_mini", "OPERA_MINI", "Opera Mini", Prefix.O, versions(operaMini, earliest)));
 
         SourceWriter writer = new SourceWriter();
 
