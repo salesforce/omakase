@@ -1596,4 +1596,14 @@ public class PrefixerUnitTargetedTest {
             new SupportMatrix().latest(Browser.IOS_SAFARI));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityNotPrefixedInChrome() {
+        String original = ".test {backface-visibility:visible}";
+        String expected = ".test {backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().latest(Browser.CHROME));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
