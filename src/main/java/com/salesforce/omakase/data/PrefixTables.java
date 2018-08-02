@@ -238,7 +238,7 @@ public final class PrefixTables {
         builder.put(Property.BACKFACE_VISIBILITY, Browser.CHROME, 35.0);
         builder.put(Property.PERSPECTIVE, Browser.SAFARI, 8.0);
         builder.put(Property.PERSPECTIVE_ORIGIN, Browser.SAFARI, 8.0);
-        builder.put(Property.BACKFACE_VISIBILITY, Browser.SAFARI, 8.0);
+        builder.put(Property.BACKFACE_VISIBILITY, Browser.SAFARI, 11.1);
         builder.put(Property.PERSPECTIVE, Browser.FIREFOX, 15.0);
         builder.put(Property.PERSPECTIVE_ORIGIN, Browser.FIREFOX, 15.0);
         builder.put(Property.BACKFACE_VISIBILITY, Browser.FIREFOX, 15.0);
@@ -247,7 +247,7 @@ public final class PrefixTables {
         builder.put(Property.BACKFACE_VISIBILITY, Browser.ANDROID, 4.4);
         builder.put(Property.PERSPECTIVE, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.PERSPECTIVE_ORIGIN, Browser.IOS_SAFARI, 8.4);
-        builder.put(Property.BACKFACE_VISIBILITY, Browser.IOS_SAFARI, 8.4);
+        builder.put(Property.BACKFACE_VISIBILITY, Browser.IOS_SAFARI, 11.4);
         builder.put(Property.BOX_SIZING, Browser.CHROME, 9.0);
         builder.put(Property.BOX_SIZING, Browser.SAFARI, 5.0);
         builder.put(Property.BOX_SIZING, Browser.FIREFOX, 28.0);
@@ -410,26 +410,26 @@ public final class PrefixTables {
         builder.put(Property.JUSTIFY_CONTENT, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.ORDER, Browser.IOS_SAFARI, 8.4);
         builder.put(Property.USER_SELECT, Browser.IE, 11.0);
-        builder.put(Property.USER_SELECT, Browser.EDGE, 16.0);
+        builder.put(Property.USER_SELECT, Browser.EDGE, 17.0);
         builder.put(Property.USER_SELECT, Browser.OPERA, 40.0);
         builder.put(Property.USER_SELECT, Browser.CHROME, 53.0);
         builder.put(Property.USER_SELECT, Browser.SAFARI, 11.1);
-        builder.put(Property.USER_SELECT, Browser.FIREFOX, 59.0);
+        builder.put(Property.USER_SELECT, Browser.FIREFOX, 61.0);
         builder.put(Property.USER_SELECT, Browser.ANDROID, 4.4);
         builder.put(Property.USER_SELECT, Browser.IE_MOBILE, 11.0);
-        builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 11.3);
+        builder.put(Property.USER_SELECT, Browser.IOS_SAFARI, 11.4);
         builder.put(Property.HYPHENS, Browser.IE, 11.0);
-        builder.put(Property.HYPHENS, Browser.EDGE, 16.0);
+        builder.put(Property.HYPHENS, Browser.EDGE, 17.0);
         builder.put(Property.HYPHENS, Browser.SAFARI, 11.1);
         builder.put(Property.HYPHENS, Browser.FIREFOX, 42.0);
-        builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 11.3);
+        builder.put(Property.HYPHENS, Browser.IOS_SAFARI, 11.4);
         builder.put(Property.TAB_SIZE, Browser.OPERA, 12.1);
-        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 59.0);
-        builder.put(Property.APPEARANCE, Browser.FIREFOX, 59.0);
-        builder.put(Property.APPEARANCE, Browser.CHROME, 65.0);
+        builder.put(Property.TAB_SIZE, Browser.FIREFOX, 61.0);
+        builder.put(Property.APPEARANCE, Browser.FIREFOX, 61.0);
+        builder.put(Property.APPEARANCE, Browser.CHROME, 68.0);
         builder.put(Property.APPEARANCE, Browser.SAFARI, 11.1);
-        builder.put(Property.APPEARANCE, Browser.ANDROID, 62.0);
-        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 11.3);
+        builder.put(Property.APPEARANCE, Browser.ANDROID, 67.0);
+        builder.put(Property.APPEARANCE, Browser.IOS_SAFARI, 11.4);
 
         PROPERTIES = builder.build();
     }
@@ -473,9 +473,9 @@ public final class PrefixTables {
     static {
         ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
 
-        builder.put("selection", Browser.FIREFOX, 59.0);
+        builder.put("selection", Browser.FIREFOX, 61.0);
         builder.put("placeholder", Browser.IE, 11.0);
-        builder.put("placeholder", Browser.EDGE, 16.0);
+        builder.put("placeholder", Browser.EDGE, 17.0);
         builder.put("placeholder", Browser.OPERA, 43.0);
         builder.put("placeholder", Browser.CHROME, 56.0);
         builder.put("placeholder", Browser.SAFARI, 10.0);
