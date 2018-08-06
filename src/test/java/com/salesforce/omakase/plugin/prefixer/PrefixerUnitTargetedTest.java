@@ -1567,11 +1567,21 @@ public class PrefixerUnitTargetedTest {
 
     // W-5093496
     @Test
-    public void backfaceVisibilityInSafari() {
+    public void backfaceVisibilityInSafari11dot1() {
         String original = ".test {backface-visibility: visible}";
         String expected = ".test {-webkit-backface-visibility:visible; backface-visibility:visible}";
         Prefixer prefixer = Prefixer.customBrowserSupport(
-            new SupportMatrix().browser(Browser.SAFARI, 11));
+            new SupportMatrix().browser(Browser.SAFARI, 11.1));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityInOlderSafari() {
+        String original = ".test {backface-visibility: visible}";
+        String expected = ".test {-webkit-backface-visibility:visible; backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().browser(Browser.SAFARI, 10));
         assertThat(process(original, prefixer)).isEqualTo(expected);
     }
 
