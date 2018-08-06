@@ -44,6 +44,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,7 +67,7 @@ public class GeneratePrefixTablesClass {
 
     public void run() throws IOException, TemplateException {
         // read the prefix input data
-        System.out.println("reading prefixable.yaml...");
+        System.out.println("reading prefixable.yaml");
         Map types = (Map)yaml.load(Tools.readFile("/data/prefixable.yaml"));
 
         List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
@@ -90,6 +91,7 @@ public class GeneratePrefixTablesClass {
         writer.data("selectors", selectors);
         writer.data("functions", functions);
 
+        System.out.println();
         writer.write();
     }
 
@@ -99,11 +101,23 @@ public class GeneratePrefixTablesClass {
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
             for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
+                Browser browser = entry.getKey();
+                Double version = entry.getValue();
+
                 // loop through each property name in the category
                 for (String property : category.getValue()) {
                     Property prop = Property.lookup(property);
                     assert prop != null : String.format("property '%s' not found in the Property enum", property);
-                    info.add(new PropertyInfo(prop, entry.getKey(), entry.getValue()));
+
+                    // check for override
+                    Optional<Double> override = PrefixTableOverrides.getOverride(prop, browser, version);
+                    if (override.isPresent()) {
+                        String msg = "- overriding property '%s' for %s from %s to %s";
+                        System.out.println(String.format(msg, prop, browser, version, override.get()));
+                        version = override.get();
+                    }
+
+                    info.add(new PropertyInfo(prop, browser, version));
                 }
             }
         }
@@ -122,6 +136,7 @@ public class GeneratePrefixTablesClass {
                 throw new IllegalArgumentException(String.format(msg, entry.getKey()));
             }
 
+            System.out.println();
             System.out.println(String.format("reading non-standard prefix data for '%s'...", entry.getKey()));
             for (String browser : entry.getValue()) {
                 Browser b = Browser.valueOf(browser.toUpperCase());
@@ -129,7 +144,6 @@ public class GeneratePrefixTablesClass {
                 info.add(new PropertyInfo(property, b, version));
                 System.out.println(String.format("- last required with prefix in %s %s", b, version));
             }
-            System.out.println();
         }
         return info;
     }
@@ -209,11 +223,11 @@ public class GeneratePrefixTablesClass {
             }
         }
 
-        System.out.println();
         return allVersions;
     }
 
     private Map<String, Object> loadUrl(String category) throws IOException {
+        System.out.println();
         System.out.println(String.format("downloading prefix data for %s...", category));
 
         URLConnection connection = new URL(ENDPOINT + category + ".json").openConnection();

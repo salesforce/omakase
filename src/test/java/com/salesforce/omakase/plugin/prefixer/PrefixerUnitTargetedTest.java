@@ -1564,4 +1564,56 @@ public class PrefixerUnitTargetedTest {
 
         assertThat(process(original, flexSetup())).isEqualTo(expected);
     }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityInSafari11dot1() {
+        String original = ".test {backface-visibility: visible}";
+        String expected = ".test {-webkit-backface-visibility:visible; backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().browser(Browser.SAFARI, 11.1));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityInOlderSafari() {
+        String original = ".test {backface-visibility: visible}";
+        String expected = ".test {-webkit-backface-visibility:visible; backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().browser(Browser.SAFARI, 10));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityInIOSSafari() {
+        String original = ".test {backface-visibility: visible}";
+        String expected = ".test {-webkit-backface-visibility:visible; backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().browser(Browser.IOS_SAFARI,11.4));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityInLatestSafari() {
+        // safari 11 is the latest version as of now to need this, but it doesn't look like
+        // there's any indication it will change soon.
+        String original = ".test {backface-visibility: visible}";
+        String expected = ".test {-webkit-backface-visibility:visible; backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().latest(Browser.IOS_SAFARI));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
+
+    // W-5093496
+    @Test
+    public void backfaceVisibilityNotPrefixedInChrome() {
+        String original = ".test {backface-visibility:visible}";
+        String expected = ".test {backface-visibility:visible}";
+        Prefixer prefixer = Prefixer.customBrowserSupport(
+            new SupportMatrix().latest(Browser.CHROME));
+        assertThat(process(original, prefixer)).isEqualTo(expected);
+    }
 }
