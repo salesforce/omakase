@@ -180,9 +180,14 @@ public final class Comment implements Writable {
         if (checked) return;
         checked = true;
 
-        String trimmed = content.trim();
-        if (trimmed.length() > 2 && trimmed.charAt(0) == '@') {
-            String[] split = trimmed.substring(1).split(" ", 2);
+        String toCheck = content;
+        if (startsWithBang()) {
+            toCheck = toCheck.substring(1);
+        }
+        toCheck = toCheck.trim();
+
+        if (toCheck.length() > 2 && toCheck.charAt(0) == '@') {
+            String[] split = toCheck.substring(1).split(" ", 2);
             String name = split[0];
             String args = split.length > 1 ? split[1] : null;
             annotation = new CssAnnotation(name, args);
