@@ -493,6 +493,8 @@ If you need to prevent certain declarations from being flipped, you can use a CS
 }
 ```
 
+Take note of the [CSS annotation format](#css-annotations). For example, if you use two asterisks to start the comment block instead of one then it will not be recognized.
+
 ### Creating custom plugins
 
 In addition to the standard library plugins, you can create and register your own custom plugins. Custom plugins allow you to rework the processed CSS or add your own custom validation and linting rules. You can also use plugins to extend the CSS syntax and grammar.
@@ -925,6 +927,18 @@ CSS comment annotations start with `@` + the name of the annotation. They can al
   /* @custom1 */ /* @custom2 */ display: block;
 }
 ```
+
+No other content is allowed in the comment with the annotation. If there's any content before the start of the annotation the annotation will not be recognized, with the exception of bang comments:
+
+```css
+.class {
+  width: 20px;
+  margin-left: 20px;
+  /*! @noflip */ float: left;
+}
+```
+
+Any content that follows the annotation will be considered arguments for the annotation.
 
 Any number of custom annotations can be utilized by your plugins. To check for an annotation, there are convenience methods available on every syntax unit:
 

@@ -111,6 +111,13 @@ public class StyleWriterTest {
     }
 
     @Test
+    public void writeWithAnnotatedCommentsBangAnnotatedComment() {
+        StyleWriter writer = StyleWriter.compressed().writeAnnotatedComments(true);
+        Omakase.source("/*! @yes*/.test{/*no*//*!no*/color:red}").use(writer).process();
+        assertThat(writer.write()).isEqualTo("/*! @yes*/.test{color:red}");
+    }
+
+    @Test
     public void writeWithOrphanedComments() {
         StyleWriter writer = StyleWriter.compressed().writeAllComments(true);
         Omakase.source(".test{color:red/*test*/}").use(writer).process();

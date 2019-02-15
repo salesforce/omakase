@@ -72,8 +72,32 @@ public class CommentTest {
     }
 
     @Test
-    public void hasAnnotationTrueSpaced() {
+    public void hasAnnotationTrue() {
+        Comment c = new Comment("@test");
+        assertThat(c.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationTrueSpaceInFront() {
         Comment c = new Comment(" @test");
+        assertThat(c.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationTrueMultipleSpaceInFront() {
+        Comment c = new Comment(" \n @test");
+        assertThat(c.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationTrueStartsWithBang() {
+        Comment c = new Comment("! @test");
+        assertThat(c.hasAnnotation("test")).isTrue();
+    }
+
+    @Test
+    public void hasAnnotationTrueStartsWithBangNoSpace() {
+        Comment c = new Comment("!@test");
         assertThat(c.hasAnnotation("test")).isTrue();
     }
 
@@ -92,6 +116,18 @@ public class CommentTest {
     @Test
     public void hasAnnotationFalseDoesntStartWithAnnotation() {
         Comment c = new Comment("test @test");
+        assertThat(c.hasAnnotation("test")).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationFalseSpaceBeforeBang() {
+        Comment c = new Comment(" ! @test");
+        assertThat(c.hasAnnotation("test")).isFalse();
+    }
+
+    @Test
+    public void hasAnnotationFalseAsterisk() {
+        Comment c = new Comment("* @test");
         assertThat(c.hasAnnotation("test")).isFalse();
     }
 
@@ -125,6 +161,13 @@ public class CommentTest {
     @Test
     public void getAnnotationByNamePresentMultipleArgs() {
         Comment c = new Comment("@test one two");
+        CssAnnotation a = c.annotation("test").get();
+        assertThat(a.rawArgs().get()).isEqualTo("one two");
+    }
+
+    @Test
+    public void getAnnotationByNameBangInFront() {
+        Comment c = new Comment("! @test one two");
         CssAnnotation a = c.annotation("test").get();
         assertThat(a.rawArgs().get()).isEqualTo("one two");
     }
@@ -206,6 +249,12 @@ public class CommentTest {
 
     @Test
     public void startsWithBangTrue() {
+        Comment c = new Comment("! copyright");
+        assertThat(c.startsWithBang()).isTrue();
+    }
+
+    @Test
+    public void startsWithBangTrueNoSpaceAfter() {
         Comment c = new Comment("!copyright");
         assertThat(c.startsWithBang()).isTrue();
     }
@@ -213,6 +262,12 @@ public class CommentTest {
     @Test
     public void startsWithBangFalse() {
         Comment c = new Comment("blah!blah!");
+        assertThat(c.startsWithBang()).isFalse();
+    }
+
+    @Test
+    public void startsWithBangFalseSpaceInFront() {
+        Comment c = new Comment(" ! copyright");
         assertThat(c.startsWithBang()).isFalse();
     }
 }
