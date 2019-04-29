@@ -153,7 +153,7 @@ public final class Comment implements Writable {
      * @return True if the comment starts with '!'.
      */
     public boolean startsWithBang() {
-        return content.charAt(0) == '!';
+        return !content.isEmpty() && content.charAt(0) == '!';
     }
 
     @Override
