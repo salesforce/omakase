@@ -270,4 +270,16 @@ public class CommentTest {
         Comment c = new Comment(" ! copyright");
         assertThat(c.startsWithBang()).isFalse();
     }
+
+    @Test
+    public void startsWithBangFalseEmptyComment() {
+        Comment c = new Comment("");
+        assertThat(c.startsWithBang()).isFalse();
+    }
+
+    @Test
+    public void startsWithBangFalseEmptySpace() {
+        Comment c = new Comment(" ");
+        assertThat(c.startsWithBang()).isFalse();
+    }
 }
