@@ -141,7 +141,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
             // parsers skipping past whitespace is ok
             if (allowedToTrimLeadingWhitespace()) {
                 final String source = result.source.fullSource();
-                int index = source.length() - CharMatcher.WHITESPACE.trimLeadingFrom(source).length();
+                int index = source.length() - CharMatcher.whitespace().trimLeadingFrom(source).length();
                 assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(index);
             } else {
                 assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(0);
