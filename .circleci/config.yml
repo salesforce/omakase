@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: omakase-dep-cache-1-{{ checksum "pom.xml" }}
+      
+      - run: mvn dependency:go-offline # gets the project dependencies
+      
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: omakase-dep-cache-1-{{ checksum "pom.xml" }}
+      
+      - run: mvn package
+      
+      - store_test_results: 
+      # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: target/surefire-reports
+      
+      - store_artifacts:
+          path: target/omakase-*.jar
+
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples 
