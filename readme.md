@@ -2,6 +2,7 @@ Omakase
 =======
 
 ![Build](https://github.com/salesforce/omakase/workflows/Java%20CI/badge.svg)
+[![codecov](https://codecov.io/gh/salesforce/omakase/branch/master/graph/badge.svg)](https://codecov.io/gh/salesforce/omakase)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 Fast, Java-based, plugin-oriented CSS3+ parser.

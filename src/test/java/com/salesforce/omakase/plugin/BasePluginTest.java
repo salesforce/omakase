@@ -33,6 +33,8 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -44,13 +46,17 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @SuppressWarnings("JavaDoc")
 public class BasePluginTest {
-    //@Test
+    @Test
     public void hasMethodForEverySubscribable() throws InvocationTargetException, IllegalAccessException {
         Method[] declaredMethods = BasePlugin.class.getDeclaredMethods();
 
         Set<Class<?>> subscriptions = Sets.newHashSetWithExpectedSize(32);
+        List<Method> methods = new ArrayList<>();
         for (Method method : declaredMethods) {
-            subscriptions.add(method.getParameterTypes()[0]);
+            if (!method.isSynthetic()) {
+                subscriptions.add(method.getParameterTypes()[0]);
+                methods.add(method);
+            }
         }
 
         Reflections reflections = new Reflections("com.salesforce.omakase.ast");
@@ -62,7 +68,7 @@ public class BasePluginTest {
         assertThat(difference).describedAs("BasePlugin has a subscription to an object that is not subscribable").isEmpty();
 
         BasePlugin p = new BasePlugin();
-        for (Method m : declaredMethods) {
+        for (Method m : methods) {
             m.invoke(p, new Object[]{null}); // :/ to mark each method we checked as "covered" in test coverage
         }
     }
