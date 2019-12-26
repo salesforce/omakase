@@ -114,7 +114,6 @@ public class DefaultErrorManager implements ErrorManager {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void report(ParserException exception) {
         if (rethrow) {
             throw exception;
@@ -123,7 +122,6 @@ public class DefaultErrorManager implements ErrorManager {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void report(SubscriptionException exception) {
         if (rethrow) {
             throw exception;

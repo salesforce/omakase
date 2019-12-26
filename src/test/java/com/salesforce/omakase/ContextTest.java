@@ -124,8 +124,8 @@ public class ContextTest {
         TestErrorManager em = new TestErrorManager();
         c.register(new FailingPlugin());
         c.broadcaster().broadcast(new ClassSelector("class"));
-        c.before(em);
-        c.after();
+        c.beforeParsing(em);
+        c.afterParsing();
         assertThat(em.reported).isTrue();
     }
 
@@ -152,9 +152,9 @@ public class ContextTest {
 
         c.register(Lists.newArrayList(rework, validate, observe));
 
-        c.before(new TestErrorManager());
+        c.beforeParsing(new TestErrorManager());
         c.broadcaster().broadcast(new ClassSelector("test"));
-        c.after();
+        c.afterParsing();
 
         assertThat(observe.order < validate.order).isTrue();
         assertThat(rework.order < validate.order).isTrue();
@@ -164,8 +164,8 @@ public class ContextTest {
     public void afterMethodNotifyPostProcessor() {
         TestPostProcessingPlugin tpp = new TestPostProcessingPlugin();
         c.register(tpp);
-        c.before(new TestErrorManager());
-        c.after();
+        c.beforeParsing(new TestErrorManager());
+        c.afterParsing();
         assertThat(tpp.postProcessCalled).isTrue();
     }
 

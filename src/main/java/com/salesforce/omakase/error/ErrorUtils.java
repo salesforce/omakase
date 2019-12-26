@@ -38,8 +38,16 @@ import com.salesforce.omakase.parser.Source;
  * @author nmcwilliams
  */
 public final class ErrorUtils {
+    /** do not construct */
     private ErrorUtils() {}
 
+    /**
+     * Formats a general error message.
+     *
+     * @param sourceName Name of the resource (e.g., file name) that has the problem.
+     * @param message    The error message.
+     * @return The formatted message.
+     */
     public static String format(String sourceName, String message) {
         return sourceName != null ? String.format("%s:\n%s", sourceName, message) : message;
     }
@@ -47,17 +55,22 @@ public final class ErrorUtils {
     /**
      * Formats a parsing error message.
      *
-     * @param source
-     *     The source where the error occurred.
-     * @param message
-     *     The error message.
-     *
+     * @param source  The source where the error occurred.
+     * @param message The error message.
      * @return The formatted message.
      */
     public static String format(Source source, String message) {
         return format(null, source, message);
     }
 
+    /**
+     * Formats a parsing error message.
+     *
+     * @param sourceName Name of the resource (e.g., file name) that has the problem.
+     * @param source  The source where the error occurred.
+     * @param message The error message.
+     * @return The formatted message.
+     */
     public static String format(String sourceName, Source source, String message) {
         String fmt = "%s:\nat line %s, column %s%s %s\n'%s'";
         return String.format(fmt,
@@ -73,11 +86,8 @@ public final class ErrorUtils {
     /**
      * Formats a validation error message.
      *
-     * @param cause
-     *     The {@link Syntax} that has the problem.
-     * @param message
-     *     The error message.
-     *
+     * @param cause   The {@link Syntax} that has the problem.
+     * @param message The error message.
      * @return The formatted message.
      */
     public static String format(Syntax cause, String message) {
@@ -87,13 +97,9 @@ public final class ErrorUtils {
     /**
      * Formats a validation error message.
      *
-     * @param sourceName
-     *     Name of the resource (e.g., file name) that has the problem.
-     * @param cause
-     *     The {@link Syntax} that has the problem.
-     * @param message
-     *     The error message.
-     *
+     * @param sourceName Name of the resource (e.g., file name) that has the problem.
+     * @param cause      The {@link Syntax} that has the problem.
+     * @param message    The error message.
      * @return The formatted message.
      */
     public static String format(String sourceName, Syntax cause, String message) {

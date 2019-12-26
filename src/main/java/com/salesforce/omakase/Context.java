@@ -179,7 +179,7 @@ final class Context implements PluginRegistry {
     /**
      * Internal method to signify when (high-level) parsing is about to begin.
      */
-    protected Grammar before(ErrorManager em) {
+    protected Grammar beforeParsing(ErrorManager em) {
         checkNotNull(em, "An error manager must be given to the context");
 
         Grammar grammar = new Grammar(
@@ -197,7 +197,7 @@ final class Context implements PluginRegistry {
     /**
      * Internal method to signify when (high-level) parsing is completed.
      */
-    protected void after() {
+    protected void afterParsing() {
         // replay broadcasts for observers and reworkers
         emittingBroadcaster.phase(SubscriptionPhase.PROCESS);
         visitor.visit(broadcaster, Status.PARSED);

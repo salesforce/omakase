@@ -188,9 +188,9 @@ public final class Omakase {
          */
         public PluginRegistry process() {
             try {
-                Grammar grammar = context.before(this.em);
+                Grammar grammar = context.beforeParsing(this.em);
                 grammar.parser().stylesheetParser().parse(source, grammar, context.broadcaster());
-                context.after();
+                context.afterParsing();
             } catch (ParserException e) {
                 em.report(e);
             } catch (SubscriptionException e) {
