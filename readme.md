@@ -1115,9 +1115,9 @@ Atom requires the `atom` command. You can install this by going to Menu -> Insta
 Development
 -----------
 
-Before checking anything in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of the `idea` or `eclipse` folders.
+Before checking anything in, setup your IDE to conform to project standards. See and follow the instructions in the readme.md files inside of the `contributing/intellij` or `contributing/eclipse` folders.
 
-As of right now the (strongly) preferred IDE for contribution is IntelliJ IDEA. This is mainly because the existing source code and style closely conforms to the idea settings included in the project. If you use eclipse or something else then be sure to following the existing coding conventions manually if need be.
+As of right now the (strongly) preferred IDE for contribution is IntelliJ IDEA. This is mainly because the existing source code and style closely conforms to the IntelliJ settings included in the project. If you use eclipse or something else then be sure to following the existing coding conventions manually if need be.
 
 ### Building
 
