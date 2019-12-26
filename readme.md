@@ -9,6 +9,8 @@ Fast, Java-based, plugin-oriented CSS3+ parser.
 
 Omakase (お任せ o-_ma_-ka-say) has very few dependencies and doesn't need to execute Ruby or JavaScript code. It runs entirely in Java.
 
+[Latest Javadoc](http://opensource.salesforce.com/omakase/ "Generated from master")
+
 Features
 --------
 

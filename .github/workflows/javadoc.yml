@@ -1,0 +1,74 @@
+name: Javadoc
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Generate Javadoc
+      run: mvn javadoc:javadoc
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: javadoc
+        path: target/site/apidocs/
+  
+  publish:
+    runs-on: ubuntu-latest
+    
+    needs: generate
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+
+    - name: Remove previous content
+      run: |
+        git rm -r .
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v1
+      with:
+        name: javadoc
+        path: ./
+
+    # use a deploy key for now because the default $GITHUB_TOKEN
+    # does not trigger github pages rebuilds
+    # https://github.community/t5/GitHub-Actions/Github-action-not-triggering-gh-pages-upon-push/m-p/26869
+    - name: Preparing for deployment
+      run: |
+        mkdir "${HOME}/.ssh"
+        ssh-keyscan -t rsa github.com > "${HOME}/.ssh/known_hosts"
+        echo "${{secrets.GITHUB_ACTIONS_DEPLOY_TOKEN}}" > "${HOME}/.ssh/id_rsa"
+        chmod 400 "${HOME}/.ssh/id_rsa"
+        git remote set-url origin "git@github.com:${GITHUB_REPOSITORY}.git"
+
+    - name: Push gh-pages branch to origin
+      run: |
+        git add --all
+        git status      
+        git config user.name "CI Automation"  
+        git config user.email "ci-automation+omakase@salesforce.com"               
+        git commit -m "Updating Javadoc from ${GITHUB_SHA}" --allow-empty
+        git push origin gh-pages
