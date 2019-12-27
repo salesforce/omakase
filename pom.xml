@@ -1,10 +1,14 @@
-﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.salesforce</groupId>
-	<artifactId>omakase</artifactId>
-	<version>1.4.1</version>
-	<name>Omakase CSS Parser</name>
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.salesforce</groupId>
+    <artifactId>omakase</artifactId>
+    <version>1.4.1</version>
+
+    <name>Omakase CSS Parser</name>
+    <description>Java-based, plugin-oriented CSS3+ parser</description>
+    <url>https://github.com/salesforce/omakase</url>
 
     <licenses>
         <license>
@@ -39,17 +43,32 @@
         </license>
     </licenses>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <developers>
+        <developer>
+            <name>Nathan McWilliams</name>
+            <email>nmcwilliams@salesforce.com</email>
+            <organization>Salesforce.com</organization>
+            <organizationUrl>https://opensource.salesforce.com/</organizationUrl>
+        </developer>
+    </developers>
 
-	<dependencies>
-		<dependency>
+    <scm>
+        <connection>scm:git:git://github.com/salesforce/omakase.git</connection>
+        <developerConnection>scm:git:ssh://github.com:salesforce/omakase.git</developerConnection>
+        <url>http://github.com/salesforce/omakase</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
             <!-- used for general utilities -->
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>26.0-jre</version>
-		</dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>26.0-jre</version>
+        </dependency>
 
         <!-- test dependencies -->
         <dependency>
@@ -73,27 +92,27 @@
             <version>1.2.3</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
+        <dependency>
             <!-- used for unit tests -->
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <!-- used for unit test assertions -->
-			<groupId>org.easytesting</groupId>
-			<artifactId>fest-assert-core</artifactId>
-			<version>2.0M10</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert-core</artifactId>
+            <version>2.0M10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <!-- used in unit tests -->
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.9.11</version>
-			<scope>test</scope>
-		</dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <!-- used for code generators -->
             <groupId>org.freemarker</groupId>
@@ -124,51 +143,50 @@
         </dependency>
     </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -176,6 +194,7 @@
                 <configuration>
                     <author>false</author>
                     <doclint>none</doclint>
+                    <bottom>Copyright (c) 2019, Salesforce.com, Inc. All rights reserved. Licensed under the BSD 3-Clause license. For full license text, see the LICENSE file in the repository.</bottom>
                 </configuration>
                 <executions>
                     <execution>
@@ -184,10 +203,34 @@
                             <goal>jar</goal>
                         </goals>
                     </execution>
-                </executions>                
+                </executions>
             </plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <distributionManagement>
         <repository>
