@@ -3,7 +3,7 @@
 
     <groupId>com.salesforce</groupId>
     <artifactId>omakase</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3-SNAPSHOT</version>
 
     <name>Omakase CSS Parser</name>
     <description>Java-based, plugin-oriented CSS3+ parser</description>
@@ -55,7 +55,7 @@
         <url>https://github.com/salesforce/omakase</url>
         <connection>scm:git:git://github.com/salesforce/omakase.git</connection>
         <developerConnection>scm:git:git@github.com:salesforce/omakase.git</developerConnection>
-        <tag>v1.4.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
