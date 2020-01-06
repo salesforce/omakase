@@ -4,7 +4,7 @@
 
     <groupId>com.salesforce</groupId>
     <artifactId>omakase</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT</version>
 
     <name>Omakase CSS Parser</name>
     <description>Java-based, plugin-oriented CSS3+ parser</description>
@@ -53,9 +53,10 @@
     </developers>
 
     <scm>
+        <url>https://github.com/salesforce/omakase</url>
         <connection>scm:git:git://github.com/salesforce/omakase.git</connection>
-        <developerConnection>scm:git:ssh://github.com:salesforce/omakase.git</developerConnection>
-        <url>http://github.com/salesforce/omakase</url>
+        <developerConnection>scm:git:git@github.com:salesforce/omakase.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
@@ -204,6 +205,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <releaseProfiles>release</releaseProfiles>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
             </plugin>
         </plugins>
     </build>
