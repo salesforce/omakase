@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.salesforce</groupId>
@@ -46,7 +47,7 @@
         <developer>
             <name>Nathan McWilliams</name>
             <email>nmcwilliams@salesforce.com</email>
-            <organization>Salesforce.com</organization>
+            <organization>Salesforce</organization>
             <organizationUrl>https://opensource.salesforce.com/</organizationUrl>
         </developer>
     </developers>
@@ -169,6 +170,24 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <author>false</author>
+                    <doclint>none</doclint>
+                    <bottom>Copyright (c) 2019, Salesforce.com, Inc. All rights reserved. Licensed under the BSD 3-Clause license. For full license text, see the LICENSE file in the repository.</bottom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.5</version>
@@ -183,24 +202,6 @@
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <author>false</author>
-                    <doclint>none</doclint>
-                    <bottom>Copyright (c) 2019, Salesforce.com, Inc. All rights reserved. Licensed under the BSD 3-Clause license. For full license text, see the LICENSE file in the repository.</bottom>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -237,22 +238,26 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
     <distributionManagement>
-        <repository>
-            <id>${repo-id}</id>
-            <name>${repo-name-release}</name>
-            <url>${repo-url-release}</url>
-        </repository>
         <snapshotRepository>
-            <id>${repo-id}</id>
-            <name>${repo-name-snapshots}</name>
-            <url>${repo-url-snapshots}</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
 </project>
