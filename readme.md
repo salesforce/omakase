@@ -4,7 +4,7 @@ Omakase
 ![Build](https://github.com/salesforce/omakase/workflows/Java%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/salesforce/omakase/branch/master/graph/badge.svg)](https://codecov.io/gh/salesforce/omakase)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.salesforce/omakase/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.salesforce/omakase)
 Fast, Java-based, plugin-oriented CSS3+ parser.
 
 Omakase (お任せ o-_ma_-ka-say) has very few dependencies and doesn't need to execute Ruby or JavaScript code. It runs entirely in Java.
