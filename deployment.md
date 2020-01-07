@@ -9,31 +9,35 @@ Then you can use the tips here as a quick reminder.
 
 Quick Tips
 ----------
-1. ensure all relevant changes are committed and pushed
-2. bump the version number in pom.xml, commit and push
-2. tag the version number in git, and push the new tag
-    1. > git tag -a vx.x.x (e.g., v0.6.0)
-    2. > git push --tags <repo>
-3. the jars must be deploy to **two** repositories:
-    1. External aura maven repo
-    2. Internal sfdc maven repo
-4. simplest way to do this is `omakase --deploy`
-5. check in jars to p4
-    1. run `blt --build update-repository-filter`
-    2. add jars and relevant files to p4 changelist, and shelve
+1. Ensure all relevant changes are committed and pushed.
+2. If this is the first version in a major release, manually update the snapshot version (see versioning notes below).
+2. Run `mvn release:clean release:prepare` to tag and bump version.
+3. Ensure CI passes on github.com and everything looks good.
+4. Run `mvn release:perform -P release` to push to sonatype nexus and maven central.
+5. Update the dependency version in aura.
+6. Update the dependency version in core.
 
-Version Numbering
------------------
-For the first commit in an sfdc release, change the second number to the release api version number.
-e.g., for Summer '15 to Winter '16:
+Versioning Notes
+----------------
+We use [semantic versioning](https://semver.org/), but with some considerations for the Salesforce release cycle.
 
-    0.34.0 to 0.35.0
+For the first commit in a Salesforce release it's recommended to manually increase the minor number (or the major number if the changes are not backwards compatible). This way, if later a change is needed in a Salesforce patch, but new work has already been done in the next release, the patch number can be updated and life will be easy.
 
-For subsequent commits in an sfdc release/branch, increase the last number by one.
-e.g., for a patch fix in Winter '16:
+You can do this by manually updating pom.xml, or using `mvn versions:set -DnewVersion=1.2.3`.
 
-    0.35.0 to 0.35.1
-    0.35.1 to 0.35.2
-    0.35.9 to 0.35.10
+For example, if prod is on `222`, the Omakase version in prod is `1.4.4`, and the current pom has `1.4.5-SNAPSHOT`, when making the first commit for `224` then first change the version to `1.5.0-SNAPSHOT`. Emergency fixes in patch can continue to be made under `1.4.x`. Then you can continue with the above process as normal.
 
-Backwards-incompatable and API-breaking changes should only be done in the next major sfdc release, not in patch.
+Backwards-incompatable and API-breaking changes should only be done in the next major Salesforce release, not in patch, and you must increment the major number manually.
+
+Other Notes
+-----------
+
+In the configuration for the `nexus-staging-maven-plugin` in the pom.xml, if you change `autoReleaseAfterClose` to false then you can stage the change on sonatype nexus before actually releasing to maven central. More info can be found at http://sfdc.co/omakase-deploy.
+
+Quick Links
+-----------
+
+- [Sonatype Release Docs](https://central.sonatype.org/pages/apache-maven.html)
+- [Maven Central](https://search.maven.org/search?q=g:com.salesforce%20AND%20a:omakase)
+- [Sonatype Nexus Repo Manager](https://oss.sonatype.org/#nexus-search;gav~~omakase~~~)
+- [Published Versions](https://repo1.maven.org/maven2/com/salesforce/omakase/)
