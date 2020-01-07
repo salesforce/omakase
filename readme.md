@@ -3,9 +3,9 @@ Omakase
 
 [![Build](https://github.com/salesforce/omakase/workflows/Java%20CI/badge.svg)](https://github.com/salesforce/omakase/actions)
 [![codecov](https://codecov.io/gh/salesforce/omakase/branch/master/graph/badge.svg)](https://codecov.io/gh/salesforce/omakase)
-[![Maven Central](https://img.shields.io/maven-central/v/com.salesforce/omakase.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.salesforce%22%20AND%20a:%22omakase%22)
-[![javadoc](https://javadoc.io/badge2/com.salesforce/omakase/javadoc.svg)](https://javadoc.io/doc/com.salesforce/omakase)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Maven Central](https://img.shields.io/maven-central/v/com.salesforce/omakase.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.salesforce%22%20AND%20a:%22omakase%22)
+[![Javadoc](https://javadoc.io/badge2/com.salesforce/omakase/javadoc.svg)](https://javadoc.io/doc/com.salesforce/omakase)
 
 Fast, Java-based, plugin-oriented CSS3+ parser.
 
