@@ -1,8 +1,8 @@
 Deployment
 ==========
 
-For your first time doing this, read the full details at http://sfdc.co/omakase-deploy.
-Then you can use the tips here as a quick reminder.
+For your first time, read the full details at http://sfdc.co/omakase-deploy.
+Then use these tips as a quick reminder.
 
 Quick Tips
 ----------
@@ -25,11 +25,6 @@ You can do this by manually updating pom.xml, or using `mvn versions:set -DnewVe
 For example let's say prod is on `222`, and the Omakase version in prod is `1.4.4`, and the current pom has `1.4.5-SNAPSHOT`. When making the first commit for `224`, first manually change the version to `1.5.0-SNAPSHOT`. Then you can continue with the above process as normal. Emergency fixes in patch can continue to be made under `1.4.x`.
 
 Backwards-incompatable and API-breaking changes should only be done in the next major Salesforce release, not in patch, and you must increment the major number manually.
-
-Other Notes
------------
-
-In the configuration for the `nexus-staging-maven-plugin` in the pom.xml, if you change `autoReleaseAfterClose` to `false` then you can stage the change on sonatype nexus before actually releasing to maven central. More info can be found at http://sfdc.co/omakase-deploy.
 
 Quick Links
 -----------
