@@ -47,7 +47,7 @@ import static com.google.common.base.Preconditions.*;
 /**
  * The main class for writing processed CSS content.
  * <p>
- * TO use, add an instance of this class via {@link com.salesforce.omakase.Omakase.Request#use(Plugin...)}.
+ * To use, add an instance of this class via {@link com.salesforce.omakase.Omakase.Request#use(Plugin...)}.
  * <p>
  * Examples:
  * <pre><code>
