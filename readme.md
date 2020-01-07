@@ -1,7 +1,7 @@
 Omakase
 =======
 
-[![Build](https://github.com/salesforce/omakase/actions)](https://github.com/salesforce/omakase/workflows/Java%20CI/badge.svg)
+[![Build](https://github.com/salesforce/omakase/workflows/Java%20CI/badge.svg)](https://github.com/salesforce/omakase/actions)
 [![codecov](https://codecov.io/gh/salesforce/omakase/branch/master/graph/badge.svg)](https://codecov.io/gh/salesforce/omakase)
 [![Maven Central](https://img.shields.io/maven-central/v/com.salesforce/omakase.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.salesforce%22%20AND%20a:%22omakase%22)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
