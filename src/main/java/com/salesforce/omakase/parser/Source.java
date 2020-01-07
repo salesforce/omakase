@@ -835,7 +835,7 @@ public final class Source {
      * Creates a snapshot of the current index, line, column, and other essential state information.
      * <p>
      * Creating a snapshot allows you to parse content but then return to a previous state once it becomes clear that the content
-     * does fully match as expected. To revert to the latest snapshot call {@link Snapshot#rollback()} on the snapshot returned
+     * doesn't fully match as expected. To revert to the latest snapshot call {@link Snapshot#rollback()} on the snapshot returned
      * from this method.
      *
      * @return The created snapshot.

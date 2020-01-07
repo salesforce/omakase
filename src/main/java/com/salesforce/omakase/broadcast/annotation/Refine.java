@@ -60,10 +60,10 @@ import java.lang.annotation.Target;
  * for more information on custom refinement.
  * <p>
  * You can optionally add a name to this annotation to scope refinement to units with that name. For example,
- * <code><pre>
- * {@code @}Refine("myFunction")
+ * <pre><code>
+ * {@literal @}Refine("myFunction")
  *  public void refine(RawFunction function, Grammar grammar, Broadcaster broadcaster}
- * </pre></code>
+ * </code></pre>
  * will only deliver {@link RawFunction}s with the name <em>myFunction</em>. Any {@link Refinable} that is an instance of {@link
  * Named} can be scoped in this manner. This matching is case-insensitive.
  * <p>

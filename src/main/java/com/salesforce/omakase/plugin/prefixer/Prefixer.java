@@ -95,7 +95,6 @@ import static com.salesforce.omakase.data.Browser.*;
  * }
  * </code></pre>
  * after prefixing could result in
- * <p>
  * <pre><code>
  * &#64;-webkit-keyframes animation {
  *     from { -webkit-transform: rotate(0deg); -ms-transform: rotate(0deg); transform: rotate(0deg) }

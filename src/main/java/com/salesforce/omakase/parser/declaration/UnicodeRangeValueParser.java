@@ -48,7 +48,7 @@ import static com.salesforce.omakase.parser.Source.Snapshot;
  * <p>
  * - wildcard range (e.g. {@code U+4??})
  * <p>
- * Check out the <a href='http://www.w3.org/TR/CSS21/syndata.html#tokenization (see UNICODE-RANGE)'>grammar</a> and the <a
+ * Check out the <a href='http://www.w3.org/TR/CSS21/syndata.html#tokenization'>grammar (see UNICODE-RANGE)</a> and the <a
  * href='http://dev.w3.org/csswg/css-fonts/#urange-value'>textual spec</a>.
  * <p>
  * The grammar indicates otherwise, but textual spec says that only trailing '?' are allowed (not mixed in between hexidecimals),

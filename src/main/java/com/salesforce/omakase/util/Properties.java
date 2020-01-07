@@ -41,7 +41,7 @@ public final class Properties {
 
     /**
      * Expands a string with wildcards ('*') to all known properties.
-     * <p/>
+     * <p>
      * For example, 'margin*' expands to 'margin-top', 'margin-right', and so on.
      *
      * @param pattern

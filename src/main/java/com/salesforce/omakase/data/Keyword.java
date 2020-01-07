@@ -570,7 +570,7 @@ public enum Keyword {
 
     /**
      * Gets whether this keyword is the only value of the given {@link Declaration}.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code Keyword.NONE.isOnlyValueIn(theDeclaration);}
@@ -588,7 +588,7 @@ public enum Keyword {
     /**
      * Gets whether the given {@link PropertyValue} only consists of one {@link Term} which is a {@link KeywordValue} with this
      * {@link Keyword}.
-     * <p/>
+     * <p>
      * Example:
      * <pre>
      * {@code Keyword.NONE.isOnlyValueIn(thePropertyValue);}

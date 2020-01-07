@@ -48,7 +48,6 @@ import java.util.Optional;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("SpellCheckingInspection")
 public final class Equivalents {
     private Equivalents() {}
 
@@ -66,12 +65,11 @@ public final class Equivalents {
      * @param <P>
      *     (P)eer. The type of units that are considered peers and also the type of unit that will be returned in the map.
      * @param <N>
-     *     (N)amed unit. The unit that has the unprefixed name. This could be the same type as {@link P}, or it could be a unit
-     *     that's a child of {@link P}.
+     *     (N)amed unit. The unit that has the unprefixed name. This could be the same type as {@code P}, or it could be a unit
+     *     that's a child of {@code P}.
      *
      * @return All found prefixed equivalents, or an empty immutable multimap if none are found.
      */
-    @SuppressWarnings("SpellCheckingInspection")
     public static <P, N extends Named> Multimap<Prefix, P> prefixes(P peer, N unprefixed, EquivalentWalker<P, N> walker) {
         Multimap<Prefix, P> multimap = null;
 
