@@ -45,20 +45,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Main entry point for the Omakase CSS Parser.
  * <p>
  * Example:
- * <code><pre>
+ * <pre><code>
  *     StyleWriter verbose = StyleWriter.verbose();
  *     StandardValidation validation = new StandardValidation();
  *     Omakase.source(input).use(verbose).use(validation).process();
  *     verbose.writeTo(System.out);
- * </pre></code>
+ * </code></pre>
  * Example:
- * <code><pre>
+ * <pre><code>
  *     StandardValidation validation = new StandardValidation();
  *     StyleWriter inline = StyleWriter.inline();
  *
  *     Omakase.source(input)
  *         .use(new Plugin() {
- *            {@code @}Rework
+ *            {@literal @}Rework
  *             public void rework(Selector selector) {
  *                 ...
  *             }
@@ -69,7 +69,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *         .process();
  *
  *     inline.writeTo(System.out);
- * </pre></code>
+ * </code></pre>
  * Unless you are specifically optimizing for performance you should usually add {@link StandardValidation}, and it should
  * be added after any custom plugins.
  * <p>

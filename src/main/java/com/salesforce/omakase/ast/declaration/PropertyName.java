@@ -222,7 +222,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
      * @return True if this {@link PropertyName} has a name that equals the given string, including the prefix if present.
      */
     public boolean matches(String name) {
-        return name != null && name().equals(name);
+        return name().equals(name);
     }
 
     /**

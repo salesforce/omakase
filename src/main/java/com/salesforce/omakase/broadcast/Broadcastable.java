@@ -62,9 +62,8 @@ public interface Broadcastable {
      * <p>
      * The broadcast will only occur for a unit if its {@link Status} matches the given {@link Status}.
      * <p>
-     * Implementers should call {@link #propagateBroadcast(Broadcaster, Status)} on child units and {@link
-     * SyntaxCollection}s first, then use the broadcaster to broadcast itself. All of this should be wrapped in a check to
-     * ensure the {@link Status} matches.
+     * Implementers should call this on child units and {@link SyntaxCollection}s first, then use the broadcaster to broadcast
+     * itself. All of this should be wrapped in a check to ensure the {@link Status} matches.
      *
      * @param broadcaster
      *     Use this {@link Broadcaster} to broadcast all unbroadcasted child units.

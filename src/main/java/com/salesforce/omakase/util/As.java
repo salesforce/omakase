@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Helper for constructing toString() methods...cuz guava's helper just doesn't get the job done.
  * <p>
- * Example: <code><pre>As.string(this).indent().add("abc", abc).toString();</pre></code>
+ * Example: <pre><code>As.string(this).indent().add("abc", abc).toString();</code></pre>
  *
  * @author nmcwilliams
  */

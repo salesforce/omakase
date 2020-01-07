@@ -50,7 +50,6 @@ public final class Args {
      * This will handle if the given string is encased in parenthesis, e.g., <code>(arg1, arg2)</code>. This does not distinguish
      * between commas inside of quotes or handle escaped commas.
      * <p>
-     * <p>
      * For example given the following:
      * <pre>
      *     (arg1, arg2)

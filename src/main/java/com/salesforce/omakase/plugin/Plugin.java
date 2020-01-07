@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.core.AutoRefine;
@@ -34,15 +33,15 @@ import com.salesforce.omakase.plugin.core.AutoRefine;
 /**
  * A plugin that is registered during CSS processing to perform refinement, rework, validation, and more.
  * <p>
- * Plugins are registered during parser setup using {@link Omakase.Request#use(Plugin...)} (and similar methods). Plugins will
- * generally be executed in the order that they are registered.
+ * Plugins are registered during parser setup using {@link com.salesforce.omakase.Omakase.Request#use(Plugin...)} (and similar
+ * methods). Plugins will generally be executed in the order that they are registered.
  * <p>
  * Note that when implementing a plugin, not all subscriptions will be received automatically. sometimes refinement, such as with
  * {@link AutoRefine}, is necessary. See the main readme file for more information.
  * <p>
  * Subscription method invocation order follows this pattern:
  * <p>
- * {@code @}Refine -> {@code @}Rework / {@code @}Observe -> {@code @}Validate.
+ * {@literal @}Refine -&gt; {@literal @}Rework / {@literal @}Observe -&gt; {@code @}Validate.
  * <p>
  * In a class hierarchy, the more specific type is received before the more abstract type (e.g., {@link ClassSelector}
  * subscription methods invoked before {@link Selector} subscription methods).

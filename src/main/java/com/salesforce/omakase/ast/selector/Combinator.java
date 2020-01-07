@@ -130,7 +130,7 @@ public final class Combinator extends AbstractSelectorPart implements SimpleSele
     }
 
     /**
-     * Creates a new child {@link Combinator} (">"). Usually used when dynamically creating {@link Selector}s.
+     * Creates a new child {@link Combinator} ("&gt;"). Usually used when dynamically creating {@link Selector}s.
      * <p>
      * Example:
      * <pre>

@@ -134,12 +134,26 @@ public final class Message {
 
     private Message() {}
 
-    /** format a message with parameters */
+    /**
+     * Format a message with parameters.
+     *
+     * @param message
+     *     The message.
+     * @param args
+     *     Optional arguments.
+     * @return The formatted message.
+     */
     public static String fmt(String message, Object... args) {
         return (args == null || args.length == 0) ? message : String.format(message, args);
     }
 
-    /** format a message with a Class as the parameter */
+    /**
+     * Format a message with a Class as the parameter.
+     *
+     * @param message The message.
+     * @param klazz The class to use as an argument for the message.
+     * @return The formatted message.
+     */
     public static String fmt(String message, Class<?> klazz) {
         return (klazz == null) ? message : String.format(message, klazz.getSimpleName());
     }

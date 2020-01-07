@@ -28,7 +28,6 @@ package com.salesforce.omakase.writer;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Comment;
 import com.salesforce.omakase.ast.Syntax;
@@ -48,7 +47,7 @@ import static com.google.common.base.Preconditions.*;
 /**
  * The main class for writing processed CSS content.
  * <p>
- * For usage add an instance of this class to {@link Omakase.Request#use(Plugin...)}.
+ * TO use, add an instance of this class via {@link com.salesforce.omakase.Omakase.Request#use(Plugin...)}.
  * <p>
  * Examples:
  * <pre><code>

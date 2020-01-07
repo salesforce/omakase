@@ -57,7 +57,9 @@ public abstract class AbstractSyntax implements Syntax {
 
     private Status status = Status.PARSED;
 
-    /** Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units). */
+    /**
+     * Creates a new instance with no line or number specified (used for dynamically created {@link Syntax} units).
+     */
     public AbstractSyntax() {
         this(-1, -1);
     }
@@ -106,13 +108,14 @@ public abstract class AbstractSyntax implements Syntax {
      * This should be called on all copied units. It handles shared logic such as copying comments.
      * <p>
      * Examples:
-     * <code><pre>
+     * <pre><code>
      *     Rule copy = new Rule().copiedFrom(original);
-     * </pre></code>
+     * </code></pre>
      *
      * @param original
      *     The original, copied unit.
-     *
+     * @param <T>
+     *     Syntax type.
      * @return this, for chaining.
      */
     @SuppressWarnings("unchecked")
@@ -305,13 +308,25 @@ public abstract class AbstractSyntax implements Syntax {
         return As.simpleString(this, includeUnitType);
     }
 
-    /** utility to ensure the comments list is created before using it */
+    /**
+     * utility to ensure the comments list is created before using it
+     *
+     * @param initialSize
+     *     The initial array size.
+     * @return The comment list.
+     */
     private List<Comment> getOrCreateComments(int initialSize) {
         if (comments == null) comments = new ArrayList<>(initialSize);
         return comments;
     }
 
-    /** utility to ensure the orphaned comments list is created before using it */
+    /**
+     * utility to ensure the orphaned comments list is created before using it
+     *
+     * @param initialSize
+     *     The initial array size.
+     * @return The comment list.
+     */
     private List<Comment> getOrCreateOrphanedComments(int initialSize) {
         if (orphanedComments == null) orphanedComments = new ArrayList<>(initialSize);
         return orphanedComments;

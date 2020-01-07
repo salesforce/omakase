@@ -72,7 +72,7 @@ public interface Broadcaster {
      * broadcaster in place of the old one. This puts your new broadcaster at the top of the chain. This way is the easiest, but
      * doesn't work in some scenarios.
      * <p>
-     * The second way is that you call branch on the original broadcaster, passing it a newly created one. This results in the new
+     * The second way is that you call chain on the original broadcaster, passing it a newly created one. This results in the new
      * broadcaster being at the bottom of the chain instead. When doing it this way, you <em>must</em> call {@link
      * Broadcaster#cut(Broadcaster)} on the original broadcaster before your method returns, after you are finished with the
      * broadcasting. Otherwise your new broadcaster will be left dangling. However this way is <b>required</b> if the broadcasted
@@ -84,6 +84,7 @@ public interface Broadcaster {
      *     The inner {@link Broadcaster}.
      *
      * @return The same broadcaster instance given to it.
+     * @param <T> The type of the broadcaster given.
      */
     <T extends Broadcaster> T chain(T broadcaster);
 

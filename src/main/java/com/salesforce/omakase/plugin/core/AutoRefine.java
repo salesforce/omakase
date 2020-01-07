@@ -52,10 +52,10 @@ import java.util.EnumSet;
  * refinement see the main readme file.
  * <p>
  * Example:
- * <code><pre>
+ * <pre><code>
  *     Omakase.use(AutoRefine.everything()).use(...).process();
  *     Omakase.use(AutoRefine.only(Match.FUNCTIONS).use(...).process();
- * </pre></code>
+ * </code></pre>
  * If including this plugin as a dependency then it's preferred to refine everything, otherwise consider requiring a more
  * specific refiner plugin such as {@link DeclarationPlugin} instead.
  *

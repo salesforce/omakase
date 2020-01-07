@@ -105,7 +105,7 @@ public final class CssAnnotation {
      * <p>
      * For example, given the following css annotation:
      * <pre><code>
-     *     {@code @}foo one two three four
+     *     {@literal @}foo one two three four
      * </code></pre>
      * The arguments returned will be a list with values "one", "two", "three", and "four".
      *
@@ -124,7 +124,7 @@ public final class CssAnnotation {
      * <p>
      * For example, given the following css annotation:
      * <pre><code>
-     *     {@code @}foo one, two, three, four
+     *     {@literal @}foo one, two, three, four
      * </code></pre>
      * The arguments returned will be a list with values "one", "two", "three", and "four".
      *
@@ -142,22 +142,21 @@ public final class CssAnnotation {
      * <p>
      * The key value pairs are separated by commas. For example, given any of the following css annotations:
      * <pre><code>
-     *     {@code @}foo bar=baz, bim=bop, bip=beep
-     *     {@code @}foo bar = baz, bim = bop, bip = beep
-     *     {@code @}foo bar:baz, bim:bop, bip:beep
-     *     {@code @}foo bar baz, bim bop, bip beep
+     *     {@literal @}foo bar=baz, bim=bop, bip=beep
+     *     {@literal @}foo bar = baz, bim = bop, bip = beep
+     *     {@literal @}foo bar:baz, bim:bop, bip:beep
+     *     {@literal @}foo bar baz, bim bop, bip beep
      * </code></pre>
      * The arguments returned will be a map with values {"bar"="baz", "bim"="bop", "bip"="beep"}.
      * <p>
      * Optionally, the first arg may omit the key, and it will be placed in the map under "name". For example:
      * <pre><code>
-     *     {@code @}foo bar, bim bop, bip beep
+     *     {@literal @}foo bar, bim bop, bip beep
      * </code></pre>
      * The arguments returned will be a map with values {"name"="bar", "bim"="bop", "bip"="boop"}
      *
      * @param keyValueSeparator
      *     The character separating key-value pairs, usually ' ', '=' or ':'. Spaces around this character are allowed.
-     *
      * @return The parsed map of arguments, or an empty map if no arguments are present.
      */
     public ImmutableMap<String, String> keyValueArgs(char keyValueSeparator) {
@@ -188,14 +187,13 @@ public final class CssAnnotation {
     }
 
     /**
-     * Same as {@link CssAnnotation#fromEnum(Class)}, except this method only works with enums that use TITLE_CASE, and
-     * annotations that either use TITLE_CASE or lowerCamel.
+     * Same as {@link CssAnnotation#fromEnum(Class, CaseFormat, CaseFormat)}, except this method only works with enums that use
+     * TITLE_CASE, and annotations that either use TITLE_CASE or lowerCamel.
      *
      * @param enumClass
      *     The enum class.
      * @param <E>
      *     The enum type.
-     *
      * @return The set of enum values found, or an empty set if no arguments are present.
      */
     public <E extends Enum<E>> EnumSet<E> fromEnum(Class<E> enumClass) {
@@ -212,7 +210,7 @@ public final class CssAnnotation {
      * The values must be space-separated and any value not present in the enum will result in an error. For example, with the
      * enum {ONE, TWO, THREE}, the following:
      * <pre><code>
-     *     {@code @}foo one two
+     *     {@literal @}foo one two
      * </code></pre>
      * would return a map containing ONE and TWO.
      * <p>
@@ -226,9 +224,7 @@ public final class CssAnnotation {
      *     The format used by the css annotations.
      * @param <E>
      *     The enum type.
-     *
      * @return The set of enum values found, or an empty set if no arguments are present.
-     *
      * @throws IllegalArgumentException
      *     for annotation arguments without a matching enum entry.
      */
@@ -258,7 +254,6 @@ public final class CssAnnotation {
      * @param useCached
      *     If true, this method will reuse the same {@link Comment} instance previously created from this method instead of
      *     creating a new one. As {@link Comment} objects are essentially immutable, you usually want to pass true here.
-     *
      * @return The new {@link Comment} instance.
      */
     public Comment toComment(boolean useCached) {
