@@ -25,7 +25,7 @@ For the first commit in a Salesforce release it's recommended to manually increa
 
 You can do this by manually updating pom.xml, or using `mvn versions:set -DnewVersion=1.2.3`.
 
-For example, if prod is on `222`, the Omakase version in prod is `1.4.4`, and the current pom has `1.4.5-SNAPSHOT`, when making the first commit for `224` then first change the version to `1.5.0-SNAPSHOT`. Emergency fixes in patch can continue to be made under `1.4.x`. Then you can continue with the above process as normal.
+For example, if prod is on `222`, and the Omakase version in prod is `1.4.4`, and the current pom has `1.4.5-SNAPSHOT`, when making the first commit for `224` first manually change the version to `1.5.0-SNAPSHOT`. Then you can continue with the above process as normal. Emergency fixes in patch can continue to be made under `1.4.x`.
 
 Backwards-incompatable and API-breaking changes should only be done in the next major Salesforce release, not in patch, and you must increment the major number manually.
 
