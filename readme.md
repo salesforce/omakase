@@ -3,9 +3,9 @@ Omakase
 
 [![Build](https://github.com/salesforce/omakase/workflows/Java%20CI/badge.svg)](https://github.com/salesforce/omakase/actions)
 [![codecov](https://codecov.io/gh/salesforce/omakase/branch/master/graph/badge.svg)](https://codecov.io/gh/salesforce/omakase)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Maven Central](https://img.shields.io/maven-central/v/com.salesforce/omakase.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.salesforce%22%20AND%20a:%22omakase%22)
-[![Javadoc](https://javadoc.io/badge2/com.salesforce/omakase/javadoc.svg)](https://javadoc.io/doc/com.salesforce/omakase)
+[![javadoc](https://javadoc.io/badge2/com.salesforce/omakase/javadoc.svg)](https://javadoc.io/doc/com.salesforce/omakase)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 Fast, Java-based, plugin-oriented CSS3+ parser.
 
@@ -41,12 +41,22 @@ Omakase is focused on runtime usage, and provides special features to make runti
 
 You can also parse snippets of CSS on-the-fly, such as a single selector or declaration value.
 
-How to download
----------------
+How to install
+--------------
 
-Build jars from source by cloning this project locally and running `mvn install` from the project root (must have Java and Maven installed).
+Omakase is hosted on Maven Central. You can add it as a Maven dependency in your pom.xml:
 
-Or you can download a jar from [releases]. Note that no dependencies are included in the release jars. The only main dependency is Guava. See the pom.xml file for more details.
+```xml
+<dependency>
+  <groupId>com.salesforce</groupId>
+  <artifactId>omakase</artifactId>
+  <version>1.4.4</version>
+</dependency>
+```
+
+Be sure to use the latest version, which is displayed at the top of this readme.
+
+You can alternatively build jars from source by cloning this project locally and running `mvn install` from the project root (must have Java and Maven installed). Then use the jars as appropriate for your project.
 
 Usage
 -----
