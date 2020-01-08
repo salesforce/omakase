@@ -294,7 +294,7 @@ This plugin must be registered before `StandardValidation` or `AutoRefine`.
 
 #### Prefixer
 
-The [`Prefixer`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/conditionals/ConditionalsValidator.html) plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules
+The [`Prefixer`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/prefixer/Prefixer.html) plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules
 function and keyword names, and automatically prepend prefixed-equivalents based on the specified level of browser support. For example:
 
 ```css
@@ -670,8 +670,6 @@ There are other utilities for working with units in the following utility classe
 - [Args.java](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Args.html)
 - [Others](https://opensource.salesforce.com/omakase/com/salesforce/omakase/util/package-summary.html)
 
-See the `com.salesforce.omakase.util` package for more.
-
 #### Custom validation
 
 Besides rework, you can also register subscription methods to perform validation and linting. Just like rework, you declare a method with the first parameter being the type of syntax unit you would like to validate. In addition there is a second parameter which is the [`ErrorManager`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/error/ErrorManager.html) used to report any problems.
@@ -739,7 +737,7 @@ You can also require your own custom plugins by using the [`#require(Class, Supp
 
 #### Performing both rework and validation
 
-Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation do not need to be separated out in to multiple classes.
+Note that any particular plugin can have as many [`@Rework`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Rework.html) and [`@Validate`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Validate.html) annotated methods as it needs. That is, rework and validation do not need to be separated out in to multiple classes.
 
 You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework or validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order.
 
