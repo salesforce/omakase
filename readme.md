@@ -11,8 +11,6 @@ Fast, Java-based, plugin-oriented CSS3+ parser.
 
 Omakase (お任せ o-_ma_-ka-say) has very few dependencies and doesn't need to execute Ruby or JavaScript code. It runs entirely in Java.
 
-[Snapshot Javadocs](http://opensource.salesforce.com/omakase/ "Generated from master")
-
 Features
 --------
 
@@ -41,6 +39,8 @@ Omakase is focused on runtime usage, and provides special features to make runti
 
 You can also parse snippets of CSS on-the-fly, such as a single selector or declaration value.
 
+[Snapshot Javadocs](http://opensource.salesforce.com/omakase/ "Generated from master")
+
 How to install
 --------------
 
@@ -61,7 +61,7 @@ You can alternatively build jars from source by cloning this project locally and
 Usage
 -----
 
-All parsing starts with the `Omakase` class. The CSS source is specified using the `#source(CharSequence)` method, optional plugins are then registered, and then parsing is performed with a call to `#process()`. An example of the most basic form of parsing is as follows:
+All parsing starts with the [`Omakase`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/Omakase.html) class. The CSS source is specified using the `#source(CharSequence)` method, optional plugins are then registered, and then parsing is performed with a call to `#process()`. An example of the most basic form of parsing is as follows:
 
 ```java
 Omakase.source(input).process();
@@ -69,13 +69,13 @@ Omakase.source(input).process();
 
 You will almost always include one or more plugins though. Plugins are used for output/minification, automatic vendor prefixing, modifications to the AST, custom linting, and more.
 
-Unless you are specifically optimizing for performance, you should at least add the `StandardValidation` plugin, and it should be last, after other plugins.
+Unless you are specifically optimizing for performance, you should at least add the [`StandardValidation`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/core/StandardValidation.html) plugin, and it should be last, after other plugins.
 
 Note that only one instance of a plugin can be registered per parsing operation.
 
 ### Output
 
-Use the `StyleWriter` plugin to write the processed CSS:
+Use the [`StyleWriter`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/writer/StyleWriter.html) plugin to write the processed CSS:
 
 ```java
 StyleWriter verbose = StyleWriter.verbose();
@@ -115,7 +115,7 @@ You can also override how any individual syntax unit is written. For more inform
 
 In Omakase, _validation_ refers to both actual syntax validation (e.g., that the arguments to an `rgba` function are well-formed) as well as what is commonly known as _linting_ (e.g., that fonts are specified using relative units instead of pixels).
 
-All validation is written and registered as plugins. To enable the standard validations, register an instance of the `StandardValidation` plugin:
+All validation is written and registered as plugins. To enable the standard validations, register an instance of the [`StandardValidation`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/core/StandardValidation.html) plugin:
 
 ```java
 Omakase.source(input).use(new StandardValidation()).process();
@@ -135,13 +135,13 @@ When registering plugins there are important details to keep in mind:
 
 - Only one instance of a plugin can be registered.
 - Subscription methods will be executed in the order that its plugin class was registered.
-- All `@Rework` subscription methods will be executed before `@Validate`, regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
+- All [`@Rework`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Rework.html) subscription methods will be executed before [`@Validate`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Validate.html), regardless of the order in which the plugins were registered. Essentially this means validation always happens after rework modification is fully completed.
 
 ### Bundled plugins
 
 #### SyntaxTree
 
-The `SyntaxTree` plugin is an extremely simple plugin that only grabs and stores a reference to the parsed `Stylesheet` object. It's an easy way for you to get access to the `Stylesheet` object without having to write a custom plugin.
+The [`SyntaxTree`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/core/SyntaxTree.html) plugin is an extremely simple plugin that only grabs and stores a reference to the parsed `Stylesheet` object. It's an easy way for you to get access to the `Stylesheet` object without having to write a custom plugin.
 
 ```java
 SyntaxTree tree = new SyntaxTree();
@@ -152,7 +152,7 @@ System.out.println("#statements = " + stylesheet.statements().size());
 
 #### AutoRefine
 
-The `AutoRefine` plugin is responsible for automatically refining all or certain `Refinable` objects. Currently this includes `Selector`, `Declaration`, `RawFunction` and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`).
+The [`AutoRefine`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/core/AutoRefine.html) plugin is responsible for automatically refining all or certain [`Refinable`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/ast/Refinable.html) objects. Currently this includes `Selector`, `Declaration`, `RawFunction` and `AtRule`. _Refinement_ refers to the process of taking a generic syntax string (e.g., ".class > #id") and parsing out the individuals units (e.g., `ClassSelector`, `Combinator`, `IdSelector`).
 
 Unless refinement occurs the syntax object may contain invalid CSS. For example a `Selector` may contain raw content consisting of ".class~!8391", but no errors will be thrown until it is refined. The `AutoRefine` plugin can do this automatically:
 
@@ -186,7 +186,7 @@ Conditionals allow you to vary the CSS output based on specific *true conditions
 
 If "ie7" is passed in as a *true condition* then the block will be retained, otherwise it will be removed.
 
-To use conditionals, register the `Conditionals` plugin:
+To use conditionals, register the [`Conditionals`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/conditionals/Conditionals.html) plugin:
 
 ```java
 Conditionals conditionals = new Conditionals("ie7");
@@ -239,7 +239,7 @@ Of course, any string can be used and referred to as a *true condition*, not jus
 
 ##### Conditionals Collector
 
-The `ConditionalsCollector` plugin can be used when you need to know what conditions were actually used in the input CSS, say, to determine what CSS variations you need to write.
+The [`ConditionalsCollector`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/conditionals/ConditionalsCollector.html) plugin can be used when you need to know what conditions were actually used in the input CSS, say, to determine what CSS variations you need to write.
 
 ```java
 StyleWriter writer = StyleWriter.compressed();
@@ -260,7 +260,7 @@ Note that `ConditionalsCollector` automatically registers an instance of the `Co
 
 ##### Conditionals Validator
 
-The `ConditionalsValidator` plugin can be used to ensure only certain conditions can be used in the CSS:
+The [`ConditionalsValidator`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/conditionals/ConditionalsValidator.html) plugin can be used to ensure only certain conditions can be used in the CSS:
 
 ```java
 ConditionalsValidator validation = new ConditionalsValidator("ie8", "ie9", "ie10", "chrome", "firefox");
@@ -271,7 +271,7 @@ Note that `ConditionalsValidator` automatically registers an instance of the `Co
 
 #### UnquotedIEFilterPlugin
 
-If you are in the unfortunate situation of using crappy legacy IE filters then the UnquotedIEFilterPlugin must be registered, otherwise syntax errors will occur.
+If you are in the unfortunate situation of using crappy legacy IE filters then the `UnquotedIEFilterPlugin` must be registered, otherwise syntax errors will occur.
 
 ```java
 UnquotedIEFilterPlugin ieFilters = new UnquotedIEFilterPlugin();
@@ -294,7 +294,7 @@ This plugin must be registered before `StandardValidation` or `AutoRefine`.
 
 #### Prefixer
 
-The `Prefixer` plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules
+The [`Prefixer`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/prefixer/Prefixer.html) plugin enables automatic vendor prefixing. It will analyze all prefixable selectors, properties, at-rules
 function and keyword names, and automatically prepend prefixed-equivalents based on the specified level of browser support. For example:
 
 ```css
@@ -527,11 +527,11 @@ See the [Subscribable Syntax Units](#subscribable-syntax-units) section below fo
 
 To get started, a plugin must first implement one or more of the _plugin interfaces_, listed as follows:
 
-- **Plugin** - the basic plugin.
-- **DependentPlugin** - for plugins that have dependencies on other plugins.
-- **GrammarPlugin** - for plugins that customize syntax and grammar.
-- **ParserPlugin** - for plugins customize individual parser behavior.
-- **PostProcessingPlugin** for plugins that need notification after all processing has completed.
+- [**Plugin**](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/Plugin.html) - the basic plugin.
+- [**DependentPlugin**](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/DependentPlugin.html) - for plugins that have dependencies on other plugins.
+- [**GrammarPlugin**](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/GrammarPlugin.html) - for plugins that customize syntax and grammar.
+- [**ParserPlugin**](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/ParserPlugin.html) - for plugins customize individual parser behavior.
+- [**PostProcessingPlugin**](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/PostProcessingPlugin.html) for plugins that need notification after all processing has completed.
 
 Most plugins will implement just the `Plugin` or `DependentPlugin` interface.
 
@@ -663,17 +663,16 @@ You can remove any unit from the tree by calling `#destroy`. Note that doing thi
 
 There are other utilities for working with units in the following utility classes:
 
-- Selectors.java
-- Declarations.java
-- Values.java
-- Actions.java
-- Parsers.java
-
-See the `com.salesforce.omakase.util` package for more.
+- [Selectors.java](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Selectors.html)
+- [Declarations.java](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Declarations.html)
+- [Values.java](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Values.html)
+- [Parsers.java](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Parsers.html)
+- [Args.java](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Args.html)
+- [Others](https://opensource.salesforce.com/omakase/com/salesforce/omakase/util/package-summary.html)
 
 #### Custom validation
 
-Besides rework, you can also register subscription methods to perform validation and linting. Just like rework, you declare a method with the first parameter being the type of syntax unit you would like to validate. In addition there is a second parameter which is the `ErrorManager` used to report any problems.
+Besides rework, you can also register subscription methods to perform validation and linting. Just like rework, you declare a method with the first parameter being the type of syntax unit you would like to validate. In addition there is a second parameter which is the [`ErrorManager`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/error/ErrorManager.html) used to report any problems.
 
 Here is an example of a class with two validation subscription methods:
 
@@ -701,7 +700,7 @@ public class Validations implements Plugin {
             String expected = propertyName.unprefixed();
 
             // go through each declaration in the block, looking for one with the unprefixed name
-            for (Declaration d : declaration.group() {
+            for (Declaration d : declaration.group()) {
                 if (d.isProperty(expected)) {
                     found = true;
                     break;
@@ -732,13 +731,13 @@ public class Dependent implements DependentPlugin {
 }
 ```
 
-The `#require` method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case.
+The [`#require`](https://opensource.salesforce.com/omakase/com/salesforce/omakase/PluginRegistry.html#require-java.lang.Class-) method takes the class of the plugin. If the plugin is already registered then the registered instance is simply returned. Otherwise one is automatically created and added to the registry. You can then proceed to configure the plugin as necessary for your use case.
 
-You can also require your own custom plugins by using the `#require(Class, Supplier)` method.
+You can also require your own custom plugins by using the [`#require(Class, Supplier)`](https://opensource.salesforce.com/omakase/com/salesforce/omakase/PluginRegistry.html#require-java.lang.Class-java.util.function.Supplier-) method.
 
 #### Performing both rework and validation
 
-Note that any particular plugin can have as many `@Rework` and `@Validate` annotated methods as it needs. That is, rework and validation do not need to be separated out in to multiple classes.
+Note that any particular plugin can have as many [`@Rework`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Rework.html) and [`@Validate`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Validate.html) annotated methods as it needs. That is, rework and validation do not need to be separated out in to multiple classes.
 
 You can also subscribe to the exact same syntax type in multiple methods. However there is no guarantee to the execution order of subscription methods to the exact same syntax unit type for the exact same operation (rework or validate). This means, for example, that if two `@Rework` methods subscribed to `ClassSelector` are needed, and that execution order is important, then these methods should be separated out into their own classes. The classes should then be registered in the intended execution order.
 
@@ -787,7 +786,7 @@ Omakase provides a powerful mechanism for extending the standard CSS syntax. You
 - Custom selectors
 - Custom declarations
 
-Using the `@Refine` annotation, you can subscribe to any `Refinable` syntax unit:
+Using the [`@Refine`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/annotation/Refine.html) annotation, you can subscribe to any `Refinable` syntax unit:
 
 ```java
 @Refine
@@ -795,7 +794,7 @@ public void refine(RawFunction function, Grammar grammar, Broadcaster broadcaste
 }
 ```
 
-`@Refine` methods must specify three parameters. The first is the unit to refine. The second is of type `Grammar`, which should be used to access internal parsers and tokens. The third is of type `Broadcaster`, which should be used to _broadcast_ refined syntax units.
+`@Refine` methods must specify three parameters. The first is the unit to refine. The second is of type [`Grammar`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/parser/Grammar.html), which should be used to access internal parsers and tokens. The third is of type [`Broadcaster`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/broadcast/Broadcaster.html), which should be used to _broadcast_ refined syntax units.
 
 Note that after a subscription method handles a unit it will not be sent to subsequent refiners, so plugins should be registered in appropriate order.
 
@@ -815,9 +814,9 @@ public void refine(RawFunction function, Grammar grammar, Broadcaster broadcaste
 }
 ```
 
-You can utilize the `Source` class as a parsing utility, and nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on the `Grammar` instance and the `Parsers` class.
+You can utilize the [`Source`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/parser/Source.html) class as a parsing utility, and nearly all of the library parsing functionality can be used standalone. This includes parsing rules, declarations, selectors, and even specific selectors like a class selector. Utilize the methods on the [`Grammar`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/parser/Grammar.html) instance and the [`Parsers`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/util/Parsers.html) class.
 
-For a full example of a `FunctionRefiner` see `UrlPlugin`. For a full example of an `AtRuleRefiner` see `ConditionalsPlugin` and related classes. For more detailed examples see the [test samples](src/test/java/com/salesforce/omakase/sample/custom/).
+For a full example of a [`RawFunction`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/ast/RawFunction.html) refiner see [`UrlPlugin`](src/main/java/com/salesforce/omakase/plugin/syntax/UrlPlugin.java). For a full example of an `AtRule` refiner see [`Conditionals`](src/main/java/com/salesforce/omakase/plugin/conditionals) plugin and related classes. For more detailed examples see the [test samples](src/test/java/com/salesforce/omakase/sample/custom/).
 
 Note that generally speaking, by simply utilizing an internal parser, all parsed units will be automatically broadcasted to the given broadcaster. This means that a custom function could simply parse a string for terms and operators using the term sequence parser and all encountered terms and operators will be automatically added to the declaration that the custom function is in, no further work required. To avoid this, just use your own broadcaster instance instead of passing through the one given to you.
 
@@ -825,7 +824,7 @@ Note that generally speaking, by simply utilizing an internal parser, all parsed
 
 As mentioned above, most of the time you want to include the `StandardValidation` or `AutoRefine` plugins to ensure that every AST object is refined and delivered to subscription methods. The alternative is to conditionally refine only the units that are necessary.
 
-The easiest way to do this is with `AutoRefine`, where you can specify to only refine selectors, declarations, etc:
+The easiest way to do this is with [`AutoRefine`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/core/AutoRefine.html), where you can specify to only refine selectors, declarations, etc:
 
 ```java
 // skip refinement of selectors
@@ -843,13 +842,13 @@ public void observe(Selector selector, Grammar grammar, Broadcaster broadcaster)
 }
 ```
 
-You can delegate refinement to the standard plugin (`SelectorPlugin`, `DeclarationPlugin`, `MediaPlugin`).
+You can delegate refinement to the standard plugin ([`SelectorPlugin`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/syntax/SelectorPlugin.html), [`DeclarationPlugin`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/syntax/DeclarationPlugin.html), [`MediaPlugin`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/plugin/syntax/MediaPlugin.html)).
 
 Using these methods you can eliminate unnecessary parsing for large sets of CSS in performance sensitive environments.
 
 ### Custom error handling
 
-The default `ErrorManager` is `DefaultErrorManager`, which will rethrow some errors immediately and log others at the end of parsing.
+The default [`ErrorManager`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/error/ErrorManager.html) is `DefaultErrorManager`, which will rethrow some errors immediately and log others at the end of parsing.
 
 You can alternatively specify your own `ErrorManager` implementation and provide it during parser setup:
 
@@ -867,7 +866,7 @@ Omakase allows you to hook into the writing process and override the output of a
 
 However, it is not recommended to change the actual content of the unit using a custom writer, as this will bypass all rework and validation rules.
 
-The first step is to create a new class that implements the `CustomWriter` interface. This interface is parameterized with the type of unit that it is overriding:
+The first step is to create a new class that implements the [`CustomWriter`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/writer/CustomWriter.html) interface. This interface is parameterized with the type of unit that it is overriding:
 
 ```java
 public class MyCustomWriter implements CustomWriter<Selector> {
@@ -880,7 +879,7 @@ public class MyCustomWriter implements CustomWriter<Selector> {
 }
 ```
 
-Inside of the `#write` method you can append any content to the output by using the given `StyleAppendable` as seen above. If you would like to append the default output of the unit as well then call the `StyleWriter#writeInner` method, passing false for the last parameter. This method should return true if it has handled the unit, or false to allow subsequent custom writers or the default writer to handle it instead.
+Inside of the `#write` method you can append any content to the output by using the given [`StyleAppendable`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/writer/StyleAppendable.html) as seen above. If you would like to append the default output of the unit as well then call the [`StyleWriter#writeInner`](https://opensource.salesforce.com/omakase/com/salesforce/omakase/writer/StyleWriter.html#writeInner-T-com.salesforce.omakase.writer.StyleAppendable-boolean-) method, passing false for the last parameter. This method should return true if it has handled the unit, or false to allow subsequent custom writers or the default writer to handle it instead.
 
 Afterwards, register this custom writer with the `StyleWriter` instance:
 
@@ -1003,10 +1002,10 @@ public class MyPlugin implements Plugin {
 }
 ```
 
-The `CssAnnotation` class contains many powerful methods to parse various arg formats including space-delimited,
+The [`CssAnnotation`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/ast/CssAnnotation.html) class contains many powerful methods to parse various arg formats including space-delimited,
 comma-delimited, key-value pairs and enum constants.
 
-If you happen to have your hands on a specific `Comment` instance, it has convenience methods as well.
+If you happen to have your hands on a specific [`Comment`](https://opensource.salesforce.com/omakase/index.html?com/salesforce/omakase/ast/Comment.html) instance, it has convenience methods as well.
 
 When an annotation is placed before a rule, it is associated with first selector instance in the rule, not the rule or the simple selector, as explained above. However for convenience, all of the `has*` and `get*` annotation methods will also check or include results from the first selector when called on a rule instance.
 
@@ -1080,7 +1079,7 @@ Interactive Shell
 
 This project comes with an interactive shell, which allows you to quickly see what Omakase will output when given specific input CSS, all in real-time.
 
-To get started, you must first run the omakase setup script. Under the omakase project directory run this command from the terminal:
+To get started, you must first run the Omakase setup script. Under the Omakase project directory run this command from the terminal:
 
     script/setup.sh
 
@@ -1186,7 +1185,6 @@ This will setup links to the omakase CLI script. Now you can run the `omakase` c
     Options:
 
       -b (--build)                  build the project
-      -d (--deploy)                 build and deploy jars (requires additional setup, see deploy.md)
       -h (--help)                   print this help message
       -i (--interactive, --shell)   interactive shell
       -l (--local-only)             only regenerate local data, no prefix data (used with -u option)

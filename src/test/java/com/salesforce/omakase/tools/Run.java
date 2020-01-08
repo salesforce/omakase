@@ -54,9 +54,6 @@ public class Run {
     @Option(name = "-p", aliases = "--perf", usage = "performance test", metaVar = "<args>")
     private boolean perf;
 
-    @Option(name = "-d", aliases = "--deploy", usage = "build and deploy jars (requires additional setup, see deploy.md)")
-    private boolean deploy;
-
     @Option(name = "-u", aliases = "--update", usage = "regenerate data enum, data class and prefixes source files")
     private boolean update;
 
@@ -103,12 +100,6 @@ public class Run {
                     RunPerfTest.printUsage();
                 } else {
                     RunPerfTest.run(arguments);
-                }
-            } else if (deploy) {
-                if (!exec("mvn deploy -P aura-external")) {
-                    System.out.println("\n" + Colors.red("could not deploy to the external aura maven repo"));
-                } else if (!exec("mvn deploy -P aura-nexus")) {
-                    System.out.println("\n" + Colors.red("could not deploy to the sfdc nexus repo"));
                 }
             } else if (update) {
                 new GeneratePrefixEnum().run();

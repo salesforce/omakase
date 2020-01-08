@@ -44,9 +44,9 @@ import java.util.Optional;
  * <p>
  * Examples:
  * <pre>
- * {@code Optional<HexColorValue> color = Value.asHexColor(declaration.propertyValue())}
- * {@code Optional<KeywordValue> keyword = Value.asKeyword(declaration.propertyValue())}
- * {@code Optional<NumericalValue> number = Value.asNumerical(declaration.propertyValue())}
+ * {@code Optional<HexColorValue> color = Values.asHexColor(declaration.propertyValue())}
+ * {@code Optional<KeywordValue> keyword = Values.asKeyword(declaration.propertyValue())}
+ * {@code Optional<NumericalValue> number = Values.asNumerical(declaration.propertyValue())}
  * </pre>
  *
  * @author nmcwilliams
