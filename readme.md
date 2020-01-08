@@ -61,7 +61,7 @@ You can alternatively build jars from source by cloning this project locally and
 Usage
 -----
 
-All parsing starts with the `Omakase` class. The CSS source is specified using the `#source(CharSequence)` method, optional plugins are then registered, and then parsing is performed with a call to `#process()`. An example of the most basic form of parsing is as follows:
+All parsing starts with the [`Omakase`](http://opensource.salesforce.com/omakase/) class. The CSS source is specified using the `#source(CharSequence)` method, optional plugins are then registered, and then parsing is performed with a call to `#process()`. An example of the most basic form of parsing is as follows:
 
 ```java
 Omakase.source(input).process();
@@ -1186,7 +1186,6 @@ This will setup links to the omakase CLI script. Now you can run the `omakase` c
     Options:
 
       -b (--build)                  build the project
-      -d (--deploy)                 build and deploy jars (requires additional setup, see deploy.md)
       -h (--help)                   print this help message
       -i (--interactive, --shell)   interactive shell
       -l (--local-only)             only regenerate local data, no prefix data (used with -u option)
