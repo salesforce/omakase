@@ -11,8 +11,6 @@ Fast, Java-based, plugin-oriented CSS3+ parser.
 
 Omakase (お任せ o-_ma_-ka-say) has very few dependencies and doesn't need to execute Ruby or JavaScript code. It runs entirely in Java.
 
-[Snapshot Javadocs](http://opensource.salesforce.com/omakase/ "Generated from master")
-
 Features
 --------
 
@@ -40,6 +38,8 @@ Omakase is built 100% solely for parsing CSS, which means that the error message
 Omakase is focused on runtime usage, and provides special features to make runtime parsing even faster, namely a 2-level parsing strategy. The first level separates the source into selectors, declarations and at-rules only. The (optional) second level breaks each unit down further, for example into class selectors, type selectors, id selectors, etc... This allows you to do a full pass during build time, but during runtime only parse the aspects of CSS that need to be reworked. This speed improvement is on top of the general performance numbers mentioned above.
 
 You can also parse snippets of CSS on-the-fly, such as a single selector or declaration value.
+
+[Snapshot Javadocs](http://opensource.salesforce.com/omakase/ "Generated from master")
 
 How to install
 --------------
@@ -700,7 +700,7 @@ public class Validations implements Plugin {
             String expected = propertyName.unprefixed();
 
             // go through each declaration in the block, looking for one with the unprefixed name
-            for (Declaration d : declaration.group() {
+            for (Declaration d : declaration.group()) {
                 if (d.isProperty(expected)) {
                     found = true;
                     break;
@@ -1079,7 +1079,7 @@ Interactive Shell
 
 This project comes with an interactive shell, which allows you to quickly see what Omakase will output when given specific input CSS, all in real-time.
 
-To get started, you must first run the omakase setup script. Under the omakase project directory run this command from the terminal:
+To get started, you must first run the Omakase setup script. Under the Omakase project directory run this command from the terminal:
 
     script/setup.sh
 
