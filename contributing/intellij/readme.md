@@ -48,16 +48,18 @@ These settings will ensure you have the correct code style, formatting, indentat
 
 *IMPORTANT*: it's possible that importing these settings may change general options that are not specific to the Omakase module as well. This may be important to you if you use IntelliJ for other projects. Beware! (I've done my best to not export any settings that might do this).
 
-1. file -> import settings -> choose idea/settings.jar (restart editor)
+1. file -> import settings -> choose contributing/intellij/settings.jar (restart editor)
 2. preferences -> editor -> code style -> choose scheme 'Omakase'
 3. ok
+
+Alternatively, just go to editor -> code style -> import scheme and choose contributing/intellij/Omakase Code Style.xml.
 
 If you don't import settings, the most important thing is that you use 4 spaces instead of tabs, and a right margin of 130. There are other settings for Java formatting, in which case you either need to manually duplicate or otherwise ensure any code you check in conforms with the existing code.
 
 Inspections
 -----------
 
-1. preferences -> editor -> inspections -> manage -> import -> choose idea/Omakase.xml
+1. preferences -> editor -> inspections -> manage -> import -> choose contributing/intellij/Omakase.xml
     1. ensure that 'Omakase' is chosen in the dropdown on left
 2. a bunch of inspections in the list should be highlighted as blue
 3. ok
