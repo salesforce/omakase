@@ -7,8 +7,10 @@ Then use these tips as a quick reminder.
 Quick Tips
 ----------
 1. Ensure all relevant changes are committed and pushed.
-2. If this is the first version in a major release, manually update the snapshot version (see versioning notes below).
-2. Run `mvn release:clean release:prepare` to tag and bump version.
+2. To tag and bump the version, **from the master branch** run `mvn release:clean release:prepare`
+    * You will be prompted for version numbers:
+        * If this is the first version in a Salesforce major release, manually enter a version with the minor number incremented (see versioning notes below).
+        * For patches and other continuing updates in the release, the defaults are fine.
 3. Ensure CI passes on github and everything looks good.
 4. Run `mvn release:perform -P release` to push to sonatype nexus and maven central.
 5. Update the dependency version in aura.
@@ -20,7 +22,7 @@ We use [semantic versioning](https://semver.org/), but with some considerations 
 
 For the first commit in a Salesforce release it's recommended to manually increment the minor number (or the major number if the changes are not backwards compatible). This way, changes can be made in patch independently from main and life will be easy.
 
-You can do this by manually updating pom.xml, or using `mvn versions:set -DnewVersion=1.2.3`.
+You can manually make this change in the pom.xml, do it as part of the release:perform step described above, or by running `mvn versions:set -DnewVersion=1.2.3`.
 
 For example let's say prod is on `222`, and the Omakase version in prod is `1.4.4`, and the current pom has `1.4.5-SNAPSHOT`. When making the first commit for `224`, first manually change the version to `1.5.0-SNAPSHOT`. Then you can continue with the above process as normal. Emergency fixes in patch can continue to be made under `1.4.x`.
 
