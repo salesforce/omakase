@@ -60,7 +60,7 @@ public final class DeclarationParser implements Parser {
         Optional<Character> special = specialToken.flatMap(source::optional);
 
         // read the property name
-        Optional<String> ident = source.readIdent();
+        Optional<String> ident = source.readIdentLevel3();
         if (!ident.isPresent()) return false;
 
         String content = special.isPresent() ? special.get() + ident.get() : ident.get();

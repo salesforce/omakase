@@ -57,7 +57,7 @@ import static com.salesforce.omakase.util.Prefixes.PrefixPair;
  */
 public final class PropertyName extends AbstractSyntax implements Named {
     private static final char STAR = '*';
-    private static final char PREFIX_START = '-';
+    private static final char PREFIX_OR_CUSTOM_PROP_START = '-';
 
     private Prefix prefix;
     private boolean starHack;
@@ -70,15 +70,24 @@ public final class PropertyName extends AbstractSyntax implements Named {
     private PropertyName(int line, int column, String name) {
         super(line, column);
 
-        name = name.toLowerCase(); // for output consistency and Property enum lookup
-
         // the IE7 "star hack" is not part of the CSS syntax, but it still needs to be handled
         if (name.charAt(0) == STAR) {
             starHack(true);
             name = name.substring(1);
         }
 
-        if (name.charAt(0) == PREFIX_START) {
+        char firstChar = name.charAt(0);
+        char secondChar = name.charAt(1);
+
+        boolean isCustomProp = firstChar == PREFIX_OR_CUSTOM_PROP_START && secondChar == PREFIX_OR_CUSTOM_PROP_START;
+        boolean isPrefixed = !isCustomProp && firstChar == PREFIX_OR_CUSTOM_PROP_START;
+
+        // custom properties are case-sensitive, so don't modify those
+        if (!isCustomProp) {
+            name = name.toLowerCase(); // for output consistency and Property enum lookup
+        }
+
+        if (isPrefixed) {
             PrefixPair pair = Prefixes.splitPrefix(name);
             this.prefix = pair.prefix().orElse(null);
             this.unprefixed = pair.unprefixed();

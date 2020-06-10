@@ -60,9 +60,9 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
             "   ",
             "\n",
             "{color: red}",
-            "--test:red",
             "^",
-            "$name");
+            "$name",
+            "- - ");
     }
 
     @Override
@@ -125,7 +125,12 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
                 "margin: 1.1%",
                 "margin: +1px",
                 "margin: +1.1em",
-                "font-family:\"Times new Roman\""
+                "font-family:\"Times new Roman\"",
+                "--test:red",
+                "--my-color: 222, 202, 180",
+                "--MY_SIZE: 14rem",
+                "--somecomplexvalue: 5px 200px rgb(20, 32, 54)",
+                "--my-alias: var(--my-color, var(--my-other-color, red))"
             );
     }
 
@@ -150,7 +155,8 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
                 withExpectedResult("\n color: red} \n .class2 {color: red}", 12),
                 withExpectedResult("color: /*comment\ncomment*/ blue; ", 31),
                 withExpectedResult("*color:red", 10),
-                withExpectedResult("/*comment*//*comment*/ *color: red", 34)
+                withExpectedResult("/*comment*//*comment*/ *color: red", 34),
+                withExpectedResult("--my-alias: var(--my-color, var(--my-other-color, red)); color: red", 55)
             );
     }
 
@@ -207,7 +213,9 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
             withExpectedResult("display:none", "display"),
             withExpectedResult("COLOR:red", "COLOR"),
             withExpectedResult("*COLOR:red", "*COLOR"),
-            withExpectedResult("ANIMATION-timing-function:red", "ANIMATION-timing-function"));
+            withExpectedResult("ANIMATION-timing-function:red", "ANIMATION-timing-function"),
+            withExpectedResult("--my-color: 222, 202, 180", "--my-color"),
+            withExpectedResult("--MY-COLOR: blue", "--MY-COLOR"));
 
         for (ParseResult<String> result : results) {
             Declaration d = expectOnly(result.broadcaster, Declaration.class);

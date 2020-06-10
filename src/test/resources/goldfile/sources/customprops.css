@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided
+ * that the following conditions are met:
+ *
+ *    Redistributions of source code must retain the above copyright notice, this list of conditions and the
+ *    following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+ *    the following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *    Neither the name of salesforce.com, inc. nor the names of its contributors may be used to endorse or
+ *    promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+:root {
+  --main-color: #090979;
+  --main-bg-color: #00d4ff;
+  --alt-color: var(--main-color);
+  --Main-Color: #efefef;
+  --foo: ; /** this is valid according to the spec */
+
+  /*
+     as per the spec, the following is a valid custom property:
+     "While this value is obviously useless as a variable, as it would be invalid in any normal property,
+     it might be read and acted on by JavaScript."
+     However this causes all kinds of issues and does not seem like a necessary supported use case at this time.
+   */
+  /*--foo-js: if(x > 5) this.width = 10;*/
+}
+
+.panel {
+  background-color: var(--main-bg-color, #000);
+}
+
+.main .heading h1 {
+  border-bottom: 1px solid var(--main-bg-color);
+}
+
+.panel:hover {
+  font-weight: var(--font-weight);
+}
+
+.block {
+  color: var(--main-color, var(--alt-color, #000));
+  background: linear-gradient(to bottom, var(--main-color), green);
+}
+
+@media screen and (max-width: 400px) {
+  :root {
+    --accent-color: 212, 108, 166;
+  }
+
+  .panel {
+    --main-color: rgba(131, 58, 180, 1);
+  }
+
+  .main .heading {
+    background: rgba(var(--accent-color), 1);
+  }
+}
+

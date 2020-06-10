@@ -1,0 +1,11 @@
+:root{--main-color:#090979;--main-bg-color:#00d4ff;--alt-color:var(--main-color);--Main-Color:#efefef;--foo:}.panel{background-color:var(--main-bg-color, #000)}.main .heading h1{border-bottom:1px solid var(--main-bg-color)}.panel:hover{font-weight:var(--font-weight)}.block{color:var(--main-color, var(--alt-color, #000));background:linear-gradient(to bottom, var(--main-color), green)}@media screen and (max-width: 400px){:root {
+    --accent-color: 212, 108, 166;
+  }
+
+  .panel {
+    --main-color: rgba(131, 58, 180, 1);
+  }
+
+  .main .heading {
+    background: rgba(var(--accent-color), 1);
+  }}

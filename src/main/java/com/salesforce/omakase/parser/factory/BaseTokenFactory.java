@@ -45,7 +45,7 @@ public class BaseTokenFactory implements TokenFactory {
     protected static final Token AT_RULE_BLOCK_END = CLOSE_BRACE;
     protected static final Token AT_RULE_TERMINATION = SEMICOLON;
     protected static final Token AT_RULE_EXPRESSION_END = AT_RULE_TERMINATION.or(AT_RULE_BLOCK_BEGIN);
-    protected static final Token SELETOR_BEGIN = DOT.or(HASH).or(ALPHA).or(COLON).or(OPEN_BRACKET).or(STAR);
+    protected static final Token SELECTOR_BEGIN = DOT.or(HASH).or(ALPHA).or(COLON).or(OPEN_BRACKET).or(STAR);
     protected static final Token SELECTOR_DELIMITER = COMMA;
     protected static final Token SELECTOR_END = SELECTOR_DELIMITER.or(OPEN_BRACE);
     protected static final Token DECLARATION_END = SEMICOLON.or(CLOSE_BRACE);
@@ -72,7 +72,7 @@ public class BaseTokenFactory implements TokenFactory {
 
     @Override
     public Token selectorBegin() {
-        return SELETOR_BEGIN;
+        return SELECTOR_BEGIN;
     }
 
     @Override
