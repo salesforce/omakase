@@ -231,6 +231,18 @@ public class DeclarationTest {
     }
 
     @Test
+    public void isPropertyReturnsTrueForMatchingCustomProperty() {
+        Declaration d = new Declaration(PropertyName.of("--custom-color"), KeywordValue.of(Keyword.RED));
+        assertThat(d.isProperty(PropertyName.of("--custom-color"))).isTrue();
+    }
+
+    @Test
+    public void isPropertyReturnsFalseForDifferentCasedCustomProperty() {
+        Declaration d = new Declaration(PropertyName.of("--custom-color"), KeywordValue.of(Keyword.RED));
+        assertThat(d.isProperty(PropertyName.of("--CUSTOM-color"))).isFalse();
+    }
+
+    @Test
     public void isPropertyTrue() {
         Declaration d = new Declaration(Property.DISPLAY, PropertyValue.of(KeywordValue.of(Keyword.NONE)));
         assertThat(d.isProperty(PropertyName.of(Property.DISPLAY))).isTrue();
