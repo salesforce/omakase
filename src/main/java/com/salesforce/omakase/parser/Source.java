@@ -918,10 +918,9 @@ public final class Source {
         Optional<String> ident = this.readIdent();
 
         if (!ident.isPresent()) {
-            final char current = current();
             // the spec does not indicate or state that NMSTART is required as the third code point, so `--` is a valid ident
             // (fun note, `--`, `---`, etc... in Chrome appear to be valid custom properties).
-            if (HYPHEN.matches(current) && HYPHEN.matches(peek())) {
+            if (HYPHEN.matches(current()) && HYPHEN.matches(peek())) {
                 return Optional.of(chomp(NMCHAR));
             }
         }
