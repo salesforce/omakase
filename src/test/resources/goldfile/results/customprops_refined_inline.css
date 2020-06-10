@@ -1,4 +1,4 @@
-:root {--main-color:#090979; --main-bg-color:#00d4ff; --alt-color:var(--main-color); --main-color:#efefef; --foo:}
+:root {--main-color:#090979; --main-bg-color:#00d4ff; --alt-color:var(--main-color); --Main-Color:#efefef; --foo:}
 .panel {background-color:var(--main-bg-color, #000)}
 .main .heading h1 {border-bottom:1px solid var(--main-bg-color)}
 .panel:hover {font-weight:var(--font-weight)}

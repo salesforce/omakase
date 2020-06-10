@@ -31,7 +31,7 @@ package com.salesforce.omakase.test.goldfile;
  *
  * @author nmcwilliams
  */
-public class CustomPropertiesTest extends AbstractGoldfileTest {
+public class CustomPropertiesGoldfileTest extends AbstractGoldfileTest {
     @Override
     public String name() {
         return "customprops";

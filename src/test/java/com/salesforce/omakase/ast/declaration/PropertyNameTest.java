@@ -69,6 +69,30 @@ public class PropertyNameTest {
     }
 
     @Test
+    public void prefixedKnownPropIsLowerCased() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME.toUpperCase());
+        assertThat(prefixed.name()).isEqualTo(PREFIX + NAME.toLowerCase());
+    }
+
+    @Test
+    public void unprefixedKnownPropIsLowerCased() {
+        PropertyName prefixed = PropertyName.of(NAME.toUpperCase());
+        assertThat(prefixed.name()).isEqualTo(NAME.toLowerCase());
+    }
+
+    @Test
+    public void unprefixedUnknownPropIsLowerCased() {
+        PropertyName prefixed = PropertyName.of("FOO");
+        assertThat(prefixed.name()).isEqualTo("foo");
+    }
+
+    @Test
+    public void customPropertyIsNotLowerCased() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME.toUpperCase());
+        assertThat(customProperty.name()).isEqualTo(CUSTOM_PROPERTY_NAME.toUpperCase());
+    }
+
+    @Test
     public void unprefixedNameWhenPrefixIsPresent() {
         PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.unprefixed()).isEqualTo(NAME);
@@ -203,12 +227,12 @@ public class PropertyNameTest {
     }
 
     @Test
-    public void asPropertyIgnorPrefixAbsentWhenUnknown() {
+    public void asPropertyIgnorePrefixAbsentWhenUnknown() {
         assertThat(PropertyName.of("-webkit-blah").asPropertyIgnorePrefix().isPresent()).isFalse();
     }
 
     @Test
-    public void asPropertyIgnorPrefixAbsentWhenCustomProperty() {
+    public void asPropertyIgnorePrefixAbsentWhenCustomProperty() {
         PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
         assertThat(customProperty.asPropertyIgnorePrefix().isPresent()).isFalse();
     }
@@ -426,6 +450,21 @@ public class PropertyNameTest {
     @Test
     public void copyFromUnknownProperty() {
         PropertyName name = PropertyName.of("blah");
+        assertThat(name.isPrefixed()).isFalse();
+        assertThat(name.hasStarHack()).isFalse();
+        name.comments(Lists.newArrayList("test"));
+
+        PropertyName copy = name.copy();
+        assertThat(copy.unprefixed()).isEqualTo(name.unprefixed());
+        assertThat(copy.prefix().isPresent()).isEqualTo(name.prefix().isPresent());
+        assertThat(copy.hasStarHack()).isEqualTo(name.hasStarHack());
+        assertThat(copy.comments()).hasSameSizeAs(name.comments());
+        assertThat(copy.asProperty().isPresent()).isFalse();
+    }
+
+    @Test
+    public void copyFromCustomProperty() {
+        PropertyName name = PropertyName.of("--my-Custom_prop");
         assertThat(name.isPrefixed()).isFalse();
         assertThat(name.hasStarHack()).isFalse();
         name.comments(Lists.newArrayList("test"));
