@@ -70,6 +70,7 @@ public final class PropertyName extends AbstractSyntax implements Named {
     private PropertyName(int line, int column, String name) {
         super(line, column);
 
+        // TODO don't use lower case name for custom properties
         name = name.toLowerCase(); // for output consistency and Property enum lookup
 
         // the IE7 "star hack" is not part of the CSS syntax, but it still needs to be handled
@@ -78,7 +79,8 @@ public final class PropertyName extends AbstractSyntax implements Named {
             name = name.substring(1);
         }
 
-        if (name.charAt(0) == PREFIX_START) {
+        // two dashes, `--` is not a prefix but a custom property
+        if (name.charAt(0) == PREFIX_START && name.charAt(1) != PREFIX_START) {
             PrefixPair pair = Prefixes.splitPrefix(name);
             this.prefix = pair.prefix().orElse(null);
             this.unprefixed = pair.unprefixed();

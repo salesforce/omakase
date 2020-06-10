@@ -50,7 +50,7 @@ public class DeclarationSequenceParserTest extends AbstractParserTest<Declaratio
             "   ",
             "\n",
             "{}",
-            "---"
+            "- --"
         );
     }
 
@@ -63,7 +63,8 @@ public class DeclarationSequenceParserTest extends AbstractParserTest<Declaratio
             "color: red; margin: 1px solid background: red;",
             "color: red; \n margin: 1px solid red;\n",
             "display:none;color:red;    padding: 1px",
-            "background: linear-gradient(45deg,rgba(0,0,0,0.24) 0%,rgba(0,0,0,0) 100%); color: blue"
+            "background: linear-gradient(45deg,rgba(0,0,0,0.24) 0%,rgba(0,0,0,0) 100%); color: blue",
+            "--custom-color: red; color: var(--custom-color); --alt-size: 1rem"
         );
     }
 

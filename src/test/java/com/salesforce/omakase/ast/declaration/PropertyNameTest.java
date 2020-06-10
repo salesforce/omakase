@@ -39,72 +39,105 @@ import java.io.IOException;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Unit tests for {@link PropertyName}. */
-@SuppressWarnings("JavaDoc")
+/**
+ * Unit tests for {@link PropertyName}.
+ */
 public class PropertyNameTest {
     private static final Prefix PREFIX = Prefix.WEBKIT;
     private static final String NAME = "border-radius";
     private static final String STARHACK_NAME = "*color";
+    private static final String CUSTOM_PROPERTY_NAME = "--main-color";
 
     @Rule public final ExpectedException exception = ExpectedException.none();
 
-    private PropertyName prefixed;
-    private PropertyName unprefixed;
-
-    @Before
-    public void setup() {
-        prefixed = PropertyName.of(PREFIX + NAME);
-        unprefixed = PropertyName.of(NAME);
-    }
-
     @Test
     public void nameWithPrefix() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.name()).isEqualTo(PREFIX + NAME);
     }
 
     @Test
     public void nameWithoutPrefix() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.name()).isEqualTo(NAME);
     }
 
     @Test
+    public void nameWithCustomProperty() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.name()).isEqualTo(CUSTOM_PROPERTY_NAME);
+    }
+
+    @Test
     public void unprefixedNameWhenPrefixIsPresent() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.unprefixed()).isEqualTo(NAME);
     }
 
     @Test
     public void unprefixedNameWhenPrefixIsAbsent() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.unprefixed()).isEqualTo(NAME);
     }
 
     @Test
+    public void unprefixedNameWhenCustomProperty() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.unprefixed()).isEqualTo(CUSTOM_PROPERTY_NAME);
+    }
+
+    @Test
     public void isPrefixedTrue() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.isPrefixed()).isTrue();
     }
 
     @Test
     public void isPrefixedFalse() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.isPrefixed()).isFalse();
     }
 
     @Test
+    public void isPrefixedReturnsFalseForCustomProperty() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.isPrefixed()).isFalse();
+    }
+
+    @Test
+    public void isPrefixedReturnsTrueForPrefixedCustomProperty() { // of course unexpected
+        PropertyName propertyName = PropertyName.of(PREFIX + CUSTOM_PROPERTY_NAME);
+        assertThat(propertyName.isPrefixed()).isTrue();
+    }
+
+    @Test
     public void prefixPresent() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.prefix().get()).isSameAs(PREFIX);
     }
 
     @Test
     public void prefixAbsent() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.prefix().isPresent()).isFalse();
     }
 
     @Test
+    public void prefixAbsentForCustomProperty() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.prefix().isPresent()).isFalse();
+    }
+
+    @Test
     public void setsPrefixWhenPreviouslyUnset() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         unprefixed.prefix(Prefix.MOZ);
         assertThat(unprefixed.prefix().get()).isSameAs(Prefix.MOZ);
     }
 
     @Test
     public void removePrefix() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         prefixed.removePrefix();
         assertThat(prefixed.prefix().isPresent()).isFalse();
     }
@@ -125,11 +158,19 @@ public class PropertyNameTest {
 
     @Test
     public void hasPrefixFalseWhenPrefixNotPresent() {
+        PropertyName unprefixed = PropertyName.of(NAME);
+        assertThat(unprefixed.hasPrefix(Prefix.WEBKIT)).isFalse();
+    }
+
+    @Test
+    public void hasPrefixFalseForCustomProperty() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.hasPrefix(Prefix.WEBKIT)).isFalse();
     }
 
     @Test
     public void asPropertyAbsentWhenPrefixed() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.asProperty().isPresent()).isFalse();
     }
 
@@ -139,17 +180,25 @@ public class PropertyNameTest {
     }
 
     @Test
+    public void asPropertyAbsentWhenCustomProperty() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.asProperty().isPresent()).isFalse();
+    }
+
+    @Test
     public void asPropertyKnownProperty() {
         assertThat(PropertyName.of(Property.DISPLAY).asProperty().get()).isSameAs(Property.DISPLAY);
     }
 
     @Test
     public void asPropertyIgnorePrefixHasPrefix() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.asPropertyIgnorePrefix().get()).isSameAs(Property.BORDER_RADIUS);
     }
 
     @Test
     public void asPropertyIgnorePrefixDoesntHavePrefix() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.asPropertyIgnorePrefix().get()).isSameAs(Property.BORDER_RADIUS);
     }
 
@@ -159,22 +208,32 @@ public class PropertyNameTest {
     }
 
     @Test
+    public void asPropertyIgnorPrefixAbsentWhenCustomProperty() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.asPropertyIgnorePrefix().isPresent()).isFalse();
+    }
+
+    @Test
     public void matchesIgnorePrefixTrueWhenPrefixed() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.matchesIgnorePrefix(Property.BORDER_RADIUS)).isTrue();
     }
 
     @Test
     public void matchesIgnorePrefixTrueWhenNotPrefixed() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matchesIgnorePrefix(Property.BORDER_RADIUS)).isTrue();
     }
 
     @Test
     public void matchesIgnorePrefixFalseWhenPrefixed() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.matchesIgnorePrefix(Property.BORDER)).isFalse();
     }
 
     @Test
     public void matchesIgnorePrefixFalseWhenNotPrefixed() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matchesIgnorePrefix(Property.BORDER)).isFalse();
     }
 
@@ -187,34 +246,68 @@ public class PropertyNameTest {
 
     @Test
     public void matchesIgnorePrefixTrueWhenPrefixedString() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.matchesIgnorePrefix("border-radius")).isTrue();
     }
 
     @Test
     public void matchesIgnorePrefixTrueWhenNotPrefixedString() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matchesIgnorePrefix("border-radius")).isTrue();
     }
 
     @Test
     public void matchesIgnorePrefixFalseWhenPrefixedString() {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         assertThat(prefixed.matchesIgnorePrefix("border")).isFalse();
     }
 
     @Test
     public void matchesIgnorePrefixFalseWhenNotPrefixedString() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matchesIgnorePrefix("border")).isFalse();
     }
 
     @Test
+    public void matchesIgnorePrefixTrueForEqualCustomProperties() {
+        PropertyName pn1 = PropertyName.of("--custom-foo");
+        PropertyName pn2 = PropertyName.of("--custom-foo");
+        assertThat(pn1.matchesIgnorePrefix(pn2)).isTrue();
+    }
+
+    @Test
+    public void matchesIgnorePrefixFalseForDifferentCustomProperties() {
+        PropertyName pn1 = PropertyName.of("--custom-foo");
+        PropertyName pn2 = PropertyName.of("--custom-bar");
+        assertThat(pn1.matchesIgnorePrefix(pn2)).isFalse();
+    }
+
+    @Test
+    public void matchesIgnorePrefixFalseForPrefixAndCustomProperty() {
+        PropertyName pn1 = PropertyName.of("-webkit-border-radius");
+        PropertyName pn2 = PropertyName.of("--border-radius");
+        assertThat(pn1.matchesIgnorePrefix(pn2)).isFalse();
+    }
+
+    @Test
     public void writeForPropertyWithPrefix() throws IOException {
+        PropertyName prefixed = PropertyName.of(PREFIX + NAME);
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSingle(prefixed)).isEqualTo(PREFIX + NAME);
     }
 
     @Test
     public void writeForPropertyWithoutPrefix() throws IOException {
+        PropertyName unprefixed = PropertyName.of(NAME);
         StyleWriter writer = StyleWriter.compressed();
         assertThat(writer.writeSingle(unprefixed)).isEqualTo(NAME);
+    }
+
+    @Test
+    public void writeForCustomProperty() throws IOException {
+        StyleWriter writer = StyleWriter.compressed();
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(writer.writeSingle(customProperty)).isEqualTo(CUSTOM_PROPERTY_NAME);
     }
 
     @Test
@@ -234,12 +327,20 @@ public class PropertyNameTest {
 
     @Test
     public void matchesSameInstance() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matches(unprefixed)).isTrue();
     }
 
     @Test
     public void matchesAnotherPropertyNameWithSameName() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matches(PropertyName.of(NAME))).isTrue();
+    }
+
+    @Test
+    public void matchesAnotherCustomPropertyNameWithSameName() {
+        PropertyName customProperty = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(customProperty.matches(PropertyName.of(CUSTOM_PROPERTY_NAME))).isTrue();
     }
 
     @Test
@@ -255,7 +356,14 @@ public class PropertyNameTest {
     }
 
     @Test
+    public void matchesStringWithSameCustomPropertyName() {
+        PropertyName name = PropertyName.of(CUSTOM_PROPERTY_NAME);
+        assertThat(name.matches(CUSTOM_PROPERTY_NAME)).isTrue();
+    }
+
+    @Test
     public void doesNotMatchPropertyNameWithDifferentName() {
+        PropertyName unprefixed = PropertyName.of(NAME);
         assertThat(unprefixed.matches(PropertyName.of("zyx"))).isFalse();
     }
 
@@ -269,6 +377,12 @@ public class PropertyNameTest {
     public void doesNotMatchStringWithDifferentName() {
         PropertyName name = PropertyName.of("display");
         assertThat(name.matches("color")).isFalse();
+    }
+
+    @Test
+    public void doesNotMatchCustomPropertyWithoutDashes() {
+        PropertyName name = PropertyName.of("--myprop");
+        assertThat(name.matches("myprop")).isFalse();
     }
 
     @Test

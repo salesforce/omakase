@@ -307,7 +307,6 @@ public final class Source {
      * Gets whether the current character is preceded by the escape character
      *
      * @return If the current character is escaped.
-     *
      * @see Tokens#ESCAPE
      */
     public boolean isEscaped() {
@@ -405,7 +404,6 @@ public final class Source {
      *
      * @param numCharacters
      *     The number of characters ahead to peak.
-     *
      * @return The character, or null if the end of the source occurs first.
      */
     public char peek(int numCharacters) {
@@ -453,7 +451,6 @@ public final class Source {
      *
      * @param token
      *     The token to match.
-     *
      * @return The parsed character, or an empty {@link Optional} if not matched.
      */
     public Optional<Character> optional(Token token) {
@@ -474,7 +471,6 @@ public final class Source {
      *
      * @param token
      *     The token to match.
-     *
      * @return True if there was a match, false otherwise.
      */
     public boolean optionallyPresent(Token token) {
@@ -491,7 +487,6 @@ public final class Source {
      *     Enum class.
      * @param <T>
      *     Type of the enum.
-     *
      * @return The matching enum instance, or an empty {@link Optional} if none match.
      */
     public <T extends Enum<T> & TokenEnum> Optional<T> optionalFromEnum(Class<T> klass) {
@@ -513,7 +508,6 @@ public final class Source {
      *     Enum class.
      * @param <T>
      *     Type of the enum.
-     *
      * @return The matching enum instance, or an empty {@link Optional} if none match.
      */
     public <T extends Enum<T> & ConstantEnum> Optional<T> optionalFromConstantEnum(Class<T> klass) {
@@ -530,7 +524,6 @@ public final class Source {
      *
      * @param token
      *     Ensure that the current token matches this {@link Token} before we advance.
-     *
      * @return this, for chaining.
      */
     public Source expect(Token token) {
@@ -547,7 +540,6 @@ public final class Source {
      *     The error message to use if there isn't a match.
      * @param args
      *     Optional error message arguments to String#format.
-     *
      * @return this, for chaining.
      */
     public Source expect(Token token, String errorMessage, Object... args) {
@@ -567,7 +559,6 @@ public final class Source {
      *
      * @param token
      *     The token to match.
-     *
      * @return A string containing all characters that were matched, excluding the character that matched the given {@link Token}.
      */
     public String until(Token token) {
@@ -608,7 +599,6 @@ public final class Source {
      *
      * @param token
      *     The token to match.
-     *
      * @return A string containing all characters that were matched. If nothing matched then an empty string is returned.
      */
     public String chomp(Token token) {
@@ -638,7 +628,6 @@ public final class Source {
      *     The opening token.
      * @param closingToken
      *     The closing token.
-     *
      * @return All content in between the opening and closing tokens (excluding the tokens themselves).
      */
     public String chompEnclosedValue(Token openingToken, Token closingToken) {
@@ -717,7 +706,6 @@ public final class Source {
      *
      * @param skipWhitespace
      *     If we should skip past whitespace before, between and after comments.
-     *
      * @return this, for chaining.
      */
     public Source collectComments(boolean skipWhitespace) {
@@ -760,12 +748,11 @@ public final class Source {
      * parser later determines it doesn't match. The next parser can still retrieve the comments from the buffer even if another
      * parser triggered the collection of them.
      * <p>
-     * This method will return true if anything was parsed. Pass in a value false to only check for comments and not
-     * whitespace, otherwise pass in true.
+     * This method will return true if anything was parsed. Pass in a value false to only check for comments and not whitespace,
+     * otherwise pass in true.
      *
      * @param skipWhitespace
      *     If we should skip past whitespace before, between and after comments.
-     *
      * @return True if anything was parsed.
      */
     public boolean findComments(boolean skipWhitespace) {
@@ -856,7 +843,6 @@ public final class Source {
      *
      * @param constant
      *     The exact content to match.
-     *
      * @return true if the constant was matched.
      */
     public boolean readConstant(String constant) {
@@ -885,7 +871,6 @@ public final class Source {
      *
      * @param constant
      *     The lower-cased version of the constant.
-     *
      * @return true if the constant was matched.
      */
     public boolean readConstantCaseInsensitive(String constant) {
@@ -913,11 +898,42 @@ public final class Source {
     }
 
     /**
+     * Same as {@link #readIdent()}, but this also supports `--` as the first two characters, as specified in the Level 3 spec.
+     * <p>
+     * See <a href="https://www.w3.org/TR/css-syntax-3/#changes-CR-20140220">Changes from the 20 February 2014 Candidate
+     * Recommendation</a>:
+     * <blockquote>
+     * Change the definition of ident-like tokens to allow "--" to start an ident. As part of this, rearrange the ordering of the
+     * clauses in the "-" step of consume a token so that <CDC-token>s are recognized as such instead of becoming a --
+     * &lt;ident-token&gt;.
+     * </blockquote>
+     * Also see https://www.w3.org/TR/css-syntax-3/#would-start-an-identifier.
+     * <p>
+     * This implementation can replace {@link #readIdent()} once we verify compliance with CSS Level 3 in other
+     * areas of the parser.
+     *
+     * @return The matched token, or an empty {@link Optional} if not matched.
+     */
+    public Optional<String> readIdentLevel3() {
+        Optional<String> ident = this.readIdent();
+
+        if (!ident.isPresent()) {
+            final char current = current();
+            // the spec does not indicate or state that NMSTART is required as the third code point, so `--` is a valid ident
+            // (fun note, `--`, `---`, etc... in Chrome appear to be valid custom properties).
+            if (HYPHEN.matches(current) && HYPHEN.matches(peek())) {
+                return Optional.of(chomp(NMCHAR));
+            }
+        }
+
+        return ident;
+    }
+
+    /**
      * Reads a value encased in either single or double quotes. If a match is found the current position is advanced to the end of
      * the string.
      *
      * @return The value, excluding the quotation marks.
-     *
      * @throws ParserException
      *     if the string is not closed properly.
      */
@@ -1060,7 +1076,6 @@ public final class Source {
          *     The error message.
          * @param args
          *     Optional args for the error message.
-         *
          * @throws ParserException
          *     An exception with the given message.
          */

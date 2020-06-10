@@ -849,6 +849,76 @@ public class SourceTest {
     }
 
     @Test
+    public void readIdentLevel3Matches() {
+        Source source = new Source("keyword-one");
+        assertThat(source.readIdentLevel3().get()).isEqualTo("keyword-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentLevel3MatchesUC() {
+        Source source = new Source("KEYWORD-one");
+        assertThat(source.readIdentLevel3().get()).isEqualTo("KEYWORD-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentLevel3MatchesStartsWithHyphen() {
+        Source source = new Source("-keyword-one");
+        assertThat(source.readIdentLevel3().get()).isEqualTo("-keyword-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentLevel3MatchesStartsWithUnderscore() {
+        Source source = new Source("_keyword-one");
+        assertThat(source.readIdentLevel3().get()).isEqualTo("_keyword-one");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentLevel3DoubleHyphenMatches() {
+        Source source = new Source("--custom-color");
+        assertThat(source.readIdentLevel3().get()).isEqualTo("--custom-color");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentLevel3DoubleHyphenOnlyMatches() {
+        Source source = new Source("--");
+        assertThat(source.readIdentLevel3().get()).isEqualTo("--");
+        assertThat(source.eof());
+    }
+
+    @Test
+    public void readIdentLevel3DoesntMatch() {
+        Source source = new Source("111a");
+        assertThat(source.readIdentLevel3().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readIdentLevel3HypenDigit() {
+        Source source = new Source("-1abc");
+        assertThat(source.readIdentLevel3().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readIdentLevel3HyphenOnly() {
+        Source source = new Source("-");
+        assertThat(source.readIdentLevel3().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
+    public void readIdentLevel3DoesntMatchOther() {
+        Source source = new Source("$abc");
+        assertThat(source.readIdentLevel3().isPresent()).isFalse();
+        assertThat(source.index()).isEqualTo(0);
+    }
+
+    @Test
     public void readStringAbsent() {
         Source source = new Source("abc");
         assertThat(source.readString().isPresent()).isFalse();
