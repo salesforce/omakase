@@ -106,7 +106,7 @@ final class Subscription implements Comparable<Subscription> {
         } catch (IllegalAccessException e) {
             throw new SubscriptionException("CSS Parser plugin 'validate' method is not accessible", e);
         } catch (InvocationTargetException e) {
-            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin  method during 'validate'");
+            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin method during 'validate'");
         }
     }
 
