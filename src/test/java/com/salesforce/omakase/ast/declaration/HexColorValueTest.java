@@ -66,6 +66,12 @@ public class HexColorValueTest {
     }
 
     @Test
+    public void dynamicConstructionLowerCases() {
+        value = new HexColorValue("FFF", false);
+        assertThat(value.color()).isEqualTo("fff");
+    }
+
+    @Test
     public void removesSymbol() {
         value = HexColorValue.of("#fff");
         assertThat(value.color()).isEqualTo("fff");
