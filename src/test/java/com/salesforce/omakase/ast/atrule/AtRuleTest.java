@@ -395,20 +395,20 @@ public class AtRuleTest {
     public void breakBroadcastIfNeverEmit() {
         AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
         ar.status(Status.NEVER_EMIT);
-        assertThat(ar.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(ar.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void breakBroadcastIfAlreadyRefined() {
         AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
         ar.expression(new CustomExpression());
-        assertThat(ar.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(ar.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void dontBreakBroadcastIfNotRefined() {
         AtRule ar = new AtRule(1, 1, "meta", new RawSyntax(1, 1, "ahoy"), null);
-        assertThat(ar.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
+        assertThat(ar.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 
     public static final class CustomExpression extends AbstractAtRuleMember implements AtRuleExpression {

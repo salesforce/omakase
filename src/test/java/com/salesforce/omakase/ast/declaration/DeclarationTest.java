@@ -519,17 +519,17 @@ public class DeclarationTest {
     @Test
     public void breakBroadcastIfNeverEmit() {
         fromRaw.status(Status.NEVER_EMIT);
-        assertThat(fromRaw.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(fromRaw.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void breakBroadcastIfAlreadyRefined() {
         Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
-        assertThat(d.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(d.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void dontBreakBroadcastIfNotRefined() {
-        assertThat(fromRaw.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
+        assertThat(fromRaw.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 }

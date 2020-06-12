@@ -72,10 +72,10 @@ public class AbstractSyntaxTest {
     @Test
     public void breakBroadcastIfNeverEmit() {
         TestSyntax t = new TestSyntax();
-        assertThat(t.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
+        assertThat(t.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isFalse();
 
         t.status(Status.NEVER_EMIT);
-        assertThat(t.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(t.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test

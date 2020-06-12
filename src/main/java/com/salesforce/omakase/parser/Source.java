@@ -1018,7 +1018,6 @@ public final class Source {
         }
     }
 
-    /** data object */
     public static final class Snapshot {
         private final Source source;
 

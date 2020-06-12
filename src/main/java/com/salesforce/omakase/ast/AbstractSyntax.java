@@ -255,7 +255,7 @@ public abstract class AbstractSyntax implements Syntax {
     }
 
     @Override
-    public boolean breakBroadcast(SubscriptionPhase phase) {
+    public boolean shouldBreakBroadcast(SubscriptionPhase phase) {
         return status == Status.NEVER_EMIT;
     }
 

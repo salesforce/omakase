@@ -142,7 +142,7 @@ public final class Emitter {
         for (Subscription subscription : subscriptions(event)) {
             if (subscription.phase() == phase) {
                 // checking inside the loop because any subscription method can result in a change of status
-                if (event.breakBroadcast(phase)) {
+                if (event.shouldBreakBroadcast(phase)) {
                     return; // break out when we no longer need to emit, e.g., for a destroyed unit or already refined
                 }
 

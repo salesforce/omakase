@@ -132,7 +132,7 @@ public final class RawFunction extends AbstractSyntax implements Named, Refinabl
     }
 
     @Override
-    public boolean breakBroadcast(SubscriptionPhase phase) {
-        return status() == Status.PARSED || super.breakBroadcast(phase);
+    public boolean shouldBreakBroadcast(SubscriptionPhase phase) {
+        return status() == Status.PARSED || super.shouldBreakBroadcast(phase);
     }
 }

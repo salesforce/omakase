@@ -122,7 +122,6 @@ final class Subscription implements Comparable<Subscription> {
         return name == null || (event instanceof Named && ((Named)event).name().toLowerCase().equals(name));
     }
 
-    /** Handle ITE errors */
     private void handlePluginError(Throwable t, ErrorManager em, String msg) {
         if (t.getCause() instanceof ParserException) {
             em.report((ParserException)t.getCause());

@@ -435,8 +435,8 @@ public final class Declaration extends AbstractGroupable<Rule, Declaration> impl
     }
 
     @Override
-    public boolean breakBroadcast(SubscriptionPhase phase) {
-        return super.breakBroadcast(phase) || (phase == SubscriptionPhase.REFINE && isRefined());
+    public boolean shouldBreakBroadcast(SubscriptionPhase phase) {
+        return super.shouldBreakBroadcast(phase) || (phase == SubscriptionPhase.REFINE && isRefined());
     }
 
     @Override
