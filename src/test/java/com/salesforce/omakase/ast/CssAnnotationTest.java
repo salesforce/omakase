@@ -28,6 +28,8 @@ package com.salesforce.omakase.ast;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableMap;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.error.OmakaseException;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
@@ -204,6 +206,14 @@ public class CssAnnotationTest {
         assertThat(map.get("foo")).isEqualTo("bar");
         assertThat(map.get("baz")).isEqualTo("boo");
         assertThat(map.get("bim")).isEqualTo("bop");
+    }
+
+    @Test
+    public void getKeyValueArgsDuplicateArgsThrowsException() {
+        CssAnnotation a = new CssAnnotation("test", "foo=bar, baz=boo, foo=bop");
+        exception.expect(OmakaseException.class);
+        exception.expectMessage("unable to parse CSS comment annotation");
+        ImmutableMap<String, String> map = a.keyValueArgs('=');
     }
 
     public enum TestEnum {FOO, BAR, BAZ_QUX}

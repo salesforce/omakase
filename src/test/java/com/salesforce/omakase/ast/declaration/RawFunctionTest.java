@@ -79,19 +79,19 @@ public class RawFunctionTest {
     public void breakBroadcastIfNeverEmit() {
         RawFunction raw = new RawFunction(1, 1, "name", "args args");
         raw.status(Status.NEVER_EMIT);
-        assertThat(raw.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(raw.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void breakBroadcastIfParsed() {
         RawFunction raw = new RawFunction(1, 1, "name", "args args");
         raw.status(Status.PARSED);
-        assertThat(raw.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(raw.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void dontBreakBroadcastIfNotParsed() {
         RawFunction raw = new RawFunction(1, 1, "name", "args args");
-        assertThat(raw.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
+        assertThat(raw.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 }

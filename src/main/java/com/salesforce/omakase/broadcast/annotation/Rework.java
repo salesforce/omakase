@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * <p>
  * The one and only parameter for methods with this annotation should be one of the {@link Syntax} types. It is generally better
  * to subscribe the the most specific unit as possible (e.g., {@link UrlFunctionValue} instead of {@link Declaration}), however
- * note that specific syntax types will not be delivered if the parent type is not refined. See the main readme file for more
+ * note that lower-level syntax types will not be delivered if the parent type is not refined. See the main readme file for more
  * information about refinement. Generally, if you are parsing with {@link AutoRefine} or {@link StandardValidation} then all
  * syntax types will be delivered.
  * <p>

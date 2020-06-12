@@ -76,7 +76,7 @@ public interface Broadcaster {
      * broadcaster being at the bottom of the chain instead. When doing it this way, you <em>must</em> call {@link
      * Broadcaster#cut(Broadcaster)} on the original broadcaster before your method returns, after you are finished with the
      * broadcasting. Otherwise your new broadcaster will be left dangling. However this way is <b>required</b> if the broadcasted
-     * events you need pass through through a {@link Refine} plugin. Those methods will not use a broadcaster you place at the top
+     * events need to pass through {@link Refine} plugin methods. Those methods will not use a broadcaster you place at the top
      * of the chain so being at the bottom is required. In this scenario prefer to use {@link #chainBroadcast(Broadcastable,
      * Broadcaster, Broadcaster...)}, which will take care of the cutting responsibility.
      *

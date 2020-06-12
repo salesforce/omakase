@@ -245,18 +245,18 @@ public class SelectorTest {
     public void breakBroadcastIfNeverEmit() {
         selector = new Selector(new RawSyntax(5, 2, ".class > #id"));
         selector.status(Status.NEVER_EMIT);
-        assertThat(selector.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(selector.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void breakBroadcastIfAlreadyRefined() {
         selector = new Selector(new ClassSelector("test"));
-        assertThat(selector.breakBroadcast(SubscriptionPhase.REFINE)).isTrue();
+        assertThat(selector.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isTrue();
     }
 
     @Test
     public void dontBreakBroadcastIfNotRefined() {
         selector = new Selector(new RawSyntax(5, 2, ".class > #id"));
-        assertThat(selector.breakBroadcast(SubscriptionPhase.REFINE)).isFalse();
+        assertThat(selector.shouldBreakBroadcast(SubscriptionPhase.REFINE)).isFalse();
     }
 }

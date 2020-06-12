@@ -68,6 +68,18 @@ public class UnicodeRangeValueTest {
     }
 
     @Test
+    public void valueLowerCasedWithoutLineInfo() {
+        range = new UnicodeRangeValue("U+0025-00FF");
+        assertThat(range.value()).isEqualTo("u+0025-00ff");
+    }
+
+    @Test
+    public void valueLowerCasedExplicitly() {
+        range = new UnicodeRangeValue("U+0025-00FF", false);
+        assertThat(range.value()).isEqualTo("u+0025-00ff");
+    }
+
+    @Test
     public void textualValueReturnsValue() {
         range = new UnicodeRangeValue(5, 10, "u+ff0");
         assertThat(range.textualValue()).isEqualTo("u+ff0");

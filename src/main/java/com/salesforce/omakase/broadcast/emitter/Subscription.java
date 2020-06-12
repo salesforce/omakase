@@ -106,7 +106,7 @@ final class Subscription implements Comparable<Subscription> {
         } catch (IllegalAccessException e) {
             throw new SubscriptionException("CSS Parser plugin 'validate' method is not accessible", e);
         } catch (InvocationTargetException e) {
-            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin  method during 'validate'");
+            handlePluginError(e, em, "Exception thrown from a CSS Parser plugin method during 'validate'");
         }
     }
 
@@ -122,7 +122,6 @@ final class Subscription implements Comparable<Subscription> {
         return name == null || (event instanceof Named && ((Named)event).name().toLowerCase().equals(name));
     }
 
-    /** Handle ITE errors */
     private void handlePluginError(Throwable t, ErrorManager em, String msg) {
         if (t.getCause() instanceof ParserException) {
             em.report((ParserException)t.getCause());

@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.util;
 
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.PropertyName;
+import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Property;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -53,5 +58,16 @@ public class AsTest {
     public void testIndent() {
         String s = As.string(this).indent().add("1", "a").add("2", "b").toString();
         assertThat(s).isEqualTo("AsTest {\n  1: a\n  2: b\n}");
+    }
+
+    @Test
+    public void testFields() {
+        Declaration d = new Declaration(Property.DISPLAY, KeywordValue.of(Keyword.NONE));
+        String actual = As.string(d.propertyValue()).fields().toString();
+        String expected = "PropertyValue {\n" +
+            "  important: false\n" +
+            "  members: LinkedSyntaxCollection{units=[none (keyword-value)]}\n" +
+            "}";
+        assertThat(actual).isEqualTo(expected);
     }
 }

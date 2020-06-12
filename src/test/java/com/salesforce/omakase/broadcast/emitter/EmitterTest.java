@@ -289,7 +289,7 @@ public class EmitterTest {
         public boolean breakBroadcast;
 
         @Override
-        public boolean breakBroadcast(SubscriptionPhase phase) {
+        public boolean shouldBreakBroadcast(SubscriptionPhase phase) {
             return breakBroadcast;
         }
 

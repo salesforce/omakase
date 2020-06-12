@@ -83,5 +83,5 @@ public interface Broadcastable {
      *
      * @return True if in-progress broadcasting should be stopped.
      */
-    boolean breakBroadcast(SubscriptionPhase phase);
+    boolean shouldBreakBroadcast(SubscriptionPhase phase);
 }
