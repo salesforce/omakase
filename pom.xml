@@ -176,6 +176,7 @@
                     <author>false</author>
                     <doclint>none</doclint>
                     <bottom>Copyright (c) 2019, Salesforce.com, Inc. All rights reserved. Licensed under the BSD 3-Clause license. For full license text, see the LICENSE file in the repository.</bottom>
+                    <source>8</source>
                 </configuration>
                 <executions>
                     <execution>
