@@ -48,6 +48,17 @@ import java.util.regex.Pattern;
  */
 public final class CssVariableFallbackPlugin implements DependentPlugin {
     public static final String FALLBACK = "css-var-fallback";
+    private Boolean preserve = true;
+    
+    /**
+     * Creates a new instance of the {@link CssVariableFallbackPlugin} plugin setting preserve to false.
+     *
+     * @return The new {@link CssVariableFallbackPlugin} instance.
+     */
+    public CssVariableFallbackPlugin noPreserve() {
+        this.preserve = false;
+        return this;
+    }
     
     @Override
     public void dependencies(PluginRegistry registry) {
@@ -95,7 +106,12 @@ public final class CssVariableFallbackPlugin implements DependentPlugin {
                 // create a new declaration
                 Declaration newDeclaration = new Declaration(PropertyName.of(args.get(0)), value);
 
-                declaration.append(newDeclaration);
+                if (preserve) {
+                    declaration.prepend(newDeclaration);
+                } else {
+                    declaration.propertyName(newDeclaration.propertyName());
+                    declaration.propertyValue(value);
+                }
             }
         } else {
             // if CSS variable value drill in to find the fallback value
@@ -105,8 +121,11 @@ public final class CssVariableFallbackPlugin implements DependentPlugin {
                 // create a new declaration
                 Declaration newDeclaration = new Declaration(declaration.propertyName(), value);
 
-                declaration.prepend(newDeclaration);
-                // declaration.propertyValue(value);
+                if (preserve) {
+                    declaration.prepend(newDeclaration);
+                } else {
+                    declaration.propertyValue(value);
+                }
             }
         }
     }

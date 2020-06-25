@@ -35,10 +35,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @SuppressWarnings("JavaDoc")
 public class CssVariableFallbackPluginTest {
 
-    private void check(String pre, String post) {
+    private void check(String pre, String post, Boolean preserve) {
         StyleWriter writer = StyleWriter.compressed();
-        StringBuilder builder = new StringBuilder();
-        Omakase.source(pre).use(new CssVariableFallbackPlugin()).use(writer).process();
+        CssVariableFallbackPlugin plugin = new CssVariableFallbackPlugin();
+        if (!preserve) {
+            plugin.noPreserve();
+        }
+        Omakase.source(pre).use(plugin).use(writer).process();
         assertThat(writer.write()).isEqualTo(post);
     }
 
@@ -46,28 +49,56 @@ public class CssVariableFallbackPluginTest {
     public void noFallbackProperty() {
         check(
             ".test{/* @css-var-fallback */--sds-c-avatar-radius-border: 10%;}",
-            ".test{--sds-c-avatar-radius-border:10%}");
+            ".test{--sds-c-avatar-radius-border:10%}",
+            true);
     }
 
     @Test
     public void withFallbackProperty() {
         check(
             ".test{/* @css-var-fallback border-radius */--sds-c-avatar-radius-border: 10%;}",
-            ".test{--sds-c-avatar-radius-border:10%;border-radius:10%}");
+            ".test{border-radius:10%;--sds-c-avatar-radius-border:10%}",
+            true);
+    }
+
+    @Test
+    public void withFallbackPropertyNoPreserve() {
+        check(
+            ".test{/* @css-var-fallback border-radius */--sds-c-avatar-radius-border: 10%;}",
+            ".test{border-radius:10%}",
+            false);
     }
 
     @Test
     public void withComplexValue() {
         check(
             ".test{/* @css-var-fallback border-radius */--sds-c-avatar-radius-border: var(--sds-g-radius-border, 10%);}",
-            ".test{--sds-c-avatar-radius-border:var(--sds-g-radius-border, 10%);border-radius:10%}");
+            ".test{border-radius:10%;--sds-c-avatar-radius-border:var(--sds-g-radius-border, 10%)}",
+            true);
+    }
+
+    @Test
+    public void withComplexValueNoPreserve() {
+        check(
+            ".test{/* @css-var-fallback border-radius */--sds-c-avatar-radius-border: var(--sds-g-radius-border, 10%);}",
+            ".test{border-radius:10%}",
+            false);
     }
 
     @Test
     public void withNestedValue() {
         check(
             ".test{/* @css-var-fallback border-radius */--sds-c-avatar-radius-border: var(--sds-g-radius-border, var(--sds-g-border, var(--pickles, 10%)));}",
-            ".test{--sds-c-avatar-radius-border:var(--sds-g-radius-border, var(--sds-g-border, var(--pickles, 10%)));border-radius:10%}");
+            ".test{border-radius:10%;--sds-c-avatar-radius-border:var(--sds-g-radius-border, var(--sds-g-border, var(--pickles, 10%)))}",
+            true);
+    }
+
+    @Test
+    public void withNestedValueNoPreserve() {
+        check(
+            ".test{/* @css-var-fallback border-radius */--sds-c-avatar-radius-border: var(--sds-g-radius-border, var(--sds-g-border, var(--pickles, 10%)));}",
+            ".test{border-radius:10%}",
+            false);
     }
 
     @Test
@@ -77,13 +108,34 @@ public class CssVariableFallbackPluginTest {
             + "/* @css-var-fallback border-color */--sds-c-button-color-border: var(--sds-c-button-color-border-disabled, transparent);"
             + "/* @css-var-fallback color */--sds-c-button-color-text: var(--sds-c-button-color-text-disabled, #{$color-text-button-default-disabled});"
             + "}",
-            ".test{--sds-c-button-color-background:var(--sds-c-button-color-background-disabled, transparent);background-color:transparent;--sds-c-button-color-border:var(--sds-c-button-color-border-disabled, transparent);border-color:transparent;--sds-c-button-color-text:var(--sds-c-button-color-text-disabled, #{$color-text-button-default-disabled});color:#{$color-text-button-default-disabled}}");
+            ".test{background-color:transparent;--sds-c-button-color-background:var(--sds-c-button-color-background-disabled, transparent);border-color:transparent;--sds-c-button-color-border:var(--sds-c-button-color-border-disabled, transparent);color:#{$color-text-button-default-disabled};--sds-c-button-color-text:var(--sds-c-button-color-text-disabled, #{$color-text-button-default-disabled})}",
+            true);
+    }
+
+    @Test
+    public void withMultipleAnnotationsNoPreserve() {
+        check(
+            ".test{/* @css-var-fallback background-color */--sds-c-button-color-background: var(--sds-c-button-color-background-disabled, transparent);"
+            + "/* @css-var-fallback border-color */--sds-c-button-color-border: var(--sds-c-button-color-border-disabled, transparent);"
+            + "/* @css-var-fallback color */--sds-c-button-color-text: var(--sds-c-button-color-text-disabled, #{$color-text-button-default-disabled});"
+            + "}",
+            ".test{background-color:transparent;border-color:transparent;color:#{$color-text-button-default-disabled}}",
+            false);
     }
 
     @Test
     public void noAnnotationValueOnly() {
         check(
             ".test{color: var(--sds-c-button-inverse-color-text-active, $color-text-button-default);}",
-            ".test{color:$color-text-button-default;color:var(--sds-c-button-inverse-color-text-active, $color-text-button-default)}");
+            ".test{color:$color-text-button-default;color:var(--sds-c-button-inverse-color-text-active, $color-text-button-default)}",
+            true);
+    }
+
+    @Test
+    public void noAnnotationValueOnlyNoPreserve() {
+        check(
+            ".test{color: var(--sds-c-button-inverse-color-text-active, $color-text-button-default);}",
+            ".test{color:$color-text-button-default}",
+            false);
     }
 }
