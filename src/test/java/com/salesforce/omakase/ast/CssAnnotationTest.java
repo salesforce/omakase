@@ -26,16 +26,16 @@
 
 package com.salesforce.omakase.ast;
 
-import com.google.common.base.CaseFormat;
-import com.google.common.collect.ImmutableMap;
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.error.OmakaseException;
-import org.junit.*;
-import org.junit.rules.ExpectedException;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.EnumSet;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import com.google.common.base.CaseFormat;
+import com.google.common.collect.ImmutableMap;
+import com.salesforce.omakase.error.OmakaseException;
 
 /**
  * Unit tests for {@link CssAnnotation}.
@@ -213,7 +213,7 @@ public class CssAnnotationTest {
         CssAnnotation a = new CssAnnotation("test", "foo=bar, baz=boo, foo=bop");
         exception.expect(OmakaseException.class);
         exception.expectMessage("unable to parse CSS comment annotation");
-        ImmutableMap<String, String> map = a.keyValueArgs('=');
+        a.keyValueArgs('=');
     }
 
     public enum TestEnum {FOO, BAR, BAZ_QUX}
@@ -251,7 +251,7 @@ public class CssAnnotationTest {
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Invalid");
-        EnumSet<TestEnum> set = a.fromEnum(TestEnum.class);
+        a.fromEnum(TestEnum.class);
     }
 
     public enum TestEnum2 {foo, bar_um}

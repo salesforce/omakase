@@ -26,11 +26,10 @@
 
 package com.salesforce.omakase;
 
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.Plugin;
-
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import com.salesforce.omakase.plugin.Plugin;
 
 /**
  * Registry of {@link Plugin}s.

@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
@@ -36,10 +38,6 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.core.StandardValidation;
-import com.salesforce.omakase.writer.StyleWriter;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Main entry point for the Omakase CSS Parser.
