@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.plugin.misc;
 
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.writer.StyleWriter;
 
 @SuppressWarnings("JavaDoc")
 public class DirectionFlipPluginTest {
 
     private void check(String ltr, String rtl) {
         StyleWriter writer = StyleWriter.compressed();
-        StringBuilder builder = new StringBuilder();
         Omakase.source(ltr).use(new DirectionFlipPlugin()).use(writer).process();
         assertThat(writer.write()).isEqualTo(rtl);
     }

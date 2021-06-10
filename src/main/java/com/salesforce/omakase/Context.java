@@ -26,16 +26,21 @@
 
 package com.salesforce.omakase;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.Message.DUPLICATE_PLUGIN;
+import static com.salesforce.omakase.Message.NO_SUPPLIER;
+import static com.salesforce.omakase.Message.UNIQUE_PLUGIN;
+
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.EmittingBroadcaster;
 import com.salesforce.omakase.broadcast.VisitingBroadcaster;
-import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.broadcast.emitter.Emitter;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.Grammar;
@@ -49,21 +54,16 @@ import com.salesforce.omakase.plugin.ParserPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.Message.*;
-
 /**
  * Contextual state for a parsing operation.
  * <p>
- * This handles the registry of plugins (see {@link PluginRegistry}) and manages the main {@link Broadcaster} instance.
+ * This handles the registry of plugins (see {@link PluginRegistry}) and manages
+ * the main {@link Broadcaster} instance.
  * <p>
- * All broadcasting events are collected and stored during parsing. After the source is completely parsed, each event is replayed
- * once in each of the two phases: process ({@link Observe} and {@link Rework} annotated methods), then validation ({@link
- * Validate} annotated methods).
+ * All broadcasting events are collected and stored during parsing. After the
+ * source is completely parsed, each event is replayed once in each of the two
+ * phases: process ({@link Observe} and {@link Rework} annotated methods), then
+ * validation ({@link Validate} annotated methods).
  *
  * @author nmcwilliams
  */

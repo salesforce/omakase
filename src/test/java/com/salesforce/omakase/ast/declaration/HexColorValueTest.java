@@ -26,13 +26,14 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link HexColorValue}. */
 @SuppressWarnings("JavaDoc")
@@ -123,7 +124,7 @@ public class HexColorValueTest {
         value = HexColorValue.of("#123123");
         value.comments(Lists.newArrayList("test"));
 
-        HexColorValue copy = (HexColorValue)value.copy();
+        HexColorValue copy = value.copy();
         assertThat(copy.color()).isEqualTo(value.color());
         assertThat(copy.comments()).hasSameSizeAs(value.comments());
     }

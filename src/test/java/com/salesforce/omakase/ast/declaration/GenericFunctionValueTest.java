@@ -26,15 +26,16 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link GenericFunctionValue}. */
 @SuppressWarnings("JavaDoc")
@@ -117,7 +118,7 @@ public class GenericFunctionValueTest {
         value = new GenericFunctionValue("test", "args");
         value.comments(Lists.newArrayList("test"));
 
-        GenericFunctionValue copy = (GenericFunctionValue)value.copy();
+        GenericFunctionValue copy = value.copy();
         assertThat(copy.name()).isEqualTo("test");
         assertThat(copy.args()).isEqualTo("args");
         assertThat(copy.comments()).hasSameSizeAs(value.comments());

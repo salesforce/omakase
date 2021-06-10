@@ -26,14 +26,15 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link PseudoClassSelector}. */
 @SuppressWarnings("JavaDoc")
@@ -113,7 +114,7 @@ public class PseudoClassSelectorTest {
     @Test
     public void copyWithArgs() {
         PseudoClassSelector s = new PseudoClassSelector("nth-child", "-2n+1");
-        PseudoClassSelector copy = (PseudoClassSelector)s.copy();
+        PseudoClassSelector copy = s.copy();
         assertThat(copy.name()).isEqualTo(s.name());
         assertThat(copy.args().get()).isEqualTo(s.args().get());
     }
@@ -121,7 +122,7 @@ public class PseudoClassSelectorTest {
     @Test
     public void copyNoArgs() {
         PseudoClassSelector s = new PseudoClassSelector("hover");
-        PseudoClassSelector copy = (PseudoClassSelector)s.copy();
+        PseudoClassSelector copy = s.copy();
         assertThat(copy.name()).isEqualTo(s.name());
         assertThat(copy.args().isPresent()).isFalse();
     }

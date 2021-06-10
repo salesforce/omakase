@@ -26,21 +26,27 @@
 
 package com.salesforce.omakase;
 
-import com.google.common.collect.ImmutableMap;
-import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.conditionals.Conditionals;
-import com.salesforce.omakase.plugin.conditionals.ConditionalsCollector;
-import com.salesforce.omakase.plugin.conditionals.ConditionalsValidator;
-import com.salesforce.omakase.plugin.core.SyntaxTree;
-import com.salesforce.omakase.plugin.prefixer.PrefixCleaner;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import com.salesforce.omakase.plugin.syntax.*;
-import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
-import com.salesforce.omakase.plugin.core.StandardValidation;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import com.google.common.collect.ImmutableMap;
+import com.salesforce.omakase.plugin.conditionals.Conditionals;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsCollector;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsValidator;
+import com.salesforce.omakase.plugin.core.StandardValidation;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
+import com.salesforce.omakase.plugin.prefixer.PrefixCleaner;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
+import com.salesforce.omakase.plugin.syntax.DeclarationPlugin;
+import com.salesforce.omakase.plugin.syntax.FontFacePlugin;
+import com.salesforce.omakase.plugin.syntax.KeyframesPlugin;
+import com.salesforce.omakase.plugin.syntax.LinearGradientPlugin;
+import com.salesforce.omakase.plugin.syntax.MediaPlugin;
+import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
+import com.salesforce.omakase.plugin.syntax.SupportsPlugin;
+import com.salesforce.omakase.plugin.syntax.UrlPlugin;
+import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
 
 /**
  * Helper for creating instances of library-provided {@link Plugin}s.
