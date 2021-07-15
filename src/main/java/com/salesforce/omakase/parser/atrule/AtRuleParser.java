@@ -26,11 +26,15 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.atrule.AtRuleExpression;
+import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.ConsumingBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
@@ -39,9 +43,6 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.factory.TokenFactory;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Parses an {@link AtRule}.
@@ -63,11 +64,15 @@ public final class AtRuleParser implements Parser {
         int startColumn = source.originalColumn();
 
         // must begin with '@'
-        if (!source.optionallyPresent(Tokens.AT_RULE)) return false;
+        if (!source.optionallyPresent(Tokens.AT_RULE)) {
+            return false;
+        }
 
         // read the name
         Optional<String> name = source.readIdent();
-        if (!name.isPresent()) throw new ParserException(source, Message.MISSING_AT_RULE_NAME);
+        if (!name.isPresent()) {
+            throw new ParserException(source, Message.MISSING_AT_RULE_NAME);
+        }
 
         // read everything up until the end of the at-rule expression (usually a semicolon or open bracket).
         int line = source.originalLine();
@@ -90,7 +95,9 @@ public final class AtRuleParser implements Parser {
         }
 
         // expression content must be present
-        if (expression == null && block == null) throw new ParserException(source, Message.MISSING_AT_RULE_VALUE);
+        if (expression == null && block == null) {
+            throw new ParserException(source, Message.MISSING_AT_RULE_VALUE);
+        }
 
         source.flushComments(); // ignore any comments that were in the block, the block itself will handle them
 
@@ -99,8 +106,12 @@ public final class AtRuleParser implements Parser {
         atRule.comments(comments);
 
         broadcaster.chainBroadcast(atRule,
-            new ConsumingBroadcaster<>(AtRuleExpression.class, atRule::expression),
-            new ConsumingBroadcaster<>(AtRuleBlock.class, atRule::block));
+            new ConsumingBroadcaster<>(AtRuleExpression.class, atRule::expression, t -> {
+                return !atRule.isConditional();
+            }),
+            new ConsumingBroadcaster<>(AtRuleBlock.class, atRule::block, t -> {
+                return atRule.isConditional() && (t instanceof ConditionalAtRuleBlock);
+            }));
 
         return true;
     }

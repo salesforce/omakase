@@ -118,7 +118,6 @@ public final class Omakase {
         Request(CharSequence source) {
             this.context = new Context();
             this.source = new Source(source.toString());
-            this.em = new DefaultErrorManager();
         }
 
         /**
@@ -185,6 +184,9 @@ public final class Omakase {
          * for further processing or information retrieval.
          */
         public PluginRegistry process() {
+            if (this.em == null) {
+                this.em = new DefaultErrorManager();
+            }
             try {
                 Grammar grammar = context.beforeParsing(this.em);
                 grammar.parser().stylesheetParser().parse(source, grammar, context.broadcaster());
@@ -198,6 +200,8 @@ public final class Omakase {
             if (em.autoSummarize() && em.hasErrors()) {
                 throw new ProblemSummaryException(em.summarize());
             }
+            
+            System.err.print(em.summarize());
 
             return context;
         }

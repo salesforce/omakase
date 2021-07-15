@@ -50,7 +50,9 @@ public final class CombinationParser implements Parser {
     @Override
     public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         for (Parser parser : parsers) {
-            if (parser.parse(source, grammar, broadcaster)) return true;
+            if (parser.parse(source, grammar, broadcaster)) {
+                return true;
+            }
         }
         return false;
     }

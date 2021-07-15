@@ -38,8 +38,12 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
  * @author nmcwilliams
  * @see Rule
  */
-public final class RuleParser implements Parser {
+public class RuleParser implements Parser {
 
+    protected boolean parse(Source source, Grammar grammar, QueryableBroadcaster queryable) {
+        return grammar.parser().rawSelectorSequenceParser().parse(source, grammar, queryable);
+    }
+    
     @Override
     public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
         source.collectComments();
@@ -52,7 +56,9 @@ public final class RuleParser implements Parser {
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // if there isn't a selector then we aren't a rule
-        if (!grammar.parser().rawSelectorSequenceParser().parse(source, grammar, queryable)) return false;
+        if (!parse(source, grammar, queryable)) {
+            return false;
+        }
 
         // parse the declaration block
         source.skipWhitepace().expect(grammar.token().declarationBlockBegin());
@@ -75,5 +81,4 @@ public final class RuleParser implements Parser {
         broadcaster.broadcast(rule);
         return true;
     }
-
 }
