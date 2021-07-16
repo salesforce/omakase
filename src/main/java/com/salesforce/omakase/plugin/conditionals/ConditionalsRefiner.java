@@ -148,7 +148,7 @@ public final class ConditionalsRefiner implements Plugin {
                 throw new ParserException(source, Message.UNPARSABLE_CONDITIONAL_CONTENT, source.remaining());
             }
         }
-        
+
         // create the new conditional node and broadcast it
         ConditionalAtRuleBlock block = new ConditionalAtRuleBlock(atRule.line(), atRule.column(), conditionals,
             queryable.filter(Statement.class), config);

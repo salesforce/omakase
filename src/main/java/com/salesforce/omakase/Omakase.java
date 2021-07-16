@@ -200,8 +200,6 @@ public final class Omakase {
             if (em.autoSummarize() && em.hasErrors()) {
                 throw new ProblemSummaryException(em.summarize());
             }
-            
-            System.err.print(em.summarize());
 
             return context;
         }

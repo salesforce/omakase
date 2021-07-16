@@ -30,7 +30,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * A broadcaster that will forward broadcasted units of a certain type to a {@link Consumer}.
+ * A broadcaster that will forward broadcasted units of a certain type to a
+ * {@link Consumer}.
  *
  * @param <T>
  *     The type of units to consume.
@@ -49,11 +50,16 @@ public final class ConsumingBroadcaster<T extends Broadcastable> extends Abstrac
      *     The type of unit to consume.
      * @param consumer
      *     The consumer.
+     * @param customComparableLogic
+     *      Additional logic function return true then the {@code consumer} will
+     *      be called. If false, then it will not be called. This function is
+     *      used in conjunction with the {@code klass} attribute.
+     * @see #ConsumingBroadcaster(Class, Consumer)
      */
-    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer) {
+    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer, Function<T, Boolean> customComparableLogic) {
         this.klass = klass;
         this.consumer = consumer;
-        this.customComparableLogic = null;
+        this.customComparableLogic = customComparableLogic;
     }
     
     /**
@@ -63,11 +69,10 @@ public final class ConsumingBroadcaster<T extends Broadcastable> extends Abstrac
      *     The type of unit to consume.
      * @param consumer
      *     The consumer.
+     * @see #ConsumingBroadcaster(Class, Consumer, Function)
      */
-    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer, Function<T, Boolean> customComparableLogic) {
-        this.klass = klass;
-        this.consumer = consumer;
-        this.customComparableLogic = customComparableLogic;
+    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer) {
+        this(klass, consumer, null);
     }
 
     @Override

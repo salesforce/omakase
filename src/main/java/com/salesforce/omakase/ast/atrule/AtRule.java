@@ -265,10 +265,26 @@ public final class AtRule extends AbstractGroupable<StatementIterable, Statement
         return expression != null || block != null;
     }
     
+    /**
+     * Setter to indicate this at rule is a conditional rule ({@code @if}).
+     * 
+     * @param isConditional True if this rule is conditional.
+     * @see #isConditional()
+     */
     public void setConditional(final boolean isConditional) {
         this.isConditional = isConditional;
     }
     
+    /**
+     * Determines if this rule is conditional ({@code @if}) or not.
+     * 
+     * <p>For more information on conditional at rules, see
+     * {@link com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock}.</p>
+     * 
+     * @return True if this rule is conditional, else false. This class defaults
+     *      to false if not explicitly set.
+     * @see #setConditional(boolean)
+     */
     public boolean isConditional() {
         return isConditional;
     }

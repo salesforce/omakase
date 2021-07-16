@@ -113,9 +113,7 @@ public final class AtRuleParser implements Parser {
         atRule.comments(comments);
 
         broadcaster.chainBroadcast(atRule,
-            new ConsumingBroadcaster<>(AtRuleExpression.class, atRule::expression, t -> {
-                return !atRule.isConditional();
-            }),
+            new ConsumingBroadcaster<>(AtRuleExpression.class, atRule::expression, t -> !atRule.isConditional()),
             new ConsumingBroadcaster<>(AtRuleBlock.class, atRule::block, t -> {
                 if(atRule.isConditional()) {
                     return (t instanceof ConditionalAtRuleBlock);

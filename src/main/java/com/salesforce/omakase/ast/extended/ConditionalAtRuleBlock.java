@@ -54,21 +54,23 @@ import com.salesforce.omakase.writer.StyleWriter;
  * <p>
  * Example of a conditional at-rule:
  * <pre>
- * {@code @}if(ie7) { .test{color:red} }
+ * <code>@if(ie7) { .test{color:red} }</code>
  * </pre>
+ * </p>
  * <p>
  * This block will output its inner statements if its condition is contained
  * within the set of "true" condition strings, as specified by a
  * {@link ConditionalsConfig}. Negation may be specified on conditions using
- * <code>!</code>. Multiple conditions may be specified using <code>||</code>.
+ * {@code !}. Multiple conditions may be specified using {@code ||}.
+ * </p>
  * <p>
  * For more information on using and configuring conditionals see the main
  * readme file.
  * </p>
  *
  * @author nmcwilliams
- * @see Conditionals
- * @see ConditionalsRefiner
+ * @see com.salesforce.omakase.plugin.conditionals.Conditionals
+ * @see com.salesforce.omakase.plugin.conditionals.ConditionalsRefiner
  */
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)
