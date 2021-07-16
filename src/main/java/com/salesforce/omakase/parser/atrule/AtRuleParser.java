@@ -54,6 +54,11 @@ public final class AtRuleParser implements Parser {
 
     @Override
     public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
+        return parse(source, grammar, broadcaster, false);
+    }
+    
+    @Override
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, Boolean parentIsConditional) {
         TokenFactory tf = grammar.token();
 
         source.skipWhitepace();
@@ -72,6 +77,8 @@ public final class AtRuleParser implements Parser {
         Optional<String> name = source.readIdent();
         if (!name.isPresent()) {
             throw new ParserException(source, Message.MISSING_AT_RULE_NAME);
+        } else if(name.get().equalsIgnoreCase("if") && parentIsConditional) {
+            throw new ParserException(source, Message.UNEXPECTED_NESTED_CONDITIONAL_AT_RULE);
         }
 
         // read everything up until the end of the at-rule expression (usually a semicolon or open bracket).
@@ -110,7 +117,10 @@ public final class AtRuleParser implements Parser {
                 return !atRule.isConditional();
             }),
             new ConsumingBroadcaster<>(AtRuleBlock.class, atRule::block, t -> {
-                return atRule.isConditional() && (t instanceof ConditionalAtRuleBlock);
+                if(atRule.isConditional()) {
+                    return (t instanceof ConditionalAtRuleBlock);
+                }
+                return !(t instanceof ConditionalAtRuleBlock);
             }));
 
         return true;

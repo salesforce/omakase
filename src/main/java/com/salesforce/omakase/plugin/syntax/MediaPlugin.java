@@ -106,13 +106,15 @@ public final class MediaPlugin implements Plugin {
             QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
             // parse the inner statements
-            Parser ruleParser = grammar.parser().statementParser();
+            Parser statementParser = grammar.parser().statementParser();
             while (!source.eof()) {
-                boolean matched = ruleParser.parse(source, grammar, queryable);
+                boolean matched = statementParser.parse(source, grammar, queryable);
                 source.skipWhitepace();
 
                 // after parsing there should be nothing left in the source
-                if (!matched && !source.eof()) throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+                if (!matched && !source.eof()) {
+                    throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+                }
             }
 
             // create and add the block

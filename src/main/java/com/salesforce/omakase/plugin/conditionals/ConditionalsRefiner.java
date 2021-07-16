@@ -140,7 +140,7 @@ public final class ConditionalsRefiner implements Plugin {
         // parse the inner statements
         Parser rule = grammar.parser().statementParser();
         while (!source.eof()) {
-            boolean matched = rule.parse(source, grammar, queryable);
+            boolean matched = rule.parse(source, grammar, queryable, true);
             source.skipWhitepace();
 
             // after parsing there should be nothing left in the source

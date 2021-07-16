@@ -56,6 +56,30 @@ public interface Parser {
      *
      * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
      * of true does not indicate that the parsed content was completely valid syntax (unknown for some units until refinement).
+     * @see #parse(Source, Grammar, Broadcaster, Boolean) 
      */
     boolean parse(Source source, Grammar grammar, Broadcaster broadcaster);
+    
+    /**
+     * Parse from the current position of the given source, notifying the given {@link Broadcaster} of any applicable events and
+     * data.
+     * <p>
+     * Necessary grammar tokens and other parsers should be retrieved from the provided {@link Grammar} instance.
+     *
+     * @param source
+     *     The source to parse.
+     * @param grammar
+     *     The grammar.
+     * @param broadcaster
+     *     The broadcaster.
+     * @param parentIsConditional
+     *     Indicates that the parent rule is a conditional rule.
+     *
+     * @return True if we parsed <em>something</em> (excluding whitespace and comments), false otherwise. Note that a return value
+     * of true does not indicate that the parsed content was completely valid syntax (unknown for some units until refinement).
+     * @see #parse(Source, Grammar, Broadcaster)
+     */
+    default boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, Boolean parentIsConditional) {
+        return parse(source, grammar, broadcaster);
+    }
 }

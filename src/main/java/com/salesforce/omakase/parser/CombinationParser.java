@@ -56,4 +56,14 @@ public final class CombinationParser implements Parser {
         }
         return false;
     }
+    
+    @Override
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, Boolean parentIsConditional) {
+        for (Parser parser : parsers) {
+            if (parser.parse(source, grammar, broadcaster, parentIsConditional)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
