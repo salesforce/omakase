@@ -27,6 +27,13 @@ package com.salesforce.omakase.test.goldfile;
 
 /**
  * Test nested rules.
+ * 
+ * Example:
+ * <pre><code>
+ * {@literal @}if(IE) {
+ *     {@literal @}media (min-width: 30em) { ... }
+ * }
+ * </code></pre>
  *
  * @author eperret (Eric Perret)
  * @since 1.7.0
