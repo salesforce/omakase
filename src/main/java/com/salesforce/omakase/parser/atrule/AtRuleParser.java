@@ -58,7 +58,7 @@ public final class AtRuleParser implements Parser {
     }
     
     @Override
-    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, Boolean parentIsConditional) {
+    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, boolean parentIsConditional) {
         TokenFactory tf = grammar.token();
 
         source.skipWhitepace();

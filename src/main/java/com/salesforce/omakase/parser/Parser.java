@@ -79,7 +79,7 @@ public interface Parser {
      * of true does not indicate that the parsed content was completely valid syntax (unknown for some units until refinement).
      * @see #parse(Source, Grammar, Broadcaster)
      */
-    default boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, Boolean parentIsConditional) {
+    default boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, boolean parentIsConditional) {
         return parse(source, grammar, broadcaster);
     }
 }

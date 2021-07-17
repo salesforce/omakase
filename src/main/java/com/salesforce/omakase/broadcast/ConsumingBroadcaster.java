@@ -51,9 +51,9 @@ public final class ConsumingBroadcaster<T extends Broadcastable> extends Abstrac
      * @param consumer
      *     The consumer.
      * @param customComparableLogic
-     *      Additional logic function return true then the {@code consumer} will
-     *      be called. If false, then it will not be called. This function is
-     *      used in conjunction with the {@code klass} attribute.
+     *      Additional logic function if return true then the {@code consumer}
+     *      will be called. If false, then it will not be called. This function
+     *      is used in conjunction with the {@code klass} attribute.
      * @see #ConsumingBroadcaster(Class, Consumer)
      */
     public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer, Function<T, Boolean> customComparableLogic) {
