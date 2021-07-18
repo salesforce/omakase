@@ -26,19 +26,14 @@
 
 package com.salesforce.omakase.test;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import java.io.IOException;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.core.StandardValidation;
-import com.salesforce.omakase.test.goldfile.Goldfile;
-import com.salesforce.omakase.test.util.QuickWriter;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.File;
-import java.io.IOException;
 
 /** Temp test for debugging. */
 public final class Debug {
@@ -49,8 +44,8 @@ public final class Debug {
     private Debug() {}
 
     public static void main(String[] args) throws IOException {
-        File f = new File(Goldfile.class.getResource(DEBUG_FILE).getFile());
-        String fileSrc = Files.toString(f, Charsets.UTF_8);
+        // File f = new File(Goldfile.class.getResource(DEBUG_FILE).getFile());
+        // String fileSrc = Files.toString(f, Charsets.UTF_8);
 
         withPlugins(STRING_SRC);
     }
@@ -73,7 +68,7 @@ public final class Debug {
         writer.writeTo(System.out);
     }
 
-    private static void writeAllModes(String source) throws IOException {
-        QuickWriter.writeAllModes(source);
-    }
+    // private static void writeAllModes(String source) throws IOException {
+    //     QuickWriter.writeAllModes(source);
+    // }
 }
