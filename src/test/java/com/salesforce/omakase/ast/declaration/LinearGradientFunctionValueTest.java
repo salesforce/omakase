@@ -26,12 +26,13 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link LinearGradientFunctionValue}.
@@ -123,7 +124,7 @@ public class LinearGradientFunctionValueTest {
     public void testCopy() {
         function = new LinearGradientFunctionValue("red, yellow");
         function.comments(Lists.newArrayList("test"));
-        LinearGradientFunctionValue copy = (LinearGradientFunctionValue)function.copy();
+        LinearGradientFunctionValue copy = function.copy();
         assertThat(copy.args()).isEqualTo(function.args());
         assertThat(copy.comments()).hasSameSizeAs(function.comments());
         assertThat(copy.repeating()).isEqualTo(function.repeating());

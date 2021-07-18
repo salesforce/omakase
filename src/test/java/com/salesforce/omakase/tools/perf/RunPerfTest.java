@@ -26,18 +26,19 @@
 
 package com.salesforce.omakase.tools.perf;
 
-import com.google.common.base.CaseFormat;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.CaseFormat;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+
 /**
- * Performance testing of this parser (more extensive tests + csv writer is in perf-test branch).
+ * Performance testing of this parser (more extensive tests + csv writer is in
+ * perf-test branch).
  *
  * @author nmcwilliams
  */
@@ -153,12 +154,6 @@ public final class RunPerfTest {
             parser.parse(mode, input);
             long end = System.nanoTime();
             parseTimes.add(TimeUnit.NANOSECONDS.toMillis(end - start));
-        }
-
-        // calculate the average
-        long total = 0;
-        for (Long time : parseTimes) {
-            total += time;
         }
 
         // why min? while it's true that the average real world time is going to be higher than the minimum run,

@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.Syntax;
@@ -39,14 +48,6 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Subscription}.
@@ -422,8 +423,6 @@ public class SubscriptionTest {
         HasRefineMethod subscriber2 = new HasRefineMethod();
         Method m2 = subscriber2.getClass().getMethod(HasRefineMethod.refineMethodName, HasRefineMethod.refineMethodArgs);
 
-        TestRefinableNamed event = new TestRefinableNamed();
-
         Subscription s1 = new Subscription(SubscriptionPhase.REFINE, subscriber1, m1, null);
         Subscription s2 = new Subscription(SubscriptionPhase.REFINE, subscriber2, m2, null);
 
@@ -434,8 +433,6 @@ public class SubscriptionTest {
     public void testEquals_anotherObjectReturnsFalse() throws Exception {
         HasRefineMethod subscriber1 = new HasRefineMethod();
         Method m1 = subscriber1.getClass().getMethod(HasRefineMethod.refineMethodName, HasRefineMethod.refineMethodArgs);
-
-        TestRefinableNamed event = new TestRefinableNamed();
 
         Subscription s1 = new Subscription(SubscriptionPhase.REFINE, subscriber1, m1, null);
 
@@ -448,8 +445,6 @@ public class SubscriptionTest {
         HasRefineMethod subscriber1 = new HasRefineMethod();
         Method m1 = subscriber1.getClass().getMethod(HasRefineMethod.refineMethodName, HasRefineMethod.refineMethodArgs);
 
-        TestRefinableNamed event = new TestRefinableNamed();
-
         Subscription s1 = new Subscription(SubscriptionPhase.REFINE, subscriber1, m1, null);
         Subscription s2 = new Subscription(SubscriptionPhase.REFINE, subscriber1, m1, null);
 
@@ -460,8 +455,6 @@ public class SubscriptionTest {
     public void testToString() throws Exception {
         HasRefineMethod subscriber = new HasRefineMethod();
         Method m = subscriber.getClass().getMethod(HasRefineMethod.refineMethodName, HasRefineMethod.refineMethodArgs);
-
-        TestRefinableNamed event = new TestRefinableNamed();
 
         Subscription s = new Subscription(SubscriptionPhase.REFINE, subscriber, m, null);
         assertThat(s.toString()).containsIgnoringCase(HasRefineMethod.refineMethodName);
