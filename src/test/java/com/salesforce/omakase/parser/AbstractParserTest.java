@@ -26,6 +26,17 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.fail;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
@@ -34,15 +45,6 @@ import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Base class for testing parsers.
@@ -101,8 +103,11 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void returnsFalseOnFailure() {
-        List<GenericParseResult> results = parse(invalidSources());
-        for (GenericParseResult result : results) {
+        for (GenericParseResult result : parse(invalidSources(), false)) {
+            assertThat(result.success).describedAs(result.source.toString()).isFalse();
+        }
+        
+        for (GenericParseResult result : parse(invalidSources(), true)) {
             assertThat(result.success).describedAs(result.source.toString()).isFalse();
         }
     }
@@ -110,8 +115,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void returnsTrueOnSuccess() {
-        List<GenericParseResult> results = parse(validSources());
-        for (GenericParseResult result : results) {
+        for (GenericParseResult result : parse(validSources(), false)) {
             assertThat(result.success).describedAs(result.source.toString()).isTrue();
         }
     }
@@ -119,8 +123,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void eofOnValidSources() {
-        List<GenericParseResult> results = parse(validSources());
-        for (GenericParseResult result : results) {
+        for (GenericParseResult result : parse(validSources(), false)) {
             assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
         }
     }
@@ -129,7 +132,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
-        for (GenericParseResult result : parse(validSources())) {
+        for (GenericParseResult result : parse(validSources(), false)) {
             assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(1);
         }
     }
@@ -137,7 +140,18 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     @Test
     @Override
     public void noChangeToStreamOnFailure() {
-        for (GenericParseResult result : parse(invalidSources())) {
+        for (GenericParseResult result : parse(invalidSources(), false)) {
+            // parsers skipping past whitespace is ok
+            if (allowedToTrimLeadingWhitespace()) {
+                final String source = result.source.fullSource();
+                int index = source.length() - CharMatcher.whitespace().trimLeadingFrom(source).length();
+                assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(index);
+            } else {
+                assertThat(result.source.index()).describedAs(result.source.toString()).isEqualTo(0);
+            }
+        }
+        
+        for (GenericParseResult result : parse(invalidSources(), true)) {
             // parsers skipping past whitespace is ok
             if (allowedToTrimLeadingWhitespace()) {
                 final String source = result.source.fullSource();
@@ -186,27 +200,32 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         }
         return interest.one().get();
     }
-
+    
     /** helper method */
-    protected List<GenericParseResult> parse(String... sources) {
-        return parse(Lists.newArrayList(sources));
+    protected GenericParseResult parse(String source, boolean parsentIsConditional) {
+        GenericParseResult result = new GenericParseResult();
+        result.broadcaster = new QueryableBroadcaster();
+        result.source = new Source(source);
+        result.success = parser.parse(result.source, new Grammar(), result.broadcaster, parsentIsConditional);
+        result.broadcasted = result.broadcaster.all();
+        result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
+        return result;
     }
 
     /** helper method */
-    protected List<GenericParseResult> parse(Iterable<String> sources) {
+    protected List<GenericParseResult> parse(Iterable<String> sources, boolean parsentIsConditional) {
         List<GenericParseResult> results = new ArrayList<>();
 
         for (String source : sources) {
-            GenericParseResult result = new GenericParseResult();
-            result.broadcaster = new QueryableBroadcaster();
-            result.source = new Source(source);
-            result.success = parser.parse(result.source, new Grammar(), result.broadcaster);
-            result.broadcasted = result.broadcaster.all();
-            result.broadcastedSyntax = result.broadcaster.filter(Syntax.class);
-            results.add(result);
+            results.add(parse(source, parsentIsConditional));
         }
 
         return results;
+    }
+
+    /** helper method */
+    protected List<GenericParseResult> parse(String... sources) {
+        return parse(Lists.newArrayList(sources), false);
     }
 
     /** helper method */

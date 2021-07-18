@@ -26,14 +26,8 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.util.As;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +39,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static com.google.common.base.Preconditions.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.util.As;
 
 /**
  * Standard (default) implementation of the {@link SyntaxCollection}.

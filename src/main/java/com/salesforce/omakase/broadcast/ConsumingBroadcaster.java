@@ -27,9 +27,11 @@
 package com.salesforce.omakase.broadcast;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
- * A broadcaster that will forward broadcasted units of a certain type to a {@link Consumer}.
+ * A broadcaster that will forward broadcasted units of a certain type to a
+ * {@link Consumer}.
  *
  * @param <T>
  *     The type of units to consume.
@@ -39,6 +41,7 @@ import java.util.function.Consumer;
 public final class ConsumingBroadcaster<T extends Broadcastable> extends AbstractBroadcaster {
     private final Consumer<T> consumer;
     private final Class<T> klass;
+    private final Function<T, Boolean> customComparableLogic;
 
     /**
      * Creates a new broadcaster that matches units of the given class.
@@ -47,16 +50,38 @@ public final class ConsumingBroadcaster<T extends Broadcastable> extends Abstrac
      *     The type of unit to consume.
      * @param consumer
      *     The consumer.
+     * @param customComparableLogic
+     *      Additional logic function if return true then the {@code consumer}
+     *      will be called. If false, then it will not be called. This function
+     *      is used in conjunction with the {@code klass} attribute.
+     * @see #ConsumingBroadcaster(Class, Consumer)
      */
-    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer) {
+    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer, Function<T, Boolean> customComparableLogic) {
         this.klass = klass;
         this.consumer = consumer;
+        this.customComparableLogic = customComparableLogic;
+    }
+    
+    /**
+     * Creates a new broadcaster that matches units of the given class.
+     *
+     * @param klass
+     *     The type of unit to consume.
+     * @param consumer
+     *     The consumer.
+     * @see #ConsumingBroadcaster(Class, Consumer, Function)
+     */
+    public ConsumingBroadcaster(Class<T> klass, Consumer<T> consumer) {
+        this(klass, consumer, null);
     }
 
     @Override
     public void broadcast(Broadcastable broadcastable) {
         if (klass.isInstance(broadcastable)) {
-            consumer.accept(klass.cast(broadcastable));
+            final T input = klass.cast(broadcastable);
+            if ((customComparableLogic == null) || customComparableLogic.apply(input)) {
+                consumer.accept(input);
+            }
         }
         relay(broadcastable);
     }

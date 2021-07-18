@@ -91,6 +91,7 @@ public final class Message {
     public static final String UNEXPECTED_AFTER_QUOTE = "Unexpected content in url after closing quote '%s'";
     public static final String UNEXPECTED_KEYFRAME_NAME = "Unexpected content after the keyframes name: %s";
     public static final String UNEXPECTED_EXPRESSION_FONT_FACE = "Unexpected expression after '@font-face'";
+    public static final String UNEXPECTED_NESTED_CONDITIONAL_AT_RULE = "Unexpected nested conditional at-rule (@if)";
 
     // trailing content
     public static final String TRAILING_OPERATOR = "Expected to find another term following the term operator. " +

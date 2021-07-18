@@ -26,19 +26,17 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import java.io.IOException;
+import java.util.Iterator;
+
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.plugin.syntax.FontFacePlugin;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Represents the block of a font-face at-rule.

@@ -28,9 +28,9 @@ package com.salesforce.omakase.parser.selector;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.factory.TokenFactory;
 
@@ -49,7 +49,9 @@ public final class SelectorSequenceParser implements Parser {
         Parser rawSelectorParser = grammar.parser().rawSelectorParser();
 
         // check if the next character is a valid first character for a selector
-        if (!tf.selectorBegin().matches(source.current())) return false;
+        if (!tf.selectorBegin().matches(source.current())) {
+            return false;
+        }
 
         boolean foundDelimiter = false;
         boolean foundSelector;

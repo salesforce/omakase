@@ -26,12 +26,13 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.broadcast.NoopBroadcaster;
 import com.salesforce.omakase.parser.declaration.KeywordValueParser;
 import com.salesforce.omakase.parser.declaration.NumericalValueParser;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link CombinationParser}.
@@ -46,5 +47,13 @@ public class CombinationParserTest {
         assertThat(c.parse(new Source("red"), new Grammar(), new NoopBroadcaster())).isTrue();
         assertThat(c.parse(new Source("3px"), new Grammar(), new NoopBroadcaster())).isTrue();
         assertThat(c.parse(new Source("!"), new Grammar(), new NoopBroadcaster())).isFalse();
+    }
+    
+    @Test
+    public void parsesEither2() {
+        CombinationParser c = new CombinationParser(new KeywordValueParser(), new NumericalValueParser());
+        assertThat(c.parse(new Source("red"), new Grammar(), new NoopBroadcaster(), true)).isTrue();
+        assertThat(c.parse(new Source("3px"), new Grammar(), new NoopBroadcaster(), true)).isTrue();
+        assertThat(c.parse(new Source("!"), new Grammar(), new NoopBroadcaster(), true)).isFalse();
     }
 }

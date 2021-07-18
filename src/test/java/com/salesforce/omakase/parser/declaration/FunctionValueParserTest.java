@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.RawFunction;
@@ -40,13 +48,6 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.test.RespondingBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Optional;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link FunctionValueParser}.
@@ -201,7 +202,11 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
     @Test
     @Override
     public void matchesExpectedBroadcastCount() {
-        for (GenericParseResult result : parse(validSources())) {
+        for (GenericParseResult result : parse(validSources(), false)) {
+            assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(2); // raw function + specific function
+        }
+        
+        for (GenericParseResult result : parse(validSources(), true)) {
             assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(2); // raw function + specific function
         }
     }

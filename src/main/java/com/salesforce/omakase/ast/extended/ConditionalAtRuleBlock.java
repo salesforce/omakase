@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.ast.extended;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
@@ -37,37 +45,32 @@ import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.conditionals.Conditionals;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
-import com.salesforce.omakase.plugin.conditionals.ConditionalsRefiner;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_AT_RULE;
 
 /**
  * An extension to the standard CSS syntax that allows for conditional at-rules.
  * <p>
  * Example of a conditional at-rule:
  * <pre>
- * {@code @}if(ie7) { .test{color:red} }
+ * <code>@if(ie7) { .test{color:red} }</code>
  * </pre>
+ * </p>
  * <p>
- * This block will output its inner statements if its condition is contained within the set of "true" condition strings, as
- * specified by a {@link ConditionalsConfig}. Negation may be specified on conditions using <code>!</code>. Multiple conditions
- * may be specified using <code>||</code>.
+ * This block will output its inner statements if its condition is contained
+ * within the set of "true" condition strings, as specified by a
+ * {@link ConditionalsConfig}. Negation may be specified on conditions using
+ * {@code !}. Multiple conditions may be specified using {@code ||}.
+ * </p>
  * <p>
- * For more information on using and configuring conditionals see the main readme file.
+ * For more information on using and configuring conditionals see the main
+ * readme file.
+ * </p>
  *
  * @author nmcwilliams
- * @see Conditionals
- * @see ConditionalsRefiner
+ * @see com.salesforce.omakase.plugin.conditionals.Conditionals
+ * @see com.salesforce.omakase.plugin.conditionals.ConditionalsRefiner
  */
 @Subscribable
 @Description(value = "conditionals", broadcasted = REFINED_AT_RULE)

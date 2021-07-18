@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -39,13 +47,6 @@ import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link PropertyValueParser}.
@@ -229,12 +230,22 @@ public class PropertyValueParserTest extends AbstractParserTest<PropertyValuePar
             sourcesWithoutSpace.add(source + "!IMPORTANT");
         }
 
-        for (GenericParseResult result : parse(sourcesWithSpace)) {
+        for (GenericParseResult result : parse(sourcesWithSpace, false)) {
+            assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
+            assertThat(result.success).describedAs(result.source.toString()).isTrue();
+        }
+        
+        for (GenericParseResult result : parse(sourcesWithSpace, true)) {
             assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
             assertThat(result.success).describedAs(result.source.toString()).isTrue();
         }
 
-        for (GenericParseResult result : parse(sourcesWithoutSpace)) {
+        for (GenericParseResult result : parse(sourcesWithoutSpace, false)) {
+            assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
+            assertThat(result.success).describedAs(result.source.toString()).isTrue();
+        }
+        
+        for (GenericParseResult result : parse(sourcesWithoutSpace, true)) {
             assertThat(result.source.eof()).describedAs(result.source.toString()).isTrue();
             assertThat(result.success).describedAs(result.source.toString()).isTrue();
         }

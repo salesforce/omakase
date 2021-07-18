@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -33,12 +40,6 @@ import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StylesheetParser}.
@@ -78,5 +79,10 @@ public class StylesheetParserTest {
         QueryableBroadcaster qb = new QueryableBroadcaster();
         new StylesheetParser().parse(new Source(".abc{color:red} /*comment*/"), new Grammar(), qb);
         assertThat(qb.find(Stylesheet.class).get().orphanedComments()).hasSize(1);
+    }
+    
+    @Test
+    public void testComplexStyleSheet() {
+        
     }
 }

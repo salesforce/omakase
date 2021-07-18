@@ -26,13 +26,12 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
-import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
-import com.salesforce.omakase.ast.atrule.MediaQuery;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.InterestBroadcaster;
@@ -43,10 +42,7 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
 import com.salesforce.omakase.plugin.Plugin;
-
-import java.util.Optional;
 
 /**
  * Refines media query at-rules (@media).
@@ -110,13 +106,15 @@ public final class MediaPlugin implements Plugin {
             QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
             // parse the inner statements
-            Parser ruleParser = grammar.parser().ruleParser();
+            Parser statementParser = grammar.parser().statementParser();
             while (!source.eof()) {
-                boolean matched = ruleParser.parse(source, grammar, queryable);
+                boolean matched = statementParser.parse(source, grammar, queryable);
                 source.skipWhitepace();
 
                 // after parsing there should be nothing left in the source
-                if (!matched && !source.eof()) throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+                if (!matched && !source.eof()) {
+                    throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+                }
             }
 
             // create and add the block

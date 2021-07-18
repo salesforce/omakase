@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
@@ -33,12 +40,6 @@ import com.salesforce.omakase.ast.selector.Combinator;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link CombinatorParser}.
@@ -127,8 +128,17 @@ public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
     @Test
     /* overridden because whitespace can be a descendant combinator */
     public void correctLineAndColumnNumber() {
-        List<GenericParseResult> results = parse(validSources());
-        for (GenericParseResult result : results) {
+        for (GenericParseResult result : parse(validSources(), false)) {
+            Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
+            assertThat(syntax.line())
+                .describedAs(result.source.toString())
+                .isEqualTo(1);
+            assertThat(syntax.column())
+                .describedAs(result.source.toString())
+                .isEqualTo(1);
+        }
+        
+        for (GenericParseResult result : parse(validSources(), true)) {
             Syntax syntax = Iterables.get(result.broadcastedSyntax, 0);
             assertThat(syntax.line())
                 .describedAs(result.source.toString())

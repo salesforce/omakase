@@ -26,20 +26,22 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link KeyframeSelectorParser}.
@@ -80,7 +82,11 @@ public class KeyframeSelectorParserTest extends AbstractParserTest<KeyframeSelec
 
     @Override
     public void matchesExpectedBroadcastCount() {
-        for (GenericParseResult result : parse(validSources())) {
+        for (GenericParseResult result : parse(validSources(), false)) {
+            assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(2);
+        }
+        
+        for (GenericParseResult result : parse(validSources(), true)) {
             assertThat(result.broadcasted).describedAs(result.source.toString()).hasSize(2);
         }
     }
