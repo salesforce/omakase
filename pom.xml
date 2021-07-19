@@ -67,7 +67,7 @@
             <!-- used for general utilities -->
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>26.0-jre</version>
+            <version>29.0-jre</version>
         </dependency>
 
         <!-- test dependencies -->
@@ -124,7 +124,7 @@
             <!-- used for code generators -->
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.25</version>
+            <version>1.26</version>
             <scope>test</scope>
         </dependency>
         <dependency>
