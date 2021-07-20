@@ -50,14 +50,18 @@ public final class StylesheetParser implements Parser {
         interest.chain(broadcaster);
 
         while (true) {
-            if (!statement.parse(source, grammar, interest)) break;
+            if (!statement.parse(source, grammar, interest)) {
+                break;
+            }
         }
 
         // collect any orphaned comments and move past trailing space
         source.collectComments();
 
         // after all rules and content is parsed, there should be nothing left in the source
-        if (!source.eof()) throw new ParserException(source, Message.EXTRANEOUS, source.remaining());
+        if (!source.eof()) {
+            throw new ParserException(source, Message.EXTRANEOUS, source.remaining());
+        }
 
         // create the stylesheet
         Stylesheet stylesheet = new Stylesheet();

@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
@@ -41,10 +45,6 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 import com.salesforce.omakase.plugin.Plugin;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Parses {@link AtRule} objects that are {@link ConditionalAtRuleBlock}s.
@@ -87,6 +87,8 @@ public final class ConditionalsRefiner implements Plugin {
         if (!atRule.rawBlock().isPresent()) {
             throw new ParserException(atRule, Message.MISSING_CONDITIONAL_BLOCK);
         }
+        
+        atRule.setConditional(true);
 
         // parse the condition(s), lower-case for comparison purposes. Conditions can be preceded be a logical negation operator
         // (!) and multiple conditions can be separated by logical OR operators (||)
@@ -102,7 +104,9 @@ public final class ConditionalsRefiner implements Plugin {
         // find the first condition
         boolean isNegated = source.optionallyPresent(Tokens.EXCLAMATION);
         Optional<String> condition = source.readIdent();
-        if (!condition.isPresent()) throw new ParserException(source, Message.CONDITION_NAME);
+        if (!condition.isPresent()) {
+            throw new ParserException(source, Message.CONDITION_NAME);
+        }
         conditionals.add(new Conditional(condition.get().toLowerCase(), isNegated));
 
         // find extra conditions after logical ORs
@@ -113,7 +117,9 @@ public final class ConditionalsRefiner implements Plugin {
 
             isNegated = source.optionallyPresent(Tokens.EXCLAMATION);
             condition = source.readIdent();
-            if (!condition.isPresent()) throw new ParserException(source, Message.CONDITION_NAME);
+            if (!condition.isPresent()) {
+                throw new ParserException(source, Message.CONDITION_NAME);
+            }
             conditionals.add(new Conditional(condition.get().toLowerCase(), isNegated));
 
             source.skipWhitepace();
@@ -123,16 +129,18 @@ public final class ConditionalsRefiner implements Plugin {
 
         // nothing should be left
         source.skipWhitepace();
-        if (!source.eof()) throw new ParserException(source, Message.UNPARSABLE_CONDITIONAL_CONTENT, source.remaining());
+        if (!source.eof()) {
+            throw new ParserException(source, Message.UNPARSABLE_CONDITIONAL_CONTENT, source.remaining());
+        }
 
         // setup stuff for parsing inner statements
         source = new Source(atRule.rawBlock().get());
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // parse the inner statements
-        Parser rule = grammar.parser().ruleParser();
+        Parser rule = grammar.parser().statementParser();
         while (!source.eof()) {
-            boolean matched = rule.parse(source, grammar, queryable);
+            boolean matched = rule.parse(source, grammar, queryable, true);
             source.skipWhitepace();
 
             // after parsing there should be nothing left in the source

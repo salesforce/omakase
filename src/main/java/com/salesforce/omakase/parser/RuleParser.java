@@ -52,7 +52,9 @@ public final class RuleParser implements Parser {
         QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
         // if there isn't a selector then we aren't a rule
-        if (!grammar.parser().rawSelectorSequenceParser().parse(source, grammar, queryable)) return false;
+        if (!grammar.parser().rawSelectorSequenceParser().parse(source, grammar, queryable)) {
+            return false;
+        }
 
         // parse the declaration block
         source.skipWhitepace().expect(grammar.token().declarationBlockBegin());

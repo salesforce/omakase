@@ -23,47 +23,25 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package com.salesforce.omakase.parser;
-
-import com.salesforce.omakase.broadcast.Broadcaster;
+package com.salesforce.omakase.test.goldfile;
 
 /**
- * Combines two or more {@link Parser}s together. If the first parser does not succeed (i.e., returns false) then subsequent
- * parsers will be tried (until/if one does).
+ * Test nested rules.
+ * 
+ * Example:
+ * <pre><code>
+ * {@literal @}if(IE) {
+ *     {@literal @}media (min-width: 30em) { ... }
+ * }
+ * </code></pre>
  *
- * @author nmcwilliams
+ * @author eperret (Eric Perret)
+ * @since 1.7.0
  */
-public final class CombinationParser implements Parser {
-    private final Parser[] parsers;
-
-    /**
-     * Creates a new instance using the given {@link Parser}s, in order.
-     *
-     * @param parsers
-     *     The parsers.
-     */
-    public CombinationParser(Parser... parsers) {
-        this.parsers = parsers;
-    }
+public class NestedRulesGoldfileTest extends AbstractGoldfileTest {
 
     @Override
-    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster) {
-        for (Parser parser : parsers) {
-            if (parser.parse(source, grammar, broadcaster)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean parse(Source source, Grammar grammar, Broadcaster broadcaster, boolean parentIsConditional) {
-        for (Parser parser : parsers) {
-            if (parser.parse(source, grammar, broadcaster, parentIsConditional)) {
-                return true;
-            }
-        }
-        return false;
+    public String name() {
+        return "nested-rules";
     }
 }
