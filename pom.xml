@@ -49,6 +49,12 @@
             <organization>Salesforce</organization>
             <organizationUrl>https://opensource.salesforce.com/</organizationUrl>
         </developer>
+        <developer>
+            <name>Eric Perret</name>
+            <email>eperret@salesforce.com</email>
+            <organization>Salesforce</organization>
+            <organizationUrl>https://opensource.salesforce.com/</organizationUrl>
+        </developer>
     </developers>
 
     <scm>
