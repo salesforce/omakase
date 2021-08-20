@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 /**
  * Unit tests for {@link ConditionalsConfig}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalsConfigTest {
     @Test
     public void addCondition() {

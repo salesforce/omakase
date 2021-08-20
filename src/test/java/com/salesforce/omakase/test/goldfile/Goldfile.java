@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.test.goldfile;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.File;
+import java.io.IOException;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
@@ -36,11 +41,6 @@ import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-
 /**
  * Utility for executing goldfile tests.
  * <p>
@@ -48,7 +48,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public final class Goldfile {
     private Goldfile() {}
 
@@ -65,7 +64,7 @@ public final class Goldfile {
      * @throws IOException
      *     If there is a problem with teh files.
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings("deprecation")
     public static void test(String name, StyleWriter writer, boolean autoRefine, Iterable<Plugin> plugins) throws IOException {
         // grab the source to parse
         File sourceFile = sourceFile(name);
@@ -119,6 +118,7 @@ public final class Goldfile {
      * @throws IOException
      *     If something goes wrong reading the file.
      */
+    @SuppressWarnings("deprecation")
     public static String fileContents(File file) throws IOException {
         return Files.toString(file, Charsets.UTF_8);
     }

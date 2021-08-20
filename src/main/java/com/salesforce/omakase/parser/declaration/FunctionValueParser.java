@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
@@ -37,8 +39,6 @@ import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.Source.Snapshot;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.Optional;
 
 /**
  * Parses a {@link GenericFunctionValue}.

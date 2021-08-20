@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.sample.custom.selector;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.salesforce.omakase.ast.selector.AbstractSelectorPart;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
@@ -34,17 +38,12 @@ import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The custom AST object representing our placeholder selector.
  *
  * @author nmcwilliams
  */
 @Subscribable
-@SuppressWarnings("JavaDoc")
 public class PlaceholderSelector extends AbstractSelectorPart implements SimpleSelector {
     private final String name;
     private final List<Selector> references = new ArrayList<>();

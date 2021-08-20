@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue.Sign;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.Optional;
 
 /**
  * Parses a {@link NumericalValue}.

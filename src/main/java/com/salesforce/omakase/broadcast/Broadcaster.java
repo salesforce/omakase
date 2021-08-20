@@ -26,10 +26,6 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Refine;
-import com.salesforce.omakase.broadcast.emitter.Emitter;
-
 /**
  * Responsible for broadcasting {@link Broadcastable} events (usually newly created {@link Syntax} units).
  *

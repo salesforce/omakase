@@ -26,19 +26,19 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Prefixes;
+import com.salesforce.omakase.util.Prefixes.PrefixPair;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.util.Prefixes.PrefixPair;
 
 /**
  * The property name within a {@link Declaration}.
@@ -66,7 +66,6 @@ public final class PropertyName extends AbstractSyntax implements Named {
     private final String unprefixed;
 
     /** private -- use a constructor method for new instances */
-    @SuppressWarnings("AssignmentToMethodParameter")
     private PropertyName(int line, int column, String name) {
         super(line, column);
 

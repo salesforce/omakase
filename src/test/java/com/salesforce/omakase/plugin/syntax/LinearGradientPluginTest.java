@@ -26,23 +26,23 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.declaration.LinearGradientFunctionValue;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link LinearGradientPlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class LinearGradientPluginTest {
     private LinearGradientPlugin plugin;
     private QueryableBroadcaster broadcaster;

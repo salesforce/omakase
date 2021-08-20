@@ -26,14 +26,13 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
-import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
-import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
@@ -41,12 +40,8 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.parser.atrule.KeyframeSelectorParser;
-import com.salesforce.omakase.parser.atrule.KeyframeSelectorSequenceParser;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.util.Prefixes;
-
-import java.util.Optional;
 
 /**
  * Refines keyframes at-rules (@keyframes).

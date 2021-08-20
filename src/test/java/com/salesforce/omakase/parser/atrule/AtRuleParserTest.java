@@ -54,7 +54,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class AtRuleParserTest extends AbstractParserTest<AtRuleParser> {
     @Override
     public List<String> invalidSources() {

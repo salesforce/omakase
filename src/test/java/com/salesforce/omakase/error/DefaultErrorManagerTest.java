@@ -26,24 +26,25 @@
 
 package com.salesforce.omakase.error;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link DefaultErrorManager}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class DefaultErrorManagerTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

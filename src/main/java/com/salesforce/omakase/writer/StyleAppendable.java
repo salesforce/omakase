@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.writer;
 
-import java.io.IOException;
-
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
 
 /**
  * A wrapper around an {@link Appendable} that provides a few convenience functions.

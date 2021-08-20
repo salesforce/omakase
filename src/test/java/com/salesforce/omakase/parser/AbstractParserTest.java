@@ -51,8 +51,9 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "unchecked"})
+@SuppressWarnings({"unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
     protected final Parser parser;
 
@@ -192,6 +193,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     }
 
     /** helper method */
+    @SuppressWarnings("hiding")
     protected <T extends Broadcastable> T parse(Class<T> klass, String source) {
         SingleInterestBroadcaster<T> interest = new SingleInterestBroadcaster<T>(klass);
         parser.parse(new Source(source), new Grammar(), interest);
@@ -252,6 +254,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         return results;
     }
 
+    @SuppressWarnings("hiding")
     protected <T extends Broadcastable> T expectOnly(QueryableBroadcaster broadcaster, Class<T> klass) {
         String msg = "expected to find exactly one instance of " + klass.getSimpleName();
 

@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.Broadcaster;
@@ -33,11 +38,6 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.util.As;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Metadata class to wrap the details around a subscription method. For internal use only.

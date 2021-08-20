@@ -26,25 +26,25 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.PropertyValueMember;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaQueryList}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MediaQueryListTest {
     private MediaQueryList list;
     private MediaQuery q1;

@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -38,19 +45,12 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link GenericAtRuleBlock}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class GenericAtRuleBlockTest {
     private Statement statement;
 

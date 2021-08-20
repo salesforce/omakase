@@ -26,11 +26,11 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableList;
 
 /**
  * An {@link InterestBroadcaster} that is interested in only a single broadcast of a particular type.

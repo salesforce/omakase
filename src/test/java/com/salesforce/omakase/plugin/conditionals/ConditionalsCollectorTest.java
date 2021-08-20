@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import com.salesforce.omakase.Omakase;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.Omakase;
 
 /**
  * Unit tests for {@link ConditionalsCollector}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalsCollectorTest {
     private static final String SOURCE = ".test {color: red}\n" +
         "\n" +

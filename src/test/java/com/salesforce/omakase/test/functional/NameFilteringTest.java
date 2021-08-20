@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -35,16 +39,13 @@ import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.core.AutoRefine;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Tests that name filters work.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "unused"})
+@SuppressWarnings({"unused"})
 public class NameFilteringTest {
 
     @Test

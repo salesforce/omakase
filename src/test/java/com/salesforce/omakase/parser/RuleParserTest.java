@@ -26,28 +26,25 @@
 
 package com.salesforce.omakase.parser;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.parser.AbstractParserTest;
-import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.RuleParser;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link RuleParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class RuleParserTest extends AbstractParserTest<RuleParser> {
     @Override
     public List<String> invalidSources() {

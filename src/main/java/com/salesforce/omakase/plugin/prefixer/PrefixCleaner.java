@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -33,8 +35,6 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.util.Declarations;
 import com.salesforce.omakase.util.Prefixes;
-
-import java.util.Optional;
 
 /**
  * This plugin handles removing unnecessary prefixed units.

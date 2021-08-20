@@ -27,10 +27,6 @@
 package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.plugin.syntax.MediaPlugin;
-import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
-
-import java.util.function.Supplier;
 
 /**
  * A {@link Plugin} that has dependencies on other {@link Plugin}s.

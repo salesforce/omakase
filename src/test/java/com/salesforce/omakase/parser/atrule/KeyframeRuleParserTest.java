@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Rule;
@@ -34,19 +41,13 @@ import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link KeyframeRuleParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class KeyframeRuleParserTest extends AbstractParserTest<KeyframeRuleParser> {
 
     @Override

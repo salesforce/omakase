@@ -37,8 +37,8 @@ import org.junit.rules.ExpectedException;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link PseudoClassSelector}. */
-@SuppressWarnings("JavaDoc")
 public class PseudoClassSelectorTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

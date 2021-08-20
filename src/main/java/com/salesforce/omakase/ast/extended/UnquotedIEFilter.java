@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.ast.declaration.AbstractTerm;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 import java.io.IOException;
 
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
+import com.salesforce.omakase.ast.declaration.AbstractTerm;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * MS filter junk.

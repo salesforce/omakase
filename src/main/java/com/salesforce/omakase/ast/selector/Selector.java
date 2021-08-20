@@ -26,12 +26,18 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -39,18 +45,8 @@ import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
-import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
-import com.salesforce.omakase.plugin.core.AutoRefine;
-import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS selector.

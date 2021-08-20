@@ -26,12 +26,6 @@
 
 package com.salesforce.omakase.tools;
 
-import com.salesforce.omakase.tools.perf.RunPerfTest;
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,12 +33,19 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
+import com.salesforce.omakase.tools.perf.RunPerfTest;
+
 /**
  * Omakase CLI. See script/omakase.sh.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({})
 public class Run {
     public static final String USAGE = "Usage: omakase [options]";
 
@@ -82,6 +83,7 @@ public class Run {
         new Run().cli(args);
     }
 
+    @SuppressWarnings("deprecation")
     public void cli(String[] args) throws Exception {
         CmdLineParser parser = new CmdLineParser(this);
         parser.setUsageWidth(250);

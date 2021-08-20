@@ -38,8 +38,8 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link GenericFunctionValue}. */
-@SuppressWarnings("JavaDoc")
 public class GenericFunctionValueTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     GenericFunctionValue value;

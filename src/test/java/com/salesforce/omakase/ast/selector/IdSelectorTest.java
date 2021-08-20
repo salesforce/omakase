@@ -35,7 +35,6 @@ import org.junit.Test;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link IdSelector}. */
-@SuppressWarnings("JavaDoc")
 public class IdSelectorTest {
     @Test
     public void getName() {

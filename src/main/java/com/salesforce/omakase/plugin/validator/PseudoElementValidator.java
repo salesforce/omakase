@@ -26,10 +26,11 @@
 
 package com.salesforce.omakase.plugin.validator;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.broadcast.annotation.Validate;
@@ -37,8 +38,6 @@ import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
-
-import java.util.Optional;
 
 /**
  * Validates that {@link PseudoElementSelector}s are last within a selector sequence (the last {@link SelectorPart} within a

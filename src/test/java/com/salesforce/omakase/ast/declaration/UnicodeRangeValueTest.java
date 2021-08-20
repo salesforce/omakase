@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link UnicodeRangeValue}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class UnicodeRangeValueTest {
     private UnicodeRangeValue range;
 

@@ -26,6 +26,16 @@
 
 package com.salesforce.omakase.plugin.core;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -39,18 +49,8 @@ import com.salesforce.omakase.plugin.syntax.DeclarationPlugin;
 import com.salesforce.omakase.plugin.syntax.MediaPlugin;
 import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
 import com.salesforce.omakase.plugin.syntax.UrlPlugin;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Tests for {@link AutoRefine}. */
-@SuppressWarnings("JavaDoc")
 public class AutoRefineTest {
     private Registry registry;
 

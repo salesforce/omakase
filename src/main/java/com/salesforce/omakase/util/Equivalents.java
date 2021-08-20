@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.util;
 
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -40,8 +42,6 @@ import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Prefix;
-
-import java.util.Optional;
 
 /**
  * Utilities for finding prefixed equivalents.

@@ -26,19 +26,18 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.ast.Named;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
+import com.salesforce.omakase.ast.Named;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a CSS pseudo class selector.

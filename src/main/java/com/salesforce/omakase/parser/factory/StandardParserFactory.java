@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.parser.factory;
 
-import com.salesforce.omakase.parser.Parser;
-
 /**
  * A {@link ParserFactory} for retrieving standard {@link Parser}s.
  *

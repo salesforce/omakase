@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.selector.ClassSelector;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.ast.selector.ClassSelector;
 
 /**
  * Unit tests for {@link NoopBroadcaster}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class NoopBroadcasterTest {
     @Test
     public void relaysToInnerBroadcaster() {

@@ -26,14 +26,20 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.collect.Sets;
-import com.salesforce.omakase.ast.selector.*;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
+
+import com.google.common.collect.Sets;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.selector.TypeSelector;
 
 /**
  * Utilities for working with {@link Selector}s and {@link SelectorPart}s.

@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.parser.token;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link CompoundToken}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class CompoundTokenTest {
     @Test
     public void matchesEither() {

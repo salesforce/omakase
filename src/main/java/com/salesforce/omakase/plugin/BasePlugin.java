@@ -26,6 +26,7 @@
 
 package com.salesforce.omakase.plugin;
 
+import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.Stylesheet;
@@ -33,16 +34,30 @@ import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.atrule.FontDescriptor;
 import com.salesforce.omakase.ast.atrule.MediaQueryList;
-import com.salesforce.omakase.ast.declaration.*;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.FunctionValue;
+import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import com.salesforce.omakase.ast.declaration.HexColorValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.LinearGradientFunctionValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.StringValue;
+import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.ast.declaration.UnicodeRangeValue;
+import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
-import com.salesforce.omakase.ast.RawFunction;
-import com.salesforce.omakase.ast.selector.*;
-import com.salesforce.omakase.broadcast.annotation.Observe;
-import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.plugin.conditionals.Conditionals;
-import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.ast.selector.AttributeSelector;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.selector.SimpleSelector;
+import com.salesforce.omakase.ast.selector.TypeSelector;
+import com.salesforce.omakase.ast.selector.UniversalSelector;
 
 /**
  * An optional base {@link Plugin} that can be extended from or used to see which types of subscriptions are possible.

@@ -26,11 +26,11 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
+
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_SELECTOR;
 
 /**
  * A {@link SimpleSelector}, {@link PseudoElementSelector}, or {@link Combinator}.

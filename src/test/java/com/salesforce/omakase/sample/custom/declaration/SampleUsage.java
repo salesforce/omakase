@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.sample.custom.declaration;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.plugin.GrammarPlugin;
 import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * An example of using the sample custom declaration (and at-rule!) classes in this package.
@@ -50,7 +49,6 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "JavaDoc"})
 public final class SampleUsage {
     public static void main(String[] args) throws IOException {
         // sample CSS input

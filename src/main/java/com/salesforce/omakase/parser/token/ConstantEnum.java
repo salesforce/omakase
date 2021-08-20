@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.parser.Source;
-
 /**
  * Very similar to a {@link TokenEnum}, except that this is used for enums that must match more than one character (a constant) as
  * opposed to a single token.

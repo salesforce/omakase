@@ -26,6 +26,16 @@
 
 package com.salesforce.omakase.ast.collection;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -35,19 +45,10 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link LinkedSyntaxCollection}. */
-@SuppressWarnings("JavaDoc")
 public class LinkedSyntaxCollectionTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private SyntaxCollection<Parent, Child> collection;
@@ -629,6 +630,7 @@ public class LinkedSyntaxCollectionTest {
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {
+        @SuppressWarnings("unused")
         private final int i;
 
         public Child(int i) {

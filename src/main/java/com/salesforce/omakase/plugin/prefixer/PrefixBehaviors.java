@@ -27,7 +27,6 @@
 package com.salesforce.omakase.plugin.prefixer;
 
 import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.PrefixTables;
 
 /**
  * A collection of {@link PrefixBehavior}s.

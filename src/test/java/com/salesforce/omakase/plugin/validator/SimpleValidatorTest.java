@@ -26,12 +26,13 @@
 
 package com.salesforce.omakase.plugin.validator;
 
-import com.salesforce.omakase.error.ErrorLevel;
-import com.salesforce.omakase.plugin.Plugin;
 import org.junit.Test;
 
+import com.salesforce.omakase.error.ErrorLevel;
+import com.salesforce.omakase.plugin.Plugin;
+
 /** For testing validators that only validate one thing. */
-@SuppressWarnings({"JavaDoc", "AbstractClassExtendsConcreteClass"})
+@SuppressWarnings({})
 public abstract class SimpleValidatorTest<T extends Plugin> extends BaseValidatorTest<T> {
     public abstract Iterable<String> validSources();
 

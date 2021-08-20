@@ -54,8 +54,8 @@ import com.salesforce.omakase.writer.StyleWriter;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SubscriptionTest {
+    @SuppressWarnings("deprecation")
     @org.junit.Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -238,6 +238,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethodWithWrongArgSignatureThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(ClassSelector selector) {}
         };
         Method m = subscriber.getClass().getMethod("refine", ClassSelector.class);
@@ -253,6 +254,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethodWithPrivateAccessThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             private void refine(TestRefinable event, Grammar grammer, Broadcaster b) {}
         };
         Method m = subscriber.getClass().getDeclaredMethod(HasRefineMethod.refineMethodName, HasRefineMethod.refineMethodArgs);
@@ -268,6 +270,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethod_ParserException_reportsToErrorManager() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(TestRefinable event, Grammar grammer, Broadcaster b) {
                 throw new ParserException(event, "foo");
             }
@@ -285,6 +288,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethod_SubscriptionException_reportsToErrorManager() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(TestRefinable event, Grammar grammer, Broadcaster b) {
                 throw new SubscriptionException("foo");
             }
@@ -302,6 +306,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethod_GenericException_throws() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(TestRefinable event, Grammar grammer, Broadcaster b) {
                 throw new RuntimeException("foo");
             }
@@ -321,6 +326,7 @@ public class SubscriptionTest {
     @Test
     public void testProcessMethodWithWrongArgSignatureThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void process() {}
         };
         Method m = subscriber.getClass().getMethod("process");
@@ -336,6 +342,7 @@ public class SubscriptionTest {
     @Test
     public void testProcessMethodWithPrivateAccessThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             private void process(ClassSelector selector) {}
         };
         Method m = subscriber.getClass().getDeclaredMethod("process", ClassSelector.class);
@@ -351,6 +358,7 @@ public class SubscriptionTest {
     @Test
     public void testProcessMethod_GenericException_throws() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void process(ClassSelector selector) {
                 throw new RuntimeException("foo");
             }
@@ -370,6 +378,7 @@ public class SubscriptionTest {
     @Test
     public void testValidateMethodWithWrongArgSignatureThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void validate(ClassSelector selector) {}
         };
         Method m = subscriber.getClass().getMethod("validate", ClassSelector.class);
@@ -385,6 +394,7 @@ public class SubscriptionTest {
     @Test
     public void testValidateMethodWithPrivateAccessThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             private void validate(ClassSelector selector, ErrorManager em) {}
         };
         Method m = subscriber.getClass().getDeclaredMethod("validate", ClassSelector.class, ErrorManager.class);
@@ -400,6 +410,7 @@ public class SubscriptionTest {
     @Test
     public void testValidateMethod_GenericException_throws() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void validate(ClassSelector selector, ErrorManager em) {
                 throw new RuntimeException("foo");
             }

@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
@@ -33,11 +35,8 @@ import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * Represents a list of media queries.

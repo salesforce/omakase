@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.data.Property;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link PropertyName}.
@@ -48,6 +48,7 @@ public class PropertyNameTest {
     private static final String STARHACK_NAME = "*color";
     private static final String CUSTOM_PROPERTY_NAME = "--main-color";
 
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

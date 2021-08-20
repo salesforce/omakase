@@ -29,8 +29,8 @@ package com.salesforce.omakase.parser.declaration;
 import com.salesforce.omakase.ast.declaration.QuotationMode;
 import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 

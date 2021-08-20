@@ -46,7 +46,6 @@ public final class Actions {
         return DESTROY;
     }
 
-    @SuppressWarnings("Convert2Lambda")
     private static final Action<Groupable<?, ?>> DESTROY = new Action<Groupable<?, ?>>() {
         @Override
         public void apply(Iterable<? extends Groupable<?, ?>> instances) {

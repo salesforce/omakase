@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
+
+import java.io.IOException;
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.Named;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Refinable;
@@ -40,18 +47,8 @@ import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.parser.declaration.DeclarationParser;
-import com.salesforce.omakase.parser.declaration.PropertyValueParser;
-import com.salesforce.omakase.plugin.core.AutoRefine;
-import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import static com.google.common.base.Preconditions.*;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * Represents a CSS declaration.

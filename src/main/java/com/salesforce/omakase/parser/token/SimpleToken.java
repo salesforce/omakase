@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.plugin.GrammarPlugin;
-
 /**
  * Mainly for use with custom {@link GrammarPlugin}s that need to specify additional characters not already covered by
  * {@link Tokens}.

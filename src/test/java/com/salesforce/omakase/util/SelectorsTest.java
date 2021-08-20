@@ -26,17 +26,26 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.selector.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.Combinator;
+import com.salesforce.omakase.ast.selector.CombinatorType;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.ast.selector.PseudoClassSelector;
+import com.salesforce.omakase.ast.selector.PseudoElementSelector;
+import com.salesforce.omakase.ast.selector.Selector;
+import com.salesforce.omakase.ast.selector.SelectorPart;
+import com.salesforce.omakase.ast.selector.TypeSelector;
 
 /**
  * Unit tests for {@link Selectors}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "FieldCanBeLocal", "UnusedDeclaration"})
+@SuppressWarnings({})
 public class SelectorsTest {
     private SelectorPart part;
     private SelectorPart obj1;
@@ -46,6 +55,7 @@ public class SelectorsTest {
     private SelectorPart obj5;
     private SelectorPart obj6;
     private Combinator combinator;
+    @SuppressWarnings("unused")
     private Selector full;
 
     private void fill() {

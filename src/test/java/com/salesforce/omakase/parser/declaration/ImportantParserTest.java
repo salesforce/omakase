@@ -44,7 +44,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ImportantParserTest extends AbstractParserTest<ImportantParser> {
     @Override
     public List<String> invalidSources() {

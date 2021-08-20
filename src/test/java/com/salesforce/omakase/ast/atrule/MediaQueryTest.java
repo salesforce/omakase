@@ -26,27 +26,28 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.declaration.NumericalValue;
-import com.salesforce.omakase.broadcast.QueryableBroadcaster;
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.broadcast.QueryableBroadcaster;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link MediaQuery}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MediaQueryTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private MediaQuery mq;

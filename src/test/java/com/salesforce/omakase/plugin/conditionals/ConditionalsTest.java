@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link Conditionals}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalsTest {
     @Test
     public void getsConfig() {

@@ -31,7 +31,6 @@ import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.InterestBroadcaster;
 import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;

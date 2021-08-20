@@ -26,8 +26,9 @@
 
 package com.salesforce.omakase.data;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Enum of browsers.
@@ -39,7 +40,6 @@ import java.util.List;
  * <p>
  * See class com.salesforce.omakase.tools.GenerateBrowserEnum for instructions on updating.
  */
-@SuppressWarnings("AutoBoxing")
 public enum Browser {
     /** The 'Internet Explorer' browser */
     IE("ie", "Internet Explorer", Prefix.MS, ImmutableList.of(11.0,10.0,9.0,8.0,7.0,6.0,5.5)),

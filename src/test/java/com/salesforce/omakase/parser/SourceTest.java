@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.ConstantEnum;
@@ -33,24 +42,16 @@ import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
 import com.salesforce.omakase.test.util.TemplatesHelper;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Source}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SourceTest {
     static final String INLINE = ".class, #id { color: red }";
 
+    @SuppressWarnings("deprecation")
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 

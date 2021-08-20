@@ -26,28 +26,26 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import org.reflections.Reflections;
-
 import java.util.Comparator;
 import java.util.List;
+
+import org.reflections.Reflections;
+
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
 /**
  * Lists all {@link Subscribable} {@link Syntax} units. Also available via the 'script/omakase.sh' script.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PrintSubscribableSyntaxTable {
     public static void main(String[] args) {
         new PrintSubscribableSyntaxTable().run();
     }
 
-    @SuppressWarnings("Convert2Lambda")
     public void run() {
         Reflections reflections = new Reflections("com.salesforce.omakase.ast");
         List<Class<?>> list = Lists.newArrayList(reflections.getTypesAnnotatedWith(Subscribable.class, true));

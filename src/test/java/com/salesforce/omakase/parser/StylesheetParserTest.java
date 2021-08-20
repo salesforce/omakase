@@ -46,8 +46,8 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class StylesheetParserTest {
+    @SuppressWarnings("deprecation")
     @org.junit.Rule
     public final ExpectedException exception = ExpectedException.none();
 

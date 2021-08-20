@@ -33,7 +33,6 @@ import org.junit.Test;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.writer.StyleWriter;
 
-@SuppressWarnings("JavaDoc")
 public class DirectionFlipPluginTest {
 
     private void check(String ltr, String rtl) {

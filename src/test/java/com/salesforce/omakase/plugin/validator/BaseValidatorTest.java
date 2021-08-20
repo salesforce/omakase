@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.plugin.validator;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.salesforce.omakase.Omakase;
@@ -38,14 +40,11 @@ import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.plugin.core.SyntaxTree;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
 /**
  * Base test for validation unit tests.
  * <p>
  * This will only work if the validator has a no-org constructor.
  */
-@SuppressWarnings("JavaDoc")
 public class BaseValidatorTest<T extends Plugin> {
     protected Plugin plugin;
 
@@ -169,7 +168,6 @@ public class BaseValidatorTest<T extends Plugin> {
 
         @Override
         public void report(ParserException exception) {
-            this.level = level;
             this.message = exception.getMessage();
         }
 

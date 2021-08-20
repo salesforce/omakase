@@ -26,13 +26,11 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.parser.selector.CombinatorParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * Represents a CSS combinator.

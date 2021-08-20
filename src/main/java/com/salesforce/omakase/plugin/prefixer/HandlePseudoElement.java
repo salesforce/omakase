@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import java.util.Set;
+
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -36,8 +38,6 @@ import com.salesforce.omakase.data.PrefixTablesUtil;
 import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.Selectors;
 import com.salesforce.omakase.util.SupportMatrix;
-
-import java.util.Set;
 
 /**
  * Handles prefixing pseudo element selectors. In this case, when a prefix is needed the whole rule must be copied.

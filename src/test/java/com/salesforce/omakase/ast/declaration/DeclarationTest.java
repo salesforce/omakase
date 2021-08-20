@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
@@ -43,17 +51,10 @@ import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Declaration}. */
-@SuppressWarnings("JavaDoc")
 public class DeclarationTest {
+    @SuppressWarnings("deprecation")
     @org.junit.Rule public final ExpectedException exception = ExpectedException.none();
 
     private RawSyntax rawName;

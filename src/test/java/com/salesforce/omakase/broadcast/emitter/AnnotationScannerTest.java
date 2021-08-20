@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.Maps;
 import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -37,22 +46,14 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.Map;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link AnnotationScanner}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "ConstantConditions"})
 public class AnnotationScannerTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private AnnotationScanner scanner;
@@ -134,7 +135,6 @@ public class AnnotationScannerTest {
         scanner.scanSubscriptions(new InvalidValidate());
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class AllValid implements Plugin {
         @Observe
         public void observe(ClassSelector cs) {}

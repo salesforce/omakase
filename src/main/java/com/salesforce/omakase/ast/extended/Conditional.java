@@ -26,15 +26,14 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.plugin.conditionals.Conditionals;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
+
 import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
-
-import java.io.IOException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents a single condition within a {@link ConditionalAtRuleBlock}.

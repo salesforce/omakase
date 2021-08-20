@@ -26,25 +26,27 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.UnicodeRangeValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link UnicodeRangeValueParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
+@SuppressWarnings({})
 public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRangeValueParser> {
     @Override
     public List<String> invalidSources() {

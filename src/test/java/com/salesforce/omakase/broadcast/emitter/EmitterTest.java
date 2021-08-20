@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Refinable;
@@ -45,20 +53,12 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Emitter}
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"UnusedParameters", "JavaDoc"})
 public class EmitterTest {
     private Grammar grammar;
     private Broadcaster broadcaster;

@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.tools.perf;
 
-@SuppressWarnings("ALL")
 abstract class PerfTest {
     public abstract String name();
 

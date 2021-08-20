@@ -28,13 +28,11 @@ package com.salesforce.omakase.parser.atrule;
 
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.RuleParser;
 import com.salesforce.omakase.parser.Source;
 
 /**

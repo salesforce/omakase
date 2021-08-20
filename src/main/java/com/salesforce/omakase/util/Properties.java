@@ -26,10 +26,10 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.data.Property;
-
 import java.util.EnumSet;
 import java.util.regex.Pattern;
+
+import com.salesforce.omakase.data.Property;
 
 /**
  * Utilities for working with {@link Property}.

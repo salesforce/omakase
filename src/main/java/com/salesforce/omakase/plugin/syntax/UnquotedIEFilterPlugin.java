@@ -26,18 +26,16 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
-import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
-
-import java.util.Optional;
 
 /**
  * This plugin enables unquoted IE proprietary filters.

@@ -42,7 +42,6 @@ import com.google.common.collect.Lists;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("ALL")
 public final class RunPerfTest {
 
     /** set of possible parsers configurations to test */

@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.ast.Rule;
@@ -57,19 +64,13 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.core.AutoRefine;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Verifies expected delivery order for subscription methods.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "unused"})
+@SuppressWarnings({"unused"})
 public class SubscriptionDeliveryOrderTest {
     private static final String SRC = "#test .test, .test2 > p {\n" +
         "  margin: 5px 3px;\n" +

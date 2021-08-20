@@ -26,20 +26,29 @@
 
 package com.salesforce.omakase.parser;
 
+import static com.google.common.base.Preconditions.checkPositionIndex;
+import static com.salesforce.omakase.parser.token.Tokens.CLOSE_PAREN;
+import static com.salesforce.omakase.parser.token.Tokens.DOUBLE_QUOTE;
+import static com.salesforce.omakase.parser.token.Tokens.ESCAPE;
+import static com.salesforce.omakase.parser.token.Tokens.FORWARD_SLASH;
+import static com.salesforce.omakase.parser.token.Tokens.HYPHEN;
+import static com.salesforce.omakase.parser.token.Tokens.NEWLINE;
+import static com.salesforce.omakase.parser.token.Tokens.NMCHAR;
+import static com.salesforce.omakase.parser.token.Tokens.NMSTART;
+import static com.salesforce.omakase.parser.token.Tokens.OPEN_PAREN;
+import static com.salesforce.omakase.parser.token.Tokens.SINGLE_QUOTE;
+import static com.salesforce.omakase.parser.token.Tokens.STAR;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
-import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkPositionIndex;
-import static com.salesforce.omakase.parser.token.Tokens.*;
 
 /**
  * A tool for reading a String source one character at a time.

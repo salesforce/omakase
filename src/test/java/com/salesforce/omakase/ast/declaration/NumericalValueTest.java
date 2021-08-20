@@ -26,19 +26,20 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link NumericalValue}. */
-@SuppressWarnings("JavaDoc")
 public class NumericalValueTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private NumericalValue numerical;

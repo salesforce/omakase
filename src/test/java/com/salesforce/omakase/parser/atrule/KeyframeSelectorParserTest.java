@@ -48,8 +48,8 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class KeyframeSelectorParserTest extends AbstractParserTest<KeyframeSelectorParser> {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Override

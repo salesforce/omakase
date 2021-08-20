@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-
 /**
  * Indicates the conditions for an {@link Subscribable} type to be broadcasted.
  *

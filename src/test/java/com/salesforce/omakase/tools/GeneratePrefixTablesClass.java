@@ -26,6 +26,16 @@
 
 package com.salesforce.omakase.tools;
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import org.yaml.snakeyaml.Yaml;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -36,16 +46,8 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.PrefixTables;
 import com.salesforce.omakase.data.Property;
-import freemarker.template.TemplateException;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import freemarker.template.TemplateException;
 
 /**
  * Handles updating the {@link PrefixTables} class.
@@ -56,7 +58,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"rawtypes", "JavaDoc", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class GeneratePrefixTablesClass {
     private static final String ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/features-json/";
     private static final Yaml yaml = new Yaml();

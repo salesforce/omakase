@@ -26,17 +26,16 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.broadcast.BroadcastRequirement;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.syntax.UrlPlugin;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a url function value.

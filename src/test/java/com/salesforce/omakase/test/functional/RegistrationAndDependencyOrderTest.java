@@ -26,25 +26,25 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Cross-functional test focusing on correct plugin registration dependency order.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class RegistrationAndDependencyOrderTest {
     @Test
     public void registrationOrder() {
@@ -68,7 +68,6 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder1 extends RegistrationOrderBase {
         RegistrationOrder1(List<Class<?>> list) {
             super(list);
@@ -80,7 +79,6 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder2 extends RegistrationOrderBase {
         RegistrationOrder2(List<Class<?>> list) {
             super(list);
@@ -92,7 +90,6 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder3 extends RegistrationOrderBase implements DependentPlugin {
         RegistrationOrder3(List<Class<?>> list) {
             super(list);
@@ -110,7 +107,6 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder4 extends RegistrationOrderBase implements DependentPlugin {
         RegistrationOrder4(List<Class<?>> list) {
             super(list);
@@ -127,7 +123,6 @@ public class RegistrationAndDependencyOrderTest {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class RegistrationOrder5 extends RegistrationOrderBase implements DependentPlugin {
         RegistrationOrder5(List<Class<?>> list) {
             super(list);

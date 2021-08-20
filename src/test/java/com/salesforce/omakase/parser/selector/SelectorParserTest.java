@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
@@ -38,19 +45,12 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.test.RespondingBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link SelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SelectorParserTest extends AbstractParserTest<SelectorParser> {
 
     @Override

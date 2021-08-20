@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 
 /** Base class for {@link SelectorPart}s. */

@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.writer;
 
-import com.salesforce.omakase.ast.Rule;
-
 /**
  * The various levels of compression and minification for output.
  *

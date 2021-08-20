@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.data;
 
+import java.util.Map;
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.util.Values;
-
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Enum of all recognized CSS keywords.
@@ -44,7 +43,6 @@ import java.util.Optional;
  * <p>
  * See class com.salesforce.omakase.tools.GenerateKeywordEnum for instructions on updating.
  */
-@SuppressWarnings("SpellCheckingInspection")
 public enum Keyword {
     /** CSS keyword named 'above' */
     ABOVE("above"),

@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.data.Prefix;
-
 import java.util.Optional;
+
+import com.salesforce.omakase.data.Prefix;
 
 /**
  * Utilities for working with vendor prefixes.

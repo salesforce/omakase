@@ -26,9 +26,6 @@
 
 package com.salesforce.omakase.parser.token;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.parser.Source;
-
 /**
  * For Enums that are members of {@link Syntax} units and are associated with a specific {@link Token}.
  * <p>

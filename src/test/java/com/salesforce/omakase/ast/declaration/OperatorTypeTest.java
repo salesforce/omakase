@@ -26,15 +26,15 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link OperatorType}. */
-@SuppressWarnings("JavaDoc")
 public class OperatorTypeTest {
     @Test
     public void alwaysWritable() {

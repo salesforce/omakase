@@ -26,20 +26,20 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.salesforce.omakase.ast.selector.ClassSelector;
 
 /**
  * Unit tests for {@link AbstractBroadcaster}
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class AbstractBroadcasterTest {
     @Test
     public void chain() {

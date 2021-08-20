@@ -26,24 +26,7 @@
 
 package com.salesforce.omakase.parser.factory;
 
-import com.salesforce.omakase.ast.declaration.Operator;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.ast.selector.KeyframeSelector;
-import com.salesforce.omakase.ast.selector.PseudoElementSelector;
-import com.salesforce.omakase.ast.selector.SimpleSelector;
-import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.parser.Parser;
-import com.salesforce.omakase.parser.RuleParser;
-import com.salesforce.omakase.parser.StylesheetParser;
-import com.salesforce.omakase.parser.atrule.AtRuleParser;
-import com.salesforce.omakase.parser.atrule.KeyframeRuleParser;
-import com.salesforce.omakase.parser.atrule.KeyframeSelectorSequenceParser;
-import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
-import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
-import com.salesforce.omakase.parser.atrule.MediaQueryParser;
-import com.salesforce.omakase.parser.declaration.*;
-import com.salesforce.omakase.parser.selector.*;
 
 /**
  * A factory for retrieving various {@link Parser}s.

@@ -27,7 +27,6 @@
 package com.salesforce.omakase.plugin.core;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.Refinable;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.validator.PseudoElementValidator;
 

@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.sample.custom.function;
 
+import java.util.Map;
+
 import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
@@ -33,14 +35,11 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.plugin.Plugin;
 
-import java.util.Map;
-
 /**
  * This is the actual plugin that gets registered with the parser.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class CustomVarPlugin implements Plugin {
     public enum Mode {PASSTHROUGH, RESOLVE}
 

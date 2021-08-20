@@ -26,12 +26,7 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.yaml.snakeyaml.Yaml;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +35,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkState;
+import org.yaml.snakeyaml.Yaml;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.Maps;
+import com.google.common.io.Files;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * Code generator for java files.
@@ -96,7 +98,7 @@ final class SourceWriter {
      *
      * @return True if the file contents have changed.
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
     public boolean write() throws IOException, TemplateException {
         checkState(templateName != null, "template not set");
         checkState(generator != null, "generator not set");

@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
@@ -33,19 +40,13 @@ import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link PseudoSelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorParser> {
     @Override
     public List<String> invalidSources() {
@@ -105,7 +106,6 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
             withExpectedResult(":root", 5),

@@ -42,8 +42,8 @@ import com.salesforce.omakase.error.OmakaseException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class CssAnnotationTest {
+    @SuppressWarnings("deprecation")
     @org.junit.Rule
     public final ExpectedException exception = ExpectedException.none();
 

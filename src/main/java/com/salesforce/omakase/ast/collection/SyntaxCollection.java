@@ -26,16 +26,11 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.writer.Writable;
-
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import com.salesforce.omakase.ast.Status;
+import com.salesforce.omakase.broadcast.Broadcaster;
 
 /**
  * A collection of related {@link Syntax} units.

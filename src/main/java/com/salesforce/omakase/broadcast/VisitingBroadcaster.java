@@ -26,9 +26,9 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.Status;
-
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.salesforce.omakase.ast.Status;
 
 /**
  * A broadcaster that can replay the broadcast chain on demand.

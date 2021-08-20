@@ -26,14 +26,14 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.google.common.collect.Lists;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.google.common.collect.Lists;
 
 /** Unit tests for {@link AbstractSelectorPart}. */
-@SuppressWarnings("JavaDoc")
 public class AbstractSelectorPartTest {
     private SelectorPart part;
     private Selector selector;

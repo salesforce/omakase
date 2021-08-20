@@ -26,20 +26,20 @@
 
 package com.salesforce.omakase.plugin.core;
 
+import java.util.EnumSet;
+
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.RawFunction;
-import com.salesforce.omakase.ast.Refinable;
-import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.syntax.*;
-
-import java.util.EnumSet;
+import com.salesforce.omakase.plugin.syntax.DeclarationPlugin;
+import com.salesforce.omakase.plugin.syntax.FontFacePlugin;
+import com.salesforce.omakase.plugin.syntax.KeyframesPlugin;
+import com.salesforce.omakase.plugin.syntax.LinearGradientPlugin;
+import com.salesforce.omakase.plugin.syntax.MediaPlugin;
+import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
+import com.salesforce.omakase.plugin.syntax.SupportsPlugin;
+import com.salesforce.omakase.plugin.syntax.UrlPlugin;
 
 /**
  * Automatically refines {@link Refinable} types.

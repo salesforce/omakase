@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -36,20 +44,13 @@ import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link TermSequenceParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParser> {
     @Override
     public List<String> invalidSources() {

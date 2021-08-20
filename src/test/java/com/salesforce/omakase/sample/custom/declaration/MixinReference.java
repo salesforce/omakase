@@ -26,17 +26,16 @@
 
 package com.salesforce.omakase.sample.custom.declaration;
 
-import com.google.common.collect.ImmutableMap;
-import com.salesforce.omakase.ast.declaration.AbstractTerm;
-import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableMap;
+import com.salesforce.omakase.ast.declaration.AbstractTerm;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * The custom AST object representing a reference to a mixin (from within a rule).
@@ -47,7 +46,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author nmcwilliams
  */
 @Subscribable
-@SuppressWarnings("JavaDoc")
 public class MixinReference extends AbstractTerm {
     private final Mixin mixin;
     private final Map<String, String> params;

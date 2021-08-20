@@ -26,15 +26,15 @@
 
 package com.salesforce.omakase.data;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link Keyword}. */
-@SuppressWarnings("JavaDoc")
 public class KeywordTest {
     @Test
     public void isOnlyValueInDeclarationTrue() {

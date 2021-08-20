@@ -26,10 +26,7 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.google.common.collect.Sets;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import org.junit.Test;
-import org.reflections.Reflections;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,14 +34,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+import org.reflections.Reflections;
+
+import com.google.common.collect.Sets;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
 
 /**
  * Unit tests for {@link BasePlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class BasePluginTest {
     @Test
     public void hasMethodForEverySubscribable() throws InvocationTargetException, IllegalAccessException {

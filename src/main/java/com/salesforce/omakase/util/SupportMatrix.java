@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
@@ -36,16 +45,6 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixTablesUtil;
 import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
-
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Represents a set of supported browser versions.

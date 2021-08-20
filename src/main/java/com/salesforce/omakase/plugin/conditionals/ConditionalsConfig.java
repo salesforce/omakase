@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import com.google.common.collect.ImmutableSet;
-import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
-import com.salesforce.omakase.util.As;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+import com.salesforce.omakase.util.As;
 
 /**
  * Manages the set of "trueConditions" as used by the {@link Conditionals} plugin and individual {@link ConditionalAtRuleBlock}

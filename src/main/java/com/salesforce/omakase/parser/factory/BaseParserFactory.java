@@ -37,8 +37,28 @@ import com.salesforce.omakase.parser.atrule.KeyframeSelectorSequenceParser;
 import com.salesforce.omakase.parser.atrule.MediaQueryExpressionParser;
 import com.salesforce.omakase.parser.atrule.MediaQueryListParser;
 import com.salesforce.omakase.parser.atrule.MediaQueryParser;
-import com.salesforce.omakase.parser.declaration.*;
-import com.salesforce.omakase.parser.selector.*;
+import com.salesforce.omakase.parser.declaration.DeclarationParser;
+import com.salesforce.omakase.parser.declaration.DeclarationSequenceParser;
+import com.salesforce.omakase.parser.declaration.FunctionValueParser;
+import com.salesforce.omakase.parser.declaration.HexColorValueParser;
+import com.salesforce.omakase.parser.declaration.ImportantParser;
+import com.salesforce.omakase.parser.declaration.KeywordValueParser;
+import com.salesforce.omakase.parser.declaration.NumericalValueParser;
+import com.salesforce.omakase.parser.declaration.OperatorParser;
+import com.salesforce.omakase.parser.declaration.PropertyValueParser;
+import com.salesforce.omakase.parser.declaration.StringValueParser;
+import com.salesforce.omakase.parser.declaration.TermSequenceParser;
+import com.salesforce.omakase.parser.declaration.UnicodeRangeValueParser;
+import com.salesforce.omakase.parser.selector.AttributeSelectorParser;
+import com.salesforce.omakase.parser.selector.ClassSelectorParser;
+import com.salesforce.omakase.parser.selector.CombinatorParser;
+import com.salesforce.omakase.parser.selector.ComplexSelectorParser;
+import com.salesforce.omakase.parser.selector.IdSelectorParser;
+import com.salesforce.omakase.parser.selector.PseudoSelectorParser;
+import com.salesforce.omakase.parser.selector.SelectorParser;
+import com.salesforce.omakase.parser.selector.SelectorSequenceParser;
+import com.salesforce.omakase.parser.selector.TypeSelectorParser;
+import com.salesforce.omakase.parser.selector.UniversalSelectorParser;
 
 /**
  * Base class for {@link ParserFactory}s.

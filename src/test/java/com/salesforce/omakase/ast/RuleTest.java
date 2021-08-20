@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.ast;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
@@ -36,16 +43,10 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for Rule. */
-@SuppressWarnings("JavaDoc")
 public class RuleTest {
+    @SuppressWarnings("deprecation")
     @org.junit.Rule
     public final ExpectedException exception = ExpectedException.none();
 

@@ -54,7 +54,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class FunctionValueParserTest extends AbstractParserTest<FunctionValueParser> {
     @Override
     public List<String> invalidSources() {

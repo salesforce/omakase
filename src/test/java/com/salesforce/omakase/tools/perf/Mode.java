@@ -26,13 +26,12 @@
 
 package com.salesforce.omakase.tools.perf;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.tools.Tools;
 import com.salesforce.omakase.writer.StyleWriter;
 
-import java.io.IOException;
-
-@SuppressWarnings("ALL")
 enum Mode {
     /**
      * A simple collection of styles, with the minimum amount of parsing possible (e.g., omakase in 1-phase only).

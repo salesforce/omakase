@@ -26,15 +26,15 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import java.util.EnumSet;
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.util.Values;
-
-import java.util.EnumSet;
-import java.util.Optional;
 
 /**
  * Handles the special needs of the <code>transition</code> and <code>transition-property</code> properties.

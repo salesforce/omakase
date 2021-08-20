@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
+
 import com.salesforce.omakase.ast.Named;
-import com.salesforce.omakase.ast.RawFunction;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * General interface for function term values, such as {@link GenericFunctionValue}.

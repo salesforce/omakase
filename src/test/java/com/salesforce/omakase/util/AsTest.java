@@ -26,21 +26,20 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.PropertyName;
-import com.salesforce.omakase.data.Keyword;
-import com.salesforce.omakase.data.Property;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.ast.declaration.Declaration;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.data.Keyword;
+import com.salesforce.omakase.data.Property;
 
 /**
  * Unit tests for {@link As}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class AsTest {
     @Test
     public void testClass() {

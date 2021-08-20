@@ -26,21 +26,22 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.IdSelector;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.ast.selector.ClassSelector;
+import com.salesforce.omakase.ast.selector.IdSelector;
 
 /**
  * Unit tests for {@link SingleInterestBroadcaster}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SingleInterestBroadcasterTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

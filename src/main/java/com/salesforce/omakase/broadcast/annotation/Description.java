@@ -26,12 +26,12 @@
 
 package com.salesforce.omakase.broadcast.annotation;
 
-import com.salesforce.omakase.broadcast.BroadcastRequirement;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.salesforce.omakase.broadcast.BroadcastRequirement;
 
 /**
  * Description of a {@link Subscribable} type.

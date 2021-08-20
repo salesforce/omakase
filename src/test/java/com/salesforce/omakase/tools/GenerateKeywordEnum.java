@@ -26,10 +26,11 @@
 
 package com.salesforce.omakase.tools;
 
-import com.salesforce.omakase.data.Keyword;
-import freemarker.template.TemplateException;
-
 import java.io.IOException;
+
+import com.salesforce.omakase.data.Keyword;
+
+import freemarker.template.TemplateException;
 
 /**
  * Code generator for the {@link Keyword} enum.
@@ -39,7 +40,6 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class GenerateKeywordEnum {
     public static void main(String[] args) throws Exception {
         new GenerateKeywordEnum().run();

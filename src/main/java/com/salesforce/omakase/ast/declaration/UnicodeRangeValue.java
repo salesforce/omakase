@@ -26,17 +26,15 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.declaration.UnicodeRangeValueParser;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * A unicode-range value (e.g., from within a @font-face rule).

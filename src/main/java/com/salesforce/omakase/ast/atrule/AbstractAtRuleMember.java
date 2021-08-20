@@ -27,7 +27,6 @@
 package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
-import com.salesforce.omakase.ast.Syntax;
 
 /**
  * Base class for {@link AtRuleMember}s.

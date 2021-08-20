@@ -26,12 +26,10 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
+
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.writer.StyleWriter;
-import com.salesforce.omakase.writer.Writable;
-
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 /**
  * A {@link PropertyValueMember} within a {@link PropertyValue} representing a single segment of the {@link Declaration} value.

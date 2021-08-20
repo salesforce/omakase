@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link GenericAtRuleExpression}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class GenericAtRuleExpressionTest {
     @Test
     public void getExpression() {

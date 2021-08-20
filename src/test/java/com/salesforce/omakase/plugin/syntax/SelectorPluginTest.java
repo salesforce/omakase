@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -38,19 +44,14 @@ import com.salesforce.omakase.broadcast.NoopBroadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link SelectorPlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SelectorPluginTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

@@ -26,11 +26,16 @@
 
 package com.salesforce.omakase.plugin.misc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.CssAnnotation;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
@@ -44,12 +49,6 @@ import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.syntax.DeclarationPlugin;
 import com.salesforce.omakase.util.CssAnnotations;
 import com.salesforce.omakase.util.Values;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * DirectionFlipPlugin changes the direction of CSS property names, keywords, and term lists from left to right, or from right to

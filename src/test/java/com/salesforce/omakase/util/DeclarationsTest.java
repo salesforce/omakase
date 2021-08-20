@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.util;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -39,16 +43,12 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Declarations}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class DeclarationsTest {
     @Test
     public void testWithinStylesheetRecurseTrue() {

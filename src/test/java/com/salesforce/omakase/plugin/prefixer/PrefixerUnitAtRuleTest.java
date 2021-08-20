@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.Omakase;
@@ -33,18 +39,12 @@ import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
-
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Functional tests for {@link Prefixer} at-rule replacements.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PrefixerUnitAtRuleTest {
     private String process(String original, Prefixer prefixer) {
         StyleWriter writer = StyleWriter.inline();

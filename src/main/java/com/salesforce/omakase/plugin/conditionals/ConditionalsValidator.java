@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
@@ -35,8 +37,6 @@ import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.DependentPlugin;
-
-import java.util.Set;
 
 /**
  * A validator plugin that will validate the correctness of the syntax and contents of conditional at-rules ({@link

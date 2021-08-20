@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.parser.factory;
 
-import com.salesforce.omakase.parser.token.Token;
-
 /**
  * A {@link TokenFactory} for retrieving standard {@link Token} objects.
  *

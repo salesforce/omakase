@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -36,16 +40,12 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.ConsumingBroadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link SupportsPlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SupportsPluginTest {
 
     @Test

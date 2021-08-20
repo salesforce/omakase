@@ -26,17 +26,7 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.error.DefaultErrorManager;
-import com.salesforce.omakase.error.ProblemSummaryException;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
-import com.salesforce.omakase.plugin.core.StandardValidation;
-import com.salesforce.omakase.writer.StyleWriter;
-import com.salesforce.omakase.writer.WriterMode;
+import static com.google.common.base.Charsets.UTF_8;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +36,18 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.io.Files;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.error.DefaultErrorManager;
+import com.salesforce.omakase.error.ProblemSummaryException;
+import com.salesforce.omakase.plugin.core.StandardValidation;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
+import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.writer.StyleWriter;
+import com.salesforce.omakase.writer.WriterMode;
 
 /**
  * Interactive shell for css parsing.
@@ -221,7 +221,7 @@ public class InteractiveShell {
 
         final String key;
         final String description;
-        @SuppressWarnings("NonFinalFieldInEnum") boolean on;
+        boolean on;
 
         Command(String key, String description) {
             this.key = key;
@@ -292,6 +292,7 @@ public class InteractiveShell {
         private final Context ctx;
         private long lastMod;
 
+        @SuppressWarnings("deprecation")
         public FileWatcher(Context ctx) throws IOException {
             this.ctx = ctx;
 
@@ -308,6 +309,7 @@ public class InteractiveShell {
             return file;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void run() {
             long newLastMod = file.lastModified();

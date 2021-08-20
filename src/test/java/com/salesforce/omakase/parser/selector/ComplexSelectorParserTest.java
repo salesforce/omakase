@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -41,19 +48,12 @@ import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link ComplexSelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelectorParser> {
 
     @Override
@@ -156,7 +156,6 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
 
     @Test
     @Override
-    @SuppressWarnings("unchecked")
     public void matchesExpectedBroadcastCount() {
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("#id", 1),

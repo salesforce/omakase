@@ -29,7 +29,6 @@ package com.salesforce.omakase.plugin.syntax;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.atrule.FontDescriptor;
 import com.salesforce.omakase.ast.atrule.FontFaceBlock;
 import com.salesforce.omakase.ast.declaration.Declaration;

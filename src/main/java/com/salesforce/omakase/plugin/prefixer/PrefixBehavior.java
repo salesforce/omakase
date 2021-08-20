@@ -26,12 +26,12 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.util.SupportMatrix;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * Represents a bundle of browsers that have the same special prefix behavior (e.g., based on the same version of a spec). Each

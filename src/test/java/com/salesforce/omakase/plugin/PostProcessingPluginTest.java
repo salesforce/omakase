@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.PluginRegistry;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.PluginRegistry;
 
 /**
  * Unit tests that {@link PostProcessingPlugin}s are handled correctly.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PostProcessingPluginTest {
 
     @Test

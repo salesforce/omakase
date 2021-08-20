@@ -26,26 +26,25 @@
 
 package com.salesforce.omakase.sample.custom.selector;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
-import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.factory.TokenFactory;
 import com.salesforce.omakase.plugin.GrammarPlugin;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This is the actual plugin that gets registered with the parser.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PlaceholderSelectorPlugin implements GrammarPlugin {
     private final Map<String, PlaceholderSelector> placeholders = new HashMap<>();
 

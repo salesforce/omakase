@@ -28,7 +28,6 @@ package com.salesforce.omakase.sample.custom.selector;
 
 import com.salesforce.omakase.parser.token.CompoundToken;
 import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Since we are utilizing tokens that aren't part of the standard CSS grammar, we create our own {@link Token} enum in a similar
@@ -36,7 +35,6 @@ import com.salesforce.omakase.parser.token.Tokens;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public enum PlaceholderTokens implements Token {
     PERCENTAGE('%'),
     PIPE('|');

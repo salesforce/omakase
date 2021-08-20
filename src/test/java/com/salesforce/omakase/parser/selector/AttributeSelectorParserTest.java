@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
@@ -34,19 +41,12 @@ import com.salesforce.omakase.ast.selector.AttributeSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link AttributeSelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSelectorParser> {
     @Override
     public List<String> invalidSources() {

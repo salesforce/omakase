@@ -26,20 +26,20 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.test.util.TemplatesHelper;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link ParserException}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ParserExceptionTest {
     @Test
     public void exceptionWithSource() {

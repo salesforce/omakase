@@ -26,25 +26,26 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.HexColorValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link HexColorValueParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
+@SuppressWarnings({})
 public class HexColorValueParserTest extends AbstractParserTest<HexColorValueParser> {
     @Override
     public List<String> invalidSources() {

@@ -26,16 +26,7 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.reflect.TypeToken;
-import com.salesforce.omakase.broadcast.Broadcastable;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.annotation.Rework;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.broadcast.annotation.Validate;
-import com.salesforce.omakase.error.ErrorManager;
-import com.salesforce.omakase.parser.Grammar;
-import com.salesforce.omakase.plugin.Plugin;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -45,7 +36,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.TypeToken;
+import com.salesforce.omakase.broadcast.Broadcastable;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.error.ErrorManager;
+import com.salesforce.omakase.parser.Grammar;
 
 /**
  * Responsible for sending an event ({@link Broadcastable}) to registered listeners.

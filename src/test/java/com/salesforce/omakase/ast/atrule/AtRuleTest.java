@@ -26,6 +26,16 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.util.Iterator;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
@@ -35,19 +45,10 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-import java.util.Iterator;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link AtRule}. */
-@SuppressWarnings("JavaDoc")
 public class AtRuleTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private RawSyntax rawExpression;

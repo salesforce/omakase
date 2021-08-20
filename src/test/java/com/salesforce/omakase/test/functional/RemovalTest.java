@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.annotation.Rework;
@@ -34,17 +39,12 @@ import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.plugin.core.StandardValidation;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Tests that once a unit is destroyed, it stops being broadcasted to any further plugins
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "UnusedParameters"})
 public class RemovalTest {
     private int count;
 
