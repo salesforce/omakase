@@ -27,13 +27,12 @@
 package com.salesforce.omakase.ast.atrule;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
@@ -47,8 +46,6 @@ import com.salesforce.omakase.writer.StyleWriter;
  * @author nmcwilliams
  */
 public class MediaQueryTest {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private MediaQuery mq;
     private MediaQueryExpression exp1;
@@ -82,8 +79,7 @@ public class MediaQueryTest {
 
     @Test
     public void errorsIfAddingRestrictionWithoutMediaType() {
-        exception.expect(IllegalStateException.class);
-        mq.restriction(MediaRestriction.NOT);
+        assertThrows(IllegalStateException.class, () -> mq.restriction(MediaRestriction.NOT));
     }
 
     @Test

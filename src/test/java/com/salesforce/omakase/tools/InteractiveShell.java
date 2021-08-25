@@ -292,7 +292,6 @@ public class InteractiveShell {
         private final Context ctx;
         private long lastMod;
 
-        @SuppressWarnings("deprecation")
         public FileWatcher(Context ctx) throws IOException {
             this.ctx = ctx;
 
@@ -300,7 +299,7 @@ public class InteractiveShell {
             file.deleteOnExit();
 
             String initial = INPUT + "\n" + ctx.buffer + "\n\n" + RESULT;
-            Files.write(initial, file, UTF_8);
+            Files.asCharSink(file, UTF_8).write(initial);
 
             lastMod = file.lastModified();
         }
@@ -309,7 +308,6 @@ public class InteractiveShell {
             return file;
         }
 
-        @SuppressWarnings("deprecation")
         @Override
         public void run() {
             long newLastMod = file.lastModified();
@@ -317,7 +315,7 @@ public class InteractiveShell {
                 lastMod = newLastMod;
                 try {
                     // grab and format the input from the editor
-                    String input = Files.toString(file, UTF_8);
+                    String input = Files.asCharSource(file, UTF_8).read();
                     int index = input.indexOf(RESULT);
                     if (index > -1) {
                         input = input.substring(0, input.indexOf(RESULT, index));
@@ -334,7 +332,7 @@ public class InteractiveShell {
                     }
 
                     output = input + "\n\n" + RESULT + "\n" + output;
-                    Files.write(output, file, UTF_8);
+                    Files.asCharSink(file, UTF_8).write(output);
                     System.out.println(Colors.grey("File updated\n"));
 
                     // reset the buffer

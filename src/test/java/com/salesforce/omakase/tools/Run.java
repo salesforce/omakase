@@ -45,7 +45,6 @@ import com.salesforce.omakase.tools.perf.RunPerfTest;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({})
 public class Run {
     public static final String USAGE = "Usage: omakase [options]";
 

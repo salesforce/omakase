@@ -27,13 +27,12 @@
 package com.salesforce.omakase.ast.collection;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.writer.StyleAppendable;
@@ -41,8 +40,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link AbstractGroupable}. */
 public class AbstractGroupableTest {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private Parent parent;
     private Child child1;
@@ -128,16 +125,14 @@ public class AbstractGroupableTest {
 
     @Test
     public void prependToUngrouped() {
-        exception.expect(IllegalStateException.class);
-        child1.prepend(child3);
+        assertThrows(IllegalStateException.class, () -> child1.prepend(child3));
     }
 
     @Test
     public void prependToDestroyed() {
         parent.collection.append(child1);
         child1.destroy();
-        exception.expect(IllegalStateException.class);
-        child1.prepend(child3);
+        assertThrows(IllegalStateException.class, () -> child1.prepend(child3));
     }
 
     @Test
@@ -173,16 +168,14 @@ public class AbstractGroupableTest {
 
     @Test
     public void appendToUngrouped() {
-        exception.expect(IllegalStateException.class);
-        child1.append(child3);
+        assertThrows(IllegalStateException.class, () -> child1.append(child3));
     }
 
     @Test
     public void appendToDestroyed() {
         parent.collection.append(child1);
         child1.destroy();
-        exception.expect(IllegalStateException.class);
-        child1.append(child3);
+        assertThrows(IllegalStateException.class, () -> child1.append(child3));
     }
 
     @Test
@@ -302,11 +295,9 @@ public class AbstractGroupableTest {
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {
-        @SuppressWarnings("unused")
-        private final String name;
 
         public Child(String name) {
-            this.name = name;
+            
         }
 
         @Override
