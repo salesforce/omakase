@@ -27,19 +27,16 @@
 package com.salesforce.omakase.ast.selector;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link PseudoClassSelector}. */
 public class PseudoClassSelectorTest {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void argsAbsentByDefault() {
@@ -70,8 +67,7 @@ public class PseudoClassSelectorTest {
     @Test
     public void errorsIfNameIsPseudoElement() {
         PseudoClassSelector s = new PseudoClassSelector("hover");
-        exception.expect(IllegalArgumentException.class);
-        s.name("before");
+        assertThrows(IllegalArgumentException.class, () -> s.name("before"));
     }
 
     @Test

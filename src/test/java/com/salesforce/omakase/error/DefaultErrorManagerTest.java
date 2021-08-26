@@ -27,10 +27,9 @@
 package com.salesforce.omakase.error;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
@@ -44,8 +43,6 @@ import com.salesforce.omakase.parser.Source;
  * @author nmcwilliams
  */
 public class DefaultErrorManagerTest {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void reportParserExceptionOneError() {
@@ -107,8 +104,7 @@ public class DefaultErrorManagerTest {
         DefaultErrorManager em = new DefaultErrorManager().rethrow(true);
         Source source = new Source("{ ...");
         source.forward(5);
-        exception.expect(ParserException.class);
-        em.report(new ParserException(source, "Expected to find closing brace '{'"));
+        assertThrows(ParserException.class, () -> em.report(new ParserException(source, "Expected to find closing brace '{'")));
     }
 
     @Test
@@ -127,8 +123,8 @@ public class DefaultErrorManagerTest {
     @Test
     public void rethrowsSubscriptionException() {
         DefaultErrorManager em = new DefaultErrorManager();
-        exception.expect(SubscriptionException.class);
-        em.report(new SubscriptionException("Exception thrown from a CSS Parser plugin method", new NullPointerException()));
+        assertThrows(SubscriptionException.class, () -> em.report(new SubscriptionException("Exception thrown from a CSS Parser plugin method", new NullPointerException())));
+
     }
 
     @Test

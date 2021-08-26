@@ -30,9 +30,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.Optional;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Syntax;
@@ -46,9 +44,6 @@ import com.salesforce.omakase.ast.selector.PseudoElementSelector;
  * @author nmcwilliams
  */
 public class QueryableBroadcasterTest {
-    @SuppressWarnings("deprecation")
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
 
     private final ClassSelector sample1 = new ClassSelector(1, 1, "test");
     private final ClassSelector sample1a = new ClassSelector(1, 1, "test");

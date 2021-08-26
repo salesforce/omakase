@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.selector;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -203,22 +205,19 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
 
     @Test
     public void errorsIfMissingName() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PSEUDO_NAME);
-        parse(":");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(":"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_PSEUDO_NAME));
     }
 
     @Test
     public void errorsIfInvalidName() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PSEUDO_NAME);
-        parse(":123hover");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(":123hover"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_PSEUDO_NAME));
     }
 
     @Test
     public void errorsIfMissingClosingParens() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse(":nth-child(2n+1");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(":nth-child(2n+1"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 }

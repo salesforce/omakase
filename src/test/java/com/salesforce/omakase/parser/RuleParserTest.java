@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -133,15 +135,13 @@ public class RuleParserTest extends AbstractParserTest<RuleParser> {
 
     @Test
     public void errorsOnMissingOpeningBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find opening brace");
-        parse(".class \n ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".class \n "));
+        assertTrue(thrown.getMessage().contains("Expected to find opening brace"));
     }
 
     @Test
     public void errorsOnMissingClosingBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing brace");
-        parse(".class \n { color: red");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".class \n { color: red"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing brace"));
     }
 }

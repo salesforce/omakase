@@ -33,9 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
@@ -53,8 +51,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  */
 @SuppressWarnings({"unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
     protected final Parser parser;
 
     public AbstractParserTest() {

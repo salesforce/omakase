@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.selector;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -119,8 +121,7 @@ public class SelectorSequenceParserTest extends AbstractParserTest<SelectorSeque
 
     @Test
     public void errorsOnTrailingComma() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find a selector");
-        parse("#abc,#abc, ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#abc,#abc, "));
+        assertTrue(thrown.getMessage().contains("Expected to find a selector"));
     }
 }

@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.atrule;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -355,35 +357,31 @@ public class AtRuleParserTest extends AbstractParserTest<AtRuleParser> {
 
     @Test
     public void noNameAfterAtSymbol() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_AT_RULE_NAME);
-        parse("@");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("@"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_AT_RULE_NAME));
     }
 
     @Test
     public void spaceAfterSymbol() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_AT_RULE_NAME);
-        parse("@ media");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("@ media"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_AT_RULE_NAME));
     }
 
     @Test
     public void missingExpressionAndBlock() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_AT_RULE_VALUE);
-        parse("@media ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("@media "));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_AT_RULE_NAME));
     }
     
     @Test
     public void unexpected() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNEXPECTED_NESTED_CONDITIONAL_AT_RULE);
-        parse(
-            "@if (IE) {"
-                + ".THIS { color: green; }"
-            + "}",
-            true
-        );
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(
+                "@if (IE) {"
+                        + ".THIS { color: green; }"
+                    + "}",
+                    true
+                ));
+        assertTrue(thrown.getMessage().contains(Message.UNEXPECTED_NESTED_CONDITIONAL_AT_RULE));
     }
 
     @Test

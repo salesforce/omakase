@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.selector;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -223,23 +225,20 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
 
     @Test
     public void errorsIfUniversalNotLast() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.NAME_SELECTORS_NOT_ALLOWED);
-        parse(".class*");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".class*"));
+        assertTrue(thrown.getMessage().contains(Message.NAME_SELECTORS_NOT_ALLOWED));
     }
 
     @Test
     public void errorsIfTrailingCombinator() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Trailing combinator");
-        parse(".class>").get(0);
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".class>").get(0));
+        assertTrue(thrown.getMessage().contains("Trailing combinator"));
     }
 
     @Test
     public void errorsIfTrailingCombinator2() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Trailing combinator");
-        parse(".page .home > .child #id:hover .button .inner + span>").get(0);
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".page .home > .child #id:hover .button .inner + span>").get(0));
+        assertTrue(thrown.getMessage().contains("Trailing combinator"));
     }
     @Test
     public void removesTrailingDescendantCombinatorWithoutError() {

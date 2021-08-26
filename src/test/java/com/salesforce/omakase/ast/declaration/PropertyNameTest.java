@@ -30,9 +30,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.data.Prefix;
@@ -47,9 +45,6 @@ public class PropertyNameTest {
     private static final String NAME = "border-radius";
     private static final String STARHACK_NAME = "*color";
     private static final String CUSTOM_PROPERTY_NAME = "--main-color";
-
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void nameWithPrefix() {

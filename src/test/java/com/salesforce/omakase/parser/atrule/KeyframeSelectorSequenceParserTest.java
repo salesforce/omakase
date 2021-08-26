@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.atrule;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -126,8 +128,7 @@ public class KeyframeSelectorSequenceParserTest extends AbstractParserTest<Keyfr
 
     @Test
     public void errorsOnTrailingComma() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Unexpected trailing");
-        parse("50%, 60%, , 70% ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("50%, 60%, , 70% "));
+        assertTrue(thrown.getMessage().contains("Unexpected trailing"));
     }
 }

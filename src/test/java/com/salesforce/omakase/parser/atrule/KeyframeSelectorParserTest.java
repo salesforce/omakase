@@ -28,12 +28,12 @@ package com.salesforce.omakase.parser.atrule;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -49,8 +49,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  * @author nmcwilliams
  */
 public class KeyframeSelectorParserTest extends AbstractParserTest<KeyframeSelectorParser> {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Override
     public List<String> invalidSources() {
@@ -131,8 +129,7 @@ public class KeyframeSelectorParserTest extends AbstractParserTest<KeyframeSelec
 
     @Test
     public void errorsIfMissingPercentage() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PERCENTAGE);
-        parse("0");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("0"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_PERCENTAGE));
     }
 }

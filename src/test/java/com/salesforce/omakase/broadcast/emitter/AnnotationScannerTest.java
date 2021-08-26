@@ -27,13 +27,12 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Maps;
 import com.salesforce.omakase.ast.RawFunction;
@@ -53,8 +52,6 @@ import com.salesforce.omakase.plugin.Plugin;
  * @author nmcwilliams
  */
 public class AnnotationScannerTest {
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private AnnotationScanner scanner;
 
@@ -77,8 +74,7 @@ public class AnnotationScannerTest {
 
     @Test
     public void errorsIfInvalidRework() {
-        exception.expect(Exception.class);
-        scanner.scanSubscriptions(new InvalidRework());
+        assertThrows(Exception.class, () -> scanner.scanSubscriptions(new InvalidRework()));
     }
 
     @Test
@@ -95,8 +91,7 @@ public class AnnotationScannerTest {
 
     @Test
     public void errorsIfInvalidObserve() {
-        exception.expect(Exception.class);
-        scanner.scanSubscriptions(new InvalidObserve());
+        assertThrows(Exception.class, () -> scanner.scanSubscriptions(new InvalidObserve()));
     }
 
     @Test
@@ -113,8 +108,7 @@ public class AnnotationScannerTest {
 
     @Test
     public void errorsIfInvalidRefine() {
-        exception.expect(Exception.class);
-        scanner.scanSubscriptions(new InvalidRefine());
+        assertThrows(Exception.class, () -> scanner.scanSubscriptions(new InvalidRefine()));
     }
 
     @Test
@@ -131,8 +125,7 @@ public class AnnotationScannerTest {
 
     @Test
     public void errorsIfInvalidValidate() {
-        exception.expect(Exception.class);
-        scanner.scanSubscriptions(new InvalidValidate());
+        assertThrows(Exception.class, () -> scanner.scanSubscriptions(new InvalidValidate()));
     }
 
     public static final class AllValid implements Plugin {

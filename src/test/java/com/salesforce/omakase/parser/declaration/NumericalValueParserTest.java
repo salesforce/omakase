@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.declaration;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -175,8 +177,7 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
 
     @Test
     public void noNumberAfterDecimal() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_DECIMAL);
-        parse("1.");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("1."));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_DECIMAL));
     }
 }

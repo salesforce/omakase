@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.selector;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -205,29 +207,25 @@ public class AttributeSelectorParserTest extends AbstractParserTest<AttributeSel
 
     @Test
     public void errorsIfNoIdentAfterOpeningBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_NAME);
-        parse("[");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("["));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_ATTRIBUTE_NAME));
     }
 
     @Test
     public void errorsIfInvalidIdentAfterOpeningBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_NAME);
-        parse("[1");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("[1"));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_ATTRIBUTE_NAME));   
     }
 
     @Test
     public void errorsIfMissingClosingBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find");
-        parse("[href");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("[href"));
+        assertTrue(thrown.getMessage().contains("Expected to find"));
     }
 
     @Test
     public void errorsIfNoValueAfterMatcher() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_ATTRIBUTE_MATCH_VALUE);
-        parse("[href=");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("[href="));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_ATTRIBUTE_MATCH_VALUE));
     }
 }

@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.declaration;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -224,9 +226,8 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
 
     @Test
     public void missingColon() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_COLON);
-        parse("color red");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("color red"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_COLON));
     }
 
     @Test

@@ -30,9 +30,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.salesforce.omakase.writer.StyleWriter;
 
@@ -43,8 +41,6 @@ import com.salesforce.omakase.writer.StyleWriter;
  */
 public class UnquotedIEFilterTest {
     private static final String FILTER = "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)";
-    @SuppressWarnings("deprecation")
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testGetContent() {

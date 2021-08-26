@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.declaration;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,16 +196,14 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
 
     @Test
     public void errorsIfTrailingComma() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find another term");
-        parse("1px, ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("1px, "));
+        assertTrue(thrown.getMessage().contains("Expected to find another term"));
     }
 
     @Test
     public void errorsIfTrailingSlash() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find another term");
-        parse("1px 1px 1px 1px / ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("1px 1px 1px 1px / "));
+        assertTrue(thrown.getMessage().contains("Expected to find another term"));
     }
 
     @Test
@@ -215,9 +215,8 @@ public class TermSequenceParserTest extends AbstractParserTest<TermSequenceParse
 
     @Test
     public void errorsIfUnrecognizedTermAfterOperator() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find another term");
-        parse("1px 1px/*x*/,%");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("1px 1px/*x*/,%"));
+        assertTrue(thrown.getMessage().contains("Expected to find another term"));
     }
 
     @Test

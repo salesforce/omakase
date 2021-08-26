@@ -32,7 +32,6 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -54,8 +53,6 @@ import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link Declaration}. */
 public class DeclarationTest {
-    @SuppressWarnings("deprecation")
-    @org.junit.Rule public final ExpectedException exception = ExpectedException.none();
 
     private RawSyntax rawName;
     private RawSyntax rawValue;
