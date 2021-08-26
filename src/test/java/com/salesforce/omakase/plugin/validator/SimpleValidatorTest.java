@@ -32,7 +32,6 @@ import com.salesforce.omakase.error.ErrorLevel;
 import com.salesforce.omakase.plugin.Plugin;
 
 /** For testing validators that only validate one thing. */
-
 public abstract class SimpleValidatorTest<T extends Plugin> extends BaseValidatorTest<T> {
     public abstract Iterable<String> validSources();
 

@@ -41,7 +41,6 @@ import freemarker.template.Template;
  *
  * @author nmcwilliams
  */
-
 public final class Tools {
     private static final Configuration FREEMARKER = new Configuration();
 
@@ -52,9 +51,8 @@ public final class Tools {
     private Tools() {}
 
     /** reads a file from the classpath */
-    @SuppressWarnings("deprecation")
     public static String readFile(String path) throws IOException {
-        return Files.toString(getFile(path), Charsets.UTF_8);
+        return Files.asCharSource(getFile(path), Charsets.UTF_8).read();
     }
 
     /** finds a file from the classpath */
