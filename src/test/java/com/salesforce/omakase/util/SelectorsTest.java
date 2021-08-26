@@ -50,14 +50,23 @@ public class SelectorsTest {
     private SelectorPart obj1;
     private SelectorPart obj2;
     private SelectorPart obj3;
+    private SelectorPart obj4;
+    private SelectorPart obj5;
+    private SelectorPart obj6;
     private Combinator combinator;
+    @SuppressWarnings("unused")
+    private Selector full;
 
     private void fill() {
         obj1 = new IdSelector("test");
         obj2 = new IdSelector("test");
         obj3 = new IdSelector("test");
+        obj4 = new IdSelector("test");
+        obj5 = new IdSelector("test");
+        obj6 = new IdSelector("test");
 
         combinator = new Combinator(CombinatorType.DESCENDANT);
+        full = new Selector(obj1, obj2, obj3, combinator, obj4, obj5, obj6);
     }
 
     @Test
