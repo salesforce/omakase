@@ -28,8 +28,6 @@ package com.salesforce.omakase.ast.atrule;
 
 import com.salesforce.omakase.ast.Syntax;
 
-import java.util.Optional;
-
 /**
  * Either an {@link AtRuleExpression} or an {@link AtRuleBlock}.
  *

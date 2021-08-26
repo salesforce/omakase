@@ -29,8 +29,6 @@ package com.salesforce.omakase.plugin.syntax;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
-import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleBlock;
 import com.salesforce.omakase.ast.atrule.GenericAtRuleExpression;
 import com.salesforce.omakase.broadcast.Broadcaster;

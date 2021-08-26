@@ -26,15 +26,15 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.extended.Conditional;
 import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.DependentPlugin;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Collects the set of all found conditions, i.e., the arguments inside of {@link ConditionalAtRuleBlock}s, from the {@link

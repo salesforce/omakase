@@ -27,13 +27,14 @@
 package com.salesforce.omakase.broadcast.emitter;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.salesforce.omakase.ast.AbstractSyntax;
 import com.salesforce.omakase.ast.Named;
@@ -54,10 +55,7 @@ import com.salesforce.omakase.writer.StyleWriter;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SubscriptionTest {
-    @org.junit.Rule
-    public final ExpectedException exception = ExpectedException.none();
 
     private TestErrorManager em;
 
@@ -238,6 +236,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethodWithWrongArgSignatureThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(ClassSelector selector) {}
         };
         Method m = subscriber.getClass().getMethod("refine", ClassSelector.class);
@@ -245,29 +244,29 @@ public class SubscriptionTest {
 
         Subscription s = new Subscription(SubscriptionPhase.REFINE, subscriber, m, null);
 
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("does not have expected parameters");
-        s.refine(event, new Grammar(), new NoopBroadcaster(), em);
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.refine(event, new Grammar(), new NoopBroadcaster(), em));
+        assertTrue(thrown.getMessage().contains("does not have expected parameters"));
     }
 
     @Test
     public void testRefineMethodWithPrivateAccessThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             private void refine(TestRefinable event, Grammar grammer, Broadcaster b) {}
         };
         Method m = subscriber.getClass().getDeclaredMethod(HasRefineMethod.refineMethodName, HasRefineMethod.refineMethodArgs);
         TestRefinable event = new TestRefinable();
 
         Subscription s = new Subscription(SubscriptionPhase.REFINE, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("method is not accessible");
-        s.refine(event, new Grammar(), new NoopBroadcaster(), em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.refine(event, new Grammar(), new NoopBroadcaster(), em));
+        assertTrue(thrown.getMessage().contains("method is not accessible"));
     }
 
     @Test
     public void testRefineMethod_ParserException_reportsToErrorManager() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(TestRefinable event, Grammar grammer, Broadcaster b) {
                 throw new ParserException(event, "foo");
             }
@@ -285,6 +284,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethod_SubscriptionException_reportsToErrorManager() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(TestRefinable event, Grammar grammer, Broadcaster b) {
                 throw new SubscriptionException("foo");
             }
@@ -302,6 +302,7 @@ public class SubscriptionTest {
     @Test
     public void testRefineMethod_GenericException_throws() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void refine(TestRefinable event, Grammar grammer, Broadcaster b) {
                 throw new RuntimeException("foo");
             }
@@ -311,46 +312,45 @@ public class SubscriptionTest {
         TestRefinable event = new TestRefinable();
 
         Subscription s = new Subscription(SubscriptionPhase.REFINE, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("Exception thrown from a CSS Parser plugin method");
-        exception.expectMessage("foo");
-        s.refine(event, new Grammar(), new NoopBroadcaster(), em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.refine(event, new Grammar(), new NoopBroadcaster(), em));
+        assertTrue(thrown.getMessage().contains("Exception thrown from a CSS Parser plugin method"));
     }
 
     @Test
     public void testProcessMethodWithWrongArgSignatureThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void process() {}
         };
         Method m = subscriber.getClass().getMethod("process");
         ClassSelector event = new ClassSelector("test");
 
         Subscription s = new Subscription(SubscriptionPhase.PROCESS, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("does not have expected parameters");
-        s.process(event, this.em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.process(event, this.em));
+        assertTrue(thrown.getMessage().contains("does not have expected parameters"));
     }
 
     @Test
     public void testProcessMethodWithPrivateAccessThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             private void process(ClassSelector selector) {}
         };
         Method m = subscriber.getClass().getDeclaredMethod("process", ClassSelector.class);
         ClassSelector event = new ClassSelector("test");
 
         Subscription s = new Subscription(SubscriptionPhase.PROCESS, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("method is not accessible");
-        s.process(event, this.em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.process(event, this.em));
+        assertTrue(thrown.getMessage().contains("method is not accessible"));
     }
 
     @Test
     public void testProcessMethod_GenericException_throws() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void process(ClassSelector selector) {
                 throw new RuntimeException("foo");
             }
@@ -361,45 +361,44 @@ public class SubscriptionTest {
 
         Subscription s = new Subscription(SubscriptionPhase.PROCESS, subscriber, m, null);
 
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("Exception thrown from a CSS Parser plugin method");
-        exception.expectMessage("foo");
-        s.process(event, this.em);
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.process(event, this.em));
+        assertTrue(thrown.getMessage().contains("Exception thrown from a CSS Parser plugin method"));
     }
 
     @Test
     public void testValidateMethodWithWrongArgSignatureThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void validate(ClassSelector selector) {}
         };
         Method m = subscriber.getClass().getMethod("validate", ClassSelector.class);
         ClassSelector event = new ClassSelector("test");
 
         Subscription s = new Subscription(SubscriptionPhase.VALIDATE, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("does not have expected parameters");
-        s.validate(event, this.em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.validate(event, this.em));
+        assertTrue(thrown.getMessage().contains("does not have expected parameters"));
     }
 
     @Test
     public void testValidateMethodWithPrivateAccessThrowsException() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             private void validate(ClassSelector selector, ErrorManager em) {}
         };
         Method m = subscriber.getClass().getDeclaredMethod("validate", ClassSelector.class, ErrorManager.class);
         ClassSelector event = new ClassSelector("test");
 
         Subscription s = new Subscription(SubscriptionPhase.VALIDATE, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("method is not accessible");
-        s.validate(event, this.em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.validate(event, this.em));
+        assertTrue(thrown.getMessage().contains("method is not accessible"));
     }
 
     @Test
     public void testValidateMethod_GenericException_throws() throws Exception {
         Plugin subscriber = new Plugin() {
+            @SuppressWarnings("unused")
             public void validate(ClassSelector selector, ErrorManager em) {
                 throw new RuntimeException("foo");
             }
@@ -409,11 +408,9 @@ public class SubscriptionTest {
         ClassSelector event = new ClassSelector("test");
 
         Subscription s = new Subscription(SubscriptionPhase.VALIDATE, subscriber, m, null);
-
-        exception.expect(SubscriptionException.class);
-        exception.expectMessage("Exception thrown from a CSS Parser plugin method");
-        exception.expectMessage("foo");
-        s.validate(event, this.em);
+        
+        SubscriptionException thrown = assertThrows(SubscriptionException.class, () -> s.validate(event, this.em));
+        assertTrue(thrown.getMessage().contains("Exception thrown from a CSS Parser plugin method"));
     }
 
     @Test

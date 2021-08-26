@@ -26,9 +26,12 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
+
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.Combinator;
-import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.InterestBroadcaster;
 import com.salesforce.omakase.broadcast.QueuingBroadcaster;
@@ -36,10 +39,6 @@ import com.salesforce.omakase.broadcast.SingleInterestBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
-
-import java.util.Optional;
-
-import static com.salesforce.omakase.ast.selector.SelectorPartType.DESCENDANT_COMBINATOR;
 
 /**
  * Parses refined {@link Selector}s, as opposed to {@link SelectorParser}.

@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.atrule.AtRule;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
+
 import com.salesforce.omakase.ast.collection.Groupable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 /**
  * A top-level {@link Syntax} unit, for example a {@link Rule} or {@link AtRule}.

@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
@@ -34,18 +40,12 @@ import com.salesforce.omakase.data.Keyword;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link PropertyValue}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PropertyValueTest {
     @Test
     public void position() {

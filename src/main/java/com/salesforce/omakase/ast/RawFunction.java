@@ -26,18 +26,16 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.declaration.GenericFunctionValue;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
+
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents a function value before refinement.

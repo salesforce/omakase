@@ -26,11 +26,11 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
+import java.util.Set;
+
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.plugin.DependentPlugin;
-
-import java.util.Set;
 
 /**
  * An extension to the standard CSS syntax that allows for conditional at-rules.

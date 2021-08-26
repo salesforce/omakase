@@ -35,7 +35,6 @@ import org.junit.Test;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link PseudoElementSelector}. */
-@SuppressWarnings("JavaDoc")
 public class PseudoElementSelectorTest {
     @Test
     public void getName() {

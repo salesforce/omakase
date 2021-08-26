@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.broadcast;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -35,16 +39,12 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.plugin.Plugin;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link EmittingBroadcaster}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class EmittingBroadcasterTest {
     @Test
     public void emits() {
@@ -94,7 +94,6 @@ public class EmittingBroadcasterTest {
         assertThat(ip.broadcaster).isSameAs(broadcaster);
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class InnerPlugin implements Plugin {
         boolean called = false;
         private Grammar grammar;

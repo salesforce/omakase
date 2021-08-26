@@ -26,6 +26,16 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
@@ -38,20 +48,12 @@ import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.test.RespondingBroadcaster;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Optional;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link DeclarationParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class DeclarationParserTest extends AbstractParserTest<DeclarationParser> {
 
     @Override
@@ -135,7 +137,6 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList
             .of(
@@ -225,9 +226,8 @@ public class DeclarationParserTest extends AbstractParserTest<DeclarationParser>
 
     @Test
     public void missingColon() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_COLON);
-        parse("color red");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("color red"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_COLON));
     }
 
     @Test

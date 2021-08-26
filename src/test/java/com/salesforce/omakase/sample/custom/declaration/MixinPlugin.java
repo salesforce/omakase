@@ -40,7 +40,6 @@ import com.salesforce.omakase.plugin.GrammarPlugin;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MixinPlugin implements GrammarPlugin, DependentPlugin {
     @Override
     public TokenFactory getTokenFactory() {

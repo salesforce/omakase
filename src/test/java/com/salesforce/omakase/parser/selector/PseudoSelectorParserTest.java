@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
@@ -33,19 +42,13 @@ import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link PseudoSelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorParser> {
     @Override
     public List<String> invalidSources() {
@@ -105,7 +108,6 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<SourceWithExpectedResult<Integer>> validSourcesWithExpectedEndIndex() {
         return ImmutableList.of(
             withExpectedResult(":root", 5),
@@ -203,22 +205,19 @@ public class PseudoSelectorParserTest extends AbstractParserTest<PseudoSelectorP
 
     @Test
     public void errorsIfMissingName() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PSEUDO_NAME);
-        parse(":");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(":"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_PSEUDO_NAME));
     }
 
     @Test
     public void errorsIfInvalidName() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_PSEUDO_NAME);
-        parse(":123hover");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(":123hover"));
+        assertTrue(thrown.getMessage().contains(Message.MISSING_PSEUDO_NAME));
     }
 
     @Test
     public void errorsIfMissingClosingParens() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse(":nth-child(2n+1");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(":nth-child(2n+1"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 }

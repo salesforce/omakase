@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -34,20 +41,14 @@ import com.salesforce.omakase.ast.extended.ConditionalAtRuleBlock;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link ConditionalsRefiner}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalsRefinerTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     public static final String VALID_NAME = "if";

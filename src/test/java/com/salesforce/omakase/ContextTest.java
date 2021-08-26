@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -44,15 +51,9 @@ import com.salesforce.omakase.plugin.ParserPlugin;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.PostProcessingPlugin;
 import com.salesforce.omakase.plugin.core.SyntaxTree;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-@SuppressWarnings("JavaDoc")
 public class ContextTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     Context c;
@@ -244,36 +245,30 @@ public class ContextTest {
         }
     }
 
-    @SuppressWarnings("StaticNonFinalField") static int num;
+    static int num;
 
-    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     public static final class PluginWithObserve implements Plugin {
         int order;
 
         @Observe
-        @SuppressWarnings("UnusedParameters")
         public void classSelector(ClassSelector cs) {
             order = num++;
         }
     }
 
-    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     public static final class PluginWithRework implements Plugin {
         int order;
 
         @Rework
-        @SuppressWarnings("UnusedParameters")
         public void classSelector(ClassSelector cs) {
             order = num++;
         }
     }
 
-    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     public static final class PluginWithValidate implements Plugin {
         int order;
 
         @Validate
-        @SuppressWarnings("UnusedParameters")
         public void classSelector(ClassSelector cs, ErrorManager em) {
             order = num++;
         }

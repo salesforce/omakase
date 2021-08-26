@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase;
 
-import com.salesforce.omakase.plugin.core.SyntaxTree;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
 
 /**
  * Unit tests for Suppliers.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SuppliersTest {
     @Test
     public void testSyntaxTree() {

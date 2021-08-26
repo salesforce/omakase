@@ -26,20 +26,32 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.data.Property;
-import org.junit.Test;
+import static com.salesforce.omakase.data.Property.BORDER_BOTTOM_LEFT_RADIUS;
+import static com.salesforce.omakase.data.Property.BORDER_BOTTOM_RIGHT_RADIUS;
+import static com.salesforce.omakase.data.Property.BORDER_RADIUS;
+import static com.salesforce.omakase.data.Property.BORDER_TOP_COLOR;
+import static com.salesforce.omakase.data.Property.BORDER_TOP_LEFT_RADIUS;
+import static com.salesforce.omakase.data.Property.BORDER_TOP_RIGHT_RADIUS;
+import static com.salesforce.omakase.data.Property.BORDER_TOP_STYLE;
+import static com.salesforce.omakase.data.Property.BORDER_TOP_WIDTH;
+import static com.salesforce.omakase.data.Property.PADDING;
+import static com.salesforce.omakase.data.Property.PADDING_BOTTOM;
+import static com.salesforce.omakase.data.Property.PADDING_LEFT;
+import static com.salesforce.omakase.data.Property.PADDING_RIGHT;
+import static com.salesforce.omakase.data.Property.PADDING_TOP;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.EnumSet;
 
-import static com.salesforce.omakase.data.Property.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.salesforce.omakase.data.Property;
 
 /**
  * Unit tests for {@link Properties}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PropertiesTest {
     @Test
     public void expandSingle() {

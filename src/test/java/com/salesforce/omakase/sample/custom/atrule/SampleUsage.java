@@ -26,14 +26,11 @@
 
 package com.salesforce.omakase.sample.custom.atrule;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.ast.atrule.MediaQueryList;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * An example of using the sample custom at-rule plugin in this package.
@@ -59,7 +56,6 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "JavaDoc"})
 public final class SampleUsage {
     public static void main(String[] args) throws IOException {
         // css file 1, defines media query tokens

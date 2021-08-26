@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.Optional;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
@@ -33,18 +39,12 @@ import com.salesforce.omakase.ast.extended.UnquotedIEFilter;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.util.Values;
-import org.junit.Test;
-
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link UnquotedIEFilterPlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class UnquotedIEFilterPluginTest {
     @Test
     public void refineDeclarationNoMatchReturnsFalse() {

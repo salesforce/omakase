@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.plugin.core;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Rule;
@@ -34,10 +39,6 @@ import com.salesforce.omakase.ast.StatementIterable;
 import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link SyntaxTree}.
@@ -45,7 +46,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * This contains some tests that strictly speaking aren't necessarily testing {@link SyntaxTree} itself. This is due to leftovers
  * from refactoring... but meh, doesn't hurt to keep them for now.
  */
-@SuppressWarnings("JavaDoc")
 public class SyntaxTreeTest {
     private static final String SRC = "@charset \"UTF8\";\n" +
         "@media all and (max-width:800px) { p{color:red}}\n" +

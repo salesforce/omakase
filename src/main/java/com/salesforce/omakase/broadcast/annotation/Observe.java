@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.broadcast.annotation;
 
-import com.salesforce.omakase.ast.Syntax;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

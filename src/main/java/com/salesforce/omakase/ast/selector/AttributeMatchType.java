@@ -26,12 +26,12 @@
 
 package com.salesforce.omakase.ast.selector;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.parser.token.ConstantEnum;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
-
-import java.io.IOException;
 
 /**
  * Represents the match type in an {@link AttributeSelector}.

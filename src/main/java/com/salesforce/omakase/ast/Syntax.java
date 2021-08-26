@@ -26,22 +26,16 @@
 
 package com.salesforce.omakase.ast;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SimpleSelector;
 import com.salesforce.omakase.broadcast.BroadcastRequirement;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.annotation.Description;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.plugin.core.AutoRefine;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.Writable;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * A distinct unit of syntax within CSS.

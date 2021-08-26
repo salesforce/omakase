@@ -26,25 +26,27 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link IdSelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
     @Override
     public List<String> invalidSources() {
@@ -117,36 +119,31 @@ public class IdSelectorParserTest extends AbstractParserTest<IdSelectorParser> {
 
     @Test
     public void errorsIfDoubleHash() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid id name");
-        parse("##id");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("##id"));
+        assertTrue(thrown.getMessage().contains("expected to find a valid id name"));
     }
 
     @Test
-    public void errorsIfDoubleDash() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid id name");
-        parse("#--abc");
+    public void errorsIfDoubleDash() {        
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#--abc"));
+        assertTrue(thrown.getMessage().contains("expected to find a valid id name"));
     }
 
     @Test
-    public void errorsIfDashNumber() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid id name");
-        parse("#-1abc");
+    public void errorsIfDashNumber() {        
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#-1abc"));
+        assertTrue(thrown.getMessage().contains("expected to find a valid id name"));
     }
 
     @Test
     public void errorsIfDashDot() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid id name");
-        parse("#.class");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#.class"));
+        assertTrue(thrown.getMessage().contains("expected to find a valid id name"));
     }
 
     @Test
     public void errorsIfSpace() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("expected to find a valid id name");
-        parse("# abc");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("# abc"));
+        assertTrue(thrown.getMessage().contains("expected to find a valid id name"));
     }
 }

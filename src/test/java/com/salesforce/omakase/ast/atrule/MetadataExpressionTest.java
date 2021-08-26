@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.ast.atrule;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link MetadataExpression}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MetadataExpressionTest {
     @Test
     public void notWritable() {

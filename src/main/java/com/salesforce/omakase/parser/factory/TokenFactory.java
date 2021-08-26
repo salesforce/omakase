@@ -26,12 +26,9 @@
 
 package com.salesforce.omakase.parser.factory;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.parser.token.CompoundToken;
-import com.salesforce.omakase.parser.token.Token;
-
 import java.util.Optional;
+
+import com.salesforce.omakase.parser.token.Token;
 
 /**
  * A factory for retrieving various {@link Token}s during parsing and refinement.

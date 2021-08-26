@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import java.util.Optional;
+
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.atrule.MediaQuery;
@@ -38,8 +40,6 @@ import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.Optional;
 
 /**
  * Parsers a {@link MediaQuery}.

@@ -36,7 +36,6 @@ import com.google.common.collect.Lists;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link HexColorValue}. */
-@SuppressWarnings("JavaDoc")
 public class HexColorValueTest {
     private HexColorValue value;
 

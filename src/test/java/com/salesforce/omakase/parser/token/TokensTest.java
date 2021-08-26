@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.parser.token;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Unit test for {@link Tokens}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class TokensTest {
     @Test
     public void testMatches() {

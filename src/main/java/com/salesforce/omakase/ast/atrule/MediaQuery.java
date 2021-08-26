@@ -26,19 +26,18 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import static com.google.common.base.Preconditions.checkState;
+
+import java.io.IOException;
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
 import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.atrule.MediaQueryParser;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Represents a media query.

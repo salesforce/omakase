@@ -26,24 +26,21 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link UnquotedIEFilter}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class UnquotedIEFilterTest {
     private static final String FILTER = "progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3)";
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testGetContent() {

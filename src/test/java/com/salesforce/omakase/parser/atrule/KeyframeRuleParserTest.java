@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Rule;
@@ -34,19 +43,13 @@ import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link KeyframeRuleParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class KeyframeRuleParserTest extends AbstractParserTest<KeyframeRuleParser> {
 
     @Override
@@ -121,15 +124,13 @@ public class KeyframeRuleParserTest extends AbstractParserTest<KeyframeRuleParse
 
     @Test
     public void errorsOnMissingOpeningBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find opening brace");
-        parse("50% \n ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("50% \n "));
+        assertTrue(thrown.getMessage().contains("Expected to find opening brace"));
     }
 
     @Test
     public void errorsOnMissingClosingBracket() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing brace");
-        parse("50% { top: 0");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("50% { top: 0"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing brace"));
     }
 }

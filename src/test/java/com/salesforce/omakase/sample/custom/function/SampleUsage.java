@@ -26,15 +26,14 @@
 
 package com.salesforce.omakase.sample.custom.function;
 
+import java.io.IOException;
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
 import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.sample.custom.function.CustomVarPlugin.Mode;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * An example of using the sample custom function classes in this package.
@@ -56,7 +55,6 @@ import java.util.Map;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "JavaDoc"})
 public final class SampleUsage {
     // the sample variables
     private static final Map<String, String> VARS = ImmutableMap.<String, String>builder()

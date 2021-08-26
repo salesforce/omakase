@@ -26,16 +26,16 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.CaseFormat;
-import com.google.common.collect.Iterables;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.writer.StyleWriter;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import com.google.common.base.CaseFormat;
+import com.google.common.collect.Iterables;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Helper for constructing toString() methods...cuz guava's helper just doesn't get the job done.
@@ -187,7 +187,6 @@ public final class As {
      *
      * @return this, for chaining.
      */
-    @SuppressWarnings("AutoBoxing")
     public As fields() {
         if (instance instanceof Syntax) {
             Syntax syntax = (Syntax)instance;

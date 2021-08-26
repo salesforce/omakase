@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.parser.declaration;
 
-import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;

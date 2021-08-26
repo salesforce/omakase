@@ -26,25 +26,29 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.UnicodeRangeValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link UnicodeRangeValueParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
+
 public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRangeValueParser> {
     @Override
     public List<String> invalidSources() {
@@ -134,64 +138,55 @@ public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRange
 
     @Test
     public void errorsIfMissingHexAfterUPlus() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find hexidecimal");
-        parse("u+");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+"));
+        assertTrue(thrown.getMessage().contains("Expected to find hexidecimal"));
     }
 
     @Test
     public void errorsIfSpaceAfterUPlus() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find hexidecimal");
-        parse("u+ 11");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+ 11"));
+        assertTrue(thrown.getMessage().contains("Expected to find hexidecimal"));
     }
 
     @Test
     public void errorsOnLongLength() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNICODE_LONG);
-        parse("u+fffffff");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+fffffff"));
+        assertTrue(thrown.getMessage().contains(Message.UNICODE_LONG));
     }
 
     @Test
     public void errorsIfTooManyWildcards() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNICODE_LONG);
-        parse("u+???????");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+???????"));
+        assertTrue(thrown.getMessage().contains(Message.UNICODE_LONG));
     }
 
     @Test
     public void errorsIfHexAfterWildcard() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.HEX_AFTER_WILDCARD);
-        parse("u+??ff");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+??ff"));
+        assertTrue(thrown.getMessage().contains(Message.HEX_AFTER_WILDCARD));
     }
 
     @Test
     public void errorsIfMissingSecondPartOfRange() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find hexidecimal");
-        parse("u+ff-");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+ff-"));
+        assertTrue(thrown.getMessage().contains("Expected to find hexidecimal"));
     }
 
     @Test
     public void errorsOnLongLengthInEndRange() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.UNICODE_LONG);
-        parse("u+ff0-7777777");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+ff0-7777777"));
+        assertTrue(thrown.getMessage().contains(Message.UNICODE_LONG));
     }
 
     @Test
     public void errorsOnWildcardInFirstRange() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.WILDCARD_NOT_ALLOWED);
-        parse("u+ff0?-f00");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+ff0?-f00"));
+        assertTrue(thrown.getMessage().contains(Message.WILDCARD_NOT_ALLOWED));
     }
 
     @Test
     public void errorsOnWildcardInEndRange() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.WILDCARD_NOT_ALLOWED);
-        parse("u+ff0-f0?0");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("u+ff0-f0?0"));
+        assertTrue(thrown.getMessage().contains(Message.WILDCARD_NOT_ALLOWED));
     }
 }

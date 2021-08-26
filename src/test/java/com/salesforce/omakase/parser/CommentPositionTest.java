@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Rule;
@@ -36,16 +41,11 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.plugin.core.SyntaxTree;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit test that ensures that regular comments are correctly associated with units and that orphaned comments are created as
  * appropriate.
  */
-@SuppressWarnings("JavaDoc")
 public class CommentPositionTest {
     private static final String SRC = "/*0*/\n" +
         "\n" +

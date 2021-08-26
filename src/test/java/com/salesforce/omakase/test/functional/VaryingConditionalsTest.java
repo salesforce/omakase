@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.ast.Rule;
@@ -34,23 +40,17 @@ import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.plugin.conditionals.Conditionals;
+import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests a broader usage of {@link Conditionals}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class VaryingConditionalsTest {
     private static final String INPUT = ".class {color: red}\n" +
         "\n" +
@@ -166,7 +166,6 @@ public class VaryingConditionalsTest {
         assertThat(counter.classSelectorCount).isGreaterThan(0);
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static final class TestPlugin implements Plugin {
         int ruleCount;
         int selectorCount;

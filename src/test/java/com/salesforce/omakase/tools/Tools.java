@@ -26,21 +26,21 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * File utilities, mainly for the generators.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "AssignmentToMethodParameter"})
 public final class Tools {
     private static final Configuration FREEMARKER = new Configuration();
 
@@ -52,7 +52,7 @@ public final class Tools {
 
     /** reads a file from the classpath */
     public static String readFile(String path) throws IOException {
-        return Files.toString(getFile(path), Charsets.UTF_8);
+        return Files.asCharSource(getFile(path), Charsets.UTF_8).read();
     }
 
     /** finds a file from the classpath */

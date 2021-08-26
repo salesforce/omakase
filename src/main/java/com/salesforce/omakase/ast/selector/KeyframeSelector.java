@@ -26,13 +26,12 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a single keyframe selector part. For example, "from", "to", "0%', "50%", etc...

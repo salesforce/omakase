@@ -26,19 +26,18 @@
 
 package com.salesforce.omakase.test;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.broadcast.AbstractBroadcaster;
 import com.salesforce.omakase.broadcast.Broadcastable;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Utility for tests.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public final class RespondingBroadcaster<T extends Broadcastable> extends AbstractBroadcaster {
     private final Class<T> klass;
     private final List<Broadcastable> response;

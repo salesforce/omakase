@@ -27,8 +27,6 @@
 package com.salesforce.omakase.broadcast;
 
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionPhase;
 
 /**

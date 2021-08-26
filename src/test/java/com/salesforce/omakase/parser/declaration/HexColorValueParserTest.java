@@ -26,25 +26,28 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.HexColorValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link HexColorValueParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "SpellCheckingInspection"})
+
 public class HexColorValueParserTest extends AbstractParserTest<HexColorValueParser> {
     @Override
     public List<String> invalidSources() {
@@ -123,44 +126,38 @@ public class HexColorValueParserTest extends AbstractParserTest<HexColorValuePar
     }
 
     @Test
-    public void throwsErrorOnInvalidLength1() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected a hex color of length 3 or 6");
-        parse("#a");
+    public void throwsErrorOnInvalidLength1() {        
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#a"));
+        assertTrue(thrown.getMessage().contains("Expected a hex color of length 3 or 6"));
     }
 
     @Test
     public void throwsErrorOnLength2() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected a hex color of length 3 or 6");
-        parse("#ab");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#ab"));
+        assertTrue(thrown.getMessage().contains("Expected a hex color of length 3 or 6"));
     }
 
     @Test
     public void throwsErrorOnLength4() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected a hex color of length 3 or 6");
-        parse("#aaaa");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#aaaa"));
+        assertTrue(thrown.getMessage().contains("Expected a hex color of length 3 or 6"));
     }
 
     @Test
     public void throwsErrorOnLength5() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected a hex color of length 3 or 6");
-        parse("#12345");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#12345"));
+        assertTrue(thrown.getMessage().contains("Expected a hex color of length 3 or 6"));
     }
 
     @Test
     public void throwsErrorOnLength7() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected a hex color of length 3 or 6");
-        parse("#1234567");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#1234567"));
+        assertTrue(thrown.getMessage().contains("Expected a hex color of length 3 or 6"));
     }
 
     @Test
     public void throwsErrorOnLength8() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected a hex color of length 3 or 6");
-        parse("#123456ab");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("#123456ab"));
+        assertTrue(thrown.getMessage().contains("Expected a hex color of length 3 or 6"));
     }
 }

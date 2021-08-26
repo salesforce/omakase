@@ -26,15 +26,23 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.*;
-import com.salesforce.omakase.data.Keyword;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.declaration.HexColorValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.Operator;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.PropertyValueMember;
+import com.salesforce.omakase.ast.declaration.StringValue;
+import com.salesforce.omakase.ast.declaration.Term;
+import com.salesforce.omakase.data.Keyword;
 
 /**
  * Utilities for working with {@link PropertyValue}s and {@link Term}s.

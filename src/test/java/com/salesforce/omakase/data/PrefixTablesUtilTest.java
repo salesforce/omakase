@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.data;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link PrefixTablesUtil}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PrefixTablesUtilTest {
     @Test
     public void isPrefixableProperty() {

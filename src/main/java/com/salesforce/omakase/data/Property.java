@@ -26,10 +26,10 @@
 
 package com.salesforce.omakase.data;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-
-import java.util.Map;
 
 /**
  * Enum of all recognized CSS properties. Use {@link #toString()} to get the CSS-output representation.

@@ -26,12 +26,21 @@
 
 package com.salesforce.omakase.parser.factory;
 
-import com.salesforce.omakase.parser.token.Token;
-import com.salesforce.omakase.parser.token.Tokens;
+import static com.salesforce.omakase.parser.token.Tokens.ALPHA;
+import static com.salesforce.omakase.parser.token.Tokens.CLOSE_BRACE;
+import static com.salesforce.omakase.parser.token.Tokens.COLON;
+import static com.salesforce.omakase.parser.token.Tokens.COMMA;
+import static com.salesforce.omakase.parser.token.Tokens.DOT;
+import static com.salesforce.omakase.parser.token.Tokens.HASH;
+import static com.salesforce.omakase.parser.token.Tokens.OPEN_BRACE;
+import static com.salesforce.omakase.parser.token.Tokens.OPEN_BRACKET;
+import static com.salesforce.omakase.parser.token.Tokens.SEMICOLON;
+import static com.salesforce.omakase.parser.token.Tokens.STAR;
 
 import java.util.Optional;
 
-import static com.salesforce.omakase.parser.token.Tokens.*;
+import com.salesforce.omakase.parser.token.Token;
+import com.salesforce.omakase.parser.token.Tokens;
 
 /**
  * Base class for {@link TokenFactory}s.

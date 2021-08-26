@@ -26,17 +26,15 @@
 
 package com.salesforce.omakase.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.StatementIterable;
-import com.salesforce.omakase.ast.Stylesheet;
 import com.salesforce.omakase.ast.atrule.AtRule;
-import com.salesforce.omakase.ast.atrule.AtRuleBlock;
 import com.salesforce.omakase.ast.declaration.Declaration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Utilities for working with {@link Declaration}s.
@@ -102,7 +100,6 @@ public final class Declarations {
      *
      * @return An {@link Iterable} over each {@link Declaration}.
      */
-    @SuppressWarnings("ConstantConditions")
     public static Iterable<Declaration> within(StatementIterable parent, boolean recurse) {
         List<Iterable<Declaration>> iterables = new ArrayList<>();
 

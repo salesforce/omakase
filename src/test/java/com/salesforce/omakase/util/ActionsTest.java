@@ -26,22 +26,22 @@
 
 package com.salesforce.omakase.util;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import org.junit.Test;
-
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Actions}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ActionsTest {
     @Test
     public void detach() {

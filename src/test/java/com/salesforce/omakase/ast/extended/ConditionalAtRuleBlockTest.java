@@ -26,6 +26,14 @@
 
 package com.salesforce.omakase.ast.extended;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Rule;
 import com.salesforce.omakase.ast.Statement;
@@ -39,20 +47,12 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests {@link ConditionalAtRuleBlock}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalAtRuleBlockTest {
     private static final ConditionalsConfig CONFIG = new ConditionalsConfig().addTrueConditions("ie7", "webkit");
     private static final Conditional IE7 = new Conditional("ie7", false);

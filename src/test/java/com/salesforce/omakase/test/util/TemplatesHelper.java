@@ -31,7 +31,6 @@ package com.salesforce.omakase.test.util;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public final class TemplatesHelper {
     public static final String GENERIC_CSS_SOURCE = ".test {\n" +
         "  color: #16ff2b;\n" +

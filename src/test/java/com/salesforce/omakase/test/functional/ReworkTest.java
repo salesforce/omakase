@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.Rule;
@@ -46,22 +52,16 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.DependentPlugin;
 import com.salesforce.omakase.plugin.Plugin;
+import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.plugin.core.SyntaxTree;
 import com.salesforce.omakase.plugin.syntax.SelectorPlugin;
-import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests a basic rework workflow.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ReworkTest {
     private static final String INPUT = ".left-alone {margin: 0;}\n" +
         ".THIS .inner, .xyz .THIS {display: inline-block; padding: 10px;}\n" +

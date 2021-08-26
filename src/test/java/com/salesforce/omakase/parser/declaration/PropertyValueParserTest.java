@@ -53,7 +53,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PropertyValueParserTest extends AbstractParserTest<PropertyValueParser> {
     @Override
     public List<String> invalidSources() {

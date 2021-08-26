@@ -26,20 +26,18 @@
 
 package com.salesforce.omakase.ast.declaration;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.data.Prefix;
-import com.salesforce.omakase.plugin.syntax.LinearGradientPlugin;
-import com.salesforce.omakase.util.Args;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.REFINED_DECLARATION;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.data.Prefix;
+import com.salesforce.omakase.util.Args;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Represents a linear-gradient (or repeating-linear-gradient) function.

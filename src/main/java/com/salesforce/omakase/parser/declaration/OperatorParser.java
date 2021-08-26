@@ -26,14 +26,14 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.declaration.Operator;
 import com.salesforce.omakase.ast.declaration.OperatorType;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
-
-import java.util.Optional;
 
 /**
  * Parses a single term {@link Operator}.

@@ -26,23 +26,24 @@
 
 package com.salesforce.omakase.plugin.conditionals;
 
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.error.ProblemSummaryException;
-import com.salesforce.omakase.parser.ParserException;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.error.ProblemSummaryException;
+import com.salesforce.omakase.parser.ParserException;
 
 /**
  * Unit tests for {@link ConditionalsValidator}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalsValidatorTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

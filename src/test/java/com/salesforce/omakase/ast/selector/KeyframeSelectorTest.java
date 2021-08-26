@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase.ast.selector;
 
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link KeyframeSelector}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class KeyframeSelectorTest {
     @Test
     public void getKeyframe() {

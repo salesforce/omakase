@@ -26,24 +26,25 @@
 
 package com.salesforce.omakase.tools;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.yaml.snakeyaml.Yaml;
+
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.plugin.prefixer.Prefixer;
 import com.salesforce.omakase.util.SupportMatrix;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Prints stuff that's prefixed by {@link Prefixer#defaultBrowserSupport()}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class PrintDefaultPrefixed {
     private static final Yaml yaml = new Yaml();
 

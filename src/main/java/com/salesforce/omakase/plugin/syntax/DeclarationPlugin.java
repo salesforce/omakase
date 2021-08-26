@@ -28,10 +28,6 @@ package com.salesforce.omakase.plugin.syntax;
 
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.KeywordValue;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
-import com.salesforce.omakase.ast.declaration.PropertyValueMember;
-import com.salesforce.omakase.ast.declaration.UrlFunctionValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.parser.Grammar;

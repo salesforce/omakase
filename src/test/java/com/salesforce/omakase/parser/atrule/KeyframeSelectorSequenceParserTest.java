@@ -26,25 +26,28 @@
 
 package com.salesforce.omakase.parser.atrule;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.selector.KeyframeSelector;
 import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
 
 /**
  * Unit tests for {@link KeyframeSelectorSequenceParserTest}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class KeyframeSelectorSequenceParserTest extends AbstractParserTest<KeyframeSelectorSequenceParser> {
     @Override
     public List<String> invalidSources() {
@@ -125,8 +128,7 @@ public class KeyframeSelectorSequenceParserTest extends AbstractParserTest<Keyfr
 
     @Test
     public void errorsOnTrailingComma() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Unexpected trailing");
-        parse("50%, 60%, , 70% ");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("50%, 60%, , 70% "));
+        assertTrue(thrown.getMessage().contains("Unexpected trailing"));
     }
 }

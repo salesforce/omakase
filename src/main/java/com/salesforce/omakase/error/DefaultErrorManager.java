@@ -26,12 +26,12 @@
 
 package com.salesforce.omakase.error;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
 import com.salesforce.omakase.parser.ParserException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The default Omakase {@link ErrorManager}.

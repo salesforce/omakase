@@ -27,11 +27,8 @@
 package com.salesforce.omakase.error;
 
 import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.broadcast.emitter.SubscriptionException;
 import com.salesforce.omakase.parser.ParserException;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Responsible for handling errors.

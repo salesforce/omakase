@@ -26,13 +26,12 @@
 
 package com.salesforce.omakase.ast.declaration;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.collection.AbstractGroupable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * An {@link OperatorType} in between a {@link Term}, as property of the {@link PropertyValue} {@link PropertyValue}.

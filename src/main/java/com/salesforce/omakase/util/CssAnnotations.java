@@ -26,8 +26,6 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.CssAnnotation;
-
 /**
  * Contains names of known {@link CssAnnotation}s.
  *

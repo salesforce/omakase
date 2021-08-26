@@ -26,7 +26,6 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.parser.factory.BaseParserFactory;
 import com.salesforce.omakase.parser.factory.ParserFactory;
 
 /**

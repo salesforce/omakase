@@ -26,18 +26,18 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.ast.selector.IdSelector;
-import com.salesforce.omakase.parser.factory.StandardParserFactory;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.ast.selector.IdSelector;
+import com.salesforce.omakase.parser.factory.StandardParserFactory;
 
 /**
  * Unit tests for {@link Parsers}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ParsersTest {
     @Test
     public void parseNumericalAbsent() {

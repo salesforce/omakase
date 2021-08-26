@@ -26,15 +26,8 @@
 
 package com.salesforce.omakase.writer;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.Comment;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.Plugin;
-import com.salesforce.omakase.plugin.core.SyntaxTree;
-import com.salesforce.omakase.util.As;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -42,7 +35,14 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 
-import static com.google.common.base.Preconditions.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.salesforce.omakase.PluginRegistry;
+import com.salesforce.omakase.ast.Comment;
+import com.salesforce.omakase.ast.Syntax;
+import com.salesforce.omakase.plugin.DependentPlugin;
+import com.salesforce.omakase.plugin.core.SyntaxTree;
+import com.salesforce.omakase.util.As;
 
 /**
  * The main class for writing processed CSS content.

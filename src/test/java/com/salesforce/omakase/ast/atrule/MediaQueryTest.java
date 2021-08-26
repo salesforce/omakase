@@ -26,28 +26,26 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaQuery}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MediaQueryTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private MediaQuery mq;
     private MediaQueryExpression exp1;
@@ -81,8 +79,7 @@ public class MediaQueryTest {
 
     @Test
     public void errorsIfAddingRestrictionWithoutMediaType() {
-        exception.expect(IllegalStateException.class);
-        mq.restriction(MediaRestriction.NOT);
+        assertThrows(IllegalStateException.class, () -> mq.restriction(MediaRestriction.NOT));
     }
 
     @Test

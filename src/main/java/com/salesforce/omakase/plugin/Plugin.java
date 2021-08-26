@@ -26,10 +26,6 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.plugin.core.AutoRefine;
-
 /**
  * A plugin that is registered during CSS processing to perform refinement, rework, validation, and more.
  * <p>

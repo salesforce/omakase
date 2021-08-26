@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.declaration;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -44,7 +46,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ImportantParserTest extends AbstractParserTest<ImportantParser> {
     @Override
     public List<String> invalidSources() {
@@ -105,23 +106,20 @@ public class ImportantParserTest extends AbstractParserTest<ImportantParser> {
 
     @Test
     public void throwsExceptionIfNoImportantAfterBang() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_IMPORTANT);
-        parse("!import");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("!import"));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_IMPORTANT));
     }
 
     @Test
     public void throwsExceptionIfNoImportantAfterBangPart2() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_IMPORTANT);
-        parse("!hithere");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("!hithere"));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_IMPORTANT));
     }
 
     @Test
     public void throwsExceptionIfSpaceAfterBang() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_IMPORTANT);
-        parse("! important");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("! important"));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_IMPORTANT));
     }
 
     @Override

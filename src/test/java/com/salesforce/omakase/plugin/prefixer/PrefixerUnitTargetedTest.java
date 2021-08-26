@@ -26,22 +26,22 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.plugin.core.AutoRefine;
 import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Targeted functional tests for {@link Prefixer}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PrefixerUnitTargetedTest {
     private String process(String original, Prefixer prefixer) {
         return process(original, prefixer, WriterMode.INLINE);

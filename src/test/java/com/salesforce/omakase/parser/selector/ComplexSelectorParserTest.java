@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -41,19 +50,12 @@ import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link ComplexSelectorParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelectorParser> {
 
     @Override
@@ -156,7 +158,6 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
 
     @Test
     @Override
-    @SuppressWarnings("unchecked")
     public void matchesExpectedBroadcastCount() {
         List<ParseResult<Integer>> results = parseWithExpected(ImmutableList.of(
             withExpectedResult("#id", 1),
@@ -224,23 +225,20 @@ public class ComplexSelectorParserTest extends AbstractParserTest<ComplexSelecto
 
     @Test
     public void errorsIfUniversalNotLast() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.NAME_SELECTORS_NOT_ALLOWED);
-        parse(".class*");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".class*"));
+        assertTrue(thrown.getMessage().contains(Message.NAME_SELECTORS_NOT_ALLOWED));
     }
 
     @Test
     public void errorsIfTrailingCombinator() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Trailing combinator");
-        parse(".class>").get(0);
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".class>").get(0));
+        assertTrue(thrown.getMessage().contains("Trailing combinator"));
     }
 
     @Test
     public void errorsIfTrailingCombinator2() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Trailing combinator");
-        parse(".page .home > .child #id:hover .button .inner + span>").get(0);
+        ParserException thrown = assertThrows(ParserException.class, () -> parse(".page .home > .child #id:hover .button .inner + span>").get(0));
+        assertTrue(thrown.getMessage().contains("Trailing combinator"));
     }
     @Test
     public void removesTrailingDescendantCombinatorWithoutError() {

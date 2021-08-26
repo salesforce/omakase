@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.ast.collection;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
@@ -35,20 +44,9 @@ import com.salesforce.omakase.ast.selector.Selector;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link LinkedSyntaxCollection}. */
-@SuppressWarnings("JavaDoc")
 public class LinkedSyntaxCollectionTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private SyntaxCollection<Parent, Child> collection;
     private Child child1;
@@ -160,8 +158,7 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void errorsIfNextNotPresent() {
-        exception.expect(IllegalArgumentException.class);
-        collection.next(child1);
+        assertThrows(IllegalArgumentException.class, () -> collection.next(child1));
     }
 
     @Test
@@ -180,8 +177,7 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void errorsIfPreviousNotPresent() {
-        exception.expect(IllegalArgumentException.class);
-        collection.previous(child1);
+        assertThrows(IllegalArgumentException.class, () -> collection.previous(child1));
     }
 
     @Test
@@ -294,8 +290,7 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void prependBeforeNotInCollection() {
-        exception.expect(IllegalArgumentException.class);
-        collection.prependBefore(child3, child1);
+        assertThrows(IllegalArgumentException.class, () -> collection.prependBefore(child3, child1));
     }
 
     @Test
@@ -406,8 +401,7 @@ public class LinkedSyntaxCollectionTest {
 
     @Test
     public void appendAfterNotInCollection() {
-        exception.expect(IllegalArgumentException.class);
-        collection.appendAfter(child3, child1);
+        assertThrows(IllegalArgumentException.class, () -> collection.appendAfter(child3, child1));
     }
 
     @Test
@@ -441,31 +435,27 @@ public class LinkedSyntaxCollectionTest {
     @Test
     public void prependDestroyed() {
         child1.destroy();
-        exception.expect(IllegalArgumentException.class);
-        collection.prepend(child1);
+        assertThrows(IllegalArgumentException.class, () -> collection.prepend(child1));
     }
 
     @Test
     public void appendDestroyed() {
         child1.destroy();
-        exception.expect(IllegalArgumentException.class);
-        collection.append(child1);
+        assertThrows(IllegalArgumentException.class, () -> collection.append(child1));
     }
 
     @Test
     public void prependBeforeDestroyed() {
         collection.append(child1);
         child2.destroy();
-        exception.expect(IllegalArgumentException.class);
-        collection.prependBefore(child1, child2);
+        assertThrows(IllegalArgumentException.class, () -> collection.prependBefore(child1, child2));
     }
 
     @Test
     public void appendAfterDestroyed() {
         collection.append(child1);
         child2.destroy();
-        exception.expect(IllegalArgumentException.class);
-        collection.appendAfter(child1, child2);
+        assertThrows(IllegalArgumentException.class, () -> collection.appendAfter(child1, child2));
     }
 
     @Test
@@ -629,10 +619,8 @@ public class LinkedSyntaxCollectionTest {
     }
 
     private static final class Child extends AbstractGroupable<Parent, Child> {
-        private final int i;
 
         public Child(int i) {
-            this.i = i;
         }
 
         @Override

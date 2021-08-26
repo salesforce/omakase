@@ -26,14 +26,14 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Iterables;
 
 /**
  * A broadcaster that queues broadcasts.

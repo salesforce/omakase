@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.data;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import org.junit.Test;
+
 /** Unit tests for {@link Property}. */
-@SuppressWarnings("JavaDoc")
 public class PropertyTest {
     @Test
     public void reverseLookup() {

@@ -26,6 +26,12 @@
 
 package com.salesforce.omakase.sample.custom.declaration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.RawSyntax;
@@ -36,24 +42,17 @@ import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
-import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
 import com.salesforce.omakase.plugin.Plugin;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * This handles refining the mixins and the declarations that reference them.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MixinRefiner implements Plugin {
     private final Map<String, Mixin> mixins = new HashMap<>();
 

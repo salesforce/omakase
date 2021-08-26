@@ -30,17 +30,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.writer.StyleWriter;
 
 /** Unit tests for {@link GenericFunctionValue}. */
-@SuppressWarnings("JavaDoc")
 public class GenericFunctionValueTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     GenericFunctionValue value;
 

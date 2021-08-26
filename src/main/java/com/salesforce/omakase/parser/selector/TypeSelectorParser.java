@@ -26,13 +26,13 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.selector.TypeSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Grammar;
+import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
-
-import java.util.Optional;
 
 /**
  * Parses {@link TypeSelector}s.

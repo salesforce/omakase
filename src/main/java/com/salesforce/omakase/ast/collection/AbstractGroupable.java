@@ -26,13 +26,13 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.salesforce.omakase.ast.AbstractSyntax;
-import com.salesforce.omakase.ast.Status;
-import com.salesforce.omakase.ast.Syntax;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.*;
+import com.salesforce.omakase.ast.AbstractSyntax;
+import com.salesforce.omakase.ast.Status;
 
 /**
  * Base class for {@link Groupable}s.

@@ -26,10 +26,6 @@
 
 package com.salesforce.omakase.writer;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.Selector;
-
 import java.io.IOException;
 
 /**

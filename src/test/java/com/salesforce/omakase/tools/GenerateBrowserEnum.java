@@ -26,15 +26,6 @@
 
 package com.salesforce.omakase.tools;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.data.Prefix;
-import freemarker.template.TemplateException;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,6 +34,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.data.Prefix;
+
+import freemarker.template.TemplateException;
 
 /**
  * Handles updating the {@link Browser} enum.
@@ -53,7 +54,7 @@ import java.util.regex.Pattern;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"rawtypes", "JavaDoc", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class GenerateBrowserEnum {
     private static final String BROWSERS_ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/data.json";
 

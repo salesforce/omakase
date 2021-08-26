@@ -27,10 +27,7 @@
 package com.salesforce.omakase.plugin.syntax;
 
 import com.salesforce.omakase.Message;
-import com.salesforce.omakase.ast.selector.ClassSelector;
-import com.salesforce.omakase.ast.selector.IdSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.broadcast.Broadcaster;
 import com.salesforce.omakase.broadcast.annotation.Refine;
 import com.salesforce.omakase.parser.Grammar;

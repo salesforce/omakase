@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.util;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.broadcast.Broadcastable;
 import com.salesforce.omakase.broadcast.InterestBroadcaster;
@@ -34,8 +36,6 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.factory.StandardParserFactory;
-
-import java.util.Optional;
 
 /**
  * Utilities for working with {@link Parser}s.

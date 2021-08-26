@@ -26,21 +26,22 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_CLASS_SELECTOR;
+import static com.salesforce.omakase.ast.selector.SelectorPartType.PSEUDO_ELEMENT_SELECTOR;
+
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.Syntax;
 import com.salesforce.omakase.ast.selector.PseudoClassSelector;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.ast.selector.SelectorPartType;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.Optional;
-
-import static com.salesforce.omakase.ast.selector.SelectorPartType.*;
 
 /**
  * Parses both {@link PseudoClassSelector}s and {@link PseudoElementSelector}s.

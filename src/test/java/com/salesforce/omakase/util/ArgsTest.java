@@ -26,16 +26,15 @@
 
 package com.salesforce.omakase.util;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link Args}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ArgsTest {
 
     @Test

@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -43,11 +48,6 @@ import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.Parsers;
 import com.salesforce.omakase.util.SupportMatrix;
 import com.salesforce.omakase.util.Values;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Handles prefixing function names.

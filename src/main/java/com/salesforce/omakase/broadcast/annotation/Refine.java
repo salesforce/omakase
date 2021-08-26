@@ -26,18 +26,6 @@
 
 package com.salesforce.omakase.broadcast.annotation;
 
-import com.salesforce.omakase.ast.Named;
-import com.salesforce.omakase.ast.RawFunction;
-import com.salesforce.omakase.ast.Refinable;
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.declaration.Term;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.parser.Grammar;
-import com.salesforce.omakase.parser.Source;
-import com.salesforce.omakase.plugin.syntax.DeclarationPlugin;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

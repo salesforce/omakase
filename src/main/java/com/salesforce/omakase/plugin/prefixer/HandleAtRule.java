@@ -26,6 +26,8 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import java.util.Set;
+
 import com.google.common.collect.Multimap;
 import com.salesforce.omakase.ast.Statement;
 import com.salesforce.omakase.ast.atrule.AtRule;
@@ -33,8 +35,6 @@ import com.salesforce.omakase.data.Prefix;
 import com.salesforce.omakase.data.PrefixTablesUtil;
 import com.salesforce.omakase.util.Equivalents;
 import com.salesforce.omakase.util.SupportMatrix;
-
-import java.util.Set;
 
 /**
  * handles prefixing at rules.

@@ -26,18 +26,26 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.declaration.*;
-import com.salesforce.omakase.data.Keyword;
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.List;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.salesforce.omakase.ast.declaration.FunctionValue;
+import com.salesforce.omakase.ast.declaration.HexColorValue;
+import com.salesforce.omakase.ast.declaration.KeywordValue;
+import com.salesforce.omakase.ast.declaration.NumericalValue;
+import com.salesforce.omakase.ast.declaration.Operator;
+import com.salesforce.omakase.ast.declaration.OperatorType;
+import com.salesforce.omakase.ast.declaration.PropertyValue;
+import com.salesforce.omakase.ast.declaration.QuotationMode;
+import com.salesforce.omakase.ast.declaration.StringValue;
+import com.salesforce.omakase.data.Keyword;
 
 /** Unit tests for {@link Values}. */
-@SuppressWarnings("JavaDoc")
 public class ValuesTest {
     PropertyValue value;
 

@@ -26,22 +26,23 @@
 
 package com.salesforce.omakase.util;
 
-import com.salesforce.omakase.data.Prefix;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.Optional;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.data.Prefix;
 
 /**
  * Unit tests for {@link Prefixes}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PrefixesTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

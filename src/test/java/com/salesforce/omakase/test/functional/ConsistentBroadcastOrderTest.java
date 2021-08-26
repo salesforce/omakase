@@ -26,6 +26,13 @@
 
 package com.salesforce.omakase.test.functional;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.List;
+import java.util.Set;
+
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.salesforce.omakase.Omakase;
@@ -36,19 +43,12 @@ import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.plugin.core.AutoRefine;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Set;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Tests that the order of broadcasts for dynamically created units is the same as the order of broadcasts for parsed units.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class ConsistentBroadcastOrderTest {
     public static final String SRC = "@media all and (min-width: 300px) {\n" +
         "    #id, .class {\n" +

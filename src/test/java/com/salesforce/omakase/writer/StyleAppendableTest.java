@@ -26,18 +26,17 @@
 
 package com.salesforce.omakase.writer;
 
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  * Unit tests for {@link StyleAppendable}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class StyleAppendableTest {
     @Test
     public void appendChar() throws IOException {

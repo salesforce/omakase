@@ -52,7 +52,6 @@ import com.salesforce.omakase.plugin.core.SyntaxTree;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("ALL")
 public final class PluginSet {
     /**
      * common set of plugins simulating real world usage.

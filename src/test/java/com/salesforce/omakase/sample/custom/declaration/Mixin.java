@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase.sample.custom.declaration;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.ast.atrule.AbstractAtRuleMember;
 import com.salesforce.omakase.ast.atrule.AtRuleExpression;
 import com.salesforce.omakase.ast.declaration.Declaration;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The custom AST object representing our mixin definition.
@@ -45,7 +45,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class Mixin extends AbstractAtRuleMember implements AtRuleExpression {
     private final String name;
     private final List<String> params;

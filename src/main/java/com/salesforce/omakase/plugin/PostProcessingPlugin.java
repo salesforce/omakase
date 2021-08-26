@@ -27,9 +27,6 @@
 package com.salesforce.omakase.plugin;
 
 import com.salesforce.omakase.PluginRegistry;
-import com.salesforce.omakase.ast.Stylesheet;
-import com.salesforce.omakase.ast.declaration.Declaration;
-import com.salesforce.omakase.ast.selector.Selector;
 
 /**
  * A {@link Plugin} that wishes to be notified when all processing (rework and validation) is completed.

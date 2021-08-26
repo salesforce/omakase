@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
+import static com.salesforce.omakase.data.Browser.ANDROID;
+import static com.salesforce.omakase.data.Browser.CHROME;
+import static com.salesforce.omakase.data.Browser.EDGE;
+import static com.salesforce.omakase.data.Browser.FIREFOX;
+import static com.salesforce.omakase.data.Browser.IE;
+import static com.salesforce.omakase.data.Browser.IE_MOBILE;
+import static com.salesforce.omakase.data.Browser.IOS_SAFARI;
+import static com.salesforce.omakase.data.Browser.SAFARI;
+
 import com.salesforce.omakase.PluginRegistry;
 import com.salesforce.omakase.ast.atrule.AtRule;
 import com.salesforce.omakase.ast.declaration.Declaration;
@@ -34,11 +43,7 @@ import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.selector.PseudoElementSelector;
 import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.plugin.DependentPlugin;
-import com.salesforce.omakase.plugin.core.AutoRefine;
-import com.salesforce.omakase.plugin.core.StandardValidation;
 import com.salesforce.omakase.util.SupportMatrix;
-
-import static com.salesforce.omakase.data.Browser.*;
 
 /**
  * This experimental plugin automagically handles vendor prefixing of css property names, function values, at-rules and

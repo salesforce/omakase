@@ -26,17 +26,17 @@
 
 package com.salesforce.omakase.ast.extended;
 
-import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
-import com.salesforce.omakase.writer.StyleWriter;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.plugin.conditionals.ConditionalsConfig;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * Unit tests for {@link Conditional}.
  */
-@SuppressWarnings("JavaDoc")
 public class ConditionalTest {
     ConditionalsConfig config;
 

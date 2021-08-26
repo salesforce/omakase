@@ -39,7 +39,6 @@ import com.salesforce.omakase.writer.StyleWriter;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class LinearGradientFunctionValueTest {
     private LinearGradientFunctionValue function;
 

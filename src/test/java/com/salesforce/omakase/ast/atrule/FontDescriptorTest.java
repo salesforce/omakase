@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.ast.atrule;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Lists;
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.declaration.KeywordValue;
@@ -37,17 +42,12 @@ import com.salesforce.omakase.broadcast.QueryableBroadcaster;
 import com.salesforce.omakase.data.Property;
 import com.salesforce.omakase.util.Values;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link FontDescriptor}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class FontDescriptorTest {
     private PropertyName samplePropertyName;
     private PropertyValue samplePropertyValue;

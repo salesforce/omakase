@@ -26,17 +26,7 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
-import com.salesforce.omakase.Omakase;
-import com.salesforce.omakase.data.Browser;
-import com.salesforce.omakase.error.DefaultErrorManager;
-import com.salesforce.omakase.error.ProblemSummaryException;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
-import com.salesforce.omakase.plugin.core.StandardValidation;
-import com.salesforce.omakase.writer.StyleWriter;
-import com.salesforce.omakase.writer.WriterMode;
+import static com.google.common.base.Charsets.UTF_8;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +36,18 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.io.Files;
+import com.salesforce.omakase.Omakase;
+import com.salesforce.omakase.data.Browser;
+import com.salesforce.omakase.error.DefaultErrorManager;
+import com.salesforce.omakase.error.ProblemSummaryException;
+import com.salesforce.omakase.plugin.core.StandardValidation;
+import com.salesforce.omakase.plugin.prefixer.Prefixer;
+import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
+import com.salesforce.omakase.writer.StyleWriter;
+import com.salesforce.omakase.writer.WriterMode;
 
 /**
  * Interactive shell for css parsing.
@@ -221,7 +221,7 @@ public class InteractiveShell {
 
         final String key;
         final String description;
-        @SuppressWarnings("NonFinalFieldInEnum") boolean on;
+        boolean on;
 
         Command(String key, String description) {
             this.key = key;
@@ -299,7 +299,7 @@ public class InteractiveShell {
             file.deleteOnExit();
 
             String initial = INPUT + "\n" + ctx.buffer + "\n\n" + RESULT;
-            Files.write(initial, file, UTF_8);
+            Files.asCharSink(file, UTF_8).write(initial);
 
             lastMod = file.lastModified();
         }
@@ -315,7 +315,7 @@ public class InteractiveShell {
                 lastMod = newLastMod;
                 try {
                     // grab and format the input from the editor
-                    String input = Files.toString(file, UTF_8);
+                    String input = Files.asCharSource(file, UTF_8).read();
                     int index = input.indexOf(RESULT);
                     if (index > -1) {
                         input = input.substring(0, input.indexOf(RESULT, index));
@@ -332,7 +332,7 @@ public class InteractiveShell {
                     }
 
                     output = input + "\n\n" + RESULT + "\n" + output;
-                    Files.write(output, file, UTF_8);
+                    Files.asCharSink(file, UTF_8).write(output);
                     System.out.println(Colors.grey("File updated\n"));
 
                     // reset the buffer

@@ -26,15 +26,15 @@
 
 package com.salesforce.omakase.broadcast;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.Status;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.Selector;
-import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Unit tests for {@link VisitingBroadcaster}. */
-@SuppressWarnings("JavaDoc")
 public class VisitingBroadcasterTest {
     @Test
     public void relaysBroadcasts() {

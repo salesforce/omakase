@@ -26,6 +26,10 @@
 
 package com.salesforce.omakase.broadcast;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.ast.declaration.KeywordValue;
 import com.salesforce.omakase.ast.declaration.NumericalValue;
 import com.salesforce.omakase.ast.declaration.PropertyValue;
@@ -33,20 +37,13 @@ import com.salesforce.omakase.ast.declaration.Term;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.ast.selector.SelectorPart;
 import com.salesforce.omakase.data.Keyword;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link TypeInterestBroadcaster}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class TypeInterestBroadcasterTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testRetrieval() {

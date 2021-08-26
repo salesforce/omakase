@@ -26,9 +26,7 @@
 
 package com.salesforce.omakase.plugin;
 
-import com.salesforce.omakase.parser.factory.BaseTokenFactory;
 import com.salesforce.omakase.parser.factory.TokenFactory;
-import com.salesforce.omakase.parser.token.SimpleToken;
 
 /**
  * A {@link Plugin} that provides a custom {@link TokenFactory}.

@@ -28,6 +28,8 @@ package com.salesforce.omakase.parser.declaration;
 
 import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +56,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class FunctionValueParserTest extends AbstractParserTest<FunctionValueParser> {
     @Override
     public List<String> invalidSources() {
@@ -212,31 +213,27 @@ public class FunctionValueParserTest extends AbstractParserTest<FunctionValuePar
     }
 
     @Test
-    public void missingClosingParen() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("url(afafa");
+    public void missingClosingParen() {  
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("url(afafa"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
-    public void missingClosingParenBecauseOfEscaped() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("url(afafa\\)");
+    public void missingClosingParenBecauseOfEscaped() {  
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("url(afafa\\)"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void missingClosingParenBecauseOfInString() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("url('afafa)'");
+        ParserException thrown = assertThrows(ParserException.class, () ->  parse("url('afafa)'"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void unclosedString() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("url('afafafafafafafa)");
+        ParserException thrown = assertThrows(ParserException.class, () ->  parse("url('afafafafafafafa)"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test

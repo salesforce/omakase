@@ -26,12 +26,9 @@
 
 package com.salesforce.omakase.ast.collection;
 
-import com.salesforce.omakase.ast.Syntax;
-import com.salesforce.omakase.ast.selector.Selector;
-import com.salesforce.omakase.ast.selector.SelectorPart;
-import com.salesforce.omakase.broadcast.annotation.Rework;
-
 import java.util.Optional;
+
+import com.salesforce.omakase.ast.Syntax;
 
 /**
  * Represents an item that appears in a group or chain of other related units, for usage with {@link SyntaxCollection}.

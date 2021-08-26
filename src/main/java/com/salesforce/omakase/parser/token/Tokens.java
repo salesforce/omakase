@@ -26,10 +26,13 @@
 
 package com.salesforce.omakase.parser.token;
 
+import static com.google.common.base.CharMatcher.anyOf;
+import static com.google.common.base.CharMatcher.forPredicate;
+import static com.google.common.base.CharMatcher.inRange;
+import static com.google.common.base.CharMatcher.is;
+
 import com.google.common.base.CharMatcher;
 import com.salesforce.omakase.parser.Source;
-
-import static com.google.common.base.CharMatcher.*;
 
 /**
  * List of {@link Token}s.

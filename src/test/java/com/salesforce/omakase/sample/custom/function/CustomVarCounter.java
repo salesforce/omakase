@@ -26,12 +26,12 @@
 
 package com.salesforce.omakase.sample.custom.function;
 
+import java.io.IOException;
+
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.salesforce.omakase.broadcast.annotation.Observe;
 import com.salesforce.omakase.plugin.Plugin;
-
-import java.io.IOException;
 
 /**
  * Sample class showing how you can subscribe to and work with your custom AST objects.
@@ -40,7 +40,6 @@ import java.io.IOException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "UnusedParameters"})
 public class CustomVarCounter implements Plugin {
     private final Multiset<String> details = HashMultiset.create();
 

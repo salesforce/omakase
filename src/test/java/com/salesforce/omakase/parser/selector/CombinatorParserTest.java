@@ -46,7 +46,6 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class CombinatorParserTest extends AbstractParserTest<CombinatorParser> {
 
     @Override

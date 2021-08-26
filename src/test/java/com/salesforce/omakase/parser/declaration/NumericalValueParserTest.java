@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.Message;
@@ -34,19 +43,12 @@ import com.salesforce.omakase.ast.declaration.NumericalValue.Sign;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link NumericalValueParser}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class NumericalValueParserTest extends AbstractParserTest<NumericalValueParser> {
 
     @Override
@@ -175,8 +177,7 @@ public class NumericalValueParserTest extends AbstractParserTest<NumericalValueP
 
     @Test
     public void noNumberAfterDecimal() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.EXPECTED_DECIMAL);
-        parse("1.");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("1."));
+        assertTrue(thrown.getMessage().contains(Message.EXPECTED_DECIMAL));
     }
 }

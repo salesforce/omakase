@@ -26,21 +26,20 @@
 
 package com.salesforce.omakase.ast;
 
-import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
-import com.salesforce.omakase.ast.collection.SyntaxCollection;
-import com.salesforce.omakase.broadcast.Broadcaster;
-import com.salesforce.omakase.broadcast.annotation.Description;
-import com.salesforce.omakase.broadcast.annotation.Subscribable;
-import com.salesforce.omakase.parser.StylesheetParser;
-import com.salesforce.omakase.writer.StyleAppendable;
-import com.salesforce.omakase.writer.StyleWriter;
+import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.salesforce.omakase.broadcast.BroadcastRequirement.AUTOMATIC;
+import com.salesforce.omakase.ast.collection.LinkedSyntaxCollection;
+import com.salesforce.omakase.ast.collection.SyntaxCollection;
+import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.broadcast.annotation.Description;
+import com.salesforce.omakase.broadcast.annotation.Subscribable;
+import com.salesforce.omakase.writer.StyleAppendable;
+import com.salesforce.omakase.writer.StyleWriter;
 
 /**
  * The root-level {@link Syntax} object.

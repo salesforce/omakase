@@ -26,7 +26,12 @@
 
 package com.salesforce.omakase.test.goldfile;
 
-import com.google.common.base.Charsets;
+import static com.google.common.base.Charsets.UTF_8;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.io.File;
+import java.io.IOException;
+
 import com.google.common.io.Files;
 import com.salesforce.omakase.Omakase;
 import com.salesforce.omakase.plugin.Plugin;
@@ -36,11 +41,6 @@ import com.salesforce.omakase.plugin.syntax.UnquotedIEFilterPlugin;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-
 /**
  * Utility for executing goldfile tests.
  * <p>
@@ -48,7 +48,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public final class Goldfile {
     private Goldfile() {}
 
@@ -65,7 +64,6 @@ public final class Goldfile {
      * @throws IOException
      *     If there is a problem with teh files.
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void test(String name, StyleWriter writer, boolean autoRefine, Iterable<Plugin> plugins) throws IOException {
         // grab the source to parse
         File sourceFile = sourceFile(name);
@@ -100,7 +98,7 @@ public final class Goldfile {
             expectedFile.createNewFile();
 
             // write the contents to the new file
-            Files.write(result, expectedFile, Charsets.UTF_8);
+            Files.asCharSink(expectedFile, UTF_8).write(result);
         }
 
         String msg = String.format("Goldfile did not match expected value." +
@@ -120,7 +118,7 @@ public final class Goldfile {
      *     If something goes wrong reading the file.
      */
     public static String fileContents(File file) throws IOException {
-        return Files.toString(file, Charsets.UTF_8);
+        return Files.asCharSource(file, UTF_8).read();
     }
 
     /** Gets the goldfile "sources" folder. */

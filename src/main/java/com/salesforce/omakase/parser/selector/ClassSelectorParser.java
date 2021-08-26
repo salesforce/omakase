@@ -26,16 +26,16 @@
 
 package com.salesforce.omakase.parser.selector;
 
+import java.util.Optional;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.selector.ClassSelector;
 import com.salesforce.omakase.broadcast.Broadcaster;
+import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Parser;
 import com.salesforce.omakase.parser.ParserException;
-import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.parser.token.Tokens;
-
-import java.util.Optional;
 
 /**
  * Parses a {@link ClassSelector}.

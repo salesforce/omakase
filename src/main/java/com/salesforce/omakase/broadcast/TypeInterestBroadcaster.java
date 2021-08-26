@@ -26,13 +26,13 @@
 
 package com.salesforce.omakase.broadcast;
 
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Iterables;
 
 /**
  * An {@link InterestBroadcaster} that is interested in all broadcasts of a particular type.

@@ -405,6 +405,7 @@ public final class LinkedSyntaxCollection<P, T extends Groupable<P, T>> implemen
             return sparse != null ? sparse.size() : dense.size();
         }
 
+        @SuppressWarnings("unused")
         public boolean isEmpty() {
             return sparse != null ? sparse.isEmpty() : dense.isEmpty();
         }

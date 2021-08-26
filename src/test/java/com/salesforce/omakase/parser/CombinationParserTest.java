@@ -39,7 +39,6 @@ import com.salesforce.omakase.parser.declaration.NumericalValueParser;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class CombinationParserTest {
     @Test
     public void parsesEither() {

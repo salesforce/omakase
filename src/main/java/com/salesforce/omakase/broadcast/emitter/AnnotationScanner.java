@@ -26,6 +26,11 @@
 
 package com.salesforce.omakase.broadcast.emitter;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -42,12 +47,6 @@ import com.salesforce.omakase.broadcast.annotation.Rework;
 import com.salesforce.omakase.broadcast.annotation.Validate;
 import com.salesforce.omakase.error.ErrorManager;
 import com.salesforce.omakase.parser.Grammar;
-import com.salesforce.omakase.plugin.Plugin;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Scans for annotated methods on classes.

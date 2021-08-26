@@ -33,9 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
@@ -51,9 +49,8 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "unchecked"})
+@SuppressWarnings({"unchecked"})
 public abstract class AbstractParserTest<T extends Parser> implements ParserTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
     protected final Parser parser;
 
     public AbstractParserTest() {
@@ -192,8 +189,8 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     }
 
     /** helper method */
-    protected <T extends Broadcastable> T parse(Class<T> klass, String source) {
-        SingleInterestBroadcaster<T> interest = new SingleInterestBroadcaster<T>(klass);
+    protected <S extends Broadcastable> S parse(Class<S> klass, String source) {
+        SingleInterestBroadcaster<S> interest = new SingleInterestBroadcaster<S>(klass);
         parser.parse(new Source(source), new Grammar(), interest);
         if (!interest.one().isPresent()) {
             fail("did not find expected syntax unit");
@@ -252,6 +249,7 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
         return results;
     }
 
+    @SuppressWarnings("hiding")
     protected <T extends Broadcastable> T expectOnly(QueryableBroadcaster broadcaster, Class<T> klass) {
         String msg = "expected to find exactly one instance of " + klass.getSimpleName();
 

@@ -26,18 +26,19 @@
 
 package com.salesforce.omakase.test.goldfile;
 
+import java.io.IOException;
+import java.util.Arrays;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
+
 import com.google.common.collect.ImmutableList;
 import com.salesforce.omakase.plugin.Plugin;
 import com.salesforce.omakase.writer.StyleWriter;
 import com.salesforce.omakase.writer.WriterMode;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.io.IOException;
-import java.util.Arrays;
-
-import static org.junit.runners.Parameterized.*;
 
 /**
  * Base class for goldfile tests.
@@ -45,7 +46,6 @@ import static org.junit.runners.Parameterized.*;
  * @author nmcwilliams
  */
 @RunWith(Parameterized.class)
-@SuppressWarnings("JavaDoc")
 public abstract class AbstractGoldfileTest {
     @Parameters(name = "mode={0} refined={1}")
     public static Iterable<Object[]> data() {

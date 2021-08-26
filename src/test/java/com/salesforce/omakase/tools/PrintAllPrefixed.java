@@ -26,22 +26,22 @@
 
 package com.salesforce.omakase.tools;
 
-import com.google.common.collect.Sets;
-import com.salesforce.omakase.data.Property;
-import com.salesforce.omakase.plugin.prefixer.Prefixer;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.yaml.snakeyaml.Yaml;
+
+import com.google.common.collect.Sets;
+import com.salesforce.omakase.data.Property;
 
 /**
  * Prints everything supported by {@link Prefixer}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"JavaDoc", "rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class PrintAllPrefixed {
     private static final Yaml yaml = new Yaml();
 

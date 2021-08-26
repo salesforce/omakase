@@ -26,18 +26,21 @@
 
 package com.salesforce.omakase.parser.declaration;
 
+import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.salesforce.omakase.ast.declaration.StringValue;
 import com.salesforce.omakase.parser.AbstractParserTest;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult;
-import org.junit.Test;
-
-import java.util.List;
-
-import static com.salesforce.omakase.test.util.TemplatesHelper.withExpectedResult;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link StringValueParser}.
@@ -46,7 +49,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class StringValueParserTest extends AbstractParserTest<StringValueParser> {
 
     @Override
@@ -113,57 +115,49 @@ public class StringValueParserTest extends AbstractParserTest<StringValueParser>
 
     @Test
     public void errorsOnUnclosedDoubleQuote() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("\"afafafafa");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("\"afafafafa"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedDoubleQuoteEscaped() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("\"afafafafa\\\"");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("\"afafafafa\\\""));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedDoubleQuoteSingleQuote() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("\"afafafafa'");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("\"afafafafa'"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedDoubleQuoteThreeEscapes() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("\"afafafafa\\\"afafafafa\\\"afafa");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("\"afafafafa\\\\\\\"afafafafa\\\\\\\"afafa"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedSingleQuote() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("'afafafafaf");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("'afafafafaf"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedSingleQuoteEscaped() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("'afafafafaf\\'");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("'afafafafaf\\\\'"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedSingleQuoteSingleQuote() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("'afafafafa\"");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("'afafafafa\\\""));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void errorsOnUnclosedSingleQuoteThreeEscapes() {
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        parse("'asfasfs\\'asfasfas\\'sfsf");
+        ParserException thrown = assertThrows(ParserException.class, () -> parse("'asfasfs\\\\'asfasfas\\\\'sfsf"));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 }

@@ -26,12 +26,11 @@
 
 package com.salesforce.omakase.util;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.salesforce.omakase.ast.RawFunction;
-
 import java.util.List;
 import java.util.regex.Pattern;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 /**
  * Utilities for dealing with arguments, particular from {@link RawFunction} instances.

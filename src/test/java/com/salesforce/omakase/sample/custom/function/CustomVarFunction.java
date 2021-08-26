@@ -26,14 +26,13 @@
 
 package com.salesforce.omakase.sample.custom.function;
 
+import java.io.IOException;
+
 import com.salesforce.omakase.ast.declaration.AbstractTerm;
 import com.salesforce.omakase.ast.declaration.FunctionValue;
-import com.salesforce.omakase.ast.declaration.PropertyValue;
 import com.salesforce.omakase.broadcast.annotation.Subscribable;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-
-import java.io.IOException;
 
 /**
  * This is a sample custom AST object representing our custom function. The custom function represents a variable lookup.
@@ -45,7 +44,6 @@ import java.io.IOException;
  */
 
 @Subscribable
-@SuppressWarnings("JavaDoc")
 public class CustomVarFunction extends AbstractTerm implements FunctionValue {
     public static final String NAME = "custom-var";
     private final String arg;

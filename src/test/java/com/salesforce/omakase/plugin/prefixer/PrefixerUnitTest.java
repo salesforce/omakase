@@ -26,20 +26,21 @@
 
 package com.salesforce.omakase.plugin.prefixer;
 
-import com.salesforce.omakase.Omakase;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.salesforce.omakase.Omakase;
 
 /**
  * Unit tests for {@link Prefixer}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class PrefixerUnitTest {
+    @SuppressWarnings("deprecation")
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test

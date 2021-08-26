@@ -26,6 +26,15 @@
 
 package com.salesforce.omakase.parser;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Test;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.parser.token.ConstantEnum;
@@ -33,26 +42,14 @@ import com.salesforce.omakase.parser.token.Token;
 import com.salesforce.omakase.parser.token.TokenEnum;
 import com.salesforce.omakase.parser.token.Tokens;
 import com.salesforce.omakase.test.util.TemplatesHelper;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link Source}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class SourceTest {
     static final String INLINE = ".class, #id { color: red }";
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void line() {
@@ -239,8 +236,7 @@ public class SourceTest {
     @Test
     public void forwardOutOfRange() {
         Source source = new Source("abc");
-        exception.expect(IndexOutOfBoundsException.class);
-        source.forward(10);
+        assertThrows(IndexOutOfBoundsException.class, () -> source.forward(10));
     }
 
     @Test
@@ -413,8 +409,7 @@ public class SourceTest {
     @Test
     public void expectDoesntMatch() {
         Source source = new Source("abc");
-        exception.expect(ParserException.class);
-        source.expect(Tokens.DIGIT);
+        assertThrows(ParserException.class, () -> source.expect(Tokens.DIGIT));
     }
 
     @Test
@@ -543,18 +538,15 @@ public class SourceTest {
     @Test
     public void chompEnclosedDoesntMatch() {
         Source source = new Source("(abc");
-
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+        ParserException thrown = assertThrows(ParserException.class, () -> source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
     public void chompUnclosedUnmatchedNested() {
         Source source = new Source("(abc(abc)ab\nc");
-        exception.expect(ParserException.class);
-        exception.expectMessage("Expected to find closing");
-        source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN);
+        ParserException thrown = assertThrows(ParserException.class, () -> source.chompEnclosedValue(Tokens.OPEN_PAREN, Tokens.CLOSE_PAREN));
+        assertTrue(thrown.getMessage().contains("Expected to find closing"));
     }
 
     @Test
@@ -652,10 +644,9 @@ public class SourceTest {
 
     @Test
     public void unclosedComment() {
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MISSING_COMMENT_CLOSE);
         Source source = new Source("/*abc/a");
-        source.collectComments();
+        ParserException thrown = assertThrows(ParserException.class, () -> source.collectComments());
+        assertTrue(thrown.getMessage().contains(Message.MISSING_COMMENT_CLOSE));
     }
 
     @Test
@@ -706,9 +697,7 @@ public class SourceTest {
         Source source = new Source("abc");
         Source.Snapshot snapshot = source.snapshot();
         source.next();
-
-        exception.expect(ParserException.class);
-        snapshot.rollback(Message.EXPECTED_DECIMAL);
+        assertThrows(ParserException.class, () -> snapshot.rollback(Message.EXPECTED_DECIMAL));
     }
 
     @Test
@@ -978,17 +967,13 @@ public class SourceTest {
     @Test
     public void readStringMissingClosingSingleQuote() {
         Source source = new Source("'abc");
-
-        exception.expect(ParserException.class);
-        source.readString();
+        assertThrows(ParserException.class, () -> source.readString());
     }
 
     @Test
     public void readStringMissingClosingDoubleQuote() {
         Source source = new Source("'\"abc");
-
-        exception.expect(ParserException.class);
-        source.readString();
+        assertThrows(ParserException.class, () -> source.readString());
     }
 
     @Test
