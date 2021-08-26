@@ -189,9 +189,8 @@ public abstract class AbstractParserTest<T extends Parser> implements ParserTest
     }
 
     /** helper method */
-    @SuppressWarnings("hiding")
-    protected <T extends Broadcastable> T parse(Class<T> klass, String source) {
-        SingleInterestBroadcaster<T> interest = new SingleInterestBroadcaster<T>(klass);
+    protected <S extends Broadcastable> S parse(Class<S> klass, String source) {
+        SingleInterestBroadcaster<S> interest = new SingleInterestBroadcaster<S>(klass);
         parser.parse(new Source(source), new Grammar(), interest);
         if (!interest.one().isPresent()) {
             fail("did not find expected syntax unit");
