@@ -48,7 +48,7 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({})
+
 public class UnicodeRangeValueParserTest extends AbstractParserTest<UnicodeRangeValueParser> {
     @Override
     public List<String> invalidSources() {

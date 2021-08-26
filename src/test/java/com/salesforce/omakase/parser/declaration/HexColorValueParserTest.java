@@ -47,7 +47,7 @@ import com.salesforce.omakase.test.util.TemplatesHelper.SourceWithExpectedResult
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({})
+
 public class HexColorValueParserTest extends AbstractParserTest<HexColorValueParser> {
     @Override
     public List<String> invalidSources() {

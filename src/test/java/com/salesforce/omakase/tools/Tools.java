@@ -41,7 +41,7 @@ import freemarker.template.Template;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({})
+
 public final class Tools {
     private static final Configuration FREEMARKER = new Configuration();
 
