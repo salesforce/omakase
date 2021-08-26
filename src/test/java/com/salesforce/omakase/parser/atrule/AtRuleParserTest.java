@@ -370,7 +370,7 @@ public class AtRuleParserTest extends AbstractParserTest<AtRuleParser> {
     @Test
     public void missingExpressionAndBlock() {
         ParserException thrown = assertThrows(ParserException.class, () -> parse("@media "));
-        assertTrue(thrown.getMessage().contains(Message.MISSING_AT_RULE_NAME));
+        assertTrue(thrown.getMessage().contains("Expected to find an at-rule expression"));
     }
     
     @Test
