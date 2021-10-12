@@ -2,3 +2,4 @@
 # later match takes precedence, these owners will be requested for review when
 # someone opens a pull request.
 *    @salesforce/omakase @salesforce/lightning-application-services
+#ECCN:Open Source
