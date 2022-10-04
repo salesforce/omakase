@@ -3,7 +3,7 @@
 
     <groupId>com.salesforce</groupId>
     <artifactId>omakase</artifactId>
-    <version>1.7.3</version>
+    <version>1.7.3-SNAPSHOT</version>
 
     <name>Omakase CSS Parser</name>
     <description>Java-based, plugin-oriented CSS3+ parser</description>
