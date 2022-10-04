@@ -42,17 +42,15 @@ import freemarker.template.TemplateException;
  */
 public class GeneratePrefixEnum {
     public static void main(String[] args) throws TemplateException, IOException {
-        new GeneratePrefixEnum().run();
+        run();
     }
 
-    public void run() throws IOException, TemplateException {
-        SourceWriter writer = new SourceWriter();
-
-        writer.generator(GeneratePrefixEnum.class);
-        writer.classToWrite(Prefix.class);
-        writer.source("prefixes.yaml");
-        writer.template("prefix-to-enum.ftl");
-
-        writer.write();
+    public static void run() throws IOException, TemplateException {
+        new SourceWriter()
+              .generator(GeneratePrefixEnum.class)
+              .classToWrite(Prefix.class)
+              .source("prefixes.yaml")
+              .template("prefix-to-enum.ftl")
+              .write();
     }
 }

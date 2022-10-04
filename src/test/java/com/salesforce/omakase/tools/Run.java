@@ -103,12 +103,12 @@ public class Run {
                     RunPerfTest.run(arguments);
                 }
             } else if (update) {
-                new GeneratePrefixEnum().run();
-                new GenerateKeywordEnum().run();
-                new GeneratePropertyEnum().run();
+                GeneratePrefixEnum.run();
+                GenerateKeywordEnum.run();
+                GeneratePropertyEnum.run();
 
                 if (!local) {
-                    boolean updated = new GenerateBrowserEnum().run();
+                    boolean updated = GenerateBrowserEnum.run();
 
                     if (updated) {
                         System.out.println("Browser.java was updated. Forcing recompilation of sources...");
@@ -163,8 +163,12 @@ public class Run {
 
         String s;
 
-        while ((s = in.readLine()) != null) System.out.println(s);
-        while ((s = err.readLine()) != null) System.err.println(s);
+        while ((s = in.readLine()) != null) {
+            System.out.println(s);
+        }
+        while ((s = err.readLine()) != null) {
+            System.err.println(s);
+        }
 
         int code = proc.waitFor();
         return code == 0;
