@@ -23,12 +23,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.salesforce.omakase.tools;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +37,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Prefix;
 
@@ -55,18 +57,30 @@ import freemarker.template.TemplateException;
  * @author nmcwilliams
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class GenerateBrowserEnum {
+public final class GenerateBrowserEnum {
     private static final String BROWSERS_ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/data.json";
 
     public static void main(String[] args) throws Exception {
-        new GenerateBrowserEnum().run();
+        run();
     }
 
-    public boolean run() throws IOException, TemplateException {
+    public static boolean run() throws IOException, TemplateException {
         System.out.println("downloading browser data from caniuse.com [https://github.com/Fyrd/caniuse]...");
         URLConnection connection = new URL(BROWSERS_ENDPOINT).openConnection();
         connection.setUseCaches(false);
-        Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
+        final Map map;
+        try (final InputStream is = connection.getInputStream()) {
+            map = new ObjectMapper()
+                // This adds support for using byte code to perform
+                // deserialization:
+                // https://github.com/FasterXML/jackson-modules-base/tree/master/afterburner
+                // Need to set setUseValueClassLoader to false to fix a class
+                // loader issue in Java 9
+                // https://github.com/FasterXML/jackson-modules-base/issues/37
+                // This means it will only look at public properties.
+                .registerModule(new AfterburnerModule().setUseValueClassLoader(false))
+                .readValue(is, Map.class);
+        }
 
         String earliestString = (String)Iterables.get(((Map)map.get("eras")).keySet(), 0);
         Matcher matcher = Pattern.compile("e-([0-9]+)").matcher(earliestString);
@@ -74,8 +88,6 @@ public class GenerateBrowserEnum {
         int earliest = Integer.parseInt(matcher.group(1));
 
         Map agents = (Map)map.get("agents");
-
-        List<BrowserInfo> browsers = Lists.newArrayList();
 
         Map ie = (Map)agents.get("ie");
         Map edge = (Map)agents.get("edge");
@@ -87,34 +99,35 @@ public class GenerateBrowserEnum {
         Map ieMobile = (Map)agents.get("ie_mob");
         Map iosSafari = (Map)agents.get("ios_saf");
 
-        browsers.add(new BrowserInfo("ie", "IE", "Internet Explorer", Prefix.MS, versions(ie, earliest)));
-        browsers.add(new BrowserInfo("edge", "EDGE", "Microsoft Edge", Prefix.MS, versions(edge, earliest)));
-        browsers.add(new BrowserInfo("opera", "OPERA", "Opera", Prefix.WEBKIT, versions(opera, earliest)));
-        browsers.add(new BrowserInfo("chrome", "CHROME", "Google Chrome", Prefix.WEBKIT, versions(chrome, earliest)));
-        browsers.add(new BrowserInfo("safari", "SAFARI", "Safari", Prefix.WEBKIT, versions(safari, earliest)));
-        browsers.add(new BrowserInfo("firefox", "FIREFOX", "Firefox", Prefix.MOZ, versions(firefox, earliest)));
-        browsers.add(new BrowserInfo("android", "ANDROID", "Android Browser", Prefix.WEBKIT, versions(android, earliest)));
-        browsers.add(new BrowserInfo("ie_mob", "IE_MOBILE", "IE Mobile", Prefix.MS, versions(ieMobile, earliest)));
-        browsers.add(new BrowserInfo("ios_saf", "IOS_SAFARI", "Safari on iOS", Prefix.WEBKIT, versions(iosSafari, earliest)));
+        final List<BrowserInfo> browsers = ImmutableList.of(
+            new BrowserInfo("ie"     , "IE"        , "Internet Explorer", Prefix.MS    , versions(ie, earliest)),
+            new BrowserInfo("edge"   , "EDGE"      , "Microsoft Edge"   , Prefix.MS    , versions(edge, earliest)),
+            new BrowserInfo("opera"  , "OPERA"     , "Opera"            , Prefix.WEBKIT, versions(opera, earliest)),
+            new BrowserInfo("chrome" , "CHROME"    , "Google Chrome"    , Prefix.WEBKIT, versions(chrome, earliest)),
+            new BrowserInfo("safari" , "SAFARI"    , "Safari"           , Prefix.WEBKIT, versions(safari, earliest)),
+            new BrowserInfo("firefox", "FIREFOX"   , "Firefox"          , Prefix.MOZ   , versions(firefox, earliest)),
+            new BrowserInfo("android", "ANDROID"   , "Android Browser"  , Prefix.WEBKIT, versions(android, earliest)),
+            new BrowserInfo("ie_mob" , "IE_MOBILE" , "IE Mobile"        , Prefix.MS    , versions(ieMobile, earliest)),
+            new BrowserInfo("ios_saf", "IOS_SAFARI", "Safari on iOS"    , Prefix.WEBKIT, versions(iosSafari, earliest))
+        );
 
-        SourceWriter writer = new SourceWriter();
-
-        writer.generator(GenerateBrowserEnum.class);
-        writer.classToWrite(Browser.class);
-        writer.template("browser-enum.ftl");
-        writer.data("browsers", browsers);
+        SourceWriter writer = new SourceWriter()
+              .generator(GenerateBrowserEnum.class)
+              .classToWrite(Browser.class)
+              .template("browser-enum.ftl")
+              .data("browsers", browsers);
 
         return writer.write();
     }
 
-    private String versions(Map browser, int indexOfCurrent) {
+    private static String versions(Map browser, int indexOfCurrent) {
         List<String> all = (List<String>)browser.get("versions");
-        List<Double> filtered = Lists.newArrayList();
+        List<Double> filtered = new ArrayList<>();
 
         for (int i = 0; i <= indexOfCurrent; i++) { // skip the last two, as they are "future" versions
             if (all.get(i) != null) {
-                for (String s : Splitter.on("-").split(all.get(i))) {
-                    if (s.indexOf(".") == s.lastIndexOf(".")) { // hacky deal with something like Android 4.4.3. Just skip for now
+                for (String s : Splitter.on('-').split(all.get(i))) {
+                    if (s.indexOf(".") == s.lastIndexOf('.')) { // hacky deal with something like Android 4.4.3. Just skip for now
                         filtered.add(Double.valueOf(s));
                     }
                 }
@@ -147,7 +160,7 @@ public class GenerateBrowserEnum {
         }
 
         public String getPrefix() {
-            return String.format("Prefix.%s", prefix.name());
+            return "Prefix." + prefix.name();
         }
 
         public String getEnumName() {

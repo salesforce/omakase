@@ -3,7 +3,7 @@
 
     <groupId>com.salesforce</groupId>
     <artifactId>omakase</artifactId>
-    <version>1.7.3-SNAPSHOT</version>
+    <version>1.7.3</version>
 
     <name>Omakase CSS Parser</name>
     <description>Java-based, plugin-oriented CSS3+ parser</description>
@@ -131,7 +131,13 @@
             <!-- used to read xhr json data for prefixes/browsers info -->
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.12.6.1</version>
+            <version>2.13.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-afterburner</artifactId>
+            <version>2.13.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

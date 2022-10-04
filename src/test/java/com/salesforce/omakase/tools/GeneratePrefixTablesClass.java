@@ -27,8 +27,11 @@
 package com.salesforce.omakase.tools;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,10 +40,9 @@ import java.util.concurrent.TimeUnit;
 import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.primitives.Doubles;
 import com.salesforce.omakase.data.Browser;
 import com.salesforce.omakase.data.Keyword;
@@ -58,10 +60,19 @@ import freemarker.template.TemplateException;
  *
  * @author nmcwilliams
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings("unchecked")
 public class GeneratePrefixTablesClass {
     private static final String ENDPOINT = "https://raw.github.com/Fyrd/caniuse/master/features-json/";
     private static final Yaml yaml = new Yaml();
+    private final ObjectMapper jsonMapper = new ObjectMapper()
+            // This adds support for using byte code to perform
+            // deserialization:
+            // https://github.com/FasterXML/jackson-modules-base/tree/master/afterburner
+            // Need to set setUseValueClassLoader to false to fix a class
+            // loader issue in Java 9
+            // https://github.com/FasterXML/jackson-modules-base/issues/37
+            // This means it will only look at public properties.
+            .registerModule(new AfterburnerModule().setUseValueClassLoader(false));
 
     public static void main(String[] args) throws IOException, TemplateException {
         new GeneratePrefixTablesClass().run();
@@ -70,36 +81,36 @@ public class GeneratePrefixTablesClass {
     public void run() throws IOException, TemplateException {
         // read the prefix input data
         System.out.println("reading prefixable.yaml");
-        Map types = (Map)yaml.load(Tools.readFile("/data/prefixable.yaml"));
+        @SuppressWarnings("rawtypes")
+        Map<String, Map> types = (Map<String, Map>)yaml.load(Tools.readFile("/data/prefixable.yaml"));
 
-        List<PropertyInfo> properties = loadProperties((Map)types.get("properties"));
-        Map nonStandard = (Map)types.get("non-standard");
-        properties.addAll(readNonStandardProperties((Map)nonStandard.get("properties")));
+        List<PropertyInfo> properties = loadProperties(types.get("properties"));
+        Map<String, Map<String, List<String>>> nonStandard = types.get("non-standard");
+        properties.addAll(readNonStandardProperties(nonStandard.get("properties")));
 
-        List<KeywordInfo> keywords = loadKeywords((Map)types.get("keywords"));
-        List<NameInfo> atRules = loadGeneric((Map)types.get("at-rules"));
-        List<NameInfo> selectors = loadGeneric((Map)types.get("selectors"));
-        List<NameInfo> functions = loadGeneric((Map)types.get("functions"));
+        List<KeywordInfo> keywords = loadKeywords(types.get("keywords"));
+        List<NameInfo> atRules = loadGeneric(types.get("at-rules"));
+        List<NameInfo> selectors = loadGeneric(types.get("selectors"));
+        List<NameInfo> functions = loadGeneric(types.get("functions"));
 
         // write out the new class source
+        System.out.println();
         SourceWriter writer = new SourceWriter();
 
-        writer.generator(GeneratePrefixTablesClass.class);
-        writer.classToWrite(PrefixTables.class);
-        writer.template("prefix-tables-class.ftl");
-        writer.data("properties", properties);
-        writer.data("keywords", keywords);
-        writer.data("atRules", atRules);
-        writer.data("selectors", selectors);
-        writer.data("functions", functions);
-
-        System.out.println();
+        writer.generator(GeneratePrefixTablesClass.class)
+              .classToWrite(PrefixTables.class)
+              .template("prefix-tables-class.ftl")
+              .data("properties", properties)
+              .data("keywords", keywords)
+              .data("atRules", atRules)
+              .data("selectors", selectors)
+              .data("functions", functions);
         writer.write();
     }
 
     /** load information on all the prefixable properties */
     private List<PropertyInfo> loadProperties(Map<String, List<String>> categories) throws IOException {
-        List<PropertyInfo> info = Lists.newArrayList();
+        List<PropertyInfo> info = new ArrayList<>();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
             for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
@@ -109,13 +120,13 @@ public class GeneratePrefixTablesClass {
                 // loop through each property name in the category
                 for (String property : category.getValue()) {
                     Property prop = Property.lookup(property);
-                    assert prop != null : String.format("property '%s' not found in the Property enum", property);
+                    assert prop != null : ("property '" + property + "' not found in the Property enum.");
 
                     // check for override
                     Optional<Double> override = PrefixTableOverrides.getOverride(prop, browser, version);
                     if (override.isPresent()) {
-                        String msg = "- overriding property '%s' for %s from %s to %s";
-                        System.out.println(String.format(msg, prop, browser, version, override.get()));
+                        String msg = "- overriding property '" + prop + "' for " + browser + " from " + version + " to " + override.get();
+                        System.out.println(msg);
                         version = override.get();
                     }
 
@@ -128,23 +139,23 @@ public class GeneratePrefixTablesClass {
     }
 
     /** read (not load) non standard properties */
-    private List<PropertyInfo> readNonStandardProperties(Map<String, List<String>> properties) {
-        List<PropertyInfo> info = Lists.newArrayList();
+    private static List<PropertyInfo> readNonStandardProperties(Map<String, List<String>> properties) {
+        List<PropertyInfo> info = new ArrayList<>();
 
         for (Map.Entry<String, List<String>> entry : properties.entrySet()) {
             Property property = Property.lookup(entry.getKey());
             if (property == null) {
-                String msg = "Property '%s' does not exist in the Property enum";
-                throw new IllegalArgumentException(String.format(msg, entry.getKey()));
+                String msg = "Property '" + entry.getKey() + "' does not exist in the Property enum.";
+                throw new IllegalArgumentException(msg);
             }
 
             System.out.println();
-            System.out.println(String.format("reading non-standard prefix data for '%s'...", entry.getKey()));
+            System.out.println("reading non-standard prefix data for '" + entry.getKey() + "'...");
             for (String browser : entry.getValue()) {
                 Browser b = Browser.valueOf(browser.toUpperCase());
                 Double version = b.versions().get(0);
                 info.add(new PropertyInfo(property, b, version));
-                System.out.println(String.format("- last required with prefix in %s %s", b, version));
+                System.out.println("- last required with prefix in " + b + version);
             }
         }
         return info;
@@ -152,14 +163,14 @@ public class GeneratePrefixTablesClass {
 
     /** load information on all the prefixable keywords */
     private List<KeywordInfo> loadKeywords(Map<String, List<String>> categories) throws IOException {
-        List<KeywordInfo> info = Lists.newArrayList();
+        List<KeywordInfo> info = new ArrayList<>();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
             for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
                 // loop through each keyword name in the category
                 for (String keyword : category.getValue()) {
                     Keyword kw = Keyword.lookup(keyword);
-                    assert kw != null : String.format("keyword '%s' not found in the Keyword enum", keyword);
+                    assert kw != null : ("keyword '" + keyword + "' not found in the Keyword enum.");
                     info.add(new KeywordInfo(kw, entry.getKey(), entry.getValue()));
                 }
             }
@@ -170,7 +181,7 @@ public class GeneratePrefixTablesClass {
 
     /** load information on generic prefixable data */
     private List<NameInfo> loadGeneric(Map<String, List<String>> categories) throws IOException {
-        List<NameInfo> info = Lists.newArrayList();
+        List<NameInfo> info = new ArrayList<>();
 
         for (Map.Entry<String, List<String>> category : categories.entrySet()) {
             for (Map.Entry<Browser, Double> entry : lastPrefixedBrowserVersions(category.getKey()).entrySet()) {
@@ -186,25 +197,25 @@ public class GeneratePrefixTablesClass {
 
     /** last prefixed version for each browser (each browser with at least one prefixed version) */
     private Map<Browser, Double> lastPrefixedBrowserVersions(String category) throws IOException {
-        Map<Browser, Double> allVersions = Maps.newLinkedHashMap();
+        Map<Browser, Double> allVersions = new LinkedHashMap<>();
 
         // load data for the category
         Map<String, Object> stats = loadUrl(category);
 
         // for each known browser, check if it requires a prefix
         for (Browser browser : Browser.values()) {
-            Map<String, String> browserSpecific = (Map)stats.get(browser.key());
-            assert browserSpecific != null : String.format("browser %s not found in downloaded stats", browser);
+            Map<String, String> browserSpecific = (Map<String, String>)stats.get(browser.key());
+            assert browserSpecific != null : ("browser " + browser + " not found in downloaded stats");
 
             // find the last browser version that requires a prefix (presence of "x" indicates prefix is required)
             double lastPrefixedVersion = 0d;
             for (Map.Entry<String, String> browserVersionPrefixInfo : browserSpecific.entrySet()) {
                 if (browserVersionPrefixInfo.getValue().contains("x")) {
-                    String versionString = Iterables.getLast(Splitter.on("-").split(browserVersionPrefixInfo.getKey()));
+                    String versionString = Iterables.getLast(Splitter.on('-').split(browserVersionPrefixInfo.getKey()));
 
-                    if (versionString.indexOf(".") != versionString.lastIndexOf(".")) {
+                    if (versionString.indexOf('.') != versionString.lastIndexOf('.')) {
                         // hacky deal with something like Android 4.4.3. Just treat it as 4.4 for now.
-                        versionString = versionString.substring(0, versionString.lastIndexOf("."));
+                        versionString = versionString.substring(0, versionString.lastIndexOf('.'));
                     }
 
                     Double version = Doubles.tryParse(versionString);
@@ -220,7 +231,7 @@ public class GeneratePrefixTablesClass {
 
             // if we have a prefix requirement, mark it for each property in the category.
             if (lastPrefixedVersion > 0) {
-                System.out.println(String.format("- last required with prefix in %s %s", browser, lastPrefixedVersion));
+                System.out.println("- last required with prefix in " + browser + ' ' + lastPrefixedVersion);
                 allVersions.put(browser, lastPrefixedVersion);
             }
         }
@@ -237,17 +248,16 @@ public class GeneratePrefixTablesClass {
         connection.setConnectTimeout((int)TimeUnit.SECONDS.toMillis(2));
         connection.setReadTimeout((int)TimeUnit.SECONDS.toMillis(2));
 
-        try {
+        try (final InputStream is = connection.getInputStream()) {
             // parse the json and find the "stats" map entry which contains the browser prefix info
-            Map map = new ObjectMapper().readValue(connection.getInputStream(), Map.class);
-            return (Map)map.get("stats");
+            Map<String, Map<String, Object>> map = jsonMapper.readValue(is, Map.class);
+            return map.get("stats");
         } catch (IOException e) {
             System.out.println("retrying...");
             return loadUrl(category);
         }
     }
 
-    @SuppressWarnings("unused")
     private static class Info {
         private final Browser browser;
         private final Double version;
