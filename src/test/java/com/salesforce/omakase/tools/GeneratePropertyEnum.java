@@ -42,17 +42,15 @@ import freemarker.template.TemplateException;
  */
 public class GeneratePropertyEnum {
     public static void main(String[] args) throws IOException, TemplateException {
-        new GeneratePropertyEnum().run();
+        run();
     }
 
-    public void run() throws IOException, TemplateException {
-        SourceWriter writer = new SourceWriter();
-
-        writer.generator(GeneratePropertyEnum.class);
-        writer.classToWrite(Property.class);
-        writer.source("properties.yaml");
-        writer.template("property-to-enum.ftl");
-
-        writer.write();
+    public static void run() throws IOException, TemplateException {
+        new SourceWriter()
+              .generator(GeneratePropertyEnum.class)
+              .classToWrite(Property.class)
+              .source("properties.yaml")
+              .template("property-to-enum.ftl")
+              .write();
     }
 }

@@ -26,6 +26,7 @@
 
 package com.salesforce.omakase.tools.perf;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 
 /**
  * Performance testing of this parser (more extensive tests + csv writer is in
@@ -100,6 +100,7 @@ public final class RunPerfTest {
         if (parser == null) {
             System.err.println("unable to find parser '" + parserArg + "'");
             System.exit(1);
+            return;
         }
 
         // find mode
@@ -115,6 +116,7 @@ public final class RunPerfTest {
         if (mode == null) {
             System.err.println("unable to find mode '" + modeArg + "'");
             System.exit(1);
+            return;
         }
 
         // other options
@@ -147,7 +149,7 @@ public final class RunPerfTest {
     /** prints out the parse time for the given source */
     public static void time(int loc, PerfTest parser, Mode mode, String input) {
         // do the parsing
-        List<Long> parseTimes = Lists.newArrayList();
+        List<Long> parseTimes = new ArrayList<>(5);
         for (int i = 0; i < 5; i++) {
             long start = System.nanoTime();
             parser.parse(mode, input);

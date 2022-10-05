@@ -62,12 +62,12 @@ public class InteractiveShell {
      * @throws Exception
      *     if something bad happens.
      */
-    public void run() throws Exception {
+    public static void run() throws Exception {
         System.out.println(Colors.yellow("Omakase Interactive Shell"));
 
         // print out options
         for (Command command : Command.values()) {
-            System.out.println("enter " + Colors.red(command.key) + " " + command.description);
+            System.out.println("enter " + Colors.red(command.key) + ' ' + command.description);
         }
         System.out.println();
 
@@ -88,7 +88,7 @@ public class InteractiveShell {
                     System.out.println();
                 } catch (ProblemSummaryException e) {
                     System.out.print(Colors.red(e.getMessage()));
-                    System.out.println("\n");
+                    System.out.println('\n');
                 }
 
                 ctx.terminate = true;
@@ -105,7 +105,7 @@ public class InteractiveShell {
                 on = !on;
                 System.out.print(Colors.grey("continuous mode is ") + Colors.red(on ? "on" : "off"));
                 if (on) System.out.print(Colors.grey(" (ctrl+c or !c again to stop)"));
-                System.out.println("\n");
+                System.out.println('\n');
             }
         },
 
@@ -160,7 +160,7 @@ public class InteractiveShell {
                 if (ctx.prefixer.prune()) {
                     System.out.print(Colors.grey(" (!prefix-prune again to turn off)"));
                 }
-                System.out.println("\n");
+                System.out.println('\n');
             }
         },
 
@@ -173,7 +173,7 @@ public class InteractiveShell {
                 if (ctx.prefixer.rearrange()) {
                     System.out.print(Colors.grey(" (!prefix-rearrange again to turn off)"));
                 }
-                System.out.println("\n");
+                System.out.println('\n');
             }
         },
 
@@ -193,7 +193,9 @@ public class InteractiveShell {
                 Timer timer = new Timer(true);
                 timer.schedule(watcher, 0, 50);
 
-                Runtime.getRuntime().exec("subl " + watcher.file() + ":2");
+                Runtime.getRuntime().exec(new String[] {
+                    "subl", watcher.file() + ":2" 
+                });
             }
         },
 
@@ -206,7 +208,9 @@ public class InteractiveShell {
                 Timer timer = new Timer(true);
                 timer.schedule(watcher, 0, 50);
 
-                Runtime.getRuntime().exec("atom " + watcher.file() + ":2");
+                Runtime.getRuntime().exec(new String[] {
+                    "atom", watcher.file() + ":2"
+                });
             }
         };
 
@@ -215,7 +219,9 @@ public class InteractiveShell {
 
         static {
             Builder<String, Command> builder = ImmutableMap.builder();
-            for (Command c : Command.values()) builder.put(c.key, c);
+            for (Command c : Command.values()) {
+                builder.put(c.key, c);
+            }
             map = builder.build();
         }
 
@@ -236,7 +242,7 @@ public class InteractiveShell {
     }
 
     /** handles event loop and css processing */
-    private static final class Context {
+    static final class Context {
         private final Scanner console = new Scanner(System.in);
 
         protected StringBuilder buffer = new StringBuilder(512);
@@ -251,7 +257,7 @@ public class InteractiveShell {
             while (true) {
                 String next = console.nextLine();
 
-                if (next.startsWith("!")) {
+                if (next.charAt(0) == '!') {
                     Optional<Command> command = Command.get(next);
                     if (command.isPresent()) {
                         command.get().execute(this);
@@ -260,24 +266,26 @@ public class InteractiveShell {
                         System.out.println(Colors.grey("Unknown command '" + next + "'\n"));
                     }
                 } else {
-                    buffer.append(next).append("\n");
+                    buffer.append(next).append('\n');
                 }
             }
         }
 
         public String process() {
             String input = buffer.toString().trim();
-            if (input.isEmpty()) return "";
+            if (input.isEmpty()) {
+                return "";
+            }
 
             Omakase.Request request = Omakase.source(input);
             if (prefixer != null) {
                 request.use(prefixer);
             }
-            request.use(writer);
-            request.use(new UnquotedIEFilterPlugin());
-            request.use(new StandardValidation());
-            request.use(new DefaultErrorManager().rethrow(false));
-            request.process();
+            request.use(writer)
+                   .use(new UnquotedIEFilterPlugin())
+                   .use(new StandardValidation())
+                   .use(new DefaultErrorManager().rethrow(false))
+                   .process();
 
             return writer.write();
         }
@@ -298,7 +306,7 @@ public class InteractiveShell {
             file = File.createTempFile("omakase-", ".css");
             file.deleteOnExit();
 
-            String initial = INPUT + "\n" + ctx.buffer + "\n\n" + RESULT;
+            String initial = (INPUT + "\n") + ctx.buffer + ("\n\n" + RESULT);
             Files.asCharSink(file, UTF_8).write(initial);
 
             lastMod = file.lastModified();
@@ -331,7 +339,7 @@ public class InteractiveShell {
                         output = e.getMessage();
                     }
 
-                    output = input + "\n\n" + RESULT + "\n" + output;
+                    output = input + ("\n\n" + RESULT + "\n") + output;
                     Files.asCharSink(file, UTF_8).write(output);
                     System.out.println(Colors.grey("File updated\n"));
 

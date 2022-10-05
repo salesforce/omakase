@@ -42,17 +42,15 @@ import freemarker.template.TemplateException;
  */
 public class GenerateKeywordEnum {
     public static void main(String[] args) throws Exception {
-        new GenerateKeywordEnum().run();
+        run();
     }
 
-    public void run() throws IOException, TemplateException {
-        SourceWriter writer = new SourceWriter();
-
-        writer.generator(GenerateKeywordEnum.class);
-        writer.classToWrite(Keyword.class);
-        writer.source("keywords.yaml");
-        writer.template("keyword-to-enum.ftl");
-
-        writer.write();
+    public static void run() throws IOException, TemplateException {
+        new SourceWriter()
+              .generator(GenerateKeywordEnum.class)
+              .classToWrite(Keyword.class)
+              .source("keywords.yaml")
+              .template("keyword-to-enum.ftl")
+              .write();
     }
 }
