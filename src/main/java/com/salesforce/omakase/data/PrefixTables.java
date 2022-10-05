@@ -39,6 +39,7 @@ import com.google.common.collect.Table;
  * <p>
  * See class com.salesforce.omakase.tools.GeneratePrefixTablesClass for instructions on updating.
  */
+@SuppressWarnings("AutoBoxing")
 public final class PrefixTables {
     static final Table<Property, Browser, Double> PROPERTIES;
     static final Table<Keyword, Browser, Double> KEYWORDS;
