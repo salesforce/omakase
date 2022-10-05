@@ -474,6 +474,7 @@ public final class PrefixTables {
         ImmutableTable.Builder<String, Browser, Double> builder = ImmutableTable.builder();
 
         builder.put("selection", Browser.FIREFOX, 61.0);
+        builder.put("placeholder", Browser.IE, 11.0);
         builder.put("placeholder", Browser.EDGE, 17.0);
         builder.put("placeholder", Browser.OPERA, 43.0);
         builder.put("placeholder", Browser.CHROME, 56.0);
