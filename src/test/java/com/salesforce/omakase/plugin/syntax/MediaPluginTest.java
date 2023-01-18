@@ -62,8 +62,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class MediaPluginTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
-    MediaPlugin plugin;
-    QueryableBroadcaster broadcaster;
+    private MediaPlugin plugin;
+    private QueryableBroadcaster broadcaster;
 
     @Before
     public void setup() {

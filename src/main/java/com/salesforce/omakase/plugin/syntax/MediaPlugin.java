@@ -45,7 +45,7 @@ import com.salesforce.omakase.parser.Source;
 import com.salesforce.omakase.plugin.Plugin;
 
 /**
- * Refines media query at-rules (@media).
+ * Refines media query at-rules ({@code @media}).
  * <p>
  * In custom refiner plugins, you can reuse the logic from this class to parse declarations with the {@link
  * #delegateRefinement(AtRule, Grammar, Broadcaster)} method.
@@ -75,7 +75,9 @@ public final class MediaPlugin implements Plugin {
         // refine the expression (unless it was already done)
         if (!rule.expression().isPresent()) {
             // must have an expression
-            if (!rule.rawExpression().isPresent()) throw new ParserException(rule, Message.MEDIA_EXPR);
+            if (!rule.rawExpression().isPresent()) {
+                throw new ParserException(rule, Message.MEDIA_EXPR);
+            }
 
             // parse the media query expression
             Source source = new Source(rule.rawExpression().get());
@@ -87,10 +89,14 @@ public final class MediaPlugin implements Plugin {
             Optional<MediaQueryList> list = interest.one();
 
             // must have found a media query list
-            if (!list.isPresent()) throw new ParserException(source, Message.DIDNT_FIND_MEDIA_LIST);
+            if (!list.isPresent()) {
+                throw new ParserException(source, Message.DIDNT_FIND_MEDIA_LIST);
+            }
 
             // nothing should be left in the expression content
-            if (!source.skipWhitepace().eof()) throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+            if (!source.skipWhitepace().eof()) {
+                throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+            }
 
             // broadcast the expression
             broadcaster.broadcast(list.get());
@@ -99,7 +105,9 @@ public final class MediaPlugin implements Plugin {
         // refine the block (unless it was already done)
         if (!rule.block().isPresent()) {
             // must have a block
-            if (!rule.rawBlock().isPresent()) throw new ParserException(rule, Message.MEDIA_BLOCK);
+            if (!rule.rawBlock().isPresent()) {
+                throw new ParserException(rule, Message.MEDIA_BLOCK);
+            }
 
             Source source = new Source(rule.rawBlock().get());
 
