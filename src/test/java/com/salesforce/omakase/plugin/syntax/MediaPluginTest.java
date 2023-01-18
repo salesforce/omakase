@@ -26,6 +26,16 @@
 
 package com.salesforce.omakase.plugin.syntax;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.salesforce.omakase.Message;
 import com.salesforce.omakase.ast.RawSyntax;
 import com.salesforce.omakase.ast.Statement;
@@ -42,25 +52,13 @@ import com.salesforce.omakase.parser.Grammar;
 import com.salesforce.omakase.parser.ParserException;
 import com.salesforce.omakase.writer.StyleAppendable;
 import com.salesforce.omakase.writer.StyleWriter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Optional;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit tests for {@link MediaPlugin}.
  *
  * @author nmcwilliams
  */
-@SuppressWarnings("JavaDoc")
 public class MediaPluginTest {
-    @Rule public final ExpectedException exception = ExpectedException.none();
 
     private MediaPlugin plugin;
     private QueryableBroadcaster broadcaster;
@@ -95,45 +93,40 @@ public class MediaPluginTest {
     public void errorsIfMissingExpression() {
         AtRule ar = new AtRule(1, 1, "media", null, new RawSyntax(2, 2, ".class{color:red}"));
 
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MEDIA_EXPR);
-        plugin.refine(ar, new Grammar(), broadcaster);
+        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(actualException).hasMessageStartingWith(Message.MEDIA_EXPR);
     }
 
     @Test
     public void errorsIfDidntFindMediaList() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, ""), new RawSyntax(2, 2, ""));
 
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.DIDNT_FIND_MEDIA_LIST);
-        plugin.refine(ar, new Grammar(), broadcaster);
+        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(actualException).hasMessageStartingWith(Message.DIDNT_FIND_MEDIA_LIST);
     }
 
     @Test
     public void errirsIfUnparsableRemainderInExpression() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all$"), new RawSyntax(2, 2, ".class{color:red}"));
 
-        exception.expect(ParserException.class);
-        exception.expectMessage("Unable to parse");
-        plugin.refine(ar, new Grammar(), broadcaster);
+        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(actualException).hasMessageStartingWith("Unable to parse");
     }
 
     @Test
     public void errorsIfMissingBlock() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), null);
 
-        exception.expect(ParserException.class);
-        exception.expectMessage(Message.MEDIA_BLOCK);
-        plugin.refine(ar, new Grammar(), broadcaster);
+        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(actualException).hasMessageStartingWith(Message.MEDIA_BLOCK);
     }
 
     @Test
     public void errorsIfUnparsableRemainderInBlock() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}$"));
 
-        exception.expect(ParserException.class);
-        exception.expectMessage("Unable to parse");
-        plugin.refine(ar, new Grammar(), broadcaster);
+        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(actualException).hasMessageStartingWith("Unable to parse");
     }
 
     @Test
@@ -155,7 +148,14 @@ public class MediaPluginTest {
         assertThat(block.get().statements()).hasSize(1);
     }
 
-    private static final class TestExpression extends AbstractAtRuleMember implements AtRuleExpression {
+    /**
+     * Test version of the {@link AbstractAtRuleMember} class used for CSS
+     * expressions to suppress writing the content since we don't need it as
+     * part of the test.
+     *
+     * @author eperret (Eric Perret)
+     */
+    static final class TestExpression extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 
@@ -165,7 +165,14 @@ public class MediaPluginTest {
         }
     }
 
-    private static final class TestBlock extends AbstractAtRuleMember implements AtRuleBlock {
+    /**
+     * Test version of the {@link AbstractAtRuleMember} class used for CSS
+     * blocks to suppress writing the content since we don't need it as part of
+     * the test.
+     *
+     * @author eperret (Eric Perret)
+     */
+    static final class TestBlock extends AbstractAtRuleMember implements AtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 
