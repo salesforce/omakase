@@ -93,40 +93,40 @@ public class MediaPluginTest {
     public void errorsIfMissingExpression() {
         AtRule ar = new AtRule(1, 1, "media", null, new RawSyntax(2, 2, ".class{color:red}"));
 
-        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(actualException).hasMessageStartingWith(Message.MEDIA_EXPR);
+        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(parserException).hasMessageStartingWith(Message.MEDIA_EXPR);
     }
 
     @Test
     public void errorsIfDidntFindMediaList() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, ""), new RawSyntax(2, 2, ""));
 
-        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(actualException).hasMessageStartingWith(Message.DIDNT_FIND_MEDIA_LIST);
+        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(parserException).hasMessageStartingWith(Message.DIDNT_FIND_MEDIA_LIST);
     }
 
     @Test
     public void errirsIfUnparsableRemainderInExpression() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all$"), new RawSyntax(2, 2, ".class{color:red}"));
 
-        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(actualException).hasMessageStartingWith("Unable to parse");
+        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(parserException).hasMessageStartingWith("Unable to parse");
     }
 
     @Test
     public void errorsIfMissingBlock() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), null);
 
-        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(actualException).hasMessageStartingWith(Message.MEDIA_BLOCK);
+        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(parserException).hasMessageStartingWith(Message.MEDIA_BLOCK);
     }
 
     @Test
     public void errorsIfUnparsableRemainderInBlock() {
         AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, ".class{color:red}$"));
 
-        final ParserException actualException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(actualException).hasMessageStartingWith("Unable to parse");
+        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
+        assertThat(parserException).hasMessageStartingWith("Unable to parse");
     }
 
     @Test
