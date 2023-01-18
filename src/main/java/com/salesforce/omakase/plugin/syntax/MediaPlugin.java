@@ -76,7 +76,7 @@ public final class MediaPlugin implements Plugin {
         if (!rule.expression().isPresent()) {
             // must have an expression
             if (!rule.rawExpression().isPresent()) {
-            	throw new ParserException(rule, Message.MEDIA_EXPR);
+                throw new ParserException(rule, Message.MEDIA_EXPR);
             }
 
             // parse the media query expression
@@ -90,12 +90,12 @@ public final class MediaPlugin implements Plugin {
 
             // must have found a media query list
             if (!list.isPresent()) {
-            	throw new ParserException(source, Message.DIDNT_FIND_MEDIA_LIST);
+                throw new ParserException(source, Message.DIDNT_FIND_MEDIA_LIST);
             }
 
             // nothing should be left in the expression content
             if (!source.skipWhitepace().eof()) {
-            	throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
+                throw new ParserException(source, Message.UNPARSABLE_MEDIA, source.remaining());
             }
 
             // broadcast the expression
@@ -106,7 +106,7 @@ public final class MediaPlugin implements Plugin {
         if (!rule.block().isPresent()) {
             // must have a block
             if (!rule.rawBlock().isPresent()) {
-            	throw new ParserException(rule, Message.MEDIA_BLOCK);
+                throw new ParserException(rule, Message.MEDIA_BLOCK);
             }
 
             Source source = new Source(rule.rawBlock().get());
@@ -114,9 +114,9 @@ public final class MediaPlugin implements Plugin {
             QueryableBroadcaster queryable = new QueryableBroadcaster(broadcaster);
 
             // parse the inner statements
-            Parser ruleParser = grammar.parser().ruleParser();
+            Parser statementParser = grammar.parser().statementParser();
             while (!source.eof()) {
-                boolean matched = ruleParser.parse(source, grammar, queryable);
+                boolean matched = statementParser.parse(source, grammar, queryable);
                 source.skipWhitepace();
 
                 // after parsing there should be nothing left in the source

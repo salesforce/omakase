@@ -128,30 +128,6 @@ public class MediaPluginTest {
         final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
         assertThat(parserException).hasMessageStartingWith("Unable to parse");
     }
-    
-    @Test
-    public void errorsIfNextedAtRule() {
-        AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "@media only screen {\n\t.class{color:red};\n}"));
-
-        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(parserException).hasMessageStartingWith("Unable to parse");
-    }
-    
-    @Test
-    public void errorsIfNextedAtRule2() {
-        AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "@media (max-width: 600px) {\n\t.class{color:red};\n}"));
-
-        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(parserException).hasMessageStartingWith("Unable to parse");
-    }
-    
-    @Test
-    public void errorsIfNextedConditionalAtRule() {
-        AtRule ar = new AtRule(1, 1, "media", new RawSyntax(1, 1, "all"), new RawSyntax(2, 2, "@if(IE) {\n\t.class{color:red};\n}"));
-
-        final ParserException parserException = assertThrows(ParserException.class, () -> plugin.refine(ar, new Grammar(), broadcaster));
-        assertThat(parserException).hasMessageStartingWith("Unable to parse");
-    }
 
     @Test
     public void broadcastsTheExpression() {
@@ -172,7 +148,14 @@ public class MediaPluginTest {
         assertThat(block.get().statements()).hasSize(1);
     }
 
-    private static final class TestExpression extends AbstractAtRuleMember implements AtRuleExpression {
+    /**
+     * Test version of the {@link AbstractAtRuleMember} class used for CSS
+     * expressions to suppress writing the content since we don't need it as
+     * part of the test.
+     *
+     * @author eperret (Eric Perret)
+     */
+    static final class TestExpression extends AbstractAtRuleMember implements AtRuleExpression {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 
@@ -182,7 +165,14 @@ public class MediaPluginTest {
         }
     }
 
-    private static final class TestBlock extends AbstractAtRuleMember implements AtRuleBlock {
+    /**
+     * Test version of the {@link AbstractAtRuleMember} class used for CSS
+     * blocks to suppress writing the content since we don't need it as part of
+     * the test.
+     *
+     * @author eperret (Eric Perret)
+     */
+    static final class TestBlock extends AbstractAtRuleMember implements AtRuleBlock {
         @Override
         public void write(StyleWriter writer, StyleAppendable appendable) throws IOException {}
 
